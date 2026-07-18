@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+.vite/
+cypress/screenshots/
+cypress/videos/
+.yarn/install-state.gz
+.pnp.*
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log

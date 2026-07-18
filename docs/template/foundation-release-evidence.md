@@ -2,14 +2,15 @@
 
 ## Status
 
-Foundation Template v1.0.0 remains a release candidate. Final release requires
-the exact Node 24.18.0 Linux and Windows workflows, GitHub Pages deployment,
-and manual real-device HTTPS validation for the final commit.
+Foundation Template v1.0.0 remains a release candidate. Pinned Linux and
+Windows validation and GitHub Pages deployment are green. Final release still
+requires manual real-device HTTPS validation and explicit approval to create
+the tag.
 
 ## Source identity
 
 ```text
-Candidate implementation commit: ef19198
+Candidate implementation and deployment commit: 7ad5320d162c1eb772d369bb7fd8250d1aa4fcd3
 Git tag: unavailable; no release tag was created
 Evidence update: this document's follow-up commit
 ```
@@ -56,9 +57,13 @@ git diff --check: passed
 ## CI evidence
 
 ```text
-Linux pinned-runtime workflow: configured; not executed from this workspace
-Windows portability workflow: configured; not executed from this workspace
-Commit/workflow run: unavailable
+Validation commit: 7ad5320d162c1eb772d369bb7fd8250d1aa4fcd3
+Validation run 29664844694: success
+linux-full job 88133423858: success
+windows-portability job 88133423837: success
+linux-archive-portability job 88133525195: success
+Pages run 29664947169, deploy job 88133693594: success
+Deployed URL: https://wwwworkingprocess.github.io/vite-tt-foundation/
 ```
 
 ## PWA/offline evidence
@@ -74,6 +79,14 @@ pacing was paused with zero credit and bonus before advancing again and closing.
 `autoUpdate` registers the generated revisioned
 precache and activates an available update; no background simulation catch-up
 or data synchronization is performed.
+
+The same offline lifecycle spec also passed against the deployed HTTPS origin
+with Cypress 15.18.1 and Electron 138. Direct HTTPS checks returned 200 for the
+application shell, manifest, both icons, registration script, service worker,
+Workbox file, application entry, lazy representation chunk, and dedicated
+Worker chunk. A live browser session reached Worker `ready`, advanced and
+paused pacing, saved tick 39, and restored tick 39 under a new timeline with
+CommandRevision, StreamOffset, pacing credit, and bonus reset to zero.
 
 ## Bundle budgets
 
@@ -97,6 +110,13 @@ The immutable install reports Yarn YN0086 for optional peer surfaces; inspection
 identifies the only unmet peer as transitive `tunnel-rat`/Zustand React metadata.
 React is supplied by the web workspace, builds and browser tests pass, and the
 warning can be removed when the upstream R3F dependency metadata is corrected.
+GitHub annotates the otherwise successful workflows because the supported
+`actions/upload-artifact@v4`, `actions/download-artifact@v4`,
+`actions/configure-pages@v5`, `actions/deploy-pages@v4`, and the upload action
+embedded by `actions/upload-pages-artifact@v4` still declare Node 20 action
+runtimes. GitHub forced them onto Node 24. No project command ran under the
+unpinned package manager, and these third-party annotations did not fail either
+workflow.
 
 ## Template audit
 
@@ -120,7 +140,8 @@ versioning remains limited to the validated snapshot and save-record schemas.
 
 ## Limitations
 
-- Exact Node 24.18.0 local validation was unavailable; local evidence uses 24.13.0.
-- GitHub Actions Linux and Windows jobs could not run because this repository has no configured Git remote.
-- No tag or final release commit exists yet.
-- GitHub Pages deployment and manual real-device HTTPS validation remain pending.
+- Local exact-runtime validation remains unavailable because the workstation
+  uses Node 24.13.0; remote validation used the pinned Node 24.18.0 and Yarn
+  4.17.1.
+- Manual real-device HTTPS validation remains pending.
+- No final v1.0.0 tag has been created.

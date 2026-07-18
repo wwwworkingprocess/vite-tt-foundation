@@ -76,7 +76,7 @@ interface SimulationCalendar {
 }
 ```
 
-`genesisUtcMs` must be a finite safe integer aligned to an exact second. Local time zones are presentation concerns.
+`genesisUtcMs` must be a non-negative finite safe integer aligned to an exact second. Local time zones are presentation concerns.
 
 The mapping is:
 
@@ -98,7 +98,7 @@ Non-aligned instants are rejected rather than rounded. Presentation code may for
 The simulation advances only through explicit whole-tick operations.
 
 ```ts
-advanceTicks(state, count)
+advanceTicks(state, count);
 ```
 
 `count` must be a non-negative safe integer.
@@ -182,7 +182,7 @@ interface SpeedBonusState {
 }
 ```
 
-`remainingSimulationTicks` is decremented by the number of authoritative simulation ticks actually advanced while the bonus is active. It is never decremented while paused.
+`remainingSimulationTicks` is decremented by the number of authoritative simulation ticks actually advanced while the bonus is active. Pause is enforced by the future scheduler producing zero advancement, so there are no ticks for the bonus-consumption helper to classify or consume.
 
 The bonus ends immediately when the remaining value reaches zero. If a requested advancement would cross the boundary, the host divides the advancement so only the remaining bonus ticks receive the multiplier.
 
@@ -207,6 +207,23 @@ at 40x total effective rate ->  90 seconds = 1 minute 30 seconds
 Therefore, when the normal base rate is `20x` and a `2x` bonus produces `40x`, a bonus intended to last three pacing minutes must be configured as `1,440` simulation ticks, not `720`.
 
 This arithmetic is intentional and must be tested. Balance data chooses the tick budget; the engine does not infer a desired wall-clock duration.
+
+### Bonus expiry within a pacing interval
+
+A future scheduler must split a pacing interval when a bonus expires partway through it. For one pacing second:
+
+```text
+base rate 20x  = 4 ticks per pacing second
+bonus rate 40x = 8 ticks per pacing second
+
+2 bonus ticks remaining
+-> 2 ticks at 40x consume 0.25 pacing seconds
+-> 0.75 pacing seconds remain at the 20x base rate
+-> 0.75 * 4 = 3 regular ticks
+-> total advancement for the interval = 5 ticks, not 8
+```
+
+`consumeSpeedBonusForAdvancedTicks` does not perform this scheduling calculation or enforce pause. It only classifies whole simulation ticks that the host has already advanced and consumes the corresponding bonus-tick budget. Every advanced tick is classified as either a bonus tick or a regular tick. The pacing-clock accumulator and interval-splitting scheduler, including producing zero advancement while paused, remain deferred.
 
 The remaining bonus may be persisted by the application alongside a save because it is a player entitlement. It is not part of the deterministic transport simulation state and cannot alter the result of processing a given sequence of simulation ticks and commands.
 

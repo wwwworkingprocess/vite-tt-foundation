@@ -56,7 +56,11 @@ Research and document how a future authoritative host could integrate through So
 
 The adapter-neutral decision and proposed contracts are recorded in `../architecture/decisions/0002-simulation-host-transport-readiness.md` and `../architecture/transport-contract.md`. Runtime implementation remains deferred to Phase 3 or later.
 
+Phase 2 is complete.
+
 ## Phase 3 — Blank end-to-end platform
+
+Phase 3A, the time, identity, and contract foundation described in `phase-3-plan.md`, is the current milestone.
 
 ### Goal
 

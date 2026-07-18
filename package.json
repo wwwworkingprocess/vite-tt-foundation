@@ -20,13 +20,15 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "test": "yarn build:libraries && vitest run",
+    "test:coverage": "yarn build:libraries && vitest run --project simulation --coverage && vitest run --project protocol --coverage && vitest run --project web --coverage",
     "typecheck": "tsc --build",
     "test:e2e": "yarn build:libraries && start-server-and-test 'yarn workspace @torrevieja-tycoon/web dev --host 127.0.0.1' http://127.0.0.1:4173 'cypress run'",
-    "validate": "yarn format:check && yarn lint && yarn typecheck && yarn test && yarn build && yarn test:e2e"
+    "validate": "yarn format:check && yarn lint && yarn typecheck && yarn test && yarn test:coverage && yarn build && yarn test:e2e"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@types/node": "24.10.13",
+    "@vitest/coverage-v8": "4.1.10",
     "cypress": "15.18.1",
     "eslint": "10.7.0",
     "eslint-plugin-import-x": "4.17.1",

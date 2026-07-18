@@ -5,7 +5,14 @@ export default defineConfig({
   test: {
     name: 'web',
     environment: 'jsdom',
-    include: ['src/**/*.test.tsx'],
+    include: ['src/**/*.test.{ts,tsx}'],
     setupFiles: ['./src/test/setup.tsx'],
+    coverage: {
+      provider: 'v8',
+      reportsDirectory: '../../coverage/web-simulation-host',
+      include: ['src/simulation-host/**/*.ts'],
+      exclude: ['src/**/*.test.ts'],
+      thresholds: { statements: 95, lines: 95, functions: 95, branches: 90 },
+    },
   },
 });

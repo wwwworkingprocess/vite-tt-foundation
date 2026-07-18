@@ -5,3 +5,5 @@ export const protocolFoundationVersion = 1 as const;
 export type FoundationIdentifier = string & {
   readonly __foundationIdentifier: unique symbol;
 };
+
+export * from './positions.js';

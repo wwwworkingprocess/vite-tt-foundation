@@ -58,13 +58,17 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`architecture/boundaries.md`](architecture/boundaries.md) — package dependencies and adapter boundaries.
 - [`architecture/state-ownership.md`](architecture/state-ownership.md) — authoritative, application, and presentation state.
 - [`architecture/transport-contract.md`](architecture/transport-contract.md) — proposed adapter-neutral host/client semantics and failure recovery.
+- [`architecture/time-model.md`](architecture/time-model.md) — authoritative five-second tick and host-owned playback model.
 - [`architecture/decisions/0002-simulation-host-transport-readiness.md`](architecture/decisions/0002-simulation-host-transport-readiness.md) — Socket.IO-readiness research and transport-boundary decision.
+- [`architecture/decisions/0003-simulation-time-and-playback-pacing.md`](architecture/decisions/0003-simulation-time-and-playback-pacing.md) — simulation-time and playback-pacing decision.
 - [`development/roadmap.md`](development/roadmap.md) — phased master plan.
 - [`development/testing-strategy.md`](development/testing-strategy.md) — TDD workflow, test layers, determinism, and coverage policy.
+- [`development/phase-3-plan.md`](development/phase-3-plan.md) — incremental Phase 3 delivery milestones.
 - [`development/definition-of-done.md`](development/definition-of-done.md) — completion and validation rules.
 - [`prompts/codex-system-prompt.md`](prompts/codex-system-prompt.md) — reusable Codex session prompt.
 - [`prompts/phase-1-project-foundation.md`](prompts/phase-1-project-foundation.md) — completed foundation implementation request.
-- [`prompts/phase-2-socketio-readiness-research.md`](prompts/phase-2-socketio-readiness-research.md) — current architecture-research request.
+- [`prompts/phase-2-socketio-readiness-research.md`](prompts/phase-2-socketio-readiness-research.md) — completed architecture-research request.
+- [`prompts/phase-3a-time-foundation.md`](prompts/phase-3a-time-foundation.md) — current time and contract foundation milestone.
 
 ## Fixed implementation facts
 
@@ -73,5 +77,5 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - The simulation and protocol package compilers are restricted to environment-neutral ECMAScript libraries and no ambient platform types.
 - ESLint enforces the documented package dependency direction and forbidden platform imports.
 - The web production build generates a service worker and web app manifest through `vite-plugin-pwa`.
-- Phase 1 contains smoke contracts and rendering only; simulation mechanics and host adapters remain deferred.
-- Actual simulation behaviour will be developed test-first with high package coverage and deterministic tests.
+- Phase 3A adds deterministic five-second time primitives, distinct protocol position primitives, and pure application-owned playback calculations; simulation host adapters remain deferred.
+- Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

@@ -13,5 +13,6 @@ jobs:
       - run: yarn lint
       - run: yarn typecheck
       - run: yarn test
+      - run: yarn test:coverage
       - run: yarn build
       - run: yarn test:e2e

@@ -13,12 +13,18 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "zod": "4.4.3"
+  },
   "devDependencies": {
-    "typescript": "6.0.3"
+    "@vitest/coverage-v8": "4.1.10",
+    "typescript": "6.0.3",
+    "vitest": "4.1.10"
   },
   "scripts": {
     "build": "tsc --build",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --build"
   }
 }

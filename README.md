@@ -34,6 +34,7 @@ yarn format:check
 yarn lint
 yarn typecheck
 yarn test
+yarn test:coverage
 yarn build
 yarn test:e2e
 ```
@@ -51,4 +52,4 @@ Begin with [`docs/project-foundation.md`](docs/project-foundation.md), which lin
 
 ## Current status
 
-Phase 1 provides the workspace and smoke implementations. Game mechanics, transport adapters, persistence workflows, and production interface design remain deferred.
+Phase 2 architecture research is complete. Phase 3A implements deterministic five-second simulation time, distinct protocol position primitives, and pure host-owned playback calculations. Transport adapters, persistence workflows, game mechanics, and production interface design remain deferred.

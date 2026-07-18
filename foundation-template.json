@@ -1,0 +1,68 @@
+{
+  "$schema": "./docs/template/foundation-template.schema.json",
+  "templateName": "Foundation Template",
+  "templateVersion": "1.0.0",
+  "referenceProject": "Torrevieja Tycoon",
+  "runtime": {
+    "node": "24.18.0",
+    "yarn": "4.17.1"
+  },
+  "foundationPaths": [
+    "packages/simulation",
+    "packages/protocol",
+    "apps/web/src/simulation-host",
+    "apps/web/src/simulation-worker",
+    "apps/web/src/persistence",
+    "apps/web/src/application",
+    "apps/web/src/pacing"
+  ],
+  "extensionPoints": [
+    "simulation-state-and-snapshot",
+    "simulation-commands",
+    "protocol-contracts",
+    "host-publications",
+    "application-orchestration",
+    "representation",
+    "validated-scenario-data"
+  ],
+  "validationCommands": [
+    "corepack yarn install --immutable",
+    "corepack yarn format:check",
+    "corepack yarn lint",
+    "corepack yarn typecheck",
+    "corepack yarn test",
+    "corepack yarn test:coverage",
+    "corepack yarn build",
+    "corepack yarn test:e2e"
+  ],
+  "renameSurfaces": [
+    "repository-name",
+    "root-package-name",
+    "workspace-package-namespace",
+    "visible-title",
+    "pwa-metadata",
+    "shell-default-identifiers",
+    "readme-branding",
+    "ci-artifact-names"
+  ],
+  "protectedCompatibilitySurfaces": [
+    "protocol-message-discriminators",
+    "snapshot-kind-and-schema-version",
+    "save-kind-and-schema-version",
+    "lifecycle-state-semantics",
+    "authoritative-coordinate-meanings",
+    "idempotency-semantics"
+  ],
+  "archiveExcludes": [
+    ".git",
+    "node_modules",
+    "dist",
+    "coverage",
+    ".vite",
+    "cypress/screenshots",
+    "cypress/videos",
+    "cypress/downloads",
+    ".env.local",
+    "*.log"
+  ]
+}

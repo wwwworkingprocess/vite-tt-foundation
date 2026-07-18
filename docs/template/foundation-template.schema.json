@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Foundation Template Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "templateName",
+    "templateVersion",
+    "referenceProject",
+    "runtime",
+    "foundationPaths",
+    "extensionPoints",
+    "validationCommands",
+    "renameSurfaces",
+    "protectedCompatibilitySurfaces",
+    "archiveExcludes"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "templateName": { "type": "string", "minLength": 1 },
+    "templateVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "referenceProject": { "type": "string", "minLength": 1 },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "yarn"],
+      "properties": {
+        "node": { "const": "24.18.0" },
+        "yarn": { "const": "4.17.1" }
+      }
+    },
+    "foundationPaths": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "extensionPoints": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "validationCommands": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "renameSurfaces": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "protectedCompatibilitySurfaces": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "archiveExcludes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

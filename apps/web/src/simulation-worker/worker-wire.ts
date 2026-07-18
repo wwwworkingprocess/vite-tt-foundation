@@ -8,6 +8,8 @@ import {
   parseFoundationHostMessage,
 } from '@torrevieja-tycoon/protocol';
 
+export const foundationWorkerWireSchemaVersion = 1 as const;
+
 const requestIdSchema = z.number().int().positive().safe();
 const identity = { gameId: z.string(), timelineId: z.string() };
 const connectSchema = z.discriminatedUnion('mode', [

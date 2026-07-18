@@ -23,6 +23,13 @@
     "test:coverage": "yarn build:libraries && vitest run --project simulation --coverage && vitest run --project protocol --coverage && vitest run --project web --coverage",
     "typecheck": "tsc --build",
     "test:e2e": "yarn build:libraries && start-server-and-test 'yarn workspace @torrevieja-tycoon/web dev --host 127.0.0.1' http://127.0.0.1:4173 'cypress run'",
+    "test:pwa": "yarn build && start-server-and-test 'yarn workspace @torrevieja-tycoon/web preview --host 127.0.0.1' http://127.0.0.1:4174 'cypress run --config-file cypress.pwa.config.ts'",
+    "audit:architecture": "node scripts/foundation-audit.mjs",
+    "audit:tracked": "node scripts/tracked-output-audit.mjs",
+    "audit:runtime": "node scripts/runtime-audit.mjs",
+    "audit:manifest": "node scripts/template-manifest-audit.mjs",
+    "audit:build": "node scripts/build-budget-audit.mjs",
+    "audit": "yarn audit:runtime && yarn audit:architecture && yarn audit:manifest && yarn audit:build",
     "validate": "yarn format:check && yarn lint && yarn typecheck && yarn test && yarn test:coverage && yarn build && yarn test:e2e"
   },
   "devDependencies": {

@@ -1,18 +1,46 @@
 name: Validation
 on: [push, pull_request]
 jobs:
-  validate:
+  linux-full:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version-file: .node-version, cache: yarn }
       - run: corepack enable
-      - run: yarn install --immutable
-      - run: yarn format:check
-      - run: yarn lint
-      - run: yarn typecheck
-      - run: yarn test
-      - run: yarn test:coverage
-      - run: yarn build
-      - run: yarn test:e2e
+      - run: corepack prepare yarn@4.17.1 --activate
+      - run: corepack yarn install --immutable
+      - run: corepack yarn audit:runtime
+      - run: corepack yarn format:check
+      - run: corepack yarn lint
+      - run: corepack yarn typecheck
+      - run: corepack yarn test
+      - run: corepack yarn test:coverage
+      - run: corepack yarn build
+      - run: corepack yarn audit:architecture
+      - run: corepack yarn audit:tracked
+      - run: corepack yarn audit:manifest
+      - run: corepack yarn audit:build
+      - run: corepack yarn test:e2e
+      - run: corepack yarn test:pwa
+      - run: git diff --check
+  windows-portability:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version-file: .node-version, cache: yarn }
+      - run: corepack enable
+      - run: corepack prepare yarn@4.17.1 --activate
+      - run: corepack yarn install --immutable
+      - run: corepack yarn audit:runtime
+      - run: corepack yarn format:check
+      - run: corepack yarn lint
+      - run: corepack yarn typecheck
+      - run: corepack yarn test
+      - run: corepack yarn build
+      - run: corepack yarn audit:architecture
+      - run: corepack yarn audit:tracked
+      - run: corepack yarn audit:manifest
+      - run: corepack yarn audit:build
+      - run: git diff --check

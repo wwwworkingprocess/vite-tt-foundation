@@ -1,0 +1,8 @@
+RoutePattern
+busId
+StopNode
+passenger-queue
+platform_id
+fare-type
+DepotSchedule
+vehicle.kind

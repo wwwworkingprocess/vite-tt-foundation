@@ -96,7 +96,7 @@ export default tseslint.config(
     extends: [tseslint.configs.disableTypeChecked],
   },
   {
-    files: ['**/*.config.ts', '*.js'],
+    files: ['**/*.config.ts', '*.js', 'scripts/**/*.mjs'],
     languageOptions: { globals: globals.node },
     extends: [tseslint.configs.disableTypeChecked],
   },

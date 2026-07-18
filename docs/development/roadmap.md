@@ -60,8 +60,9 @@ Phase 2 is complete.
 
 ## Phase 3 — Blank end-to-end platform
 
-Phase 3D, the persistence and application bridge described in
-`phase-3-plan.md`, is complete. Phase 3E remains deferred.
+Phases 3A–3E are complete. Phase 3F release hardening is implemented locally;
+Foundation Template v1.0.0 remains a release candidate until its exact-runtime
+Linux and Windows CI gates pass.
 
 ### Goal
 

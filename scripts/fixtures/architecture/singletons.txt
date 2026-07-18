@@ -1,0 +1,3 @@
+const authoritativeHost = createFoundationHost();
+const applicationStore = createStore();
+const foundationDatabase = new SaveDatabase('global');

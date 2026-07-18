@@ -16,6 +16,10 @@ import {
   deleteFoundationSaveDatabase,
   type FoundationSaveRepository,
 } from './save-repository.js';
+import { foundationSaveRecordSchemaVersion } from './save-record.js';
+
+it('exports the save-record schema version', () =>
+  expect(foundationSaveRecordSchemaVersion).toBe(1));
 
 let sequence = 0;
 const databases: string[] = [];

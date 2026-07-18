@@ -5,9 +5,11 @@ import {
 } from './foundation-state.js';
 import { parseSimulationTick, type SimulationTick } from './time.js';
 
+export const foundationSimulationSnapshotSchemaVersion = 1 as const;
+
 const schema = z.strictObject({
   kind: z.literal('foundation-simulation-snapshot'),
-  schemaVersion: z.literal(1),
+  schemaVersion: z.literal(foundationSimulationSnapshotSchemaVersion),
   simulationVersion: z.literal('foundation-1'),
   state: z.strictObject({ tick: z.number().int().nonnegative().safe() }),
 });

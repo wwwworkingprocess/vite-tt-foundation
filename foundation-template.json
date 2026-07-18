@@ -16,6 +16,22 @@
     "apps/web/src/application",
     "apps/web/src/pacing"
   ],
+  "publicEntryPoints": [
+    "@torrevieja-tycoon/simulation",
+    "@torrevieja-tycoon/protocol"
+  ],
+  "schemaVersions": {
+    "protocolFoundation": 1,
+    "simulationSnapshot": 1,
+    "saveRecord": 1,
+    "workerWire": 1
+  },
+  "buildBudgetsBytes": {
+    "applicationEntry": 400000,
+    "representation": 1200000,
+    "worker": 100000,
+    "totalJavaScript": 1500000
+  },
   "extensionPoints": [
     "simulation-state-and-snapshot",
     "simulation-commands",
@@ -33,7 +49,13 @@
     "corepack yarn test",
     "corepack yarn test:coverage",
     "corepack yarn build",
-    "corepack yarn test:e2e"
+    "corepack yarn test:e2e",
+    "corepack yarn test:pwa",
+    "corepack yarn audit:architecture",
+    "corepack yarn audit:runtime",
+    "corepack yarn audit:tracked",
+    "corepack yarn audit:manifest",
+    "corepack yarn audit:build"
   ],
   "renameSurfaces": [
     "repository-name",
@@ -62,6 +84,9 @@
     "cypress/screenshots",
     "cypress/videos",
     "cypress/downloads",
+    ".yarn/install-state.gz",
+    ".env",
+    ".env.*",
     ".env.local",
     "*.log"
   ]

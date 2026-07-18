@@ -9,6 +9,9 @@
     "referenceProject",
     "runtime",
     "foundationPaths",
+    "publicEntryPoints",
+    "schemaVersions",
+    "buildBudgetsBytes",
     "extensionPoints",
     "validationCommands",
     "renameSurfaces",
@@ -37,6 +40,44 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": { "type": "string", "minLength": 1 }
+    },
+    "publicEntryPoints": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "schemaVersions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolFoundation",
+        "simulationSnapshot",
+        "saveRecord",
+        "workerWire"
+      ],
+      "properties": {
+        "protocolFoundation": { "const": 1 },
+        "simulationSnapshot": { "const": 1 },
+        "saveRecord": { "const": 1 },
+        "workerWire": { "const": 1 }
+      }
+    },
+    "buildBudgetsBytes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicationEntry",
+        "representation",
+        "worker",
+        "totalJavaScript"
+      ],
+      "properties": {
+        "applicationEntry": { "type": "integer", "minimum": 1 },
+        "representation": { "type": "integer", "minimum": 1 },
+        "worker": { "type": "integer", "minimum": 1 },
+        "totalJavaScript": { "type": "integer", "minimum": 1 }
+      }
     },
     "extensionPoints": {
       "type": "array",

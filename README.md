@@ -37,6 +37,11 @@ yarn test
 yarn test:coverage
 yarn build
 yarn test:e2e
+yarn test:pwa
+yarn audit:architecture
+yarn audit:tracked
+yarn audit:manifest
+yarn audit:build
 ```
 
 Run the complete sequence with `yarn validate`. Build either standalone library independently with:
@@ -52,4 +57,4 @@ Begin with [`docs/project-foundation.md`](docs/project-foundation.md), which lin
 
 ## Current status
 
-Phase 2 architecture research is complete. Phase 3A implements deterministic five-second simulation time, distinct protocol position primitives, and pure host-owned playback calculations. Transport adapters, persistence workflows, game mechanics, and production interface design remain deferred.
+Phases 1–3 are implemented. The repository is a Foundation Template v1.0.0 release candidate with deterministic simulation foundations, direct/Worker host adapters, IndexedDB saves, application orchestration, browser pacing, PWA offline verification, executable architecture audits, and enforced coverage. Final release acceptance still requires the pinned Linux and Windows CI workflows to pass. Phase 4 game mechanics remain deferred.

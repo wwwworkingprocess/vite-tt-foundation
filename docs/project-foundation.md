@@ -68,7 +68,7 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`prompts/codex-system-prompt.md`](prompts/codex-system-prompt.md) — reusable Codex session prompt.
 - [`prompts/phase-1-project-foundation.md`](prompts/phase-1-project-foundation.md) — completed foundation implementation request.
 - [`prompts/phase-2-socketio-readiness-research.md`](prompts/phase-2-socketio-readiness-research.md) — completed architecture-research request.
-- [`prompts/phase-3a-time-foundation.md`](prompts/phase-3a-time-foundation.md) — current time and contract foundation milestone.
+- [`prompts/phase-3a-time-foundation.md`](prompts/phase-3a-time-foundation.md) — completed time and contract foundation milestone.
 
 ## Fixed implementation facts
 
@@ -88,4 +88,7 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   modes, tick-counted 2× bonus consumption, a generation-safe pacing
   controller, visibility-aware animation-frame driving, and minimal platform
   controls; pacing state remains runtime-only.
+- Phase 3F hardens the completed platform as Foundation Template v1.0.0 with
+  executable architecture, manifest, bundle, lifecycle, and built-PWA offline
+  release gates. Final release status requires the pinned CI workflows to pass.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

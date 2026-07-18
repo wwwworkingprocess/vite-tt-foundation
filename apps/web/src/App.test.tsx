@@ -21,7 +21,7 @@ afterEach(() => {
 });
 
 describe('foundation screen', () => {
-  it('identifies the app and starts the renderer boundary', () => {
+  it('identifies the app and starts the renderer boundary', async () => {
     render(<App />);
     expect(
       screen.getByRole('heading', { name: 'Torrevieja Tycoon' }),
@@ -29,7 +29,7 @@ describe('foundation screen', () => {
     expect(
       screen.getByText('standalone simulation package'),
     ).toBeInTheDocument();
-    expect(screen.getByTestId('r3f-canvas')).toBeInTheDocument();
+    expect(await screen.findByTestId('r3f-canvas')).toBeInTheDocument();
   });
 
   it('reports Worker readiness, advancement, and cleanup', async () => {

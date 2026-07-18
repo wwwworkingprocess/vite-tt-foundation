@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed for Phase 3F.
+Accepted as a release candidate; final release is gated by pinned CI evidence.
 
 ## Context
 

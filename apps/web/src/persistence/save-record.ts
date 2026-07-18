@@ -10,6 +10,8 @@ import {
   type TimelineId,
 } from '@torrevieja-tycoon/protocol';
 
+export const foundationSaveRecordSchemaVersion = 1 as const;
+
 const idSchema = z
   .string()
   .min(1)
@@ -20,7 +22,7 @@ const time = z.number().int().nonnegative().safe();
 const recordSchema = z
   .strictObject({
     kind: z.literal('foundation-save-record'),
-    schemaVersion: z.literal(1),
+    schemaVersion: z.literal(foundationSaveRecordSchemaVersion),
     saveId: idSchema,
     label: z.string().trim().min(1).max(120).optional(),
     gameId: z.string(),

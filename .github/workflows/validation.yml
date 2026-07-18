@@ -1,49 +1,49 @@
 name: Validation
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   linux-full:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version-file: .node-version, cache: yarn }
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version-file: .node-version }
       - run: corepack enable
-      - run: corepack prepare yarn@4.17.1 --activate
+      - run: corepack install --global yarn@4.17.1
+      - run: |
+          node --version
+          corepack yarn --version
+          corepack yarn audit:runtime
       - run: corepack yarn install --immutable
       - run: corepack yarn validate:portable
-      - run: corepack yarn audit:tracked
-      - run: git diff --check
-      - run: git diff --exit-code
-      - name: Require clean working tree
-        run: |
-          git status --porcelain
-          test -z "$(git status --porcelain)"
+      - run: corepack yarn validate:repository
   windows-portability:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version-file: .node-version, cache: yarn }
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version-file: .node-version }
       - run: corepack enable
-      - run: corepack prepare yarn@4.17.1 --activate
+      - run: corepack install --global yarn@4.17.1
+      - run: |
+          node --version
+          corepack yarn --version
+          corepack yarn audit:runtime
       - run: corepack yarn install --immutable
       - run: corepack yarn audit:line-endings
-      - run: corepack yarn audit:runtime
       - run: corepack yarn format:check
       - run: corepack yarn lint
       - run: corepack yarn typecheck
       - run: corepack yarn test
       - run: corepack yarn build
       - run: corepack yarn audit:architecture
-      - run: corepack yarn audit:tracked
       - run: corepack yarn audit:manifest
       - run: corepack yarn audit:build
-      - run: git diff --check
-      - run: git diff --exit-code
-      - name: Require clean working tree
-        run: |
-          git status --porcelain
-          if (git status --porcelain) { throw "Validation modified tracked files." }
+      - run: corepack yarn validate:repository
       - run: git archive --format=zip --output=foundation-template.zip HEAD
       - uses: actions/upload-artifact@v4
         with:
@@ -57,16 +57,14 @@ jobs:
         with:
           name: windows-foundation-template
       - run: unzip foundation-template.zip -d foundation-template
-      - uses: actions/setup-node@v4
-        with:
-          {
-            node-version-file: foundation-template/.node-version,
-            cache: yarn,
-            cache-dependency-path: foundation-template/yarn.lock,
-          }
+      - uses: actions/setup-node@v6
+        with: { node-version-file: foundation-template/.node-version }
       - working-directory: foundation-template
         run: |
           corepack enable
-          corepack prepare yarn@4.17.1 --activate
+          corepack install --global yarn@4.17.1
+          node --version
+          corepack yarn --version
+          corepack yarn audit:runtime
           corepack yarn install --immutable
           corepack yarn validate:portable

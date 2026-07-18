@@ -71,9 +71,11 @@ if (!ci.includes('node-version-file: .node-version'))
 const yarnPins = [
   pkg.packageManager.replace('yarn@', ''),
   manifest.runtime.yarn,
-  ...[...ci.matchAll(/corepack prepare yarn@([^\s]+) --activate/g)].map(
-    (match) => match[1],
-  ),
+  ...[
+    ...ci.matchAll(
+      /corepack (?:install --global|prepare) yarn@([^\s]+)(?: --activate)?/g,
+    ),
+  ].map((match) => match[1]),
 ];
 if (new Set(yarnPins).size !== 1 || yarnPins.length < 4)
   throw new Error(`Yarn pins are inconsistent: ${yarnPins.join(', ')}`);

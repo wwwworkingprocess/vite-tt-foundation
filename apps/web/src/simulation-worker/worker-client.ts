@@ -6,6 +6,7 @@ import {
   parseFoundationRenderSnapshot,
   parseFoundationStateUpdate,
   parseFoundationSynchronizationResponse,
+  parseFoundationSnapshotExport,
   parseGameId,
   parseTimelineId,
   foundationProtocolErrorSchema,
@@ -15,8 +16,12 @@ import {
   type FoundationSimulationClient,
   type FoundationStateUpdate,
   type FoundationSynchronizationResponse,
+  type FoundationSnapshotExport,
 } from '@torrevieja-tycoon/protocol';
-import { parseSimulationTick } from '@torrevieja-tycoon/simulation';
+import {
+  parseFoundationSimulationSnapshot,
+  parseSimulationTick,
+} from '@torrevieja-tycoon/simulation';
 
 import { parseWorkerResponse } from './worker-wire.js';
 
@@ -31,7 +36,8 @@ export interface FoundationWorkerLike {
 }
 
 interface PendingOperation {
-  readonly operation: 'initialize' | 'send-command' | 'synchronize' | 'close';
+  readonly operation:
+    'initialize' | 'send-command' | 'synchronize' | 'export-snapshot' | 'close';
   readonly resolve: (value: unknown) => void;
   readonly reject: (reason: Error) => void;
 }
@@ -179,6 +185,11 @@ export function createWorkerFoundationClient(input: {
         result = null;
       } else if (operation.operation === 'send-command') {
         result = freezeCommandResult(message.result);
+      } else if (operation.operation === 'export-snapshot') {
+        const exported = parseFoundationSnapshotExport(message.result);
+        Object.freeze(exported.snapshot.state);
+        Object.freeze(exported.snapshot);
+        result = Object.freeze(exported);
       } else {
         result = freezeSynchronization(message.result);
       }
@@ -256,9 +267,20 @@ export function createWorkerFoundationClient(input: {
         throw new Error('Foundation client can connect only from idle.');
       const gameId = parseGameId(connectRequest.gameId);
       const timelineId = parseTimelineId(connectRequest.timelineId);
-      const initialSimulationTick = parseSimulationTick(
-        connectRequest.initialSimulationTick,
-      );
+      const validatedRequest =
+        connectRequest.mode === 'new'
+          ? {
+              ...connectRequest,
+              initialSimulationTick: parseSimulationTick(
+                connectRequest.initialSimulationTick,
+              ),
+            }
+          : {
+              ...connectRequest,
+              snapshot: parseFoundationSimulationSnapshot(
+                connectRequest.snapshot,
+              ),
+            };
       publishLifecycle({ state: 'connecting' });
       try {
         worker = input.workerFactory();
@@ -271,9 +293,9 @@ export function createWorkerFoundationClient(input: {
       }
       try {
         await request('initialize', {
+          ...validatedRequest,
           gameId,
           timelineId,
-          initialSimulationTick,
         });
       } catch (error) {
         if (isConnecting())
@@ -300,6 +322,10 @@ export function createWorkerFoundationClient(input: {
         'synchronize',
         syncRequest,
       )) as FoundationSynchronizationResponse;
+    },
+    async exportSnapshot() {
+      requireReady();
+      return (await request('export-snapshot')) as FoundationSnapshotExport;
     },
     subscribeReliableUpdates: (listener) =>
       subscribe(reliableListeners, listener),

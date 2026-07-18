@@ -4,15 +4,24 @@ import {
   foundationRenderSnapshotSchema,
   foundationStateUpdateSchema,
   foundationSynchronizationRequestSchema,
+  foundationSnapshotDataSchema,
   parseFoundationHostMessage,
 } from '@torrevieja-tycoon/protocol';
 
 const requestIdSchema = z.number().int().positive().safe();
-const connectSchema = z.strictObject({
-  gameId: z.string(),
-  timelineId: z.string(),
-  initialSimulationTick: z.number().int().nonnegative().safe(),
-});
+const identity = { gameId: z.string(), timelineId: z.string() };
+const connectSchema = z.discriminatedUnion('mode', [
+  z.strictObject({
+    ...identity,
+    mode: z.literal('new'),
+    initialSimulationTick: z.number().int().nonnegative().safe(),
+  }),
+  z.strictObject({
+    ...identity,
+    mode: z.literal('restore'),
+    snapshot: foundationSnapshotDataSchema,
+  }),
+]);
 
 export const workerRequestSchema = z.discriminatedUnion('operation', [
   z.strictObject({
@@ -32,6 +41,11 @@ export const workerRequestSchema = z.discriminatedUnion('operation', [
     requestId: requestIdSchema,
     operation: z.literal('synchronize'),
     payload: foundationSynchronizationRequestSchema,
+  }),
+  z.strictObject({
+    kind: z.literal('worker-request'),
+    requestId: requestIdSchema,
+    operation: z.literal('export-snapshot'),
   }),
   z.strictObject({
     kind: z.literal('worker-request'),

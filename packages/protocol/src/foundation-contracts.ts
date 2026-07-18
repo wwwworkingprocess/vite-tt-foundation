@@ -5,6 +5,8 @@ import {
   parseRenderSnapshotSequence,
   parseStreamOffset,
   parseTimelineId,
+  type CommandRevision,
+  type StreamOffset,
   type TimelineId,
 } from './positions.js';
 
@@ -17,6 +19,12 @@ const correlationIdSchema = opaqueId<'CorrelationId'>();
 const clientIdSchema = opaqueId<'ClientId'>();
 const sessionIdSchema = opaqueId<'SessionId'>();
 const positionSchema = z.number().int().nonnegative().safe();
+export const foundationSnapshotDataSchema = z.strictObject({
+  kind: z.literal('foundation-simulation-snapshot'),
+  schemaVersion: z.literal(1),
+  simulationVersion: z.literal('foundation-1'),
+  state: z.strictObject({ tick: positionSchema }),
+});
 
 export type GameId = z.infer<typeof gameIdSchema>;
 export type CommandId = z.infer<typeof commandIdSchema>;
@@ -24,10 +32,35 @@ export type CorrelationId = z.infer<typeof correlationIdSchema>;
 export type ClientId = z.infer<typeof clientIdSchema>;
 export type SessionId = z.infer<typeof sessionIdSchema>;
 
-export interface FoundationClientConnectRequest {
+export interface FoundationSnapshotData {
+  readonly kind: 'foundation-simulation-snapshot';
+  readonly schemaVersion: 1;
+  readonly simulationVersion: 'foundation-1';
+  readonly state: Readonly<{ readonly tick: number }>;
+}
+
+export type FoundationClientConnectRequest =
+  | Readonly<{
+      mode: 'new';
+      gameId: GameId;
+      timelineId: TimelineId;
+      initialSimulationTick: number;
+    }>
+  | Readonly<{
+      mode: 'restore';
+      gameId: GameId;
+      timelineId: TimelineId;
+      snapshot: FoundationSnapshotData;
+    }>;
+
+export interface FoundationSnapshotExport {
+  readonly kind: 'foundation-snapshot-export';
   readonly gameId: GameId;
   readonly timelineId: TimelineId;
-  readonly initialSimulationTick: number;
+  readonly commandRevision: CommandRevision;
+  readonly simulationTick: number;
+  readonly streamOffset: StreamOffset;
+  readonly snapshot: FoundationSnapshotData;
 }
 
 export type FoundationClientLifecycle =
@@ -57,6 +90,7 @@ export interface FoundationSimulationClient {
   synchronize(
     request: FoundationSynchronizationRequest,
   ): Promise<FoundationSynchronizationResponse>;
+  exportSnapshot(): Promise<FoundationSnapshotExport>;
   subscribeReliableUpdates(
     listener: (update: FoundationStateUpdate) => void,
   ): () => void;
@@ -167,6 +201,16 @@ export const foundationSynchronizationRequestSchema = z.strictObject({
     .optional(),
 });
 
+export const foundationSnapshotExportSchema = z.strictObject({
+  kind: z.literal('foundation-snapshot-export'),
+  gameId: gameIdSchema,
+  timelineId: z.string().transform(parseTimelineId),
+  commandRevision: positionSchema.transform(parseCommandRevision),
+  simulationTick: positionSchema,
+  streamOffset: positionSchema.transform(parseStreamOffset),
+  snapshot: foundationSnapshotDataSchema,
+});
+
 const foundationSuccessfulSynchronizationResponseSchema = z.discriminatedUnion(
   'mode',
   [
@@ -209,6 +253,7 @@ export const foundationHostMessageSchema = z.union([
   foundationRenderSnapshotSchema,
   foundationFullBaselineSchema,
   foundationSynchronizationResponseSchema,
+  foundationSnapshotExportSchema,
 ]);
 
 export type FoundationAppliedCommandResult = Readonly<
@@ -315,3 +360,6 @@ export const parseFoundationSynchronizationResponse = (
   value: unknown,
 ): FoundationSynchronizationResponse =>
   foundationSynchronizationResponseSchema.parse(value);
+export const parseFoundationSnapshotExport = (
+  value: unknown,
+): FoundationSnapshotExport => foundationSnapshotExportSchema.parse(value);

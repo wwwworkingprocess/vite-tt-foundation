@@ -1,5 +1,6 @@
 import {
   applyFoundationCommand,
+  createFoundationSimulationSnapshot,
   parseFoundationCommand,
   type FoundationState,
 } from '@torrevieja-tycoon/simulation';
@@ -14,6 +15,7 @@ import {
   parseFoundationStateUpdate,
   parseFoundationSynchronizationRequest,
   parseFoundationSynchronizationResponse,
+  parseFoundationSnapshotExport,
   parseRenderSnapshotSequence,
   parseStreamOffset,
   type CommandRevision,
@@ -23,6 +25,7 @@ import {
   type FoundationRenderSnapshot,
   type FoundationStateUpdate,
   type FoundationSynchronizationResponse,
+  type FoundationSnapshotExport,
   type GameId,
   type RenderSnapshotSequence,
   type StreamOffset,
@@ -45,6 +48,7 @@ interface StoredCommandResult {
 
 export interface InMemorySimulationHost {
   sendCommand(value: unknown): Promise<FoundationCommandResult>;
+  exportSnapshot(): Promise<FoundationSnapshotExport>;
   synchronize(value: unknown): FoundationSynchronizationResponse;
   subscribeReliableUpdates(
     listener: (update: FoundationStateUpdate) => void,
@@ -247,6 +251,29 @@ export function createInMemorySimulationHost(input: {
     return result;
   }
 
+  function exportSnapshot(): Promise<FoundationSnapshotExport> {
+    const result = commandQueue.then(() => {
+      const snapshot = createFoundationSimulationSnapshot(state);
+      const exported = parseFoundationSnapshotExport({
+        kind: 'foundation-snapshot-export',
+        gameId: input.gameId,
+        timelineId: input.timelineId,
+        commandRevision,
+        simulationTick: state.tick,
+        streamOffset,
+        snapshot,
+      });
+      Object.freeze(exported.snapshot.state);
+      Object.freeze(exported.snapshot);
+      return Object.freeze(exported);
+    });
+    commandQueue = result.then(
+      () => undefined,
+      () => undefined,
+    );
+    return result;
+  }
+
   function fullBaseline(): FoundationFullBaseline {
     const baseline = parseFoundationFullBaseline({
       kind: 'foundation-full-baseline',
@@ -342,6 +369,7 @@ export function createInMemorySimulationHost(input: {
 
   return Object.freeze({
     sendCommand,
+    exportSnapshot,
     synchronize,
     subscribeReliableUpdates: (
       listener: (update: FoundationStateUpdate) => void,

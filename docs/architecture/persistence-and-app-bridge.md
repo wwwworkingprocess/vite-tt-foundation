@@ -2,7 +2,7 @@
 
 ## Status
 
-Provisional architecture contract for Phase 3D.
+Implemented architecture contract for Phase 3D.
 
 Phase 3D adds versioned local persistence and a vanilla Zustand bridge
 around the accepted direct/Worker client contract.
@@ -235,9 +235,19 @@ interface FoundationApplicationState {
     | { readonly status: 'failed'; readonly message: string };
 
   readonly persistence:
-    | { readonly status: 'idle'; readonly saves: readonly FoundationSaveSummary[] }
-    | { readonly status: 'saving' | 'loading' | 'restoring'; readonly saves: readonly FoundationSaveSummary[] }
-    | { readonly status: 'failed'; readonly saves: readonly FoundationSaveSummary[]; readonly message: string };
+    | {
+        readonly status: 'idle';
+        readonly saves: readonly FoundationSaveSummary[];
+      }
+    | {
+        readonly status: 'saving' | 'loading' | 'restoring';
+        readonly saves: readonly FoundationSaveSummary[];
+      }
+    | {
+        readonly status: 'failed';
+        readonly saves: readonly FoundationSaveSummary[];
+        readonly message: string;
+      };
 }
 ```
 

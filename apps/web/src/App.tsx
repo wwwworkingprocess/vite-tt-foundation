@@ -36,7 +36,7 @@ export function App() {
       void client.close().then(() => setWorkerStatus('closed'));
     });
     void client
-      .connect({ gameId, timelineId, initialSimulationTick: 0 })
+      .connect({ mode: 'new', gameId, timelineId, initialSimulationTick: 0 })
       .then(async () => {
         if (active) setWorkerStatus('ready');
         await client.sendCommand(

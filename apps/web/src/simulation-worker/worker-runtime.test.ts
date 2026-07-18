@@ -29,6 +29,7 @@ describe('foundation Worker runtime validation', () => {
         requestId: 2,
         operation: 'initialize',
         payload: {
+          mode: 'new',
           gameId: 'game',
           timelineId: 'timeline',
           initialSimulationTick: 0,
@@ -42,6 +43,7 @@ describe('foundation Worker runtime validation', () => {
         requestId: 3,
         operation: 'initialize',
         payload: {
+          mode: 'new',
           gameId: 'game',
           timelineId: 'timeline',
           initialSimulationTick: 0,
@@ -81,6 +83,7 @@ describe('foundation Worker runtime validation', () => {
         requestId: 1,
         operation: 'initialize',
         payload: {
+          mode: 'new',
           gameId: 'game',
           timelineId: 'timeline',
           initialSimulationTick: 0,
@@ -135,6 +138,7 @@ describe('foundation Worker runtime validation', () => {
         requestId: 1,
         operation: 'initialize',
         payload: {
+          mode: 'new',
           gameId: 'game',
           timelineId: 'timeline',
           initialSimulationTick: 0,

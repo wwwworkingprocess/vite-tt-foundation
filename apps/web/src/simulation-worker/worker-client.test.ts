@@ -6,7 +6,12 @@ import { createControllableWorker } from './worker-test-double.js';
 describe('Worker foundation client failures', () => {
   const gameId = parseGameId('game');
   const timelineId = parseTimelineId('timeline');
-  const connectRequest = { gameId, timelineId, initialSimulationTick: 0 };
+  const connectRequest = {
+    mode: 'new' as const,
+    gameId,
+    timelineId,
+    initialSimulationTick: 0,
+  };
 
   async function connectControllable() {
     const worker = createControllableWorker();
@@ -31,6 +36,7 @@ describe('Worker foundation client failures', () => {
     const connecting = client.connect({
       gameId,
       timelineId,
+      mode: 'new',
       initialSimulationTick: 0,
     });
     expect(worker.postedMessages[0]).toMatchObject({
@@ -73,6 +79,7 @@ describe('Worker foundation client failures', () => {
       const connecting = client.connect({
         gameId,
         timelineId,
+        mode: 'new',
         initialSimulationTick: 0,
       });
       worker.emitFailure(event);
@@ -91,6 +98,7 @@ describe('Worker foundation client failures', () => {
     const connecting = client.connect({
       gameId,
       timelineId,
+      mode: 'new',
       initialSimulationTick: 0,
     });
     worker.emitMessage({ malformed: true });
@@ -108,7 +116,12 @@ describe('Worker foundation client failures', () => {
       },
     });
     await expect(
-      startup.connect({ gameId, timelineId, initialSimulationTick: 0 }),
+      startup.connect({
+        mode: 'new',
+        gameId,
+        timelineId,
+        initialSimulationTick: 0,
+      }),
     ).rejects.toThrow();
     expect(startup.getLifecycle()).toMatchObject({
       state: 'failed',
@@ -122,6 +135,7 @@ describe('Worker foundation client failures', () => {
     const connecting = pendingClient.connect({
       gameId,
       timelineId,
+      mode: 'new',
       initialSimulationTick: 0,
     });
     await pendingClient.close();

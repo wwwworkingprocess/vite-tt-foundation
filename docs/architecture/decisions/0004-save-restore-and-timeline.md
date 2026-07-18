@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed for Phase 3D.
+Accepted and implemented in Phase 3D.
 
 ## Context
 

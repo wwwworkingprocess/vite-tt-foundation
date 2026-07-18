@@ -14,7 +14,12 @@ import { createStructuredCloneLoopbackWorker } from '../simulation-worker/worker
 
 const gameId = parseGameId('contract-game');
 const timelineId = parseTimelineId('contract-timeline');
-const connectRequest = { gameId, timelineId, initialSimulationTick: 10 };
+const connectRequest = {
+  mode: 'new' as const,
+  gameId,
+  timelineId,
+  initialSimulationTick: 10,
+};
 
 function command(id: string, count: number, expectedCommandRevision = 0) {
   return parseFoundationCommandEnvelope({
@@ -69,6 +74,7 @@ describe.each(factories)(
       const client = createClient();
       expect(client.getLifecycle()).toEqual({ state: 'idle' });
       await expect(client.sendCommand(command('early', 1))).rejects.toThrow();
+      await expect(client.exportSnapshot()).rejects.toThrow();
       await client.connect(connectRequest);
       expect(client.getLifecycle()).toEqual({
         state: 'ready',
@@ -277,6 +283,62 @@ describe.each(factories)(
       expect(() => client.subscribeLifecycle(() => undefined)).toThrow(
         'closed',
       );
+    });
+
+    it('exports a queued immutable snapshot and restores with reset coordinates', async () => {
+      const client = createClient();
+      await client.connect(connectRequest);
+      const commandA = client.sendCommand(command('before-export', 2));
+      const exporting = client.exportSnapshot();
+      const commandB = client.sendCommand(command('after-export', 3, 1));
+      await commandA;
+      const exported = await exporting;
+      await commandB;
+      expect(exported).toMatchObject({
+        commandRevision: 1,
+        simulationTick: 12,
+        streamOffset: 1,
+        snapshot: { state: { tick: 12 } },
+      });
+      expect(Object.isFrozen(exported)).toBe(true);
+      expect(Object.isFrozen(exported.snapshot)).toBe(true);
+      expect(Object.isFrozen(exported.snapshot.state)).toBe(true);
+      await client.close();
+
+      const restored = createClient();
+      const restoredTimeline = parseTimelineId('restored-timeline');
+      await restored.connect({
+        mode: 'restore',
+        gameId,
+        timelineId: restoredTimeline,
+        snapshot: exported.snapshot,
+      });
+      await expect(
+        restored.synchronize({
+          kind: 'foundation-synchronization-request',
+          gameId,
+        }),
+      ).resolves.toMatchObject({
+        baseline: {
+          timelineId: restoredTimeline,
+          commandRevision: 0,
+          simulationTick: 12,
+          lastIncludedStreamOffset: 0,
+        },
+      });
+      await expect(
+        restored.sendCommand(
+          parseFoundationCommandEnvelope({
+            ...command('before-export', 1),
+            timelineId: restoredTimeline,
+          }),
+        ),
+      ).resolves.toMatchObject({
+        status: 'applied',
+        duplicate: false,
+        appliedCommandRevision: 1,
+      });
+      await restored.close();
     });
   },
 );

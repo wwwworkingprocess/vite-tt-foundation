@@ -80,4 +80,8 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - Phase 3A adds deterministic five-second time primitives, distinct protocol position primitives, and pure application-owned playback calculations.
 - Phase 3B adds a browser-neutral in-memory foundation host with concrete validated command, result, reliable-update, render-snapshot, and synchronization contracts; Worker and persistence adapters remain deferred.
 - Phase 3C adds direct and dedicated-Worker adapters behind one foundation client contract, with strict Worker-boundary validation, correlation, lifecycle failure handling, cleanup, and structured-clone re-freezing; scheduling and persistence remain deferred.
+- Phase 3D adds simulation-owned versioned snapshots, queued direct/Worker
+  snapshot export, explicit new-timeline restoration, validated in-memory and
+  Dexie save repositories, and a serialized vanilla Zustand application
+  projection; timers, autosave, React save UI, and gameplay remain deferred.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

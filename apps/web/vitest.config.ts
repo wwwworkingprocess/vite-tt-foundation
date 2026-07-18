@@ -13,8 +13,12 @@ export default defineConfig({
       include: [
         'src/simulation-host/**/*.ts',
         'src/simulation-worker/**/*.ts',
+        'src/application/**/*.ts',
+        'src/persistence/**/*.ts',
         'apps/web/src/simulation-host/**/*.ts',
         'apps/web/src/simulation-worker/**/*.ts',
+        'apps/web/src/application/**/*.ts',
+        'apps/web/src/persistence/**/*.ts',
       ],
       exclude: [
         'src/**/*.test.ts',

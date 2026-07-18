@@ -7,6 +7,8 @@ import {
 import {
   createFoundationState,
   parseSimulationTick,
+  parseFoundationSimulationSnapshot,
+  restoreFoundationState,
 } from '@torrevieja-tycoon/simulation';
 
 import {
@@ -101,13 +103,18 @@ export function createDirectFoundationClient(): FoundationSimulationClient {
         );
       let gameId;
       let timelineId;
-      let initialSimulationTick;
+      let initialState;
       try {
         gameId = parseGameId(request.gameId);
         timelineId = parseTimelineId(request.timelineId);
-        initialSimulationTick = parseSimulationTick(
-          request.initialSimulationTick,
-        );
+        initialState =
+          request.mode === 'new'
+            ? createFoundationState(
+                parseSimulationTick(request.initialSimulationTick),
+              )
+            : restoreFoundationState(
+                parseFoundationSimulationSnapshot(request.snapshot),
+              );
       } catch (error) {
         return Promise.reject(
           error instanceof Error
@@ -119,7 +126,7 @@ export function createDirectFoundationClient(): FoundationSimulationClient {
       host = createInMemorySimulationHost({
         gameId,
         timelineId,
-        initialState: createFoundationState(initialSimulationTick),
+        initialState,
       });
       publishLifecycle({ state: 'ready', gameId, timelineId });
       for (const registration of reliableListeners)
@@ -147,6 +154,15 @@ export function createDirectFoundationClient(): FoundationSimulationClient {
       } catch (error) {
         return Promise.reject(
           error instanceof Error ? error : new Error('Synchronization failed.'),
+        );
+      }
+    },
+    exportSnapshot() {
+      try {
+        return track(requireReady().exportSnapshot());
+      } catch (error) {
+        return Promise.reject(
+          error instanceof Error ? error : new Error('Snapshot export failed.'),
         );
       }
     },

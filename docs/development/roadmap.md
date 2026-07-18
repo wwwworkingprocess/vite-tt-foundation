@@ -60,7 +60,8 @@ Phase 2 is complete.
 
 ## Phase 3 — Blank end-to-end platform
 
-Phase 3C, the typed dedicated Worker adapter described in `phase-3-plan.md`, is the current milestone.
+Phase 3D, the persistence and application bridge described in
+`phase-3-plan.md`, is complete. Phase 3E remains deferred.
 
 ### Goal
 

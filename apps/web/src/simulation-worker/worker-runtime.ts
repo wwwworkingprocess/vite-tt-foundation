@@ -6,7 +6,9 @@ import {
 } from '@torrevieja-tycoon/protocol';
 import {
   createFoundationState,
+  parseFoundationSimulationSnapshot,
   parseSimulationTick,
+  restoreFoundationState,
 } from '@torrevieja-tycoon/simulation';
 
 import {
@@ -63,9 +65,14 @@ export function startFoundationWorkerRuntime(
           host = createInMemorySimulationHost({
             gameId: parseGameId(request.payload.gameId),
             timelineId: parseTimelineId(request.payload.timelineId),
-            initialState: createFoundationState(
-              parseSimulationTick(request.payload.initialSimulationTick),
-            ),
+            initialState:
+              request.payload.mode === 'new'
+                ? createFoundationState(
+                    parseSimulationTick(request.payload.initialSimulationTick),
+                  )
+                : restoreFoundationState(
+                    parseFoundationSimulationSnapshot(request.payload.snapshot),
+                  ),
           });
           cleanups.push(
             host.subscribeReliableUpdates((update: FoundationStateUpdate) =>
@@ -104,6 +111,15 @@ export function startFoundationWorkerRuntime(
             requestId: request.requestId,
             status: 'success',
             result: host.synchronize(request.payload),
+          });
+        } else if (request.operation === 'export-snapshot') {
+          const result = await host.exportSnapshot();
+          if (closed) return;
+          endpoint.postMessage({
+            kind: 'worker-operation-result',
+            requestId: request.requestId,
+            status: 'success',
+            result,
           });
         } else {
           try {

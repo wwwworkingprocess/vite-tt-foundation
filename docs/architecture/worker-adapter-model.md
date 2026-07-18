@@ -2,7 +2,7 @@
 
 ## Status
 
-Provisional architecture contract for Phase 3C.
+Implemented architecture contract for Phase 3C.
 
 Phase 3C places the accepted Phase 3B in-memory authoritative host inside
 a dedicated Web Worker and exposes it through the same application-facing
@@ -216,6 +216,9 @@ Required behavior:
 - a response settles exactly its matching request;
 - unknown/duplicate request IDs do not settle unrelated requests;
 - close rejects all unresolved requests;
+- both adapters reject unresolved public operations as soon as close begins;
+- each pending Worker request records its expected operation, and a response
+  is accepted only when its result shape matches that operation;
 - Worker error or `messageerror` rejects all unresolved requests;
 - malformed incoming messages cannot leave promises silently pending;
 - one rejected request does not poison later requests while ready.
@@ -232,6 +235,9 @@ Preserve Phase 3B semantics:
 - diagnostic failures do not affect delivery;
 - no messages are delivered after close;
 - Worker listeners are installed once and removed on close.
+- subscriptions may be registered independently before connect;
+- Worker-runtime close detaches its endpoint listener, releases the host, and
+  permits no later request or publication.
 
 ## Direct adapter
 

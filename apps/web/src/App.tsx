@@ -1,8 +1,71 @@
 import { Canvas } from '@react-three/fiber';
-import { protocolFoundationVersion } from '@torrevieja-tycoon/protocol';
+import {
+  parseCommandId,
+  parseFoundationCommandEnvelope,
+  parseGameId,
+  parseTimelineId,
+  protocolFoundationVersion,
+} from '@torrevieja-tycoon/protocol';
 import { simulationFoundationLabel } from '@torrevieja-tycoon/simulation';
+import { useEffect, useState } from 'react';
+import { createBrowserFoundationWorker } from './simulation-worker/browser-worker.js';
+import { createWorkerFoundationClient } from './simulation-worker/worker-client.js';
 
 export function App() {
+  const [workerStatus, setWorkerStatus] = useState('starting');
+  const [workerTick, setWorkerTick] = useState<number>();
+  const [closeWorker, setCloseWorker] = useState<() => void>(() => () => {});
+
+  useEffect(() => {
+    if (typeof Worker === 'undefined') {
+      setWorkerStatus('unavailable in this environment');
+      return;
+    }
+    const gameId = parseGameId('browser-foundation-game');
+    const timelineId = parseTimelineId('browser-foundation-timeline');
+    const client = createWorkerFoundationClient({
+      workerFactory: createBrowserFoundationWorker,
+    });
+    let active = true;
+    const removeUpdate = client.subscribeReliableUpdates((update) => {
+      if (active) setWorkerTick(update.simulationTick);
+    });
+    setCloseWorker(() => () => {
+      active = false;
+      removeUpdate();
+      void client.close().then(() => setWorkerStatus('closed'));
+    });
+    void client
+      .connect({ gameId, timelineId, initialSimulationTick: 0 })
+      .then(async () => {
+        if (active) setWorkerStatus('ready');
+        await client.sendCommand(
+          parseFoundationCommandEnvelope({
+            kind: 'foundation-command',
+            gameId,
+            timelineId,
+            commandId: parseCommandId('browser-command-1'),
+            correlationId: 'browser-correlation-1',
+            clientId: 'browser-client',
+            sessionId: 'browser-session',
+            expectedCommandRevision: 0,
+            command: { type: 'foundation.advance-ticks', count: 1 },
+          }),
+        );
+      })
+      .catch((error: unknown) => {
+        if (active)
+          setWorkerStatus(
+            error instanceof Error ? `failed: ${error.message}` : 'failed',
+          );
+      });
+    return () => {
+      active = false;
+      removeUpdate();
+      void client.close();
+    };
+  }, []);
+
   return (
     <main>
       <section aria-labelledby="foundation-title">
@@ -21,6 +84,15 @@ export function App() {
             <dd>version {protocolFoundationVersion}</dd>
           </div>
         </dl>
+        <div aria-label="Foundation Worker status">
+          <p data-testid="worker-status">Worker status: {workerStatus}</p>
+          <p data-testid="worker-tick">
+            Worker tick: {workerTick ?? 'pending'}
+          </p>
+          <button type="button" onClick={closeWorker}>
+            Close foundation Worker
+          </button>
+        </div>
       </section>
       <section
         className="scene"

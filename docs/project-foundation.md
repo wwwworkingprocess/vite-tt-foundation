@@ -79,4 +79,5 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - The web production build generates a service worker and web app manifest through `vite-plugin-pwa`.
 - Phase 3A adds deterministic five-second time primitives, distinct protocol position primitives, and pure application-owned playback calculations.
 - Phase 3B adds a browser-neutral in-memory foundation host with concrete validated command, result, reliable-update, render-snapshot, and synchronization contracts; Worker and persistence adapters remain deferred.
+- Phase 3C adds direct and dedicated-Worker adapters behind one foundation client contract, with strict Worker-boundary validation, correlation, lifecycle failure handling, cleanup, and structured-clone re-freezing; scheduling and persistence remain deferred.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

@@ -5,6 +5,7 @@ import {
   parseRenderSnapshotSequence,
   parseStreamOffset,
   parseTimelineId,
+  type TimelineId,
 } from './positions.js';
 
 const opaqueIdPattern = /^[A-Za-z0-9][A-Za-z0-9._:-]*$/;
@@ -22,6 +23,52 @@ export type CommandId = z.infer<typeof commandIdSchema>;
 export type CorrelationId = z.infer<typeof correlationIdSchema>;
 export type ClientId = z.infer<typeof clientIdSchema>;
 export type SessionId = z.infer<typeof sessionIdSchema>;
+
+export interface FoundationClientConnectRequest {
+  readonly gameId: GameId;
+  readonly timelineId: TimelineId;
+  readonly initialSimulationTick: number;
+}
+
+export type FoundationClientLifecycle =
+  | { readonly state: 'idle' }
+  | { readonly state: 'connecting' }
+  | {
+      readonly state: 'ready';
+      readonly gameId: GameId;
+      readonly timelineId: TimelineId;
+    }
+  | {
+      readonly state: 'failed';
+      readonly code:
+        | 'worker-startup-failed'
+        | 'worker-crashed'
+        | 'message-error'
+        | 'invalid-worker-message';
+      readonly message: string;
+    }
+  | { readonly state: 'closed' };
+
+export interface FoundationSimulationClient {
+  connect(request: FoundationClientConnectRequest): Promise<void>;
+  sendCommand(
+    envelope: FoundationCommandEnvelope,
+  ): Promise<FoundationCommandResult>;
+  synchronize(
+    request: FoundationSynchronizationRequest,
+  ): Promise<FoundationSynchronizationResponse>;
+  subscribeReliableUpdates(
+    listener: (update: FoundationStateUpdate) => void,
+  ): () => void;
+  subscribeRenderSnapshots(
+    listener: (snapshot: FoundationRenderSnapshot) => void,
+  ): () => void;
+  getLifecycle(): FoundationClientLifecycle;
+  subscribeLifecycle(
+    listener: (state: FoundationClientLifecycle) => void,
+  ): () => void;
+  close(): Promise<void>;
+}
 
 export const foundationCommandEnvelopeSchema = z.strictObject({
   kind: z.literal('foundation-command'),

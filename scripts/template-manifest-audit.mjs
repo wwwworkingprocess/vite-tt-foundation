@@ -66,19 +66,39 @@ const nodePins = [
 if (new Set(nodePins).size !== 1)
   throw new Error(`Node pins are inconsistent: ${nodePins.join(', ')}`);
 const ci = await read('.github/workflows/validation.yml');
+const pages = await read('.github/workflows/pages.yml');
 if (!ci.includes('node-version-file: .node-version'))
   throw new Error('CI does not use the pinned Node version file.');
+if (!pages.includes('node-version-file: .node-version'))
+  throw new Error(
+    'Pages deployment does not use the pinned Node version file.',
+  );
 const yarnPins = [
   pkg.packageManager.replace('yarn@', ''),
   manifest.runtime.yarn,
   ...[
-    ...ci.matchAll(
+    ...`${ci}\n${pages}`.matchAll(
       /corepack (?:install --global|prepare) yarn@([^\s]+)(?: --activate)?/g,
     ),
   ].map((match) => match[1]),
 ];
 if (new Set(yarnPins).size !== 1 || yarnPins.length < 4)
   throw new Error(`Yarn pins are inconsistent: ${yarnPins.join(', ')}`);
+for (const required of [
+  'workflow_run:',
+  "github.event.workflow_run.conclusion == 'success'",
+  "github.event.workflow_run.head_branch == 'main'",
+  'workflow_dispatch:',
+  'VITE_BASE_PATH: /vite-tt-foundation/',
+  'corepack yarn audit:subpath',
+  'corepack yarn audit:build',
+  'actions/configure-pages@v5',
+  'actions/upload-pages-artifact@v4',
+  'path: apps/web/dist',
+  'actions/deploy-pages@v4',
+])
+  if (!pages.includes(required))
+    throw new Error(`Pages deployment is missing: ${required}`);
 for (const path of manifest.foundationPaths)
   await access(new URL(`${path}/`, root));
 for (const path of [

@@ -1,0 +1,61 @@
+name: Deploy GitHub Pages
+
+on:
+  workflow_run:
+    workflows: [Validation]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: >-
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main') ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+      - run: corepack enable
+      - run: corepack install --global yarn@4.17.1
+      - run: |
+          node --version
+          corepack yarn --version
+          node scripts/runtime-audit.mjs
+      - run: corepack yarn install --immutable
+      - if: github.event_name == 'workflow_dispatch'
+        run: corepack yarn cypress install
+      - if: github.event_name == 'workflow_dispatch'
+        run: corepack yarn validate:portable
+      - if: github.event_name == 'workflow_dispatch'
+        run: corepack yarn validate:repository
+      - uses: actions/configure-pages@v5
+      - name: Build and audit repository-subpath PWA
+        env:
+          VITE_BASE_PATH: /vite-tt-foundation/
+        run: |
+          corepack yarn audit:subpath
+          corepack yarn audit:build
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: apps/web/dist
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

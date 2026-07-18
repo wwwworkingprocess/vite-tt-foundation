@@ -1,6 +1,10 @@
 import { readFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
-const base = '/torrevieja-tycoon/';
+const base = process.env.VITE_BASE_PATH ?? '/torrevieja-tycoon/';
+if (!/^\/(?:[^/]+\/)*$/.test(base))
+  throw new Error(
+    'VITE_BASE_PATH must start and end with a slash and contain path segments only.',
+  );
 const options = {
   cwd: new URL('../', import.meta.url),
   env: { ...process.env, VITE_BASE_PATH: base },

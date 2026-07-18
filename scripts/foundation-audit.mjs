@@ -1,4 +1,5 @@
 import { readFile, readdir } from 'node:fs/promises';
+import { builtinModules } from 'node:module';
 import { extname, join } from 'node:path';
 import ts from 'typescript';
 const root = new URL('../', import.meta.url);
@@ -92,6 +93,9 @@ const unwrapExpression = (expression) => {
 };
 const importedFactories = (sourceFile) => {
   const storeFactories = new Set(['createStore']);
+  const storeNamespaces = new Set();
+  const importedStores = new Set();
+  const authorityFactories = new Set();
   const constructors = new Set(['Dexie']);
   for (const statement of sourceFile.statements) {
     if (
@@ -100,14 +104,25 @@ const importedFactories = (sourceFile) => {
     )
       continue;
     const clause = statement.importClause;
+    if (clause?.namedBindings && ts.isNamedImports(clause.namedBindings))
+      for (const element of clause.namedBindings.elements) {
+        const importedName = (element.propertyName ?? element.name).text;
+        if (/^create\w*(?:Store|Host|Controller|Database)$/.test(importedName))
+          authorityFactories.add(element.name.text);
+        if (/(?:^store$|Store$)/.test(importedName))
+          importedStores.add(element.name.text);
+      }
     if (
       statement.moduleSpecifier.text === 'zustand/vanilla' &&
-      clause?.namedBindings &&
-      ts.isNamedImports(clause.namedBindings)
-    )
-      for (const element of clause.namedBindings.elements)
-        if ((element.propertyName ?? element.name).text === 'createStore')
-          storeFactories.add(element.name.text);
+      clause?.namedBindings
+    ) {
+      if (ts.isNamedImports(clause.namedBindings))
+        for (const element of clause.namedBindings.elements)
+          if ((element.propertyName ?? element.name).text === 'createStore')
+            storeFactories.add(element.name.text);
+      if (ts.isNamespaceImport(clause.namedBindings))
+        storeNamespaces.add(clause.namedBindings.name.text);
+    }
     if (statement.moduleSpecifier.text === 'dexie') {
       if (clause?.name) constructors.add(clause.name.text);
       if (clause?.namedBindings && ts.isNamedImports(clause.namedBindings))
@@ -121,16 +136,41 @@ const importedFactories = (sourceFile) => {
       for (const declaration of statement.declarationList.declarations)
         if (
           declaration.initializer &&
-          ts.isIdentifier(declaration.initializer) &&
-          /(?:Database|Store|Host|Controller)$/.test(
-            declaration.initializer.text,
-          )
+          ts.isIdentifier(declaration.initializer)
         ) {
-          constructors.add(declaration.initializer.text);
-          if (ts.isIdentifier(declaration.name))
-            constructors.add(declaration.name.text);
+          if (
+            /(?:Database|Store|Host|Controller)$/.test(
+              declaration.initializer.text,
+            )
+          ) {
+            constructors.add(declaration.initializer.text);
+            if (ts.isIdentifier(declaration.name))
+              constructors.add(declaration.name.text);
+          }
+          if (
+            /^create\w*(?:Store|Host|Controller|Database)$/.test(
+              declaration.initializer.text,
+            )
+          )
+            authorityFactories.add(declaration.initializer.text);
         }
-  return { storeFactories, constructors };
+  const collectAuthorityFactories = (node) => {
+    if (
+      ts.isCallExpression(node) &&
+      ts.isIdentifier(node.expression) &&
+      /^create\w*(?:Store|Host|Controller|Database)$/.test(node.expression.text)
+    )
+      authorityFactories.add(node.expression.text);
+    ts.forEachChild(node, collectAuthorityFactories);
+  };
+  collectAuthorityFactories(sourceFile);
+  return {
+    storeFactories,
+    storeNamespaces,
+    importedStores,
+    authorityFactories,
+    constructors,
+  };
 };
 const extendAliases = (sourceFile, names) => {
   let changed = true;
@@ -153,13 +193,24 @@ const extendAliases = (sourceFile, names) => {
     visit(sourceFile);
   }
 };
-const creationKind = (expression, factories, constructors) => {
+const creationKind = (
+  expression,
+  factories,
+  namespaces,
+  authorities,
+  constructors,
+) => {
   const value = unwrapExpression(expression);
   if (ts.isCallExpression(value)) {
     const name = identifierText(value.expression);
     if (name && factories.has(name)) return 'store';
-    if (name && /^create\w*(?:Store|Host|Controller|Database)$/.test(name))
-      return 'authority';
+    if (name && authorities.has(name)) return 'authority';
+    if (
+      ts.isPropertyAccessExpression(value.expression) &&
+      namespaces.has(value.expression.expression.getText()) &&
+      value.expression.name.text === 'createStore'
+    )
+      return 'store';
   }
   if (ts.isNewExpression(value)) {
     const name = identifierText(value.expression);
@@ -174,8 +225,10 @@ const creationKind = (expression, factories, constructors) => {
 };
 export function topLevelSingletons(text) {
   const sourceFile = parse(text);
-  const { storeFactories, constructors } = importedFactories(sourceFile);
+  const { storeFactories, storeNamespaces, authorityFactories, constructors } =
+    importedFactories(sourceFile);
   extendAliases(sourceFile, storeFactories);
+  extendAliases(sourceFile, authorityFactories);
   extendAliases(sourceFile, constructors);
   const violations = [];
   for (const statement of sourceFile.statements) {
@@ -183,12 +236,24 @@ export function topLevelSingletons(text) {
       for (const declaration of statement.declarationList.declarations)
         if (
           declaration.initializer &&
-          creationKind(declaration.initializer, storeFactories, constructors)
+          creationKind(
+            declaration.initializer,
+            storeFactories,
+            storeNamespaces,
+            authorityFactories,
+            constructors,
+          )
         )
           violations.push(declaration.getText(sourceFile));
     if (
       ts.isExportAssignment(statement) &&
-      creationKind(statement.expression, storeFactories, constructors)
+      creationKind(
+        statement.expression,
+        storeFactories,
+        storeNamespaces,
+        authorityFactories,
+        constructors,
+      )
     )
       violations.push(statement.getText(sourceFile));
   }
@@ -196,14 +261,7 @@ export function topLevelSingletons(text) {
 }
 export function environmentNeutralViolations(text) {
   const violations = [];
-  const builtins =
-    '(?:node:)?(?:assert|buffer|child_process|crypto|events|fs|http|https|module|os|path|perf_hooks|process|stream|string_decoder|timers|tls|tty|url|util|v8|vm|worker_threads|zlib)(?:\\/[^\'"]*)?';
-  if (
-    new RegExp(
-      `(?:from\\s+|import\\s*\\(|import\\s+|require\\s*\\()\\s*['"]${builtins}['"]`,
-    ).test(text)
-  )
-    violations.push('node-import');
+  if (nodeBuiltinImports(text).length) violations.push('node-import');
   if (
     /\b(?:process|Buffer|__dirname|__filename|setImmediate|clearImmediate)\b/.test(
       text,
@@ -214,14 +272,55 @@ export function environmentNeutralViolations(text) {
     violations.push('timer-api');
   return violations;
 }
+export function nodeBuiltinImports(text) {
+  const sourceFile = parse(text);
+  const builtins = new Set(
+    builtinModules.map((name) => name.replace(/^node:/, '')),
+  );
+  const imports = [];
+  const checkSpecifier = (specifier) => {
+    if (typeof specifier !== 'string') return;
+    const normalized = specifier.replace(/^node:/, '');
+    if (
+      builtins.has(normalized) ||
+      [...builtins].some((name) => normalized.startsWith(`${name}/`))
+    )
+      imports.push(specifier);
+  };
+  const visitImports = (node) => {
+    if (
+      ts.isImportDeclaration(node) &&
+      ts.isStringLiteral(node.moduleSpecifier)
+    )
+      checkSpecifier(node.moduleSpecifier.text);
+    if (
+      ts.isCallExpression(node) &&
+      (node.expression.kind === ts.SyntaxKind.ImportKeyword ||
+        identifierText(node.expression) === 'require') &&
+      node.arguments[0] &&
+      ts.isStringLiteral(node.arguments[0])
+    )
+      checkSpecifier(node.arguments[0].text);
+    ts.forEachChild(node, visitImports);
+  };
+  visitImports(sourceFile);
+  return imports;
+}
 export function writableStoreViolations(text) {
   const sourceFile = parse(text);
-  const { storeFactories } = importedFactories(sourceFile);
+  const { storeFactories, storeNamespaces, importedStores } =
+    importedFactories(sourceFile);
   extendAliases(sourceFile, storeFactories);
-  const storeValues = new Set();
+  const storeValues = new Set(importedStores);
   const exposedValues = new Set();
   const typeNamesStore = (node) =>
     node?.getText(sourceFile).includes('StoreApi');
+  const propertyName = (name) => {
+    if (ts.isIdentifier(name) || ts.isStringLiteral(name)) return name.text;
+    if (ts.isComputedPropertyName(name) && ts.isStringLiteral(name.expression))
+      return name.expression.text;
+    return name.getText(sourceFile);
+  };
   const derivesStore = (expression) => {
     const value = unwrapExpression(expression);
     if (ts.isIdentifier(value))
@@ -229,6 +328,12 @@ export function writableStoreViolations(text) {
     if (ts.isCallExpression(value)) {
       const name = identifierText(value.expression);
       if (name && storeFactories.has(name)) return true;
+      if (
+        ts.isPropertyAccessExpression(value.expression) &&
+        storeNamespaces.has(value.expression.expression.getText(sourceFile)) &&
+        value.expression.name.text === 'createStore'
+      )
+        return true;
       if (
         ts.isPropertyAccessExpression(value.expression) &&
         value.expression.expression.getText(sourceFile) === 'Object'
@@ -239,11 +344,19 @@ export function writableStoreViolations(text) {
       return value.properties.some((property) =>
         ts.isSpreadAssignment(property)
           ? derivesStore(property.expression)
-          : ts.isPropertyAssignment(property) &&
-            property.name.getText(sourceFile) === 'setState' &&
-            (derivesStore(property.initializer) ||
-              (ts.isPropertyAccessExpression(property.initializer) &&
-                derivesStore(property.initializer.expression))),
+          : ts.isShorthandPropertyAssignment(property)
+            ? exposedValues.has(property.name.text)
+            : ts.isMethodDeclaration(property)
+              ? propertyName(property.name) === 'setState' &&
+                !!property.body &&
+                property.body.statements.some((statement) =>
+                  statement.getText(sourceFile).includes('.setState'),
+                )
+              : ts.isPropertyAssignment(property) &&
+                propertyName(property.name) === 'setState' &&
+                (derivesStore(property.initializer) ||
+                  (ts.isPropertyAccessExpression(property.initializer) &&
+                    derivesStore(property.initializer.expression))),
       );
     if (ts.isPropertyAccessExpression(value))
       return derivesStore(value.expression) && value.name.text === 'setState';
@@ -272,8 +385,13 @@ export function writableStoreViolations(text) {
       const directStore =
         typeNamesStore(declaration.type) ||
         (ts.isCallExpression(value) &&
-          !!identifierText(value.expression) &&
-          storeFactories.has(identifierText(value.expression))) ||
+          ((!!identifierText(value.expression) &&
+            storeFactories.has(identifierText(value.expression))) ||
+            (ts.isPropertyAccessExpression(value.expression) &&
+              storeNamespaces.has(
+                value.expression.expression.getText(sourceFile),
+              ) &&
+              value.expression.name.text === 'createStore'))) ||
         (ts.isIdentifier(value) && storeValues.has(value.text));
       if (directStore && !storeValues.has(name)) {
         storeValues.add(name);
@@ -292,6 +410,15 @@ export function writableStoreViolations(text) {
       derivesStore(node.expression)
     )
       violations.push(node.getText(sourceFile));
+    if (
+      ts.isVariableStatement(node) &&
+      node.modifiers?.some(
+        (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword,
+      )
+    )
+      for (const declaration of node.declarationList.declarations)
+        if (declaration.initializer && derivesStore(declaration.initializer))
+          violations.push(declaration.getText(sourceFile));
     ts.forEachChild(node, visit);
   };
   visit(sourceFile);
@@ -377,6 +504,15 @@ const astForbiddenFixture = await source(
 const astAllowedFixture = await source(
   'scripts/fixtures/architecture/ast-allowed.txt',
 );
+const astAuthorityAliasesFixture = await source(
+  'scripts/fixtures/architecture/ast-authority-aliases.txt',
+);
+const astStoreExposureFixture = await source(
+  'scripts/fixtures/architecture/ast-store-exposure.txt',
+);
+const nodeBuiltinsFixture = await source(
+  'scripts/fixtures/architecture/node-builtins.txt',
+);
 for (const expected of [
   'route',
   'bus',
@@ -407,6 +543,18 @@ if (
   writableStoreViolations(astForbiddenFixture).length !== 5
 )
   fail('AST ownership regression fixtures were not fully detected.');
+if (topLevelSingletons(astAuthorityAliasesFixture).length !== 3)
+  fail('authority-factory alias fixtures were not fully detected.');
+if (
+  topLevelSingletons(astStoreExposureFixture).length !== 1 ||
+  writableStoreViolations(astStoreExposureFixture).length !== 4
+)
+  fail('Zustand namespace/exposure fixtures were not fully detected.');
+if (
+  environmentNeutralViolations(nodeBuiltinsFixture).length !== 1 ||
+  nodeBuiltinImports(nodeBuiltinsFixture).length !== 4
+)
+  fail('Node built-in fixtures were not fully detected.');
 if (
   environmentNeutralViolations(allowedFixture).length ||
   writableStoreViolations(allowedFixture).length ||

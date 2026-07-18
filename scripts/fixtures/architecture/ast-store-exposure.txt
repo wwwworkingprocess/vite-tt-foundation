@@ -1,0 +1,24 @@
+import * as zustand from 'zustand/vanilla';
+const namespaceStore = zustand.createStore();
+
+function exposeShorthand(store: StoreApi<State>) {
+  const setState = store.setState;
+  return { setState };
+}
+
+function exposeMethod(store: StoreApi<State>) {
+  return {
+    setState(...args) {
+      return store.setState(...args);
+    }
+  };
+}
+
+function exposeComputed(store: StoreApi<State>) {
+  return {
+    ['setState']: store.setState
+  };
+}
+
+import { store } from './internal-store';
+export const projection = Object.freeze({ ...store });

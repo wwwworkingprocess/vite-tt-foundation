@@ -1,0 +1,4 @@
+import dns from 'dns';
+import 'node:readline';
+import { AsyncLocalStorage } from 'async_hooks';
+await import('node:diagnostics_channel');

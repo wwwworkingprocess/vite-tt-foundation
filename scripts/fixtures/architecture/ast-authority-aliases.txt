@@ -1,0 +1,10 @@
+import { createInMemorySimulationHost as makeHost } from './host';
+const host = makeHost();
+
+import {
+  createFoundationApplicationController as makeController
+} from './controller';
+const controller = makeController();
+
+const makeHostAlias = createInMemorySimulationHost;
+const aliasedHost = makeHostAlias();

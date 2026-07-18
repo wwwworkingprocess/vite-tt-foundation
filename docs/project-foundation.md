@@ -9,9 +9,9 @@ The product is intentionally designed as two cooperating projects:
 1. a standalone deterministic TypeScript simulation library;
 2. one or more clients that represent and control that simulation.
 
-The first client will be a browser-based Progressive Web App built with Vite, React, and React Three Fiber.
+The first client is a browser-based Progressive Web App built with Vite, React, and React Three Fiber.
 
-## Planned workspace
+## Workspace
 
 ```text
 torrevieja-tycoon/
@@ -22,8 +22,6 @@ torrevieja-tycoon/
 │   └── protocol/             # Shared adapter-neutral contracts
 └── docs/
 ```
-
-The Phase 1 workspace foundation implements this structure with explicit package exports and TypeScript project references.
 
 ## Core architectural statement
 
@@ -47,6 +45,7 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 | PWA integration            | vite-plugin-pwa                        |
 | Unit and integration tests | Vitest                                 |
 | Browser tests              | Cypress                                |
+| Development method         | TDD for simulation behaviour           |
 | Formatting                 | Prettier                               |
 | Linting                    | ESLint                                 |
 | Continuous integration     | GitHub Actions                         |
@@ -59,13 +58,18 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`architecture/boundaries.md`](architecture/boundaries.md) — package dependencies and adapter boundaries.
 - [`architecture/state-ownership.md`](architecture/state-ownership.md) — authoritative, application, and presentation state.
 - [`development/roadmap.md`](development/roadmap.md) — phased master plan.
+- [`development/testing-strategy.md`](development/testing-strategy.md) — TDD workflow, test layers, determinism, and coverage policy.
 - [`development/definition-of-done.md`](development/definition-of-done.md) — completion and validation rules.
 - [`prompts/codex-system-prompt.md`](prompts/codex-system-prompt.md) — reusable Codex session prompt.
-- [`prompts/phase-1-project-foundation.md`](prompts/phase-1-project-foundation.md) — first implementation request.
+- [`prompts/phase-1-project-foundation.md`](prompts/phase-1-project-foundation.md) — completed foundation implementation request.
+- [`prompts/phase-2-socketio-readiness-research.md`](prompts/phase-2-socketio-readiness-research.md) — current architecture-research request.
 
 ## Fixed implementation facts
 
 - Node.js 24.18.0 LTS and Yarn 4.17.1 are pinned.
 - Vite 8, React 19, strict TypeScript, Vitest, Cypress, ESLint, and Prettier provide the initial toolchain.
+- The simulation and protocol package compilers are restricted to environment-neutral ECMAScript libraries and no ambient platform types.
+- ESLint enforces the documented package dependency direction and forbidden platform imports.
 - The web production build generates a service worker and web app manifest through `vite-plugin-pwa`.
 - Phase 1 contains smoke contracts and rendering only; simulation mechanics and host adapters remain deferred.
+- Actual simulation behaviour will be developed test-first with high package coverage and deterministic tests.

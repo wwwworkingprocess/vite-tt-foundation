@@ -8,18 +8,9 @@ The roadmap separates platform construction, architecture research, simulation d
 
 Create the repository root, durable documentation, Codex instructions, and bounded phase prompts.
 
-### Output
+### Status
 
-- architecture principles;
-- package boundaries;
-- state ownership rules;
-- definition of done;
-- reusable Codex system prompt;
-- Phase 1 implementation prompt.
-
-### Current status
-
-In progress through this documentation pack.
+Complete.
 
 ## Phase 1 — Strong project template
 
@@ -27,26 +18,15 @@ In progress through this documentation pack.
 
 Create a modern, reusable Yarn workspace with the selected stack, strict quality tooling, package boundaries, and minimal smoke implementations.
 
-### Includes
+### Status
 
-- root Yarn workspace configuration;
-- pinned Node and Yarn versions;
-- `apps/web` Vite + React + TypeScript application;
-- `packages/simulation` standalone TypeScript package skeleton;
-- `packages/protocol` standalone TypeScript package skeleton;
-- React Three Fiber dependency and minimal scene smoke test;
-- Zustand, Dexie, Zod, and PWA dependencies prepared in their owning layer;
-- Vitest and Cypress configuration;
-- ESLint, Prettier, strict TypeScript, and GitHub Actions;
-- build, test, lint, formatting, and type-check scripts.
+Complete after the architecture-enforcement correction. Final milestone verification should include a successful CI run under the pinned Node runtime.
 
-### Explicit non-goals
+## Cross-cutting rule — Test-driven simulation development
 
-- no transport simulation;
-- no passengers, routes, buses, finances, or scenarios;
-- no Socket.IO implementation;
-- no full worker/persistence runtime pipeline;
-- no Torrevieja map or game UI.
+All actual simulation behaviour introduced from Phase 4 onward follows the test strategy in `testing-strategy.md`. Coverage enforcement must be installed and passing before Phase 4 game mechanics begin.
+
+TDD extends the roadmap; it does not change package ownership or phase boundaries.
 
 ## Phase 2 — Socket.IO-readiness research
 
@@ -56,15 +36,21 @@ Research and document how a future authoritative host could integrate through So
 
 ### Output
 
-- architecture decision record;
-- command/event envelope recommendations;
-- reconnection, acknowledgement, revision, and resynchronization strategy;
-- proposed adapter-neutral transport interface;
-- explicit list of deferred implementation work.
+- an architecture decision record based on current official sources;
+- proposed adapter-neutral client/host and transport boundaries;
+- command, acknowledgement, event, snapshot, revision, and resynchronization recommendations;
+- connection loss, duplicate delivery, ordering, refresh, and stale-client failure analysis;
+- guidance for worker and future Socket.IO adapters sharing protocol contracts;
+- an explicit list of deferred implementation work.
 
-### Non-goal
+### Non-goals
 
-Do not add a Socket.IO server or client merely to prove connectivity.
+- no Socket.IO package installation;
+- no Socket.IO server or client;
+- no Web Worker runtime;
+- no final game command/event catalogue;
+- no authentication, hosting, database, or multiplayer implementation;
+- no transport simulation mechanics.
 
 ## Phase 3 — Blank end-to-end platform
 
@@ -81,7 +67,9 @@ Prove the application boundaries with a deliberately trivial deterministic model
 - Dexie save repository implementation;
 - save, restore, pause, and speed smoke behaviours;
 - PWA offline and update lifecycle verification;
-- R3F representation of trivial simulation output.
+- R3F representation of trivial simulation output;
+- adapter contract tests;
+- package coverage command and CI enforcement required before Phase 4.
 
 ### Non-goal
 
@@ -91,7 +79,7 @@ No transport-game mechanics yet.
 
 ### Goal
 
-Implement the first actual transport simulation as a pure TypeScript library.
+Implement the first actual transport simulation as a pure TypeScript library through TDD.
 
 ### Initial model
 
@@ -104,9 +92,11 @@ Implement the first actual transport simulation as a pure TypeScript library.
 - boarding, alighting, waiting, and capacity;
 - command processing, events, metrics, and snapshots.
 
-### Required property
+### Required properties
 
-A full simulated day can run and be tested without React, a browser, a worker, or a database.
+- a full simulated day can run and be tested without React, a browser, a worker, or a database;
+- the same inputs, seed, and ordered commands produce the same result;
+- package coverage thresholds and behavioural acceptance tests pass.
 
 ## Phase 5 — React Three Fiber visualization POC
 

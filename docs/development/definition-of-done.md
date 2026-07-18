@@ -13,7 +13,7 @@ A phase is complete only when its stated acceptance criteria are met and the rep
 ### Architecture
 
 - Dependency direction remains valid.
-- The simulation package remains independent of web, rendering, persistence, and networking libraries.
+- The simulation package remains independent of web, rendering, persistence, platform, and networking libraries.
 - Authoritative state is not moved into React, Zustand, R3F, Dexie, or transport adapters.
 - New durable decisions are documented.
 
@@ -25,12 +25,18 @@ A phase is complete only when its stated acceptance criteria are met and the rep
 - Formatting validation passes.
 - Public package APIs are deliberate and use package exports where appropriate.
 
-### Tests
+### Tests and TDD
 
-- Unit/integration tests cover introduced behaviour.
+- Observable simulation behaviour was introduced test-first unless the completion report documents why the task was not behavioural.
+- A defect fix includes a regression test that failed before the fix.
+- Unit and integration tests cover introduced behaviour.
+- Tests cover relevant invariants, error cases, and boundary conditions rather than only happy paths.
+- Deterministic systems control time, randomness, and command ordering.
 - Browser smoke tests cover user-visible foundation behaviour when relevant.
-- Tests are deterministic and do not depend on arbitrary sleeps when an observable condition can be awaited.
+- Tests do not depend on arbitrary sleeps when an observable condition can be awaited.
 - Existing tests continue to pass.
+- Required package coverage thresholds pass once established by the roadmap.
+- Coverage exclusions were not broadened to hide untested logic.
 
 ### Build and runtime
 
@@ -43,12 +49,12 @@ A phase is complete only when its stated acceptance criteria are met and the rep
 ### Documentation
 
 - README instructions match actual commands.
-- Architecture or decision documents are updated for durable changes.
+- Architecture, decision, testing, or development documents are updated for durable changes.
 - The phase report lists commands executed and their outcomes.
 
 ## Minimum validation command categories
 
-The exact script names will be established in Phase 1, but the root workspace must provide equivalents of:
+The root workspace must provide equivalents of:
 
 ```text
 install with immutable/frozen lockfile semantics
@@ -60,7 +66,9 @@ workspace build
 Cypress browser test
 ```
 
-A phase prompt may add package-specific or PWA-specific validation.
+Before Phase 4 behaviour begins, validation and CI must additionally include simulation package coverage with the thresholds defined in `testing-strategy.md`.
+
+A phase prompt may add package-specific, PWA-specific, determinism, serialization, or coverage validation.
 
 ## Failure handling
 
@@ -85,11 +93,12 @@ Changed
 Validation
 - exact commands run
 - pass/fail result for each
+- runtime version used
 
 Acceptance criteria
 - criteria satisfied
 - criteria not satisfied, if any
 
 Follow-up
-- unresolved issues only
+- unresolved issues and intentionally deferred work only
 ```

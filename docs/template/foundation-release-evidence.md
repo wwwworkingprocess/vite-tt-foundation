@@ -9,9 +9,9 @@ pass for the final commit.
 ## Source identity
 
 ```text
-Base Git commit: fb11eb8fb8a96498850f06ece2ecac7e45fefde8
+Candidate implementation commit: 79d4a1c
 Git tag: unavailable; no release tag was created
-Working tree clean: no; Phase 3F release-candidate changes are uncommitted
+Working tree clean after evidence commit: yes
 ```
 
 ## Toolchain
@@ -114,5 +114,5 @@ Extension guide reviewed: passed
 ## Limitations
 
 - Exact Node 24.18.0 local validation was unavailable; local evidence uses 24.13.0.
-- GitHub Actions Linux and Windows jobs have not run for these uncommitted changes.
+- GitHub Actions Linux and Windows jobs could not run because this repository has no configured Git remote.
 - No tag or final release commit exists yet.

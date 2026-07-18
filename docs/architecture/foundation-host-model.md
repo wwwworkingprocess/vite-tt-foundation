@@ -2,7 +2,7 @@
 
 ## Status
 
-Provisional architecture contract for Phase 3B.
+Implemented architecture contract for Phase 3B.
 
 This phase creates a browser-neutral in-memory reference host around the
 Phase 3A deterministic foundation state. It proves command, idempotency,
@@ -91,6 +91,10 @@ The first accepted command advances each applicable sequence to `1`.
 ## Command processing order
 
 For one game, commands are serialized.
+
+`sendCommand` is Promise-based. The in-memory host processes submissions
+through one FIFO promise queue, so a listener that submits another command
+cannot interleave its publications with the command currently being published.
 
 For a new command:
 
@@ -207,6 +211,9 @@ Reliable updates and render snapshots use separate subscriptions.
 
 Each subscription returns an idempotent cleanup function.
 
+Each call creates an independent registration, even when the same callback is
+subscribed more than once. Removing one registration leaves the others active.
+
 Required behavior:
 
 - listeners are called in registration order;
@@ -218,6 +225,8 @@ Required behavior:
 - listener failures are exposed through a small host diagnostic callback
   or returned diagnostic collection, not thrown through command
   processing.
+- failures thrown by the diagnostic callback itself are isolated from command
+  processing and publication.
 
 The exact diagnostic shape may remain minimal in Phase 3B.
 
@@ -251,6 +260,9 @@ Return a full baseline when:
 - the timeline differs;
 - the client offset is ahead;
 - the request has no usable baseline.
+
+A request for a different `gameId` returns only an identity-mismatch result. It
+must not expose either a full baseline or a delta for the host game.
 
 An offset equal to the current offset returns an empty valid delta.
 

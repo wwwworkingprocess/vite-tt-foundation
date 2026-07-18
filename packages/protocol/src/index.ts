@@ -6,4 +6,5 @@ export type FoundationIdentifier = string & {
   readonly __foundationIdentifier: unique symbol;
 };
 
+export * from './foundation-contracts.js';
 export * from './positions.js';

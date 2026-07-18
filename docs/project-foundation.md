@@ -77,5 +77,6 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - The simulation and protocol package compilers are restricted to environment-neutral ECMAScript libraries and no ambient platform types.
 - ESLint enforces the documented package dependency direction and forbidden platform imports.
 - The web production build generates a service worker and web app manifest through `vite-plugin-pwa`.
-- Phase 3A adds deterministic five-second time primitives, distinct protocol position primitives, and pure application-owned playback calculations; simulation host adapters remain deferred.
+- Phase 3A adds deterministic five-second time primitives, distinct protocol position primitives, and pure application-owned playback calculations.
+- Phase 3B adds a browser-neutral in-memory foundation host with concrete validated command, result, reliable-update, render-snapshot, and synchronization contracts; Worker and persistence adapters remain deferred.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

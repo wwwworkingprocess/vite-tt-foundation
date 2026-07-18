@@ -2,5 +2,6 @@
 export const simulationFoundationLabel =
   'standalone simulation package' as const;
 
+export * from './foundation-command.js';
 export * from './foundation-state.js';
 export * from './time.js';

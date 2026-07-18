@@ -60,7 +60,7 @@ Phase 2 is complete.
 
 ## Phase 3 — Blank end-to-end platform
 
-Phase 3A, the time, identity, and contract foundation described in `phase-3-plan.md`, is the current milestone.
+Phase 3B, the browser-neutral in-memory foundation host described in `phase-3-plan.md`, is the current milestone.
 
 ### Goal
 

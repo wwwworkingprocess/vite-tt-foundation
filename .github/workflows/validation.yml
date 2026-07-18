@@ -17,7 +17,7 @@ jobs:
       - run: |
           node --version
           corepack yarn --version
-          corepack yarn audit:runtime
+          node scripts/runtime-audit.mjs
       - run: corepack yarn install --immutable
       - run: corepack yarn validate:portable
       - run: corepack yarn validate:repository
@@ -32,7 +32,7 @@ jobs:
       - run: |
           node --version
           corepack yarn --version
-          corepack yarn audit:runtime
+          node scripts/runtime-audit.mjs
       - run: corepack yarn install --immutable
       - run: corepack yarn audit:line-endings
       - run: corepack yarn format:check
@@ -65,6 +65,6 @@ jobs:
           corepack install --global yarn@4.17.1
           node --version
           corepack yarn --version
-          corepack yarn audit:runtime
+          node scripts/runtime-audit.mjs
           corepack yarn install --immutable
           corepack yarn validate:portable

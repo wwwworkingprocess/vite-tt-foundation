@@ -84,4 +84,8 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   snapshot export, explicit new-timeline restoration, validated in-memory and
   Dexie save repositories, and a serialized vanilla Zustand application
   projection; timers, autosave, React save UI, and gameplay remain deferred.
+- Phase 3E adds deterministic integer browser pacing, configurable playback
+  modes, tick-counted 2× bonus consumption, a generation-safe pacing
+  controller, visibility-aware animation-frame driving, and minimal platform
+  controls; pacing state remains runtime-only.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

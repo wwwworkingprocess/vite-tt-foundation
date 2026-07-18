@@ -40,7 +40,7 @@ describe('foundation screen', () => {
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
     await waitFor(() =>
-      expect(screen.getByTestId('worker-tick')).toHaveTextContent('1'),
+      expect(screen.getByTestId('worker-tick')).toHaveTextContent('0'),
     );
     fireEvent.click(
       screen.getByRole('button', { name: 'Close foundation Worker' }),

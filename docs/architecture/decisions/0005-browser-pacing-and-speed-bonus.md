@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed for Phase 3E.
+Accepted and implemented in Phase 3E.
 
 ## Context
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Provisional architecture contract for Phase 3E.
+Implemented architecture contract for Phase 3E.
 
 Phase 3E advances the foundation simulation through the accepted
 application controller and Worker client. It adds no transport-game
@@ -130,8 +130,8 @@ The store is not authoritative simulation state.
 Consumers receive only:
 
 ```ts
-getState()
-subscribe()
+getState();
+subscribe();
 ```
 
 ## Pacing controller

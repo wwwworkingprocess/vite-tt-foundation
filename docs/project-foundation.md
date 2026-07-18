@@ -57,6 +57,8 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`architecture/principles.md`](architecture/principles.md) — non-negotiable design principles.
 - [`architecture/boundaries.md`](architecture/boundaries.md) — package dependencies and adapter boundaries.
 - [`architecture/state-ownership.md`](architecture/state-ownership.md) — authoritative, application, and presentation state.
+- [`architecture/transport-contract.md`](architecture/transport-contract.md) — proposed adapter-neutral host/client semantics and failure recovery.
+- [`architecture/decisions/0002-simulation-host-transport-readiness.md`](architecture/decisions/0002-simulation-host-transport-readiness.md) — Socket.IO-readiness research and transport-boundary decision.
 - [`development/roadmap.md`](development/roadmap.md) — phased master plan.
 - [`development/testing-strategy.md`](development/testing-strategy.md) — TDD workflow, test layers, determinism, and coverage policy.
 - [`development/definition-of-done.md`](development/definition-of-done.md) — completion and validation rules.

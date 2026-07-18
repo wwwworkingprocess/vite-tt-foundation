@@ -111,7 +111,7 @@ interface SimulationTransport {
 }
 ```
 
-The precise interfaces will be designed in their implementation phases. These examples establish ownership, not final APIs.
+The precise interfaces will be designed in their implementation phases. These examples establish ownership, not final APIs. Phase 2 recommendations are documented in [`transport-contract.md`](transport-contract.md) and remain production-code proposals until Phase 3.
 
 ## Rendering boundary
 

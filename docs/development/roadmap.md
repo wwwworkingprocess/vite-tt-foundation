@@ -52,6 +52,10 @@ Research and document how a future authoritative host could integrate through So
 - no authentication, hosting, database, or multiplayer implementation;
 - no transport simulation mechanics.
 
+### Research result
+
+The adapter-neutral decision and proposed contracts are recorded in `../architecture/decisions/0002-simulation-host-transport-readiness.md` and `../architecture/transport-contract.md`. Runtime implementation remains deferred to Phase 3 or later.
+
 ## Phase 3 — Blank end-to-end platform
 
 ### Goal

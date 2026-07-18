@@ -1,0 +1,36 @@
+const typedStore: StoreApi<State> = createStore();
+
+import { createStore as make } from 'zustand/vanilla';
+const aliasedStore = make();
+const storeFactory = make;
+const variableAliasStore = storeFactory();
+
+export default createStore();
+
+function exposeFrozenProjection(store: StoreApi<State>) {
+  const projection = Object.freeze({ ...store });
+  return projection;
+}
+
+function exposeAssignedProjection(store: StoreApi<State>) {
+  const projection = Object.assign({}, store);
+  return projection;
+}
+
+function exposeInlineFrozenProjection(store: StoreApi<State>) {
+  return Object.freeze({ ...store });
+}
+
+function exposeWritableProjection(store: StoreApi<State>) {
+  const projection = {
+    getState: store.getState,
+    subscribe: store.subscribe,
+    setState: store.setState,
+  };
+  return projection;
+}
+
+function exposeCompleteAlias(store: StoreApi<State>) {
+  const alias: StoreApi<State> = store;
+  return alias;
+}

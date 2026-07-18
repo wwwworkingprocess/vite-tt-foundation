@@ -1,0 +1,7 @@
+export function createController() {
+  const store = createStore();
+  return Object.freeze({
+    getState: store.getState,
+    subscribe: store.subscribe,
+  });
+}

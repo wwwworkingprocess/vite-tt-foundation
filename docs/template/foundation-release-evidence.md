@@ -9,9 +9,9 @@ and manual real-device HTTPS validation for the final commit.
 ## Source identity
 
 ```text
-Candidate implementation commit: 79d4a1c
+Candidate implementation commit: 6aab534
 Git tag: unavailable; no release tag was created
-Working tree clean after evidence commit: yes
+Evidence update: this document's follow-up commit
 ```
 
 ## Toolchain
@@ -36,6 +36,7 @@ Service-worker tooling: vite-plugin-pwa 1.3.0 / Workbox 7.4.1 generated service 
 
 ```text
 Immutable install: passed with Yarn's existing optional peer-dependency warning
+Authoritative portable command: blocked only by the local Node 24.13.0 runtime audit; all subsequent stages passed independently
 Format: passed
 Lint: passed
 Typecheck: passed
@@ -79,7 +80,7 @@ or data synchronization is performed.
 Application entry: 385,083 / 400,000 bytes — passed.
 Lazy representation/R3F chunk: 880,881 / 1,200,000 bytes — passed.
 Dedicated Worker: 78,776 / 100,000 bytes — passed.
-Total emitted JavaScript: 1,344,740 / 1,500,000 bytes — passed.
+Total emitted JavaScript, including registerSW, service worker, and Workbox: 1,361,349 / 1,550,000 bytes — passed.
 Hashed artifacts are classified by stable chunk prefixes. The representation and
 Worker are separate emitted chunks and production source maps are absent.
 
@@ -108,7 +109,7 @@ Portable validation is Git-free; tracked-output and clean-tree validation are re
 `corepack yarn validate:portable` is the authoritative post-install template gate, including root and subpath browser/PWA checks
 Archive exclusions complete: passed
 Domain-free audit: passed in Git-free archive mode with regression fixtures
-Git tracked-output audit: passed separately
+Git tracked-output and clean-tree audits: passed separately after the evidence commit
 Rename guide reviewed: passed
 Extension guide reviewed: passed
 ```

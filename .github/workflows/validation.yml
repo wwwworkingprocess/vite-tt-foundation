@@ -19,6 +19,7 @@ jobs:
           corepack yarn --version
           node scripts/runtime-audit.mjs
       - run: corepack yarn install --immutable
+      - run: corepack yarn cypress install
       - run: corepack yarn validate:portable
       - run: corepack yarn validate:repository
   windows-portability:
@@ -67,4 +68,5 @@ jobs:
           corepack yarn --version
           node scripts/runtime-audit.mjs
           corepack yarn install --immutable
+          corepack yarn cypress install
           corepack yarn validate:portable

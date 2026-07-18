@@ -9,7 +9,7 @@ and manual real-device HTTPS validation for the final commit.
 ## Source identity
 
 ```text
-Candidate implementation commit: f363cf3
+Candidate implementation commit: ef19198
 Git tag: unavailable; no release tag was created
 Evidence update: this document's follow-up commit
 ```
@@ -47,7 +47,7 @@ Independent simulation: passed
 Independent protocol: passed
 Real Worker E2E: passed
 Production PWA offline E2E: passed
-Architecture audit: passed, including TypeScript-AST ownership and writable-store exposure fixtures
+Architecture audit: passed, including TypeScript-AST authority/store provenance, alias, namespace, writable-exposure, and Node built-in fixtures
 Template-manifest audit: passed
 Bundle-budget audit: passed
 git diff --check: passed

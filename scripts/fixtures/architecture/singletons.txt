@@ -1,3 +1,14 @@
 const authoritativeHost = createFoundationHost();
 const applicationStore = createStore();
 const foundationDatabase = new SaveDatabase('global');
+export const publicStore = createStore();
+export const publicHost =
+  createFoundationHost();
+const alias = SaveDatabase;
+const hiddenDatabase = new alias('global');
+const anything = new Dexie('global');
+const unnamedStore = createStore();
+const unnamedHost = createFoundationHost();
+const unnamedController = createFoundationApplicationController();
+const frozenStore = Object.freeze(createStore());
+const unnamedDatabase = new Dexie('db');

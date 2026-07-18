@@ -6,3 +6,29 @@ platform_id
 fare-type
 DepotSchedule
 vehicle.kind
+routes
+stops
+platforms
+buses
+passengers
+schedules
+economics
+"foundation.bus-arrived"
+{ setState: store.setState }
+Object.assign(projection, { setState: store.setState })
+return store as StoreApi<State>;
+import value from 'node:fs';
+process.cwd(); Buffer.from('x'); __dirname; __filename; require('x');
+import { setTimeout } from 'node:timers';
+import fs from 'fs';
+import 'node:fs';
+import path from 'path';
+const dynamicBuiltin = import('fs');
+return Object.freeze(store);
+return { ...store };
+return Object.assign({}, store);
+const projection = {
+  getState: store.getState,
+  subscribe: store.subscribe,
+  setState: store.setState
+};

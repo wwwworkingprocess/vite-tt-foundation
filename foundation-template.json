@@ -21,16 +21,18 @@
     "@torrevieja-tycoon/protocol"
   ],
   "schemaVersions": {
-    "protocolFoundation": 1,
     "simulationSnapshot": 1,
-    "saveRecord": 1,
-    "workerWire": 1
+    "saveRecord": 1
+  },
+  "contractVersions": {
+    "protocolContract": 1,
+    "workerAdapterContract": 1
   },
   "buildBudgetsBytes": {
     "applicationEntry": 400000,
     "representation": 1200000,
     "worker": 100000,
-    "totalJavaScript": 1500000
+    "totalEmittedJavaScript": 1550000
   },
   "extensionPoints": [
     "simulation-state-and-snapshot",
@@ -41,21 +43,11 @@
     "representation",
     "validated-scenario-data"
   ],
-  "validationCommands": [
-    "corepack yarn install --immutable",
-    "corepack yarn format:check",
-    "corepack yarn lint",
-    "corepack yarn typecheck",
-    "corepack yarn test",
-    "corepack yarn test:coverage",
-    "corepack yarn build",
-    "corepack yarn test:e2e",
-    "corepack yarn test:pwa",
-    "corepack yarn audit:architecture",
-    "corepack yarn audit:runtime",
+  "bootstrapCommands": ["corepack yarn install --immutable"],
+  "portableValidationCommand": "corepack yarn validate:portable",
+  "releaseRepositoryValidationCommands": [
     "corepack yarn audit:tracked",
-    "corepack yarn audit:manifest",
-    "corepack yarn audit:build"
+    "corepack yarn audit:repository"
   ],
   "renameSurfaces": [
     "repository-name",

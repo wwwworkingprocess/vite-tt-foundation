@@ -10,20 +10,14 @@ jobs:
       - run: corepack enable
       - run: corepack prepare yarn@4.17.1 --activate
       - run: corepack yarn install --immutable
-      - run: corepack yarn audit:runtime
-      - run: corepack yarn format:check
-      - run: corepack yarn lint
-      - run: corepack yarn typecheck
-      - run: corepack yarn test
-      - run: corepack yarn test:coverage
-      - run: corepack yarn build
-      - run: corepack yarn audit:architecture
+      - run: corepack yarn validate:portable
       - run: corepack yarn audit:tracked
-      - run: corepack yarn audit:manifest
-      - run: corepack yarn audit:build
-      - run: corepack yarn test:e2e
-      - run: corepack yarn test:pwa
       - run: git diff --check
+      - run: git diff --exit-code
+      - name: Require clean working tree
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)"
   windows-portability:
     runs-on: windows-latest
     steps:
@@ -33,6 +27,7 @@ jobs:
       - run: corepack enable
       - run: corepack prepare yarn@4.17.1 --activate
       - run: corepack yarn install --immutable
+      - run: corepack yarn audit:line-endings
       - run: corepack yarn audit:runtime
       - run: corepack yarn format:check
       - run: corepack yarn lint
@@ -44,3 +39,34 @@ jobs:
       - run: corepack yarn audit:manifest
       - run: corepack yarn audit:build
       - run: git diff --check
+      - run: git diff --exit-code
+      - name: Require clean working tree
+        run: |
+          git status --porcelain
+          if (git status --porcelain) { throw "Validation modified tracked files." }
+      - run: git archive --format=zip --output=foundation-template.zip HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-foundation-template
+          path: foundation-template.zip
+  linux-archive-portability:
+    needs: windows-portability
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-foundation-template
+      - run: unzip foundation-template.zip -d foundation-template
+      - uses: actions/setup-node@v4
+        with:
+          {
+            node-version-file: foundation-template/.node-version,
+            cache: yarn,
+            cache-dependency-path: foundation-template/yarn.lock,
+          }
+      - working-directory: foundation-template
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+          corepack yarn install --immutable
+          corepack yarn validate:portable

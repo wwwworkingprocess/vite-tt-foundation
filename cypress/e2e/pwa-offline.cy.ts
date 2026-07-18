@@ -19,7 +19,7 @@ describe('built foundation PWA offline lifecycle', () => {
 
   it('restores a saved Worker session from the installed offline shell', () => {
     cy.then(() => clearOrigin());
-    cy.visit('/');
+    cy.visit('./');
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.window().then(async (win) => {
       await win.navigator.serviceWorker.ready;
@@ -50,10 +50,10 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="save-count"]').should('contain.text', '1');
     cy.window().then(async (win) => {
       for (const path of [
-        '/icons/foundation-192.png',
-        '/icons/foundation-512.png',
+        'icons/foundation-192.png',
+        'icons/foundation-512.png',
       ]) {
-        const response = await win.fetch(path);
+        const response = await win.fetch(new URL(path, win.document.baseURI));
         expect(response.ok).to.equal(true);
         expect((await response.blob()).size).to.be.greaterThan(0);
       }

@@ -1,52 +1,79 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
+import { basename, posix } from 'node:path';
+
 const dist = new URL('../apps/web/dist/', import.meta.url);
-const assets = new URL('assets/', dist);
-const files = await readdir(assets);
+const walk = async (directory = '') => {
+  const entries = await readdir(new URL(directory, dist), {
+    withFileTypes: true,
+  });
+  const files = [];
+  for (const entry of entries) {
+    const relative = posix.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...(await walk(`${relative}/`)));
+    else files.push(relative);
+  }
+  return files;
+};
+const files = (await walk()).sort();
 const javascript = files.filter((file) => file.endsWith('.js'));
-const one = (prefix) => javascript.filter((file) => file.startsWith(prefix));
-const worker = one('foundation.worker-');
-const entry = one('index-');
-const representation = one('foundation-scene-');
-if (worker.length !== 1 || entry.length !== 1 || representation.length !== 1)
-  throw new Error(
-    'Expected separate hashed application, representation/R3F, and dedicated Worker chunks.',
-  );
+const one = (pattern) =>
+  javascript.filter((file) => pattern.test(basename(file)));
+const worker = one(/^foundation\.worker-[\w-]+\.js$/);
+const entry = one(/^index-[\w-]+\.js$/);
+const representation = one(/^foundation-scene-[\w-]+\.js$/);
+const register = one(/^registerSW\.js$/);
+const serviceWorker = one(/^sw\.js$/);
+const workbox = one(/^workbox-[\w-]+\.js$/);
+for (const [name, matches] of Object.entries({
+  application: entry,
+  representation,
+  worker,
+  registerSW: register,
+  serviceWorker,
+  workbox,
+}))
+  if (matches.length !== 1)
+    throw new Error(`Expected one deterministic ${name} JavaScript artifact.`);
 const configured = JSON.parse(
   await readFile(
     new URL('../foundation-template.json', import.meta.url),
     'utf8',
   ),
 ).buildBudgetsBytes;
+const size = async (file) => (await stat(new URL(file, dist))).size;
 const sizes = {
-  applicationEntry: (await stat(new URL(entry[0], assets))).size,
-  representation: (await stat(new URL(representation[0], assets))).size,
-  worker: (await stat(new URL(worker[0], assets))).size,
-  totalJavaScript: 0,
+  applicationEntry: await size(entry[0]),
+  representation: await size(representation[0]),
+  worker: await size(worker[0]),
+  totalEmittedJavaScript: (await Promise.all(javascript.map(size))).reduce(
+    (sum, bytes) => sum + bytes,
+    0,
+  ),
 };
-sizes.totalJavaScript = (
-  await Promise.all(
-    javascript.map(async (file) => (await stat(new URL(file, assets))).size),
-  )
-).reduce((sum, size) => sum + size, 0);
 for (const [name, budget] of Object.entries(configured))
   if (sizes[name] > budget)
     throw new Error(
       `Build budget exceeded for ${name}: ${sizes[name]}/${budget}.`,
     );
 if (files.some((file) => file.endsWith('.map')))
-  throw new Error('Production source maps must not be emitted.');
+  throw new Error(
+    'Production source maps must not be emitted anywhere in dist.',
+  );
 const manifest = JSON.parse(
   await readFile(new URL('manifest.webmanifest', dist), 'utf8'),
 );
+const base = manifest.start_url;
+if (typeof base !== 'string' || manifest.scope !== base)
+  throw new Error('Manifest start_url and scope must use the configured base.');
 const requiredIcons = new Map([
-  ['/icons/foundation-192.png', [192, 192]],
-  ['/icons/foundation-512.png', [512, 512]],
+  [`${base}icons/foundation-192.png`, [192, 192]],
+  [`${base}icons/foundation-512.png`, [512, 512]],
 ]);
 for (const icon of manifest.icons ?? []) {
   if (!requiredIcons.has(icon.src)) continue;
   if (icon.type !== 'image/png' || !icon.purpose?.includes('maskable'))
     throw new Error(`Icon metadata is incomplete: ${icon.src}`);
-  const bytes = await readFile(new URL(`.${icon.src}`, dist));
+  const bytes = await readFile(new URL(icon.src.slice(base.length), dist));
   const dimensions = [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
   if (dimensions.join('x') !== requiredIcons.get(icon.src).join('x'))
     throw new Error(`Icon dimensions are invalid: ${icon.src}`);
@@ -57,5 +84,5 @@ if (requiredIcons.size)
     `Built manifest is missing install icons: ${[...requiredIcons.keys()].join(', ')}`,
   );
 console.log(
-  `Build and installability audit passed: ${JSON.stringify({ sizes, budgets: configured })}.`,
+  `Build and installability audit passed: ${JSON.stringify({ javascript, sizes, budgets: configured })}.`,
 );

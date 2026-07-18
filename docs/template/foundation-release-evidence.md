@@ -2,9 +2,9 @@
 
 ## Status
 
-Local release gates pass under Node 24.13.0. Foundation Template v1.0.0 remains
-a release candidate until the exact Node 24.18.0 Linux and Windows workflows
-pass for the final commit.
+Foundation Template v1.0.0 remains a release candidate. Final release requires
+the exact Node 24.18.0 Linux and Windows workflows, GitHub Pages deployment,
+and manual real-device HTTPS validation for the final commit.
 
 ## Source identity
 
@@ -104,6 +104,8 @@ Manifest schema valid: passed through strict Zod validation against the document
 Foundation paths exist: passed
 Runtime pins consistent: passed
 Validation commands exist: passed
+Portable validation is Git-free; tracked-output and clean-tree validation are release-repository-only
+`corepack yarn validate:portable` is the authoritative post-install template gate, including root and subpath browser/PWA checks
 Archive exclusions complete: passed
 Domain-free audit: passed in Git-free archive mode with regression fixtures
 Git tracked-output audit: passed separately
@@ -111,8 +113,13 @@ Rename guide reviewed: passed
 Extension guide reviewed: passed
 ```
 
+The protocol and Worker adapter values in `contractVersions` are source/API
+compatibility markers, not serialized wire-schema guarantees. Serialized
+versioning remains limited to the validated snapshot and save-record schemas.
+
 ## Limitations
 
 - Exact Node 24.18.0 local validation was unavailable; local evidence uses 24.13.0.
 - GitHub Actions Linux and Windows jobs could not run because this repository has no configured Git remote.
 - No tag or final release commit exists yet.
+- GitHub Pages deployment and manual real-device HTTPS validation remain pending.

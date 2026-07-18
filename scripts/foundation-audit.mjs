@@ -10,7 +10,9 @@ const walk = async (directory) => {
     const name = join(directory, entry.name);
     if (entry.isDirectory()) files.push(...(await walk(name)));
     else if (
-      ['.ts', '.tsx'].includes(extname(entry.name)) &&
+      ['.ts', '.tsx', '.js', '.mjs', '.cjs', '.json'].includes(
+        extname(entry.name),
+      ) &&
       !entry.name.includes('.test.') &&
       !entry.name.includes('test-double')
     )
@@ -59,13 +61,82 @@ export function transportDomainTerms(text, file = '') {
   return [...new Set(tokens.filter((token) => forbidden.has(token)))];
 }
 export function topLevelSingletons(text) {
-  return text
-    .split(/\r?\n/)
-    .filter((line) =>
-      /^(?:const|let|var)\s+\w*(?:authoritative|store|host|database|db)\w*\s*=\s*(?:new\s+|create)/i.test(
-        line,
-      ),
-    );
+  const violations = [];
+  const declarations = [
+    ...text.matchAll(
+      /^(?:export\s+)?(?:const|let|var)\s+(\w+)\s*=\s*(?:\r?\n\s*)?([^;]+);/gm,
+    ),
+  ];
+  const aliases = new Set(
+    declarations
+      .filter((match) =>
+        /^(?:Dexie|\w*(?:Database|Store|Host|Controller))$/.test(
+          match[2].trim(),
+        ),
+      )
+      .map((match) => match[1]),
+  );
+  for (const match of declarations) {
+    const [statement, name, initializer] = match;
+    if (
+      /\b(?:create\w*(?:Store|Host|Controller|Database)|new\s+(?:Dexie|\w*(?:Database|Store|Host|Controller)))\b/.test(
+        initializer,
+      )
+    )
+      violations.push(statement);
+    else if (
+      /^new\s+Dexie\b/.test(initializer) ||
+      [...aliases].some((alias) =>
+        new RegExp(`^new\\s+${alias}\\b`).test(initializer),
+      ) ||
+      (/(?:authoritative|store|host|database|db)/i.test(name) &&
+        /^(?:new\s+|create)/.test(initializer))
+    )
+      violations.push(statement);
+  }
+  return violations;
+}
+export function environmentNeutralViolations(text) {
+  const violations = [];
+  const builtins =
+    '(?:node:)?(?:assert|buffer|child_process|crypto|events|fs|http|https|module|os|path|perf_hooks|process|stream|string_decoder|timers|tls|tty|url|util|v8|vm|worker_threads|zlib)(?:\\/[^\'"]*)?';
+  if (
+    new RegExp(
+      `(?:from\\s+|import\\s*\\(|import\\s+|require\\s*\\()\\s*['"]${builtins}['"]`,
+    ).test(text)
+  )
+    violations.push('node-import');
+  if (
+    /\b(?:process|Buffer|__dirname|__filename|setImmediate|clearImmediate)\b/.test(
+      text,
+    )
+  )
+    violations.push('node-global');
+  if (/\b(?:setTimeout|clearTimeout|setInterval|clearInterval)\b/.test(text))
+    violations.push('timer-api');
+  return violations;
+}
+export function writableStoreViolations(text) {
+  const aliases = new Set(['store']);
+  for (const match of text.matchAll(
+    /(?:const|let|var)\s+(\w+)\s*=\s*(\w+)\s*;/g,
+  ))
+    if (aliases.has(match[2])) aliases.add(match[1]);
+  const storeName = `(?:${[...aliases].join('|')})`;
+  const patterns = [
+    /projection\s*[:=]\s*store\b/,
+    /projection\s*\.\s*setState/,
+    /return\s+store(?:\s+as\s+StoreApi[^;]*)?\s*;/,
+    /{\s*setState\s*:\s*\w+\.setState\s*}/,
+    /Object\.assign\s*\(\s*projection\s*,\s*{[^}]*setState/s,
+    /(?:const|let|var)\s+projection\s*=\s*{[^}]*setState\s*:\s*\w+\.setState/s,
+    new RegExp(`return\\s+Object\\.freeze\\s*\\(\\s*${storeName}\\s*\\)`),
+    new RegExp(`return\\s+{[^}]*\\.\\.\\.\\s*${storeName}[^}]*}`, 's'),
+    new RegExp(
+      `return\\s+Object\\.assign\\s*\\(\\s*{}\\s*,\\s*${storeName}\\s*\\)`,
+    ),
+  ];
+  return patterns.filter((pattern) => pattern.test(text)).map(String);
 }
 const simulation = await walk('packages/simulation/src');
 const protocol = await walk('packages/protocol/src');
@@ -80,6 +151,8 @@ for (const file of [...simulation, ...protocol]) {
     fail(`${file} imports a forbidden adapter.`);
   if (/\b(?:window|document|indexedDB|localStorage)\b/.test(text))
     fail(`${file} uses a browser global.`);
+  if (environmentNeutralViolations(text).length)
+    fail(`${file} uses Node-only imports or globals.`);
 }
 for (const file of simulation)
   if (
@@ -95,11 +168,7 @@ for (const file of web) {
     !file.includes('simulation-worker')
   )
     fail(`${file} uses Worker globals outside the Worker adapter.`);
-  if (
-    /projection\s*[:=]\s*store\b|projection\s*\.\s*setState|return\s+store\b/.test(
-      text,
-    )
-  )
+  if (writableStoreViolations(text).length)
     fail(`${file} exposes a writable Zustand store.`);
 }
 for (const file of [...simulation, ...protocol, ...web]) {
@@ -143,12 +212,39 @@ const allowedFixture = await source(
 const singletonFixture = await source(
   'scripts/fixtures/architecture/singletons.txt',
 );
-if (transportDomainTerms(forbiddenFixture).length !== 9)
-  fail('domain regression fixture was not fully detected.');
+for (const expected of [
+  'route',
+  'bus',
+  'stop',
+  'passenger',
+  'platform',
+  'fare',
+  'depot',
+  'schedule',
+  'vehicle',
+  'routes',
+  'stops',
+  'buses',
+  'passengers',
+  'schedules',
+  'economics',
+])
+  if (!transportDomainTerms(forbiddenFixture).includes(expected))
+    fail(`domain regression fixture missed ${expected}.`);
 if (transportDomainTerms(allowedFixture, 'browser-pacing-driver.ts').length)
   fail('legitimate foundation fixture was rejected.');
-if (topLevelSingletons(singletonFixture).length !== 3)
+if (topLevelSingletons(singletonFixture).length !== 12)
   fail('singleton regression fixture was not fully detected.');
+if (environmentNeutralViolations(forbiddenFixture).length !== 3)
+  fail('Node-only regression fixtures were not fully detected.');
+if (writableStoreViolations(forbiddenFixture).length !== 7)
+  fail('writable-store regression fixtures were not fully detected.');
+if (
+  environmentNeutralViolations(allowedFixture).length ||
+  writableStoreViolations(allowedFixture).length ||
+  topLevelSingletons(allowedFixture).length
+)
+  fail('legitimate foundation fixture failed architecture checks.');
 console.log(
   `Foundation architecture audit passed (${simulation.length + protocol.length + web.length} production modules, Git-free mode).`,
 );

@@ -13,7 +13,10 @@
     "schemaVersions",
     "buildBudgetsBytes",
     "extensionPoints",
-    "validationCommands",
+    "contractVersions",
+    "bootstrapCommands",
+    "portableValidationCommand",
+    "releaseRepositoryValidationCommands",
     "renameSurfaces",
     "protectedCompatibilitySurfaces",
     "archiveExcludes"
@@ -50,17 +53,19 @@
     "schemaVersions": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "protocolFoundation",
-        "simulationSnapshot",
-        "saveRecord",
-        "workerWire"
-      ],
+      "required": ["simulationSnapshot", "saveRecord"],
       "properties": {
-        "protocolFoundation": { "const": 1 },
         "simulationSnapshot": { "const": 1 },
-        "saveRecord": { "const": 1 },
-        "workerWire": { "const": 1 }
+        "saveRecord": { "const": 1 }
+      }
+    },
+    "contractVersions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocolContract", "workerAdapterContract"],
+      "properties": {
+        "protocolContract": { "const": 1 },
+        "workerAdapterContract": { "const": 1 }
       }
     },
     "buildBudgetsBytes": {
@@ -70,13 +75,13 @@
         "applicationEntry",
         "representation",
         "worker",
-        "totalJavaScript"
+        "totalEmittedJavaScript"
       ],
       "properties": {
         "applicationEntry": { "type": "integer", "minimum": 1 },
         "representation": { "type": "integer", "minimum": 1 },
         "worker": { "type": "integer", "minimum": 1 },
-        "totalJavaScript": { "type": "integer", "minimum": 1 }
+        "totalEmittedJavaScript": { "type": "integer", "minimum": 1 }
       }
     },
     "extensionPoints": {
@@ -85,7 +90,14 @@
       "uniqueItems": true,
       "items": { "type": "string", "minLength": 1 }
     },
-    "validationCommands": {
+    "bootstrapCommands": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "portableValidationCommand": { "const": "corepack yarn validate:portable" },
+    "releaseRepositoryValidationCommands": {
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,

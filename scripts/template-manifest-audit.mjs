@@ -20,10 +20,14 @@ const shape = z
     publicEntryPoints: z.array(z.string().min(1)).min(2),
     schemaVersions: z
       .object({
-        protocolFoundation: z.literal(1),
         simulationSnapshot: z.literal(1),
         saveRecord: z.literal(1),
-        workerWire: z.literal(1),
+      })
+      .strict(),
+    contractVersions: z
+      .object({
+        protocolContract: z.literal(1),
+        workerAdapterContract: z.literal(1),
       })
       .strict(),
     buildBudgetsBytes: z
@@ -31,11 +35,13 @@ const shape = z
         applicationEntry: z.number().int().positive(),
         representation: z.number().int().positive(),
         worker: z.number().int().positive(),
-        totalJavaScript: z.number().int().positive(),
+        totalEmittedJavaScript: z.number().int().positive(),
       })
       .strict(),
     extensionPoints: z.array(z.string().min(1)).min(1),
-    validationCommands: z.array(z.string().min(1)).min(1),
+    bootstrapCommands: z.array(z.string().min(1)).min(1),
+    portableValidationCommand: z.literal('corepack yarn validate:portable'),
+    releaseRepositoryValidationCommands: z.array(z.string().min(1)).min(1),
     renameSurfaces: z.array(z.string().min(1)).min(1),
     protectedCompatibilitySurfaces: z.array(z.string().min(1)).min(1),
     archiveExcludes: z.array(z.string().min(1)).min(1),
@@ -90,13 +96,36 @@ for (const entry of manifest.publicEntryPoints)
     ]
   )
     throw new Error(`Public entry point is not exported: ${entry}`);
-for (const command of manifest.validationCommands) {
+for (const command of [
+  ...manifest.bootstrapCommands,
+  manifest.portableValidationCommand,
+  ...manifest.releaseRepositoryValidationCommands,
+]) {
   const script = command.match(/^corepack yarn ([\w:-]+)$/)?.[1];
   if (script && !(script in pkg.scripts))
     throw new Error(`Manifest command has no package script: ${script}`);
 }
-if (!manifest.validationCommands.includes('corepack yarn audit:runtime'))
-  throw new Error('audit:runtime is missing from release validation commands.');
+const portableScript = pkg.scripts['validate:portable'];
+for (const required of [
+  'audit:runtime',
+  'audit:line-endings',
+  'audit:architecture',
+  'audit:manifest',
+  'format:check',
+  'lint',
+  'typecheck',
+  'test',
+  'test:coverage',
+  'build',
+  'audit:build',
+  'test:e2e',
+  'test:pwa',
+  'test:pwa:subpath',
+])
+  if (!portableScript.includes(`yarn ${required}`))
+    throw new Error(`validate:portable is missing ${required}.`);
+if (/audit:(?:tracked|repository)/.test(portableScript))
+  throw new Error('Portable validation must not require Git history.');
 const requiredExcludes = [
   '.git',
   'node_modules',
@@ -115,18 +144,14 @@ for (const exclusion of requiredExcludes)
   if (!manifest.archiveExcludes.includes(exclusion))
     throw new Error(`Archive exclusion is missing: ${exclusion}`);
 const sources = {
-  protocolFoundation: await read('packages/protocol/src/index.ts'),
   simulationSnapshot: await read(
     'packages/simulation/src/foundation-snapshot.ts',
   ),
   saveRecord: await read('apps/web/src/persistence/save-record.ts'),
-  workerWire: await read('apps/web/src/simulation-worker/worker-wire.ts'),
 };
 const constants = {
-  protocolFoundation: 'protocolFoundationVersion',
   simulationSnapshot: 'foundationSimulationSnapshotSchemaVersion',
   saveRecord: 'foundationSaveRecordSchemaVersion',
-  workerWire: 'foundationWorkerWireSchemaVersion',
 };
 for (const [key, source] of Object.entries(sources))
   if (
@@ -136,5 +161,24 @@ for (const [key, source] of Object.entries(sources))
   )
     throw new Error(
       `Manifest ${key} version does not match its exported implementation constant.`,
+    );
+const contractSources = {
+  protocolContract: await read('packages/protocol/src/index.ts'),
+  workerAdapterContract: await read(
+    'apps/web/src/simulation-worker/worker-wire.ts',
+  ),
+};
+const contractConstants = {
+  protocolContract: 'protocolContractVersion',
+  workerAdapterContract: 'foundationWorkerAdapterContractVersion',
+};
+for (const [key, source] of Object.entries(contractSources))
+  if (
+    !new RegExp(
+      `export const ${contractConstants[key]} = ${manifest.contractVersions[key]} as const`,
+    ).test(source)
+  )
+    throw new Error(
+      `Manifest ${key} compatibility marker does not match its exported constant.`,
     );
 console.log('Foundation template manifest consistency audit passed.');

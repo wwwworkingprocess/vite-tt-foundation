@@ -1,7 +1,7 @@
 import {
   parseGameId,
   parseTimelineId,
-  protocolFoundationVersion,
+  protocolContractVersion,
 } from '@torrevieja-tycoon/protocol';
 import { simulationFoundationLabel } from '@torrevieja-tycoon/simulation';
 import { lazy, Suspense, useEffect, useState } from 'react';
@@ -146,8 +146,8 @@ export function App() {
             <dd>{simulationFoundationLabel}</dd>
           </div>
           <div>
-            <dt>Protocol foundation</dt>
-            <dd>version {protocolFoundationVersion}</dd>
+            <dt>Protocol contract</dt>
+            <dd>version {protocolContractVersion}</dd>
           </div>
         </dl>
         <div aria-label="Foundation Worker status">

@@ -8,7 +8,8 @@ import {
   parseFoundationHostMessage,
 } from '@torrevieja-tycoon/protocol';
 
-export const foundationWorkerWireSchemaVersion = 1 as const;
+/** Source/API compatibility marker for the Worker adapter, not a serialized wire field. */
+export const foundationWorkerAdapterContractVersion = 1 as const;
 
 const requestIdSchema = z.number().int().positive().safe();
 const identity = { gameId: z.string(), timelineId: z.string() };

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
+import { createDirectTransportSimulationClient } from './transport-client.js';
 import {
   createWorkerTransportSimulationClient,
   startTransportWorkerRuntime,
@@ -33,6 +34,128 @@ const scenario = () =>
   });
 
 describe('transport Worker boundary failures', () => {
+  it('finishes runtime shutdown when close acknowledgement posting throws', async () => {
+    let listener!: (event: { data: unknown }) => void;
+    let connected = false;
+    const remove = vi.fn();
+    const endpoint: TransportWorkerEndpoint = {
+      postMessage(message) {
+        if (
+          message.kind === 'transport-worker-result' &&
+          message.operation === 'connect'
+        )
+          connected = true;
+        if (
+          message.kind === 'transport-worker-result' &&
+          message.operation === 'close'
+        )
+          throw new Error('close acknowledgement failed');
+      },
+      addEventListener: (_type, next) => {
+        listener = next;
+      },
+      removeEventListener: remove,
+    };
+    const runtime = startTransportWorkerRuntime(endpoint);
+    listener({
+      data: {
+        kind: 'transport-worker-request',
+        contractVersion: 1,
+        requestId: 1,
+        operation: 'connect',
+        payload: {
+          kind: 'transport-client-connect',
+          contractVersion: 1,
+          mode: 'new',
+          gameId: 'game',
+          timelineId: 'timeline',
+          initialSimulationTick: 0,
+          scenario: scenario(),
+        },
+      },
+    });
+    await vi.waitFor(() => expect(connected).toBe(true));
+    listener({
+      data: {
+        kind: 'transport-worker-request',
+        contractVersion: 1,
+        requestId: 2,
+        operation: 'close',
+        payload: null,
+      },
+    });
+    await vi.waitFor(() => expect(remove).toHaveBeenCalledOnce());
+    await expect(runtime.close()).resolves.toBeUndefined();
+  });
+
+  it('cleans a failed runtime client and permits a later valid connect', async () => {
+    const posted: unknown[] = [];
+    let listener!: (event: { data: unknown }) => void;
+    const endpoint: TransportWorkerEndpoint = {
+      postMessage: (message) => posted.push(message),
+      addEventListener: (_type, next) => {
+        listener = next;
+      },
+      removeEventListener: vi.fn(),
+    };
+    const failed = createDirectTransportSimulationClient();
+    const failedClose = vi.fn(() => failed.close());
+    let sequence = 0;
+    startTransportWorkerRuntime(endpoint, () => {
+      if (++sequence === 1)
+        return Object.freeze({
+          ...failed,
+          connect: async () => Promise.reject(new Error('connect failed')),
+          close: failedClose,
+        });
+      return createDirectTransportSimulationClient();
+    });
+    const payload = {
+      kind: 'transport-client-connect',
+      contractVersion: 1,
+      mode: 'new',
+      gameId: 'game',
+      timelineId: 'timeline',
+      initialSimulationTick: 0,
+      scenario: scenario(),
+    };
+    listener({
+      data: {
+        kind: 'transport-worker-request',
+        contractVersion: 1,
+        requestId: 1,
+        operation: 'connect',
+        payload,
+      },
+    });
+    await vi.waitFor(() =>
+      expect(posted).toContainEqual(
+        expect.objectContaining({
+          kind: 'transport-worker-failure',
+          requestId: 1,
+        }),
+      ),
+    );
+    expect(failedClose).toHaveBeenCalledOnce();
+    listener({
+      data: {
+        kind: 'transport-worker-request',
+        contractVersion: 1,
+        requestId: 2,
+        operation: 'connect',
+        payload: { ...payload, timelineId: 'timeline-2' },
+      },
+    });
+    await vi.waitFor(() =>
+      expect(posted).toContainEqual(
+        expect.objectContaining({
+          kind: 'transport-worker-result',
+          requestId: 2,
+        }),
+      ),
+    );
+  });
+
   it('ignores malformed responses, rejects duplicate connect, and closes pending work', async () => {
     let listener!: (event: { data: unknown }) => void;
     const worker: TransportWorkerLike = {
@@ -70,7 +193,7 @@ describe('transport Worker boundary failures', () => {
       scenario: scenario(),
     } as never;
     await client.connect(request);
-    await expect(client.connect(request)).rejects.toThrow('cannot connect');
+    await expect(client.connect(request)).rejects.toThrow('idle');
     listener({ data: { contractVersion: 2 } });
     listener({ data: { contractVersion: 1, kind: 'unknown' } });
     listener({ data: { contractVersion: 1, kind: 'transport-worker-result' } });

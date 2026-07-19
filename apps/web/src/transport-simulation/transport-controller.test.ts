@@ -8,7 +8,10 @@ import {
   createTransportSimulationState,
 } from '@torrevieja-tycoon/simulation';
 import { parseGameId, parseTimelineId } from '@torrevieja-tycoon/protocol';
-import { parseTransportSaveRecord } from './transport-save-record.js';
+import {
+  classifyPersistedSaveRecord,
+  parseTransportSaveRecord,
+} from './transport-save-record.js';
 import { createDirectTransportSimulationClient } from './transport-client.js';
 import { createTransportApplicationController } from './transport-controller.js';
 
@@ -55,6 +58,283 @@ const record = () => {
 };
 
 describe('transport application controller', () => {
+  it('rejects every authority operation while idle and subscriptions after close', async () => {
+    const controller = createTransportApplicationController({
+      createClient: createDirectTransportSimulationClient,
+      repository: { get: async () => undefined, put: async () => undefined },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await expect(
+      controller.save({
+        saveId: 'idle',
+        createdAtUtcMs: 1,
+        updatedAtUtcMs: 1,
+      }),
+    ).rejects.toThrow('No ready');
+    await expect(controller.advanceTicks(1)).rejects.toThrow('No ready');
+    await expect(
+      controller.restore({
+        saveId: 'idle',
+        timelineId: parseTimelineId('idle-restore'),
+      }),
+    ).rejects.toThrow('No ready');
+    await controller.close();
+    expect(() => controller.projection.subscribe(() => undefined)).toThrow(
+      'closed',
+    );
+  });
+
+  it('serializes duplicate start and save behind a pending activation', async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const base = createDirectTransportSimulationClient();
+    const stored: unknown[] = [];
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        Object.freeze({
+          ...base,
+          async connect(request: Parameters<typeof base.connect>[0]) {
+            await gate;
+            await base.connect(request);
+          },
+        }),
+      repository: {
+        get: async () => undefined,
+        put: async (value) => {
+          stored.push(value);
+        },
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    const starting = controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-queued'),
+      scenario: scenario(),
+    });
+    await expect(
+      controller.startNew({
+        gameId: parseGameId('game-fixture'),
+        timelineId: parseTimelineId('duplicate'),
+        scenario: scenario(),
+      }),
+    ).rejects.toThrow('unavailable');
+    const saving = controller.save({
+      saveId: 'queued',
+      createdAtUtcMs: 1,
+      updatedAtUtcMs: 1,
+    });
+    expect(stored).toHaveLength(0);
+    release();
+    await starting;
+    await saving;
+    expect(stored).toHaveLength(1);
+    await controller.close();
+  });
+
+  it('serializes commands and saves behind restore resolution', async () => {
+    let resolve!: (value: ReturnType<typeof scenario>) => void;
+    const clients = [
+      createDirectTransportSimulationClient(),
+      createDirectTransportSimulationClient(),
+    ];
+    const stored: unknown[] = [];
+    const controller = createTransportApplicationController({
+      createClient: () => clients.shift()!,
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async (value) => {
+          stored.push(value);
+        },
+      },
+      scenarioResolver: {
+        resolve: () => new Promise((accept) => (resolve = accept)),
+      },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: scenario(),
+    });
+    const restoring = controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('timeline-restored'),
+    });
+    const advancing = controller.advanceTicks(1);
+    const saving = controller.save({
+      saveId: 'after-restore',
+      createdAtUtcMs: 1,
+      updatedAtUtcMs: 1,
+    });
+    await vi.waitFor(() => expect(resolve).toBeTypeOf('function'));
+    resolve(scenario());
+    await restoring;
+    await advancing;
+    await saving;
+    expect(controller.projection.getState()).toMatchObject({
+      timelineId: 'timeline-restored',
+      simulationTick: 121,
+    });
+    expect(stored[0]).toMatchObject({ sourceTimelineId: 'timeline-restored' });
+    await controller.close();
+  });
+
+  it('makes close terminal while snapshot export is pending and suppresses the stale save', async () => {
+    const base = createDirectTransportSimulationClient();
+    let release!: () => void;
+    let entered!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const exportEntered = new Promise<void>((resolve) => {
+      entered = resolve;
+    });
+    let delay = false;
+    const put = vi.fn(async () => undefined);
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        Object.freeze({
+          ...base,
+          async exportSnapshot() {
+            if (delay) {
+              entered();
+              await gate;
+            }
+            return base.exportSnapshot();
+          },
+        }),
+      repository: { get: async () => undefined, put },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-close-save'),
+      scenario: scenario(),
+    });
+    delay = true;
+    const saving = controller.save({
+      saveId: 'stale',
+      createdAtUtcMs: 1,
+      updatedAtUtcMs: 1,
+    });
+    await exportEntered;
+    const closing = controller.close();
+    release();
+    await saving;
+    await closing;
+    expect(put).not.toHaveBeenCalled();
+    expect(controller.projection.getState()).toEqual({ status: 'closed' });
+  });
+
+  it('serializes two competing restores and leaves only the last timeline active', async () => {
+    const clients = Array.from({ length: 3 }, () =>
+      createDirectTransportSimulationClient(),
+    );
+    const controller = createTransportApplicationController({
+      createClient: () => clients.shift()!,
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: scenario(),
+    });
+    const first = controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('timeline-one'),
+    });
+    const second = controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('timeline-two'),
+    });
+    await Promise.all([first, second]);
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-two',
+      simulationTick: 120,
+    });
+    await controller.close();
+  });
+
+  it('isolates command/save failures and aggregates both cleanup failures', async () => {
+    const base = createDirectTransportSimulationClient();
+    let failCommand = false;
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        Object.freeze({
+          ...base,
+          sendCommand: (command: Parameters<typeof base.sendCommand>[0]) =>
+            failCommand
+              ? Promise.reject(new Error('command failed'))
+              : base.sendCommand(command),
+          async close() {
+            await base.close();
+            throw new Error('client close failed');
+          },
+        }),
+      repository: {
+        get: async () => undefined,
+        put: async () => Promise.reject(new Error('put failed')),
+        close: async () => Promise.reject(new Error('repository close failed')),
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    const remove = controller.projection.subscribe(() => undefined);
+    remove();
+    remove();
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-failures'),
+      scenario: scenario(),
+    });
+    await expect(
+      controller.save({
+        saveId: 'slot',
+        createdAtUtcMs: 1,
+        updatedAtUtcMs: 1,
+      }),
+    ).rejects.toThrow('put failed');
+    expect(controller.projection.getState().message).toBe('put failed');
+    failCommand = true;
+    await expect(controller.advanceTicks(1)).rejects.toThrow('command failed');
+    await expect(controller.close()).rejects.toThrow('cleanup failed');
+    expect(controller.projection.getState()).toEqual({ status: 'closed' });
+  });
+
+  it('closes a replacement whose readiness export fails', async () => {
+    const base = createDirectTransportSimulationClient();
+    const close = vi.fn(() => base.close());
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        Object.freeze({
+          ...base,
+          exportSnapshot: async () =>
+            Promise.reject(new Error('readiness failed')),
+          close,
+        }),
+      repository: { get: async () => undefined, put: async () => undefined },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await expect(
+      controller.startNew({
+        gameId: parseGameId('game-fixture'),
+        timelineId: parseTimelineId('timeline-readiness'),
+        scenario: scenario(),
+      }),
+    ).rejects.toThrow('readiness failed');
+    expect(close).toHaveBeenCalledOnce();
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'failed',
+      message: 'readiness failed',
+    });
+    await controller.close();
+  });
+
   it('closes an idle controller and notifies a healthy projection listener', async () => {
     const listener = vi.fn();
     const controller = createTransportApplicationController({
@@ -94,7 +374,7 @@ describe('transport application controller', () => {
     await Promise.resolve();
     await controller.close();
     releaseExport();
-    await starting;
+    await expect(starting).rejects.toThrow('stale');
     expect(controller.projection.getState()).toEqual({ status: 'closed' });
 
     const failingBase = createDirectTransportSimulationClient();
@@ -138,7 +418,10 @@ describe('transport application controller', () => {
     ];
     const controller = createTransportApplicationController({
       createClient: () => clients.shift()!,
-      repository: { get: async () => record(), put: async () => undefined },
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
       scenarioResolver: {
         resolve: () =>
           new Promise((resolve) => {
@@ -156,8 +439,7 @@ describe('transport application controller', () => {
       saveId: 'slot',
       timelineId: parseTimelineId('timeline-restored'),
     });
-    await Promise.resolve();
-    expect(events).toEqual(['resolve-start']);
+    await vi.waitFor(() => expect(events).toEqual(['resolve-start']));
     resolveScenario(scenario());
     await restoring;
     expect(events).toEqual(['resolve-start', 'close-old']);
@@ -176,7 +458,10 @@ describe('transport application controller', () => {
     const client = Object.freeze({ ...base, close });
     const controller = createTransportApplicationController({
       createClient: () => client,
-      repository: { get: async () => record(), put: async () => undefined },
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
       scenarioResolver: {
         resolve: async () => Promise.reject(new Error('missing scenario')),
       },
@@ -208,24 +493,25 @@ describe('transport application controller', () => {
     const controller = createTransportApplicationController({
       createClient: () => Object.freeze({ ...base, close }),
       repository: {
-        get: async () => ({
-          kind: 'foundation-save-record',
-          schemaVersion: 1,
-          saveId: 'legacy',
-          gameId: 'game-fixture',
-          sourceTimelineId: 'old',
-          sourceCommandRevision: 0,
-          sourceSimulationTick: 0,
-          sourceStreamOffset: 0,
-          createdAtUtcMs: 1,
-          updatedAtUtcMs: 1,
-          snapshot: {
-            kind: 'foundation-simulation-snapshot',
+        get: async () =>
+          classifyPersistedSaveRecord({
+            kind: 'foundation-save-record',
             schemaVersion: 1,
-            simulationVersion: 'foundation-1',
-            state: { tick: 0 },
-          },
-        }),
+            saveId: 'legacy',
+            gameId: 'game-fixture',
+            sourceTimelineId: 'old',
+            sourceCommandRevision: 0,
+            sourceSimulationTick: 0,
+            sourceStreamOffset: 0,
+            createdAtUtcMs: 1,
+            updatedAtUtcMs: 1,
+            snapshot: {
+              kind: 'foundation-simulation-snapshot',
+              schemaVersion: 1,
+              simulationVersion: 'foundation-1',
+              state: { tick: 0 },
+            },
+          }),
         put: async (value) => {
           stored.push(value);
         },
@@ -276,9 +562,12 @@ describe('transport application controller', () => {
 
   it('keeps missing and malformed restore failures recoverable and enforces terminal guards', async () => {
     const client = createDirectTransportSimulationClient();
-    const raws: unknown[] = [
+    const raws = [
       undefined,
-      { kind: 'transport-save-record', schemaVersion: 1 },
+      classifyPersistedSaveRecord({
+        kind: 'transport-save-record',
+        schemaVersion: 1,
+      }),
     ];
     const controller = createTransportApplicationController({
       createClient: () => client,
@@ -323,12 +612,12 @@ describe('transport application controller', () => {
     await controller.close();
     await expect(
       controller.save({ saveId: 'x', createdAtUtcMs: 1, updatedAtUtcMs: 1 }),
-    ).rejects.toThrow('No ready');
+    ).rejects.toThrow('closed');
     await expect(
       controller.restore({
         saveId: 'x',
         timelineId: parseTimelineId('late'),
       }),
-    ).rejects.toThrow('No ready');
+    ).rejects.toThrow('closed');
   });
 });

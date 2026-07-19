@@ -19,9 +19,9 @@ describe('foundation screen', () => {
         cy.wait(350);
         cy.get('[data-testid="worker-tick"]').should('have.text', pausedTick);
       });
-    cy.contains('button', 'Close foundation Worker').click();
+    cy.contains('button', 'Close transport Worker').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
-    cy.contains('button', 'Start new foundation session').click();
+    cy.contains('button', 'Start new transport session').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="worker-timeline"]').should(
       'contain.text',

@@ -11,7 +11,6 @@ import {
   parseFoundationRenderSnapshot,
   parseFoundationStateUpdate,
   parseFoundationSynchronizationRequest,
-  type FoundationCommandEnvelope,
   type FoundationCommandResult,
   type FoundationRenderSnapshot,
   type FoundationStateUpdate,
@@ -21,43 +20,21 @@ import {
   type TransportClientConnectRequest,
   type TransportClientLifecycle,
   type TransportSimulationClient,
-  type TransportSnapshotExport,
-  type TransportSynchronizationResponse,
 } from './transport-client.js';
+import {
+  parseTransportWorkerRequest,
+  parseTransportWorkerResponse,
+  parseTransportSnapshotExportResult,
+  parseTransportSynchronizationResult,
+  type TransportWorkerRequest,
+  type TransportWorkerResponse,
+} from './transport-worker-wire.js';
 
 type Operation =
   'connect' | 'send-command' | 'synchronize' | 'export-snapshot' | 'close';
-interface RequestMessage {
-  readonly kind: 'transport-worker-request';
-  readonly contractVersion: 1;
-  readonly requestId: number;
-  readonly operation: Operation;
-  readonly payload: unknown;
-}
-type ResponseMessage =
-  | Readonly<{
-      kind: 'transport-worker-result';
-      contractVersion: 1;
-      requestId: number;
-      operation: Operation;
-      payload: unknown;
-    }>
-  | Readonly<{
-      kind: 'transport-worker-failure';
-      contractVersion: 1;
-      requestId: number;
-      operation: Operation;
-      message: string;
-    }>
-  | Readonly<{
-      kind: 'transport-worker-publication';
-      contractVersion: 1;
-      channel: 'reliable' | 'render';
-      payload: unknown;
-    }>;
 
 export interface TransportWorkerEndpoint {
-  postMessage(message: ResponseMessage): void;
+  postMessage(message: TransportWorkerResponse): void;
   addEventListener(
     type: 'message',
     listener: (event: { data: unknown }) => void,
@@ -68,7 +45,7 @@ export interface TransportWorkerEndpoint {
   ): void;
 }
 export interface TransportWorkerLike {
-  postMessage(message: RequestMessage): void;
+  postMessage(message: TransportWorkerRequest): void;
   addEventListener(
     type: 'message',
     listener: (event: { data: unknown }) => void,
@@ -88,9 +65,13 @@ const freeze = <T>(value: T): T => {
 const errorMessage = (error: unknown) =>
   error instanceof Error ? error.message : 'Transport Worker operation failed.';
 
-export function startTransportWorkerRuntime(endpoint: TransportWorkerEndpoint) {
+export function startTransportWorkerRuntime(
+  endpoint: TransportWorkerEndpoint,
+  createClient: () => TransportSimulationClient = createDirectTransportSimulationClient,
+) {
   let client: TransportSimulationClient | undefined;
   let closed = false;
+  let operationQueue = Promise.resolve();
   const cleanups: Array<() => void> = [];
   const shutdown = async () => {
     if (closed) return;
@@ -102,24 +83,36 @@ export function startTransportWorkerRuntime(endpoint: TransportWorkerEndpoint) {
   };
   const onMessage = (event: { data: unknown }) => {
     if (closed) return;
-    const request = event.data as Partial<RequestMessage>;
-    if (
-      request.kind !== 'transport-worker-request' ||
-      request.contractVersion !== 1 ||
-      typeof request.requestId !== 'number' ||
-      typeof request.operation !== 'string'
-    )
+    let request: TransportWorkerRequest;
+    try {
+      request = parseTransportWorkerRequest(event.data);
+    } catch {
+      const raw = event.data as { requestId?: unknown };
+      const validRequestId =
+        typeof raw.requestId === 'number' &&
+        Number.isSafeInteger(raw.requestId) &&
+        raw.requestId > 0
+          ? raw.requestId
+          : undefined;
+      endpoint.postMessage({
+        kind: 'transport-worker-failure',
+        contractVersion: 1,
+        ...(validRequestId === undefined ? {} : { requestId: validRequestId }),
+        message: 'Invalid Transport Worker request.',
+      });
       return;
+    }
     const requestId = request.requestId;
     const operation = request.operation;
-    void (async () => {
+    operationQueue = operationQueue.then(async () => {
       try {
         let payload: unknown = null;
         if (request.operation === 'connect') {
           if (client) throw new Error('Transport Worker is already connected.');
-          client = createDirectTransportSimulationClient();
+          const next = createClient();
+          client = next;
           cleanups.push(
-            client.subscribeReliableUpdates((update) =>
+            next.subscribeReliableUpdates((update) =>
               endpoint.postMessage({
                 kind: 'transport-worker-publication',
                 contractVersion: 1,
@@ -127,7 +120,7 @@ export function startTransportWorkerRuntime(endpoint: TransportWorkerEndpoint) {
                 payload: update,
               }),
             ),
-            client.subscribeRenderSnapshots((snapshot) =>
+            next.subscribeRenderSnapshots((snapshot) =>
               endpoint.postMessage({
                 kind: 'transport-worker-publication',
                 contractVersion: 1,
@@ -136,14 +129,22 @@ export function startTransportWorkerRuntime(endpoint: TransportWorkerEndpoint) {
               }),
             ),
           );
-          await client.connect(
-            request.payload as TransportClientConnectRequest,
-          );
+          try {
+            await next.connect(
+              request.payload as TransportClientConnectRequest,
+            );
+          } catch (error) {
+            for (const cleanup of cleanups.splice(0)) cleanup();
+            try {
+              await next.close();
+            } finally {
+              if (client === next) client = undefined;
+            }
+            throw error;
+          }
         } else if (request.operation === 'send-command') {
           if (!client) throw new Error('Transport Worker is not connected.');
-          payload = await client.sendCommand(
-            request.payload as FoundationCommandEnvelope,
-          );
+          payload = await client.sendCommand(request.payload);
         } else if (request.operation === 'synchronize') {
           if (!client) throw new Error('Transport Worker is not connected.');
           payload = await client.synchronize(
@@ -153,19 +154,16 @@ export function startTransportWorkerRuntime(endpoint: TransportWorkerEndpoint) {
           if (!client) throw new Error('Transport Worker is not connected.');
           payload = await client.exportSnapshot();
         } else if (request.operation === 'close') {
-          try {
-            endpoint.postMessage({
-              kind: 'transport-worker-result',
-              contractVersion: 1,
-              requestId,
-              operation: 'close',
-              payload: null,
-            });
-          } finally {
-            await shutdown();
-          }
+          await shutdown();
+          endpoint.postMessage({
+            kind: 'transport-worker-result',
+            contractVersion: 1,
+            requestId,
+            operation: 'close',
+            payload: null,
+          });
           return;
-        } else throw new Error('Unsupported Transport Worker operation.');
+        }
         endpoint.postMessage({
           kind: 'transport-worker-result',
           contractVersion: 1,
@@ -175,15 +173,19 @@ export function startTransportWorkerRuntime(endpoint: TransportWorkerEndpoint) {
         });
       } catch (error) {
         if (!closed)
-          endpoint.postMessage({
-            kind: 'transport-worker-failure',
-            contractVersion: 1,
-            requestId,
-            operation,
-            message: errorMessage(error),
-          });
+          try {
+            endpoint.postMessage({
+              kind: 'transport-worker-failure',
+              contractVersion: 1,
+              requestId,
+              operation,
+              message: errorMessage(error),
+            });
+          } catch {
+            await shutdown();
+          }
       }
-    })();
+    });
   };
   endpoint.addEventListener('message', onMessage);
   return Object.freeze({ close: shutdown });
@@ -232,13 +234,15 @@ export function createWorkerTransportSimulationClient(input: {
     return new Promise<unknown>((resolve, reject) => {
       pending.set(requestId, { operation, resolve, reject });
       try {
-        worker!.postMessage({
-          kind: 'transport-worker-request',
-          contractVersion: 1,
-          requestId,
-          operation,
-          payload,
-        });
+        worker!.postMessage(
+          parseTransportWorkerRequest({
+            kind: 'transport-worker-request',
+            contractVersion: 1,
+            requestId,
+            operation,
+            payload,
+          }),
+        );
       } catch (error) {
         pending.delete(requestId);
         reject(error instanceof Error ? error : new Error(errorMessage(error)));
@@ -246,8 +250,23 @@ export function createWorkerTransportSimulationClient(input: {
     });
   };
   const onMessage = (event: { data: unknown }) => {
-    const message = event.data as Partial<ResponseMessage>;
-    if (message.contractVersion !== 1) return;
+    let message: TransportWorkerResponse;
+    try {
+      message = parseTransportWorkerResponse(event.data);
+    } catch {
+      const error = new Error('Transport Worker returned an invalid message.');
+      for (const entry of pending.values()) entry.reject(error);
+      pending.clear();
+      publishLifecycle({
+        state: 'failed',
+        code: 'invalid-worker-message',
+        message: error.message,
+      });
+      worker?.removeEventListener('message', onMessage);
+      worker?.terminate();
+      worker = undefined;
+      return;
+    }
     if (message.kind === 'transport-worker-publication') {
       if (closed) return;
       if (message.channel === 'reliable') {
@@ -274,13 +293,8 @@ export function createWorkerTransportSimulationClient(input: {
       }
       return;
     }
-    if (
-      message.kind !== 'transport-worker-result' &&
-      message.kind !== 'transport-worker-failure'
-    )
-      return;
     const requestId = message.requestId;
-    if (typeof requestId !== 'number') return;
+    if (requestId === undefined) return;
     const entry = pending.get(requestId);
     if (!entry || entry.operation !== message.operation) return;
     pending.delete(requestId);
@@ -300,25 +314,26 @@ export function createWorkerTransportSimulationClient(input: {
   };
   const client: TransportSimulationClient = {
     async connect(request) {
-      if (worker || closed)
-        throw new Error('Transport Worker client cannot connect.');
+      if (lifecycle.state !== 'idle' || worker || closed)
+        throw new Error('Transport Worker client can connect only from idle.');
       if (
         request.kind !== 'transport-client-connect' ||
         request.contractVersion !== 1 ||
         (request.mode !== 'new' && request.mode !== 'restore')
       )
         throw new Error('Unsupported transport client connect request.');
-      publishLifecycle({ state: 'connecting' });
-      worker = input.workerFactory();
-      worker.addEventListener('message', onMessage);
-      authority =
+      const nextAuthority =
         request.mode === 'new'
           ? createTransportSimulationState(
               request.scenario,
               request.initialSimulationTick,
             )
           : restoreTransportSimulationState(request.snapshot, request.scenario);
+      publishLifecycle({ state: 'connecting' });
       try {
+        worker = input.workerFactory();
+        worker.addEventListener('message', onMessage);
+        authority = nextAuthority;
         await post('connect', structuredClone(request));
         publishLifecycle({
           state: 'ready',
@@ -327,10 +342,15 @@ export function createWorkerTransportSimulationClient(input: {
           scenario: createScenarioCoordinate(authority.scenario),
         });
       } catch (error) {
-        worker.removeEventListener('message', onMessage);
-        worker.terminate();
+        worker?.removeEventListener('message', onMessage);
+        worker?.terminate();
         worker = undefined;
         authority = undefined;
+        publishLifecycle({
+          state: 'failed',
+          code: 'worker-startup-failed',
+          message: errorMessage(error),
+        });
         throw error;
       }
     },
@@ -341,14 +361,15 @@ export function createWorkerTransportSimulationClient(input: {
     },
     async synchronize(request) {
       if (!authority) throw new Error('Transport client is not ready.');
-      return (await post(
-        'synchronize',
-        request,
-      )) as TransportSynchronizationResponse;
+      return parseTransportSynchronizationResult(
+        await post('synchronize', request),
+      );
     },
     async exportSnapshot() {
       if (!authority) throw new Error('Transport client is not ready.');
-      return (await post('export-snapshot', null)) as TransportSnapshotExport;
+      return parseTransportSnapshotExportResult(
+        await post('export-snapshot', null),
+      );
     },
     subscribeReliableUpdates: (listener) => subscribe(reliable, listener),
     subscribeRenderSnapshots: (listener) => subscribe(render, listener),

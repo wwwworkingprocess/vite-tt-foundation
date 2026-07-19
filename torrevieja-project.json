@@ -1,0 +1,16 @@
+{
+  "schemaVersions": {
+    "transportSimulationSnapshot": 1,
+    "transportSaveRecord": 1
+  },
+  "contractVersions": {
+    "transportClientContract": 1,
+    "transportWorkerContract": 1
+  },
+  "buildBudgetsBytes": {
+    "applicationEntry": 440000,
+    "representation": 1200000,
+    "transportWorker": 115000,
+    "totalEmittedJavaScript": 1750000
+  }
+}

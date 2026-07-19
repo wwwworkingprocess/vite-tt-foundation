@@ -22,21 +22,17 @@
   ],
   "schemaVersions": {
     "simulationSnapshot": 1,
-    "saveRecord": 1,
-    "transportSimulationSnapshot": 1,
-    "transportSaveRecord": 1
+    "saveRecord": 1
   },
   "contractVersions": {
     "protocolContract": 1,
-    "workerAdapterContract": 1,
-    "transportClientContract": 1
+    "workerAdapterContract": 1
   },
   "buildBudgetsBytes": {
-    "applicationEntry": 440000,
+    "applicationEntry": 400000,
     "representation": 1200000,
-    "worker": 110000,
-    "transportWorker": 115000,
-    "totalEmittedJavaScript": 1750000
+    "worker": 100000,
+    "totalEmittedJavaScript": 1550000
   },
   "extensionPoints": [
     "simulation-state-and-snapshot",

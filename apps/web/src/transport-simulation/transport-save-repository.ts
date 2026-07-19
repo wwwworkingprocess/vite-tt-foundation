@@ -8,7 +8,7 @@ import {
 
 export interface TransportSaveRepository {
   put(record: TransportSaveRecord): Promise<void>;
-  get(saveId: string): Promise<unknown>;
+  get(saveId: string): Promise<PersistedSaveClassification | undefined>;
   list(): Promise<readonly PersistedSaveClassification[]>;
   delete(saveId: string): Promise<void>;
   close(): Promise<void>;
@@ -50,7 +50,9 @@ export function createInMemoryTransportSaveRepository(
       return Promise.resolve().then(() => {
         open();
         const value = records.get(saveId);
-        return value === undefined ? undefined : structuredClone(value);
+        return value === undefined
+          ? undefined
+          : classifyPersistedSaveRecord(structuredClone(value));
       });
     },
     list() {
@@ -73,10 +75,12 @@ export function createInMemoryTransportSaveRepository(
 }
 
 class TransportSaveDatabase extends Dexie {
-  records!: EntityTable<Record<string, unknown>, 'saveId'>;
+  foundationSaves!: EntityTable<Record<string, unknown>, 'saveId'>;
   constructor(name: string) {
     super(name);
-    this.version(1).stores({ records: 'saveId, kind, updatedAtUtcMs' });
+    this.version(1).stores({
+      foundationSaves: 'saveId, gameId, updatedAtUtcMs',
+    });
   }
 }
 
@@ -93,22 +97,24 @@ export function createDexieTransportSaveRepository(
     async put(record: TransportSaveRecord) {
       open();
       const parsed = parseTransportSaveRecord(structuredClone(record));
-      await database.records.put(
+      await database.foundationSaves.put(
         structuredClone(parsed) as unknown as Record<string, unknown>,
       );
     },
     async get(saveId: string) {
       open();
-      const value = await database.records.get(saveId);
-      return value === undefined ? undefined : structuredClone(value);
+      const value = await database.foundationSaves.get(saveId);
+      return value === undefined
+        ? undefined
+        : classifyPersistedSaveRecord(structuredClone(value));
     },
     async list() {
       open();
-      return classify(await database.records.toArray());
+      return classify(await database.foundationSaves.toArray());
     },
     async delete(saveId: string) {
       open();
-      await database.records.delete(saveId);
+      await database.foundationSaves.delete(saveId);
     },
     close() {
       if (!closed) {

@@ -465,6 +465,7 @@ for (const file of [...simulation, ...protocol, ...web]) {
   const transportExtension =
     normalized.includes('apps/web/src/scenarios') ||
     normalized.includes('apps/web/src/transport-simulation') ||
+    normalized.endsWith('apps/web/src/App.tsx') ||
     normalized.endsWith('packages/simulation/src/transport-simulation.ts');
   const domain = transportExtension ? [] : transportDomainTerms(text, file);
   if (domain.length)

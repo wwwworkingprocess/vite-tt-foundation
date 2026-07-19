@@ -120,9 +120,28 @@ describe.each(factories)('%s transport client', (_name, createClient) => {
       initialSimulationTick: 0,
       scenario: scenario(),
     });
+    const authority = client.getAuthoritativeState();
+    await expect(
+      client.connect({
+        kind: 'transport-client-connect',
+        contractVersion: 1,
+        mode: 'new',
+        gameId: parseGameId('game-fixture'),
+        timelineId: parseTimelineId('duplicate'),
+        initialSimulationTick: 0,
+        scenario: scenario(),
+      }),
+    ).rejects.toThrow('idle');
+    expect(client.getAuthoritativeState()).toBe(authority);
     expect(healthy).toHaveBeenCalledTimes(2);
     removeSecond();
-    await client.close();
+    const firstClose = client.close();
+    expect(client.close()).toBe(firstClose);
+    await firstClose;
+    expect(() => client.subscribeLifecycle(() => undefined)).toThrow('closed');
+    expect(() => client.subscribeReliableUpdates(() => undefined)).toThrow(
+      'closed',
+    );
   });
 
   it('has new/restore parity and exposes coordinate without static data', async () => {

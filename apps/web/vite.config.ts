@@ -11,7 +11,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      includeAssets: ['icons/*.png'],
+      includeAssets: ['icons/*.png', 'scenarios/**/*.json'],
       registerType: 'autoUpdate',
       manifest: {
         name: 'Torrevieja Tycoon',

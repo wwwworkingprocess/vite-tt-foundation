@@ -24,6 +24,15 @@ type Session = Readonly<
   | { status: 'ready'; gameId: GameId; timelineId: TimelineId }
   | { status: 'failed'; message: string }
 >;
+export interface ApplicationSaveSummary {
+  readonly saveId: string;
+  readonly sourceTimelineId: TimelineId;
+  readonly sourceSimulationTick: number;
+  readonly createdAtUtcMs: number;
+  readonly updatedAtUtcMs: number;
+  readonly label?: string | undefined;
+  readonly compatibility?: 'current' | 'legacy-incompatible' | undefined;
+}
 export interface FoundationApplicationState {
   readonly session: Session;
   readonly authoritative?: Readonly<{
@@ -40,11 +49,11 @@ export interface FoundationApplicationState {
   readonly persistence: Readonly<
     | {
         status: 'idle' | 'saving' | 'loading' | 'restoring';
-        saves: readonly FoundationSaveSummary[];
+        saves: readonly ApplicationSaveSummary[];
       }
     | {
         status: 'failed';
-        saves: readonly FoundationSaveSummary[];
+        saves: readonly ApplicationSaveSummary[];
         message: string;
       }
   >;

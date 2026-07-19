@@ -6,11 +6,79 @@ import {
   waitFor,
 } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 
-vi.mock('./simulation-worker/browser-worker.js', async () => {
-  const { createStructuredCloneLoopbackWorker } =
-    await import('./simulation-worker/worker-test-double.js');
-  return { createBrowserFoundationWorker: createStructuredCloneLoopbackWorker };
+const fixture = join(
+  import.meta.dirname,
+  '..',
+  '..',
+  '..',
+  'packages',
+  'transport-domain',
+  'fixtures',
+  'torrevieja-mini-v1',
+);
+const json = (name: string) =>
+  JSON.parse(readFileSync(join(fixture, name), 'utf8')) as unknown;
+const scenario = parseScenarioPackage({
+  manifest: json('scenario.json'),
+  settlements: json('settlements.json'),
+  stops: json('stops.json'),
+  routes: json('routes.json'),
+  presentation: json('presentation.json'),
+  provenance: json('provenance.json'),
+});
+
+vi.mock('./scenarios/ScenarioPanel.js', () => ({
+  ScenarioPanel: ({
+    onScenarioReady,
+  }: {
+    onScenarioReady(value: typeof scenario): void;
+  }) => {
+    queueMicrotask(() => onScenarioReady(scenario));
+    return <div>Scenario fixture</div>;
+  },
+}));
+
+vi.mock('./transport-simulation/browser-transport-worker.js', async () => {
+  const { startTransportWorkerRuntime } =
+    await import('./transport-simulation/worker-transport-client.js');
+  return {
+    createBrowserTransportWorker: () => {
+      const clientListeners = new Set<(event: { data: unknown }) => void>();
+      const runtimeListeners = new Set<(event: { data: unknown }) => void>();
+      const runtime = startTransportWorkerRuntime({
+        postMessage: (message) =>
+          queueMicrotask(() =>
+            clientListeners.forEach((listener) =>
+              listener({ data: structuredClone(message) }),
+            ),
+          ),
+        addEventListener: (_type, listener) => runtimeListeners.add(listener),
+        removeEventListener: (_type, listener) =>
+          runtimeListeners.delete(listener),
+      });
+      return {
+        postMessage: (message: unknown) =>
+          queueMicrotask(() =>
+            runtimeListeners.forEach((listener) =>
+              listener({ data: structuredClone(message) }),
+            ),
+          ),
+        addEventListener: (
+          _type: 'message',
+          listener: (event: { data: unknown }) => void,
+        ) => clientListeners.add(listener),
+        removeEventListener: (
+          _type: 'message',
+          listener: (event: { data: unknown }) => void,
+        ) => clientListeners.delete(listener),
+        terminate: () => void runtime.close(),
+      };
+    },
+  };
 });
 
 import { App } from './App.js';
@@ -43,13 +111,13 @@ describe('foundation screen', () => {
       expect(screen.getByTestId('worker-tick')).toHaveTextContent('0'),
     );
     fireEvent.click(
-      screen.getByRole('button', { name: 'Close foundation Worker' }),
+      screen.getByRole('button', { name: 'Close transport Worker' }),
     );
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('closed'),
     );
     fireEvent.click(
-      screen.getByRole('button', { name: 'Start new foundation session' }),
+      screen.getByRole('button', { name: 'Start new transport session' }),
     );
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),

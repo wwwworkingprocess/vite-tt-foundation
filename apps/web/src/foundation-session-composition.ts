@@ -5,8 +5,8 @@ import {
   type TimelineId,
 } from '@torrevieja-tycoon/protocol';
 import type {
+  ApplicationSaveSummary,
   FoundationApplicationState,
-  createFoundationApplicationController,
 } from './application/foundation-controller.js';
 import type { createBrowserPacingDriver } from './pacing/browser-pacing-driver.js';
 import type {
@@ -14,15 +14,35 @@ import type {
   createFoundationPacingController,
 } from './pacing/foundation-pacing-controller.js';
 
-type Application = ReturnType<typeof createFoundationApplicationController>;
 type Pacing = ReturnType<typeof createFoundationPacingController>;
 type Driver = ReturnType<typeof createBrowserPacingDriver>;
 
 export interface FoundationSessionStack {
-  readonly application: Pick<
-    Application,
-    'projection' | 'startNew' | 'save' | 'restore' | 'listSaves' | 'close'
-  >;
+  readonly application: {
+    readonly projection: {
+      getState(): FoundationApplicationState;
+      subscribe(
+        listener: (state: FoundationApplicationState) => void,
+      ): () => void;
+    };
+    startNew(request: {
+      gameId: ReturnType<typeof parseGameId>;
+      timelineId: TimelineId;
+      initialSimulationTick: number;
+    }): Promise<void>;
+    save(metadata: {
+      saveId: string;
+      label?: string;
+      createdAtUtcMs: number;
+      updatedAtUtcMs: number;
+    }): Promise<void>;
+    restore(request: {
+      saveId: string;
+      newTimelineId: TimelineId;
+    }): Promise<void>;
+    listSaves(): Promise<readonly ApplicationSaveSummary[]>;
+    close(): Promise<void>;
+  };
   readonly pacing: Pick<
     Pacing,
     | 'projection'

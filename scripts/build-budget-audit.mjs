@@ -18,7 +18,6 @@ const files = (await walk()).sort();
 const javascript = files.filter((file) => file.endsWith('.js'));
 const one = (pattern) =>
   javascript.filter((file) => pattern.test(basename(file)));
-const worker = one(/^foundation\.worker-[\w-]+\.js$/);
 const transportWorker = one(/^transport\.worker-[\w-]+\.js$/);
 const entry = one(/^index-[\w-]+\.js$/);
 const representation = one(/^foundation-scene-[\w-]+\.js$/);
@@ -28,7 +27,6 @@ const workbox = one(/^workbox-[\w-]+\.js$/);
 for (const [name, matches] of Object.entries({
   application: entry,
   representation,
-  worker,
   transportWorker,
   registerSW: register,
   serviceWorker,
@@ -38,7 +36,7 @@ for (const [name, matches] of Object.entries({
     throw new Error(`Expected one deterministic ${name} JavaScript artifact.`);
 const configured = JSON.parse(
   await readFile(
-    new URL('../foundation-template.json', import.meta.url),
+    new URL('../torrevieja-project.json', import.meta.url),
     'utf8',
   ),
 ).buildBudgetsBytes;
@@ -46,7 +44,6 @@ const size = async (file) => (await stat(new URL(file, dist))).size;
 const sizes = {
   applicationEntry: await size(entry[0]),
   representation: await size(representation[0]),
-  worker: await size(worker[0]),
   transportWorker: await size(transportWorker[0]),
   totalEmittedJavaScript: (await Promise.all(javascript.map(size))).reduce(
     (sum, bytes) => sum + bytes,
@@ -65,6 +62,7 @@ if (files.some((file) => file.endsWith('.map')))
 const manifest = JSON.parse(
   await readFile(new URL('manifest.webmanifest', dist), 'utf8'),
 );
+const serviceWorkerSource = await readFile(new URL('sw.js', dist), 'utf8');
 const base = manifest.start_url;
 if (typeof base !== 'string' || manifest.scope !== base)
   throw new Error('Manifest start_url and scope must use the configured base.');
@@ -86,6 +84,17 @@ if (requiredIcons.size)
   throw new Error(
     `Built manifest is missing install icons: ${[...requiredIcons.keys()].join(', ')}`,
   );
+for (const scenarioAsset of [
+  'scenarios/catalog.json',
+  'scenarios/torrevieja-v1/scenario.json',
+  'scenarios/torrevieja-v1/settlements.json',
+  'scenarios/torrevieja-v1/stops.json',
+  'scenarios/torrevieja-v1/routes.json',
+  'scenarios/torrevieja-v1/presentation.json',
+  'scenarios/torrevieja-v1/provenance.json',
+])
+  if (!serviceWorkerSource.includes(`url:${JSON.stringify(scenarioAsset)}`))
+    throw new Error(`Service Worker does not precache ${scenarioAsset}.`);
 console.log(
   `Build and installability audit passed: ${JSON.stringify({ javascript, sizes, budgets: configured })}.`,
 );

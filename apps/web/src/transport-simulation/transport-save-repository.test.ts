@@ -1,4 +1,5 @@
 import 'fake-indexeddb/auto';
+import Dexie from 'dexie';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   createScenarioCoordinate,
@@ -84,8 +85,19 @@ describe.each([
     const repository = create();
     await repository.put(record());
     expect(await repository.get('slot')).toMatchObject({
-      kind: 'transport-save-record',
+      classification: 'current',
+      record: { kind: 'transport-save-record' },
     });
+    const first = await repository.get('slot');
+    const second = await repository.get('slot');
+    expect(first).not.toBe(second);
+    expect(Object.isFrozen(first)).toBe(true);
+    if (first?.classification === 'current') {
+      expect(Object.isFrozen(first.record.snapshot.state)).toBe(true);
+      expect(() => {
+        (first.record.snapshot.state as { tick: number }).tick = 99;
+      }).toThrow();
+    }
     const list = await repository.list();
     expect(list.some((item) => item.classification === 'current')).toBe(true);
     await repository.delete('slot');
@@ -94,6 +106,41 @@ describe.each([
     await repository.close();
     await expect(repository.list()).rejects.toThrow('closed');
   });
+});
+
+it('classifies raw IndexedDB legacy, corruption, and future data on get and list', async () => {
+  const database = new Dexie('transport-raw-contract');
+  database.version(1).stores({
+    foundationSaves: 'saveId, gameId, updatedAtUtcMs',
+  });
+  const table = database.table('foundationSaves');
+  await table.bulkPut([
+    legacy,
+    { saveId: 'corrupt', kind: 'transport-save-record', schemaVersion: 1 },
+    { saveId: 'future', kind: 'transport-save-record', schemaVersion: 2 },
+  ]);
+  database.close();
+  const repository = createDexieTransportSaveRepository(
+    'transport-raw-contract',
+  );
+  await expect(repository.get('legacy')).resolves.toMatchObject({
+    classification: 'legacy-foundation',
+  });
+  await expect(repository.get('corrupt')).resolves.toMatchObject({
+    classification: 'malformed-known',
+  });
+  await expect(repository.get('future')).resolves.toMatchObject({
+    classification: 'unsupported-future',
+  });
+  expect(await repository.list()).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ classification: 'legacy-foundation' }),
+      expect.objectContaining({ classification: 'malformed-known' }),
+      expect.objectContaining({ classification: 'unsupported-future' }),
+    ]),
+  );
+  await repository.close();
+  await deleteTransportSaveDatabase('transport-raw-contract');
 });
 
 it('validates repository construction and classifies seeded legacy data', async () => {

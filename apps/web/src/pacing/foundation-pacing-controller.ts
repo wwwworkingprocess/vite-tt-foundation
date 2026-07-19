@@ -1,9 +1,11 @@
 import { createStore } from 'zustand/vanilla';
 import {
   parseFoundationCommandEnvelope,
+  type FoundationCommandEnvelope,
+  type FoundationCommandResult,
   type TimelineId,
 } from '@torrevieja-tycoon/protocol';
-import type { createFoundationApplicationController } from '../application/foundation-controller.js';
+import type { FoundationApplicationState } from '../application/foundation-controller.js';
 import {
   defaultPlaybackProfile,
   planPacing,
@@ -12,7 +14,17 @@ import {
   type PlaybackProfile,
 } from './pacing-plan.js';
 
-type Application = ReturnType<typeof createFoundationApplicationController>;
+interface PacingApplicationPort {
+  readonly projection: {
+    getState(): FoundationApplicationState;
+    subscribe(
+      listener: (state: FoundationApplicationState) => void,
+    ): () => void;
+  };
+  sendCommand(
+    envelope: FoundationCommandEnvelope,
+  ): Promise<FoundationCommandResult>;
+}
 export interface FoundationPacingState {
   readonly status: 'idle' | 'running' | 'paused' | 'failed' | 'closed';
   readonly mode: PlaybackMode;
@@ -25,7 +37,7 @@ export interface FoundationPacingState {
 }
 const freeze = (value: FoundationPacingState) => Object.freeze(value);
 export function createFoundationPacingController(input: {
-  readonly application: Application;
+  readonly application: PacingApplicationPort;
   readonly profile?: PlaybackProfile;
 }) {
   const profile = input.profile ?? defaultPlaybackProfile;

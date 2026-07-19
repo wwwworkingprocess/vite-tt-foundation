@@ -24,3 +24,7 @@ Saves stay small and deterministic, and corrected scenario packages cannot
 silently change restored worlds. Exact restores require that the matching
 scenario package remains available. No vehicle, movement, passenger, economy,
 map, or network mechanics are introduced by this decision.
+
+The browser runs one authoritative session stack. Scenario selection supplies
+the immutable scenario to the existing application/pacing/persistence
+composition; a standalone parallel Foundation session is not created.

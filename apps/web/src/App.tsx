@@ -1,16 +1,21 @@
 import { protocolContractVersion } from '@torrevieja-tycoon/protocol';
-import { simulationFoundationLabel } from '@torrevieja-tycoon/simulation';
+import {
+  createScenarioCoordinate,
+  scenarioCoordinatesEqual,
+  simulationFoundationLabel,
+} from '@torrevieja-tycoon/simulation';
+import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { createFoundationApplicationController } from './application/foundation-controller.js';
 import {
   createFoundationSessionComposition,
   type FoundationSessionCompositionState,
 } from './foundation-session-composition.js';
-import { createDexieFoundationSaveRepository } from './persistence/save-repository.js';
 import { createDefaultBrowserPacingDriver } from './pacing/browser-pacing-driver.js';
 import { createFoundationPacingController } from './pacing/foundation-pacing-controller.js';
-import { createBrowserFoundationWorker } from './simulation-worker/browser-worker.js';
-import { createWorkerFoundationClient } from './simulation-worker/worker-client.js';
+import { createBrowserTransportWorker } from './transport-simulation/browser-transport-worker.js';
+import { createTransportFoundationApplication } from './transport-simulation/transport-foundation-application.js';
+import { createDexieTransportSaveRepository } from './transport-simulation/transport-save-repository.js';
+import { createWorkerTransportSimulationClient } from './transport-simulation/worker-transport-client.js';
 
 type Actions = Readonly<{
   mode: (mode: 'paused' | 'normal' | 'fast' | 'maximum') => Promise<void>;
@@ -25,18 +30,35 @@ type Actions = Readonly<{
 export function App() {
   const [state, setState] = useState<FoundationSessionCompositionState>();
   const [actions, setActions] = useState<Actions>();
+  const [scenario, setScenario] = useState<CanonicalScenario>();
   useEffect(() => {
-    if (typeof Worker === 'undefined') return;
+    if (typeof Worker === 'undefined' || !scenario) return;
     const composition = createFoundationSessionComposition({
       createStack() {
-        const application = createFoundationApplicationController({
-          repository: createDexieFoundationSaveRepository(
-            'foundation-template',
-          ),
-          clientFactory: () =>
-            createWorkerFoundationClient({
-              workerFactory: createBrowserFoundationWorker,
+        const repository = createDexieTransportSaveRepository(
+          'foundation-template',
+        );
+        const application = createTransportFoundationApplication({
+          scenario,
+          repository,
+          createClient: () =>
+            createWorkerTransportSimulationClient({
+              workerFactory: createBrowserTransportWorker,
             }),
+          scenarioResolver: {
+            resolve(coordinate) {
+              if (
+                scenarioCoordinatesEqual(
+                  createScenarioCoordinate(scenario),
+                  coordinate,
+                )
+              )
+                return Promise.resolve(scenario);
+              return Promise.reject(
+                new Error('The exact saved scenario package is unavailable.'),
+              );
+            },
+          },
         });
         const pacing = createFoundationPacingController({ application });
         return {
@@ -71,7 +93,7 @@ export function App() {
       remove();
       void composition.dispose();
     };
-  }, []);
+  }, [scenario]);
 
   const application = state?.application;
   const pacing = state?.pacing;
@@ -111,7 +133,7 @@ export function App() {
             <dd>version {protocolContractVersion}</dd>
           </div>
         </dl>
-        <div aria-label="Foundation Worker status">
+        <div aria-label="Authoritative transport Worker status">
           <p data-testid="worker-status">Worker status: {status}</p>
           <p data-testid="worker-tick">
             Worker tick:{' '}
@@ -128,6 +150,12 @@ export function App() {
           <p data-testid="stream-offset">
             Stream offset:{' '}
             {application?.authoritative?.streamOffset ?? 'pending'}
+          </p>
+          <p data-testid="scenario-coordinate">
+            Scenario coordinate:{' '}
+            {scenario
+              ? `${scenario.manifest.scenarioId}@${scenario.manifest.scenarioVersion}#${scenario.manifest.contentHash}`
+              : 'pending'}
           </p>
           <div aria-label="Foundation pacing controls">
             <button
@@ -207,7 +235,7 @@ export function App() {
             <button disabled={!ready} onClick={action(actions?.save)}>
               {state?.saveMode === 'autosave'
                 ? 'Save autosave now'
-                : 'Save foundation session'}
+                : 'Save transport session'}
             </button>
             <button
               disabled={!ready || !selectedSaveAvailable}
@@ -228,6 +256,12 @@ export function App() {
             <p data-testid="save-count">
               Saved sessions: {application?.persistence.saves.length ?? 0}
             </p>
+            <p data-testid="legacy-save-count">
+              Legacy incompatible saves:{' '}
+              {application?.persistence.saves.filter(
+                (save) => save.compatibility === 'legacy-incompatible',
+              ).length ?? 0}
+            </p>
             <p data-testid="persistence-status">
               Persistence status: {application?.persistence.status ?? 'idle'}
               {persistenceMessage ? `: ${persistenceMessage}` : ''}
@@ -238,7 +272,7 @@ export function App() {
           </div>
           {state?.canStartNewSession ? (
             <button type="button" onClick={action(actions?.start)}>
-              Start new foundation session
+              Start new transport session
             </button>
           ) : (
             <button
@@ -246,13 +280,13 @@ export function App() {
               disabled={!actions || state?.operation === 'closing'}
               onClick={action(actions?.close)}
             >
-              Close foundation Worker
+              Close transport Worker
             </button>
           )}
         </div>
       </section>
       <Suspense fallback={<p>Loading scenario catalogue…</p>}>
-        <ScenarioPanel />
+        <ScenarioPanel onScenarioReady={setScenario} />
       </Suspense>
       <Suspense fallback={<p>Loading representation…</p>}>
         <FoundationScene />

@@ -117,6 +117,7 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
   const foundation = createDirectFoundationClient();
   let authority: TransportSimulationState | undefined;
   let lifecycle: TransportClientLifecycle = freeze({ state: 'idle' });
+  let closePromise: Promise<void> | undefined;
   let registrationSequence = 0;
   const lifecycleListeners = new Map<
     number,
@@ -141,19 +142,19 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
 
   const client: TransportSimulationClient = {
     async connect(request) {
+      if (lifecycle.state !== 'idle')
+        throw new Error('Transport client can connect only from idle.');
       assertConnectShape(request);
+      const nextAuthority =
+        request.mode === 'new'
+          ? createTransportSimulationState(
+              request.scenario,
+              request.initialSimulationTick,
+            )
+          : restoreTransportSimulationState(request.snapshot, request.scenario);
       publishLifecycle({ state: 'connecting' });
       try {
-        authority =
-          request.mode === 'new'
-            ? createTransportSimulationState(
-                request.scenario,
-                request.initialSimulationTick,
-              )
-            : restoreTransportSimulationState(
-                request.snapshot,
-                request.scenario,
-              );
+        authority = nextAuthority;
         await foundation.connect(
           request.mode === 'new'
             ? {
@@ -179,6 +180,14 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         });
       } catch (error) {
         authority = undefined;
+        publishLifecycle({
+          state: 'failed',
+          code: 'invalid-worker-message',
+          message:
+            error instanceof Error
+              ? error.message
+              : 'Transport startup failed.',
+        });
         throw error;
       }
     },
@@ -220,6 +229,8 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
       foundation.subscribeRenderSnapshots(listener),
     getLifecycle: () => lifecycle,
     subscribeLifecycle(listener) {
+      if (lifecycle.state === 'closed')
+        throw new Error('Transport client is closed.');
       const registration = ++registrationSequence;
       lifecycleListeners.set(registration, listener);
       return () => lifecycleListeners.delete(registration);
@@ -228,11 +239,15 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
       if (!authority) throw new Error('Transport client is not ready.');
       return authority;
     },
-    async close() {
-      await foundation.close();
-      authority = undefined;
-      publishLifecycle({ state: 'closed' });
-      lifecycleListeners.clear();
+    close() {
+      if (closePromise) return closePromise;
+      closePromise = (async () => {
+        await foundation.close();
+        authority = undefined;
+        publishLifecycle({ state: 'closed' });
+        lifecycleListeners.clear();
+      })();
+      return closePromise;
     },
   };
   return Object.freeze(client);

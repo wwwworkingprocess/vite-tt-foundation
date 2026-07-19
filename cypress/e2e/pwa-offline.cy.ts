@@ -61,7 +61,7 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.contains('button', 'Restore foundation session').click();
     cy.get('[data-testid="worker-timeline"]').should(
       'have.text',
-      'Timeline: browser-foundation-restored',
+      'Timeline: browser-foundation-restored-1',
     );
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(savedTick),

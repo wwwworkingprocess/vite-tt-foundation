@@ -48,5 +48,14 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('closed'),
     );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Start new foundation session' }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
+    );
+    expect(screen.getByTestId('worker-timeline')).toHaveTextContent(
+      'browser-foundation-timeline-2',
+    );
   });
 });

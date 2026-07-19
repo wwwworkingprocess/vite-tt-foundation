@@ -1,137 +1,94 @@
-import {
-  parseGameId,
-  parseTimelineId,
-  protocolContractVersion,
-} from '@torrevieja-tycoon/protocol';
+import { protocolContractVersion } from '@torrevieja-tycoon/protocol';
 import { simulationFoundationLabel } from '@torrevieja-tycoon/simulation';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { createFoundationApplicationController } from './application/foundation-controller.js';
+import {
+  createFoundationSessionComposition,
+  type FoundationSessionCompositionState,
+} from './foundation-session-composition.js';
 import { createDexieFoundationSaveRepository } from './persistence/save-repository.js';
 import { createDefaultBrowserPacingDriver } from './pacing/browser-pacing-driver.js';
-import {
-  createFoundationPacingController,
-  type FoundationPacingState,
-} from './pacing/foundation-pacing-controller.js';
+import { createFoundationPacingController } from './pacing/foundation-pacing-controller.js';
 import { createBrowserFoundationWorker } from './simulation-worker/browser-worker.js';
 import { createWorkerFoundationClient } from './simulation-worker/worker-client.js';
 
+type Actions = Readonly<{
+  mode: (mode: 'paused' | 'normal' | 'fast' | 'maximum') => Promise<void>;
+  bonus: () => Promise<void>;
+  save: () => Promise<void>;
+  restore: () => Promise<void>;
+  saveMode: (mode: 'manual' | 'autosave') => Promise<void>;
+  close: () => Promise<void>;
+  start: () => Promise<void>;
+}>;
+
 export function App() {
-  const [status, setStatus] = useState('starting');
-  const [tick, setTick] = useState<number>();
-  const [saveCount, setSaveCount] = useState(0);
-  const [timeline, setTimeline] = useState('pending');
-  const [commandRevision, setCommandRevision] = useState<number>();
-  const [streamOffset, setStreamOffset] = useState<number>();
-  const [persistenceStatus, setPersistenceStatus] = useState('idle');
-  const [persistenceMessage, setPersistenceMessage] = useState<string>();
-  const [pacingState, setPacingState] = useState<FoundationPacingState>();
-  const [actions, setActions] = useState<{
-    mode: (mode: 'paused' | 'normal' | 'fast' | 'maximum') => void;
-    bonus: () => void;
-    save: () => void;
-    restore: () => void;
-    close: () => void;
-  }>();
+  const [state, setState] = useState<FoundationSessionCompositionState>();
+  const [actions, setActions] = useState<Actions>();
   useEffect(() => {
-    if (typeof Worker === 'undefined') {
-      setStatus('unavailable in this environment');
-      return;
-    }
-    let active = true;
-    const application = createFoundationApplicationController({
-      repository: createDexieFoundationSaveRepository('foundation-template'),
-      clientFactory: () =>
-        createWorkerFoundationClient({
-          workerFactory: createBrowserFoundationWorker,
-        }),
+    if (typeof Worker === 'undefined') return;
+    const composition = createFoundationSessionComposition({
+      createStack() {
+        const application = createFoundationApplicationController({
+          repository: createDexieFoundationSaveRepository(
+            'foundation-template',
+          ),
+          clientFactory: () =>
+            createWorkerFoundationClient({
+              workerFactory: createBrowserFoundationWorker,
+            }),
+        });
+        const pacing = createFoundationPacingController({ application });
+        return {
+          application,
+          pacing,
+          driver: createDefaultBrowserPacingDriver(),
+        };
+      },
+      confirm: (message) => window.confirm(message),
+      timer: {
+        setInterval: (callback, milliseconds) =>
+          window.setInterval(callback, milliseconds),
+        clearInterval: (id) => {
+          if (typeof id === 'number') window.clearInterval(id);
+        },
+      },
+      nowUtcMs: Date.now,
     });
-    const pacing = createFoundationPacingController({ application });
-    const driver = createDefaultBrowserPacingDriver();
-    const removeApp = application.projection.subscribe((state) => {
-      if (!active) return;
-      setStatus(state.session.status);
-      setTick(state.authoritative?.simulationTick);
-      setSaveCount(state.persistence.saves.length);
-      setTimeline(
-        state.session.status === 'ready' ? state.session.timelineId : 'pending',
-      );
-      setCommandRevision(state.authoritative?.commandRevision);
-      setStreamOffset(state.authoritative?.streamOffset);
-      setPersistenceStatus(state.persistence.status);
-      setPersistenceMessage(
-        state.persistence.status === 'failed'
-          ? state.persistence.message
-          : undefined,
-      );
-    });
-    const removePacing = pacing.projection.subscribe((state) => {
-      if (active) setPacingState(state);
-    });
-    setPacingState(pacing.projection.getState());
-    const close = () => {
-      if (!active) return;
-      active = false;
-      driver.close();
-      void pacing
-        .close()
-        .then(() => application.close())
-        .catch(() => undefined)
-        .finally(() => setStatus('closed'));
-    };
+    const remove = composition.projection.subscribe((next) => setState(next));
+    setState(composition.projection.getState());
     setActions({
-      mode: (mode) => void pacing.setMode(mode).catch(() => undefined),
-      bonus: () => void pacing.grantDoubleSpeedBonus(24).catch(() => undefined),
-      save: () =>
-        void application
-          .save({
-            saveId: 'foundation-slot',
-            label: 'Foundation slot',
-            createdAtUtcMs: 1,
-            updatedAtUtcMs: 1,
-          })
-          .catch(() => undefined),
-      restore: () =>
-        void application
-          .restore({
-            saveId: 'foundation-slot',
-            newTimelineId: parseTimelineId('browser-foundation-restored'),
-          })
-          .catch(() => undefined),
-      close,
+      mode: composition.setMode,
+      bonus: composition.grantBonus,
+      save: composition.saveManual,
+      restore: composition.restoreManual,
+      saveMode: composition.setSaveMode,
+      close: composition.closeSession,
+      start: composition.startNewSession,
     });
-    void application
-      .startNew({
-        gameId: parseGameId('browser-foundation-game'),
-        timelineId: parseTimelineId('browser-foundation-timeline'),
-        initialSimulationTick: 0,
-      })
-      .then(() => {
-        if (active) {
-          setStatus('ready');
-          setTick(0);
-          driver.start((elapsed) =>
-            pacing.advanceByElapsedMicroseconds(elapsed),
-          );
-          void application.listSaves().catch(() => undefined);
-        }
-      })
-      .catch((error: unknown) => {
-        if (active)
-          setStatus(
-            error instanceof Error ? `failed: ${error.message}` : 'failed',
-          );
-      });
+    void composition.startNewSession();
     return () => {
-      active = false;
-      removeApp();
-      removePacing();
-      driver.close();
-      void pacing
-        .close()
-        .then(() => application.close())
-        .catch(() => undefined);
+      remove();
+      void composition.dispose();
     };
   }, []);
+
+  const application = state?.application;
+  const pacing = state?.pacing;
+  const session = application?.session;
+  const status =
+    typeof Worker === 'undefined'
+      ? 'unavailable in this environment'
+      : (session?.status ?? 'starting');
+  const ready = session?.status === 'ready' && state?.operation === 'idle';
+  const persistenceMessage =
+    application?.persistence.status === 'failed'
+      ? application.persistence.message
+      : undefined;
+  const action = (operation: (() => Promise<void>) | undefined) => () => {
+    void operation?.();
+  };
+
   return (
     <main>
       <section aria-labelledby="foundation-title">
@@ -152,84 +109,127 @@ export function App() {
         </dl>
         <div aria-label="Foundation Worker status">
           <p data-testid="worker-status">Worker status: {status}</p>
-          <p data-testid="worker-tick">Worker tick: {tick ?? 'pending'}</p>
-          <p data-testid="worker-timeline">Timeline: {timeline}</p>
+          <p data-testid="worker-tick">
+            Worker tick:{' '}
+            {application?.authoritative?.simulationTick ?? 'pending'}
+          </p>
+          <p data-testid="worker-timeline">
+            Timeline:{' '}
+            {session?.status === 'ready' ? session.timelineId : 'pending'}
+          </p>
           <p data-testid="command-revision">
-            Command revision: {commandRevision ?? 'pending'}
+            Command revision:{' '}
+            {application?.authoritative?.commandRevision ?? 'pending'}
           </p>
           <p data-testid="stream-offset">
-            Stream offset: {streamOffset ?? 'pending'}
+            Stream offset:{' '}
+            {application?.authoritative?.streamOffset ?? 'pending'}
           </p>
           <div aria-label="Foundation pacing controls">
             <button
-              disabled={status === 'closed'}
-              onClick={() => actions?.mode('paused')}
+              disabled={!ready}
+              onClick={action(
+                () => actions?.mode('paused') ?? Promise.resolve(),
+              )}
             >
               Pause
             </button>
             <button
-              disabled={status === 'closed'}
-              onClick={() => actions?.mode('normal')}
+              disabled={!ready}
+              onClick={action(
+                () => actions?.mode('normal') ?? Promise.resolve(),
+              )}
             >
               Normal 20×
             </button>
             <button
-              disabled={status === 'closed'}
-              onClick={() => actions?.mode('fast')}
+              disabled={!ready}
+              onClick={action(() => actions?.mode('fast') ?? Promise.resolve())}
             >
               Fast 50×
             </button>
             <button
-              disabled={status === 'closed'}
-              onClick={() => actions?.mode('maximum')}
+              disabled={!ready}
+              onClick={action(
+                () => actions?.mode('maximum') ?? Promise.resolve(),
+              )}
             >
               Maximum 60×
             </button>
-            <button
-              disabled={status === 'closed'}
-              onClick={() => actions?.bonus()}
-            >
+            <button disabled={!ready} onClick={action(actions?.bonus)}>
               Grant demo 2× bonus
             </button>
             <p data-testid="pacing-rate">
-              Effective rate: {pacingState?.effectiveRate ?? 0}×
+              Effective rate: {pacing?.effectiveRate ?? 0}×
             </p>
             <p data-testid="pacing-status">
-              Pacing status: {pacingState?.status ?? 'idle'}
-              {pacingState?.message ? `: ${pacingState.message}` : ''}
+              Pacing status: {pacing?.status ?? 'idle'}
+              {pacing?.message ? `: ${pacing.message}` : ''}
             </p>
             <p data-testid="bonus-ticks">
               Bonus ticks remaining:{' '}
-              {pacingState?.remainingDoubleSpeedBonusTicks ?? 0}
+              {pacing?.remainingDoubleSpeedBonusTicks ?? 0}
             </p>
             <p data-testid="pacing-credit">
-              Pacing credit: {pacingState?.creditGameMicroseconds ?? 0}
+              Pacing credit: {pacing?.creditGameMicroseconds ?? 0}
             </p>
-            <button
-              disabled={status !== 'ready'}
-              onClick={() => actions?.save()}
-            >
+            <fieldset>
+              <legend>Save mode</legend>
+              <label>
+                <input
+                  type="radio"
+                  name="save-mode"
+                  checked={(state?.saveMode ?? 'manual') === 'manual'}
+                  disabled={!actions}
+                  onChange={action(
+                    () => actions?.saveMode('manual') ?? Promise.resolve(),
+                  )}
+                />
+                Manual
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="save-mode"
+                  checked={state?.saveMode === 'autosave'}
+                  disabled={!actions}
+                  onChange={action(
+                    () => actions?.saveMode('autosave') ?? Promise.resolve(),
+                  )}
+                />
+                Autosave
+              </label>
+            </fieldset>
+            <button disabled={!ready} onClick={action(actions?.save)}>
               Save foundation session
             </button>
-            <button
-              disabled={status !== 'ready'}
-              onClick={() => actions?.restore()}
-            >
+            <button disabled={!ready} onClick={action(actions?.restore)}>
               Restore foundation session
             </button>
-            <p data-testid="save-count">Saved sessions: {saveCount}</p>
+            <p data-testid="save-count">
+              Saved sessions: {application?.persistence.saves.length ?? 0}
+            </p>
             <p data-testid="persistence-status">
-              Persistence status: {persistenceStatus}
+              Persistence status: {application?.persistence.status ?? 'idle'}
               {persistenceMessage ? `: ${persistenceMessage}` : ''}
             </p>
+            {state?.message ? (
+              <p role="alert">Session action failed: {state.message}</p>
+            ) : null}
           </div>
-          <button
-            type="button"
-            disabled={status === 'closed'}
-            onClick={() => actions?.close()}
-          >
-            Close foundation Worker
-          </button>
+          {state?.canStartNewSession ? (
+            <button type="button" onClick={action(actions?.start)}>
+              Start new foundation session
+            </button>
+          ) : (
+            <button
+              type="button"
+              disabled={!actions || state?.operation === 'closing'}
+              onClick={action(actions?.close)}
+            >
+              Close foundation Worker
+            </button>
+          )}
         </div>
       </section>
       <Suspense fallback={<p>Loading representation…</p>}>

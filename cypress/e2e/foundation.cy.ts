@@ -21,5 +21,11 @@ describe('foundation screen', () => {
       });
     cy.contains('button', 'Close foundation Worker').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
+    cy.contains('button', 'Start new foundation session').click();
+    cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
+    cy.get('[data-testid="worker-timeline"]').should(
+      'contain.text',
+      'browser-foundation-timeline-2',
+    );
   });
 });

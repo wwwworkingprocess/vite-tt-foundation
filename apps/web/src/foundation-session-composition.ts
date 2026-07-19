@@ -61,10 +61,9 @@ export interface FoundationSessionCompositionState {
 }
 
 function deepFreeze<T>(value: T): T {
-  if (value === null || typeof value !== 'object' || Object.isFrozen(value))
-    return value;
+  if (value === null || typeof value !== 'object') return value;
   for (const child of Object.values(value)) deepFreeze(child);
-  return Object.freeze(value);
+  return Object.isFrozen(value) ? value : Object.freeze(value);
 }
 
 const idleApplication = deepFreeze<FoundationApplicationState>({
@@ -115,7 +114,7 @@ export function createFoundationSessionComposition(input: {
   let sessionSequence = 0;
   let restoreSequence = 0;
   let disposed = false;
-  let autosaveInFlight = false;
+  let autosaveOwnerGeneration: number | undefined;
   let closePromise: Promise<void> | undefined;
   const issuedRestoreTimelines = new Set<TimelineId>();
 
@@ -187,8 +186,9 @@ export function createFoundationSessionComposition(input: {
   async function autosave() {
     const candidate = stack;
     const token = generation;
-    if (!candidate || !shouldArmAutosave() || autosaveInFlight) return;
-    autosaveInFlight = true;
+    if (!candidate || !shouldArmAutosave() || autosaveOwnerGeneration === token)
+      return;
+    autosaveOwnerGeneration = token;
     set({ operation: 'saving' });
     try {
       await candidate.application.save(metadata('autosave'));
@@ -196,7 +196,8 @@ export function createFoundationSessionComposition(input: {
     } catch (error) {
       recordError(error, candidate, token);
     } finally {
-      autosaveInFlight = false;
+      if (autosaveOwnerGeneration === token)
+        autosaveOwnerGeneration = undefined;
       if (currentContext(candidate, token)) set({ operation: 'idle' });
     }
   }
@@ -439,7 +440,11 @@ export function createFoundationSessionComposition(input: {
     saveManual,
     restoreManual,
     setSaveMode(mode: FoundationSaveMode) {
-      if ((mode !== 'manual' && mode !== 'autosave') || disposed)
+      if (
+        (mode !== 'manual' && mode !== 'autosave') ||
+        disposed ||
+        store.getState().operation !== 'idle'
+      )
         return Promise.resolve();
       set({ saveMode: mode });
       armAutosaveInterval();

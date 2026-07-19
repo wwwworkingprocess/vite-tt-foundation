@@ -79,10 +79,12 @@ function harness(options?: {
     pulse: ((elapsed: number) => Promise<void>) | undefined;
   }> = [];
   let delayedSave: Promise<void> | undefined;
+  const delayedSaveByStack = new Map<number, Promise<void>>();
   let delayedRestore: Promise<void> | undefined;
   let nextSaveFailure: Error | undefined;
   let nextListFailure: Error | undefined;
   const createStack = () => {
+    const stackIndex = stacks.length;
     const app = projection<FoundationApplicationState>({
       session: { status: 'idle' },
       synchronization: { status: 'idle' },
@@ -109,6 +111,8 @@ function harness(options?: {
         },
       });
     const save = vi.fn(async ({ saveId }: { saveId: unknown }) => {
+      const stackDelay = delayedSaveByStack.get(stackIndex);
+      if (stackDelay) await stackDelay;
       if (delayedSave) await delayedSave;
       if (nextSaveFailure) {
         const failure = nextSaveFailure;
@@ -215,6 +219,9 @@ function harness(options?: {
     delaySave(promise: Promise<void>) {
       delayedSave = promise;
     },
+    delaySaveForStack(index: number, promise: Promise<void>) {
+      delayedSaveByStack.set(index, promise);
+    },
     delayRestore(promise: Promise<void>) {
       delayedRestore = promise;
     },
@@ -228,6 +235,108 @@ function harness(options?: {
 }
 
 describe('foundation session composition', () => {
+  it('ignores save-mode changes during save and restore confirmation', async () => {
+    const answers: Array<(value: boolean) => void> = [];
+    const { composition } = harness({
+      confirm: () =>
+        new Promise<boolean>((resolve) => {
+          answers.push(resolve);
+        }),
+    });
+    await composition.startNewSession();
+    await composition.saveManual();
+
+    const saving = composition.saveManual();
+    await Promise.resolve();
+    expect(composition.projection.getState().operation).toBe('confirming-save');
+    await composition.setSaveMode('autosave');
+    expect(composition.projection.getState().saveMode).toBe('manual');
+    answers.shift()?.(false);
+    await saving;
+
+    const restoring = composition.restoreManual();
+    await Promise.resolve();
+    expect(composition.projection.getState().operation).toBe(
+      'confirming-restore',
+    );
+    await composition.setSaveMode('autosave');
+    expect(composition.projection.getState().saveMode).toBe('manual');
+    answers.shift()?.(false);
+    await restoring;
+  });
+
+  it('ignores save-mode changes while saving, restoring, and closing', async () => {
+    const { composition, delaySave, delayRestore, stacks } = harness();
+    await composition.startNewSession();
+    let releaseSave!: () => void;
+    delaySave(new Promise<void>((resolve) => (releaseSave = resolve)));
+    const saving = composition.saveManual();
+    await Promise.resolve();
+    await composition.setSaveMode('autosave');
+    expect(composition.projection.getState().saveMode).toBe('manual');
+    releaseSave();
+    await saving;
+
+    let releaseRestore!: () => void;
+    delayRestore(new Promise<void>((resolve) => (releaseRestore = resolve)));
+    const restoring = composition.restoreManual();
+    await Promise.resolve();
+    await Promise.resolve();
+    await composition.setSaveMode('autosave');
+    expect(composition.projection.getState().saveMode).toBe('manual');
+    releaseRestore();
+    await restoring;
+
+    let releaseClose!: () => void;
+    stacks[0]?.pacingClose.mockImplementationOnce(
+      () => new Promise<void>((resolve) => (releaseClose = resolve)),
+    );
+    const closing = composition.closeSession();
+    await composition.setSaveMode('autosave');
+    expect(composition.projection.getState().saveMode).toBe('manual');
+    releaseClose();
+    await closing;
+  });
+
+  it('scopes pending autosave ownership to its stack generation', async () => {
+    const { composition, timer, stacks, delaySaveForStack } = harness();
+    await composition.startNewSession();
+    await composition.setSaveMode('autosave');
+    let releaseOld!: () => void;
+    delaySaveForStack(
+      0,
+      new Promise<void>((resolve) => (releaseOld = resolve)),
+    );
+    await timer.fire();
+    expect(composition.projection.getState().operation).toBe('saving');
+    await composition.closeSession();
+    await composition.startNewSession();
+    expect(timer.activeCount()).toBe(1);
+    await timer.fire();
+    expect(stacks[1]?.save).toHaveBeenCalledOnce();
+    expect(composition.projection.getState().operation).toBe('idle');
+    releaseOld();
+    await Promise.resolve();
+    expect(composition.projection.getState().operation).toBe('idle');
+  });
+
+  it('recursively freezes children of shallow-frozen projections', async () => {
+    const { composition, stacks } = harness();
+    await composition.startNewSession();
+    const nestedSession = {
+      status: 'ready' as const,
+      gameId: parseGameId('browser-foundation-game'),
+      timelineId: parseTimelineId('browser-foundation-timeline'),
+    };
+    stacks[0]?.app.set(
+      Object.freeze({
+        ...stacks[0].app.api.getState(),
+        session: nestedSession,
+      }),
+    );
+    expect(Object.isFrozen(nestedSession)).toBe(true);
+  });
+
   it('serializes deferred confirmations as operations', async () => {
     let answer!: (value: boolean) => void;
     const confirm = vi.fn(

@@ -184,7 +184,7 @@ export function App() {
                   type="radio"
                   name="save-mode"
                   checked={(state?.saveMode ?? 'manual') === 'manual'}
-                  disabled={!actions}
+                  disabled={!actions || state?.operation !== 'idle'}
                   onChange={action(
                     () => actions?.saveMode('manual') ?? Promise.resolve(),
                   )}
@@ -196,7 +196,7 @@ export function App() {
                   type="radio"
                   name="save-mode"
                   checked={state?.saveMode === 'autosave'}
-                  disabled={!actions}
+                  disabled={!actions || state?.operation !== 'idle'}
                   onChange={action(
                     () => actions?.saveMode('autosave') ?? Promise.resolve(),
                   )}

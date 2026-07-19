@@ -81,6 +81,10 @@ export function App() {
       ? 'unavailable in this environment'
       : (session?.status ?? 'starting');
   const ready = session?.status === 'ready' && state?.operation === 'idle';
+  const selectedSaveAvailable =
+    state?.saveMode === 'autosave'
+      ? state.autosaveSaveAvailable
+      : state?.manualSaveAvailable;
   const persistenceMessage =
     application?.persistence.status === 'failed'
       ? application.persistence.message
@@ -201,11 +205,26 @@ export function App() {
               </label>
             </fieldset>
             <button disabled={!ready} onClick={action(actions?.save)}>
-              Save foundation session
+              {state?.saveMode === 'autosave'
+                ? 'Save autosave now'
+                : 'Save foundation session'}
             </button>
-            <button disabled={!ready} onClick={action(actions?.restore)}>
-              Restore foundation session
+            <button
+              disabled={!ready || !selectedSaveAvailable}
+              onClick={action(actions?.restore)}
+            >
+              {state?.saveMode === 'autosave'
+                ? 'Restore autosave'
+                : 'Restore manual save'}
             </button>
+            <p data-testid="manual-save-availability">
+              Manual save:{' '}
+              {state?.manualSaveAvailable ? 'available' : 'not available'}
+            </p>
+            <p data-testid="autosave-availability">
+              Autosave:{' '}
+              {state?.autosaveSaveAvailable ? 'available' : 'not available'}
+            </p>
             <p data-testid="save-count">
               Saved sessions: {application?.persistence.saves.length ?? 0}
             </p>

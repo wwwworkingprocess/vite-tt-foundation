@@ -70,6 +70,7 @@ function harness(options?: {
     pacing: ReturnType<typeof projection<FoundationPacingState>>;
     save: ReturnType<typeof vi.fn>;
     restore: ReturnType<typeof vi.fn>;
+    listSaves: ReturnType<typeof vi.fn>;
     close: ReturnType<typeof vi.fn>;
     setMode: ReturnType<typeof vi.fn>;
     bonus: ReturnType<typeof vi.fn>;
@@ -80,6 +81,7 @@ function harness(options?: {
   let delayedSave: Promise<void> | undefined;
   let delayedRestore: Promise<void> | undefined;
   let nextSaveFailure: Error | undefined;
+  let nextListFailure: Error | undefined;
   const createStack = () => {
     const app = projection<FoundationApplicationState>({
       session: { status: 'idle' },
@@ -132,6 +134,15 @@ function harness(options?: {
         });
       },
     );
+    const listSaves = vi.fn(async () => {
+      if (nextListFailure) {
+        const failure = nextListFailure;
+        nextListFailure = undefined;
+        throw failure;
+      }
+      refreshSaves();
+      return app.api.getState().persistence.saves;
+    });
     const close = vi.fn(async () => {
       app.set({ ...app.api.getState(), session: { status: 'closed' } });
     });
@@ -157,10 +168,7 @@ function harness(options?: {
           },
           save,
           restore,
-          async listSaves() {
-            refreshSaves();
-            return app.api.getState().persistence.saves;
-          },
+          listSaves,
           close,
         },
         pacing: {
@@ -181,6 +189,7 @@ function harness(options?: {
       pacing,
       save,
       restore,
+      listSaves,
       close,
       setMode,
       bonus,
@@ -212,10 +221,117 @@ function harness(options?: {
     failNextSave(error: Error) {
       nextSaveFailure = error;
     },
+    failNextList(error: Error) {
+      nextListFailure = error;
+    },
   };
 }
 
 describe('foundation session composition', () => {
+  it('serializes deferred confirmations as operations', async () => {
+    let answer!: (value: boolean) => void;
+    const confirm = vi.fn(
+      () => new Promise<boolean>((resolve) => (answer = resolve)),
+    );
+    const { composition, stacks } = harness({ confirm });
+    await composition.startNewSession();
+    await composition.saveManual();
+
+    const first = composition.restoreManual();
+    const second = composition.restoreManual();
+    await Promise.resolve();
+    expect(composition.projection.getState().operation).toBe(
+      'confirming-restore',
+    );
+    expect(confirm).toHaveBeenCalledOnce();
+    expect(stacks[0]?.restore).not.toHaveBeenCalled();
+    answer(true);
+    await Promise.all([first, second]);
+    expect(stacks[0]?.restore).toHaveBeenCalledOnce();
+  });
+
+  it('uses the selected save mode as the save and restore target', async () => {
+    const { composition, stacks } = harness();
+    await composition.startNewSession();
+    expect(composition.projection.getState().manualSaveAvailable).toBe(false);
+    await composition.setSaveMode('autosave');
+    expect(composition.projection.getState().autosaveSaveAvailable).toBe(false);
+    await composition.saveManual();
+    expect(stacks[0]?.save).toHaveBeenLastCalledWith(
+      expect.objectContaining({ saveId: 'foundation-autosave' }),
+    );
+    expect(composition.projection.getState().autosaveSaveAvailable).toBe(true);
+    await composition.restoreManual();
+    expect(stacks[0]?.restore).toHaveBeenLastCalledWith(
+      expect.objectContaining({ saveId: 'foundation-autosave' }),
+    );
+  });
+
+  it('deeply freezes every published composition projection', async () => {
+    const { composition } = harness();
+    await composition.startNewSession();
+    await composition.closeSession();
+    const state = composition.projection.getState();
+    expect(Object.isFrozen(state)).toBe(true);
+    expect(Object.isFrozen(state.application)).toBe(true);
+    expect(Object.isFrozen(state.application.session)).toBe(true);
+    expect(Object.isFrozen(state.application.persistence.saves)).toBe(true);
+    expect(Object.isFrozen(state.pacing)).toBe(true);
+  });
+
+  it('invalidates a pending confirmation when close replaces the stack', async () => {
+    let answer!: (value: boolean) => void;
+    const { composition, stacks } = harness({
+      confirm: () => new Promise<boolean>((resolve) => (answer = resolve)),
+    });
+    await composition.startNewSession();
+    await composition.saveManual();
+    const restoring = composition.restoreManual();
+    await Promise.resolve();
+    await composition.closeSession();
+    await composition.startNewSession();
+    answer(true);
+    await restoring;
+    expect(stacks[0]?.restore).not.toHaveBeenCalled();
+    expect(stacks[1]?.restore).not.toHaveBeenCalled();
+    expect(composition.projection.getState().application.session.status).toBe(
+      'ready',
+    );
+  });
+
+  it('does not silently overwrite when refreshing save summaries fails', async () => {
+    const { composition, stacks, failNextList } = harness();
+    await composition.startNewSession();
+    failNextList(new Error('save list unavailable'));
+    await composition.saveManual();
+    expect(stacks[0]?.save).not.toHaveBeenCalled();
+    expect(composition.projection.getState().message).toBe(
+      'save list unavailable',
+    );
+    expect(composition.projection.getState().operation).toBe('idle');
+  });
+
+  it('shares close cleanup and remains terminal when driver cleanup throws', async () => {
+    const { composition, stacks } = harness();
+    await composition.startNewSession();
+    stacks[0]?.driverClose.mockImplementationOnce(() => {
+      throw new Error('driver cleanup unavailable');
+    });
+    const first = composition.closeSession();
+    const second = composition.closeSession();
+    expect(second).toBe(first);
+    await expect(Promise.all([first, second])).resolves.toBeDefined();
+    expect(stacks[0]?.driverClose).toHaveBeenCalledOnce();
+    expect(stacks[0]?.pacingClose).toHaveBeenCalledOnce();
+    expect(stacks[0]?.close).toHaveBeenCalledOnce();
+    expect(composition.projection.getState()).toMatchObject({
+      application: { session: { status: 'closed' } },
+      operation: 'idle',
+      canStartNewSession: true,
+      message: 'driver cleanup unavailable',
+    });
+  });
+
   it('validates the injected autosave interval', () => {
     const base = {
       createStack: () => {
@@ -342,6 +458,8 @@ describe('foundation session composition', () => {
     expect(timer.activeCount()).toBe(0);
 
     await composition.setSaveMode('autosave');
+    await composition.saveManual();
+    stacks[0]?.save.mockClear();
     let release!: () => void;
     delayRestore(new Promise<void>((resolve) => (release = resolve)));
     const restoring = composition.restoreManual();

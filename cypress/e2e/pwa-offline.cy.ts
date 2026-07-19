@@ -58,7 +58,7 @@ describe('built foundation PWA offline lifecycle', () => {
         expect((await response.blob()).size).to.be.greaterThan(0);
       }
     });
-    cy.contains('button', 'Restore foundation session').click();
+    cy.contains('button', 'Restore manual save').click();
     cy.get('[data-testid="worker-timeline"]').should(
       'have.text',
       'Timeline: browser-foundation-restored-1',

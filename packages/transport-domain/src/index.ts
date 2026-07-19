@@ -44,6 +44,7 @@ const version = z.literal(scenarioSchemaVersion);
 const scenarioDataVersion = z
   .string()
   .regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/);
+const scenarioStatus = z.enum(['development-seed', 'playable', 'test-fixture']);
 const nonEmpty = z.string().trim().min(1);
 const safePath = z.string().superRefine((value, context) => {
   if (
@@ -79,7 +80,7 @@ const descriptor = z
     primarySettlementId: settlementId,
     settlementIds: z.array(settlementId),
     manifestPath: safePath,
-    status: z.enum(['development-seed', 'playable', 'test-fixture']),
+    status: scenarioStatus,
     contentHash: hash,
   })
   .strict();
@@ -95,7 +96,7 @@ const manifestSchema = z
     schemaVersion: version,
     scenarioId,
     scenarioVersion: scenarioDataVersion,
-    status: nonEmpty,
+    status: scenarioStatus,
     title: nonEmpty,
     primarySettlementId: settlementId,
     settlementIds: z.array(settlementId),
@@ -220,8 +221,8 @@ export type CanonicalScenario = DeepReadonly<{
   settlements: z.infer<typeof settlementsFileSchema>;
   stops: z.infer<typeof stopsFileSchema>;
   routes: z.infer<typeof routesFileSchema>;
-  presentation?: Readonly<Record<string, unknown>>;
-  provenance?: Readonly<Record<string, unknown>>;
+  presentation?: z.infer<typeof optionalMetadataSchema>;
+  provenance?: z.infer<typeof optionalMetadataSchema>;
 }>;
 
 function deepFreeze<T>(value: T): T {
@@ -573,15 +574,21 @@ export interface DirectedScenarioGraph {
     routes: number;
     patterns: number;
   }>;
-  outgoingEdges(stop: string): readonly DirectedEdge[];
-  incomingEdges(stop: string): readonly DirectedEdge[];
-  patternEdges(pattern: string): readonly DirectedEdge[];
-  route(
+  readonly outgoingEdges: (
+    stop: string,
+  ) => readonly DeepReadonly<DirectedEdge>[];
+  readonly incomingEdges: (
+    stop: string,
+  ) => readonly DeepReadonly<DirectedEdge>[];
+  readonly patternEdges: (
+    pattern: string,
+  ) => readonly DeepReadonly<DirectedEdge>[];
+  readonly route: (
     id: string,
-  ): DeepReadonly<CanonicalScenario['routes']['routes'][number]> | undefined;
-  pattern(
+  ) => DeepReadonly<CanonicalScenario['routes']['routes'][number]> | undefined;
+  readonly pattern: (
     id: string,
-  ):
+  ) =>
     | DeepReadonly<
         CanonicalScenario['routes']['routes'][number]['patterns'][number]
       >

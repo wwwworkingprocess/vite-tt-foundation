@@ -10,6 +10,62 @@ const response = (value: unknown) => ({
 });
 
 describe('browser scenario loader', () => {
+  it('clears stale scenario metadata across loading, failure, unknown, and catalogue reload states', async () => {
+    const publicRoot = join(import.meta.dirname, '..', '..', 'public');
+    let failCatalog = false;
+    const fetchText = vi.fn(async (url: string) => {
+      if (failCatalog && url.endsWith('catalog.json'))
+        return { ok: false, text: async () => '' };
+      const relative = url.replace('/scenarios/', 'scenarios/');
+      const text = readFileSync(join(publicRoot, relative), 'utf8');
+      if (url.endsWith('catalog.json')) {
+        const catalog = JSON.parse(text) as {
+          scenarios: Array<Record<string, unknown>>;
+        };
+        catalog.scenarios.push({
+          ...catalog.scenarios[0],
+          scenarioId: 'scenario-b',
+          title: 'B',
+        });
+        return response(catalog);
+      }
+      return { ok: true, text: async () => text };
+    });
+    const loader = createScenarioLoader({
+      baseUrl: '/',
+      fetchText,
+      digestSha256: async (text) =>
+        createHash('sha256').update(text).digest('hex'),
+    });
+    await loader.loadCatalog();
+    await loader.loadScenario('torrevieja-v1');
+    expect(loader.projection.getState().graph).toBeDefined();
+    const loadingB = loader.loadScenario('scenario-b');
+    expect(loader.projection.getState()).toMatchObject({
+      status: 'loading-scenario',
+      selectedScenarioId: 'scenario-b',
+    });
+    expect(loader.projection.getState()).not.toHaveProperty('graph');
+    expect(loader.projection.getState()).not.toHaveProperty('title');
+    await loadingB;
+    expect(loader.projection.getState()).toMatchObject({
+      status: 'failed',
+      selectedScenarioId: 'scenario-b',
+    });
+    expect(loader.projection.getState()).not.toHaveProperty('graph');
+    await loader.loadScenario('unknown');
+    expect(loader.projection.getState()).not.toHaveProperty('title');
+    const reload = loader.loadCatalog();
+    expect(loader.projection.getState()).toEqual({
+      status: 'loading-catalogue',
+    });
+    await reload;
+    await loader.loadScenario('torrevieja-v1');
+    failCatalog = true;
+    await loader.loadCatalog();
+    expect(loader.projection.getState()).toMatchObject({ status: 'failed' });
+    expect(loader.projection.getState()).not.toHaveProperty('graph');
+  });
   it('treats duplicate subscriptions independently and isolates listener failures', async () => {
     const diagnostics = vi.fn();
     const loader = createScenarioLoader({

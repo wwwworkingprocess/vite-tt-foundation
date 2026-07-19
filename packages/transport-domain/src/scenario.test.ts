@@ -32,6 +32,40 @@ type MutableSettlement = {
 };
 
 describe('scenario parsing and directed graph', () => {
+  it.each(['development-seed', 'playable', 'test-fixture'])(
+    'accepts shared scenario status %s',
+    (status) => {
+      const manifest = fixture('scenario.json') as { status: string };
+      manifest.status = status;
+      expect(parseScenarioManifest(manifest).status).toBe(status);
+    },
+  );
+
+  it('rejects unsupported status in catalogue, manifest, and direct package parsing', () => {
+    const manifest = fixture('scenario.json') as { status: string };
+    manifest.status = 'unsupported';
+    expect(() => parseScenarioManifest(manifest)).toThrow(/malformed-manifest/);
+    expect(() => parseScenarioPackage({ ...mini(), manifest })).toThrow(
+      /malformed-manifest/,
+    );
+    const descriptor = {
+      scenarioId: 'x',
+      scenarioVersion: '1.0.0',
+      title: 'X',
+      primarySettlementId: 's',
+      settlementIds: ['s'],
+      manifestPath: 'x/scenario.json',
+      status: 'unsupported',
+      contentHash: 'a'.repeat(64),
+    };
+    expect(() =>
+      parseScenarioCatalog({
+        schemaVersion: '1.0.0',
+        catalogId: 'x',
+        scenarios: [descriptor],
+      }),
+    ).toThrow(/malformed-catalogue/);
+  });
   it.each(['1.0.0', '1.0.1', '2.3.4'])(
     'accepts scenario data version %s independently',
     (scenarioVersion) => {

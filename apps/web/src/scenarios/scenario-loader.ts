@@ -50,10 +50,10 @@ export function createScenarioLoader(input: {
     number,
     (next: ScenarioLoaderState, previous: ScenarioLoaderState) => void
   >();
-  const set = (patch: Partial<ScenarioLoaderState>, token: number) => {
+  const replace = (next: ScenarioLoaderState, token: number) => {
     if (token !== generation) return;
     const previous = state;
-    state = freeze({ ...state, ...patch });
+    state = freeze(next);
     for (const listener of [...listeners.values()])
       try {
         listener(state, previous);
@@ -88,13 +88,13 @@ export function createScenarioLoader(input: {
   };
   async function loadCatalog() {
     const token = ++generation;
-    set({ status: 'loading-catalogue', message: undefined }, token);
+    replace({ status: 'loading-catalogue' }, token);
     try {
       const text = await getText(`${base}scenarios/catalog.json`);
       const catalog = parseScenarioCatalog(decode(text!, 'catalogue'));
-      set({ status: 'idle', catalog, message: undefined }, token);
+      replace({ status: 'idle', catalog }, token);
     } catch (error) {
-      set({ status: 'failed', message: errorMessage(error) }, token);
+      replace({ status: 'failed', message: errorMessage(error) }, token);
     }
   }
   async function loadScenario(selectedScenarioId: string) {
@@ -104,19 +104,21 @@ export function createScenarioLoader(input: {
     );
     if (!descriptor) {
       const token = ++generation;
-      set(
-        { status: 'failed', message: `Unknown scenario ${selectedScenarioId}` },
+      replace(
+        {
+          status: 'failed',
+          ...(catalog ? { catalog } : {}),
+          message: `Unknown scenario ${selectedScenarioId}`,
+        },
         token,
       );
       return;
     }
     const token = ++generation;
-    set(
+    replace(
       {
         status: 'loading-scenario',
         selectedScenarioId: descriptor.scenarioId,
-        graph: undefined,
-        message: undefined,
       },
       token,
     );
@@ -153,19 +155,28 @@ export function createScenarioLoader(input: {
         provenance: decoded.get('provenance'),
       });
       const graph = buildDirectedScenarioGraph(scenario);
-      set(
+      replace(
         {
           status: 'ready',
+          catalog,
+          selectedScenarioId: descriptor.scenarioId,
           graph,
           title: manifest.title,
           settlementCount: scenario.settlements.settlements.length,
           routeCount: scenario.routes.routes.length,
-          message: undefined,
         },
         token,
       );
     } catch (error) {
-      set({ status: 'failed', message: errorMessage(error) }, token);
+      replace(
+        {
+          status: 'failed',
+          catalog,
+          selectedScenarioId: descriptor.scenarioId,
+          message: errorMessage(error),
+        },
+        token,
+      );
     }
   }
   return Object.freeze({

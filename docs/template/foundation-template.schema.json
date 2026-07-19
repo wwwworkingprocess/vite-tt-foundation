@@ -53,19 +53,31 @@
     "schemaVersions": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["simulationSnapshot", "saveRecord"],
+      "required": [
+        "simulationSnapshot",
+        "saveRecord",
+        "transportSimulationSnapshot",
+        "transportSaveRecord"
+      ],
       "properties": {
         "simulationSnapshot": { "const": 1 },
-        "saveRecord": { "const": 1 }
+        "saveRecord": { "const": 1 },
+        "transportSimulationSnapshot": { "const": 1 },
+        "transportSaveRecord": { "const": 1 }
       }
     },
     "contractVersions": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["protocolContract", "workerAdapterContract"],
+      "required": [
+        "protocolContract",
+        "workerAdapterContract",
+        "transportClientContract"
+      ],
       "properties": {
         "protocolContract": { "const": 1 },
-        "workerAdapterContract": { "const": 1 }
+        "workerAdapterContract": { "const": 1 },
+        "transportClientContract": { "const": 1 }
       }
     },
     "buildBudgetsBytes": {
@@ -75,12 +87,14 @@
         "applicationEntry",
         "representation",
         "worker",
+        "transportWorker",
         "totalEmittedJavaScript"
       ],
       "properties": {
         "applicationEntry": { "type": "integer", "minimum": 1 },
         "representation": { "type": "integer", "minimum": 1 },
         "worker": { "type": "integer", "minimum": 1 },
+        "transportWorker": { "type": "integer", "minimum": 1 },
         "totalEmittedJavaScript": { "type": "integer", "minimum": 1 }
       }
     },

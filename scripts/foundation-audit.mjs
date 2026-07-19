@@ -452,7 +452,8 @@ for (const file of web) {
   const text = await source(file);
   if (
     /\b(?:DedicatedWorkerGlobalScope|postMessage|new Worker)\b/.test(text) &&
-    !file.includes('simulation-worker')
+    !file.includes('simulation-worker') &&
+    !file.includes('transport-simulation')
   )
     fail(`${file} uses Worker globals outside the Worker adapter.`);
   if (writableStoreViolations(text).length)
@@ -460,9 +461,12 @@ for (const file of web) {
 }
 for (const file of [...simulation, ...protocol, ...web]) {
   const text = await source(file);
-  const domain = file.replaceAll('\\', '/').includes('apps/web/src/scenarios')
-    ? []
-    : transportDomainTerms(text, file);
+  const normalized = file.replaceAll('\\', '/');
+  const transportExtension =
+    normalized.includes('apps/web/src/scenarios') ||
+    normalized.includes('apps/web/src/transport-simulation') ||
+    normalized.endsWith('packages/simulation/src/transport-simulation.ts');
+  const domain = transportExtension ? [] : transportDomainTerms(text, file);
   if (domain.length)
     fail(`${file} contains transport-domain terms: ${domain.join(', ')}.`);
   if (topLevelSingletons(text).length)
@@ -501,7 +505,6 @@ if (
   protocolPackage.dependencies?.['@torrevieja-tycoon/web'] ||
   protocolPackage.dependencies?.['@torrevieja-tycoon/simulation'] ||
   protocolPackage.dependencies?.['@torrevieja-tycoon/transport-domain'] ||
-  simulationPackage.dependencies?.['@torrevieja-tycoon/transport-domain'] ||
   transportPackage.dependencies?.['@torrevieja-tycoon/web'] ||
   transportPackage.dependencies?.['@torrevieja-tycoon/protocol'] ||
   transportPackage.dependencies?.['@torrevieja-tycoon/simulation']

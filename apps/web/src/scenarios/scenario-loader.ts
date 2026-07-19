@@ -6,6 +6,7 @@ import {
   parseScenarioManifest,
   parseScenarioPackage,
   type DirectedScenarioGraph,
+  type CanonicalScenario,
   type ScenarioCatalog,
   type ScenarioId,
 } from '@torrevieja-tycoon/transport-domain';
@@ -20,6 +21,7 @@ export interface ScenarioLoaderState {
   readonly catalog?: ScenarioCatalog | undefined;
   readonly selectedScenarioId?: ScenarioId | undefined;
   readonly graph?: DirectedScenarioGraph | undefined;
+  readonly scenario?: CanonicalScenario | undefined;
   readonly title?: string | undefined;
   readonly settlementCount?: number | undefined;
   readonly routeCount?: number | undefined;
@@ -162,6 +164,7 @@ export function createScenarioLoader(input: {
           catalog,
           selectedScenarioId: descriptor.scenarioId,
           graph,
+          scenario,
           title: manifest.title,
           settlementCount: scenario.settlements.settlements.length,
           routeCount: scenario.routes.routes.length,

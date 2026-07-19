@@ -2,8 +2,8 @@
   "files": [],
   "references": [
     { "path": "packages/protocol" },
-    { "path": "packages/simulation" },
     { "path": "packages/transport-domain" },
+    { "path": "packages/simulation" },
     { "path": "apps/web" }
   ]
 }

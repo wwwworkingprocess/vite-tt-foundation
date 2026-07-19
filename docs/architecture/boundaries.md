@@ -18,10 +18,14 @@ apps/web
   └── may depend on packages/protocol
 
 packages/simulation
-  └── may depend on packages/protocol only when the shared contract genuinely belongs there
+  ├── may depend on packages/protocol only when the shared contract genuinely belongs there
+  └── may depend on packages/transport-domain for authoritative scenario state
 
 packages/protocol
   └── must remain independent of apps/web and packages/simulation implementation details
+
+packages/transport-domain
+  └── remains independent of protocol and simulation
 ```
 
 No package may import from `apps/web`.

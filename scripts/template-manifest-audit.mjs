@@ -22,12 +22,15 @@ const shape = z
       .object({
         simulationSnapshot: z.literal(1),
         saveRecord: z.literal(1),
+        transportSimulationSnapshot: z.literal(1),
+        transportSaveRecord: z.literal(1),
       })
       .strict(),
     contractVersions: z
       .object({
         protocolContract: z.literal(1),
         workerAdapterContract: z.literal(1),
+        transportClientContract: z.literal(1),
       })
       .strict(),
     buildBudgetsBytes: z
@@ -35,6 +38,7 @@ const shape = z
         applicationEntry: z.number().int().positive(),
         representation: z.number().int().positive(),
         worker: z.number().int().positive(),
+        transportWorker: z.number().int().positive(),
         totalEmittedJavaScript: z.number().int().positive(),
       })
       .strict(),
@@ -170,10 +174,18 @@ const sources = {
     'packages/simulation/src/foundation-snapshot.ts',
   ),
   saveRecord: await read('apps/web/src/persistence/save-record.ts'),
+  transportSimulationSnapshot: await read(
+    'packages/simulation/src/transport-simulation.ts',
+  ),
+  transportSaveRecord: await read(
+    'apps/web/src/transport-simulation/transport-save-record.ts',
+  ),
 };
 const constants = {
   simulationSnapshot: 'foundationSimulationSnapshotSchemaVersion',
   saveRecord: 'foundationSaveRecordSchemaVersion',
+  transportSimulationSnapshot: 'transportSimulationSnapshotSchemaVersion',
+  transportSaveRecord: 'transportSaveRecordSchemaVersion',
 };
 for (const [key, source] of Object.entries(sources))
   if (
@@ -189,10 +201,14 @@ const contractSources = {
   workerAdapterContract: await read(
     'apps/web/src/simulation-worker/worker-wire.ts',
   ),
+  transportClientContract: await read(
+    'apps/web/src/transport-simulation/transport-client.ts',
+  ),
 };
 const contractConstants = {
   protocolContract: 'protocolContractVersion',
   workerAdapterContract: 'foundationWorkerAdapterContractVersion',
+  transportClientContract: 'transportClientContractVersion',
 };
 for (const [key, source] of Object.entries(contractSources))
   if (

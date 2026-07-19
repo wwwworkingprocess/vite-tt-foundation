@@ -51,12 +51,6 @@ export default tseslint.config(
               message: 'Protocol must not depend on transport-domain.',
             },
             {
-              target: './packages/simulation',
-              from: './packages/transport-domain',
-              message:
-                'Phase 4A simulation must not depend on transport-domain.',
-            },
-            {
               target: './packages/transport-domain',
               from: './packages/simulation',
               message:

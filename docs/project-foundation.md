@@ -61,6 +61,8 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`architecture/transport-contract.md`](architecture/transport-contract.md) — proposed adapter-neutral host/client semantics and failure recovery.
 - [`architecture/time-model.md`](architecture/time-model.md) — authoritative five-second tick and host-owned playback model.
 - [`architecture/scenario-packages-and-directed-graph.md`](architecture/scenario-packages-and-directed-graph.md) — Phase 4A scenario and graph boundary.
+- [`architecture/transport-simulation-authority.md`](architecture/transport-simulation-authority.md) — Phase 4B authoritative scenario and snapshot boundary.
+- [`architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md`](architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md) — exact scenario-coordinate compatibility decision.
 - [`architecture/decisions/0007-scenario-package-and-directed-graph.md`](architecture/decisions/0007-scenario-package-and-directed-graph.md) — scenario package and directed-edge decision.
 - [`architecture/decisions/0002-simulation-host-transport-readiness.md`](architecture/decisions/0002-simulation-host-transport-readiness.md) — Socket.IO-readiness research and transport-boundary decision.
 - [`architecture/decisions/0003-simulation-time-and-playback-pacing.md`](architecture/decisions/0003-simulation-time-and-playback-pacing.md) — simulation-time and playback-pacing decision.
@@ -97,4 +99,8 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - Phase 4A adds an environment-neutral transport-domain package, reviewed
   scenario assets, strict immutable parsing, directed graph queries, and a
   base-aware browser loader without changing authoritative Phase 3 contracts.
+- Phase 4B binds one immutable canonical scenario and derived graph to a
+  transport timeline. Transport snapshots and current saves retain only the
+  exact scenario coordinate plus dynamic tick; legacy foundation saves remain
+  explicitly incompatible rather than being assigned invented scenario data.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

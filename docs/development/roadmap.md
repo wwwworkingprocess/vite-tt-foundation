@@ -98,26 +98,14 @@ network curation and source-data reconciliation remain external tasks.
 
 ## Phase 4B — Standalone non-graphical simulation integration
 
-### Goal
+### Goal and status
 
-Implement the first actual transport simulation as a pure TypeScript library through TDD.
+In progress: bind a selected canonical scenario and derived graph to one
+authoritative timeline, preserve its exact coordinate through compact transport
+snapshots and saves, and retain direct/clone-boundary and restore semantics.
 
-### Initial model
-
-- directed node graph;
-- stations as nodes;
-- travel links as edges;
-- one ordered service;
-- buses moving in fixed deterministic steps;
-- generated passengers with origins and destinations;
-- boarding, alighting, waiting, and capacity;
-- command processing, events, metrics, and snapshots.
-
-### Required properties
-
-- a full simulated day can run and be tested without React, a browser, a worker, or a database;
-- the same inputs, seed, and ordered commands produce the same result;
-- package coverage thresholds and behavioural acceptance tests pass.
+Tick remains the only dynamic state. Vehicles, movement, services, passengers,
+capacity, economics, and other mechanics are deferred to later phases.
 
 ## Phase 5 — React Three Fiber visualization POC
 

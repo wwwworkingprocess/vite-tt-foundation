@@ -6,3 +6,4 @@ export * from './foundation-command.js';
 export * from './foundation-state.js';
 export * from './foundation-snapshot.js';
 export * from './time.js';
+export * from './transport-simulation.js';

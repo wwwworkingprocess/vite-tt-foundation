@@ -19,6 +19,7 @@ const javascript = files.filter((file) => file.endsWith('.js'));
 const one = (pattern) =>
   javascript.filter((file) => pattern.test(basename(file)));
 const worker = one(/^foundation\.worker-[\w-]+\.js$/);
+const transportWorker = one(/^transport\.worker-[\w-]+\.js$/);
 const entry = one(/^index-[\w-]+\.js$/);
 const representation = one(/^foundation-scene-[\w-]+\.js$/);
 const register = one(/^registerSW\.js$/);
@@ -28,6 +29,7 @@ for (const [name, matches] of Object.entries({
   application: entry,
   representation,
   worker,
+  transportWorker,
   registerSW: register,
   serviceWorker,
   workbox,
@@ -45,6 +47,7 @@ const sizes = {
   applicationEntry: await size(entry[0]),
   representation: await size(representation[0]),
   worker: await size(worker[0]),
+  transportWorker: await size(transportWorker[0]),
   totalEmittedJavaScript: (await Promise.all(javascript.map(size))).reduce(
     (sum, bytes) => sum + bytes,
     0,

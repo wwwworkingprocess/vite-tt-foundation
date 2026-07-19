@@ -500,6 +500,8 @@ if (
   simulationPackage.dependencies?.['@torrevieja-tycoon/web'] ||
   protocolPackage.dependencies?.['@torrevieja-tycoon/web'] ||
   protocolPackage.dependencies?.['@torrevieja-tycoon/simulation'] ||
+  protocolPackage.dependencies?.['@torrevieja-tycoon/transport-domain'] ||
+  simulationPackage.dependencies?.['@torrevieja-tycoon/transport-domain'] ||
   transportPackage.dependencies?.['@torrevieja-tycoon/web'] ||
   transportPackage.dependencies?.['@torrevieja-tycoon/protocol'] ||
   transportPackage.dependencies?.['@torrevieja-tycoon/simulation']

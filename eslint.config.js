@@ -46,6 +46,17 @@ export default tseslint.config(
               message: 'Phase 4A transport-domain must not depend on protocol.',
             },
             {
+              target: './packages/protocol',
+              from: './packages/transport-domain',
+              message: 'Protocol must not depend on transport-domain.',
+            },
+            {
+              target: './packages/simulation',
+              from: './packages/transport-domain',
+              message:
+                'Phase 4A simulation must not depend on transport-domain.',
+            },
+            {
               target: './packages/transport-domain',
               from: './packages/simulation',
               message:
@@ -105,6 +116,11 @@ export default tseslint.config(
     files: ['**/*.test.{ts,tsx}', 'cypress/**/*.ts'],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
     extends: [tseslint.configs.disableTypeChecked],
+  },
+  {
+    files: ['**/*.compile.ts'],
+    extends: [tseslint.configs.disableTypeChecked],
+    rules: { '@typescript-eslint/no-unsafe-call': 'off' },
   },
   {
     files: ['**/*.config.ts', '*.js', 'scripts/**/*.mjs'],

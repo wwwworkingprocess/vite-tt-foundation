@@ -10,6 +10,34 @@ const response = (value: unknown) => ({
 });
 
 describe('browser scenario loader', () => {
+  it('treats duplicate subscriptions independently and isolates listener failures', async () => {
+    const diagnostics = vi.fn();
+    const loader = createScenarioLoader({
+      baseUrl: '/',
+      fetchText: async () =>
+        response({ schemaVersion: '1.0.0', catalogId: 'x', scenarios: [] }),
+      digestSha256: async () => 'a'.repeat(64),
+      onDiagnostic: diagnostics,
+    });
+    const healthy = vi.fn();
+    const removeFirst = loader.projection.subscribe(healthy);
+    const removeSecond = loader.projection.subscribe(healthy);
+    const removeThrowing = loader.projection.subscribe(() => {
+      throw new Error('listener failed');
+    });
+    removeFirst();
+    removeFirst();
+    await expect(loader.loadCatalog()).resolves.toBeUndefined();
+    expect(healthy).toHaveBeenCalledTimes(2);
+    expect(loader.projection.getState()).toMatchObject({
+      status: 'idle',
+      catalog: { catalogId: 'x' },
+    });
+    expect(diagnostics).toHaveBeenCalled();
+    removeSecond();
+    removeThrowing();
+  });
+
   it('uses the configured base, verifies hashes, and loads a package', async () => {
     const values = new Map<string, unknown>();
     values.set('/vite-tt-foundation/scenarios/catalog.json', {
@@ -54,6 +82,32 @@ describe('browser scenario loader', () => {
     );
     await oldLoad;
     expect(loader.projection.getState().catalog?.catalogId).toBe('new');
+  });
+
+  it('ignores a stale failure after a newer successful catalogue load', async () => {
+    const requests: Array<
+      (value: { ok: boolean; text: () => Promise<string> }) => void
+    > = [];
+    const loader = createScenarioLoader({
+      baseUrl: '/',
+      fetchText: () => new Promise((resolve) => requests.push(resolve)),
+      digestSha256: async () => 'a'.repeat(64),
+    });
+    const stale = loader.loadCatalog();
+    const current = loader.loadCatalog();
+    requests[1]!(
+      response({ schemaVersion: '1.0.0', catalogId: 'current', scenarios: [] }),
+    );
+    await current;
+    requests[0]!({
+      ok: true,
+      text: async () => {
+        throw new Error('stale failed');
+      },
+    });
+    await stale;
+    expect(loader.projection.getState().catalog?.catalogId).toBe('current');
+    expect(loader.projection.getState().status).toBe('idle');
   });
 
   it('loads the adopted Torrevieja seed after verifying every declared hash', async () => {

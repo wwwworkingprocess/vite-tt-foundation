@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   ScenarioDomainError,
+  assertScenarioDescriptorMatchesManifest,
   buildDirectedScenarioGraph,
   parseScenarioCatalog,
   parseScenarioManifest,
@@ -24,8 +25,61 @@ const mini = () => ({
   presentation: fixture('presentation.json'),
   provenance: fixture('provenance.json'),
 });
+type MutableSettlement = {
+  center: { latitude: number; longitude: number };
+  bounds: { south: number; west: number; north: number; east: number };
+  settlementId: string;
+};
 
 describe('scenario parsing and directed graph', () => {
+  it.each(['1.0.0', '1.0.1', '2.3.4'])(
+    'accepts scenario data version %s independently',
+    (scenarioVersion) => {
+      const manifest = fixture('scenario.json') as { scenarioVersion: string };
+      manifest.scenarioVersion = scenarioVersion;
+      expect(parseScenarioManifest(manifest).scenarioVersion).toBe(
+        scenarioVersion,
+      );
+    },
+  );
+
+  it.each(['1', '1.0', 'v1.0.0', '1.0.0-beta', '01.0.0'])(
+    'rejects malformed scenario data version %s',
+    (scenarioVersion) => {
+      const manifest = fixture('scenario.json') as { scenarioVersion: string };
+      manifest.scenarioVersion = scenarioVersion;
+      expect(() => parseScenarioManifest(manifest)).toThrow(
+        /malformed-manifest/,
+      );
+    },
+  );
+
+  it.each([
+    'scenarioId',
+    'scenarioVersion',
+    'status',
+    'title',
+    'primarySettlementId',
+    'settlementIds',
+    'contentHash',
+  ] as const)('rejects catalogue/manifest mismatch for %s', (field) => {
+    const manifest = parseScenarioManifest(fixture('scenario.json'));
+    const descriptor = {
+      scenarioId: manifest.scenarioId,
+      scenarioVersion: manifest.scenarioVersion,
+      status: 'test-fixture' as const,
+      title: manifest.title,
+      primarySettlementId: manifest.primarySettlementId,
+      settlementIds: [...manifest.settlementIds],
+      manifestPath: 'mini/scenario.json',
+      contentHash: manifest.contentHash,
+      [field]: field === 'settlementIds' ? ['other'] : 'different',
+    };
+    expect(() =>
+      assertScenarioDescriptorMatchesManifest(descriptor, manifest),
+    ).toThrow(/content-integrity-mismatch|unresolved-reference/);
+  });
+
   it('matches the normative mini graph oracle exactly and deterministically', () => {
     const scenario = parseScenarioPackage(mini());
     const graph = buildDirectedScenarioGraph(scenario);
@@ -132,6 +186,120 @@ describe('scenario parsing and directed graph', () => {
         scenarios: [],
       }),
     ).not.toThrow();
+  });
+
+  it.each([
+    '/absolute.json',
+    '../parent.json',
+    'https://example.test/a.json',
+    '..\\parent.json',
+    'folder//asset.json',
+  ])('reports typed unsafe manifest asset path %s', (path) => {
+    const manifest = fixture('scenario.json') as {
+      assets: { presentation: { path: string } };
+    };
+    manifest.assets.presentation.path = path;
+    try {
+      parseScenarioManifest(manifest);
+      throw new Error('expected failure');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ScenarioDomainError);
+      expect((error as ScenarioDomainError).code).toBe('unsafe-asset-path');
+    }
+  });
+
+  it('reports a typed unsafe catalogue manifest path', () => {
+    const catalog = {
+      schemaVersion: '1.0.0',
+      catalogId: 'x',
+      scenarios: [
+        {
+          scenarioId: 'x',
+          scenarioVersion: '1.0.0',
+          title: 'X',
+          primarySettlementId: 's',
+          settlementIds: ['s'],
+          manifestPath: '../scenario.json',
+          status: 'test-fixture',
+          contentHash: 'a'.repeat(64),
+        },
+      ],
+    };
+    try {
+      parseScenarioCatalog(catalog);
+      throw new Error('expected failure');
+    } catch (error) {
+      expect((error as ScenarioDomainError).code).toBe('unsafe-asset-path');
+    }
+  });
+
+  it.each([
+    [
+      'center latitude',
+      (s: MutableSettlement) => {
+        s.center.latitude = 91;
+      },
+    ],
+    [
+      'center longitude',
+      (s: MutableSettlement) => {
+        s.center.longitude = 181;
+      },
+    ],
+    [
+      'south latitude',
+      (s: MutableSettlement) => {
+        s.bounds.south = -91;
+      },
+    ],
+    [
+      'north latitude',
+      (s: MutableSettlement) => {
+        s.bounds.north = 91;
+      },
+    ],
+    [
+      'west longitude',
+      (s: MutableSettlement) => {
+        s.bounds.west = -181;
+      },
+    ],
+    [
+      'east longitude',
+      (s: MutableSettlement) => {
+        s.bounds.east = 181;
+      },
+    ],
+    [
+      'latitude ordering',
+      (s: MutableSettlement) => {
+        s.bounds.south = s.bounds.north + 1;
+      },
+    ],
+    [
+      'longitude ordering',
+      (s: MutableSettlement) => {
+        s.bounds.west = s.bounds.east + 1;
+      },
+    ],
+    [
+      'center outside',
+      (s: MutableSettlement) => {
+        s.center.latitude = s.bounds.north + 0.01;
+      },
+    ],
+  ])('rejects settlement geography: %s', (_name, mutate) => {
+    const input = mini();
+    const file = input.settlements as { settlements: MutableSettlement[] };
+    mutate(file.settlements[0]!);
+    expect(() => parseScenarioPackage(input)).toThrow(/invalid-coordinate/);
+  });
+
+  it('requires exact ordered manifest settlement identity without hidden extras', () => {
+    const input = mini();
+    const file = input.settlements as { settlements: MutableSettlement[] };
+    file.settlements.push({ ...file.settlements[0], settlementId: 'extra' });
+    expect(() => parseScenarioPackage(input)).toThrow(/unresolved-reference/);
   });
 
   it.each([

@@ -41,6 +41,9 @@ export type DirectedEdgeId = string & z.core.$brand<'DirectedEdgeId'>;
 
 const hash = z.string().regex(/^[0-9a-f]{64}$/);
 const version = z.literal(scenarioSchemaVersion);
+const scenarioDataVersion = z
+  .string()
+  .regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/);
 const nonEmpty = z.string().trim().min(1);
 const safePath = z.string().superRefine((value, context) => {
   if (
@@ -52,6 +55,8 @@ const safePath = z.string().superRefine((value, context) => {
   )
     context.addIssue({ code: 'custom', message: 'unsafe asset path' });
 });
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null;
 const position = z
   .object({ latitude: z.number().finite(), longitude: z.number().finite() })
   .strict();
@@ -69,7 +74,7 @@ const asset = z
 const descriptor = z
   .object({
     scenarioId,
-    scenarioVersion: version,
+    scenarioVersion: scenarioDataVersion,
     title: nonEmpty,
     primarySettlementId: settlementId,
     settlementIds: z.array(settlementId),
@@ -89,7 +94,7 @@ const manifestSchema = z
   .object({
     schemaVersion: version,
     scenarioId,
-    scenarioVersion: version,
+    scenarioVersion: scenarioDataVersion,
     status: nonEmpty,
     title: nonEmpty,
     primarySettlementId: settlementId,
@@ -197,9 +202,20 @@ const optionalMetadataSchema = z
   .object({ schemaVersion: version, scenarioId })
   .catchall(jsonValue);
 
-export type ScenarioCatalog = Readonly<z.infer<typeof catalogSchema>>;
-export type ScenarioManifest = Readonly<z.infer<typeof manifestSchema>>;
-export type CanonicalScenario = Readonly<{
+export type DeepReadonly<T> = T extends
+  string | number | boolean | bigint | symbol | null | undefined
+  ? T
+  : T extends (...arguments_: never[]) => unknown
+    ? T
+    : T extends readonly (infer Item)[]
+      ? readonly DeepReadonly<Item>[]
+      : T extends object
+        ? { readonly [Key in keyof T]: DeepReadonly<T[Key]> }
+        : T;
+export type ScenarioDescriptor = DeepReadonly<z.infer<typeof descriptor>>;
+export type ScenarioCatalog = DeepReadonly<z.infer<typeof catalogSchema>>;
+export type ScenarioManifest = DeepReadonly<z.infer<typeof manifestSchema>>;
+export type CanonicalScenario = DeepReadonly<{
   manifest: z.infer<typeof manifestSchema>;
   settlements: z.infer<typeof settlementsFileSchema>;
   stops: z.infer<typeof stopsFileSchema>;
@@ -229,8 +245,7 @@ const parse = <T>(
 };
 const rejectUnsupported = (value: unknown, context: string) => {
   if (
-    typeof value === 'object' &&
-    value !== null &&
+    isRecord(value) &&
     'schemaVersion' in value &&
     (value as { schemaVersion?: unknown }).schemaVersion !==
       scenarioSchemaVersion
@@ -260,6 +275,23 @@ const assertPosition = (
 
 export function parseScenarioCatalog(value: unknown): ScenarioCatalog {
   rejectUnsupported(value, 'catalogue');
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    'scenarios' in value &&
+    Array.isArray(value.scenarios)
+  )
+    for (const item of value.scenarios)
+      if (
+        isRecord(item) &&
+        'manifestPath' in item &&
+        typeof item.manifestPath === 'string' &&
+        !safePath.safeParse(item.manifestPath).success
+      )
+        throw new ScenarioDomainError(
+          'unsafe-asset-path',
+          `catalogue manifest ${item.manifestPath}`,
+        );
   const parsed = parse(
     catalogSchema,
     value,
@@ -270,18 +302,44 @@ export function parseScenarioCatalog(value: unknown): ScenarioCatalog {
     parsed.scenarios.map((item) => item.scenarioId),
     'scenario',
   );
-  for (const item of parsed.scenarios)
+  for (const item of parsed.scenarios) {
+    assertUnique(
+      item.settlementIds,
+      `catalogue scenario ${item.scenarioId} settlement`,
+    );
     if (!item.settlementIds.includes(item.primarySettlementId))
       throw new ScenarioDomainError(
         'unresolved-reference',
         `catalogue primary settlement ${item.primarySettlementId}`,
       );
+  }
   return deepFreeze(parsed);
 }
 
 export function parseScenarioManifest(value: unknown): ScenarioManifest {
   rejectUnsupported(value, 'manifest');
+  if (
+    isRecord(value) &&
+    'assets' in value &&
+    typeof value.assets === 'object' &&
+    value.assets !== null
+  )
+    for (const [name, entry] of Object.entries(value.assets))
+      if (
+        isRecord(entry) &&
+        'path' in entry &&
+        typeof entry.path === 'string' &&
+        !safePath.safeParse(entry.path).success
+      )
+        throw new ScenarioDomainError(
+          'unsafe-asset-path',
+          `${name}: ${entry.path}`,
+        );
   const parsed = parse(manifestSchema, value, 'malformed-manifest', 'manifest');
+  assertUnique(
+    parsed.settlementIds,
+    `manifest scenario ${parsed.scenarioId} settlement`,
+  );
   if (!parsed.settlementIds.includes(parsed.primarySettlementId))
     throw new ScenarioDomainError(
       'unresolved-reference',
@@ -302,6 +360,32 @@ export function parseScenarioManifest(value: unknown): ScenarioManifest {
       );
   }
   return deepFreeze(parsed);
+}
+
+export function assertScenarioDescriptorMatchesManifest(
+  descriptorValue: ScenarioDescriptor,
+  manifest: ScenarioManifest,
+) {
+  if (
+    descriptorValue.scenarioId !== manifest.scenarioId ||
+    descriptorValue.scenarioVersion !== manifest.scenarioVersion ||
+    descriptorValue.status !== manifest.status ||
+    descriptorValue.title !== manifest.title ||
+    descriptorValue.primarySettlementId !== manifest.primarySettlementId ||
+    descriptorValue.settlementIds.length !== manifest.settlementIds.length ||
+    descriptorValue.settlementIds.some(
+      (idValue, index) => idValue !== manifest.settlementIds[index],
+    )
+  )
+    throw new ScenarioDomainError(
+      'unresolved-reference',
+      `catalogue/manifest parity ${descriptorValue.scenarioId}`,
+    );
+  if (descriptorValue.contentHash !== manifest.contentHash)
+    throw new ScenarioDomainError(
+      'content-integrity-mismatch',
+      `catalogue/manifest contentHash ${descriptorValue.scenarioId}`,
+    );
 }
 
 export function parseScenarioPackage(value: {
@@ -349,6 +433,43 @@ export function parseScenarioPackage(value: {
   const settlementIds = new Set(
     settlements.settlements.map((item) => item.settlementId),
   );
+  if (
+    settlements.settlements.length !== manifest.settlementIds.length ||
+    settlements.settlements.some(
+      (item, index) => item.settlementId !== manifest.settlementIds[index],
+    )
+  )
+    throw new ScenarioDomainError(
+      'unresolved-reference',
+      'settlement file does not exactly match manifest settlementIds',
+    );
+  for (const settlement of settlements.settlements) {
+    assertPosition(
+      settlement.center,
+      `settlement ${settlement.settlementId} center`,
+    );
+    const { south, west, north, east } = settlement.bounds;
+    assertPosition(
+      { latitude: south, longitude: west },
+      `settlement ${settlement.settlementId} southwest bounds`,
+    );
+    assertPosition(
+      { latitude: north, longitude: east },
+      `settlement ${settlement.settlementId} northeast bounds`,
+    );
+    if (
+      south > north ||
+      west > east ||
+      settlement.center.latitude < south ||
+      settlement.center.latitude > north ||
+      settlement.center.longitude < west ||
+      settlement.center.longitude > east
+    )
+      throw new ScenarioDomainError(
+        'invalid-coordinate',
+        `settlement ${settlement.settlementId} bounds`,
+      );
+  }
   for (const expected of manifest.settlementIds)
     if (!settlementIds.has(expected))
       throw new ScenarioDomainError(
@@ -444,8 +565,8 @@ export interface DirectedEdge {
   readonly toStopNodeId: StopNodeId;
 }
 export interface DirectedScenarioGraph {
-  readonly nodes: CanonicalScenario['stops']['stopNodes'];
-  readonly edges: readonly DirectedEdge[];
+  readonly nodes: DeepReadonly<CanonicalScenario['stops']['stopNodes']>;
+  readonly edges: readonly DeepReadonly<DirectedEdge>[];
   readonly summary: Readonly<{
     nodes: number;
     edges: number;
@@ -455,11 +576,15 @@ export interface DirectedScenarioGraph {
   outgoingEdges(stop: string): readonly DirectedEdge[];
   incomingEdges(stop: string): readonly DirectedEdge[];
   patternEdges(pattern: string): readonly DirectedEdge[];
-  route(id: string): CanonicalScenario['routes']['routes'][number] | undefined;
+  route(
+    id: string,
+  ): DeepReadonly<CanonicalScenario['routes']['routes'][number]> | undefined;
   pattern(
     id: string,
   ):
-    | CanonicalScenario['routes']['routes'][number]['patterns'][number]
+    | DeepReadonly<
+        CanonicalScenario['routes']['routes'][number]['patterns'][number]
+      >
     | undefined;
 }
 

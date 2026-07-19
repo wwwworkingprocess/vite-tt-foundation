@@ -1,5 +1,6 @@
 import {
   ScenarioDomainError,
+  assertScenarioDescriptorMatchesManifest,
   buildDirectedScenarioGraph,
   parseScenarioCatalog,
   parseScenarioManifest,
@@ -36,6 +37,7 @@ export function createScenarioLoader(input: {
   readonly baseUrl: string;
   readonly fetchText: (url: string) => Promise<TextResponse>;
   readonly digestSha256: (text: string) => Promise<string>;
+  readonly onDiagnostic?: ((error: unknown) => void) | undefined;
 }) {
   const base = `/${input.baseUrl.replace(/^\/+|\/+$/g, '')}/`.replace(
     '//',
@@ -43,14 +45,25 @@ export function createScenarioLoader(input: {
   );
   let state = freeze<ScenarioLoaderState>({ status: 'idle' });
   let generation = 0;
-  const listeners = new Set<
+  let listenerSequence = 0;
+  const listeners = new Map<
+    number,
     (next: ScenarioLoaderState, previous: ScenarioLoaderState) => void
   >();
   const set = (patch: Partial<ScenarioLoaderState>, token: number) => {
     if (token !== generation) return;
     const previous = state;
     state = freeze({ ...state, ...patch });
-    for (const listener of [...listeners]) listener(state, previous);
+    for (const listener of [...listeners.values()])
+      try {
+        listener(state, previous);
+      } catch (error) {
+        try {
+          input.onDiagnostic?.(error);
+        } catch {
+          // Diagnostics never affect loading.
+        }
+      }
   };
   const getText = async (url: string, required = true) => {
     const response = await input.fetchText(url);
@@ -111,16 +124,7 @@ export function createScenarioLoader(input: {
       const manifestUrl = `${base}scenarios/${descriptor.manifestPath}`;
       const manifestText = await getText(manifestUrl);
       const manifest = parseScenarioManifest(decode(manifestText!, 'manifest'));
-      if (manifest.scenarioId !== descriptor.scenarioId)
-        throw new ScenarioDomainError(
-          'unresolved-reference',
-          'catalogue/manifest scenarioId mismatch',
-        );
-      if (manifest.contentHash !== descriptor.contentHash)
-        throw new ScenarioDomainError(
-          'content-integrity-mismatch',
-          'catalogue/manifest contentHash mismatch',
-        );
+      assertScenarioDescriptorMatchesManifest(descriptor, manifest);
       const directory = manifestUrl.slice(0, manifestUrl.lastIndexOf('/') + 1);
       const decoded = new Map<string, unknown>();
       for (const [name, asset] of Object.entries(manifest.assets)) {
@@ -173,9 +177,10 @@ export function createScenarioLoader(input: {
           previous: ScenarioLoaderState,
         ) => void,
       ) {
-        listeners.add(listener);
+        const registration = ++listenerSequence;
+        listeners.set(registration, listener);
         return () => {
-          listeners.delete(listener);
+          listeners.delete(registration);
         };
       },
     }),

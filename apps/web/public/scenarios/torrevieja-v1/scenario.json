@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Torrevieja",
+  "primarySettlementId": "es-torrevieja",
+  "settlementIds": [
+    "es-torrevieja"
+  ],
+  "contentHash": "02b87c9b831ada20fb8d72d4bac507ce71d17d5faf39d32bd2992fe7252f88f9",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "409cac0706155c07ccc58fc3465706e434adf349621aa1ffed4080522b191f9b"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "661ec180dec75d1db3ebe02363b2c3dabc6465be0c29be3d43b60d79da6751ca"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "633f2528c556e17d5e4c4a39140667b19aac8412b64d2514282cdc9e10a520f9"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "5d47b9e19a7cd4d5fe6e2d96afaec9622ebccd1d830ac417859b2c770a164158"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "71767855fc5e77022b6d43e9d0994b3639ff6161bbe182fa77e31adac5120514"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

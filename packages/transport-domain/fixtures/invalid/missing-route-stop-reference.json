@@ -1,0 +1,26 @@
+{
+  "description": "Reject a route pattern that references a StopNode absent from stops.json.",
+  "routes": {
+    "schemaVersion": "1.0.0",
+    "scenarioId": "invalid-missing-stop",
+    "routes": [
+      {
+        "routeId": "invalid-route",
+        "publicCode": "X",
+        "name": "Invalid route",
+        "dataStatus": "test-fixture",
+        "patterns": [
+          {
+            "patternId": "invalid-pattern",
+            "directionLabel": "Invalid",
+            "closesLoop": false,
+            "stopNodeIds": [
+              "tv-stop-0053",
+              "tv-stop-does-not-exist"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -4,3 +4,5 @@ coverage
 cypress/screenshots
 cypress/videos
 yarn.lock
+apps/web/public/scenarios
+packages/transport-domain/fixtures

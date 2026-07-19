@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "catalogId": "torrevieja-tycoon-scenarios",
+  "scenarios": [
+    {
+      "scenarioId": "torrevieja-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Torrevieja",
+      "primarySettlementId": "es-torrevieja",
+      "settlementIds": [
+        "es-torrevieja"
+      ],
+      "manifestPath": "torrevieja-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "02b87c9b831ada20fb8d72d4bac507ce71d17d5faf39d32bd2992fe7252f88f9"
+    }
+  ]
+}

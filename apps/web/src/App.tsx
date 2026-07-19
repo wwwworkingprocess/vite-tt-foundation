@@ -251,6 +251,9 @@ export function App() {
           )}
         </div>
       </section>
+      <Suspense fallback={<p>Loading scenario catalogue…</p>}>
+        <ScenarioPanel />
+      </Suspense>
       <Suspense fallback={<p>Loading representation…</p>}>
         <FoundationScene />
       </Suspense>
@@ -259,3 +262,8 @@ export function App() {
 }
 
 const FoundationScene = lazy(() => import('./foundation-scene.js'));
+const ScenarioPanel = lazy(() =>
+  import('./scenarios/ScenarioPanel.js').then(({ ScenarioPanel }) => ({
+    default: ScenarioPanel,
+  })),
+);

@@ -1,0 +1,70 @@
+{
+  "description": "Reject duplicate StopNode IDs.",
+  "stops": {
+    "schemaVersion": "1.0.0",
+    "scenarioId": "invalid-duplicate-stop",
+    "stopPlaces": [],
+    "stopNodes": [
+      {
+        "stopNodeId": "tv-stop-0053",
+        "stopPlaceId": null,
+        "settlementId": "es-torrevieja",
+        "name": "Avda. Alemania (Esq. Europeos)",
+        "position": {
+          "latitude": 38.0207066,
+          "longitude": -0.6541589
+        },
+        "sourceReferences": [
+          {
+            "source": "openstreetmap",
+            "role": "platform",
+            "sourceType": "node",
+            "sourceId": "node/5034179723",
+            "sourceRef": "418"
+          },
+          {
+            "source": "openstreetmap",
+            "role": "stop-position",
+            "sourceType": "node",
+            "sourceId": "node/10204989118",
+            "sourceRef": "418"
+          }
+        ],
+        "resolution": {
+          "status": "automatic-high",
+          "distanceMetres": 4.882
+        }
+      },
+      {
+        "stopNodeId": "tv-stop-0053",
+        "stopPlaceId": null,
+        "settlementId": "es-torrevieja",
+        "name": "Avda. Alemania (Esq. Europeos)",
+        "position": {
+          "latitude": 38.0207066,
+          "longitude": -0.6541589
+        },
+        "sourceReferences": [
+          {
+            "source": "openstreetmap",
+            "role": "platform",
+            "sourceType": "node",
+            "sourceId": "node/5034179723",
+            "sourceRef": "418"
+          },
+          {
+            "source": "openstreetmap",
+            "role": "stop-position",
+            "sourceType": "node",
+            "sourceId": "node/10204989118",
+            "sourceRef": "418"
+          }
+        ],
+        "resolution": {
+          "status": "automatic-high",
+          "distanceMetres": 4.882
+        }
+      }
+    ]
+  }
+}

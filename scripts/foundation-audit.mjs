@@ -426,8 +426,9 @@ export function writableStoreViolations(text) {
 }
 const simulation = await walk('packages/simulation/src');
 const protocol = await walk('packages/protocol/src');
+const transport = await walk('packages/transport-domain/src');
 const web = await walk('apps/web/src');
-for (const file of [...simulation, ...protocol]) {
+for (const file of [...simulation, ...protocol, ...transport]) {
   const text = await source(file);
   if (
     /from\s+['"](?:react|react-dom|three|zustand|dexie|vite-plugin-pwa|socket\.io|@react-three|@torrevieja-tycoon\/web)/.test(
@@ -459,9 +460,18 @@ for (const file of web) {
 }
 for (const file of [...simulation, ...protocol, ...web]) {
   const text = await source(file);
-  const domain = transportDomainTerms(text, file);
+  const domain = file.replaceAll('\\', '/').includes('apps/web/src/scenarios')
+    ? []
+    : transportDomainTerms(text, file);
   if (domain.length)
     fail(`${file} contains transport-domain terms: ${domain.join(', ')}.`);
+  if (topLevelSingletons(text).length)
+    fail(
+      `${file} creates a top-level authoritative/store/host/database singleton.`,
+    );
+}
+for (const file of transport) {
+  const text = await source(file);
   if (topLevelSingletons(text).length)
     fail(
       `${file} creates a top-level authoritative/store/host/database singleton.`,
@@ -483,10 +493,16 @@ const simulationPackage = JSON.parse(
 const protocolPackage = JSON.parse(
   await source('packages/protocol/package.json'),
 );
+const transportPackage = JSON.parse(
+  await source('packages/transport-domain/package.json'),
+);
 if (
   simulationPackage.dependencies?.['@torrevieja-tycoon/web'] ||
   protocolPackage.dependencies?.['@torrevieja-tycoon/web'] ||
-  protocolPackage.dependencies?.['@torrevieja-tycoon/simulation']
+  protocolPackage.dependencies?.['@torrevieja-tycoon/simulation'] ||
+  transportPackage.dependencies?.['@torrevieja-tycoon/web'] ||
+  transportPackage.dependencies?.['@torrevieja-tycoon/protocol'] ||
+  transportPackage.dependencies?.['@torrevieja-tycoon/simulation']
 )
   fail('package metadata violates dependency direction.');
 const forbiddenFixture = await source(
@@ -513,6 +529,12 @@ const astStoreExposureFixture = await source(
 const nodeBuiltinsFixture = await source(
   'scripts/fixtures/architecture/node-builtins.txt',
 );
+const transportExtensionFixture = await source(
+  'scripts/fixtures/architecture/transport-extension-allowed.txt',
+);
+const transportGenericFixture = await source(
+  'scripts/fixtures/architecture/transport-generic-forbidden.txt',
+);
 for (const expected of [
   'route',
   'bus',
@@ -534,6 +556,13 @@ for (const expected of [
     fail(`domain regression fixture missed ${expected}.`);
 if (transportDomainTerms(allowedFixture, 'browser-pacing-driver.ts').length)
   fail('legitimate foundation fixture was rejected.');
+if (!transportDomainTerms(transportGenericFixture).length)
+  fail('generic transport-domain boundary fixture was not rejected.');
+if (
+  environmentNeutralViolations(transportExtensionFixture).length ||
+  topLevelSingletons(transportExtensionFixture).length
+)
+  fail('legitimate transport extension fixture failed architecture checks.');
 if (topLevelSingletons(singletonFixture).length !== 12)
   fail('singleton regression fixture was not fully detected.');
 if (environmentNeutralViolations(forbiddenFixture).length !== 3)
@@ -567,5 +596,5 @@ if (
 )
   fail('legitimate factory-scoped store fixture failed architecture checks.');
 console.log(
-  `Foundation architecture audit passed (${simulation.length + protocol.length + web.length} production modules, Git-free mode).`,
+  `Foundation architecture audit passed (${simulation.length + protocol.length + transport.length + web.length} production modules, Git-free mode).`,
 );

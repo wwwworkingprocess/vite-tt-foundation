@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-mini-v1",
+  "nodeIds": [
+    "tv-stop-0053",
+    "tv-stop-0065",
+    "tv-stop-0066",
+    "tv-stop-0067",
+    "tv-stop-0078",
+    "tv-stop-0093",
+    "tv-stop-0108"
+  ],
+  "edges": [
+    {
+      "edgeId": "legacy-A2-torrevieja-la-mata:0",
+      "routeId": "legacy-A2",
+      "patternId": "legacy-A2-torrevieja-la-mata",
+      "sequence": 0,
+      "fromStopNodeId": "tv-stop-0108",
+      "toStopNodeId": "tv-stop-0053"
+    },
+    {
+      "edgeId": "legacy-A2-torrevieja-la-mata:1",
+      "routeId": "legacy-A2",
+      "patternId": "legacy-A2-torrevieja-la-mata",
+      "sequence": 1,
+      "fromStopNodeId": "tv-stop-0053",
+      "toStopNodeId": "tv-stop-0078"
+    },
+    {
+      "edgeId": "legacy-A2-torrevieja-la-mata:2",
+      "routeId": "legacy-A2",
+      "patternId": "legacy-A2-torrevieja-la-mata",
+      "sequence": 2,
+      "fromStopNodeId": "tv-stop-0078",
+      "toStopNodeId": "tv-stop-0067"
+    },
+    {
+      "edgeId": "legacy-A2-torrevieja-la-mata:3",
+      "routeId": "legacy-A2",
+      "patternId": "legacy-A2-torrevieja-la-mata",
+      "sequence": 3,
+      "fromStopNodeId": "tv-stop-0067",
+      "toStopNodeId": "tv-stop-0093"
+    },
+    {
+      "edgeId": "legacy-A2-la-mata-torrevieja:0",
+      "routeId": "legacy-A2",
+      "patternId": "legacy-A2-la-mata-torrevieja",
+      "sequence": 0,
+      "fromStopNodeId": "tv-stop-0093",
+      "toStopNodeId": "tv-stop-0065"
+    },
+    {
+      "edgeId": "legacy-A2-la-mata-torrevieja:1",
+      "routeId": "legacy-A2",
+      "patternId": "legacy-A2-la-mata-torrevieja",
+      "sequence": 1,
+      "fromStopNodeId": "tv-stop-0065",
+      "toStopNodeId": "tv-stop-0066"
+    }
+  ],
+  "counts": {
+    "nodes": 7,
+    "edges": 6
+  },
+  "negativeAssertions": [
+    {
+      "fromStopNodeId": "tv-stop-0093",
+      "toStopNodeId": "tv-stop-0067",
+      "reason": "No reverse edge is inferred from the outbound pattern."
+    },
+    {
+      "fromStopNodeId": "tv-stop-0066",
+      "toStopNodeId": "tv-stop-0093",
+      "reason": "No closing edge is added because closesLoop is false."
+    }
+  ]
+}

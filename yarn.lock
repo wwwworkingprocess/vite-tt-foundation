@@ -2169,6 +2169,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@torrevieja-tycoon/transport-domain@workspace:*, @torrevieja-tycoon/transport-domain@workspace:packages/transport-domain":
+  version: 0.0.0-use.local
+  resolution: "@torrevieja-tycoon/transport-domain@workspace:packages/transport-domain"
+  dependencies:
+    "@vitest/coverage-v8": "npm:4.1.10"
+    typescript: "npm:6.0.3"
+    vitest: "npm:4.1.10"
+    zod: "npm:4.4.3"
+  languageName: unknown
+  linkType: soft
+
 "@torrevieja-tycoon/web@workspace:apps/web":
   version: 0.0.0-use.local
   resolution: "@torrevieja-tycoon/web@workspace:apps/web"
@@ -2180,6 +2191,7 @@ __metadata:
     "@testing-library/react": "npm:16.3.2"
     "@torrevieja-tycoon/protocol": "workspace:*"
     "@torrevieja-tycoon/simulation": "workspace:*"
+    "@torrevieja-tycoon/transport-domain": "workspace:*"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
     "@types/three": "npm:0.185.1"

@@ -3,6 +3,7 @@
   "references": [
     { "path": "packages/protocol" },
     { "path": "packages/simulation" },
+    { "path": "packages/transport-domain" },
     { "path": "apps/web" }
   ]
 }

@@ -1,0 +1,1 @@
+export const passengerQueue = { busId: 'bus-1', routePattern: 'route-a' };

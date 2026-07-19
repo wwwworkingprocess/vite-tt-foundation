@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-v1",
+  "routes": [
+    {
+      "routeId": "legacy-A2",
+      "publicCode": "A2",
+      "name": "Torrevieja - La Mata by Avenida de Paris",
+      "dataStatus": "partial-development-seed",
+      "patterns": [
+        {
+          "patternId": "legacy-A2-torrevieja-la-mata",
+          "directionLabel": "Torrevieja - La Mata",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 10,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "tv-stop-0108",
+            "tv-stop-0053",
+            "tv-stop-0078",
+            "tv-stop-0067",
+            "tv-stop-0093"
+          ]
+        },
+        {
+          "patternId": "legacy-A2-la-mata-torrevieja",
+          "directionLabel": "La Mata - Torrevieja",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 3
+          },
+          "stopNodeIds": [
+            "tv-stop-0093",
+            "tv-stop-0065",
+            "tv-stop-0066"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-A2",
+          "sourceFile": "source/legacy-routes/route-a2.json"
+        }
+      ]
+    }
+  ]
+}

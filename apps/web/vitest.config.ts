@@ -16,11 +16,13 @@ export default defineConfig({
         'src/application/**/*.ts',
         'src/persistence/**/*.ts',
         'src/pacing/**/*.ts',
+        'src/scenarios/**/*.ts',
         'apps/web/src/simulation-host/**/*.ts',
         'apps/web/src/simulation-worker/**/*.ts',
         'apps/web/src/application/**/*.ts',
         'apps/web/src/persistence/**/*.ts',
         'apps/web/src/pacing/**/*.ts',
+        'apps/web/src/scenarios/**/*.ts',
       ],
       exclude: [
         'src/**/*.test.ts',

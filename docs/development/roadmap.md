@@ -85,7 +85,18 @@ Prove the application boundaries with a deliberately trivial deterministic model
 
 No transport-game mechanics yet.
 
-## Phase 4 — Standalone non-graphical simulation library
+## Phase 4A — Canonical scenario domain foundation
+
+### Status
+
+Implemented: strict split scenario packages, immutable canonical StopNodes,
+explicit ordered-pattern directed graphs, browser-owned integrity loading, and
+the reviewed partial Torrevieja A2 development seed.
+
+Torrevieja is the first scenario rather than a simulation assumption. Complete
+network curation and source-data reconciliation remain external tasks.
+
+## Phase 4B — Standalone non-graphical simulation integration
 
 ### Goal
 

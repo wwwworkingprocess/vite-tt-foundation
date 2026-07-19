@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-v1",
+  "generatedAt": "2026-07-19T00:00:00.000Z",
+  "sources": [
+    {
+      "sourceId": "osm-torrevieja-bus-stops-2026-07-18",
+      "name": "OpenStreetMap",
+      "attribution": "© OpenStreetMap contributors",
+      "license": "ODbL-1.0",
+      "accessedAt": "2026-07-18T15:59:30.214Z",
+      "sourceFile": "source/torrevieja-osm-bus-stops.json"
+    },
+    {
+      "sourceId": "legacy-route-a2-capture",
+      "name": "The Costas route A2 capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-a2.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "canonical-stop-projection-v1",
+      "description": "Conservatively pairs platform and stop_position source components into one directional StopNode within 10 metres; prefers platform coordinates; retains source IDs only as provenance."
+    }
+  ],
+  "warnings": [
+    "The route file intentionally contains only two reviewed contiguous slices for Phase 4A graph-loader development. It is not the complete Torrevieja route network.",
+    "Review ODbL obligations before publicly distributing a derived database."
+  ]
+}

@@ -19,7 +19,8 @@ torrevieja-tycoon/
 │   └── web/                  # Browser/PWA representation and interaction layer
 ├── packages/
 │   ├── simulation/           # Standalone deterministic TypeScript library
-│   └── protocol/             # Shared adapter-neutral contracts
+│   ├── protocol/             # Shared adapter-neutral contracts
+│   └── transport-domain/     # Scenario DTOs and directed graph
 └── docs/
 ```
 
@@ -59,6 +60,8 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`architecture/state-ownership.md`](architecture/state-ownership.md) — authoritative, application, and presentation state.
 - [`architecture/transport-contract.md`](architecture/transport-contract.md) — proposed adapter-neutral host/client semantics and failure recovery.
 - [`architecture/time-model.md`](architecture/time-model.md) — authoritative five-second tick and host-owned playback model.
+- [`architecture/scenario-packages-and-directed-graph.md`](architecture/scenario-packages-and-directed-graph.md) — Phase 4A scenario and graph boundary.
+- [`architecture/decisions/0007-scenario-package-and-directed-graph.md`](architecture/decisions/0007-scenario-package-and-directed-graph.md) — scenario package and directed-edge decision.
 - [`architecture/decisions/0002-simulation-host-transport-readiness.md`](architecture/decisions/0002-simulation-host-transport-readiness.md) — Socket.IO-readiness research and transport-boundary decision.
 - [`architecture/decisions/0003-simulation-time-and-playback-pacing.md`](architecture/decisions/0003-simulation-time-and-playback-pacing.md) — simulation-time and playback-pacing decision.
 - [`development/roadmap.md`](development/roadmap.md) — phased master plan.
@@ -91,4 +94,7 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - Phase 3F hardens the completed platform as Foundation Template v1.0.0 with
   executable architecture, manifest, bundle, lifecycle, and built-PWA offline
   release gates. Final release status requires the pinned CI workflows to pass.
+- Phase 4A adds an environment-neutral transport-domain package, reviewed
+  scenario assets, strict immutable parsing, directed graph queries, and a
+  base-aware browser loader without changing authoritative Phase 3 contracts.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

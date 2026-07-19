@@ -43,10 +43,14 @@ describe('browser scenario loader', () => {
     const loadingB = loader.loadScenario('scenario-b');
     expect(loader.projection.getState()).toMatchObject({
       status: 'loading-scenario',
+      catalog: { catalogId: 'torrevieja-tycoon-scenarios' },
       selectedScenarioId: 'scenario-b',
     });
     expect(loader.projection.getState()).not.toHaveProperty('graph');
     expect(loader.projection.getState()).not.toHaveProperty('title');
+    expect(loader.projection.getState()).not.toHaveProperty('settlementCount');
+    expect(loader.projection.getState()).not.toHaveProperty('routeCount');
+    expect(loader.projection.getState()).not.toHaveProperty('message');
     await loadingB;
     expect(loader.projection.getState()).toMatchObject({
       status: 'failed',
@@ -66,6 +70,114 @@ describe('browser scenario loader', () => {
     expect(loader.projection.getState()).toMatchObject({ status: 'failed' });
     expect(loader.projection.getState()).not.toHaveProperty('graph');
   });
+
+  it.each(['success', 'failure'] as const)(
+    'keeps the catalogue available for a newer selection and ignores late stale %s',
+    async (lateOutcome) => {
+      const publicRoot = join(import.meta.dirname, '..', '..', 'public');
+      const sourceCatalog = JSON.parse(
+        readFileSync(join(publicRoot, 'scenarios', 'catalog.json'), 'utf8'),
+      ) as { scenarios: Array<Record<string, unknown>> };
+      const sourceManifest = JSON.parse(
+        readFileSync(
+          join(publicRoot, 'scenarios', 'torrevieja-v1', 'scenario.json'),
+          'utf8',
+        ),
+      ) as Record<string, unknown>;
+      const descriptor = sourceCatalog.scenarios[0]!;
+      const assets = Object.fromEntries(
+        Object.entries(sourceManifest.assets as Record<string, object>).map(
+          ([name, asset]) => [name, { ...asset, sha256: 'a'.repeat(64) }],
+        ),
+      );
+      const manifest = (scenarioId: string) => ({
+        ...sourceManifest,
+        scenarioId,
+        title: scenarioId,
+        assets,
+      });
+      const catalog = {
+        ...sourceCatalog,
+        scenarios: ['scenario-a', 'scenario-b'].map((scenarioId) => ({
+          ...descriptor,
+          scenarioId,
+          title: scenarioId,
+          manifestPath: `${scenarioId}/scenario.json`,
+        })),
+      };
+      const pending = new Map<
+        string,
+        (value: { ok: boolean; text: () => Promise<string> }) => void
+      >();
+      const fetchText = vi.fn((url: string) => {
+        if (url.endsWith('catalog.json'))
+          return Promise.resolve(response(catalog));
+        const scenarioMatch =
+          /scenarios\/(scenario-[ab])\/scenario\.json$/.exec(url);
+        if (scenarioMatch)
+          return new Promise<ReturnType<typeof response>>((resolve) =>
+            pending.set(scenarioMatch[1]!, resolve),
+          );
+        const filename = url.slice(url.lastIndexOf('/') + 1);
+        const scenarioId = /scenarios\/(scenario-[ab])\//.exec(url)?.[1];
+        try {
+          const value = JSON.parse(
+            readFileSync(
+              join(publicRoot, 'scenarios', 'torrevieja-v1', filename),
+              'utf8',
+            ),
+          ) as Record<string, unknown>;
+          return Promise.resolve(
+            response(scenarioId ? { ...value, scenarioId } : value),
+          );
+        } catch {
+          return Promise.resolve({ ok: false, text: async () => '' });
+        }
+      });
+      const loader = createScenarioLoader({
+        baseUrl: '/',
+        fetchText,
+        digestSha256: async () => 'a'.repeat(64),
+      });
+      await loader.loadCatalog();
+      const loadA = loader.loadScenario('scenario-a');
+      expect(loader.projection.getState()).toMatchObject({
+        status: 'loading-scenario',
+        catalog: {
+          scenarios: expect.arrayContaining([
+            expect.objectContaining({ scenarioId: 'scenario-b' }),
+          ]),
+        },
+        selectedScenarioId: 'scenario-a',
+      });
+
+      const loadB = loader.loadScenario('scenario-b');
+      expect(loader.projection.getState()).toMatchObject({
+        status: 'loading-scenario',
+        selectedScenarioId: 'scenario-b',
+      });
+      expect(loader.projection.getState().message).toBeUndefined();
+      pending.get('scenario-b')!(response(manifest('scenario-b')));
+      await loadB;
+      expect(loader.projection.getState()).toMatchObject({
+        status: 'ready',
+        selectedScenarioId: 'scenario-b',
+        title: 'scenario-b',
+      });
+
+      pending.get('scenario-a')!(
+        lateOutcome === 'success'
+          ? response(manifest('scenario-a'))
+          : { ok: false, text: async () => '' },
+      );
+      await loadA;
+      expect(loader.projection.getState()).toMatchObject({
+        status: 'ready',
+        selectedScenarioId: 'scenario-b',
+        title: 'scenario-b',
+      });
+    },
+  );
   it('treats duplicate subscriptions independently and isolates listener failures', async () => {
     const diagnostics = vi.fn();
     const loader = createScenarioLoader({

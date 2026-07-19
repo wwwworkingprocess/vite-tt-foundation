@@ -118,6 +118,7 @@ export function createScenarioLoader(input: {
     replace(
       {
         status: 'loading-scenario',
+        catalog,
         selectedScenarioId: descriptor.scenarioId,
       },
       token,

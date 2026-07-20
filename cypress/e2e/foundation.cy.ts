@@ -1,3 +1,17 @@
+type VehicleSvgState = Readonly<Record<string, string | null>>;
+const vehicleSvgState = (): Cypress.Chainable<VehicleSvgState> =>
+  cy.get('[data-testid="vehicle-position"]').then(($vehicle) => ({
+    vehicleId: $vehicle.attr('data-vehicle-id') ?? null,
+    movementKind: $vehicle.attr('data-movement-kind') ?? null,
+    edgeId: $vehicle.attr('data-edge-id') ?? null,
+    progressNumerator: $vehicle.attr('data-progress-numerator') ?? null,
+    progressDenominator: $vehicle.attr('data-progress-denominator') ?? null,
+    cx: $vehicle.attr('cx') ?? null,
+    cy: $vehicle.attr('cy') ?? null,
+  }));
+const expectVehicleSvg = (expected: VehicleSvgState) =>
+  vehicleSvgState().should('deep.equal', expected);
+
 describe('foundation screen', () => {
   it('renders without a fatal application error', () => {
     cy.visit('/');
@@ -62,13 +76,20 @@ describe('foundation screen', () => {
       ),
     );
     cy.contains('button', 'Pause').click();
+    cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     let fullTick = 0;
     let fullTimeline = '';
+    let fullSvg: VehicleSvgState;
     cy.get('[data-testid="worker-tick"]').then(($tick) => {
       fullTick = Number($tick.text().split(': ')[1]);
     });
     cy.get('[data-testid="worker-timeline"]').then(($timeline) => {
       fullTimeline = $timeline.text();
+    });
+    vehicleSvgState().then((snapshot) => {
+      fullSvg = snapshot;
+      cy.wait(350);
+      expectVehicleSvg(snapshot);
     });
     cy.contains('button', 'Save transport session').click();
     cy.get('[data-testid="manual-save-availability"]').should(
@@ -112,9 +133,16 @@ describe('foundation screen', () => {
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0),
     );
     cy.contains('button', 'Pause').click();
+    cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     let miniTick = 0;
+    let miniSvg: VehicleSvgState;
     cy.get('[data-testid="worker-tick"]').then(($tick) => {
       miniTick = Number($tick.text().split(': ')[1]);
+    });
+    vehicleSvgState().then((snapshot) => {
+      miniSvg = snapshot;
+      cy.wait(350);
+      expectVehicleSvg(snapshot);
     });
     cy.contains('label', 'Autosave').find('input').check();
     cy.contains('button', 'Save autosave now').click();
@@ -133,6 +161,7 @@ describe('foundation screen', () => {
       expect(Number($tick.text().split(': ')[1])).to.equal(fullTick),
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.then(() => expectVehicleSvg(fullSvg));
     cy.get('[data-testid="command-revision"]').should('contain.text', '0');
     cy.get('[data-testid="stream-offset"]').should('contain.text', '0');
 
@@ -151,10 +180,22 @@ describe('foundation screen', () => {
       'torrevieja-mini-v1',
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.then(() => expectVehicleSvg(miniSvg));
     cy.contains('button', /^Normal /).click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(miniTick),
     );
+    cy.then(() =>
+      vehicleSvgState().should((current) =>
+        expect(current).not.to.deep.equal(miniSvg),
+      ),
+    );
+    cy.contains('button', 'Pause').click();
+    cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
+    vehicleSvgState().then((snapshot) => {
+      cy.wait(350);
+      expectVehicleSvg(snapshot);
+    });
     cy.contains('button', 'Close transport Worker').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
   });

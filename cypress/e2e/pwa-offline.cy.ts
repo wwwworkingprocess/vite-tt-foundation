@@ -45,6 +45,19 @@ const readSave = (win: Window, saveId: string) =>
       transaction.oncomplete = () => request.result.close();
     };
   });
+type VehicleSvgState = Readonly<Record<string, string | null>>;
+const vehicleSvgState = (): Cypress.Chainable<VehicleSvgState> =>
+  cy.get('[data-testid="vehicle-position"]').then(($vehicle) => ({
+    vehicleId: $vehicle.attr('data-vehicle-id') ?? null,
+    movementKind: $vehicle.attr('data-movement-kind') ?? null,
+    edgeId: $vehicle.attr('data-edge-id') ?? null,
+    progressNumerator: $vehicle.attr('data-progress-numerator') ?? null,
+    progressDenominator: $vehicle.attr('data-progress-denominator') ?? null,
+    cx: $vehicle.attr('cx') ?? null,
+    cy: $vehicle.attr('cy') ?? null,
+  }));
+const expectVehicleSvg = (expected: VehicleSvgState) =>
+  vehicleSvgState().should('deep.equal', expected);
 
 describe('built foundation PWA offline lifecycle', () => {
   afterEach(() => network(false));
@@ -99,11 +112,17 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     let savedTick = 0;
     let savedCoordinate = '';
+    let savedSvg: VehicleSvgState = {};
     cy.get('[data-testid="worker-tick"]').then(($tick) => {
       savedTick = Number($tick.text().split(': ')[1]);
     });
     cy.get('[data-testid="scenario-coordinate"]').then(($coordinate) => {
       savedCoordinate = $coordinate.text();
+    });
+    vehicleSvgState().then((snapshot) => {
+      savedSvg = snapshot;
+      cy.wait(350);
+      expectVehicleSvg(snapshot);
     });
     cy.contains('button', 'Save transport session').click();
     cy.get('[data-testid="save-count"]').should('contain.text', '2');
@@ -139,11 +158,17 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.contains('button', 'Pause').click();
     let miniSavedTick = 0;
     let miniSavedCoordinate = '';
+    let miniSavedSvg: VehicleSvgState = {};
     cy.get('[data-testid="worker-tick"]').then(($tick) => {
       miniSavedTick = Number($tick.text().split(': ')[1]);
     });
     cy.get('[data-testid="scenario-coordinate"]').then(($coordinate) => {
       miniSavedCoordinate = $coordinate.text();
+    });
+    vehicleSvgState().then((snapshot) => {
+      miniSavedSvg = snapshot;
+      cy.wait(350);
+      expectVehicleSvg(snapshot);
     });
     cy.contains('label', 'Autosave').find('input').check();
     cy.contains('button', 'Save autosave now').click();
@@ -228,6 +253,7 @@ describe('built foundation PWA offline lifecycle', () => {
       expect(Number($tick.text().split(': ')[1])).to.equal(savedTick),
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '0');
+    cy.get('[data-testid="vehicle-position"]').should('not.exist');
     cy.get('[data-testid="command-revision"]').should(
       'have.text',
       'Command revision: 0',
@@ -272,6 +298,7 @@ describe('built foundation PWA offline lifecycle', () => {
       'Bonus ticks remaining: 0',
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.then(() => expectVehicleSvg(savedSvg));
     cy.contains('label', 'Autosave').find('input').check();
     cy.contains('button', 'Restore autosave').click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
@@ -294,12 +321,24 @@ describe('built foundation PWA offline lifecycle', () => {
       'Pacing credit: 0',
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.then(() => expectVehicleSvg(miniSavedSvg));
     cy.contains('button', 'Normal 20×').click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(
         miniSavedTick,
       ),
     );
+    cy.then(() =>
+      vehicleSvgState().should((current) =>
+        expect(current).not.to.deep.equal(miniSavedSvg),
+      ),
+    );
+    cy.contains('button', 'Pause').click();
+    cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
+    vehicleSvgState().then((snapshot) => {
+      cy.wait(350);
+      expectVehicleSvg(snapshot);
+    });
     cy.contains('button', 'Close transport Worker').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
     cy.then(() => network(false));

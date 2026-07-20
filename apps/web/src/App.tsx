@@ -29,6 +29,7 @@ import {
 import { createDefaultBrowserPacingDriver } from './pacing/browser-pacing-driver.js';
 import { createFoundationPacingController } from './pacing/foundation-pacing-controller.js';
 import { VehicleMovementSvg } from './transport-representation/VehicleMovementSvg.js';
+import { createDemoVehicleCommandForAuthority } from './transport-representation/demo-vehicle-command.js';
 import { createBrowserTransportWorker } from './transport-simulation/browser-transport-worker.js';
 import { createTransportFoundationApplication } from './transport-simulation/transport-foundation-application.js';
 import { createDexieTransportSaveRepository } from './transport-simulation/transport-save-repository.js';
@@ -53,7 +54,9 @@ export function App() {
   const [state, setState] = useState<FoundationSessionCompositionState>();
   const [actions, setActions] = useState<Actions>();
   const [selectedScenario, setSelectedScenario] = useState<CanonicalScenario>();
-  const [activeScenario, setActiveScenario] = useState<CanonicalScenario>();
+  const [stackSeedScenario, setStackSeedScenario] =
+    useState<CanonicalScenario>();
+  const [browserActionMessage, setBrowserActionMessage] = useState<string>();
   const [, setScenarioCacheRevision] = useState(0);
   const scenarioCache = useRef(new Map<string, CanonicalScenario>());
   const scenarioResolver = useRef<
@@ -82,12 +85,12 @@ export function App() {
     (next: CanonicalScenario) => {
       cacheScenario(next);
       setSelectedScenario(next);
-      setActiveScenario((current) => current ?? next);
+      setStackSeedScenario((current) => current ?? next);
     },
     [cacheScenario],
   );
   useEffect(() => {
-    if (typeof Worker === 'undefined' || !activeScenario) return;
+    if (typeof Worker === 'undefined' || !stackSeedScenario) return;
     let currentApplication:
       ReturnType<typeof createTransportFoundationApplication> | undefined;
     let vehicleCommandSequence = 0;
@@ -134,7 +137,7 @@ export function App() {
           'foundation-template',
         );
         const application = createTransportFoundationApplication({
-          scenario: activeScenario,
+          scenario: stackSeedScenario,
           repository,
           createClient: () =>
             createWorkerTransportSimulationClient({
@@ -182,20 +185,22 @@ export function App() {
       close: composition.closeSession,
       start: composition.startNewSession,
       createVehicle: async () => {
-        const pattern = activeScenario.routes.routes[0]?.patterns[0];
-        if (!pattern) return;
-        const edgeCount =
-          pattern.stopNodeIds.length - 1 + (pattern.closesLoop ? 1 : 0);
-        await sendVehicleCommand({
-          kind: 'transport.vehicle.create',
-          vehicleId: parseVehicleId('browser-demo-vehicle'),
-          label: 'Demo vehicle',
-          patternId: pattern.patternId,
-          movementPlan: {
-            kind: 'vehicle-movement-plan-v1',
-            edgeTravelTicks: Array.from({ length: edgeCount }, () => 3),
-          },
-        });
+        const coordinate = currentApplication?.projection.getState().scenario;
+        if (!coordinate) return;
+        try {
+          const command = createDemoVehicleCommandForAuthority(
+            coordinate,
+            (current) => scenarioCache.current.get(scenarioKey(current)),
+          );
+          setBrowserActionMessage(undefined);
+          await sendVehicleCommand(command);
+        } catch (error) {
+          setBrowserActionMessage(
+            error instanceof Error
+              ? error.message
+              : 'The demo vehicle could not be created.',
+          );
+        }
       },
       startVehicle: () =>
         sendVehicleCommand({
@@ -208,7 +213,7 @@ export function App() {
       remove();
       void composition.dispose();
     };
-  }, [activeScenario]);
+  }, [stackSeedScenario]);
 
   const application = state?.application;
   const pacing = state?.pacing;
@@ -436,6 +441,11 @@ export function App() {
             {state?.message ? (
               <p role="alert">Session action failed: {state.message}</p>
             ) : null}
+            {browserActionMessage ? (
+              <p role="alert" data-testid="browser-action-message">
+                {browserActionMessage}
+              </p>
+            ) : null}
           </div>
           {state?.canStartNewSession ? (
             <button
@@ -443,13 +453,13 @@ export function App() {
               onClick={action(async () => {
                 if (
                   selectedScenario &&
-                  activeScenario &&
+                  stackSeedScenario &&
                   !scenarioCoordinatesEqual(
                     createScenarioCoordinate(selectedScenario),
-                    createScenarioCoordinate(activeScenario),
+                    createScenarioCoordinate(stackSeedScenario),
                   )
                 ) {
-                  setActiveScenario(selectedScenario);
+                  setStackSeedScenario(selectedScenario);
                   return;
                 }
                 await actions?.start();

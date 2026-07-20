@@ -1,3 +1,4 @@
+import 'fake-indexeddb/auto';
 import {
   cleanup,
   fireEvent,
@@ -37,11 +38,31 @@ const alternate = (name: string) =>
   ) as Record<string, unknown>;
 const alternateManifest = alternate('scenario.json');
 alternateManifest.contentHash = 'b'.repeat(64);
+const alternateRoutes = alternate('routes.json') as {
+  routes: Array<{
+    routeId: string;
+    patterns: Array<{
+      patternId: string;
+      closesLoop: boolean;
+      stopNodeIds: string[];
+    }>;
+  }>;
+};
+const alternatePattern = alternateRoutes.routes[0]!.patterns[0]!;
+alternateRoutes.routes[0]!.routeId = 'scenario-b-route';
+alternateRoutes.routes[0]!.patterns = [
+  {
+    ...alternatePattern,
+    patternId: 'scenario-b-pattern',
+    closesLoop: false,
+    stopNodeIds: alternatePattern.stopNodeIds.slice(0, 3),
+  },
+];
 const alternateScenario = parseScenarioPackage({
   manifest: alternateManifest,
   settlements: alternate('settlements.json'),
   stops: alternate('stops.json'),
-  routes: alternate('routes.json'),
+  routes: alternateRoutes,
   presentation: alternate('presentation.json'),
   provenance: alternate('provenance.json'),
 });
@@ -49,19 +70,35 @@ const alternateScenario = parseScenarioPackage({
 vi.mock('./scenarios/ScenarioPanel.js', () => ({
   ScenarioPanel: ({
     onScenarioReady,
+    onResolverReady,
   }: {
     onScenarioReady(value: typeof scenario): void;
+    onResolverReady?(
+      resolve: (coordinate: { scenarioId: string }) => Promise<typeof scenario>,
+    ): void;
   }) => {
     const emitted = useRef(false);
     if (!emitted.current) {
       emitted.current = true;
-      queueMicrotask(() => onScenarioReady(scenario));
+      queueMicrotask(() => {
+        onResolverReady?.((coordinate) =>
+          Promise.resolve(
+            coordinate.scenarioId === alternateScenario.manifest.scenarioId
+              ? alternateScenario
+              : scenario,
+          ),
+        );
+        onScenarioReady(scenario);
+      });
     }
     return (
       <div>
         Scenario fixture
         <button onClick={() => onScenarioReady(alternateScenario)}>
           Select scenario B
+        </button>
+        <button onClick={() => onScenarioReady(scenario)}>
+          Select scenario A
         </button>
       </div>
     );
@@ -143,6 +180,11 @@ describe('foundation screen', () => {
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
     await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Create demo vehicle' }),
+      ).toBeEnabled(),
+    );
+    await waitFor(() =>
       expect(screen.getByTestId('worker-tick')).toHaveTextContent('0'),
     );
     expect(screen.getByTestId('scenario-coordinate')).toHaveTextContent(
@@ -217,6 +259,11 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Create demo vehicle' }),
+      ).toBeEnabled(),
+    );
     fireEvent.click(
       screen.getByRole('button', { name: 'Create demo vehicle' }),
     );
@@ -247,8 +294,162 @@ describe('foundation screen', () => {
     );
     const position = screen.getByTestId('vehicle-position');
     expect(position).toHaveAttribute('data-vehicle-id', 'browser-demo-vehicle');
-    expect(position.getAttribute('cx')).toBe(
-      screen.getByTestId('vehicle-position').getAttribute('cx'),
+    const pausedPosition = [
+      position.getAttribute('data-movement-kind'),
+      position.getAttribute('data-edge-id'),
+      position.getAttribute('data-progress-numerator'),
+      position.getAttribute('data-progress-denominator'),
+      position.getAttribute('cx'),
+      position.getAttribute('cy'),
+    ];
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect([
+      position.getAttribute('data-movement-kind'),
+      position.getAttribute('data-edge-id'),
+      position.getAttribute('data-progress-numerator'),
+      position.getAttribute('data-progress-denominator'),
+      position.getAttribute('cx'),
+      position.getAttribute('cy'),
+    ]).toEqual(pausedPosition);
+    fireEvent.click(screen.getByRole('button', { name: /Normal 20/ }));
+    await waitFor(() =>
+      expect([
+        position.getAttribute('data-movement-kind'),
+        position.getAttribute('data-edge-id'),
+        position.getAttribute('data-progress-numerator'),
+        position.getAttribute('data-progress-denominator'),
+        position.getAttribute('cx'),
+        position.getAttribute('cy'),
+      ]).not.toEqual(pausedPosition),
+    );
+  });
+
+  it('constructs demo vehicle commands from restored disjoint authority, not selection or stack seed', async () => {
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    const confirm = vi.fn(() => true);
+    vi.stubGlobal('confirm', confirm);
+    render(<App />);
+    await waitFor(() =>
+      expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Save transport session' }),
+      ).toBeEnabled(),
+    );
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Save transport session' }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('manual-save-availability')).toHaveTextContent(
+        'available',
+      ),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Select scenario B' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Close transport Worker' }),
+    );
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'Start new transport session',
+      }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('active-scenario')).toHaveTextContent(
+        'scenario-b',
+      ),
+    );
+    await waitFor(() =>
+      expect(screen.getByRole('radio', { name: 'Autosave' })).toBeEnabled(),
+    );
+    fireEvent.click(screen.getByRole('radio', { name: 'Autosave' }));
+    await waitFor(() =>
+      expect(screen.getByRole('radio', { name: 'Autosave' })).toBeChecked(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Save autosave now' }));
+    await waitFor(() =>
+      expect(screen.getByTestId('autosave-availability')).toHaveTextContent(
+        'available',
+      ),
+    );
+
+    await waitFor(() =>
+      expect(screen.getByRole('radio', { name: 'Manual' })).toBeEnabled(),
+    );
+    fireEvent.click(screen.getByRole('radio', { name: 'Manual' }));
+    await waitFor(() =>
+      expect(screen.getByRole('radio', { name: 'Manual' })).toBeChecked(),
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Restore manual save' }),
+      ).toBeEnabled(),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Restore manual save' }),
+    );
+    await waitFor(() => expect(confirm).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(screen.getByTestId('active-scenario')).toHaveTextContent(
+        'torrevieja-mini-v1',
+      ),
+    );
+    expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
+      'scenario-b',
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Create demo vehicle' }),
+      ).toBeEnabled(),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Create demo vehicle' }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-pattern')).toHaveTextContent(
+        'legacy-A2-torrevieja-la-mata',
+      ),
+    );
+    expect(screen.getByTestId('vehicle-pattern')).not.toHaveTextContent(
+      'scenario-b-pattern',
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select scenario A' }));
+    expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
+      'torrevieja-mini-v1',
+    );
+    await waitFor(() =>
+      expect(screen.getByRole('radio', { name: 'Autosave' })).toBeEnabled(),
+    );
+    fireEvent.click(screen.getByRole('radio', { name: 'Autosave' }));
+    await waitFor(() =>
+      expect(screen.getByRole('radio', { name: 'Autosave' })).toBeChecked(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Restore autosave' }));
+    await waitFor(() =>
+      expect(screen.getByTestId('active-scenario')).toHaveTextContent(
+        'scenario-b',
+      ),
+    );
+    expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
+      'torrevieja-mini-v1',
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Create demo vehicle' }),
+      ).toBeEnabled(),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Create demo vehicle' }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-pattern')).toHaveTextContent(
+        'scenario-b-pattern',
+      ),
+    );
+    expect(screen.getByTestId('vehicle-pattern')).not.toHaveTextContent(
+      'legacy-A2-torrevieja-la-mata',
     );
   });
 });

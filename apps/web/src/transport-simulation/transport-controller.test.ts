@@ -58,6 +58,110 @@ const record = () => {
 };
 
 describe('transport application controller', () => {
+  it('publishes failed and permits retry after synchronous initial construction failure', async () => {
+    const reliable = vi.fn();
+    const render = vi.fn();
+    const close = vi.fn();
+    const valid = createDirectTransportSimulationClient();
+    let calls = 0;
+    const controller = createTransportApplicationController({
+      createClient: () => {
+        if (++calls === 1) throw new Error('construction failed');
+        return Object.freeze({
+          ...valid,
+          subscribeReliableUpdates(
+            listener: Parameters<typeof valid.subscribeReliableUpdates>[0],
+          ) {
+            reliable();
+            return valid.subscribeReliableUpdates(listener);
+          },
+          subscribeRenderSnapshots(
+            listener: Parameters<typeof valid.subscribeRenderSnapshots>[0],
+          ) {
+            render();
+            return valid.subscribeRenderSnapshots(listener);
+          },
+          async close() {
+            close();
+            await valid.close();
+          },
+        });
+      },
+      repository: { get: async () => undefined, put: async () => undefined },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await expect(
+      controller.startNew({
+        gameId: parseGameId('game-fixture'),
+        timelineId: parseTimelineId('failed-timeline'),
+        scenario: scenario(),
+      }),
+    ).rejects.toThrow('construction failed');
+    expect(controller.projection.getState()).toEqual({
+      status: 'failed',
+      message: 'construction failed',
+    });
+    expect(reliable).not.toHaveBeenCalled();
+    expect(render).not.toHaveBeenCalled();
+    expect(close).not.toHaveBeenCalled();
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('retry-timeline'),
+      scenario: scenario(),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'retry-timeline',
+    });
+    await controller.close();
+  });
+
+  it('normalizes a non-Error initial construction failure', async () => {
+    const controller = createTransportApplicationController({
+      createClient: () => {
+        throw 'construction failed';
+      },
+      repository: { get: async () => undefined, put: async () => undefined },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await expect(
+      controller.startNew({
+        gameId: parseGameId('game-fixture'),
+        timelineId: parseTimelineId('failed-timeline'),
+        scenario: scenario(),
+      }),
+    ).rejects.toBe('construction failed');
+    expect(controller.projection.getState()).toEqual({
+      status: 'failed',
+      message: 'Transport operation failed.',
+    });
+    await controller.close();
+  });
+
+  it('finishes terminal close when construction failure starts close', async () => {
+    const holder: {
+      controller?: ReturnType<typeof createTransportApplicationController>;
+    } = {};
+    const controller = createTransportApplicationController({
+      createClient: () => {
+        void holder.controller!.close();
+        throw new Error('construction failed during close');
+      },
+      repository: { get: async () => undefined, put: async () => undefined },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    holder.controller = controller;
+    await expect(
+      controller.startNew({
+        gameId: parseGameId('game-fixture'),
+        timelineId: parseTimelineId('failed-timeline'),
+        scenario: scenario(),
+      }),
+    ).rejects.toThrow('construction failed during close');
+    await controller.close();
+    expect(controller.projection.getState()).toEqual({ status: 'closed' });
+  });
+
   it('rejects every authority operation while idle and subscriptions after close', async () => {
     const controller = createTransportApplicationController({
       createClient: createDirectTransportSimulationClient,

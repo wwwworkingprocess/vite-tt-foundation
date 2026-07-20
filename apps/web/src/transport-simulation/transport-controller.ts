@@ -233,8 +233,17 @@ export function createTransportApplicationController(input: {
         const gameId = parseGameId(request.gameId);
         const timelineId = parseTimelineId(request.timelineId);
         const token = ++generation;
+        let candidate: TransportSimulationClient;
+        try {
+          candidate = input.createClient();
+        } catch (error) {
+          sessionClaimed = false;
+          if (!closing && !closed && generation === token)
+            set({ status: 'failed', message: errorMessage(error) });
+          throw error;
+        }
         await activate(
-          input.createClient(),
+          candidate,
           {
             kind: 'transport-client-connect',
             contractVersion: 1,

@@ -11,6 +11,7 @@ import { createFoundationPacingController } from '../pacing/foundation-pacing-co
 import { createDirectTransportSimulationClient } from './transport-client.js';
 import { createTransportFoundationApplication } from './transport-foundation-application.js';
 import { createInMemoryTransportSaveRepository } from './transport-save-repository.js';
+import type { TransportSaveSummary } from './transport-save-record.js';
 
 const root = join(
   import.meta.dirname,
@@ -53,6 +54,61 @@ const legacy = {
 };
 
 describe('transport-backed foundation application port', () => {
+  it('deeply freezes every nested ready and persistence projection value', async () => {
+    const application = createTransportFoundationApplication({
+      scenario,
+      repository: createInMemoryTransportSaveRepository(),
+      createClient: createDirectTransportSimulationClient,
+      scenarioResolver: { resolve: async () => scenario },
+    });
+    await application.startNew({
+      gameId: parseGameId('game'),
+      timelineId: parseTimelineId('timeline'),
+      initialSimulationTick: 3,
+    });
+    await application.save({
+      saveId: 'slot',
+      label: 'Nested summary',
+      createdAtUtcMs: 1,
+      updatedAtUtcMs: 2,
+    });
+    const first = application.projection.getState();
+    expect(Object.isFrozen(first)).toBe(true);
+    expect(Object.isFrozen(first.session)).toBe(true);
+    expect(Object.isFrozen(first.scenario)).toBe(true);
+    expect(Object.isFrozen(first.authoritative)).toBe(true);
+    expect(Object.isFrozen(first.synchronization)).toBe(true);
+    expect(Object.isFrozen(first.persistence)).toBe(true);
+    expect(Object.isFrozen(first.persistence.saves)).toBe(true);
+    expect(Object.isFrozen(first.persistence.saves[0])).toBe(true);
+    expect(Reflect.set(first.session, 'status', 'failed')).toBe(false);
+    expect(Reflect.set(first.authoritative!, 'simulationTick', 999)).toBe(
+      false,
+    );
+    expect(Reflect.set(first.authoritative!, 'commandRevision', 999)).toBe(
+      false,
+    );
+    expect(Reflect.set(first.authoritative!, 'streamOffset', 999)).toBe(false);
+    expect(Reflect.set(first.scenario!, 'scenarioId', 'mutated')).toBe(false);
+    expect(Reflect.set(first.synchronization, 'status', 'failed')).toBe(false);
+    expect(Reflect.set(first.persistence, 'status', 'failed')).toBe(false);
+    expect(() =>
+      (first.persistence.saves as TransportSaveSummary[]).push(
+        first.persistence.saves[0]! as TransportSaveSummary,
+      ),
+    ).toThrow();
+    expect(Reflect.set(first.persistence.saves[0]!, 'label', 'mutated')).toBe(
+      false,
+    );
+    expect(application.projection.getState()).toEqual(first);
+    await application.close();
+    const closed = application.projection.getState();
+    expect(Object.isFrozen(closed)).toBe(true);
+    expect(Object.isFrozen(closed.session)).toBe(true);
+    expect(Reflect.set(closed.session, 'status', 'ready')).toBe(false);
+    expect(application.projection.getState()).toEqual(closed);
+  });
+
   it('drives one transport authority through pacing, saves, legacy listing, and restore', async () => {
     const repository = createInMemoryTransportSaveRepository([
       legacy,
@@ -259,6 +315,11 @@ describe('transport-backed foundation application port', () => {
       synchronization: { status: 'idle' },
       persistence: { status: 'idle', saves: [] },
     });
+    const failed = application.projection.getState();
+    expect(Object.isFrozen(failed)).toBe(true);
+    expect(Object.isFrozen(failed.session)).toBe(true);
+    expect(Reflect.set(failed.session, 'status', 'ready')).toBe(false);
+    expect(application.projection.getState()).toEqual(failed);
     await application.close();
   });
 });

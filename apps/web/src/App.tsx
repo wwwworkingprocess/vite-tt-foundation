@@ -1,9 +1,17 @@
-import { protocolContractVersion } from '@torrevieja-tycoon/protocol';
+import {
+  parseClientId,
+  parseCommandId,
+  parseCorrelationId,
+  parseSessionId,
+  protocolContractVersion,
+} from '@torrevieja-tycoon/protocol';
 import {
   createScenarioCoordinate,
+  parseVehicleId,
   scenarioCoordinatesEqual,
   simulationFoundationLabel,
   type ScenarioCoordinate,
+  type VehicleState,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
@@ -26,6 +34,8 @@ type Actions = Readonly<{
   saveMode: (mode: 'manual' | 'autosave') => Promise<void>;
   close: () => Promise<void>;
   start: () => Promise<void>;
+  createVehicle: () => Promise<void>;
+  startVehicle: () => Promise<void>;
 }>;
 
 export function App() {
@@ -38,6 +48,46 @@ export function App() {
   >(undefined);
   useEffect(() => {
     if (typeof Worker === 'undefined' || !activeScenario) return;
+    let currentApplication:
+      ReturnType<typeof createTransportFoundationApplication> | undefined;
+    let vehicleCommandSequence = 0;
+    const sendVehicleCommand = async (
+      command:
+        | Readonly<{
+            kind: 'transport.vehicle.create';
+            vehicleId: ReturnType<typeof parseVehicleId>;
+            label: string;
+            patternId: CanonicalScenario['routes']['routes'][number]['patterns'][number]['patternId'];
+            movementPlan: Readonly<{
+              kind: 'vehicle-movement-plan-v1';
+              edgeTravelTicks: readonly number[];
+            }>;
+          }>
+        | Readonly<{
+            kind: 'transport.vehicle.start';
+            vehicleId: ReturnType<typeof parseVehicleId>;
+          }>,
+    ) => {
+      const application = currentApplication;
+      const session = application?.projection.getState().session;
+      if (!application || session?.status !== 'ready') return;
+      const sequence = ++vehicleCommandSequence;
+      const id = `browser-vehicle-command-${sequence}`;
+      try {
+        await application.sendCommand({
+          kind: 'foundation-command',
+          gameId: session.gameId,
+          timelineId: session.timelineId,
+          commandId: parseCommandId(id),
+          correlationId: parseCorrelationId(id),
+          clientId: parseClientId('transport-browser'),
+          sessionId: parseSessionId('transport-session'),
+          command,
+        });
+      } catch {
+        // The application projection already exposes the actionable failure.
+      }
+    };
     const composition = createFoundationSessionComposition({
       createStack() {
         const repository = createDexieTransportSaveRepository(
@@ -63,6 +113,7 @@ export function App() {
             },
           },
         });
+        currentApplication = application;
         const pacing = createFoundationPacingController({ application });
         return {
           application,
@@ -90,6 +141,27 @@ export function App() {
       saveMode: composition.setSaveMode,
       close: composition.closeSession,
       start: composition.startNewSession,
+      createVehicle: async () => {
+        const pattern = activeScenario.routes.routes[0]?.patterns[0];
+        if (!pattern) return;
+        const edgeCount =
+          pattern.stopNodeIds.length - 1 + (pattern.closesLoop ? 1 : 0);
+        await sendVehicleCommand({
+          kind: 'transport.vehicle.create',
+          vehicleId: parseVehicleId('browser-demo-vehicle'),
+          label: 'Demo vehicle',
+          patternId: pattern.patternId,
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: Array.from({ length: edgeCount }, () => 3),
+          },
+        });
+      },
+      startVehicle: () =>
+        sendVehicleCommand({
+          kind: 'transport.vehicle.start',
+          vehicleId: parseVehicleId('browser-demo-vehicle'),
+        }),
     });
     void composition.startNewSession();
     return () => {
@@ -114,6 +186,12 @@ export function App() {
     application?.persistence.status === 'failed'
       ? application.persistence.message
       : undefined;
+  const fleet = (
+    application as
+      | (typeof application & { readonly fleet?: readonly VehicleState[] })
+      | undefined
+  )?.fleet;
+  const firstVehicle = fleet?.[0];
   const action = (operation: (() => Promise<void>) | undefined) => () => {
     void operation?.();
   };
@@ -168,6 +246,38 @@ export function App() {
             Active authoritative scenario:{' '}
             {application?.scenario?.scenarioId ?? 'pending'}
           </p>
+          <div aria-label="Vehicle diagnostics">
+            <button disabled={!ready} onClick={action(actions?.createVehicle)}>
+              Create demo vehicle
+            </button>
+            <button disabled={!ready} onClick={action(actions?.startVehicle)}>
+              Start demo vehicle
+            </button>
+            <p data-testid="vehicle-count">
+              Vehicle count: {fleet?.length ?? 0}
+            </p>
+            <p data-testid="vehicle-id">
+              Vehicle: {firstVehicle?.vehicleId ?? 'none'}
+            </p>
+            <p data-testid="vehicle-pattern">
+              Pattern: {firstVehicle?.patternId ?? 'none'}
+            </p>
+            <p data-testid="vehicle-movement">
+              Movement: {firstVehicle?.movement.kind ?? 'none'}
+            </p>
+            <p data-testid="vehicle-location">
+              Location:{' '}
+              {firstVehicle?.movement.kind === 'running-on-edge'
+                ? firstVehicle.movement.edgeId
+                : (firstVehicle?.movement.stopNodeId ?? 'none')}
+            </p>
+            <p data-testid="vehicle-progress">
+              Progress:{' '}
+              {firstVehicle?.movement.kind === 'running-on-edge'
+                ? `${firstVehicle.movement.progressTicks}/${firstVehicle.movement.travelTicks}`
+                : 'not-on-edge'}
+            </p>
+          </div>
           <div aria-label="Foundation pacing controls">
             <button
               disabled={!ready}

@@ -42,7 +42,7 @@ const record = () => {
   const value = scenario();
   return parseTransportSaveRecord({
     kind: 'transport-save-record',
-    schemaVersion: 1,
+    schemaVersion: 2,
     saveId: 'slot',
     gameId: 'game',
     sourceTimelineId: 'timeline',
@@ -117,7 +117,7 @@ it('classifies raw IndexedDB legacy, corruption, and future data on get and list
   await table.bulkPut([
     legacy,
     { saveId: 'corrupt', kind: 'transport-save-record', schemaVersion: 1 },
-    { saveId: 'future', kind: 'transport-save-record', schemaVersion: 2 },
+    { saveId: 'future', kind: 'transport-save-record', schemaVersion: 3 },
   ]);
   database.close();
   const repository = createDexieTransportSaveRepository(

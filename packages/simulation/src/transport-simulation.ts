@@ -12,6 +12,13 @@ import {
   type SimulationTick,
   type TickAdvancement,
 } from './time.js';
+import {
+  advanceVehicleFleet,
+  applyVehicleCommand,
+  parseVehicleFleetSnapshot,
+  restoreVehicleFleet,
+  type VehicleState,
+} from './vehicle-movement.js';
 
 export type ScenarioCompatibilityErrorCode =
   | 'unsupported-transport-snapshot'
@@ -20,7 +27,7 @@ export type ScenarioCompatibilityErrorCode =
   | 'scenario-version-mismatch'
   | 'scenario-content-hash-mismatch';
 
-export const transportSimulationSnapshotSchemaVersion = 1 as const;
+export const transportSimulationSnapshotSchemaVersion = 2 as const;
 
 export class ScenarioCompatibilityError extends Error {
   constructor(
@@ -44,9 +51,10 @@ export interface TransportSimulationState {
   readonly tick: SimulationTick;
   readonly scenario: CanonicalScenario;
   readonly graph: DirectedScenarioGraph;
+  readonly fleet: readonly VehicleState[];
 }
 
-export interface TransportSimulationSnapshot {
+export interface TransportSimulationSnapshotV1 {
   readonly kind: 'transport-simulation-snapshot';
   readonly schemaVersion: 1;
   readonly simulationVersion: 'transport-1';
@@ -54,20 +62,44 @@ export interface TransportSimulationSnapshot {
   readonly state: Readonly<{ readonly tick: SimulationTick }>;
 }
 
+export interface TransportSimulationSnapshotV2 {
+  readonly kind: 'transport-simulation-snapshot';
+  readonly schemaVersion: 2;
+  readonly simulationVersion: 'transport-2';
+  readonly scenario: ScenarioCoordinate;
+  readonly state: Readonly<{
+    readonly tick: SimulationTick;
+    readonly fleet: readonly VehicleState[];
+  }>;
+}
+
+export type TransportSimulationSnapshot = TransportSimulationSnapshotV2;
+
 const hash = z.string().regex(/^[0-9a-f]{64}$/);
-const snapshotSchema = z.strictObject({
+const coordinateSchema = z.strictObject({
+  scenarioSchemaVersion: z.literal('1.0.0'),
+  scenarioId: z.string().trim().min(1),
+  scenarioVersion: z
+    .string()
+    .regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/),
+  contentHash: hash,
+});
+const snapshotV1Schema = z.strictObject({
+  kind: z.literal('transport-simulation-snapshot'),
+  schemaVersion: z.literal(1),
+  simulationVersion: z.literal('transport-1'),
+  scenario: coordinateSchema,
+  state: z.strictObject({ tick: z.number().int().nonnegative().safe() }),
+});
+const snapshotV2Schema = z.strictObject({
   kind: z.literal('transport-simulation-snapshot'),
   schemaVersion: z.literal(transportSimulationSnapshotSchemaVersion),
-  simulationVersion: z.literal('transport-1'),
-  scenario: z.strictObject({
-    scenarioSchemaVersion: z.literal('1.0.0'),
-    scenarioId: z.string().trim().min(1),
-    scenarioVersion: z
-      .string()
-      .regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/),
-    contentHash: hash,
+  simulationVersion: z.literal('transport-2'),
+  scenario: coordinateSchema,
+  state: z.strictObject({
+    tick: z.number().int().nonnegative().safe(),
+    fleet: z.array(z.unknown()),
   }),
-  state: z.strictObject({ tick: z.number().int().nonnegative().safe() }),
 });
 
 const freeze = <T>(value: T): T => {
@@ -118,6 +150,7 @@ export function createTransportSimulationState(
     tick: parseSimulationTick(tick),
     scenario,
     graph: buildDirectedScenarioGraph(scenario),
+    fleet: [],
   });
 }
 
@@ -130,17 +163,47 @@ export function advanceTransportTicks(
     tick: parseSimulationTick(state.tick + tickCount),
     scenario: state.scenario,
     graph: state.graph,
+    fleet: advanceVehicleFleet(state.graph, state.fleet, tickCount),
+  });
+}
+
+export function applyTransportVehicleCommand(
+  state: TransportSimulationState,
+  command: unknown,
+): TransportSimulationState {
+  return freeze({
+    ...state,
+    fleet: applyVehicleCommand(state.graph, state.fleet, command),
   });
 }
 
 export function parseTransportSimulationSnapshot(
   value: unknown,
 ): TransportSimulationSnapshot {
-  const result = snapshotSchema.safeParse(value);
+  const result = snapshotV2Schema.safeParse(value);
   if (!result.success)
     throw new ScenarioCompatibilityError(
       'unsupported-transport-snapshot',
-      result.error.issues[0]?.message ?? 'invalid snapshot',
+      result.error.issues[0]!.message,
+    );
+  return freeze({
+    ...result.data,
+    scenario: result.data.scenario as ScenarioCoordinate,
+    state: {
+      tick: parseSimulationTick(result.data.state.tick),
+      fleet: parseVehicleFleetSnapshot(result.data.state.fleet),
+    },
+  });
+}
+
+export function parseTransportSimulationSnapshotV1(
+  value: unknown,
+): TransportSimulationSnapshotV1 {
+  const result = snapshotV1Schema.safeParse(value);
+  if (!result.success)
+    throw new ScenarioCompatibilityError(
+      'unsupported-transport-snapshot',
+      result.error.issues[0]!.message,
     );
   return freeze({
     ...result.data,
@@ -149,15 +212,27 @@ export function parseTransportSimulationSnapshot(
   });
 }
 
+export function migrateTransportSimulationSnapshotV1(
+  value: unknown,
+): TransportSimulationSnapshotV2 {
+  const snapshot = parseTransportSimulationSnapshotV1(value);
+  return parseTransportSimulationSnapshot({
+    ...snapshot,
+    schemaVersion: 2,
+    simulationVersion: 'transport-2',
+    state: { tick: snapshot.state.tick, fleet: [] },
+  });
+}
+
 export function createTransportSimulationSnapshot(
   state: TransportSimulationState,
 ): TransportSimulationSnapshot {
   return parseTransportSimulationSnapshot({
     kind: 'transport-simulation-snapshot',
-    schemaVersion: 1,
-    simulationVersion: 'transport-1',
+    schemaVersion: 2,
+    simulationVersion: 'transport-2',
     scenario: createScenarioCoordinate(state.scenario),
-    state: { tick: state.tick },
+    state: { tick: state.tick, fleet: state.fleet },
   });
 }
 
@@ -183,9 +258,11 @@ export function restoreTransportSimulationState(
   const snapshot = parseTransportSimulationSnapshot(snapshotValue);
   const scenario = reparseScenario(scenarioValue);
   assertCoordinate(snapshot.scenario, createScenarioCoordinate(scenario));
+  const graph = buildDirectedScenarioGraph(scenario);
   return freeze({
     tick: snapshot.state.tick,
     scenario,
-    graph: buildDirectedScenarioGraph(scenario),
+    graph,
+    fleet: restoreVehicleFleet(graph, snapshot.state.fleet),
   });
 }

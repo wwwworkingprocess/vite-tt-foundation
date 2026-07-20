@@ -9,8 +9,16 @@ import {
   createScenarioCoordinate,
   createTransportSimulationSnapshot,
   createTransportSimulationState,
+  parseVehicleId,
 } from '@torrevieja-tycoon/simulation';
-import { parseGameId, parseTimelineId } from '@torrevieja-tycoon/protocol';
+import {
+  parseClientId,
+  parseCommandId,
+  parseCorrelationId,
+  parseGameId,
+  parseSessionId,
+  parseTimelineId,
+} from '@torrevieja-tycoon/protocol';
 import { createDirectTransportSimulationClient } from './transport-client.js';
 import { createTransportApplicationController } from './transport-controller.js';
 import { parseTransportSaveRecord } from './transport-save-record.js';
@@ -34,7 +42,7 @@ const load = (directory: string): CanonicalScenario => {
 const save = (scenario: CanonicalScenario, saveId: string, tick: number) =>
   parseTransportSaveRecord({
     kind: 'transport-save-record',
-    schemaVersion: 1,
+    schemaVersion: 2,
     saveId,
     gameId: 'game',
     sourceTimelineId: `source-${saveId}`,
@@ -50,6 +58,71 @@ const save = (scenario: CanonicalScenario, saveId: string, tick: number) =>
   });
 
 describe('exact cross-scenario restore', () => {
+  it('preserves and continues a V2 fleet while resetting host coordinates', async () => {
+    const mini = load('torrevieja-mini-v1');
+    const repository = createInMemoryTransportSaveRepository();
+    const controller = createTransportApplicationController({
+      createClient: createDirectTransportSimulationClient,
+      repository,
+      scenarioResolver: { resolve: async () => mini },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game'),
+      timelineId: parseTimelineId('fleet-source'),
+      scenario: mini,
+    });
+    const common = (id: string) => ({
+      kind: 'foundation-command' as const,
+      gameId: parseGameId('game'),
+      timelineId: parseTimelineId('fleet-source'),
+      commandId: parseCommandId(id),
+      correlationId: parseCorrelationId(id),
+      clientId: parseClientId('test-client'),
+      sessionId: parseSessionId('test-session'),
+    });
+    await controller.sendCommand({
+      ...common('create'),
+      command: {
+        kind: 'transport.vehicle.create',
+        vehicleId: parseVehicleId('vehicle-restore'),
+        label: 'Restore vehicle',
+        patternId: mini.routes.routes[0]!.patterns[0]!.patternId,
+        movementPlan: {
+          kind: 'vehicle-movement-plan-v1',
+          edgeTravelTicks: [3, 4, 5, 6],
+        },
+      },
+    });
+    await controller.sendCommand({
+      ...common('start'),
+      command: {
+        kind: 'transport.vehicle.start',
+        vehicleId: parseVehicleId('vehicle-restore'),
+      },
+    });
+    await controller.advanceTicks(5);
+    const savedFleet = controller.projection.getState().fleet;
+    await controller.save({
+      saveId: 'fleet-slot',
+      createdAtUtcMs: 1,
+      updatedAtUtcMs: 1,
+    });
+    await controller.restore({
+      saveId: 'fleet-slot',
+      timelineId: parseTimelineId('fleet-restored'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'fleet-restored',
+      commandRevision: 0,
+      streamOffset: 0,
+      fleet: savedFleet,
+    });
+    await controller.advanceTicks(1);
+    expect(controller.projection.getState().fleet).not.toEqual(savedFleet);
+    await controller.close();
+  });
+
   it('resolves saved coordinates before teardown and restores both directions', async () => {
     const full = load('torrevieja-v1');
     const mini = load('torrevieja-mini-v1');

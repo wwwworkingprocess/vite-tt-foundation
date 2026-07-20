@@ -62,6 +62,8 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`architecture/time-model.md`](architecture/time-model.md) — authoritative five-second tick and host-owned playback model.
 - [`architecture/scenario-packages-and-directed-graph.md`](architecture/scenario-packages-and-directed-graph.md) — Phase 4A scenario and graph boundary.
 - [`architecture/transport-simulation-authority.md`](architecture/transport-simulation-authority.md) — Phase 4B authoritative scenario and snapshot boundary.
+- [`architecture/vehicle-movement-authority.md`](architecture/vehicle-movement-authority.md) — Phase 4C deterministic vehicle authority.
+- [`architecture/decisions/0009-graph-native-vehicle-movement.md`](architecture/decisions/0009-graph-native-vehicle-movement.md) — graph-native movement and V2 compatibility decision.
 - [`architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md`](architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md) — exact scenario-coordinate compatibility decision.
 - [`architecture/decisions/0007-scenario-package-and-directed-graph.md`](architecture/decisions/0007-scenario-package-and-directed-graph.md) — scenario package and directed-edge decision.
 - [`architecture/decisions/0002-simulation-host-transport-readiness.md`](architecture/decisions/0002-simulation-host-transport-readiness.md) — Socket.IO-readiness research and transport-boundary decision.
@@ -103,4 +105,7 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   transport timeline. Transport snapshots and current saves retain only the
   exact scenario coordinate plus dynamic tick; legacy foundation saves remain
   explicitly incompatible rather than being assigned invented scenario data.
+- Phase 4C adds strict graph-native vehicles, integer per-edge movement plans,
+  atomic tick advancement, and explicit Transport Snapshot/Save V2 with named
+  V1-to-V2 empty-fleet migration. Scheduling and gameplay remain deferred.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

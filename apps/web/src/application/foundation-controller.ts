@@ -34,7 +34,8 @@ export interface ApplicationSaveSummary {
   readonly createdAtUtcMs: number;
   readonly updatedAtUtcMs: number;
   readonly label?: string | undefined;
-  readonly compatibility?: 'current' | 'legacy-incompatible' | undefined;
+  readonly compatibility?:
+    'current' | 'migratable' | 'legacy-incompatible' | undefined;
 }
 export interface FoundationApplicationState {
   readonly session: Session;

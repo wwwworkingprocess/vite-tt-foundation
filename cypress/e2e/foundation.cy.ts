@@ -36,6 +36,13 @@ describe('foundation screen', () => {
       'contain.text',
       'torrevieja-v1',
     );
+    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.contains('button', 'Start demo vehicle').click();
+    cy.get('[data-testid="vehicle-movement"]').should(
+      'contain.text',
+      'running-at-stop',
+    );
     cy.contains('button', /^Normal /).click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0),
@@ -78,6 +85,9 @@ describe('foundation screen', () => {
       'contain.text',
       'torrevieja-mini-v1',
     );
+    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.contains('button', 'Start demo vehicle').click();
     cy.contains('button', /^Normal /).click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0),
@@ -103,6 +113,7 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(fullTick),
     );
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
     cy.get('[data-testid="command-revision"]').should('contain.text', '0');
     cy.get('[data-testid="stream-offset"]').should('contain.text', '0');
 
@@ -115,6 +126,7 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(miniTick),
     );
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
     cy.contains('button', /^Normal /).click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(miniTick),

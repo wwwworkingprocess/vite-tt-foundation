@@ -198,4 +198,40 @@ describe('foundation screen', () => {
     );
     expect(screen.getByTestId('worker-status')).toHaveTextContent('ready');
   });
+
+  it('exposes deterministic vehicle diagnostics from the authoritative Worker', async () => {
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    await waitFor(() =>
+      expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Create demo vehicle' }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-count')).toHaveTextContent('1'),
+    );
+    expect(screen.getByTestId('vehicle-id')).toHaveTextContent(
+      'browser-demo-vehicle',
+    );
+    expect(screen.getByTestId('vehicle-movement')).toHaveTextContent(
+      'parked-at-stop',
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Start demo vehicle' }));
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-movement')).toHaveTextContent(
+        'running-at-stop',
+      ),
+    );
+    fireEvent.click(screen.getByRole('button', { name: /Normal 20/ }));
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-movement')).toHaveTextContent(
+        /running-on-edge|running-at-stop|completed-at-stop/,
+      ),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Pause' }));
+    await waitFor(() =>
+      expect(screen.getByTestId('pacing-status')).toHaveTextContent('paused'),
+    );
+  });
 });

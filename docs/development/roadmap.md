@@ -110,8 +110,17 @@ The temporary Torrevieja Mini test scenario exists only to prove multi-scenario
 selection, authority, persistence, and offline restore behavior. This remains
 Phase 4B hardening rather than Phase 4C mechanics.
 
-Tick remains the only dynamic state. Vehicles, movement, services, passengers,
-capacity, economics, and other mechanics are deferred to later phases.
+## Phase 4C — Deterministic vehicles on directed edges
+
+### Status
+
+Freeze candidate: authoritative vehicles use immutable graph-native location
+states and integer per-edge plans. Create/start commands and the existing tick
+command operate through the single Worker/application/pacing/persistence stack.
+Transport Snapshot/Save V2 preserve fleets; V1 migration is explicit and empty.
+
+Services, schedules, dwell, dispatch, passengers, capacity, economics, traffic,
+maps, and render interpolation remain deferred to Phase 4D or later.
 
 ## Phase 5 — React Three Fiber visualization POC
 

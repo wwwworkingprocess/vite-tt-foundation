@@ -1,7 +1,7 @@
 {
   "schemaVersions": {
-    "transportSimulationSnapshot": 1,
-    "transportSaveRecord": 1
+    "transportSimulationSnapshot": 2,
+    "transportSaveRecord": 2
   },
   "contractVersions": {
     "transportClientContract": 1,
@@ -21,6 +21,16 @@
       "apps/web/src/transport-simulation/transport-save-record.ts",
       "apps/web/src/transport-simulation/transport-save-repository.ts",
       "apps/web/src/scenarios/scenario-loader.ts"
+    ]
+  },
+  "simulationCriticalCoverage": {
+    "statements": 95,
+    "lines": 95,
+    "functions": 95,
+    "branches": 95,
+    "files": [
+      "packages/simulation/src/vehicle-movement.ts",
+      "packages/simulation/src/transport-simulation.ts"
     ]
   },
   "buildBudgetsBytes": {

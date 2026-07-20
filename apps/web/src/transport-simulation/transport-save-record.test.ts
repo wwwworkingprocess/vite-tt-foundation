@@ -9,6 +9,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
   classifyPersistedSaveRecord,
+  migrateTransportSaveRecordV1,
   parseTransportSaveRecord,
   summarizeCompatibleSave,
 } from './transport-save-record.js';
@@ -39,7 +40,7 @@ const current = () => {
   const canonical = scenario();
   return {
     kind: 'transport-save-record',
-    schemaVersion: 1,
+    schemaVersion: 2,
     saveId: 'foundation-slot',
     label: 'Mini save',
     gameId: 'game-fixture',
@@ -93,6 +94,41 @@ describe('transport save compatibility', () => {
     });
   });
 
+  it('classifies Transport V1 as migratable and migrates only when requested', () => {
+    const canonical = scenario();
+    const value = {
+      ...current(),
+      schemaVersion: 1,
+      snapshot: {
+        kind: 'transport-simulation-snapshot',
+        schemaVersion: 1,
+        simulationVersion: 'transport-1',
+        scenario: createScenarioCoordinate(canonical),
+        state: { tick: 120 },
+      },
+    };
+    const classified = classifyPersistedSaveRecord(value);
+    expect(classified).toMatchObject({
+      classification: 'migratable-transport-v1',
+      summary: {
+        compatibility: 'migratable',
+        snapshotVersion: 1,
+        vehicleCount: 0,
+      },
+    });
+    if (classified.classification !== 'migratable-transport-v1')
+      throw new Error('Expected a migratable Transport V1 record.');
+    const migrated = migrateTransportSaveRecordV1(classified.record);
+    expect(migrated).toMatchObject({
+      schemaVersion: 2,
+      snapshot: {
+        schemaVersion: 2,
+        state: { tick: 120, fleet: [] },
+      },
+    });
+    expect(Object.isFrozen(migrated.snapshot.state.fleet)).toBe(true);
+  });
+
   it('distinguishes malformed known and unsupported future records', () => {
     expect(
       classifyPersistedSaveRecord({
@@ -107,5 +143,60 @@ describe('transport save compatibility', () => {
         snapshot: { ...current().snapshot, state: { tick: 999 } },
       }),
     ).toMatchObject({ classification: 'malformed-known' });
+  });
+
+  it.each([
+    [
+      'scenario',
+      (value: ReturnType<typeof current>) => {
+        value.scenario = { ...value.scenario, contentHash: '0'.repeat(64) };
+      },
+    ],
+    [
+      'tick',
+      (value: ReturnType<typeof current>) => {
+        value.sourceSimulationTick = 121;
+      },
+    ],
+    [
+      'timestamps',
+      (value: ReturnType<typeof current>) => {
+        value.updatedAtUtcMs = 99;
+      },
+    ],
+  ])('rejects inconsistent current %s coordinates', (_name, mutate) => {
+    const value = current();
+    mutate(value);
+    expect(() => parseTransportSaveRecord(value)).toThrow('inconsistent');
+  });
+
+  it('validates V1 consistency and supports summaries without labels', () => {
+    const value = current();
+    delete (value as { label?: string }).label;
+    const parsed = parseTransportSaveRecord(value);
+    expect(summarizeCompatibleSave(parsed)).not.toHaveProperty('label');
+    const v1 = {
+      ...value,
+      schemaVersion: 1,
+      sourceSimulationTick: 121,
+      snapshot: {
+        kind: 'transport-simulation-snapshot',
+        schemaVersion: 1,
+        simulationVersion: 'transport-1',
+        scenario: value.scenario,
+        state: { tick: 120 },
+      },
+    };
+    expect(classifyPersistedSaveRecord(v1)).toMatchObject({
+      classification: 'malformed-known',
+    });
+    v1.sourceSimulationTick = 120;
+    const classified = classifyPersistedSaveRecord(v1);
+    expect(classified).toMatchObject({
+      classification: 'migratable-transport-v1',
+    });
+    if (classified.classification !== 'migratable-transport-v1')
+      throw new Error('Expected migratable record.');
+    expect(classified.summary).not.toHaveProperty('label');
   });
 });

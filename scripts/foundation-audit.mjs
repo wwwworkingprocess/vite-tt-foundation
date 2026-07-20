@@ -466,7 +466,9 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.includes('apps/web/src/scenarios') ||
     normalized.includes('apps/web/src/transport-simulation') ||
     normalized.endsWith('apps/web/src/App.tsx') ||
-    normalized.endsWith('packages/simulation/src/transport-simulation.ts');
+    normalized.endsWith('packages/simulation/src/transport-simulation.ts') ||
+    normalized.endsWith('packages/simulation/src/vehicle-movement.ts') ||
+    normalized.endsWith('packages/simulation/src/index.ts');
   const domain = transportExtension ? [] : transportDomainTerms(text, file);
   if (domain.length)
     fail(`${file} contains transport-domain terms: ${domain.join(', ')}.`);
@@ -541,6 +543,9 @@ const transportExtensionFixture = await source(
 const transportGenericFixture = await source(
   'scripts/fixtures/architecture/transport-generic-forbidden.txt',
 );
+const vehicleAuthorityForbiddenFixture = await source(
+  'scripts/fixtures/architecture/vehicle-authority-forbidden.txt',
+);
 for (const expected of [
   'route',
   'bus',
@@ -569,6 +574,14 @@ if (
   topLevelSingletons(transportExtensionFixture).length
 )
   fail('legitimate transport extension fixture failed architecture checks.');
+if (
+  !/from\s+['"]three['"]/.test(vehicleAuthorityForbiddenFixture) ||
+  !/\bDate\b/.test(vehicleAuthorityForbiddenFixture) ||
+  !/Math\.random/.test(vehicleAuthorityForbiddenFixture) ||
+  !/setInterval/.test(vehicleAuthorityForbiddenFixture) ||
+  !topLevelSingletons(vehicleAuthorityForbiddenFixture).length
+)
+  fail('vehicle-authority negative fixture was not fully detected.');
 if (topLevelSingletons(singletonFixture).length !== 12)
   fail('singleton regression fixture was not fully detected.');
 if (environmentNeutralViolations(forbiddenFixture).length !== 3)

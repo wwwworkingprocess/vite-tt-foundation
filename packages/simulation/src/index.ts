@@ -7,3 +7,4 @@ export * from './foundation-state.js';
 export * from './foundation-snapshot.js';
 export * from './time.js';
 export * from './transport-simulation.js';
+export * from './vehicle-movement.js';

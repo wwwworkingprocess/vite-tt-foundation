@@ -1,0 +1,5 @@
+import * as THREE from 'three';
+const vehicleStartedAt = new Date();
+const vehicleId = Math.random().toString();
+setInterval(() => advanceVehicle(), 16);
+export const writableVehicleStore = createStore();

@@ -1,25 +1,23 @@
 import {
-  advanceTransportTicks,
   createScenarioCoordinate,
   createTransportSimulationState,
-  parseTickAdvancement,
+  parseSimulationTick,
   restoreTransportSimulationState,
   type TransportSimulationState,
 } from '@torrevieja-tycoon/simulation';
 import {
   parseFoundationHostMessage,
-  parseFoundationRenderSnapshot,
-  parseFoundationStateUpdate,
   parseFoundationSynchronizationRequest,
   type FoundationCommandResult,
-  type FoundationRenderSnapshot,
-  type FoundationStateUpdate,
 } from '@torrevieja-tycoon/protocol';
 import {
   createDirectTransportSimulationClient,
+  type TransportCommandEnvelope,
   type TransportClientConnectRequest,
   type TransportClientLifecycle,
   type TransportSimulationClient,
+  type TransportRenderSnapshot,
+  type TransportStateUpdate,
 } from './transport-client.js';
 import {
   parseTransportWorkerRequest,
@@ -45,7 +43,7 @@ export interface TransportWorkerEndpoint {
   ): void;
   reportError?(error: unknown): void;
 }
-type TransportWorkerEvent = Readonly<{
+export type TransportWorkerEvent = Readonly<{
   data: unknown;
   error?: unknown;
   message?: string;
@@ -185,7 +183,9 @@ export function startTransportWorkerRuntime(
           }
         } else if (request.operation === 'send-command') {
           if (!client) throw new Error('Transport Worker is not connected.');
-          payload = await client.sendCommand(request.payload);
+          payload = await client.sendCommand(
+            request.payload as TransportCommandEnvelope,
+          );
         } else if (request.operation === 'synchronize') {
           if (!client) throw new Error('Transport Worker is not connected.');
           payload = await client.synchronize(
@@ -274,11 +274,8 @@ export function createWorkerTransportSimulationClient(input: {
       reject(error: unknown): void;
     }
   >();
-  const reliable = new Map<number, (update: FoundationStateUpdate) => void>();
-  const render = new Map<
-    number,
-    (snapshot: FoundationRenderSnapshot) => void
-  >();
+  const reliable = new Map<number, (update: TransportStateUpdate) => void>();
+  const render = new Map<number, (snapshot: TransportRenderSnapshot) => void>();
   const lifecycleListeners = new Map<
     number,
     (state: TransportClientLifecycle) => void
@@ -370,12 +367,13 @@ export function createWorkerTransportSimulationClient(input: {
     if (message.kind === 'transport-worker-publication') {
       if (closed) return;
       if (message.channel === 'reliable') {
-        const update = freeze(parseFoundationStateUpdate(message.payload));
+        const update = freeze(message.payload as TransportStateUpdate);
         if (authority && update.simulationTick >= authority.tick)
-          authority = advanceTransportTicks(
-            authority,
-            parseTickAdvancement(update.simulationTick - authority.tick),
-          );
+          authority = freeze({
+            ...authority,
+            tick: parseSimulationTick(update.simulationTick),
+            fleet: update.fleet,
+          });
         for (const listener of [...reliable.values()])
           try {
             listener(update);
@@ -383,7 +381,7 @@ export function createWorkerTransportSimulationClient(input: {
             /* isolated */
           }
       } else {
-        const snapshot = freeze(parseFoundationRenderSnapshot(message.payload));
+        const snapshot = freeze(message.payload as TransportRenderSnapshot);
         for (const listener of [...render.values()])
           try {
             listener(snapshot);

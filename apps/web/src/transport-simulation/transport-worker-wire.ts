@@ -4,6 +4,7 @@ import {
   createTransportSimulationState,
   parseSimulationTick,
   parseTransportSimulationSnapshot,
+  parseVehicleFleetSnapshot,
 } from '@torrevieja-tycoon/simulation';
 import {
   foundationCommandEnvelopeSchema,
@@ -79,6 +80,33 @@ const connectPayload = z.discriminatedUnion('mode', [
     snapshot: transportSnapshot,
   }),
 ]);
+const vehicleId = z
+  .string()
+  .min(1)
+  .max(128)
+  .regex(/^[A-Za-z0-9][A-Za-z0-9._:-]*$/);
+const vehicleCommand = z.discriminatedUnion('kind', [
+  z.strictObject({
+    kind: z.literal('transport.vehicle.create'),
+    vehicleId,
+    label: z.string().trim().min(1).max(128),
+    patternId: z.string().min(1),
+    movementPlan: z.strictObject({
+      kind: z.literal('vehicle-movement-plan-v1'),
+      edgeTravelTicks: z.array(z.number().int().positive().safe()),
+    }),
+  }),
+  z.strictObject({
+    kind: z.literal('transport.vehicle.start'),
+    vehicleId,
+  }),
+]);
+const transportCommandEnvelope = foundationCommandEnvelopeSchema.extend({
+  command: z.union([
+    foundationCommandEnvelopeSchema.shape.command,
+    vehicleCommand,
+  ]),
+});
 
 export const transportWorkerRequestSchema = z.discriminatedUnion('operation', [
   z.strictObject({
@@ -93,7 +121,7 @@ export const transportWorkerRequestSchema = z.discriminatedUnion('operation', [
     contractVersion: z.literal(transportWorkerContractVersion),
     requestId,
     operation: z.literal('send-command'),
-    payload: foundationCommandEnvelopeSchema,
+    payload: transportCommandEnvelope,
   }),
   z.strictObject({
     kind: z.literal('transport-worker-request'),
@@ -137,13 +165,17 @@ const publication = z.discriminatedUnion('channel', [
     kind: z.literal('transport-worker-publication'),
     contractVersion: z.literal(transportWorkerContractVersion),
     channel: z.literal('reliable'),
-    payload: foundationStateUpdateSchema,
+    payload: foundationStateUpdateSchema.extend({
+      fleet: z.array(z.unknown()).readonly(),
+    }),
   }),
   z.strictObject({
     kind: z.literal('transport-worker-publication'),
     contractVersion: z.literal(transportWorkerContractVersion),
     channel: z.literal('render'),
-    payload: foundationRenderSnapshotSchema,
+    payload: foundationRenderSnapshotSchema.extend({
+      fleet: z.array(z.unknown()).readonly(),
+    }),
   }),
 ]);
 const response = z.union([result, failure, publication]);
@@ -166,11 +198,13 @@ export function parseTransportSynchronizationResult(
       kind: z.literal('transport-synchronization-response'),
       foundation: z.unknown(),
       scenario: coordinate,
+      fleet: z.array(z.unknown()).readonly(),
     })
     .parse(value);
   return deepFreeze({
     ...parsed,
     foundation: parseFoundationSynchronizationResponse(parsed.foundation),
+    fleet: parseVehicleFleetSnapshot(parsed.fleet),
   }) as TransportSynchronizationResponse;
 }
 
@@ -218,6 +252,14 @@ export function parseTransportWorkerResponse(
   value: unknown,
 ): TransportWorkerResponse {
   const parsed = response.parse(value);
+  if (parsed.kind === 'transport-worker-publication')
+    return deepFreeze({
+      ...parsed,
+      payload: {
+        ...parsed.payload,
+        fleet: parseVehicleFleetSnapshot(parsed.payload.fleet),
+      },
+    }) as TransportWorkerResponse;
   if (parsed.kind !== 'transport-worker-result') return parsed;
   if (parsed.operation === 'connect' || parsed.operation === 'close') {
     if (parsed.payload !== null)

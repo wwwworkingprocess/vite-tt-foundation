@@ -51,7 +51,7 @@ const currentSave = () => {
   return classifyPersistedSaveRecord(
     parseTransportSaveRecord({
       kind: 'transport-save-record',
-      schemaVersion: 1,
+      schemaVersion: 2,
       saveId: 'slot',
       gameId: 'game-fixture',
       sourceTimelineId: 'source',

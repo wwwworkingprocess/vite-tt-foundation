@@ -1,5 +1,6 @@
 import { createStore } from 'zustand/vanilla';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
+import type { VehicleState } from '@torrevieja-tycoon/simulation';
 import type { FoundationApplicationState } from '../application/foundation-controller.js';
 import type { TransportSaveSummary } from './transport-save-record.js';
 import type { TransportSaveRepository } from './transport-save-repository.js';
@@ -18,6 +19,8 @@ const freeze = <T>(value: T): T => {
 const empty = Object.freeze([]) as readonly TransportSaveSummary[];
 const errorMessage = (error: unknown, fallback: string) =>
   error instanceof Error ? error.message : fallback;
+type TransportFoundationApplicationState = FoundationApplicationState &
+  Readonly<{ fleet?: readonly VehicleState[] | undefined }>;
 
 export function createTransportFoundationApplication(input: {
   readonly scenario: CanonicalScenario;
@@ -26,7 +29,7 @@ export function createTransportFoundationApplication(input: {
   readonly scenarioResolver: ScenarioResolver;
 }) {
   const transport = createTransportApplicationController(input);
-  const store = createStore<FoundationApplicationState>(() =>
+  const store = createStore<TransportFoundationApplicationState>(() =>
     freeze({
       session: { status: 'idle' },
       synchronization: { status: 'idle' },
@@ -45,7 +48,7 @@ export function createTransportFoundationApplication(input: {
     if (closed) throw closedError();
   };
   const publishTransport = (state: TransportApplicationProjection) => {
-    const next: FoundationApplicationState =
+    const next: TransportFoundationApplicationState =
       state.status === 'ready'
         ? {
             session: {
@@ -61,6 +64,7 @@ export function createTransportFoundationApplication(input: {
             },
             synchronization: { status: 'synchronized' },
             persistence,
+            fleet: state.fleet!,
           }
         : {
             session:
@@ -85,6 +89,7 @@ export function createTransportFoundationApplication(input: {
       const classified = await input.repository.list();
       const saves = classified.flatMap((item) =>
         item.classification === 'current' ||
+        item.classification === 'migratable-transport-v1' ||
         item.classification === 'legacy-foundation'
           ? [item.summary]
           : [],

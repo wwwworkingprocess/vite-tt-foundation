@@ -1,5 +1,8 @@
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
-import type { ScenarioCoordinate } from '@torrevieja-tycoon/simulation';
+import type {
+  ScenarioCoordinate,
+  VehicleState,
+} from '@torrevieja-tycoon/simulation';
 import {
   parseClientId,
   parseCommandId,
@@ -7,17 +10,17 @@ import {
   parseGameId,
   parseSessionId,
   parseTimelineId,
-  type FoundationCommandEnvelope,
-  type FoundationCommandResult,
   type GameId,
   type TimelineId,
 } from '@torrevieja-tycoon/protocol';
 import {
+  migrateTransportSaveRecordV1,
   parseTransportSaveRecord,
   type PersistedSaveClassification,
   type TransportSaveRecord,
 } from './transport-save-record.js';
 import type {
+  TransportCommandEnvelope,
   TransportSimulationClient,
   TransportSnapshotExport,
 } from './transport-client.js';
@@ -41,6 +44,7 @@ export interface TransportApplicationProjection {
   readonly simulationTick?: number | undefined;
   readonly commandRevision?: number | undefined;
   readonly streamOffset?: number | undefined;
+  readonly fleet?: readonly VehicleState[] | undefined;
   readonly message?: string | undefined;
 }
 
@@ -124,6 +128,7 @@ export function createTransportApplicationController(input: {
           simulationTick: update.simulationTick,
           commandRevision: update.commandRevision,
           streamOffset: update.streamOffset,
+          fleet: update.fleet,
         });
       }),
     );
@@ -202,6 +207,7 @@ export function createTransportApplicationController(input: {
         simulationTick: baseline.simulationTick,
         commandRevision: baseline.commandRevision,
         streamOffset: baseline.lastIncludedStreamOffset,
+        fleet: exported.snapshot.state.fleet,
       });
     } catch (error) {
       if (generation === token) generation += 1;
@@ -301,14 +307,21 @@ export function createTransportApplicationController(input: {
           set({ ...previousState, message: error.message });
           throw error;
         }
-        if (classified.classification !== 'current') {
+        if (
+          classified.classification !== 'current' &&
+          classified.classification !== 'migratable-transport-v1'
+        ) {
           set({ ...previousState, message: classified.error.message });
           throw classified.error;
         }
+        const restoredRecord =
+          classified.classification === 'current'
+            ? classified.record
+            : migrateTransportSaveRecordV1(classified.record);
         let scenario: CanonicalScenario;
         try {
           scenario = await input.scenarioResolver.resolve(
-            classified.record.scenario,
+            restoredRecord.scenario,
           );
         } catch (error) {
           if (client === previous && !closing && !closed)
@@ -347,10 +360,10 @@ export function createTransportApplicationController(input: {
               kind: 'transport-client-connect',
               contractVersion: 1,
               mode: 'restore',
-              gameId: classified.record.gameId,
+              gameId: restoredRecord.gameId,
               timelineId,
               scenario,
-              snapshot: classified.record.snapshot,
+              snapshot: restoredRecord.snapshot,
             },
             token,
           );
@@ -390,7 +403,7 @@ export function createTransportApplicationController(input: {
           await input.repository.put(
             parseTransportSaveRecord({
               kind: 'transport-save-record',
-              schemaVersion: 1,
+              schemaVersion: 2,
               ...metadata,
               gameId: exported.gameId,
               sourceTimelineId: exported.timelineId,
@@ -410,9 +423,7 @@ export function createTransportApplicationController(input: {
         }
       });
     },
-    sendCommand(
-      envelope: FoundationCommandEnvelope,
-    ): Promise<FoundationCommandResult> {
+    sendCommand(envelope: TransportCommandEnvelope) {
       return enqueue(async () => {
         const candidate = client;
         const operationState = state;
@@ -429,6 +440,7 @@ export function createTransportApplicationController(input: {
                 simulationTick: exported.simulationTick,
                 commandRevision: exported.commandRevision,
                 streamOffset: exported.streamOffset,
+                fleet: exported.snapshot.state.fleet,
                 message: undefined,
               });
           }
@@ -471,6 +483,7 @@ export function createTransportApplicationController(input: {
               simulationTick: exported.simulationTick,
               commandRevision: exported.commandRevision,
               streamOffset: exported.streamOffset,
+              fleet: exported.snapshot.state.fleet,
               message: undefined,
             });
         }

@@ -87,6 +87,9 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.reload();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="legacy-save-count"]').should('contain.text', '1');
+    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.contains('button', 'Start demo vehicle').click();
     cy.contains('button', 'Normal 20×').click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0),
@@ -120,6 +123,9 @@ describe('built foundation PWA offline lifecycle', () => {
       'contain.text',
       'torrevieja-mini-v1@1.0.0#',
     );
+    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.contains('button', 'Start demo vehicle').click();
     cy.contains('button', /^Normal /).click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0),
@@ -196,6 +202,30 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="worker-tick"]').should(($value) =>
       expect($value.text()).to.equal(currentTick),
     );
+    cy.window().then(async (win) => {
+      const transportV1 = structuredClone(exactSave) as {
+        schemaVersion: number;
+        snapshot: {
+          schemaVersion: number;
+          simulationVersion: string;
+          state: { tick: number; fleet?: unknown };
+        };
+      };
+      transportV1.schemaVersion = 1;
+      transportV1.snapshot.schemaVersion = 1;
+      transportV1.snapshot.simulationVersion = 'transport-1';
+      transportV1.snapshot.state = { tick: savedTick };
+      await writeSave(win, transportV1 as unknown as Record<string, unknown>);
+    });
+    cy.contains('button', 'Restore manual save').click();
+    cy.get('[data-testid="worker-tick"]').should(($tick) =>
+      expect(Number($tick.text().split(': ')[1])).to.equal(savedTick),
+    );
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '0');
+    cy.get('[data-testid="command-revision"]').should(
+      'have.text',
+      'Command revision: 0',
+    );
     cy.window().then((win) => writeSave(win, exactSave));
     cy.window().then(async (win) => {
       for (const path of [
@@ -235,6 +265,7 @@ describe('built foundation PWA offline lifecycle', () => {
       'have.text',
       'Bonus ticks remaining: 0',
     );
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
     cy.contains('label', 'Autosave').find('input').check();
     cy.contains('button', 'Restore autosave').click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
@@ -256,6 +287,7 @@ describe('built foundation PWA offline lifecycle', () => {
       'have.text',
       'Pacing credit: 0',
     );
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
     cy.contains('button', 'Normal 20×').click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(

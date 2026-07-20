@@ -58,8 +58,8 @@ describe('authoritative transport simulation', () => {
     const snapshot = createTransportSimulationSnapshot(state);
     expect(snapshot).toEqual({
       kind: 'transport-simulation-snapshot',
-      schemaVersion: 1,
-      simulationVersion: 'transport-1',
+      schemaVersion: 2,
+      simulationVersion: 'transport-2',
       scenario: {
         scenarioSchemaVersion: '1.0.0',
         scenarioId: 'torrevieja-mini-v1',
@@ -67,7 +67,7 @@ describe('authoritative transport simulation', () => {
         contentHash:
           'd9c378089d9f83b9ea4756aa57551535fab1f2118eb092d1badcd5ce06c1bb1f',
       },
-      state: { tick: 120 },
+      state: { tick: 120, fleet: [] },
     });
     expect(JSON.stringify(snapshot)).not.toContain('stopNodes');
     expect(
@@ -111,8 +111,8 @@ describe('authoritative transport simulation', () => {
     expect(() =>
       parseTransportSimulationSnapshot({
         kind: 'transport-simulation-snapshot',
-        schemaVersion: 2,
-        simulationVersion: 'transport-1',
+        schemaVersion: 3,
+        simulationVersion: 'transport-2',
         scenario: createScenarioCoordinate(scenario()),
         state: { tick: 0 },
       }),

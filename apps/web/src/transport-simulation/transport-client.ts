@@ -1,16 +1,18 @@
 import {
   advanceTransportTicks,
+  applyTransportVehicleCommand,
   createFoundationSimulationSnapshot,
   createFoundationState,
   createScenarioCoordinate,
   createTransportSimulationSnapshot,
   createTransportSimulationState,
-  parseSimulationTick,
   parseTickAdvancement,
   restoreTransportSimulationState,
   type ScenarioCoordinate,
   type TransportSimulationSnapshot,
   type TransportSimulationState,
+  type TransportVehicleCommand,
+  type VehicleState,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import type {
@@ -23,6 +25,10 @@ import type {
   FoundationSynchronizationResponse,
   GameId,
   TimelineId,
+} from '@torrevieja-tycoon/protocol';
+import {
+  parseFoundationCommandEnvelope,
+  parseFoundationProtocolError,
 } from '@torrevieja-tycoon/protocol';
 import { createDirectFoundationClient } from '../simulation-host/direct-client.js';
 
@@ -67,28 +73,43 @@ export interface TransportSnapshotExport {
   readonly snapshot: TransportSimulationSnapshot;
 }
 
+export type TransportCommandEnvelope = Readonly<
+  Omit<FoundationCommandEnvelope, 'command'> & {
+    readonly command:
+      FoundationCommandEnvelope['command'] | TransportVehicleCommand;
+  }
+>;
+
+export type TransportStateUpdate = Readonly<
+  FoundationStateUpdate & { readonly fleet: readonly VehicleState[] }
+>;
+export type TransportRenderSnapshot = Readonly<
+  FoundationRenderSnapshot & { readonly fleet: readonly VehicleState[] }
+>;
+
 export type TransportSynchronizationResponse =
   | FoundationSynchronizationResponse
   | Readonly<{
       kind: 'transport-synchronization-response';
       foundation: FoundationSynchronizationResponse;
       scenario: ScenarioCoordinate;
+      fleet: readonly VehicleState[];
     }>;
 
 export interface TransportSimulationClient {
   connect(request: TransportClientConnectRequest): Promise<void>;
   sendCommand(
-    command: FoundationCommandEnvelope,
+    command: TransportCommandEnvelope,
   ): Promise<FoundationCommandResult>;
   synchronize(
     request: FoundationSynchronizationRequest,
   ): Promise<TransportSynchronizationResponse>;
   exportSnapshot(): Promise<TransportSnapshotExport>;
   subscribeReliableUpdates(
-    listener: (update: FoundationStateUpdate) => void,
+    listener: (update: TransportStateUpdate) => void,
   ): () => void;
   subscribeRenderSnapshots(
-    listener: (snapshot: FoundationRenderSnapshot) => void,
+    listener: (snapshot: TransportRenderSnapshot) => void,
   ): () => void;
   getLifecycle(): TransportClientLifecycle;
   subscribeLifecycle(
@@ -119,7 +140,20 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
   let lifecycle: TransportClientLifecycle = freeze({ state: 'idle' });
   let closing = false;
   let closePromise: Promise<void> | undefined;
+  let commandQueue = Promise.resolve();
   let registrationSequence = 0;
+  let publicationSequence = 0;
+  let latestFoundationUpdate: FoundationStateUpdate | undefined;
+  let latestFoundationRender: FoundationRenderSnapshot | undefined;
+  const reliableListeners = new Map<
+    number,
+    (update: TransportStateUpdate) => void
+  >();
+  const renderListeners = new Map<
+    number,
+    (snapshot: TransportRenderSnapshot) => void
+  >();
+  const vehicleCommandFingerprints = new Map<string, string>();
   const lifecycleListeners = new Map<
     number,
     (state: TransportClientLifecycle) => void
@@ -133,13 +167,70 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         // Listener diagnostics cannot affect the authoritative client.
       }
   };
-  foundation.subscribeReliableUpdates((update) => {
-    if (!authority || update.simulationTick < authority.tick) return;
-    authority = advanceTransportTicks(
-      authority,
-      parseTickAdvancement(update.simulationTick - authority.tick),
+  const removeFoundationReliable = foundation.subscribeReliableUpdates(
+    (update) => {
+      latestFoundationUpdate = update;
+      const currentAuthority = authority!;
+      authority = advanceTransportTicks(
+        currentAuthority,
+        parseTickAdvancement(update.simulationTick - currentAuthority.tick),
+      );
+    },
+  );
+  const removeFoundationRender = foundation.subscribeRenderSnapshots(
+    (snapshot) => {
+      latestFoundationRender = snapshot;
+    },
+  );
+  const publish = <T>(listeners: Map<number, (value: T) => void>, value: T) => {
+    for (const listener of [...listeners.values()])
+      try {
+        listener(value);
+      } catch {
+        // Publication listeners are isolated from authoritative processing.
+      }
+  };
+  const subscribe = <T>(
+    listeners: Map<number, (value: T) => void>,
+    listener: (value: T) => void,
+  ) => {
+    if (closing) throw new Error('Transport client is closed.');
+    const registration = ++publicationSequence;
+    listeners.set(registration, listener);
+    let active = true;
+    return () => {
+      if (active) {
+        active = false;
+        listeners.delete(registration);
+      }
+    };
+  };
+  const foundationEnvelope = (command: TransportCommandEnvelope) =>
+    parseFoundationCommandEnvelope({
+      ...command,
+      command:
+        'type' in command.command
+          ? command.command
+          : { type: 'foundation.advance-ticks', count: 0 },
+    });
+  const publishAuthority = () => {
+    publish(
+      reliableListeners,
+      freeze({ ...latestFoundationUpdate!, fleet: authority!.fleet }),
     );
-  });
+    publish(
+      renderListeners,
+      freeze({ ...latestFoundationRender!, fleet: authority!.fleet }),
+    );
+  };
+  const enqueueOperation = <T>(operation: () => Promise<T>): Promise<T> => {
+    const result = commandQueue.then(operation);
+    commandQueue = result.then(
+      () => undefined,
+      () => undefined,
+    );
+    return result;
+  };
 
   const client: TransportSimulationClient = {
     async connect(request) {
@@ -192,49 +283,115 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         throw error;
       }
     },
-    sendCommand: (command) =>
-      closing
-        ? Promise.reject(new Error('Transport client is closed.'))
-        : foundation.sendCommand(command),
-    async synchronize(request) {
-      const current = closing ? undefined : authority;
-      if (!current) throw new Error('Transport client is not ready.');
-      const response = await foundation.synchronize(request);
-      return freeze({
-        kind: 'transport-synchronization-response',
-        foundation: response,
-        scenario: createScenarioCoordinate(current.scenario),
-      });
-    },
-    async exportSnapshot() {
-      const current = closing ? undefined : authority;
-      if (!current) throw new Error('Transport client is not ready.');
-      const exported = await foundation.exportSnapshot();
-      authority =
-        exported.simulationTick === current.tick
-          ? current
-          : createTransportSimulationState(
-              current.scenario,
-              parseSimulationTick(exported.simulationTick),
+    sendCommand(command) {
+      return enqueueOperation(async () => {
+        if (closing) throw new Error('Transport client is closed.');
+        const current = authority;
+        if (!current) throw new Error('Transport client is not ready.');
+        if ('type' in command.command) {
+          const result = await foundation.sendCommand(
+            foundationEnvelope(command),
+          );
+          if (
+            result.kind === 'foundation-command-result' &&
+            result.status === 'applied' &&
+            !result.duplicate
+          )
+            publishAuthority();
+          return result;
+        }
+        const fingerprint = JSON.stringify(command.command);
+        const storedFingerprint = vehicleCommandFingerprints.get(
+          command.commandId,
+        );
+        if (
+          storedFingerprint !== undefined &&
+          storedFingerprint !== fingerprint
+        )
+          return freeze(
+            parseFoundationProtocolError({
+              kind: 'foundation-protocol-error',
+              gameId: command.gameId,
+              commandId: command.commandId,
+              correlationId: command.correlationId,
+              code: 'command-id-conflict',
+              message: 'Command ID was reused with different stable intent.',
+            }),
+          );
+        let candidate = current;
+        if (storedFingerprint === undefined)
+          try {
+            candidate = applyTransportVehicleCommand(current, command.command);
+          } catch (error) {
+            return freeze(
+              parseFoundationProtocolError({
+                kind: 'foundation-protocol-error',
+                gameId: command.gameId,
+                commandId: command.commandId,
+                correlationId: command.correlationId,
+                code: 'invalid-message',
+                message:
+                  error instanceof Error
+                    ? error.message
+                    : 'Invalid vehicle command.',
+              }),
             );
-      return freeze({
-        kind: 'transport-snapshot-export',
-        gameId: exported.gameId,
-        timelineId: exported.timelineId,
-        commandRevision: exported.commandRevision,
-        simulationTick: exported.simulationTick,
-        streamOffset: exported.streamOffset,
-        snapshot: createTransportSimulationSnapshot(authority),
+          }
+        const result = await foundation.sendCommand(
+          foundationEnvelope(command),
+        );
+        vehicleCommandFingerprints.set(command.commandId, fingerprint);
+        if (
+          storedFingerprint === undefined &&
+          result.kind === 'foundation-command-result' &&
+          result.status === 'applied'
+        ) {
+          authority = candidate;
+          publishAuthority();
+        }
+        return result;
       });
     },
-    subscribeReliableUpdates: (listener) => {
-      if (closing) throw new Error('Transport client is closed.');
-      return foundation.subscribeReliableUpdates(listener);
+    synchronize(request) {
+      return enqueueOperation(async () => {
+        const current = closing ? undefined : authority;
+        if (!current) throw new Error('Transport client is not ready.');
+        const response = await foundation.synchronize(request);
+        return freeze({
+          kind: 'transport-synchronization-response',
+          foundation: response,
+          scenario: createScenarioCoordinate(current.scenario),
+          fleet: current.fleet,
+        });
+      });
     },
-    subscribeRenderSnapshots: (listener) => {
-      if (closing) throw new Error('Transport client is closed.');
-      return foundation.subscribeRenderSnapshots(listener);
+    exportSnapshot() {
+      return enqueueOperation(async () => {
+        const current = closing ? undefined : authority;
+        if (!current) throw new Error('Transport client is not ready.');
+        const exported = await foundation.exportSnapshot();
+        authority =
+          exported.simulationTick === current.tick
+            ? current
+            : advanceTransportTicks(
+                current,
+                parseTickAdvancement(exported.simulationTick - current.tick),
+              );
+        return freeze({
+          kind: 'transport-snapshot-export',
+          gameId: exported.gameId,
+          timelineId: exported.timelineId,
+          commandRevision: exported.commandRevision,
+          simulationTick: exported.simulationTick,
+          streamOffset: exported.streamOffset,
+          snapshot: createTransportSimulationSnapshot(authority),
+        });
+      });
     },
+    subscribeReliableUpdates: (listener) =>
+      subscribe(reliableListeners, listener),
+    subscribeRenderSnapshots: (listener) =>
+      subscribe(renderListeners, listener),
     getLifecycle: () => lifecycle,
     subscribeLifecycle(listener) {
       if (closing || lifecycle.state === 'closed')
@@ -253,11 +410,15 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
       authority = undefined;
       closePromise = (async () => {
         try {
+          removeFoundationReliable();
+          removeFoundationRender();
           await foundation.close();
         } finally {
           authority = undefined;
           publishLifecycle({ state: 'closed' });
           lifecycleListeners.clear();
+          reliableListeners.clear();
+          renderListeners.clear();
         }
       })();
       return closePromise;
@@ -268,13 +429,25 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
 
 export function createStructuredCloneTransportSimulationClient(): TransportSimulationClient {
   const direct = createDirectTransportSimulationClient();
+  const clone = <T>(value: T): T => freeze(structuredClone(value));
   return Object.freeze({
     ...direct,
     connect: (request: TransportClientConnectRequest) =>
       direct.connect(structuredClone(request)),
-    sendCommand: (command: FoundationCommandEnvelope) =>
-      direct.sendCommand(structuredClone(command)),
-    synchronize: (request: FoundationSynchronizationRequest) =>
-      direct.synchronize(structuredClone(request)),
+    sendCommand: async (command: TransportCommandEnvelope) =>
+      clone(await direct.sendCommand(structuredClone(command))),
+    synchronize: async (request: FoundationSynchronizationRequest) =>
+      clone(await direct.synchronize(structuredClone(request))),
+    exportSnapshot: async () => clone(await direct.exportSnapshot()),
+    subscribeReliableUpdates: (
+      listener: (update: TransportStateUpdate) => void,
+    ) => direct.subscribeReliableUpdates((update) => listener(clone(update))),
+    subscribeRenderSnapshots: (
+      listener: (snapshot: TransportRenderSnapshot) => void,
+    ) =>
+      direct.subscribeRenderSnapshots((snapshot) => listener(clone(snapshot))),
+    getLifecycle: () => clone(direct.getLifecycle()),
+    subscribeLifecycle: (listener: (state: TransportClientLifecycle) => void) =>
+      direct.subscribeLifecycle((state) => listener(clone(state))),
   });
 }

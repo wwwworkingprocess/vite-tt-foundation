@@ -41,7 +41,7 @@ const record = () => {
   const canonical = scenario();
   return parseTransportSaveRecord({
     kind: 'transport-save-record',
-    schemaVersion: 1,
+    schemaVersion: 2,
     saveId: 'slot',
     gameId: 'game-fixture',
     sourceTimelineId: 'timeline-source',

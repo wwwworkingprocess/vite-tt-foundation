@@ -73,10 +73,7 @@ export function startTransportWorkerRuntime(
   let closed = false;
   let operationQueue = Promise.resolve();
   const cleanups: Array<() => void> = [];
-  const shutdown = async () => {
-    if (closed) return;
-    closed = true;
-    endpoint.removeEventListener('message', onMessage);
+  const removeSubscriptions = () => {
     const errors: unknown[] = [];
     for (const cleanup of cleanups.splice(0))
       try {
@@ -84,6 +81,13 @@ export function startTransportWorkerRuntime(
       } catch (error) {
         errors.push(error);
       }
+    return errors;
+  };
+  const shutdown = async () => {
+    if (closed) return;
+    closed = true;
+    endpoint.removeEventListener('message', onMessage);
+    const errors = removeSubscriptions();
     try {
       await client?.close();
     } catch (error) {
@@ -133,36 +137,45 @@ export function startTransportWorkerRuntime(
           if (client) throw new Error('Transport Worker is already connected.');
           const next = createClient();
           client = next;
-          cleanups.push(
-            next.subscribeReliableUpdates((update) =>
-              endpoint.postMessage({
-                kind: 'transport-worker-publication',
-                contractVersion: 1,
-                channel: 'reliable',
-                payload: update,
-              }),
-            ),
-            next.subscribeRenderSnapshots((snapshot) =>
-              endpoint.postMessage({
-                kind: 'transport-worker-publication',
-                contractVersion: 1,
-                channel: 'render',
-                payload: snapshot,
-              }),
-            ),
-          );
           try {
+            cleanups.push(
+              next.subscribeReliableUpdates((update) =>
+                endpoint.postMessage({
+                  kind: 'transport-worker-publication',
+                  contractVersion: 1,
+                  channel: 'reliable',
+                  payload: update,
+                }),
+              ),
+            );
+            cleanups.push(
+              next.subscribeRenderSnapshots((snapshot) =>
+                endpoint.postMessage({
+                  kind: 'transport-worker-publication',
+                  contractVersion: 1,
+                  channel: 'render',
+                  payload: snapshot,
+                }),
+              ),
+            );
             await next.connect(
               request.payload as TransportClientConnectRequest,
             );
           } catch (error) {
-            for (const cleanup of cleanups.splice(0)) cleanup();
+            const cleanupErrors = removeSubscriptions();
             try {
               await next.close();
+            } catch (closeError) {
+              cleanupErrors.push(closeError);
             } finally {
               if (client === next) client = undefined;
             }
-            throw error;
+            throw cleanupErrors.length
+              ? new AggregateError(
+                  [error, ...cleanupErrors],
+                  errorMessage(error),
+                )
+              : error;
           }
         } else if (request.operation === 'send-command') {
           if (!client) throw new Error('Transport Worker is not connected.');

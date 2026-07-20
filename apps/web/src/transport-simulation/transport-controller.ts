@@ -67,7 +67,7 @@ export function createTransportApplicationController(input: {
   let closing = false;
   let closed = false;
   let closePromise: Promise<void> | undefined;
-  let cleanups: Array<() => void> = [];
+  const cleanups: Array<() => void> = [];
   const listeners = new Map<
     number,
     (state: TransportApplicationProjection) => void
@@ -94,14 +94,29 @@ export function createTransportApplicationController(input: {
       state.timelineId === timelineId,
     ].every(Boolean);
   const removeSubscriptions = () => {
-    for (const cleanup of cleanups.splice(0)) cleanup();
+    const errors: unknown[] = [];
+    for (const cleanup of cleanups.splice(0))
+      try {
+        cleanup();
+      } catch (error) {
+        errors.push(error);
+      }
+    return errors;
   };
+  const withCleanupFailures = (
+    primary: unknown,
+    cleanupErrors: readonly unknown[],
+    message: string,
+  ) =>
+    cleanupErrors.length
+      ? new AggregateError([primary, ...cleanupErrors], message)
+      : primary;
   const subscribeClient = (
     candidate: TransportSimulationClient,
     token: number,
     timelineId: TimelineId,
   ) => {
-    cleanups = [
+    cleanups.push(
       candidate.subscribeReliableUpdates((update) => {
         if (!isCurrent(candidate, token, timelineId)) return;
         set({
@@ -111,8 +126,8 @@ export function createTransportApplicationController(input: {
           streamOffset: update.streamOffset,
         });
       }),
-      candidate.subscribeRenderSnapshots(() => undefined),
-    ];
+    );
+    cleanups.push(candidate.subscribeRenderSnapshots(() => undefined));
   };
   const enqueue = <T>(operation: () => Promise<T>): Promise<T> => {
     let resolve!: (value: T) => void;
@@ -167,8 +182,8 @@ export function createTransportApplicationController(input: {
       status: request.mode === 'new' ? 'starting' : 'restoring',
       timelineId: request.timelineId,
     });
-    subscribeClient(candidate, token, request.timelineId);
     try {
+      subscribeClient(candidate, token, request.timelineId);
       await candidate.connect(request);
       const baseline = await synchronizeReady(
         candidate,
@@ -190,16 +205,22 @@ export function createTransportApplicationController(input: {
       });
     } catch (error) {
       if (generation === token) generation += 1;
-      removeSubscriptions();
+      const cleanupErrors = removeSubscriptions();
       try {
         await candidate.close();
+      } catch (closeError) {
+        cleanupErrors.push(closeError);
       } finally {
         if (client === candidate) client = undefined;
         sessionClaimed = false;
         if (!closing && !closed)
           set({ status: 'failed', message: errorMessage(error) });
       }
-      throw error;
+      throw withCleanupFailures(
+        error,
+        cleanupErrors,
+        'Transport activation and cleanup failed.',
+      );
     }
   };
 
@@ -207,7 +228,7 @@ export function createTransportApplicationController(input: {
     projection: Object.freeze({
       getState: () => state,
       subscribe(listener: (state: TransportApplicationProjection) => void) {
-        if (closed)
+        if (closing || closed)
           throw new Error('Transport application controller is closed.');
         const registration = ++listenerSequence;
         listeners.set(registration, listener);
@@ -298,12 +319,25 @@ export function createTransportApplicationController(input: {
           throw new Error('Transport restore became stale.');
         const timelineId = parseTimelineId(request.timelineId);
         const token = ++generation;
-        removeSubscriptions();
+        const teardownErrors = removeSubscriptions();
         client = undefined;
         set({ status: 'restoring' });
         let next: TransportSimulationClient | undefined;
         try {
-          await previous.close();
+          try {
+            await previous.close();
+          } catch (closeError) {
+            throw withCleanupFailures(
+              closeError,
+              teardownErrors,
+              'Transport authority teardown failed.',
+            );
+          }
+          if (teardownErrors.length)
+            throw new AggregateError(
+              teardownErrors,
+              'Transport subscription teardown failed.',
+            );
           if (closing || closed || generation !== token)
             throw new Error('Transport restore became stale.');
           next = input.createClient();
@@ -321,18 +355,15 @@ export function createTransportApplicationController(input: {
             token,
           );
         } catch (error) {
-          removeSubscriptions();
-          if (client === next) client = undefined;
-          if (next)
-            try {
-              await next.close();
-            } catch {
-              // Preserve the activation error after best-effort cleanup.
-            }
+          const cleanupErrors = removeSubscriptions();
           sessionClaimed = false;
           if (!closing && !closed)
             set({ status: 'failed', message: errorMessage(error) });
-          throw error;
+          throw withCleanupFailures(
+            error,
+            cleanupErrors,
+            'Transport restore and cleanup failed.',
+          );
         }
       });
     },
@@ -452,19 +483,20 @@ export function createTransportApplicationController(input: {
       generation += 1;
       const current = client;
       client = undefined;
-      removeSubscriptions();
       closePromise = (async () => {
-        await queue;
-        const errors: unknown[] = [];
+        const errors = removeSubscriptions();
         try {
-          await current?.close();
-        } catch (error) {
-          errors.push(error);
-        }
-        try {
-          await input.repository.close?.();
-        } catch (error) {
-          errors.push(error);
+          await queue;
+          try {
+            await current?.close();
+          } catch (error) {
+            errors.push(error);
+          }
+          try {
+            await input.repository.close?.();
+          } catch (error) {
+            errors.push(error);
+          }
         } finally {
           closed = true;
           sessionClaimed = false;

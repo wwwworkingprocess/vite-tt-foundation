@@ -44,5 +44,5 @@ the current projection.
 `foundation-template.json` remains the domain-free Phase 3 template contract.
 Transport schema, client/Worker contract, and expanded build-budget markers
 belong to `torrevieja-project.json`. The intended reusable Foundation Template
-snapshot is commit `7ad5320d162c1eb772d369bb7fd8250d1aa4fcd3`; current Phase 4
+snapshot is commit `c26be29`; current Phase 4
 HEAD must not be tagged as Foundation Template v1.0.0.

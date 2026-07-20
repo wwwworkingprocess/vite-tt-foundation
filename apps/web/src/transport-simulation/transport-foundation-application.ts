@@ -39,6 +39,11 @@ export function createTransportFoundationApplication(input: {
   });
   let closed = false;
   let closePromise: Promise<void> | undefined;
+  const closedError = () =>
+    new Error('Transport foundation application is closed.');
+  const assertOpen = () => {
+    if (closed) throw closedError();
+  };
   const publishTransport = (state: TransportApplicationProjection) => {
     if (closed && state.status !== 'closed') return;
     const next: FoundationApplicationState =
@@ -71,11 +76,13 @@ export function createTransportFoundationApplication(input: {
   const publishPersistence = (
     next: FoundationApplicationState['persistence'],
   ) => {
+    if (closed) return;
     persistence = freeze(next);
     publishTransport(transport.projection.getState());
   };
   const remove = transport.projection.subscribe(publishTransport);
   const listSaves = async () => {
+    assertOpen();
     try {
       const classified = await input.repository.list();
       const saves = classified.flatMap((item) =>
@@ -84,14 +91,15 @@ export function createTransportFoundationApplication(input: {
           ? [item.summary]
           : [],
       );
-      publishPersistence({ status: 'idle', saves });
+      if (!closed) publishPersistence({ status: 'idle', saves });
       return saves;
     } catch (error) {
-      publishPersistence({
-        status: 'failed',
-        saves: persistence.saves,
-        message: errorMessage(error, 'Persistence failed.'),
-      });
+      if (!closed)
+        publishPersistence({
+          status: 'failed',
+          saves: persistence.saves,
+          message: errorMessage(error, 'Persistence failed.'),
+        });
       throw error;
     }
   };
@@ -105,21 +113,27 @@ export function createTransportFoundationApplication(input: {
       timelineId: Parameters<typeof transport.startNew>[0]['timelineId'];
       initialSimulationTick: number;
     }) {
+      if (closed) return Promise.reject(closedError());
       return transport.startNew({ ...request, scenario: input.scenario });
     },
-    sendCommand: transport.sendCommand,
+    sendCommand(command: Parameters<typeof transport.sendCommand>[0]) {
+      if (closed) return Promise.reject(closedError());
+      return transport.sendCommand(command);
+    },
     listSaves,
     async save(metadata: Parameters<typeof transport.save>[0]) {
+      assertOpen();
       publishPersistence({ status: 'saving', saves: persistence.saves });
       try {
         await transport.save(metadata);
         await listSaves();
       } catch (error) {
-        publishPersistence({
-          status: 'failed',
-          saves: persistence.saves,
-          message: errorMessage(error, 'Save failed.'),
-        });
+        if (!closed)
+          publishPersistence({
+            status: 'failed',
+            saves: persistence.saves,
+            message: errorMessage(error, 'Save failed.'),
+          });
         throw error;
       }
     },
@@ -127,6 +141,7 @@ export function createTransportFoundationApplication(input: {
       saveId: string;
       newTimelineId: Parameters<typeof transport.restore>[0]['timelineId'];
     }) {
+      assertOpen();
       publishPersistence({ status: 'restoring', saves: persistence.saves });
       try {
         await transport.restore({
@@ -135,11 +150,12 @@ export function createTransportFoundationApplication(input: {
         });
         await listSaves();
       } catch (error) {
-        publishPersistence({
-          status: 'failed',
-          saves: persistence.saves,
-          message: errorMessage(error, 'Restore failed.'),
-        });
+        if (!closed)
+          publishPersistence({
+            status: 'failed',
+            saves: persistence.saves,
+            message: errorMessage(error, 'Restore failed.'),
+          });
         throw error;
       }
     },

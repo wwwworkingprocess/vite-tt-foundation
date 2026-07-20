@@ -117,6 +117,7 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
   const foundation = createDirectFoundationClient();
   let authority: TransportSimulationState | undefined;
   let lifecycle: TransportClientLifecycle = freeze({ state: 'idle' });
+  let closing = false;
   let closePromise: Promise<void> | undefined;
   let registrationSequence = 0;
   const lifecycleListeners = new Map<
@@ -191,9 +192,12 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         throw error;
       }
     },
-    sendCommand: (command) => foundation.sendCommand(command),
+    sendCommand: (command) =>
+      closing
+        ? Promise.reject(new Error('Transport client is closed.'))
+        : foundation.sendCommand(command),
     async synchronize(request) {
-      const current = authority;
+      const current = closing ? undefined : authority;
       if (!current) throw new Error('Transport client is not ready.');
       const response = await foundation.synchronize(request);
       return freeze({
@@ -203,7 +207,7 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
       });
     },
     async exportSnapshot() {
-      const current = authority;
+      const current = closing ? undefined : authority;
       if (!current) throw new Error('Transport client is not ready.');
       const exported = await foundation.exportSnapshot();
       authority =
@@ -223,13 +227,17 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         snapshot: createTransportSimulationSnapshot(authority),
       });
     },
-    subscribeReliableUpdates: (listener) =>
-      foundation.subscribeReliableUpdates(listener),
-    subscribeRenderSnapshots: (listener) =>
-      foundation.subscribeRenderSnapshots(listener),
+    subscribeReliableUpdates: (listener) => {
+      if (closing) throw new Error('Transport client is closed.');
+      return foundation.subscribeReliableUpdates(listener);
+    },
+    subscribeRenderSnapshots: (listener) => {
+      if (closing) throw new Error('Transport client is closed.');
+      return foundation.subscribeRenderSnapshots(listener);
+    },
     getLifecycle: () => lifecycle,
     subscribeLifecycle(listener) {
-      if (lifecycle.state === 'closed')
+      if (closing || lifecycle.state === 'closed')
         throw new Error('Transport client is closed.');
       const registration = ++registrationSequence;
       lifecycleListeners.set(registration, listener);
@@ -241,11 +249,16 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
     },
     close() {
       if (closePromise) return closePromise;
+      closing = true;
+      authority = undefined;
       closePromise = (async () => {
-        await foundation.close();
-        authority = undefined;
-        publishLifecycle({ state: 'closed' });
-        lifecycleListeners.clear();
+        try {
+          await foundation.close();
+        } finally {
+          authority = undefined;
+          publishLifecycle({ state: 'closed' });
+          lifecycleListeners.clear();
+        }
       })();
       return closePromise;
     },

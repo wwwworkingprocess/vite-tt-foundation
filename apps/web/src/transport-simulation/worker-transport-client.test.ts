@@ -34,6 +34,69 @@ const scenario = () =>
   });
 
 describe('transport Worker boundary failures', () => {
+  it('shuts down when invalid-request failure publication throws', async () => {
+    let listener!: (event: { data: unknown }) => void;
+    const remove = vi.fn();
+    const runtime = startTransportWorkerRuntime({
+      postMessage() {
+        throw new Error('failure post failed');
+      },
+      addEventListener: (_type, next) => {
+        listener = next;
+      },
+      removeEventListener: remove,
+    });
+    listener({ data: { requestId: 1, invalid: true } });
+    await vi.waitFor(() => expect(remove).toHaveBeenCalledOnce());
+    await expect(runtime.close()).resolves.toBeUndefined();
+  });
+
+  it('clears runtime authority after subscription and client cleanup errors', async () => {
+    let listener!: (event: { data: unknown }) => void;
+    const posted: unknown[] = [];
+    const direct = createDirectTransportSimulationClient();
+    const runtime = startTransportWorkerRuntime(
+      {
+        postMessage: (message) => posted.push(message),
+        addEventListener: (_type, next) => {
+          listener = next;
+        },
+        removeEventListener: vi.fn(),
+      },
+      () =>
+        Object.freeze({
+          ...direct,
+          subscribeReliableUpdates: () => () => {
+            throw new Error('unsubscribe failed');
+          },
+          close: async () => {
+            await direct.close();
+            throw new Error('client close failed');
+          },
+        }),
+    );
+    listener({
+      data: {
+        kind: 'transport-worker-request',
+        contractVersion: 1,
+        requestId: 1,
+        operation: 'connect',
+        payload: {
+          kind: 'transport-client-connect',
+          contractVersion: 1,
+          mode: 'new',
+          gameId: 'game',
+          timelineId: 'timeline',
+          initialSimulationTick: 0,
+          scenario: scenario(),
+        },
+      },
+    });
+    await vi.waitFor(() => expect(posted).toHaveLength(1));
+    await expect(runtime.close()).rejects.toThrow('cleanup failed');
+    await expect(runtime.close()).resolves.toBeUndefined();
+  });
+
   it('finishes runtime shutdown when close acknowledgement posting throws', async () => {
     let listener!: (event: { data: unknown }) => void;
     let connected = false;
@@ -206,7 +269,16 @@ describe('transport Worker boundary failures', () => {
         payload: null,
       },
     });
-    const pending = client.sendCommand({} as never);
+    const pending = client.sendCommand({
+      kind: 'foundation-command',
+      gameId: 'game',
+      timelineId: 'timeline',
+      commandId: 'command',
+      correlationId: 'correlation',
+      clientId: 'client',
+      sessionId: 'session',
+      command: { type: 'foundation.advance-ticks', count: 1 },
+    } as never);
     const closing = client.close();
     await expect(pending).rejects.toThrow('closed');
     await closing;
@@ -371,7 +443,7 @@ describe('transport Worker boundary failures', () => {
       workers.push(state);
       return {
         postMessage(message) {
-          if (state.failPost) throw new Error('post failed');
+          if (state.failPost) throw 'post failed';
           queueMicrotask(() =>
             state.listener?.({
               data: {
@@ -411,11 +483,96 @@ describe('transport Worker boundary failures', () => {
     expect(workers[0]!.terminate).toHaveBeenCalledOnce();
 
     const second = createWorkerTransportSimulationClient({ workerFactory });
-    await expect(second.connect(request)).rejects.toThrow('post failed');
+    await expect(second.connect(request)).rejects.toThrow(
+      'Transport Worker operation failed',
+    );
     expect(workers[1]!.terminate).toHaveBeenCalledOnce();
     await second.close();
     expect(() => second.subscribeReliableUpdates(() => undefined)).toThrow(
       'closed',
     );
   });
+
+  it.each([
+    'missing-operation',
+    'wrong-operation',
+    'malformed-payload',
+  ] as const)(
+    'fails terminally for a correlated %s response',
+    async (variant) => {
+      let listener!: (event: { data: unknown }) => void;
+      const terminate = vi.fn();
+      const remove = vi.fn();
+      const worker: TransportWorkerLike = {
+        postMessage(message) {
+          if (message.operation === 'connect')
+            queueMicrotask(() =>
+              listener({
+                data: {
+                  kind: 'transport-worker-result',
+                  contractVersion: 1,
+                  requestId: message.requestId,
+                  operation: 'connect',
+                  payload: null,
+                },
+              }),
+            );
+        },
+        addEventListener: (_type, next) => {
+          listener = next;
+        },
+        removeEventListener: remove,
+        terminate,
+      };
+      const client = createWorkerTransportSimulationClient({
+        workerFactory: () => worker,
+      });
+      await client.connect({
+        kind: 'transport-client-connect',
+        contractVersion: 1,
+        mode: 'new',
+        gameId: 'game',
+        timelineId: 'timeline',
+        initialSimulationTick: 0,
+        scenario: scenario(),
+      } as never);
+      const pending = client.sendCommand({
+        kind: 'foundation-command',
+        gameId: 'game',
+        timelineId: 'timeline',
+        commandId: 'command',
+        correlationId: 'correlation',
+        clientId: 'client',
+        sessionId: 'session',
+        command: { type: 'foundation.advance-ticks', count: 1 },
+      } as never);
+      listener({
+        data:
+          variant === 'missing-operation'
+            ? {
+                kind: 'transport-worker-failure',
+                contractVersion: 1,
+                requestId: 2,
+                message: 'missing operation',
+              }
+            : {
+                kind: 'transport-worker-result',
+                contractVersion: 1,
+                requestId: 2,
+                operation:
+                  variant === 'wrong-operation' ? 'connect' : 'send-command',
+                payload: null,
+              },
+      });
+      await expect(pending).rejects.toThrow(
+        variant === 'malformed-payload' ? 'invalid message' : 'did not match',
+      );
+      expect(client.getLifecycle()).toMatchObject({ state: 'failed' });
+      expect(remove).toHaveBeenCalledOnce();
+      expect(terminate).toHaveBeenCalledOnce();
+      expect(() => client.subscribeReliableUpdates(() => undefined)).toThrow(
+        'closed',
+      );
+    },
+  );
 });

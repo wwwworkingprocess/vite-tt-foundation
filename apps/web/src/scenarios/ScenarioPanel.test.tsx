@@ -1,5 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { expect, it, vi } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
+
+afterEach(cleanup);
 
 const fake = vi.hoisted(() => ({
   state: {
@@ -16,6 +18,7 @@ const fake = vi.hoisted(() => ({
   },
   loadCatalog: vi.fn(async () => undefined),
   loadScenario: vi.fn(async () => undefined),
+  resolveScenario: vi.fn(async () => fake.state.scenario),
 }));
 
 vi.mock('./scenario-loader.js', () => ({
@@ -30,6 +33,7 @@ vi.mock('./scenario-loader.js', () => ({
     },
     loadCatalog: fake.loadCatalog,
     loadScenario: fake.loadScenario,
+    resolveScenario: fake.resolveScenario,
   }),
 }));
 
@@ -37,10 +41,12 @@ import { ScenarioPanel } from './ScenarioPanel.js';
 
 it('presents the scenario and supplies it to the single session composition', async () => {
   const ready = vi.fn();
-  render(<ScenarioPanel onScenarioReady={ready} />);
+  const resolver = vi.fn();
+  render(<ScenarioPanel onScenarioReady={ready} onResolverReady={resolver} />);
   expect(await screen.findByText('231')).toBeInTheDocument();
   expect(screen.getByText('Directed edges').nextSibling).toHaveTextContent('6');
   expect(ready).toHaveBeenCalledWith(fake.state.scenario);
+  expect(resolver).toHaveBeenCalledWith(fake.resolveScenario);
   fireEvent.change(screen.getByLabelText('Scenario'), {
     target: { value: 'torrevieja-v1' },
   });
@@ -48,4 +54,11 @@ it('presents the scenario and supplies it to the single session composition', as
   expect(
     screen.queryByRole('button', { name: 'Start selected scenario' }),
   ).not.toBeInTheDocument();
+});
+
+it('allows catalogue presentation without composition callbacks', async () => {
+  render(<ScenarioPanel />);
+  expect(
+    await screen.findByRole('heading', { name: 'Transport scenario' }),
+  ).toBeInTheDocument();
 });

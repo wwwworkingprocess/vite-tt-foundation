@@ -30,6 +30,14 @@ const scenario = parseScenarioPackage({
   presentation: json('presentation.json'),
   provenance: json('provenance.json'),
 });
+const alternateScenario = {
+  ...scenario,
+  manifest: {
+    ...scenario.manifest,
+    scenarioId: 'scenario-b',
+    contentHash: 'b'.repeat(64),
+  },
+} as typeof scenario;
 
 vi.mock('./scenarios/ScenarioPanel.js', () => ({
   ScenarioPanel: ({
@@ -38,7 +46,14 @@ vi.mock('./scenarios/ScenarioPanel.js', () => ({
     onScenarioReady(value: typeof scenario): void;
   }) => {
     queueMicrotask(() => onScenarioReady(scenario));
-    return <div>Scenario fixture</div>;
+    return (
+      <div>
+        Scenario fixture
+        <button onClick={() => onScenarioReady(alternateScenario)}>
+          Select scenario B
+        </button>
+      </div>
+    );
   },
 }));
 
@@ -110,6 +125,9 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByTestId('worker-tick')).toHaveTextContent('0'),
     );
+    expect(screen.getByTestId('scenario-coordinate')).toHaveTextContent(
+      '1.0.0:torrevieja-mini-v1@1.0.0#',
+    );
     fireEvent.click(
       screen.getByRole('button', { name: 'Close transport Worker' }),
     );
@@ -124,6 +142,21 @@ describe('foundation screen', () => {
     );
     expect(screen.getByTestId('worker-timeline')).toHaveTextContent(
       'browser-foundation-timeline-2',
+    );
+  });
+
+  it('does not replace ready authority when loader selection changes', async () => {
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    await waitFor(() =>
+      expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
+    );
+    const timeline = screen.getByTestId('worker-timeline').textContent;
+    fireEvent.click(screen.getByRole('button', { name: 'Select scenario B' }));
+    expect(screen.getByTestId('worker-status')).toHaveTextContent('ready');
+    expect(screen.getByTestId('worker-timeline').textContent).toBe(timeline);
+    expect(screen.getByTestId('scenario-coordinate')).toHaveTextContent(
+      'torrevieja-mini-v1',
     );
   });
 });

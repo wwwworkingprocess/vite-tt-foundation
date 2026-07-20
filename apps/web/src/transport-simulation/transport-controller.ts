@@ -229,7 +229,7 @@ export function createTransportApplicationController(input: {
       if (sessionClaimed || closing || closed)
         return Promise.reject(new Error('Transport session is unavailable.'));
       sessionClaimed = true;
-      return enqueue(async () => {
+      const starting = enqueue(async () => {
         const gameId = parseGameId(request.gameId);
         const timelineId = parseTimelineId(request.timelineId);
         const token = ++generation;
@@ -246,6 +246,10 @@ export function createTransportApplicationController(input: {
           },
           token,
         );
+      });
+      return starting.catch((error) => {
+        if (!client && !closing && !closed) sessionClaimed = false;
+        throw error;
       });
     },
     restore(request: { saveId: string; timelineId: TimelineId }) {
@@ -287,21 +291,40 @@ export function createTransportApplicationController(input: {
         const token = ++generation;
         removeSubscriptions();
         client = undefined;
-        await previous.close();
-        const next = input.createClient();
-        await activate(
-          next,
-          {
-            kind: 'transport-client-connect',
-            contractVersion: 1,
-            mode: 'restore',
-            gameId: classified.record.gameId,
-            timelineId,
-            scenario,
-            snapshot: classified.record.snapshot,
-          },
-          token,
-        );
+        set({ status: 'restoring' });
+        let next: TransportSimulationClient | undefined;
+        try {
+          await previous.close();
+          if (closing || closed || generation !== token)
+            throw new Error('Transport restore became stale.');
+          next = input.createClient();
+          await activate(
+            next,
+            {
+              kind: 'transport-client-connect',
+              contractVersion: 1,
+              mode: 'restore',
+              gameId: classified.record.gameId,
+              timelineId,
+              scenario,
+              snapshot: classified.record.snapshot,
+            },
+            token,
+          );
+        } catch (error) {
+          removeSubscriptions();
+          if (client === next) client = undefined;
+          if (next)
+            try {
+              await next.close();
+            } catch {
+              // Preserve the activation error after best-effort cleanup.
+            }
+          sessionClaimed = false;
+          if (!closing && !closed)
+            set({ status: 'failed', message: errorMessage(error) });
+          throw error;
+        }
       });
     },
     save(metadata: {

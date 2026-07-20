@@ -30,13 +30,14 @@
     "audit:tracked": "node scripts/tracked-output-audit.mjs",
     "audit:runtime": "node scripts/runtime-audit.mjs",
     "audit:manifest": "node scripts/template-manifest-audit.mjs",
+    "audit:project": "node scripts/project-manifest-audit.mjs",
     "audit:build": "node scripts/build-budget-audit.mjs",
     "audit:subpath": "node scripts/subpath-build-audit.mjs",
     "audit:repository": "node scripts/repository-clean-audit.mjs",
     "test:pwa:subpath": "node scripts/pwa-test-runner.mjs /torrevieja-tycoon/",
-    "validate:portable": "yarn audit:runtime && yarn audit:line-endings && yarn audit:architecture && yarn audit:manifest && yarn format:check && yarn lint && yarn typecheck && yarn test && yarn test:coverage && yarn build && yarn audit:build && yarn test:e2e && yarn test:pwa && yarn test:pwa:subpath",
+    "validate:portable": "yarn audit:runtime && yarn audit:line-endings && yarn audit:architecture && yarn audit:manifest && yarn audit:project && yarn format:check && yarn lint && yarn typecheck && yarn test && yarn test:coverage && yarn build && yarn audit:build && yarn test:e2e && yarn test:pwa && yarn test:pwa:subpath",
     "validate:repository": "yarn audit:tracked && yarn audit:repository",
-    "audit": "yarn audit:runtime && yarn audit:architecture && yarn audit:manifest && yarn audit:build",
+    "audit": "yarn audit:runtime && yarn audit:architecture && yarn audit:manifest && yarn audit:project && yarn audit:build",
     "validate": "yarn format:check && yarn lint && yarn typecheck && yarn test && yarn test:coverage && yarn build && yarn test:e2e"
   },
   "devDependencies": {

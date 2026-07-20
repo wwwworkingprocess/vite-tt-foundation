@@ -19,6 +19,10 @@ const javascript = files.filter((file) => file.endsWith('.js'));
 const one = (pattern) =>
   javascript.filter((file) => pattern.test(basename(file)));
 const transportWorker = one(/^transport\.worker-[\w-]+\.js$/);
+const foundationWorker = one(/^foundation\.worker-[\w-]+\.js$/);
+const workerChunks = javascript.filter((file) =>
+  /(?:^|\/)\w[\w.-]*\.worker-[\w-]+\.js$/.test(file),
+);
 const entry = one(/^index-[\w-]+\.js$/);
 const representation = one(/^foundation-scene-[\w-]+\.js$/);
 const register = one(/^registerSW\.js$/);
@@ -34,6 +38,13 @@ for (const [name, matches] of Object.entries({
 }))
   if (matches.length !== 1)
     throw new Error(`Expected one deterministic ${name} JavaScript artifact.`);
+if (foundationWorker.length !== 0)
+  throw new Error('The project build must not emit a Foundation Worker chunk.');
+if (
+  workerChunks.length !== transportWorker.length ||
+  workerChunks.some((file) => !transportWorker.includes(file))
+)
+  throw new Error(`Unclassified Worker chunks: ${workerChunks.join(', ')}`);
 const configured = JSON.parse(
   await readFile(
     new URL('../torrevieja-project.json', import.meta.url),

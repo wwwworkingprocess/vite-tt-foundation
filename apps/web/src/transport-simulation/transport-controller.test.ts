@@ -620,4 +620,98 @@ describe('transport application controller', () => {
       }),
     ).rejects.toThrow('closed');
   });
+
+  it('releases the session claim after invalid start and failed restore teardown', async () => {
+    const first = createDirectTransportSimulationClient();
+    const clients = [
+      Object.freeze({
+        ...first,
+        async close() {
+          await first.close();
+          throw new Error('old close failed');
+        },
+      }),
+      createDirectTransportSimulationClient(),
+    ];
+    const controller = createTransportApplicationController({
+      createClient: () => clients.shift()!,
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await expect(
+      controller.startNew({
+        gameId: '' as never,
+        timelineId: parseTimelineId('invalid'),
+        scenario: scenario(),
+      }),
+    ).rejects.toThrow();
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('current'),
+      scenario: scenario(),
+    });
+    await expect(
+      controller.restore({
+        saveId: 'slot',
+        timelineId: parseTimelineId('replacement'),
+      }),
+    ).rejects.toThrow('old close failed');
+    expect(controller.projection.getState()).toEqual({
+      status: 'failed',
+      message: 'old close failed',
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('recovered'),
+      scenario: scenario(),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'recovered',
+    });
+    await controller.close();
+  });
+
+  it('recovers after synchronous replacement construction failure', async () => {
+    const clients = [
+      createDirectTransportSimulationClient(),
+      createDirectTransportSimulationClient(),
+    ];
+    let calls = 0;
+    const controller = createTransportApplicationController({
+      createClient: () => {
+        if (++calls === 2) throw new Error('construction failed');
+        return clients.shift()!;
+      },
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('current'),
+      scenario: scenario(),
+    });
+    await expect(
+      controller.restore({
+        saveId: 'slot',
+        timelineId: parseTimelineId('replacement'),
+      }),
+    ).rejects.toThrow('construction failed');
+    expect(controller.projection.getState()).toEqual({
+      status: 'failed',
+      message: 'construction failed',
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('recovered'),
+      scenario: scenario(),
+    });
+    await controller.close();
+  });
 });

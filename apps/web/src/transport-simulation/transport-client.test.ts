@@ -142,6 +142,8 @@ describe.each(factories)('%s transport client', (_name, createClient) => {
     expect(() => client.subscribeReliableUpdates(() => undefined)).toThrow(
       'closed',
     );
+    await expect(client.sendCommand({} as never)).rejects.toThrow('closed');
+    await expect(client.exportSnapshot()).rejects.toThrow('not ready');
   });
 
   it('has new/restore parity and exposes coordinate without static data', async () => {
@@ -278,6 +280,26 @@ describe.each(factories)('%s transport client', (_name, createClient) => {
     expect(after.graph).toBe(before.graph);
     removeReliable();
     removeRender();
+    await client.close();
+  });
+});
+
+describe('direct transport startup failure', () => {
+  it('becomes failed when the foundation authority rejects identity', async () => {
+    const client = createDirectTransportSimulationClient();
+    await expect(
+      client.connect({
+        kind: 'transport-client-connect',
+        contractVersion: 1,
+        mode: 'new',
+        gameId: '',
+        timelineId: 'timeline',
+        initialSimulationTick: 0,
+        scenario: scenario(),
+      } as never),
+    ).rejects.toThrow();
+    expect(client.getLifecycle()).toMatchObject({ state: 'failed' });
+    expect(() => client.getAuthoritativeState()).toThrow('not ready');
     await client.close();
   });
 });

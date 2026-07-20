@@ -10,6 +10,11 @@ import {
   type ScenarioCatalog,
   type ScenarioId,
 } from '@torrevieja-tycoon/transport-domain';
+import {
+  createScenarioCoordinate,
+  scenarioCoordinatesEqual,
+  type ScenarioCoordinate,
+} from '@torrevieja-tycoon/simulation';
 
 interface TextResponse {
   readonly ok: boolean;
@@ -126,38 +131,7 @@ export function createScenarioLoader(input: {
       token,
     );
     try {
-      const manifestUrl = `${base}scenarios/${descriptor.manifestPath}`;
-      const manifestText = await getText(manifestUrl);
-      const manifest = parseScenarioManifest(decode(manifestText!, 'manifest'));
-      assertScenarioDescriptorMatchesManifest(descriptor, manifest);
-      const directory = manifestUrl.slice(0, manifestUrl.lastIndexOf('/') + 1);
-      const decoded = new Map<string, unknown>();
-      for (const [name, asset] of Object.entries(manifest.assets)) {
-        const text = await getText(`${directory}${asset.path}`, asset.required);
-        if (text === undefined) continue;
-        const digest = await input.digestSha256(text);
-        if (digest.toLowerCase() !== asset.sha256)
-          throw new ScenarioDomainError(
-            'content-integrity-mismatch',
-            `${name} ${asset.path}`,
-          );
-        decoded.set(name, decode(text, name));
-      }
-      for (const required of ['settlements', 'stops', 'routes'])
-        if (!decoded.has(required))
-          throw new ScenarioDomainError(
-            'malformed-asset',
-            `missing required asset ${required}`,
-          );
-      const scenario = parseScenarioPackage({
-        manifest,
-        settlements: decoded.get('settlements'),
-        stops: decoded.get('stops'),
-        routes: decoded.get('routes'),
-        presentation: decoded.get('presentation'),
-        provenance: decoded.get('provenance'),
-      });
-      const graph = buildDirectedScenarioGraph(scenario);
+      const { scenario, graph, title } = await resolveDescriptor(descriptor);
       replace(
         {
           status: 'ready',
@@ -165,7 +139,7 @@ export function createScenarioLoader(input: {
           selectedScenarioId: descriptor.scenarioId,
           graph,
           scenario,
-          title: manifest.title,
+          title,
           settlementCount: scenario.settlements.settlements.length,
           routeCount: scenario.routes.routes.length,
         },
@@ -182,6 +156,59 @@ export function createScenarioLoader(input: {
         token,
       );
     }
+  }
+  async function resolveDescriptor(
+    descriptor: ScenarioCatalog['scenarios'][number],
+  ) {
+    const manifestUrl = `${base}scenarios/${descriptor.manifestPath}`;
+    const manifestText = await getText(manifestUrl);
+    const manifest = parseScenarioManifest(decode(manifestText!, 'manifest'));
+    assertScenarioDescriptorMatchesManifest(descriptor, manifest);
+    const directory = manifestUrl.slice(0, manifestUrl.lastIndexOf('/') + 1);
+    const decoded = new Map<string, unknown>();
+    for (const [name, asset] of Object.entries(manifest.assets)) {
+      const text = await getText(`${directory}${asset.path}`, asset.required);
+      if (text === undefined) continue;
+      const digest = await input.digestSha256(text);
+      if (digest.toLowerCase() !== asset.sha256)
+        throw new ScenarioDomainError(
+          'content-integrity-mismatch',
+          `${name} ${asset.path}`,
+        );
+      decoded.set(name, decode(text, name));
+    }
+    for (const required of ['settlements', 'stops', 'routes'])
+      if (!decoded.has(required))
+        throw new ScenarioDomainError(
+          'malformed-asset',
+          `missing required asset ${required}`,
+        );
+    const scenario = parseScenarioPackage({
+      manifest,
+      settlements: decoded.get('settlements'),
+      stops: decoded.get('stops'),
+      routes: decoded.get('routes'),
+      presentation: decoded.get('presentation'),
+      provenance: decoded.get('provenance'),
+    });
+    const graph = buildDirectedScenarioGraph(scenario);
+    return freeze({ scenario, graph, title: manifest.title });
+  }
+  async function resolveScenario(coordinate: ScenarioCoordinate) {
+    const descriptor = state.catalog?.scenarios.find(
+      (item) =>
+        item.scenarioId === coordinate.scenarioId &&
+        item.scenarioVersion === coordinate.scenarioVersion &&
+        item.contentHash === coordinate.contentHash,
+    );
+    if (!descriptor)
+      throw new Error('The exact saved scenario package is unavailable.');
+    const { scenario } = await resolveDescriptor(descriptor);
+    if (
+      !scenarioCoordinatesEqual(createScenarioCoordinate(scenario), coordinate)
+    )
+      throw new Error('The exact saved scenario package is unavailable.');
+    return scenario;
   }
   return Object.freeze({
     projection: Object.freeze({
@@ -201,6 +228,7 @@ export function createScenarioLoader(input: {
     }),
     loadCatalog,
     loadScenario,
+    resolveScenario,
   });
 }
 

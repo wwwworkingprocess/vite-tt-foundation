@@ -13,6 +13,11 @@ const fetchText = async (url: string) => {
 
 export function ScenarioPanel(props: {
   readonly onScenarioReady?: (scenario: CanonicalScenario) => void;
+  readonly onResolverReady?:
+    | ((
+        resolve: ReturnType<typeof createScenarioLoader>['resolveScenario'],
+      ) => void)
+    | undefined;
 }) {
   const [state, setState] = useState<ScenarioLoaderState>({ status: 'idle' });
   const [loader] = useState(() =>
@@ -23,6 +28,9 @@ export function ScenarioPanel(props: {
     }),
   );
   useEffect(() => {
+    props.onResolverReady?.(loader.resolveScenario);
+  }, [loader, props.onResolverReady]);
+  useEffect(() => {
     const remove = loader.projection.subscribe(setState);
     void loader.loadCatalog().then(() => {
       const first = loader.projection.getState().catalog?.scenarios[0];
@@ -32,7 +40,7 @@ export function ScenarioPanel(props: {
   }, [loader]);
   useEffect(() => {
     if (state.scenario) props.onScenarioReady?.(state.scenario);
-  }, [props, state.scenario]);
+  }, [props.onScenarioReady, state.scenario]);
   const graph = state.graph;
   return (
     <section aria-labelledby="scenario-title">

@@ -11,7 +11,10 @@ import {
   type GameId,
   type TimelineId,
 } from '@torrevieja-tycoon/protocol';
-import { parseSimulationTick } from '@torrevieja-tycoon/simulation';
+import {
+  parseSimulationTick,
+  type ScenarioCoordinate,
+} from '@torrevieja-tycoon/simulation';
 import {
   parseFoundationSaveId,
   parseFoundationSaveRecord,
@@ -40,6 +43,7 @@ export interface FoundationApplicationState {
     simulationTick: number;
     streamOffset: number;
   }>;
+  readonly scenario?: ScenarioCoordinate | undefined;
   readonly latestRenderSnapshot?: FoundationRenderSnapshot | undefined;
   readonly synchronization: Readonly<
     | { status: 'idle' | 'synchronized' | 'synchronizing' }
@@ -64,6 +68,7 @@ function freezeState(
 ): FoundationApplicationState {
   Object.freeze(value.session);
   if (value.authoritative) Object.freeze(value.authoritative);
+  if (value.scenario) Object.freeze(value.scenario);
   Object.freeze(value.synchronization);
   Object.freeze(value.persistence.saves);
   Object.freeze(value.persistence);

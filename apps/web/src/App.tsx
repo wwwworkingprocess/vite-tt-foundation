@@ -3,9 +3,10 @@ import {
   createScenarioCoordinate,
   scenarioCoordinatesEqual,
   simulationFoundationLabel,
+  type ScenarioCoordinate,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import {
   createFoundationSessionComposition,
   type FoundationSessionCompositionState,
@@ -30,16 +31,20 @@ type Actions = Readonly<{
 export function App() {
   const [state, setState] = useState<FoundationSessionCompositionState>();
   const [actions, setActions] = useState<Actions>();
-  const [scenario, setScenario] = useState<CanonicalScenario>();
+  const [selectedScenario, setSelectedScenario] = useState<CanonicalScenario>();
+  const [activeScenario, setActiveScenario] = useState<CanonicalScenario>();
+  const scenarioResolver = useRef<
+    ((coordinate: ScenarioCoordinate) => Promise<CanonicalScenario>) | undefined
+  >(undefined);
   useEffect(() => {
-    if (typeof Worker === 'undefined' || !scenario) return;
+    if (typeof Worker === 'undefined' || !activeScenario) return;
     const composition = createFoundationSessionComposition({
       createStack() {
         const repository = createDexieTransportSaveRepository(
           'foundation-template',
         );
         const application = createTransportFoundationApplication({
-          scenario,
+          scenario: activeScenario,
           repository,
           createClient: () =>
             createWorkerTransportSimulationClient({
@@ -47,16 +52,14 @@ export function App() {
             }),
           scenarioResolver: {
             resolve(coordinate) {
-              if (
-                scenarioCoordinatesEqual(
-                  createScenarioCoordinate(scenario),
-                  coordinate,
-                )
-              )
-                return Promise.resolve(scenario);
-              return Promise.reject(
-                new Error('The exact saved scenario package is unavailable.'),
-              );
+              const resolve = scenarioResolver.current;
+              return resolve
+                ? resolve(coordinate)
+                : Promise.reject(
+                    new Error(
+                      'The exact saved scenario package is unavailable.',
+                    ),
+                  );
             },
           },
         });
@@ -93,7 +96,7 @@ export function App() {
       remove();
       void composition.dispose();
     };
-  }, [scenario]);
+  }, [activeScenario]);
 
   const application = state?.application;
   const pacing = state?.pacing;
@@ -153,8 +156,8 @@ export function App() {
           </p>
           <p data-testid="scenario-coordinate">
             Scenario coordinate:{' '}
-            {scenario
-              ? `${scenario.manifest.scenarioId}@${scenario.manifest.scenarioVersion}#${scenario.manifest.contentHash}`
+            {application?.scenario
+              ? `${application.scenario.scenarioSchemaVersion}:${application.scenario.scenarioId}@${application.scenario.scenarioVersion}#${application.scenario.contentHash}`
               : 'pending'}
           </p>
           <div aria-label="Foundation pacing controls">
@@ -271,7 +274,23 @@ export function App() {
             ) : null}
           </div>
           {state?.canStartNewSession ? (
-            <button type="button" onClick={action(actions?.start)}>
+            <button
+              type="button"
+              onClick={action(async () => {
+                if (
+                  selectedScenario &&
+                  activeScenario &&
+                  !scenarioCoordinatesEqual(
+                    createScenarioCoordinate(selectedScenario),
+                    createScenarioCoordinate(activeScenario),
+                  )
+                ) {
+                  setActiveScenario(selectedScenario);
+                  return;
+                }
+                await actions?.start();
+              })}
+            >
               Start new transport session
             </button>
           ) : (
@@ -286,7 +305,15 @@ export function App() {
         </div>
       </section>
       <Suspense fallback={<p>Loading scenario catalogue…</p>}>
-        <ScenarioPanel onScenarioReady={setScenario} />
+        <ScenarioPanel
+          onResolverReady={(resolve) => {
+            scenarioResolver.current = resolve;
+          }}
+          onScenarioReady={(next) => {
+            setSelectedScenario(next);
+            setActiveScenario((current) => current ?? next);
+          }}
+        />
       </Suspense>
       <Suspense fallback={<p>Loading representation…</p>}>
         <FoundationScene />

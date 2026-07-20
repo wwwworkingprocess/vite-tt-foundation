@@ -10,7 +10,7 @@ the tag.
 ## Source identity
 
 The reusable, domain-free Foundation Template snapshot is commit
-`7ad5320d162c1eb772d369bb7fd8250d1aa4fcd3` on `main` before Phase 4 domain
+`c26be29` on `main` before Phase 4 domain
 integration. Current Phase 4 HEAD is a Torrevieja project extension and must
 not receive the Foundation Template v1.0.0 tag.
 

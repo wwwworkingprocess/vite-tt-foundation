@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { createScenarioLoader } from './scenario-loader.js';
+import { browserSha256, createScenarioLoader } from './scenario-loader.js';
+import { createScenarioCoordinate } from '@torrevieja-tycoon/simulation';
 
 const response = (value: unknown) => ({
   ok: true,
@@ -307,6 +308,24 @@ describe('browser scenario loader', () => {
     expect(fetchText).toHaveBeenCalledWith(
       '/vite-tt-foundation/scenarios/torrevieja-v1/stops.json',
     );
+    const selectedState = loader.projection.getState();
+    const resolved = await loader.resolveScenario(
+      createScenarioCoordinate(selectedState.scenario!),
+    );
+    expect(resolved.manifest.scenarioId).toBe('torrevieja-v1');
+    expect(loader.projection.getState()).toBe(selectedState);
+    await expect(
+      loader.resolveScenario({
+        ...createScenarioCoordinate(resolved),
+        contentHash: '0'.repeat(64),
+      }),
+    ).rejects.toThrow('exact saved scenario');
+    await expect(
+      loader.resolveScenario({
+        ...createScenarioCoordinate(resolved),
+        scenarioSchemaVersion: '2.0.0',
+      } as never),
+    ).rejects.toThrow('exact saved scenario');
 
     const mismatch = createScenarioLoader({
       baseUrl: '/vite-tt-foundation/',
@@ -334,5 +353,11 @@ describe('browser scenario loader', () => {
     });
     await expect(loader.loadScenario('missing')).resolves.toBeUndefined();
     expect(loader.projection.getState().message).toContain('Unknown scenario');
+  });
+
+  it('provides the browser SHA-256 digest port', async () => {
+    await expect(browserSha256('a')).resolves.toBe(
+      'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb',
+    );
   });
 });

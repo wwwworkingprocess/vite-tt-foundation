@@ -6,6 +6,7 @@ import type { TransportSaveRepository } from './transport-save-repository.js';
 import {
   createTransportApplicationController,
   type ScenarioResolver,
+  type TransportApplicationProjection,
 } from './transport-controller.js';
 import type { TransportSimulationClient } from './transport-client.js';
 
@@ -15,6 +16,8 @@ const freeze = <T>(value: T): T => {
   return Object.isFrozen(value) ? value : Object.freeze(value);
 };
 const empty = Object.freeze([]) as readonly TransportSaveSummary[];
+const errorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
 
 export function createTransportFoundationApplication(input: {
   readonly scenario: CanonicalScenario;
@@ -22,11 +25,7 @@ export function createTransportFoundationApplication(input: {
   readonly createClient: () => TransportSimulationClient;
   readonly scenarioResolver: ScenarioResolver;
 }) {
-  const transport = createTransportApplicationController({
-    createClient: input.createClient,
-    repository: input.repository,
-    scenarioResolver: input.scenarioResolver,
-  });
+  const transport = createTransportApplicationController(input);
   const store = createStore<FoundationApplicationState>(() =>
     freeze({
       session: { status: 'idle' },
@@ -34,33 +33,48 @@ export function createTransportFoundationApplication(input: {
       persistence: { status: 'idle', saves: empty },
     }),
   );
-  const set = (patch: Partial<FoundationApplicationState>) =>
-    store.setState(freeze({ ...store.getState(), ...patch }), true);
-  const remove = transport.projection.subscribe((state) => {
-    const session: FoundationApplicationState['session'] =
+  let persistence: FoundationApplicationState['persistence'] = freeze({
+    status: 'idle',
+    saves: empty,
+  });
+  let closed = false;
+  let closePromise: Promise<void> | undefined;
+  const publishTransport = (state: TransportApplicationProjection) => {
+    if (closed && state.status !== 'closed') return;
+    const next: FoundationApplicationState =
       state.status === 'ready'
         ? {
-            status: 'ready',
-            gameId: state.gameId!,
-            timelineId: state.timelineId!,
-          }
-        : state.status === 'failed'
-          ? { status: 'failed', message: state.message! }
-          : { status: state.status };
-    set({
-      session,
-      ...(state.status === 'ready'
-        ? {
+            session: {
+              status: 'ready',
+              gameId: state.gameId!,
+              timelineId: state.timelineId!,
+            },
+            scenario: state.scenario!,
             authoritative: {
               commandRevision: state.commandRevision!,
               simulationTick: state.simulationTick!,
               streamOffset: state.streamOffset!,
             },
             synchronization: { status: 'synchronized' },
+            persistence,
           }
-        : {}),
-    });
-  });
+        : {
+            session:
+              state.status === 'failed'
+                ? { status: 'failed', message: state.message! }
+                : { status: state.status },
+            synchronization: { status: 'idle' },
+            persistence,
+          };
+    store.setState(freeze(next), true);
+  };
+  const publishPersistence = (
+    next: FoundationApplicationState['persistence'],
+  ) => {
+    persistence = freeze(next);
+    publishTransport(transport.projection.getState());
+  };
+  const remove = transport.projection.subscribe(publishTransport);
   const listSaves = async () => {
     try {
       const classified = await input.repository.list();
@@ -70,21 +84,18 @@ export function createTransportFoundationApplication(input: {
           ? [item.summary]
           : [],
       );
-      set({ persistence: { status: 'idle', saves } });
+      publishPersistence({ status: 'idle', saves });
       return saves;
     } catch (error) {
-      set({
-        persistence: {
-          status: 'failed',
-          saves: store.getState().persistence.saves,
-          message:
-            error instanceof Error ? error.message : 'Persistence failed.',
-        },
+      publishPersistence({
+        status: 'failed',
+        saves: persistence.saves,
+        message: errorMessage(error, 'Persistence failed.'),
       });
       throw error;
     }
   };
-  return Object.freeze({
+  const application = {
     projection: Object.freeze({
       getState: store.getState,
       subscribe: store.subscribe,
@@ -99,35 +110,59 @@ export function createTransportFoundationApplication(input: {
     sendCommand: transport.sendCommand,
     listSaves,
     async save(metadata: Parameters<typeof transport.save>[0]) {
-      set({
-        persistence: {
-          status: 'saving',
-          saves: store.getState().persistence.saves,
-        },
-      });
-      await transport.save(metadata);
-      await listSaves();
+      publishPersistence({ status: 'saving', saves: persistence.saves });
+      try {
+        await transport.save(metadata);
+        await listSaves();
+      } catch (error) {
+        publishPersistence({
+          status: 'failed',
+          saves: persistence.saves,
+          message: errorMessage(error, 'Save failed.'),
+        });
+        throw error;
+      }
     },
     async restore(request: {
       saveId: string;
       newTimelineId: Parameters<typeof transport.restore>[0]['timelineId'];
     }) {
-      set({
-        persistence: {
-          status: 'restoring',
-          saves: store.getState().persistence.saves,
-        },
-      });
-      await transport.restore({
-        saveId: request.saveId,
-        timelineId: request.newTimelineId,
-      });
-      await listSaves();
+      publishPersistence({ status: 'restoring', saves: persistence.saves });
+      try {
+        await transport.restore({
+          saveId: request.saveId,
+          timelineId: request.newTimelineId,
+        });
+        await listSaves();
+      } catch (error) {
+        publishPersistence({
+          status: 'failed',
+          saves: persistence.saves,
+          message: errorMessage(error, 'Restore failed.'),
+        });
+        throw error;
+      }
     },
-    async close() {
+    close() {
+      if (closePromise) return closePromise;
+      closed = true;
       remove();
-      await transport.close();
-      set({ session: { status: 'closed' } });
+      closePromise = (async () => {
+        try {
+          await transport.close();
+        } finally {
+          store.setState(
+            freeze({
+              session: { status: 'closed' },
+              synchronization: { status: 'idle' },
+              persistence,
+            }),
+            true,
+          );
+        }
+      })();
+      return closePromise;
     },
-  });
+  };
+  return Object.freeze(application);
 }

@@ -55,7 +55,7 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
-      'torrevieja-v1@1.0.0#',
+      '1.0.0:torrevieja-v1@1.0.0#',
     );
     cy.window().then(async (win) => {
       await win.navigator.serviceWorker.ready;
@@ -94,8 +94,12 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     let savedTick = 0;
+    let savedCoordinate = '';
     cy.get('[data-testid="worker-tick"]').then(($tick) => {
       savedTick = Number($tick.text().split(': ')[1]);
+    });
+    cy.get('[data-testid="scenario-coordinate"]').then(($coordinate) => {
+      savedCoordinate = $coordinate.text();
     });
     cy.contains('button', 'Save transport session').click();
     cy.get('[data-testid="save-count"]').should('contain.text', '2');
@@ -110,9 +114,17 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
-      'torrevieja-v1@1.0.0#',
+      '1.0.0:torrevieja-v1@1.0.0#',
     );
     cy.get('[data-testid="save-count"]').should('contain.text', '2');
+    let currentTimeline = '';
+    let currentTick = '';
+    cy.get('[data-testid="worker-timeline"]').then(($value) => {
+      currentTimeline = $value.text();
+    });
+    cy.get('[data-testid="worker-tick"]').then(($value) => {
+      currentTick = $value.text();
+    });
     let exactSave: Record<string, unknown>;
     cy.window().then(async (win) => {
       exactSave = await readSave(win, 'foundation-slot');
@@ -127,6 +139,12 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.contains('button', 'Restore manual save').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[role="alert"]').should('contain.text', 'exact saved scenario');
+    cy.get('[data-testid="worker-timeline"]').should(($value) =>
+      expect($value.text()).to.equal(currentTimeline),
+    );
+    cy.get('[data-testid="worker-tick"]').should(($value) =>
+      expect($value.text()).to.equal(currentTick),
+    );
     cy.window().then(async (win) => {
       await writeSave(win, exactSave);
       const mismatch = structuredClone(exactSave) as {
@@ -140,6 +158,12 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.contains('button', 'Restore manual save').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[role="alert"]').should('contain.text', 'exact saved scenario');
+    cy.get('[data-testid="worker-timeline"]').should(($value) =>
+      expect($value.text()).to.equal(currentTimeline),
+    );
+    cy.get('[data-testid="worker-tick"]').should(($value) =>
+      expect($value.text()).to.equal(currentTick),
+    );
     cy.window().then((win) => writeSave(win, exactSave));
     cy.window().then(async (win) => {
       for (const path of [
@@ -158,6 +182,9 @@ describe('built foundation PWA offline lifecycle', () => {
     );
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(savedTick),
+    );
+    cy.get('[data-testid="scenario-coordinate"]').should(($coordinate) =>
+      expect($coordinate.text()).to.equal(savedCoordinate),
     );
     cy.get('[data-testid="command-revision"]').should(
       'have.text',

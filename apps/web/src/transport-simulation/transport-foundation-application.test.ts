@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
   createScenarioCoordinate,
@@ -113,7 +113,7 @@ describe('transport-backed foundation application port', () => {
       scenario,
       repository: Object.freeze({
         ...base,
-        list: async () => Promise.reject(new Error('list failed')),
+        list: async () => Promise.reject('list failed'),
       }),
       createClient: createDirectTransportSimulationClient,
       scenarioResolver: { resolve: async () => scenario },
@@ -123,10 +123,141 @@ describe('transport-backed foundation application port', () => {
       timelineId: parseTimelineId('timeline'),
       initialSimulationTick: 0,
     });
-    await expect(application.listSaves()).rejects.toThrow('list failed');
+    await expect(application.listSaves()).rejects.toBe('list failed');
     expect(application.projection.getState()).toMatchObject({
       session: { status: 'ready' },
-      persistence: { status: 'failed', message: 'list failed' },
+      persistence: { status: 'failed', message: 'Persistence failed.' },
+    });
+    await application.close();
+  });
+
+  it('keeps save failures recoverable with complete immutable projections', async () => {
+    const base = createInMemoryTransportSaveRepository();
+    const application = createTransportFoundationApplication({
+      scenario,
+      repository: Object.freeze({
+        ...base,
+        put: async () => Promise.reject(new Error('put failed')),
+      }),
+      createClient: createDirectTransportSimulationClient,
+      scenarioResolver: { resolve: async () => scenario },
+    });
+    await application.startNew({
+      gameId: parseGameId('game'),
+      timelineId: parseTimelineId('timeline'),
+      initialSimulationTick: 0,
+    });
+    const before = application.projection.getState();
+    await expect(
+      application.save({
+        saveId: 'slot',
+        createdAtUtcMs: 1,
+        updatedAtUtcMs: 1,
+      }),
+    ).rejects.toThrow('put failed');
+    const failed = application.projection.getState();
+    expect(failed).toMatchObject({
+      session: { status: 'ready' },
+      scenario: { scenarioId: 'torrevieja-mini-v1' },
+      authoritative: before.authoritative,
+      persistence: { status: 'failed', saves: [] },
+    });
+    expect(Object.isFrozen(failed)).toBe(true);
+    expect(Object.isFrozen(failed.scenario)).toBe(true);
+    await application.close();
+  });
+
+  it('publishes terminal closed even when transport cleanup rejects', async () => {
+    const direct = createDirectTransportSimulationClient();
+    const close = vi.fn(async () => {
+      await direct.close();
+      throw new Error('close failed');
+    });
+    const application = createTransportFoundationApplication({
+      scenario,
+      repository: createInMemoryTransportSaveRepository(),
+      createClient: () => Object.freeze({ ...direct, close }),
+      scenarioResolver: { resolve: async () => scenario },
+    });
+    await application.startNew({
+      gameId: parseGameId('game'),
+      timelineId: parseTimelineId('timeline'),
+      initialSimulationTick: 0,
+    });
+    const first = application.close();
+    expect(application.close()).toBe(first);
+    await expect(first).rejects.toThrow('cleanup failed');
+    expect(application.projection.getState().session).toEqual({
+      status: 'closed',
+    });
+    expect(application.projection.getState().authoritative).toBeUndefined();
+  });
+
+  it('keeps the old authority usable when restore resolution fails', async () => {
+    const saved = createInMemoryTransportSaveRepository();
+    const application = createTransportFoundationApplication({
+      scenario,
+      repository: saved,
+      createClient: createDirectTransportSimulationClient,
+      scenarioResolver: {
+        resolve: async () => Promise.reject(new Error('scenario missing')),
+      },
+    });
+    await application.startNew({
+      gameId: parseGameId('game'),
+      timelineId: parseTimelineId('current'),
+      initialSimulationTick: 4,
+    });
+    await application.save({
+      saveId: 'slot',
+      createdAtUtcMs: 1,
+      updatedAtUtcMs: 1,
+    });
+    const before = application.projection.getState();
+    await expect(
+      application.restore({
+        saveId: 'slot',
+        newTimelineId: parseTimelineId('replacement'),
+      }),
+    ).rejects.toThrow('scenario missing');
+    expect(application.projection.getState()).toMatchObject({
+      session: before.session,
+      authoritative: before.authoritative,
+      persistence: {
+        status: 'failed',
+        saves: [{ saveId: 'slot' }],
+        message: 'scenario missing',
+      },
+    });
+    await application.close();
+  });
+
+  it('publishes a complete failed session after activation failure', async () => {
+    const direct = createDirectTransportSimulationClient();
+    const application = createTransportFoundationApplication({
+      scenario,
+      repository: createInMemoryTransportSaveRepository(),
+      createClient: () =>
+        Object.freeze({
+          ...direct,
+          connect: async () => Promise.reject('startup failed'),
+        }),
+      scenarioResolver: { resolve: async () => scenario },
+    });
+    await expect(
+      application.startNew({
+        gameId: parseGameId('game'),
+        timelineId: parseTimelineId('timeline'),
+        initialSimulationTick: 0,
+      }),
+    ).rejects.toBe('startup failed');
+    expect(application.projection.getState()).toEqual({
+      session: {
+        status: 'failed',
+        message: 'Transport operation failed.',
+      },
+      synchronization: { status: 'idle' },
+      persistence: { status: 'idle', saves: [] },
     });
     await application.close();
   });

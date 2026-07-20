@@ -77,9 +77,25 @@ export function startTransportWorkerRuntime(
     if (closed) return;
     closed = true;
     endpoint.removeEventListener('message', onMessage);
-    for (const cleanup of cleanups.splice(0)) cleanup();
-    await client?.close();
-    client = undefined;
+    const errors: unknown[] = [];
+    for (const cleanup of cleanups.splice(0))
+      try {
+        cleanup();
+      } catch (error) {
+        errors.push(error);
+      }
+    try {
+      await client?.close();
+    } catch (error) {
+      errors.push(error);
+    } finally {
+      client = undefined;
+    }
+    if (errors.length)
+      throw new AggregateError(
+        errors,
+        'Transport Worker runtime cleanup failed.',
+      );
   };
   const onMessage = (event: { data: unknown }) => {
     if (closed) return;
@@ -94,12 +110,18 @@ export function startTransportWorkerRuntime(
         raw.requestId > 0
           ? raw.requestId
           : undefined;
-      endpoint.postMessage({
-        kind: 'transport-worker-failure',
-        contractVersion: 1,
-        ...(validRequestId === undefined ? {} : { requestId: validRequestId }),
-        message: 'Invalid Transport Worker request.',
-      });
+      try {
+        endpoint.postMessage({
+          kind: 'transport-worker-failure',
+          contractVersion: 1,
+          ...(validRequestId === undefined
+            ? {}
+            : { requestId: validRequestId }),
+          message: 'Invalid Transport Worker request.',
+        });
+      } catch {
+        operationQueue = operationQueue.then(shutdown, shutdown);
+      }
       return;
     }
     const requestId = request.requestId;
@@ -227,6 +249,22 @@ export function createWorkerTransportSimulationClient(input: {
         /* isolated */
       }
   };
+  const failTerminal = (error: Error) => {
+    closed = true;
+    for (const entry of pending.values()) entry.reject(error);
+    pending.clear();
+    authority = undefined;
+    reliable.clear();
+    render.clear();
+    publishLifecycle({
+      state: 'failed',
+      code: 'invalid-worker-message',
+      message: error.message,
+    });
+    worker?.removeEventListener('message', onMessage);
+    worker?.terminate();
+    worker = undefined;
+  };
   const post = (operation: Operation, payload: unknown) => {
     if (!worker || (closed && operation !== 'close'))
       return Promise.reject(new Error('Transport Worker client is closed.'));
@@ -255,16 +293,7 @@ export function createWorkerTransportSimulationClient(input: {
       message = parseTransportWorkerResponse(event.data);
     } catch {
       const error = new Error('Transport Worker returned an invalid message.');
-      for (const entry of pending.values()) entry.reject(error);
-      pending.clear();
-      publishLifecycle({
-        state: 'failed',
-        code: 'invalid-worker-message',
-        message: error.message,
-      });
-      worker?.removeEventListener('message', onMessage);
-      worker?.terminate();
-      worker = undefined;
+      failTerminal(error);
       return;
     }
     if (message.kind === 'transport-worker-publication') {
@@ -296,7 +325,13 @@ export function createWorkerTransportSimulationClient(input: {
     const requestId = message.requestId;
     if (requestId === undefined) return;
     const entry = pending.get(requestId);
-    if (!entry || entry.operation !== message.operation) return;
+    if (!entry) return;
+    if (entry.operation !== message.operation) {
+      failTerminal(
+        new Error('Transport Worker response operation did not match request.'),
+      );
+      return;
+    }
     pending.delete(requestId);
     if (message.kind === 'transport-worker-failure')
       entry.reject(new Error(message.message));

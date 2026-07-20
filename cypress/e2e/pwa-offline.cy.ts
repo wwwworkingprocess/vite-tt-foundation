@@ -107,6 +107,38 @@ describe('built foundation PWA offline lifecycle', () => {
       'have.text',
       'Persistence status: idle',
     );
+    cy.get('select').select('torrevieja-mini-v1');
+    cy.get('[data-testid="active-scenario"]').should(
+      'contain.text',
+      'torrevieja-v1',
+    );
+    cy.contains('button', 'Close transport Worker').click();
+    cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
+    cy.contains('button', 'Start new transport session').click();
+    cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
+    cy.get('[data-testid="scenario-coordinate"]').should(
+      'contain.text',
+      'torrevieja-mini-v1@1.0.0#',
+    );
+    cy.contains('button', /^Normal /).click();
+    cy.get('[data-testid="worker-tick"]').should(($tick) =>
+      expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0),
+    );
+    cy.contains('button', 'Pause').click();
+    let miniSavedTick = 0;
+    let miniSavedCoordinate = '';
+    cy.get('[data-testid="worker-tick"]').then(($tick) => {
+      miniSavedTick = Number($tick.text().split(': ')[1]);
+    });
+    cy.get('[data-testid="scenario-coordinate"]').then(($coordinate) => {
+      miniSavedCoordinate = $coordinate.text();
+    });
+    cy.contains('label', 'Autosave').find('input').check();
+    cy.contains('button', 'Save autosave now').click();
+    cy.get('[data-testid="autosave-availability"]').should(
+      'contain.text',
+      'available',
+    );
     cy.contains('button', 'Close transport Worker').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
     cy.then(() => network(true));
@@ -116,7 +148,7 @@ describe('built foundation PWA offline lifecycle', () => {
       'contain.text',
       '1.0.0:torrevieja-v1@1.0.0#',
     );
-    cy.get('[data-testid="save-count"]').should('contain.text', '2');
+    cy.get('[data-testid="save-count"]').should('contain.text', '3');
     let currentTimeline = '';
     let currentTick = '';
     cy.get('[data-testid="worker-timeline"]').then(($value) => {
@@ -203,9 +235,32 @@ describe('built foundation PWA offline lifecycle', () => {
       'have.text',
       'Bonus ticks remaining: 0',
     );
+    cy.contains('label', 'Autosave').find('input').check();
+    cy.contains('button', 'Restore autosave').click();
+    cy.get('[data-testid="worker-tick"]').should(($tick) =>
+      expect(Number($tick.text().split(': ')[1])).to.equal(miniSavedTick),
+    );
+    cy.get('[data-testid="scenario-coordinate"]').should(($coordinate) =>
+      expect($coordinate.text()).to.equal(miniSavedCoordinate),
+    );
+    cy.get('[data-testid="command-revision"]').should(
+      'have.text',
+      'Command revision: 0',
+    );
+    cy.get('[data-testid="stream-offset"]').should(
+      'have.text',
+      'Stream offset: 0',
+    );
+    cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
+    cy.get('[data-testid="pacing-credit"]').should(
+      'have.text',
+      'Pacing credit: 0',
+    );
     cy.contains('button', 'Normal 20×').click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
-      expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(savedTick),
+      expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(
+        miniSavedTick,
+      ),
     );
     cy.contains('button', 'Close transport Worker').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');

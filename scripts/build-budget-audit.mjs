@@ -95,15 +95,25 @@ if (requiredIcons.size)
   throw new Error(
     `Built manifest is missing install icons: ${[...requiredIcons.keys()].join(', ')}`,
   );
-for (const scenarioAsset of [
-  'scenarios/catalog.json',
-  'scenarios/torrevieja-v1/scenario.json',
-  'scenarios/torrevieja-v1/settlements.json',
-  'scenarios/torrevieja-v1/stops.json',
-  'scenarios/torrevieja-v1/routes.json',
-  'scenarios/torrevieja-v1/presentation.json',
-  'scenarios/torrevieja-v1/provenance.json',
-])
+const catalogueAsset = 'scenarios/catalog.json';
+const catalogue = JSON.parse(
+  await readFile(new URL(catalogueAsset, dist), 'utf8'),
+);
+const scenarioAssets = [catalogueAsset];
+for (const descriptor of catalogue.scenarios ?? []) {
+  const manifestAsset = `scenarios/${descriptor.manifestPath}`;
+  const scenarioManifest = JSON.parse(
+    await readFile(new URL(manifestAsset, dist), 'utf8'),
+  );
+  scenarioAssets.push(manifestAsset);
+  const scenarioDirectory = manifestAsset.slice(
+    0,
+    manifestAsset.lastIndexOf('/') + 1,
+  );
+  for (const asset of Object.values(scenarioManifest.assets ?? {}))
+    scenarioAssets.push(`${scenarioDirectory}${asset.path}`);
+}
+for (const scenarioAsset of scenarioAssets)
   if (!serviceWorkerSource.includes(`url:${JSON.stringify(scenarioAsset)}`))
     throw new Error(`Service Worker does not precache ${scenarioAsset}.`);
 console.log(

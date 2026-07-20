@@ -10,6 +10,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reportsDirectory: '../../coverage/web-simulation-host',
+      reporter: ['text', 'json'],
       include: [
         'src/simulation-host/**/*.ts',
         'src/simulation-worker/**/*.ts',

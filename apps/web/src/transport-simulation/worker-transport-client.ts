@@ -43,16 +43,22 @@ export interface TransportWorkerEndpoint {
     type: 'message',
     listener: (event: { data: unknown }) => void,
   ): void;
+  reportError?(error: unknown): void;
 }
+type TransportWorkerEvent = Readonly<{
+  data: unknown;
+  error?: unknown;
+  message?: string;
+}>;
 export interface TransportWorkerLike {
   postMessage(message: TransportWorkerRequest): void;
   addEventListener(
-    type: 'message',
-    listener: (event: { data: unknown }) => void,
+    type: 'message' | 'error' | 'messageerror',
+    listener: (event: TransportWorkerEvent) => void,
   ): void;
   removeEventListener(
-    type: 'message',
-    listener: (event: { data: unknown }) => void,
+    type: 'message' | 'error' | 'messageerror',
+    listener: (event: TransportWorkerEvent) => void,
   ): void;
   terminate(): void;
 }
@@ -168,7 +174,7 @@ export function startTransportWorkerRuntime(
             } catch (closeError) {
               cleanupErrors.push(closeError);
             } finally {
-              if (client === next) client = undefined;
+              client = undefined;
             }
             throw cleanupErrors.length
               ? new AggregateError(
@@ -188,15 +194,41 @@ export function startTransportWorkerRuntime(
         } else if (request.operation === 'export-snapshot') {
           if (!client) throw new Error('Transport Worker is not connected.');
           payload = await client.exportSnapshot();
-        } else if (request.operation === 'close') {
-          await shutdown();
-          endpoint.postMessage({
-            kind: 'transport-worker-result',
-            contractVersion: 1,
-            requestId,
-            operation: 'close',
-            payload: null,
-          });
+        } else {
+          let cleanupError: unknown;
+          try {
+            await shutdown();
+          } catch (error) {
+            cleanupError = error;
+          }
+          try {
+            endpoint.postMessage(
+              cleanupError === undefined
+                ? {
+                    kind: 'transport-worker-result',
+                    contractVersion: 1,
+                    requestId,
+                    operation: 'close',
+                    payload: null,
+                  }
+                : {
+                    kind: 'transport-worker-failure',
+                    contractVersion: 1,
+                    requestId,
+                    operation: 'close',
+                    message: errorMessage(cleanupError),
+                  },
+            );
+          } catch (postError) {
+            endpoint.reportError?.(
+              cleanupError === undefined
+                ? postError
+                : new AggregateError(
+                    [cleanupError, postError],
+                    'Transport Worker close reporting failed.',
+                  ),
+            );
+          }
           return;
         }
         endpoint.postMessage({
@@ -207,18 +239,17 @@ export function startTransportWorkerRuntime(
           payload,
         });
       } catch (error) {
-        if (!closed)
-          try {
-            endpoint.postMessage({
-              kind: 'transport-worker-failure',
-              contractVersion: 1,
-              requestId,
-              operation,
-              message: errorMessage(error),
-            });
-          } catch {
-            await shutdown();
-          }
+        try {
+          endpoint.postMessage({
+            kind: 'transport-worker-failure',
+            contractVersion: 1,
+            requestId,
+            operation,
+            message: errorMessage(error),
+          });
+        } catch {
+          await shutdown();
+        }
       }
     });
   };
@@ -253,6 +284,7 @@ export function createWorkerTransportSimulationClient(input: {
     (state: TransportClientLifecycle) => void
   >();
   let registrationSequence = 0;
+  let terminalFailurePublished = false;
   const publishLifecycle = (next: TransportClientLifecycle) => {
     lifecycle = freeze(next);
     for (const listener of [...lifecycleListeners.values()])
@@ -262,21 +294,47 @@ export function createWorkerTransportSimulationClient(input: {
         /* isolated */
       }
   };
-  const failTerminal = (error: Error) => {
-    closed = true;
-    for (const entry of pending.values()) entry.reject(error);
+  const workerError = (event: TransportWorkerEvent) =>
+    event.error instanceof Error
+      ? event.error
+      : new Error(event.message ?? 'Transport Worker failed.');
+  const cleanupWorker = (pendingError: Error) => {
+    const errors: unknown[] = [];
+    const current = worker;
+    worker = undefined;
+    if (current) {
+      for (const [type, listener] of [
+        ['message', onMessage],
+        ['error', onError],
+        ['messageerror', onMessageError],
+      ] as const)
+        try {
+          current.removeEventListener(type, listener);
+        } catch (error) {
+          errors.push(error);
+        }
+      try {
+        current.terminate();
+      } catch (error) {
+        errors.push(error);
+      }
+    }
+    for (const entry of pending.values()) entry.reject(pendingError);
     pending.clear();
     authority = undefined;
     reliable.clear();
     render.clear();
+    return errors;
+  };
+  const failTerminal = (error: Error) => {
+    closed = true;
+    terminalFailurePublished = true;
+    cleanupWorker(error);
     publishLifecycle({
       state: 'failed',
       code: 'invalid-worker-message',
       message: error.message,
     });
-    worker?.removeEventListener('message', onMessage);
-    worker?.terminate();
-    worker = undefined;
   };
   const post = (operation: Operation, payload: unknown) => {
     if (!worker || (closed && operation !== 'close'))
@@ -348,9 +406,17 @@ export function createWorkerTransportSimulationClient(input: {
     pending.delete(requestId);
     if (message.kind === 'transport-worker-failure')
       entry.reject(new Error(message.message));
-    else if ('payload' in message)
-      entry.resolve(freeze(structuredClone(message.payload)));
+    else entry.resolve(freeze(structuredClone(message.payload)));
   };
+  const onError = (event: TransportWorkerEvent) => {
+    const error = workerError(event);
+    if (closed) {
+      cleanupWorker(error);
+      return;
+    }
+    failTerminal(error);
+  };
+  const onMessageError = (event: TransportWorkerEvent) => onError(event);
   const subscribe = <T>(
     map: Map<number, (value: T) => void>,
     listener: (value: T) => void,
@@ -380,6 +446,8 @@ export function createWorkerTransportSimulationClient(input: {
       publishLifecycle({ state: 'connecting' });
       try {
         worker = input.workerFactory();
+        worker.addEventListener('error', onError);
+        worker.addEventListener('messageerror', onMessageError);
         worker.addEventListener('message', onMessage);
         authority = nextAuthority;
         await post('connect', structuredClone(request));
@@ -390,15 +458,15 @@ export function createWorkerTransportSimulationClient(input: {
           scenario: createScenarioCoordinate(authority.scenario),
         });
       } catch (error) {
-        worker?.removeEventListener('message', onMessage);
-        worker?.terminate();
-        worker = undefined;
-        authority = undefined;
-        publishLifecycle({
-          state: 'failed',
-          code: 'worker-startup-failed',
-          message: errorMessage(error),
-        });
+        cleanupWorker(
+          error instanceof Error ? error : new Error(errorMessage(error)),
+        );
+        if (!terminalFailurePublished)
+          publishLifecycle({
+            state: 'failed',
+            code: 'worker-startup-failed',
+            message: errorMessage(error),
+          });
         throw error;
       }
     },
@@ -431,21 +499,27 @@ export function createWorkerTransportSimulationClient(input: {
       if (closePromise) return closePromise;
       closed = true;
       closePromise = (async () => {
+        let primaryError: unknown;
         try {
           if (worker) await post('close', null);
-        } finally {
-          for (const entry of pending.values())
-            entry.reject(new Error('Transport Worker client closed.'));
-          pending.clear();
-          worker?.removeEventListener('message', onMessage);
-          worker?.terminate();
-          worker = undefined;
-          authority = undefined;
-          reliable.clear();
-          render.clear();
-          publishLifecycle({ state: 'closed' });
-          lifecycleListeners.clear();
+        } catch (error) {
+          primaryError = error;
         }
+        const cleanupErrors = cleanupWorker(
+          new Error('Transport Worker client closed.'),
+        );
+        publishLifecycle({ state: 'closed' });
+        lifecycleListeners.clear();
+        if (primaryError !== undefined || cleanupErrors.length)
+          throw new AggregateError(
+            [
+              ...(primaryError === undefined ? [] : [primaryError]),
+              ...cleanupErrors,
+            ],
+            primaryError instanceof Error
+              ? primaryError.message
+              : 'Transport Worker client cleanup failed.',
+          );
       })();
       return closePromise;
     },

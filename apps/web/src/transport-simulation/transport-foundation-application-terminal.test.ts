@@ -6,6 +6,7 @@ import { parseGameId, parseTimelineId } from '@torrevieja-tycoon/protocol';
 import { createDirectTransportSimulationClient } from './transport-client.js';
 import { createTransportFoundationApplication } from './transport-foundation-application.js';
 import type { TransportSaveRepository } from './transport-save-repository.js';
+import { createInMemoryTransportSaveRepository } from './transport-save-repository.js';
 
 const fixture = join(
   import.meta.dirname,
@@ -144,6 +145,119 @@ describe('terminal transport foundation application', () => {
       expect(application.projection.getState()).toBe(closedState);
       expect(listener).not.toHaveBeenCalled();
       remove();
+    },
+  );
+
+  it.each(['resolve', 'reject'] as const)(
+    'normalizes terminal persistence when a pending save %s',
+    async (completion) => {
+      const backing = createInMemoryTransportSaveRepository();
+      let releasePut!: () => void;
+      let enteredPut!: () => void;
+      const putGate = new Promise<void>((resolve) => {
+        releasePut = resolve;
+      });
+      const putEntered = new Promise<void>((resolve) => {
+        enteredPut = resolve;
+      });
+      let delayPut = false;
+      const repository: TransportSaveRepository = Object.freeze({
+        ...backing,
+        async put(record: Parameters<typeof backing.put>[0]) {
+          if (delayPut) {
+            enteredPut();
+            await putGate;
+            if (completion === 'reject') throw new Error('late save failed');
+          }
+          await backing.put(record);
+        },
+      });
+      const application = createTransportFoundationApplication({
+        scenario: canonicalScenario(),
+        repository,
+        createClient: createDirectTransportSimulationClient,
+        scenarioResolver: { resolve: async () => canonicalScenario() },
+      });
+      await application.startNew({
+        gameId: parseGameId('game'),
+        timelineId: parseTimelineId('timeline'),
+        initialSimulationTick: 4,
+      });
+      delayPut = true;
+      const saving = application.save({
+        saveId: 'slot',
+        createdAtUtcMs: 1,
+        updatedAtUtcMs: 1,
+      });
+      await putEntered;
+      const closing = application.close();
+      releasePut();
+      if (completion === 'resolve')
+        await expect(saving).rejects.toThrow('closed');
+      else await expect(saving).rejects.toThrow('late save failed');
+      await closing;
+      expect(application.projection.getState()).toEqual({
+        session: { status: 'closed' },
+        synchronization: { status: 'idle' },
+        persistence: { status: 'idle', saves: [] },
+      });
+    },
+  );
+
+  it.each(['resolve', 'reject'] as const)(
+    'normalizes terminal persistence when a pending restore %s',
+    async (completion) => {
+      const repository = createInMemoryTransportSaveRepository();
+      let resolveScenario!: (
+        value: ReturnType<typeof canonicalScenario>,
+      ) => void;
+      let rejectScenario!: (reason: unknown) => void;
+      let delayResolution = false;
+      const application = createTransportFoundationApplication({
+        scenario: canonicalScenario(),
+        repository,
+        createClient: createDirectTransportSimulationClient,
+        scenarioResolver: {
+          resolve: () =>
+            delayResolution
+              ? new Promise((resolve, reject) => {
+                  resolveScenario = resolve;
+                  rejectScenario = reject;
+                })
+              : Promise.resolve(canonicalScenario()),
+        },
+      });
+      await application.startNew({
+        gameId: parseGameId('game'),
+        timelineId: parseTimelineId('timeline'),
+        initialSimulationTick: 4,
+      });
+      await application.save({
+        saveId: 'slot',
+        createdAtUtcMs: 1,
+        updatedAtUtcMs: 1,
+      });
+      delayResolution = true;
+      const restoring = application.restore({
+        saveId: 'slot',
+        newTimelineId: parseTimelineId('restored'),
+      });
+      await vi.waitFor(() => expect(resolveScenario).toBeTypeOf('function'));
+      const closing = application.close();
+      if (completion === 'resolve') resolveScenario(canonicalScenario());
+      else rejectScenario(new Error('late restore failed'));
+      await expect(restoring).rejects.toThrow(
+        completion === 'resolve' ? 'stale' : 'late restore failed',
+      );
+      await closing;
+      expect(application.projection.getState()).toEqual({
+        session: { status: 'closed' },
+        synchronization: { status: 'idle' },
+        persistence: {
+          status: 'idle',
+          saves: [expect.objectContaining({ saveId: 'slot' })],
+        },
+      });
     },
   );
 });

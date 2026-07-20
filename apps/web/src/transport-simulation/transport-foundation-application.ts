@@ -45,7 +45,6 @@ export function createTransportFoundationApplication(input: {
     if (closed) throw closedError();
   };
   const publishTransport = (state: TransportApplicationProjection) => {
-    if (closed && state.status !== 'closed') return;
     const next: FoundationApplicationState =
       state.status === 'ready'
         ? {
@@ -76,7 +75,6 @@ export function createTransportFoundationApplication(input: {
   const publishPersistence = (
     next: FoundationApplicationState['persistence'],
   ) => {
-    if (closed) return;
     persistence = freeze(next);
     publishTransport(transport.projection.getState());
   };
@@ -167,6 +165,7 @@ export function createTransportFoundationApplication(input: {
         try {
           await transport.close();
         } finally {
+          persistence = freeze({ status: 'idle', saves: persistence.saves });
           store.setState(
             freeze({
               session: { status: 'closed' },

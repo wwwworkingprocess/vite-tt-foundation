@@ -177,12 +177,6 @@ export function createScenarioLoader(input: {
         );
       decoded.set(name, decode(text, name));
     }
-    for (const required of ['settlements', 'stops', 'routes'])
-      if (!decoded.has(required))
-        throw new ScenarioDomainError(
-          'malformed-asset',
-          `missing required asset ${required}`,
-        );
     const scenario = parseScenarioPackage({
       manifest,
       settlements: decoded.get('settlements'),

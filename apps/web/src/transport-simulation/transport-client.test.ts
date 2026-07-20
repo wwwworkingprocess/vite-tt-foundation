@@ -49,6 +49,10 @@ const scenario = () =>
   });
 const createLoopbackWorker = (): TransportWorkerLike => {
   const workerListeners = new Set<(event: { data: unknown }) => void>();
+  const workerErrorListeners = new Set<(event: { data: unknown }) => void>();
+  const workerMessageErrorListeners = new Set<
+    (event: { data: unknown }) => void
+  >();
   const runtimeListeners = new Set<(event: { data: unknown }) => void>();
   const endpoint: TransportWorkerEndpoint = {
     postMessage(message) {
@@ -69,11 +73,21 @@ const createLoopbackWorker = (): TransportWorkerLike => {
           listener({ data: cloned });
       });
     },
-    addEventListener: (_type, listener) => workerListeners.add(listener),
-    removeEventListener: (_type, listener) => workerListeners.delete(listener),
+    addEventListener: (type, listener) => {
+      if (type === 'message') workerListeners.add(listener);
+      else if (type === 'error') workerErrorListeners.add(listener);
+      else workerMessageErrorListeners.add(listener);
+    },
+    removeEventListener: (type, listener) => {
+      if (type === 'message') workerListeners.delete(listener);
+      else if (type === 'error') workerErrorListeners.delete(listener);
+      else workerMessageErrorListeners.delete(listener);
+    },
     terminate() {
       void runtime.close();
       workerListeners.clear();
+      workerErrorListeners.clear();
+      workerMessageErrorListeners.clear();
     },
   };
 };

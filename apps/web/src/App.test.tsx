@@ -9,6 +9,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
+import { useRef } from 'react';
 
 const fixture = join(
   import.meta.dirname,
@@ -30,14 +31,20 @@ const scenario = parseScenarioPackage({
   presentation: json('presentation.json'),
   provenance: json('provenance.json'),
 });
-const alternateScenario = {
-  ...scenario,
-  manifest: {
-    ...scenario.manifest,
-    scenarioId: 'scenario-b',
-    contentHash: 'b'.repeat(64),
-  },
-} as typeof scenario;
+const alternate = (name: string) =>
+  JSON.parse(
+    JSON.stringify(json(name)).replaceAll('torrevieja-mini-v1', 'scenario-b'),
+  ) as Record<string, unknown>;
+const alternateManifest = alternate('scenario.json');
+alternateManifest.contentHash = 'b'.repeat(64);
+const alternateScenario = parseScenarioPackage({
+  manifest: alternateManifest,
+  settlements: alternate('settlements.json'),
+  stops: alternate('stops.json'),
+  routes: alternate('routes.json'),
+  presentation: alternate('presentation.json'),
+  provenance: alternate('provenance.json'),
+});
 
 vi.mock('./scenarios/ScenarioPanel.js', () => ({
   ScenarioPanel: ({
@@ -45,7 +52,11 @@ vi.mock('./scenarios/ScenarioPanel.js', () => ({
   }: {
     onScenarioReady(value: typeof scenario): void;
   }) => {
-    queueMicrotask(() => onScenarioReady(scenario));
+    const emitted = useRef(false);
+    if (!emitted.current) {
+      emitted.current = true;
+      queueMicrotask(() => onScenarioReady(scenario));
+    }
     return (
       <div>
         Scenario fixture
@@ -63,6 +74,9 @@ vi.mock('./transport-simulation/browser-transport-worker.js', async () => {
   return {
     createBrowserTransportWorker: () => {
       const clientListeners = new Set<(event: { data: unknown }) => void>();
+      const clientErrorListeners = new Set<
+        (event: { data: unknown; error?: unknown }) => void
+      >();
       const runtimeListeners = new Set<(event: { data: unknown }) => void>();
       const runtime = startTransportWorkerRuntime({
         postMessage: (message) =>
@@ -83,13 +97,19 @@ vi.mock('./transport-simulation/browser-transport-worker.js', async () => {
             ),
           ),
         addEventListener: (
-          _type: 'message',
-          listener: (event: { data: unknown }) => void,
-        ) => clientListeners.add(listener),
+          type: 'message' | 'error' | 'messageerror',
+          listener: (event: { data: unknown; error?: unknown }) => void,
+        ) => {
+          if (type === 'message') clientListeners.add(listener);
+          else clientErrorListeners.add(listener);
+        },
         removeEventListener: (
-          _type: 'message',
-          listener: (event: { data: unknown }) => void,
-        ) => clientListeners.delete(listener),
+          type: 'message' | 'error' | 'messageerror',
+          listener: (event: { data: unknown; error?: unknown }) => void,
+        ) => {
+          if (type === 'message') clientListeners.delete(listener);
+          else clientErrorListeners.delete(listener);
+        },
         terminate: () => void runtime.close(),
       };
     },
@@ -153,10 +173,29 @@ describe('foundation screen', () => {
     );
     const timeline = screen.getByTestId('worker-timeline').textContent;
     fireEvent.click(screen.getByRole('button', { name: 'Select scenario B' }));
+    expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
+      'scenario-b',
+    );
+    expect(screen.getByTestId('active-scenario')).toHaveTextContent(
+      'torrevieja-mini-v1',
+    );
     expect(screen.getByTestId('worker-status')).toHaveTextContent('ready');
     expect(screen.getByTestId('worker-timeline').textContent).toBe(timeline);
     expect(screen.getByTestId('scenario-coordinate')).toHaveTextContent(
       'torrevieja-mini-v1',
     );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Close transport Worker' }),
+    );
+    const start = await screen.findByRole('button', {
+      name: 'Start new transport session',
+    });
+    fireEvent.click(start);
+    await waitFor(() =>
+      expect(screen.getByTestId('active-scenario')).toHaveTextContent(
+        'scenario-b',
+      ),
+    );
+    expect(screen.getByTestId('worker-status')).toHaveTextContent('ready');
   });
 });

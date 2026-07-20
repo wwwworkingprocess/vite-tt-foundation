@@ -39,6 +39,24 @@ after full synchronization and snapshot export, while generation, client,
 timeline, and terminal-close guards prevent stale completions from changing
 the current projection.
 
+Closing normalizes application persistence to `idle` while retaining the last
+immutable save summaries. Transient `saving` and `restoring` states never
+survive in the terminal projection, and late persistence completions cannot
+publish after the single terminal transition.
+
+## Temporary multi-scenario acceptance data
+
+`torrevieja-mini-v1` is a temporary, real-data-derived development/test
+scenario promoted from the canonical Phase 4A graph fixture. It is not a
+second completed city network and will be replaced when another curated
+settlement is available. During Phase 4B hardening, both public packages are
+pre-cached so exact cross-scenario restores can be exercised offline.
+
+The intended scaling policy is to pre-cache the catalogue and default scenario
+while runtime-caching additional selected scenarios. That transition is
+deferred; the current two-package precache is deliberate acceptance evidence,
+not the long-term distribution policy.
+
 ## Template separation
 
 `foundation-template.json` remains the domain-free Phase 3 template contract.

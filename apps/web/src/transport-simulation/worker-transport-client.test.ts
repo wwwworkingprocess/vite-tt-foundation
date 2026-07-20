@@ -568,7 +568,7 @@ describe('transport Worker boundary failures', () => {
         variant === 'malformed-payload' ? 'invalid message' : 'did not match',
       );
       expect(client.getLifecycle()).toMatchObject({ state: 'failed' });
-      expect(remove).toHaveBeenCalledOnce();
+      expect(remove).toHaveBeenCalledTimes(3);
       expect(terminate).toHaveBeenCalledOnce();
       expect(() => client.subscribeReliableUpdates(() => undefined)).toThrow(
         'closed',

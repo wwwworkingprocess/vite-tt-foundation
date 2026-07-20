@@ -7,6 +7,22 @@
     "transportClientContract": 1,
     "transportWorkerContract": 1
   },
+  "criticalCoverage": {
+    "statements": 95,
+    "lines": 95,
+    "functions": 95,
+    "branches": 95,
+    "files": [
+      "apps/web/src/transport-simulation/transport-controller.ts",
+      "apps/web/src/transport-simulation/transport-foundation-application.ts",
+      "apps/web/src/transport-simulation/transport-client.ts",
+      "apps/web/src/transport-simulation/worker-transport-client.ts",
+      "apps/web/src/transport-simulation/transport-worker-wire.ts",
+      "apps/web/src/transport-simulation/transport-save-record.ts",
+      "apps/web/src/transport-simulation/transport-save-repository.ts",
+      "apps/web/src/scenarios/scenario-loader.ts"
+    ]
+  },
   "buildBudgetsBytes": {
     "applicationEntry": 440000,
     "representation": 1200000,

@@ -1,0 +1,218 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-mini-v1",
+  "stopPlaces": [],
+  "stopNodes": [
+    {
+      "stopNodeId": "tv-stop-0053",
+      "stopPlaceId": null,
+      "settlementId": "torrevieja",
+      "name": "Avda. Alemania (Esq. Europeos)",
+      "position": {
+        "latitude": 38.0207066,
+        "longitude": -0.6541589
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/5034179723",
+          "sourceRef": "418"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989118",
+          "sourceRef": "418"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.882
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0065",
+      "stopPlaceId": null,
+      "settlementId": "torrevieja",
+      "name": "Av. de los Daneses (Petanca)",
+      "position": {
+        "latitude": 38.0236326,
+        "longitude": -0.6547415
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10204987911",
+          "sourceRef": "422"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987912",
+          "sourceRef": "422"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.439
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0066",
+      "stopPlaceId": null,
+      "settlementId": "torrevieja",
+      "name": "Avenida de los Europeos",
+      "position": {
+        "latitude": 38.0205325,
+        "longitude": -0.6551851
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3240915584",
+          "sourceRef": "423"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987910",
+          "sourceRef": "423"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.302
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0067",
+      "stopPlaceId": null,
+      "settlementId": "torrevieja",
+      "name": "Avda.del Mar",
+      "position": {
+        "latitude": 38.0278659,
+        "longitude": -0.6552697
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10202357044",
+          "sourceRef": "420"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987914",
+          "sourceRef": "420"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 2.147
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0078",
+      "stopPlaceId": null,
+      "settlementId": "torrevieja",
+      "name": "Avda. Virgen del Carmen",
+      "position": {
+        "latitude": 38.0249407,
+        "longitude": -0.6549414
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10202357045",
+          "sourceRef": "419"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987915",
+          "sourceRef": "419"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.895
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0093",
+      "stopPlaceId": null,
+      "settlementId": "torrevieja",
+      "name": "Calle Mayor - Encarnación Puchol",
+      "position": {
+        "latitude": 38.0270112,
+        "longitude": -0.6541129
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3240956611",
+          "sourceRef": "421"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989117",
+          "sourceRef": "421"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 2.672
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0108",
+      "stopPlaceId": null,
+      "settlementId": "torrevieja",
+      "name": "Centro de Salud La Mata",
+      "position": {
+        "latitude": 38.0182751,
+        "longitude": -0.6587336
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3240949320",
+          "sourceRef": "417"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989119",
+          "sourceRef": "417"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 8.929
+      }
+    }
+  ]
+}
+

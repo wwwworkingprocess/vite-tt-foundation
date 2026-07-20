@@ -160,6 +160,14 @@ export function App() {
               ? `${application.scenario.scenarioSchemaVersion}:${application.scenario.scenarioId}@${application.scenario.scenarioVersion}#${application.scenario.contentHash}`
               : 'pending'}
           </p>
+          <p data-testid="selected-scenario">
+            Selected scenario:{' '}
+            {selectedScenario?.manifest.scenarioId ?? 'pending'}
+          </p>
+          <p data-testid="active-scenario">
+            Active authoritative scenario:{' '}
+            {application?.scenario?.scenarioId ?? 'pending'}
+          </p>
           <div aria-label="Foundation pacing controls">
             <button
               disabled={!ready}

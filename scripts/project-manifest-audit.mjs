@@ -13,6 +13,13 @@ const manifest = z
       transportClientContract: z.number().int().positive(),
       transportWorkerContract: z.number().int().positive(),
     }),
+    criticalCoverage: z.strictObject({
+      statements: z.literal(95),
+      lines: z.literal(95),
+      functions: z.literal(95),
+      branches: z.literal(95),
+      files: z.array(z.string().min(1)).length(8),
+    }),
     buildBudgetsBytes: z.strictObject({
       applicationEntry: z.number().int().positive(),
       representation: z.number().int().positive(),

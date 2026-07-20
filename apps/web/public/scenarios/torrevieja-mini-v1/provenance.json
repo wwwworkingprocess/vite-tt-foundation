@@ -1,0 +1,7 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-mini-v1",
+  "purpose": "Small real-data TDD fixture extracted from the Torrevieja canonical stops and two contiguous A2 direction slices.",
+  "sourceScenarioId": "torrevieja-v1"
+}
+

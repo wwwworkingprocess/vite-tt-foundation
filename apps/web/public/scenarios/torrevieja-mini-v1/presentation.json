@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-mini-v1",
+  "title": "Torrevieja Mini — Test Scenario",
+  "initialView": {
+    "center": {
+      "latitude": 37.9849994,
+      "longitude": -0.6887842
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "legacy-A2": {
+      "label": "A2",
+      "color": "#2c7fb8"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

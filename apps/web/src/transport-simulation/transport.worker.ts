@@ -14,4 +14,5 @@ startTransportWorkerRuntime({
       'message',
       listener as (event: MessageEvent) => void,
     ),
+  reportError: (error) => scope.reportError(error),
 });

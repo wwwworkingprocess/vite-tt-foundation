@@ -100,9 +100,15 @@ network curation and source-data reconciliation remain external tasks.
 
 ### Goal and status
 
-In progress: bind a selected canonical scenario and derived graph to one
-authoritative timeline, preserve its exact coordinate through compact transport
-snapshots and saves, and retain direct/clone-boundary and restore semantics.
+Freeze-candidate hardening: a selected canonical scenario and derived graph are
+bound to one authoritative timeline, with exact coordinates preserved through
+compact transport snapshots and saves. Direct/clone-boundary/Worker lifecycle,
+cross-scenario restore, and root/subpath offline behavior now have dedicated
+behavioral evidence and critical-file coverage gates.
+
+The temporary Torrevieja Mini test scenario exists only to prove multi-scenario
+selection, authority, persistence, and offline restore behavior. This remains
+Phase 4B hardening rather than Phase 4C mechanics.
 
 Tick remains the only dynamic state. Vehicles, movement, services, passengers,
 capacity, economics, and other mechanics are deferred to later phases.

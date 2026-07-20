@@ -118,6 +118,7 @@ it('classifies raw IndexedDB legacy, corruption, and future data on get and list
     legacy,
     { saveId: 'corrupt', kind: 'transport-save-record', schemaVersion: 1 },
     { saveId: 'future', kind: 'transport-save-record', schemaVersion: 3 },
+    { saveId: 'unrelated', kind: 'another-product', schemaVersion: 99 },
   ]);
   database.close();
   const repository = createDexieTransportSaveRepository(
@@ -132,11 +133,15 @@ it('classifies raw IndexedDB legacy, corruption, and future data on get and list
   await expect(repository.get('future')).resolves.toMatchObject({
     classification: 'unsupported-future',
   });
+  await expect(repository.get('unrelated')).resolves.toEqual({
+    classification: 'unrelated',
+  });
   expect(await repository.list()).toEqual(
     expect.arrayContaining([
       expect.objectContaining({ classification: 'legacy-foundation' }),
       expect.objectContaining({ classification: 'malformed-known' }),
       expect.objectContaining({ classification: 'unsupported-future' }),
+      expect.objectContaining({ classification: 'unrelated' }),
     ]),
   );
   await repository.close();
@@ -147,11 +152,17 @@ it('validates repository construction and classifies seeded legacy data', async 
   expect(() => createDexieTransportSaveRepository(' ')).toThrow('required');
   const repository = createInMemoryTransportSaveRepository([
     legacy,
+    { saveId: 'unrelated', kind: 'another-product' },
+    null,
+    [],
     {},
     { saveId: 1 },
   ]);
-  expect(await repository.list()).toMatchObject([
-    { classification: 'legacy-foundation' },
-  ]);
+  expect(await repository.list()).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ classification: 'legacy-foundation' }),
+      expect.objectContaining({ classification: 'unrelated' }),
+    ]),
+  );
   await repository.close();
 });

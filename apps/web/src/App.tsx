@@ -14,13 +14,21 @@ import {
   type VehicleState,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   createFoundationSessionComposition,
   type FoundationSessionCompositionState,
 } from './foundation-session-composition.js';
 import { createDefaultBrowserPacingDriver } from './pacing/browser-pacing-driver.js';
 import { createFoundationPacingController } from './pacing/foundation-pacing-controller.js';
+import { VehicleMovementSvg } from './transport-representation/VehicleMovementSvg.js';
 import { createBrowserTransportWorker } from './transport-simulation/browser-transport-worker.js';
 import { createTransportFoundationApplication } from './transport-simulation/transport-foundation-application.js';
 import { createDexieTransportSaveRepository } from './transport-simulation/transport-save-repository.js';
@@ -38,14 +46,46 @@ type Actions = Readonly<{
   startVehicle: () => Promise<void>;
 }>;
 
+const scenarioKey = (coordinate: ScenarioCoordinate) =>
+  `${coordinate.scenarioSchemaVersion}:${coordinate.scenarioId}@${coordinate.scenarioVersion}#${coordinate.contentHash}`;
+
 export function App() {
   const [state, setState] = useState<FoundationSessionCompositionState>();
   const [actions, setActions] = useState<Actions>();
   const [selectedScenario, setSelectedScenario] = useState<CanonicalScenario>();
   const [activeScenario, setActiveScenario] = useState<CanonicalScenario>();
+  const [, setScenarioCacheRevision] = useState(0);
+  const scenarioCache = useRef(new Map<string, CanonicalScenario>());
   const scenarioResolver = useRef<
     ((coordinate: ScenarioCoordinate) => Promise<CanonicalScenario>) | undefined
   >(undefined);
+  const cacheScenario = useCallback((next: CanonicalScenario) => {
+    scenarioCache.current.set(
+      scenarioKey(createScenarioCoordinate(next)),
+      next,
+    );
+    setScenarioCacheRevision((revision) => revision + 1);
+  }, []);
+  const handleResolverReady = useCallback(
+    (
+      resolve: (coordinate: ScenarioCoordinate) => Promise<CanonicalScenario>,
+    ) => {
+      scenarioResolver.current = async (coordinate) => {
+        const resolved = await resolve(coordinate);
+        cacheScenario(resolved);
+        return resolved;
+      };
+    },
+    [cacheScenario],
+  );
+  const handleScenarioReady = useCallback(
+    (next: CanonicalScenario) => {
+      cacheScenario(next);
+      setSelectedScenario(next);
+      setActiveScenario((current) => current ?? next);
+    },
+    [cacheScenario],
+  );
   useEffect(() => {
     if (typeof Worker === 'undefined' || !activeScenario) return;
     let currentApplication:
@@ -192,6 +232,9 @@ export function App() {
       | undefined
   )?.fleet;
   const firstVehicle = fleet?.[0];
+  const representedScenario = application?.scenario
+    ? scenarioCache.current.get(scenarioKey(application.scenario))
+    : undefined;
   const action = (operation: (() => Promise<void>) | undefined) => () => {
     void operation?.();
   };
@@ -214,6 +257,9 @@ export function App() {
             <dd>version {protocolContractVersion}</dd>
           </div>
         </dl>
+        {representedScenario && fleet ? (
+          <VehicleMovementSvg scenario={representedScenario} fleet={fleet} />
+        ) : null}
         <div aria-label="Authoritative transport Worker status">
           <p data-testid="worker-status">Worker status: {status}</p>
           <p data-testid="worker-tick">
@@ -424,13 +470,8 @@ export function App() {
       </section>
       <Suspense fallback={<p>Loading scenario catalogue…</p>}>
         <ScenarioPanel
-          onResolverReady={(resolve) => {
-            scenarioResolver.current = resolve;
-          }}
-          onScenarioReady={(next) => {
-            setSelectedScenario(next);
-            setActiveScenario((current) => current ?? next);
-          }}
+          onResolverReady={handleResolverReady}
+          onScenarioReady={handleScenarioReady}
         />
       </Suspense>
       <Suspense fallback={<p>Loading representation…</p>}>

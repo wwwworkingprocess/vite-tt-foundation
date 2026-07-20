@@ -31,6 +31,8 @@ export function createInMemoryTransportSaveRepository(
 ): TransportSaveRepository {
   const records = new Map<string, unknown>();
   for (const value of initial) {
+    if (value === null || typeof value !== 'object' || Array.isArray(value))
+      continue;
     const saveId = (value as { saveId?: unknown }).saveId;
     if (typeof saveId === 'string') records.set(saveId, structuredClone(value));
   }

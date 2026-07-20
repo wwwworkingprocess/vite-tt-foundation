@@ -22,8 +22,9 @@ import type {
   TransportSnapshotExport,
   TransportSynchronizationResponse,
 } from './transport-client.js';
+import { transportClientContractVersion } from './transport-client.js';
 
-export const transportWorkerContractVersion = 1 as const;
+export const transportWorkerContractVersion = 2 as const;
 const requestId = z.number().int().positive().safe();
 const operation = z.enum([
   'connect',
@@ -65,7 +66,7 @@ const identity = { gameId: z.string(), timelineId: z.string() };
 const connectPayload = z.discriminatedUnion('mode', [
   z.strictObject({
     kind: z.literal('transport-client-connect'),
-    contractVersion: z.literal(1),
+    contractVersion: z.literal(transportClientContractVersion),
     mode: z.literal('new'),
     ...identity,
     initialSimulationTick: z.number().int().nonnegative().safe(),
@@ -73,7 +74,7 @@ const connectPayload = z.discriminatedUnion('mode', [
   }),
   z.strictObject({
     kind: z.literal('transport-client-connect'),
-    contractVersion: z.literal(1),
+    contractVersion: z.literal(transportClientContractVersion),
     mode: z.literal('restore'),
     ...identity,
     scenario: canonicalScenario,

@@ -4,8 +4,8 @@
     "transportSaveRecord": 2
   },
   "contractVersions": {
-    "transportClientContract": 1,
-    "transportWorkerContract": 1
+    "transportClientContract": 2,
+    "transportWorkerContract": 2
   },
   "criticalCoverage": {
     "statements": 95,
@@ -20,7 +20,8 @@
       "apps/web/src/transport-simulation/transport-worker-wire.ts",
       "apps/web/src/transport-simulation/transport-save-record.ts",
       "apps/web/src/transport-simulation/transport-save-repository.ts",
-      "apps/web/src/scenarios/scenario-loader.ts"
+      "apps/web/src/scenarios/scenario-loader.ts",
+      "apps/web/src/transport-representation/vehicle-svg-projection.ts"
     ]
   },
   "simulationCriticalCoverage": {

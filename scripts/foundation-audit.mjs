@@ -459,12 +459,24 @@ for (const file of web) {
   if (writableStoreViolations(text).length)
     fail(`${file} exposes a writable Zustand store.`);
 }
+for (const file of web.filter((path) =>
+  path.replaceAll('\\', '/').includes('apps/web/src/transport-representation'),
+)) {
+  const text = await source(file);
+  if (
+    /\b(?:Date|performance|setTimeout|setInterval|requestAnimationFrame)\b|Math\.random|from\s+['"](?:three|@react-three)/.test(
+      text,
+    )
+  )
+    fail(`${file} gives the SVG representation authority or frame timing.`);
+}
 for (const file of [...simulation, ...protocol, ...web]) {
   const text = await source(file);
   const normalized = file.replaceAll('\\', '/');
   const transportExtension =
     normalized.includes('apps/web/src/scenarios') ||
     normalized.includes('apps/web/src/transport-simulation') ||
+    normalized.includes('apps/web/src/transport-representation') ||
     normalized.endsWith('apps/web/src/App.tsx') ||
     normalized.endsWith('packages/simulation/src/transport-simulation.ts') ||
     normalized.endsWith('packages/simulation/src/vehicle-movement.ts') ||

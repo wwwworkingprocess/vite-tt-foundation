@@ -89,6 +89,7 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="legacy-save-count"]').should('contain.text', '1');
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.get('[data-testid="vehicle-movement-svg"]').should('be.visible');
     cy.contains('button', 'Start demo vehicle').click();
     cy.contains('button', 'Normal 20×').click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
@@ -122,6 +123,11 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
       'torrevieja-mini-v1@1.0.0#',
+    );
+    cy.get('[data-testid="vehicle-movement-svg"]').should(
+      'have.attr',
+      'data-scenario-id',
+      'torrevieja-mini-v1',
     );
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');

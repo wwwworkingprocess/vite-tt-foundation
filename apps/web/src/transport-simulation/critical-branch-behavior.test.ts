@@ -34,7 +34,7 @@ describe('critical transport branch behavior', () => {
     const client = createDirectTransportSimulationClient();
     await client.connect({
       kind: 'transport-client-connect',
-      contractVersion: 1,
+      contractVersion: 2,
       mode: 'new',
       gameId: 'game',
       timelineId: 'timeline',
@@ -59,7 +59,7 @@ describe('critical transport branch behavior', () => {
     expect(
       parseTransportWorkerResponse({
         kind: 'transport-worker-result',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 1,
         operation: 'send-command',
         payload: {

@@ -107,5 +107,7 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   explicitly incompatible rather than being assigned invented scenario data.
 - Phase 4C adds strict graph-native vehicles, integer per-edge movement plans,
   atomic tick advancement, and explicit Transport Snapshot/Save V2 with named
-  V1-to-V2 empty-fleet migration. Scheduling and gameplay remain deferred.
+  V1-to-V2 empty-fleet migration. Transport client and Worker contracts are V2,
+  and a read-only SVG diagnostic proves active-authority movement without
+  adding render authority. Scheduling and gameplay remain deferred.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

@@ -7,6 +7,7 @@ import {
   createTransportSimulationSnapshot,
   createTransportSimulationState,
   parseTickAdvancement,
+  parseTransportVehicleCommand,
   restoreTransportSimulationState,
   type ScenarioCoordinate,
   type TransportSimulationSnapshot,
@@ -32,12 +33,12 @@ import {
 } from '@torrevieja-tycoon/protocol';
 import { createDirectFoundationClient } from '../simulation-host/direct-client.js';
 
-export const transportClientContractVersion = 1 as const;
+export const transportClientContractVersion = 2 as const;
 
 export type TransportClientConnectRequest =
   | Readonly<{
       kind: 'transport-client-connect';
-      contractVersion: 1;
+      contractVersion: 2;
       mode: 'new';
       gameId: GameId;
       timelineId: TimelineId;
@@ -46,7 +47,7 @@ export type TransportClientConnectRequest =
     }>
   | Readonly<{
       kind: 'transport-client-connect';
-      contractVersion: 1;
+      contractVersion: 2;
       mode: 'restore';
       gameId: GameId;
       timelineId: TimelineId;
@@ -153,7 +154,7 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
     number,
     (snapshot: TransportRenderSnapshot) => void
   >();
-  const vehicleCommandFingerprints = new Map<string, string>();
+  const commandIntentFingerprints = new Map<string, string>();
   const lifecycleListeners = new Map<
     number,
     (state: TransportClientLifecycle) => void
@@ -208,11 +209,29 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
   const foundationEnvelope = (command: TransportCommandEnvelope) =>
     parseFoundationCommandEnvelope({
       ...command,
-      command:
-        'type' in command.command
-          ? command.command
-          : { type: 'foundation.advance-ticks', count: 0 },
+      command: { type: 'foundation.advance-ticks', count: 0 },
     });
+  const fingerprintEnvelope = (
+    envelope: ReturnType<typeof parseFoundationCommandEnvelope>,
+    command: FoundationCommandEnvelope['command'] | TransportVehicleCommand,
+  ) =>
+    JSON.stringify({
+      gameId: envelope.gameId,
+      timelineId: envelope.timelineId,
+      expectedCommandRevision: envelope.expectedCommandRevision ?? null,
+      command,
+    });
+  const commandConflict = (command: TransportCommandEnvelope) =>
+    freeze(
+      parseFoundationProtocolError({
+        kind: 'foundation-protocol-error',
+        gameId: command.gameId,
+        commandId: command.commandId,
+        correlationId: command.correlationId,
+        code: 'command-id-conflict',
+        message: 'Command ID was reused with different stable intent.',
+      }),
+    );
   const publishAuthority = () => {
     publish(
       reliableListeners,
@@ -289,9 +308,30 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         const current = authority;
         if (!current) throw new Error('Transport client is not ready.');
         if ('type' in command.command) {
-          const result = await foundation.sendCommand(
-            foundationEnvelope(command),
+          let parsedEnvelope: ReturnType<typeof parseFoundationCommandEnvelope>;
+          try {
+            parsedEnvelope = parseFoundationCommandEnvelope(command);
+          } catch {
+            return foundation.sendCommand(command as FoundationCommandEnvelope);
+          }
+          const fingerprint = fingerprintEnvelope(
+            parsedEnvelope,
+            parsedEnvelope.command,
           );
+          const storedFingerprint = commandIntentFingerprints.get(
+            parsedEnvelope.commandId,
+          );
+          if (
+            storedFingerprint !== undefined &&
+            storedFingerprint !== fingerprint
+          )
+            return commandConflict(command);
+          const result = await foundation.sendCommand(parsedEnvelope);
+          if (result.kind === 'foundation-command-result')
+            commandIntentFingerprints.set(
+              parsedEnvelope.commandId,
+              fingerprint,
+            );
           if (
             result.kind === 'foundation-command-result' &&
             result.status === 'applied' &&
@@ -300,28 +340,39 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
             publishAuthority();
           return result;
         }
-        const fingerprint = JSON.stringify(command.command);
-        const storedFingerprint = vehicleCommandFingerprints.get(
-          command.commandId,
-        );
-        if (
-          storedFingerprint !== undefined &&
-          storedFingerprint !== fingerprint
-        )
+        let parsedCommand: TransportVehicleCommand;
+        let parsedEnvelope: ReturnType<typeof parseFoundationCommandEnvelope>;
+        try {
+          parsedCommand = parseTransportVehicleCommand(
+            command.command,
+            current.graph,
+          );
+          parsedEnvelope = foundationEnvelope(command);
+        } catch (error) {
           return freeze(
             parseFoundationProtocolError({
               kind: 'foundation-protocol-error',
               gameId: command.gameId,
               commandId: command.commandId,
               correlationId: command.correlationId,
-              code: 'command-id-conflict',
-              message: 'Command ID was reused with different stable intent.',
+              code: 'invalid-message',
+              message: String(error),
             }),
           );
+        }
+        const fingerprint = fingerprintEnvelope(parsedEnvelope, parsedCommand);
+        const storedFingerprint = commandIntentFingerprints.get(
+          command.commandId,
+        );
+        if (
+          storedFingerprint !== undefined &&
+          storedFingerprint !== fingerprint
+        )
+          return commandConflict(command);
         let candidate = current;
         if (storedFingerprint === undefined)
           try {
-            candidate = applyTransportVehicleCommand(current, command.command);
+            candidate = applyTransportVehicleCommand(current, parsedCommand);
           } catch (error) {
             return freeze(
               parseFoundationProtocolError({
@@ -330,21 +381,18 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
                 commandId: command.commandId,
                 correlationId: command.correlationId,
                 code: 'invalid-message',
-                message:
-                  error instanceof Error
-                    ? error.message
-                    : 'Invalid vehicle command.',
+                message: String(error),
               }),
             );
           }
-        const result = await foundation.sendCommand(
-          foundationEnvelope(command),
-        );
-        vehicleCommandFingerprints.set(command.commandId, fingerprint);
+        const result = await foundation.sendCommand(parsedEnvelope);
+        if (result.kind === 'foundation-command-result')
+          commandIntentFingerprints.set(command.commandId, fingerprint);
         if (
           storedFingerprint === undefined &&
           result.kind === 'foundation-command-result' &&
-          result.status === 'applied'
+          result.status === 'applied' &&
+          !result.duplicate
         ) {
           authority = candidate;
           publishAuthority();
@@ -370,13 +418,10 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         const current = closing ? undefined : authority;
         if (!current) throw new Error('Transport client is not ready.');
         const exported = await foundation.exportSnapshot();
-        authority =
-          exported.simulationTick === current.tick
-            ? current
-            : advanceTransportTicks(
-                current,
-                parseTickAdvancement(exported.simulationTick - current.tick),
-              );
+        authority = advanceTransportTicks(
+          current,
+          parseTickAdvancement(exported.simulationTick - current.tick),
+        );
         return freeze({
           kind: 'transport-snapshot-export',
           gameId: exported.gameId,

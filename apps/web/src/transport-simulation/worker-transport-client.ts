@@ -12,6 +12,7 @@ import {
 } from '@torrevieja-tycoon/protocol';
 import {
   createDirectTransportSimulationClient,
+  transportClientContractVersion,
   type TransportCommandEnvelope,
   type TransportClientConnectRequest,
   type TransportClientLifecycle,
@@ -121,7 +122,7 @@ export function startTransportWorkerRuntime(
       try {
         endpoint.postMessage({
           kind: 'transport-worker-failure',
-          contractVersion: 1,
+          contractVersion: 2,
           ...(validRequestId === undefined
             ? {}
             : { requestId: validRequestId }),
@@ -146,7 +147,7 @@ export function startTransportWorkerRuntime(
               next.subscribeReliableUpdates((update) =>
                 endpoint.postMessage({
                   kind: 'transport-worker-publication',
-                  contractVersion: 1,
+                  contractVersion: 2,
                   channel: 'reliable',
                   payload: update,
                 }),
@@ -156,7 +157,7 @@ export function startTransportWorkerRuntime(
               next.subscribeRenderSnapshots((snapshot) =>
                 endpoint.postMessage({
                   kind: 'transport-worker-publication',
-                  contractVersion: 1,
+                  contractVersion: 2,
                   channel: 'render',
                   payload: snapshot,
                 }),
@@ -206,14 +207,14 @@ export function startTransportWorkerRuntime(
               cleanupError === undefined
                 ? {
                     kind: 'transport-worker-result',
-                    contractVersion: 1,
+                    contractVersion: 2,
                     requestId,
                     operation: 'close',
                     payload: null,
                   }
                 : {
                     kind: 'transport-worker-failure',
-                    contractVersion: 1,
+                    contractVersion: 2,
                     requestId,
                     operation: 'close',
                     message: errorMessage(cleanupError),
@@ -233,7 +234,7 @@ export function startTransportWorkerRuntime(
         }
         endpoint.postMessage({
           kind: 'transport-worker-result',
-          contractVersion: 1,
+          contractVersion: 2,
           requestId,
           operation,
           payload,
@@ -242,7 +243,7 @@ export function startTransportWorkerRuntime(
         try {
           endpoint.postMessage({
             kind: 'transport-worker-failure',
-            contractVersion: 1,
+            contractVersion: 2,
             requestId,
             operation,
             message: errorMessage(error),
@@ -343,7 +344,7 @@ export function createWorkerTransportSimulationClient(input: {
         worker!.postMessage(
           parseTransportWorkerRequest({
             kind: 'transport-worker-request',
-            contractVersion: 1,
+            contractVersion: 2,
             requestId,
             operation,
             payload,
@@ -430,7 +431,7 @@ export function createWorkerTransportSimulationClient(input: {
         throw new Error('Transport Worker client can connect only from idle.');
       if (
         request.kind !== 'transport-client-connect' ||
-        request.contractVersion !== 1 ||
+        request.contractVersion !== transportClientContractVersion ||
         (request.mode !== 'new' && request.mode !== 'restore')
       )
         throw new Error('Unsupported transport client connect request.');

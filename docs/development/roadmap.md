@@ -118,6 +118,9 @@ Freeze candidate: authoritative vehicles use immutable graph-native location
 states and integer per-edge plans. Create/start commands and the existing tick
 command operate through the single Worker/application/pacing/persistence stack.
 Transport Snapshot/Save V2 preserve fleets; V1 migration is explicit and empty.
+Transport client/Worker contracts are marked V2. A deliberately plain SVG
+diagnostic maps the active canonical graph and integer fleet progress for
+acceptance evidence only; it owns no simulation clock or state.
 
 Services, schedules, dwell, dispatch, passengers, capacity, economics, traffic,
 maps, and render interpolation remain deferred to Phase 4D or later.

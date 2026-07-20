@@ -78,12 +78,12 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 1,
         operation: 'connect',
         payload: {
           kind: 'transport-client-connect',
-          contractVersion: 1,
+          contractVersion: 2,
           mode: 'new',
           gameId: 'game',
           timelineId: 'timeline',
@@ -123,12 +123,12 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 1,
         operation: 'connect',
         payload: {
           kind: 'transport-client-connect',
-          contractVersion: 1,
+          contractVersion: 2,
           mode: 'new',
           gameId: 'game',
           timelineId: 'timeline',
@@ -141,7 +141,7 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 2,
         operation: 'close',
         payload: null,
@@ -175,7 +175,7 @@ describe('transport Worker boundary failures', () => {
     });
     const payload = {
       kind: 'transport-client-connect',
-      contractVersion: 1,
+      contractVersion: 2,
       mode: 'new',
       gameId: 'game',
       timelineId: 'timeline',
@@ -185,7 +185,7 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 1,
         operation: 'connect',
         payload,
@@ -203,7 +203,7 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 2,
         operation: 'connect',
         payload: { ...payload, timelineId: 'timeline-2' },
@@ -228,7 +228,7 @@ describe('transport Worker boundary failures', () => {
             listener({
               data: {
                 kind: 'transport-worker-result',
-                contractVersion: 1,
+                contractVersion: 2,
                 requestId: message.requestId,
                 operation: message.operation,
                 payload: null,
@@ -248,7 +248,7 @@ describe('transport Worker boundary failures', () => {
     await expect(client.sendCommand({} as never)).rejects.toThrow('closed');
     const request = {
       kind: 'transport-client-connect',
-      contractVersion: 1,
+      contractVersion: 2,
       mode: 'new',
       gameId: 'game',
       timelineId: 'timeline',
@@ -258,11 +258,11 @@ describe('transport Worker boundary failures', () => {
     await client.connect(request);
     await expect(client.connect(request)).rejects.toThrow('idle');
     listener({ data: { contractVersion: 2 } });
-    listener({ data: { contractVersion: 1, kind: 'unknown' } });
-    listener({ data: { contractVersion: 1, kind: 'transport-worker-result' } });
+    listener({ data: { contractVersion: 2, kind: 'unknown' } });
+    listener({ data: { contractVersion: 2, kind: 'transport-worker-result' } });
     listener({
       data: {
-        contractVersion: 1,
+        contractVersion: 2,
         kind: 'transport-worker-result',
         requestId: 999,
         operation: 'send-command',
@@ -300,7 +300,7 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 1,
         operation: 'send-command',
         payload: {},
@@ -321,7 +321,7 @@ describe('transport Worker boundary failures', () => {
       listener({
         data: {
           kind: 'transport-worker-request',
-          contractVersion: 1,
+          contractVersion: 2,
           requestId,
           operation,
           payload,
@@ -338,7 +338,7 @@ describe('transport Worker boundary failures', () => {
     }
     const connectPayload = {
       kind: 'transport-client-connect',
-      contractVersion: 1,
+      contractVersion: 2,
       mode: 'new',
       gameId: 'game',
       timelineId: 'runtime-timeline',
@@ -348,7 +348,7 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 4,
         operation: 'connect',
         payload: connectPayload,
@@ -365,7 +365,7 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 5,
         operation: 'connect',
         payload: connectPayload,
@@ -382,7 +382,7 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 6,
         operation: 'unknown',
         payload: null,
@@ -399,7 +399,7 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 7,
         operation: 'close',
         payload: null,
@@ -418,7 +418,7 @@ describe('transport Worker boundary failures', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 1,
+        contractVersion: 2,
         requestId: 8,
         operation: 'export-snapshot',
         payload: null,
@@ -448,7 +448,7 @@ describe('transport Worker boundary failures', () => {
             state.listener?.({
               data: {
                 kind: 'transport-worker-failure',
-                contractVersion: 1,
+                contractVersion: 2,
                 requestId: message.requestId,
                 operation: message.operation,
                 message: 'initialization failed',
@@ -469,7 +469,7 @@ describe('transport Worker boundary failures', () => {
     };
     const request = {
       kind: 'transport-client-connect',
-      contractVersion: 1,
+      contractVersion: 2,
       mode: 'new',
       gameId: 'game',
       timelineId: 'timeline',
@@ -510,7 +510,7 @@ describe('transport Worker boundary failures', () => {
               listener({
                 data: {
                   kind: 'transport-worker-result',
-                  contractVersion: 1,
+                  contractVersion: 2,
                   requestId: message.requestId,
                   operation: 'connect',
                   payload: null,
@@ -529,7 +529,7 @@ describe('transport Worker boundary failures', () => {
       });
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 1,
+        contractVersion: 2,
         mode: 'new',
         gameId: 'game',
         timelineId: 'timeline',
@@ -551,13 +551,13 @@ describe('transport Worker boundary failures', () => {
           variant === 'missing-operation'
             ? {
                 kind: 'transport-worker-failure',
-                contractVersion: 1,
+                contractVersion: 2,
                 requestId: 2,
                 message: 'missing operation',
               }
             : {
                 kind: 'transport-worker-result',
-                contractVersion: 1,
+                contractVersion: 2,
                 requestId: 2,
                 operation:
                   variant === 'wrong-operation' ? 'connect' : 'send-command',

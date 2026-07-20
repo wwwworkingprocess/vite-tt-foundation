@@ -244,7 +244,27 @@ function advanceVehicle(
   const pattern = graph.pattern(vehicle.patternId)!;
   let remaining = count as number;
   let movement: ActiveMovement = vehicle.movement;
+  let loopCycleTicks: number | undefined;
+  if (pattern.closesLoop) {
+    let total = 0;
+    for (const travelTicks of vehicle.movementPlan.edgeTravelTicks) {
+      if (travelTicks > Number.MAX_SAFE_INTEGER - total) {
+        total = 0;
+        break;
+      }
+      total += travelTicks;
+    }
+    loopCycleTicks = total === 0 ? undefined : total;
+  }
   while (remaining > 0) {
+    if (
+      movement.kind === 'running-at-stop' &&
+      loopCycleTicks !== undefined &&
+      remaining >= loopCycleTicks
+    ) {
+      remaining %= loopCycleTicks;
+      if (remaining === 0) break;
+    }
     const sequence =
       movement.kind === 'running-at-stop'
         ? movement.nextEdgeSequence

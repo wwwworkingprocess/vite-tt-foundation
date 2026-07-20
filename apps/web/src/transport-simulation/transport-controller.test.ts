@@ -672,6 +672,7 @@ describe('transport application controller', () => {
         kind: 'transport-save-record',
         schemaVersion: 1,
       }),
+      classifyPersistedSaveRecord({ saveId: 'other', kind: 'other-product' }),
     ];
     const controller = createTransportApplicationController({
       createClient: () => client,
@@ -709,6 +710,12 @@ describe('transport application controller', () => {
         timelineId: parseTimelineId('timeline-restored'),
       }),
     ).rejects.toThrow('Malformed known');
+    await expect(
+      controller.restore({
+        saveId: 'unrelated',
+        timelineId: parseTimelineId('timeline-restored'),
+      }),
+    ).rejects.toThrow('not a transport save');
     expect(controller.projection.getState()).toMatchObject({
       status: 'ready',
       timelineId: 'timeline-current',

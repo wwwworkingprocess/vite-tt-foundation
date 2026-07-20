@@ -18,14 +18,14 @@ const manifest = z
       lines: z.literal(95),
       functions: z.literal(95),
       branches: z.literal(95),
-      files: z.array(z.string().min(1)).length(8),
+      files: z.array(z.string().min(1)).min(1),
     }),
     simulationCriticalCoverage: z.strictObject({
       statements: z.literal(95),
       lines: z.literal(95),
       functions: z.literal(95),
       branches: z.literal(95),
-      files: z.array(z.string().min(1)).length(2),
+      files: z.array(z.string().min(1)).min(1),
     }),
     buildBudgetsBytes: z.strictObject({
       applicationEntry: z.number().int().positive(),
@@ -35,6 +35,20 @@ const manifest = z
     }),
   })
   .parse(JSON.parse(await read('torrevieja-project.json')));
+const requiredCriticalFiles = [
+  'apps/web/src/transport-simulation/transport-controller.ts',
+  'apps/web/src/transport-simulation/transport-foundation-application.ts',
+  'apps/web/src/transport-simulation/transport-client.ts',
+  'apps/web/src/transport-simulation/worker-transport-client.ts',
+  'apps/web/src/transport-simulation/transport-worker-wire.ts',
+  'apps/web/src/transport-simulation/transport-save-record.ts',
+  'apps/web/src/transport-simulation/transport-save-repository.ts',
+  'apps/web/src/scenarios/scenario-loader.ts',
+  'apps/web/src/transport-representation/vehicle-svg-projection.ts',
+];
+for (const path of requiredCriticalFiles)
+  if (!manifest.criticalCoverage.files.includes(path))
+    throw new Error(`criticalCoverage.files is missing ${path}.`);
 const checks = [
   [
     'schemaVersions.transportSimulationSnapshot',

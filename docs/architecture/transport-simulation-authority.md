@@ -64,3 +64,8 @@ Transport schema, client/Worker contract, and expanded build-budget markers
 belong to `torrevieja-project.json`. The intended reusable Foundation Template
 snapshot is commit `c26be29`; current Phase 4
 HEAD must not be tagged as Foundation Template v1.0.0.
+
+Phase 4C advances both application-owned transport contract markers to V2 for
+vehicle commands, fleet publications, and Transport Snapshot V2 results.
+Contract-V1 connect and Worker envelopes are rejected explicitly; snapshot V1
+remains supported only through the named empty-fleet migration path.

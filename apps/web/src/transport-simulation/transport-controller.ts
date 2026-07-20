@@ -273,7 +273,7 @@ export function createTransportApplicationController(input: {
           candidate,
           {
             kind: 'transport-client-connect',
-            contractVersion: 1,
+            contractVersion: 2,
             mode: 'new',
             gameId,
             timelineId,
@@ -311,8 +311,12 @@ export function createTransportApplicationController(input: {
           classified.classification !== 'current' &&
           classified.classification !== 'migratable-transport-v1'
         ) {
-          set({ ...previousState, message: classified.error.message });
-          throw classified.error;
+          const error =
+            classified.classification === 'unrelated'
+              ? new Error('The selected record is not a transport save.')
+              : classified.error;
+          set({ ...previousState, message: error.message });
+          throw error;
         }
         const restoredRecord =
           classified.classification === 'current'
@@ -358,7 +362,7 @@ export function createTransportApplicationController(input: {
             next,
             {
               kind: 'transport-client-connect',
-              contractVersion: 1,
+              contractVersion: 2,
               mode: 'restore',
               gameId: restoredRecord.gameId,
               timelineId,

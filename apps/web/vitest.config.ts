@@ -19,6 +19,7 @@ export default defineConfig({
         'src/pacing/**/*.ts',
         'src/scenarios/**/*.ts',
         'src/transport-simulation/**/*.ts',
+        'src/transport-representation/**/*.ts',
         'apps/web/src/simulation-host/**/*.ts',
         'apps/web/src/simulation-worker/**/*.ts',
         'apps/web/src/application/**/*.ts',
@@ -26,6 +27,7 @@ export default defineConfig({
         'apps/web/src/pacing/**/*.ts',
         'apps/web/src/scenarios/**/*.ts',
         'apps/web/src/transport-simulation/**/*.ts',
+        'apps/web/src/transport-representation/**/*.ts',
       ],
       exclude: [
         'src/**/*.test.ts',

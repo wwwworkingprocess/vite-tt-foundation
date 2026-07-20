@@ -353,6 +353,72 @@ describe('deterministic directed-edge movement', () => {
     ).toThrow('not parked');
   });
 
+  it('skips complete loop revolutions algebraically for very large batches', () => {
+    const canonical = loopScenario();
+    let state = createTransportSimulationState(canonical, 0);
+    state = applyTransportVehicleCommand(
+      state,
+      createCommand('large-loop', [2, 3]),
+    );
+    state = applyTransportVehicleCommand(state, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'large-loop',
+    });
+    const originalEdges = state.graph.patternEdges(patternId);
+    let edgeReads = 0;
+    const guardedEdges = new Proxy(originalEdges, {
+      get(target, property, receiver) {
+        if (/^\d+$/.test(String(property)) && ++edgeReads > 100)
+          throw new Error('Loop advancement iterated by revolution.');
+        return Reflect.get(target, property, receiver);
+      },
+    });
+    const guarded = {
+      ...state,
+      graph: {
+        ...state.graph,
+        patternEdges: () => guardedEdges,
+      },
+    };
+    const exact = advanceTransportTicks(guarded, 1_000_000_000_000);
+    expect(vehicle(exact)?.movement).toEqual({
+      kind: 'running-at-stop',
+      stopNodeId: 'tv-stop-0108',
+      nextEdgeSequence: 0,
+    });
+    const partial = advanceTransportTicks(state, 1_000_000_000_001);
+    expect(vehicle(partial)?.movement).toMatchObject({
+      kind: 'running-on-edge',
+      edgeSequence: 0,
+      progressTicks: 1,
+      travelTicks: 2,
+    });
+    expect(edgeReads).toBeLessThan(100);
+  });
+
+  it('finishes a partial loop edge before skipping complete cycles', () => {
+    let state = createTransportSimulationState(loopScenario(), 0);
+    state = applyTransportVehicleCommand(
+      state,
+      createCommand('partial-loop', [7, 11]),
+    );
+    state = applyTransportVehicleCommand(state, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'partial-loop',
+    });
+    state = advanceTransportTicks(state, 3);
+    const advanced = advanceTransportTicks(state, 18 * 1_000 + 5);
+    expect(vehicle(advanced)?.movement).toMatchObject({
+      kind: 'running-on-edge',
+      edgeSequence: 1,
+      progressTicks: 1,
+      travelTicks: 11,
+    });
+    expect(advanceTransportTicks(state, 41)).toEqual(
+      advanceTransportTicks(advanceTransportTicks(state, 18), 23),
+    );
+  });
+
   it('preserves parked and completed vehicles during positive global advancement', () => {
     const base = createTransportSimulationState(scenario(), 0);
     const parked = applyTransportVehicleCommand(base, createCommand());

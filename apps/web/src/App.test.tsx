@@ -172,6 +172,10 @@ describe('foundation screen', () => {
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
     const timeline = screen.getByTestId('worker-timeline').textContent;
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-scenario-id',
+      'torrevieja-mini-v1',
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Select scenario B' }));
     expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
       'scenario-b',
@@ -182,6 +186,10 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('worker-status')).toHaveTextContent('ready');
     expect(screen.getByTestId('worker-timeline').textContent).toBe(timeline);
     expect(screen.getByTestId('scenario-coordinate')).toHaveTextContent(
+      'torrevieja-mini-v1',
+    );
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-scenario-id',
       'torrevieja-mini-v1',
     );
     fireEvent.click(
@@ -197,6 +205,10 @@ describe('foundation screen', () => {
       ),
     );
     expect(screen.getByTestId('worker-status')).toHaveTextContent('ready');
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-scenario-id',
+      'scenario-b',
+    );
   });
 
   it('exposes deterministic vehicle diagnostics from the authoritative Worker', async () => {
@@ -232,6 +244,11 @@ describe('foundation screen', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Pause' }));
     await waitFor(() =>
       expect(screen.getByTestId('pacing-status')).toHaveTextContent('paused'),
+    );
+    const position = screen.getByTestId('vehicle-position');
+    expect(position).toHaveAttribute('data-vehicle-id', 'browser-demo-vehicle');
+    expect(position.getAttribute('cx')).toBe(
+      screen.getByTestId('vehicle-position').getAttribute('cx'),
     );
   });
 });

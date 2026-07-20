@@ -219,19 +219,25 @@ export type PersistedSaveClassification =
   | Readonly<{
       classification: 'malformed-known' | 'unsupported-future';
       error: Error;
-    }>;
+    }>
+  | Readonly<{ classification: 'unrelated' }>;
 
 export function classifyPersistedSaveRecord(
   value: unknown,
 ): PersistedSaveClassification {
+  if (value === null || typeof value !== 'object' || Array.isArray(value))
+    return freeze({ classification: 'unrelated' });
   const raw = value as { kind?: unknown; schemaVersion?: unknown };
   if (
-    (raw.kind === 'transport-save-record' &&
-      raw.schemaVersion !== 1 &&
-      raw.schemaVersion !== 2) ||
-    (typeof raw.kind === 'string' &&
-      raw.kind !== 'transport-save-record' &&
-      raw.kind !== 'foundation-save-record')
+    raw.kind !== 'transport-save-record' &&
+    raw.kind !== 'foundation-save-record'
+  )
+    return freeze({ classification: 'unrelated' });
+  const supportedVersion = raw.kind === 'transport-save-record' ? 2 : 1;
+  if (
+    typeof raw.schemaVersion === 'number' &&
+    Number.isSafeInteger(raw.schemaVersion) &&
+    raw.schemaVersion > supportedVersion
   )
     return freeze({
       classification: 'unsupported-future',

@@ -58,6 +58,30 @@ const current = () => {
 };
 
 describe('transport save compatibility', () => {
+  it.each([null, undefined, 0, 'save', [], {}, { kind: 'other-save' }])(
+    'classifies unrelated value %j without throwing',
+    (value) => {
+      const result = classifyPersistedSaveRecord(value);
+      expect(result).toEqual({ classification: 'unrelated' });
+      expect(Object.isFrozen(result)).toBe(true);
+    },
+  );
+
+  it('distinguishes malformed versions from numeric future versions', () => {
+    expect(
+      classifyPersistedSaveRecord({
+        kind: 'transport-save-record',
+        schemaVersion: 3,
+      }),
+    ).toMatchObject({ classification: 'unsupported-future' });
+    for (const schemaVersion of [undefined, '3', -1, 1.5])
+      expect(
+        classifyPersistedSaveRecord({
+          kind: 'transport-save-record',
+          schemaVersion,
+        }),
+      ).toMatchObject({ classification: 'malformed-known' });
+  });
   it('parses, freezes, and summarizes a current transport record', () => {
     const record = parseTransportSaveRecord(current());
     expect(summarizeCompatibleSave(record)).toMatchObject({

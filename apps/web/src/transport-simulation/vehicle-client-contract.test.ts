@@ -128,6 +128,14 @@ const envelope = (
   sessionId: parseSessionId('test-session'),
   command,
 });
+const envelopeWithId = (
+  id: string,
+  command: TransportCommandEnvelope['command'],
+): TransportCommandEnvelope => ({
+  ...envelope(999, command),
+  commandId: parseCommandId(id),
+  correlationId: parseCorrelationId(id),
+});
 
 describe.each(factories)(
   '%s vehicle client contract',
@@ -140,7 +148,7 @@ describe.each(factories)(
       client.subscribeReliableUpdates((update) => updates.push(update));
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 1,
+        contractVersion: 2,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -188,7 +196,7 @@ describe.each(factories)(
       const patternId = canonical.routes.routes[0]!.patterns[0]!.patternId;
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 1,
+        contractVersion: 2,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -218,6 +226,171 @@ describe.each(factories)(
       ).toEqual(['vehicle-a', 'vehicle-b']);
       await client.close();
     });
+
+    it('preserves one canonical stable intent across every command family', async () => {
+      const client = createClient();
+      const canonical = scenario();
+      const patternId = canonical.routes.routes[0]!.patterns[0]!.patternId;
+      const publications: unknown[] = [];
+      client.subscribeReliableUpdates((value) => publications.push(value));
+      await client.connect({
+        kind: 'transport-client-connect',
+        contractVersion: 2,
+        mode: 'new',
+        gameId: parseGameId('game'),
+        timelineId: parseTimelineId('timeline'),
+        initialSimulationTick: 0,
+        scenario: canonical,
+      });
+      const zero = envelopeWithId('shared-foundation', {
+        type: 'foundation.advance-ticks',
+        count: 0,
+      });
+      expect(await client.sendCommand(zero)).toMatchObject({
+        status: 'applied',
+      });
+      expect(
+        await client.sendCommand(
+          envelopeWithId('shared-foundation', {
+            kind: 'transport.vehicle.create',
+            vehicleId: parseVehicleId('blocked'),
+            label: 'Blocked',
+            patternId,
+            movementPlan: {
+              kind: 'vehicle-movement-plan-v1',
+              edgeTravelTicks: [1, 1, 1, 1],
+            },
+          }),
+        ),
+      ).toMatchObject({ code: 'command-id-conflict' });
+
+      const create = envelopeWithId('shared-vehicle', {
+        kind: 'transport.vehicle.create',
+        vehicleId: parseVehicleId('stable'),
+        label: '  Stable vehicle  ',
+        patternId,
+        movementPlan: {
+          kind: 'vehicle-movement-plan-v1',
+          edgeTravelTicks: [1, 2, 3, 4],
+        },
+      });
+      expect(await client.sendCommand(create)).toMatchObject({
+        status: 'applied',
+        duplicate: false,
+      });
+      expect(
+        await client.sendCommand({
+          ...create,
+          command: {
+            movementPlan: {
+              edgeTravelTicks: [1, 2, 3, 4],
+              kind: 'vehicle-movement-plan-v1',
+            },
+            patternId,
+            label: 'Stable vehicle',
+            vehicleId: parseVehicleId('stable'),
+            kind: 'transport.vehicle.create',
+          },
+        }),
+      ).toMatchObject({ status: 'applied', duplicate: true });
+      expect(
+        await client.sendCommand(
+          envelopeWithId('duplicate-vehicle-id', {
+            kind: 'transport.vehicle.create',
+            vehicleId: parseVehicleId('stable'),
+            label: 'Another stable vehicle',
+            patternId,
+            movementPlan: {
+              kind: 'vehicle-movement-plan-v1',
+              edgeTravelTicks: [2, 2, 2, 2],
+            },
+          }),
+        ),
+      ).toMatchObject({ code: 'invalid-message' });
+      expect(
+        await client.sendCommand(
+          envelopeWithId('shared-vehicle', {
+            type: 'foundation.advance-ticks',
+            count: 0,
+          }),
+        ),
+      ).toMatchObject({ code: 'command-id-conflict' });
+      expect(
+        await client.sendCommand(
+          envelopeWithId('shared-vehicle', {
+            kind: 'transport.vehicle.start',
+            vehicleId: parseVehicleId('stable'),
+          }),
+        ),
+      ).toMatchObject({ code: 'command-id-conflict' });
+
+      const stale = {
+        ...envelopeWithId('stale-vehicle', {
+          kind: 'transport.vehicle.create',
+          vehicleId: parseVehicleId('stale'),
+          label: 'Stale',
+          patternId,
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1, 1, 1],
+          },
+        }),
+        expectedCommandRevision: parseCommandRevision(99),
+      };
+      expect(await client.sendCommand(stale)).toMatchObject({
+        status: 'rejected',
+        duplicate: false,
+      });
+      expect(await client.sendCommand(stale)).toMatchObject({
+        status: 'rejected',
+        duplicate: true,
+      });
+
+      const mismatched = {
+        ...envelopeWithId('retryable-id', {
+          kind: 'transport.vehicle.create',
+          vehicleId: parseVehicleId('retryable'),
+          label: 'Retryable',
+          patternId,
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1, 1, 1],
+          },
+        }),
+        gameId: parseGameId('other-game'),
+      };
+      expect(await client.sendCommand(mismatched)).toMatchObject({
+        code: 'identity-mismatch',
+      });
+      expect(
+        await client.sendCommand({
+          ...mismatched,
+          gameId: parseGameId('game'),
+        }),
+      ).toMatchObject({ status: 'applied', duplicate: false });
+      const foundationRetry = envelopeWithId('foundation-retry', {
+        type: 'foundation.advance-ticks',
+        count: 0,
+      });
+      expect(
+        await client.sendCommand({
+          ...foundationRetry,
+          gameId: parseGameId('other-game'),
+        }),
+      ).toMatchObject({ code: 'identity-mismatch' });
+      expect(await client.sendCommand(foundationRetry)).toMatchObject({
+        status: 'applied',
+        duplicate: false,
+      });
+      const exported = await client.exportSnapshot();
+      expect(exported.commandRevision).toBe(4);
+      expect(exported.streamOffset).toBe(4);
+      expect(
+        exported.snapshot.state.fleet.map(({ vehicleId }) => vehicleId),
+      ).toEqual(['stable', 'retryable']);
+      expect(publications).toHaveLength(4);
+      await client.close();
+    });
   },
 );
 
@@ -240,7 +413,7 @@ describe('direct vehicle client failure and idempotency behavior', () => {
     ).rejects.toThrow('not ready');
     await client.connect({
       kind: 'transport-client-connect',
-      contractVersion: 1,
+      contractVersion: 2,
       mode: 'new',
       gameId: parseGameId('game'),
       timelineId: parseTimelineId('timeline'),
@@ -250,7 +423,7 @@ describe('direct vehicle client failure and idempotency behavior', () => {
     await expect(
       client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 1,
+        contractVersion: 2,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('other'),

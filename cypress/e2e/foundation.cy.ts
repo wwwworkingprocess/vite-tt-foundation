@@ -43,9 +43,23 @@ describe('foundation screen', () => {
       'contain.text',
       'running-at-stop',
     );
+    cy.get('[data-testid="vehicle-movement-svg"]').should(
+      'have.attr',
+      'data-scenario-id',
+      'torrevieja-v1',
+    );
+    let initialVehiclePosition = '';
+    cy.get('[data-testid="vehicle-position"]').then(($vehicle) => {
+      initialVehiclePosition = `${$vehicle.attr('cx')}:${$vehicle.attr('cy')}`;
+    });
     cy.contains('button', /^Normal /).click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0),
+    );
+    cy.get('[data-testid="vehicle-position"]').should(($vehicle) =>
+      expect(`${$vehicle.attr('cx')}:${$vehicle.attr('cy')}`).not.to.equal(
+        initialVehiclePosition,
+      ),
     );
     cy.contains('button', 'Pause').click();
     let fullTick = 0;
@@ -76,6 +90,11 @@ describe('foundation screen', () => {
     );
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(fullTick),
+    );
+    cy.get('[data-testid="vehicle-movement-svg"]').should(
+      'have.attr',
+      'data-scenario-id',
+      'torrevieja-v1',
     );
 
     cy.contains('button', 'Close transport Worker').click();
@@ -125,6 +144,11 @@ describe('foundation screen', () => {
     );
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(miniTick),
+    );
+    cy.get('[data-testid="vehicle-movement-svg"]').should(
+      'have.attr',
+      'data-scenario-id',
+      'torrevieja-mini-v1',
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
     cy.contains('button', /^Normal /).click();

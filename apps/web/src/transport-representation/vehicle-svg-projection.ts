@@ -1,0 +1,155 @@
+import type { VehicleState } from '@torrevieja-tycoon/simulation';
+import {
+  buildDirectedScenarioGraph,
+  type CanonicalScenario,
+} from '@torrevieja-tycoon/transport-domain';
+
+type GeographicPosition = Readonly<{ latitude: number; longitude: number }>;
+type SvgPosition = Readonly<{ cx: number; cy: number }>;
+
+export interface VehicleSvgProjection {
+  readonly viewBox: '0 0 100 100';
+  readonly nodes: readonly Readonly<
+    SvgPosition & GeographicPosition & { stopNodeId: string }
+  >[];
+  readonly edges: readonly Readonly<{
+    edgeId: string;
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+  }>[];
+  readonly vehicles: readonly Readonly<
+    SvgPosition & {
+      vehicleId: string;
+      label: string;
+      movementKind: VehicleState['movement']['kind'];
+      edgeId?: string;
+      progressNumerator?: number;
+      progressDenominator?: number;
+    }
+  >[];
+}
+
+const deepFreeze = <T>(value: T): T => {
+  if (value === null || typeof value !== 'object') return value;
+  for (const child of Object.values(value)) deepFreeze(child);
+  return Object.freeze(value);
+};
+
+export function interpolateSvgPosition(
+  from: GeographicPosition,
+  to: GeographicPosition,
+  numerator: number,
+  denominator: number,
+): GeographicPosition {
+  if (
+    !Number.isSafeInteger(numerator) ||
+    numerator < 0 ||
+    !Number.isSafeInteger(denominator) ||
+    denominator <= 0 ||
+    numerator > denominator
+  )
+    throw new Error('Invalid authoritative vehicle progress.');
+  const ratio = numerator / denominator;
+  return deepFreeze({
+    latitude: from.latitude + (to.latitude - from.latitude) * ratio,
+    longitude: from.longitude + (to.longitude - from.longitude) * ratio,
+  });
+}
+
+export function projectVehicleMovementSvg(
+  scenario: CanonicalScenario,
+  fleet: readonly VehicleState[],
+): VehicleSvgProjection {
+  const graph = buildDirectedScenarioGraph(scenario);
+  if (graph.nodes.length === 0)
+    throw new Error('SVG projection requires at least one canonical stop.');
+  const stops = new Map<string, (typeof graph.nodes)[number]>(
+    graph.nodes.map((node) => [node.stopNodeId, node]),
+  );
+  const latitudes = graph.nodes.map((node) => node.position.latitude);
+  const longitudes = graph.nodes.map((node) => node.position.longitude);
+  const south = Math.min(...latitudes);
+  const north = Math.max(...latitudes);
+  const west = Math.min(...longitudes);
+  const east = Math.max(...longitudes);
+  const latitudeSpan = north - south;
+  const longitudeSpan = east - west;
+  const mapPosition = (position: GeographicPosition): SvgPosition =>
+    deepFreeze({
+      cx:
+        longitudeSpan === 0
+          ? 50
+          : 5 + ((position.longitude - west) / longitudeSpan) * 90,
+      cy:
+        latitudeSpan === 0
+          ? 50
+          : 5 + ((north - position.latitude) / latitudeSpan) * 90,
+    });
+  const requireStop = (stopNodeId: string) => {
+    const stop = stops.get(stopNodeId);
+    if (!stop)
+      throw new Error(
+        `Vehicle references missing canonical stop: ${stopNodeId}.`,
+      );
+    return stop;
+  };
+  const nodes = graph.nodes.map((node) => ({
+    stopNodeId: node.stopNodeId,
+    latitude: node.position.latitude,
+    longitude: node.position.longitude,
+    ...mapPosition(node.position),
+  }));
+  const edges = graph.edges.map((edge) => {
+    const from = mapPosition(requireStop(edge.fromStopNodeId).position);
+    const to = mapPosition(requireStop(edge.toStopNodeId).position);
+    return {
+      edgeId: edge.edgeId,
+      x1: from.cx,
+      y1: from.cy,
+      x2: to.cx,
+      y2: to.cy,
+    };
+  });
+  const vehicles = fleet.map((vehicle) => {
+    const movement = vehicle.movement;
+    if (movement.kind !== 'running-on-edge') {
+      const position = mapPosition(requireStop(movement.stopNodeId).position);
+      return {
+        vehicleId: vehicle.vehicleId,
+        label: vehicle.label,
+        movementKind: movement.kind,
+        ...position,
+      };
+    }
+    const edge = graph.edges.find(({ edgeId }) => edgeId === movement.edgeId);
+    if (!edge)
+      throw new Error(
+        `Vehicle references missing canonical edge: ${movement.edgeId}.`,
+      );
+    if (
+      edge.fromStopNodeId !== movement.fromStopNodeId ||
+      edge.toStopNodeId !== movement.toStopNodeId
+    )
+      throw new Error(
+        `Vehicle edge endpoints do not match ${movement.edgeId}.`,
+      );
+    const geographic = interpolateSvgPosition(
+      requireStop(edge.fromStopNodeId).position,
+      requireStop(edge.toStopNodeId).position,
+      movement.progressTicks,
+      movement.travelTicks,
+    );
+    return {
+      vehicleId: vehicle.vehicleId,
+      label: vehicle.label,
+      movementKind: movement.kind,
+      edgeId: movement.edgeId,
+      progressNumerator: movement.progressTicks,
+      progressDenominator: movement.travelTicks,
+      ...mapPosition(geographic),
+    };
+  });
+  return deepFreeze({ viewBox: '0 0 100 100', nodes, edges, vehicles });
+}

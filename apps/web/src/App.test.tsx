@@ -89,8 +89,15 @@ vi.mock('./scenarios/ScenarioPanel.js', () => ({
   ScenarioPanel: ({
     onScenarioReady,
     onResolverReady,
+    onSelectionChange,
   }: {
     onScenarioReady(value: typeof scenario): void;
+    onSelectionChange?(value: {
+      requestedScenarioId?: string;
+      status: 'idle' | 'loading' | 'ready' | 'failed';
+      scenario?: typeof scenario;
+      message?: string;
+    }): void;
     onResolverReady?(
       resolve: (coordinate: { scenarioId: string }) => Promise<typeof scenario>,
     ): void;
@@ -107,16 +114,60 @@ vi.mock('./scenarios/ScenarioPanel.js', () => ({
           ),
         );
         onScenarioReady(scenario);
+        onSelectionChange?.({
+          requestedScenarioId: scenario.manifest.scenarioId,
+          status: 'ready',
+          scenario,
+        });
       });
     }
     return (
       <div>
         Scenario fixture
-        <button onClick={() => onScenarioReady(alternateScenario)}>
+        <button
+          onClick={() => {
+            onScenarioReady(alternateScenario);
+            onSelectionChange?.({
+              requestedScenarioId: alternateScenario.manifest.scenarioId,
+              status: 'ready',
+              scenario: alternateScenario as typeof scenario,
+            });
+          }}
+        >
           Select scenario B
         </button>
-        <button onClick={() => onScenarioReady(scenario)}>
+        <button
+          onClick={() => {
+            onScenarioReady(scenario);
+            onSelectionChange?.({
+              requestedScenarioId: scenario.manifest.scenarioId,
+              status: 'ready',
+              scenario,
+            });
+          }}
+        >
           Select scenario A
+        </button>
+        <button
+          onClick={() =>
+            onSelectionChange?.({
+              requestedScenarioId: alternateScenario.manifest.scenarioId,
+              status: 'loading',
+            })
+          }
+        >
+          Request scenario B
+        </button>
+        <button
+          onClick={() =>
+            onSelectionChange?.({
+              requestedScenarioId: alternateScenario.manifest.scenarioId,
+              status: 'failed',
+              message: 'Scenario B failed',
+            })
+          }
+        >
+          Fail scenario B
         </button>
       </div>
     );
@@ -227,6 +278,8 @@ describe('foundation screen', () => {
 
   it('does not replace ready authority when loader selection changes', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
+    const intervals = vi.spyOn(window, 'setInterval');
+    const clears = vi.spyOn(window, 'clearInterval');
     render(<App />);
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
@@ -236,6 +289,16 @@ describe('foundation screen', () => {
       'data-scenario-id',
       'torrevieja-mini-v1',
     );
+    await waitFor(() =>
+      expect(screen.getByRole('radio', { name: 'Autosave' })).toBeEnabled(),
+    );
+    fireEvent.click(screen.getByRole('radio', { name: 'Autosave' }));
+    await waitFor(() =>
+      expect(screen.getByRole('radio', { name: 'Autosave' })).toBeChecked(),
+    );
+    const initialAutosaveSchedules = intervals.mock.calls.filter(
+      ([, milliseconds]) => milliseconds === 30_000,
+    ).length;
     fireEvent.click(screen.getByRole('button', { name: 'Select scenario B' }));
     expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
       'scenario-b',
@@ -264,10 +327,53 @@ describe('foundation screen', () => {
         'scenario-b',
       ),
     );
+    await waitFor(() => {
+      expect(screen.getByRole('radio', { name: 'Autosave' })).toBeChecked();
+      expect(screen.getByRole('radio', { name: 'Autosave' })).toBeEnabled();
+      expect(
+        intervals.mock.calls.filter(
+          ([, milliseconds]) => milliseconds === 30_000,
+        ),
+      ).toHaveLength(initialAutosaveSchedules + 1);
+    });
+    expect(clears).toHaveBeenCalled();
     expect(screen.getByTestId('worker-status')).toHaveTextContent('ready');
     expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
       'data-scenario-id',
       'scenario-b',
+    );
+  });
+
+  it('never starts the previous ready package while a requested selection is pending or failed', async () => {
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    await waitFor(() =>
+      expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Close transport Worker' }),
+    );
+    const start = await screen.findByRole('button', {
+      name: 'Start new transport session',
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Request scenario B' }));
+    expect(screen.getByTestId('requested-scenario')).toHaveTextContent(
+      'scenario-b (loading)',
+    );
+    expect(start).toBeDisabled();
+    expect(screen.getByTestId('active-scenario')).not.toHaveTextContent(
+      'scenario-b',
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Fail scenario B' }));
+    expect(start).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: 'Select scenario B' }));
+    await waitFor(() => expect(start).toBeEnabled());
+    fireEvent.click(start);
+    await waitFor(() =>
+      expect(screen.getByTestId('active-scenario')).toHaveTextContent(
+        'scenario-b',
+      ),
     );
   });
 

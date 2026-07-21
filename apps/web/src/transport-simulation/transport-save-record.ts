@@ -90,6 +90,7 @@ export interface TransportSaveRecordV1 {
 export interface TransportSaveSummary {
   readonly saveId: FoundationSaveId;
   readonly label?: string | undefined;
+  readonly scenarioSchemaVersion?: string | undefined;
   readonly scenarioId?: string | undefined;
   readonly scenarioVersion?: string | undefined;
   readonly contentHash?: string | undefined;

@@ -24,6 +24,7 @@ import {
 } from 'react';
 import {
   createFoundationSessionComposition,
+  type FoundationSaveMode,
   type FoundationSessionCompositionState,
 } from './foundation-session-composition.js';
 import { createDefaultBrowserPacingDriver } from './pacing/browser-pacing-driver.js';
@@ -34,6 +35,7 @@ import { createBrowserTransportWorker } from './transport-simulation/browser-tra
 import { createTransportFoundationApplication } from './transport-simulation/transport-foundation-application.js';
 import { createDexieTransportSaveRepository } from './transport-simulation/transport-save-repository.js';
 import { createWorkerTransportSimulationClient } from './transport-simulation/worker-transport-client.js';
+import type { ScenarioSelectionState } from './scenarios/ScenarioPanel.js';
 
 type Actions = Readonly<{
   mode: (mode: 'paused' | 'normal' | 'fast' | 'maximum') => Promise<void>;
@@ -55,6 +57,8 @@ export function App() {
   const [state, setState] = useState<FoundationSessionCompositionState>();
   const [actions, setActions] = useState<Actions>();
   const [selectedScenario, setSelectedScenario] = useState<CanonicalScenario>();
+  const [scenarioSelection, setScenarioSelection] =
+    useState<ScenarioSelectionState>({ status: 'idle' });
   const [stackSeedScenario, setStackSeedScenario] =
     useState<CanonicalScenario>();
   const [browserActionMessage, setBrowserActionMessage] = useState<string>();
@@ -63,6 +67,7 @@ export function App() {
   const scenarioResolver = useRef<
     ((coordinate: ScenarioCoordinate) => Promise<CanonicalScenario>) | undefined
   >(undefined);
+  const saveMode = useRef<FoundationSaveMode>('manual');
   const cacheScenario = useCallback((next: CanonicalScenario) => {
     scenarioCache.current.set(
       scenarioKey(createScenarioCoordinate(next)),
@@ -85,8 +90,17 @@ export function App() {
   const handleScenarioReady = useCallback(
     (next: CanonicalScenario) => {
       cacheScenario(next);
-      setSelectedScenario(next);
-      setStackSeedScenario((current) => current ?? next);
+    },
+    [cacheScenario],
+  );
+  const handleSelectionChange = useCallback(
+    (next: ScenarioSelectionState) => {
+      setScenarioSelection(next);
+      if (next.status === 'ready' && next.scenario) {
+        cacheScenario(next.scenario);
+        setSelectedScenario(next.scenario);
+        setStackSeedScenario((current) => current ?? next.scenario);
+      }
     },
     [cacheScenario],
   );
@@ -166,6 +180,7 @@ export function App() {
         };
       },
       confirm: (message) => window.confirm(message),
+      initialSaveMode: saveMode.current,
       timer: {
         setInterval: (callback, milliseconds) =>
           window.setInterval(callback, milliseconds),
@@ -179,7 +194,10 @@ export function App() {
           (scenario) => scenario.manifest.scenarioId === scenarioId,
         )?.manifest.title,
     });
-    const remove = composition.projection.subscribe((next) => setState(next));
+    const remove = composition.projection.subscribe((next) => {
+      saveMode.current = next.saveMode;
+      setState(next);
+    });
     setState(composition.projection.getState());
     setActions({
       mode: composition.setMode,
@@ -299,6 +317,11 @@ export function App() {
           <p data-testid="selected-scenario">
             Selected scenario:{' '}
             {selectedScenario?.manifest.scenarioId ?? 'pending'}
+          </p>
+          <p data-testid="requested-scenario">
+            Requested scenario:{' '}
+            {scenarioSelection.requestedScenarioId ?? 'pending'} (
+            {scenarioSelection.status})
           </p>
           <p data-testid="active-scenario">
             Active authoritative scenario:{' '}
@@ -543,6 +566,13 @@ export function App() {
           {state?.canStartNewSession ? (
             <button
               type="button"
+              disabled={
+                !actions ||
+                scenarioSelection.status !== 'ready' ||
+                !selectedScenario ||
+                selectedScenario.manifest.scenarioId !==
+                  scenarioSelection.requestedScenarioId
+              }
               onClick={action(async () => {
                 if (
                   selectedScenario &&
@@ -575,6 +605,7 @@ export function App() {
         <ScenarioPanel
           onResolverReady={handleResolverReady}
           onScenarioReady={handleScenarioReady}
+          onSelectionChange={handleSelectionChange}
         />
       </Suspense>
       <Suspense fallback={<p>Loading representation…</p>}>

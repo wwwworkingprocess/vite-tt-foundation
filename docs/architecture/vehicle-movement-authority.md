@@ -13,6 +13,11 @@ unrelated scenarios. The browser save library is a separate collection and may
 hold records from any number of scenarios. New manual and autosave targets are
 therefore scoped by the complete active scenario coordinate; earlier global-slot
 records remain listed and explicitly restorable for compatibility.
+Scoped IDs use a bounded deterministic fingerprint of one canonical,
+length-delimited coordinate serialization. Quick-slot availability considers
+only exact scoped targets, while compatible global records remain library-only
+restore choices. Manual/autosave mode is browser composition preference across
+stack replacement and is not stored in Transport Snapshot or Save V2.
 
 The Phase 4C application-owned transport client and dedicated-Worker wire
 contracts are version 2. Version 1 envelopes are rejected explicitly rather

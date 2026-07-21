@@ -10,14 +10,35 @@ const coordinate: ScenarioCoordinate = Object.freeze({
 });
 
 describe('scenario-scoped save target identity', () => {
-  it('includes mode and every exact scenario coordinate field', () => {
+  it('produces stable bounded targets for the public coordinates', () => {
     const manual = createScenarioScopedSaveTarget('manual', coordinate);
     const autosave = createScenarioScopedSaveTarget('autosave', coordinate);
     expect(manual).not.toBe(autosave);
-    for (const part of Object.values(coordinate))
-      expect(manual).toContain(part);
     expect(manual).toMatch(/^[A-Za-z0-9][A-Za-z0-9._:-]*$/);
     expect(manual.length).toBeLessThanOrEqual(128);
+    expect(createScenarioScopedSaveTarget('manual', coordinate)).toBe(manual);
+    expect(
+      createScenarioScopedSaveTarget('manual', {
+        contentHash: coordinate.contentHash,
+        scenarioVersion: coordinate.scenarioVersion,
+        scenarioId: coordinate.scenarioId,
+        scenarioSchemaVersion: coordinate.scenarioSchemaVersion,
+      }),
+    ).toBe(manual);
+  });
+
+  it.each([
+    'a'.repeat(400),
+    'Torrevieja central scenario',
+    'Torrevieja — 交通 🚌',
+    'scenario/with?punctuation&symbols',
+  ])('accepts every valid domain scenario ID: %s', (scenarioId) => {
+    const target = createScenarioScopedSaveTarget('manual', {
+      ...coordinate,
+      scenarioId: scenarioId as ScenarioCoordinate['scenarioId'],
+    });
+    expect(target).toMatch(/^[A-Za-z0-9][A-Za-z0-9._:-]*$/);
+    expect(target.length).toBeLessThanOrEqual(128);
   });
 
   it.each([

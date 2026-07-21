@@ -63,10 +63,12 @@ function fakeTimer(): FoundationSessionTimer & {
 function harness(options?: {
   confirm?: (message: string) => boolean | Promise<boolean>;
   scenarios?: readonly ScenarioCoordinate[];
+  initialSaveMode?: 'manual' | 'autosave';
 }) {
   const timer = fakeTimer();
   const saves = new Set<string>();
   const saveSources = new Map<string, string>();
+  const saveScenarios = new Map<string, string>();
   const stacks: Array<{
     stack: FoundationSessionStack;
     app: ReturnType<typeof projection<FoundationApplicationState>>;
@@ -114,11 +116,12 @@ function harness(options?: {
             saveId,
             sourceTimelineId: saveSources.get(saveId),
             sourceSimulationTick: 0,
-            ...(saveId.includes('scenario-a')
-              ? { scenarioId: 'scenario-a', compatibility: 'current' }
-              : saveId.includes('scenario-b')
-                ? { scenarioId: 'scenario-b', compatibility: 'current' }
-                : {}),
+            ...(saveScenarios.get(saveId)
+              ? {
+                  scenarioId: saveScenarios.get(saveId),
+                  compatibility: 'current' as const,
+                }
+              : {}),
           })) as never,
         },
       });
@@ -135,6 +138,8 @@ function harness(options?: {
       const session = app.api.getState().session;
       if (session.status === 'ready')
         saveSources.set(String(saveId), session.timelineId);
+      const scenario = app.api.getState().scenario;
+      if (scenario) saveScenarios.set(String(saveId), scenario.scenarioId);
       refreshSaves();
     });
     const restore = vi.fn(
@@ -221,6 +226,9 @@ function harness(options?: {
     confirm: options?.confirm ?? (() => true),
     timer,
     autosaveIntervalMs: 3_000,
+    ...(options?.initialSaveMode
+      ? { initialSaveMode: options.initialSaveMode }
+      : {}),
     nowUtcMs: () => 1,
   });
   return {
@@ -258,6 +266,34 @@ const scenarioCoordinate = (
   });
 
 describe('foundation session composition', () => {
+  it('starts one autosave schedule when autosave is the browser-owned initial mode', async () => {
+    const { composition, timer } = harness({ initialSaveMode: 'autosave' });
+    expect(composition.projection.getState().saveMode).toBe('autosave');
+    await composition.startNewSession();
+    expect(timer.activeCount()).toBe(1);
+    expect(timer.createdCount()).toBe(1);
+    await composition.closeSession();
+    expect(timer.activeCount()).toBe(0);
+  });
+
+  it('keeps global legacy records out of scoped quick-slot availability', async () => {
+    const scenarioA = scenarioCoordinate('scenario-a', 'a'.repeat(64));
+    const { composition, saves, stacks } = harness({ scenarios: [scenarioA] });
+    saves.add('foundation-slot');
+    saves.add('foundation-autosave');
+    await composition.startNewSession();
+
+    expect(composition.projection.getState().manualSaveAvailable).toBe(false);
+    expect(composition.projection.getState().autosaveSaveAvailable).toBe(false);
+    await composition.restoreManual();
+    expect(stacks[0]!.restore).not.toHaveBeenCalled();
+
+    await composition.restoreSave('foundation-autosave');
+    expect(stacks[0]!.restore).toHaveBeenCalledWith(
+      expect.objectContaining({ saveId: 'foundation-autosave' }),
+    );
+  });
+
   it('scopes manual and autosave targets to exact active authority and restores any listed record', async () => {
     const scenarioA = scenarioCoordinate('scenario-a', 'a'.repeat(64));
     const scenarioB = scenarioCoordinate('scenario-b', 'b'.repeat(64));

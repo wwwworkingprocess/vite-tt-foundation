@@ -84,11 +84,24 @@ describe('transport save compatibility', () => {
   });
   it('parses, freezes, and summarizes a current transport record', () => {
     const record = parseTransportSaveRecord(current());
-    expect(summarizeCompatibleSave(record)).toMatchObject({
+    const summary = summarizeCompatibleSave(record);
+    expect(summary).toMatchObject({
       compatibility: 'current',
+      scenarioSchemaVersion: '1.0.0',
       scenarioId: 'torrevieja-mini-v1',
+      scenarioVersion: '1.0.0',
+      contentHash: expect.any(String),
+      snapshotVersion: 2,
+      vehicleCount: 0,
       sourceSimulationTick: 120,
     });
+    expect(Object.isFrozen(summary)).toBe(true);
+    expect(Reflect.set(summary, 'scenarioId', 'mutated')).toBe(false);
+    const assertCompileTimeReadonly = () => {
+      // @ts-expect-error public summaries are readonly
+      summary.scenarioId = 'mutated';
+    };
+    void assertCompileTimeReadonly;
     expect(Object.isFrozen(record.snapshot.scenario)).toBe(true);
   });
 

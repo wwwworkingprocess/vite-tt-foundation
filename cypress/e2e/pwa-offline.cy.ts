@@ -146,6 +146,11 @@ describe('built foundation PWA offline lifecycle', () => {
       'Persistence status: idle',
     );
     cy.get('select').select('torrevieja-mini-v1');
+    cy.get('[data-testid="requested-scenario"]').should(
+      'contain.text',
+      'torrevieja-mini-v1 (loading)',
+    );
+    cy.get('select').should('be.disabled');
     cy.get('[data-testid="selected-scenario"]').should(
       'contain.text',
       'torrevieja-mini-v1',
@@ -156,7 +161,9 @@ describe('built foundation PWA offline lifecycle', () => {
     );
     cy.contains('button', 'Close transport Worker').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
-    cy.contains('button', 'Start new transport session').click();
+    cy.contains('button', 'Start new transport session')
+      .should('be.enabled')
+      .click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',

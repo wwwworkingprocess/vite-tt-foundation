@@ -1,5 +1,9 @@
 import { readFile } from 'node:fs/promises';
-import { resolve, sep } from 'node:path';
+import { resolve } from 'node:path';
+import {
+  findCoverageEntry,
+  normalizeCoveragePath,
+} from './critical-coverage-paths.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const manifest = JSON.parse(
@@ -26,9 +30,36 @@ const loadCoverage = async (coverageCandidates) => {
     );
   return coverage;
 };
-const normalize = (value) => value.replaceAll('\\', '/').split(sep).join('/');
-if (normalize('mixed\\separator/path.ts') !== 'mixed/separator/path.ts')
+if (
+  normalizeCoveragePath('mixed\\separator/path.ts') !==
+  'mixed/separator/path.ts'
+)
   throw new Error('Critical coverage path normalization is not portable.');
+const pathFixture = Object.freeze({ fixture: true });
+for (const fixturePath of [
+  'C:\\actions\\project\\apps\\web\\src\\fixture.ts',
+  '/home/runner/work/project/apps/web/src/fixture.ts',
+])
+  if (
+    findCoverageEntry(
+      { [fixturePath]: pathFixture },
+      'apps/web/src/fixture.ts',
+    ) !== pathFixture
+  )
+    throw new Error('Critical coverage cross-root matching is not portable.');
+try {
+  findCoverageEntry(
+    {
+      'C:\\one\\apps\\web\\src\\fixture.ts': pathFixture,
+      '/two/apps/web/src/fixture.ts': pathFixture,
+    },
+    'apps/web/src/fixture.ts',
+  );
+  throw new Error('Critical coverage ambiguity fixture was not rejected.');
+} catch (error) {
+  if (!(error instanceof Error) || !error.message.includes('ambiguous'))
+    throw error;
+}
 const percent = (covered, total) =>
   total === 0 ? 100 : Number(((covered / total) * 100).toFixed(2));
 const count = (values) => {
@@ -52,10 +83,7 @@ const results = {};
 const auditGroup = async (configuration, candidates) => {
   const coverage = await loadCoverage(candidates);
   for (const relative of configuration.files) {
-    const absolute = normalize(resolve(root, relative));
-    const entry = Object.entries(coverage).find(
-      ([path]) => normalize(path) === absolute,
-    )?.[1];
+    const entry = findCoverageEntry(coverage, relative);
     if (!entry) {
       failures.push(`${relative}: missing from coverage`);
       continue;

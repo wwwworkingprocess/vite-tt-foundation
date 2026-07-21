@@ -111,6 +111,7 @@ export function createFoundationSessionComposition(input: {
   readonly confirm: (message: string) => boolean | Promise<boolean>;
   readonly timer: FoundationSessionTimer;
   readonly autosaveIntervalMs?: number;
+  readonly initialSaveMode?: FoundationSaveMode;
   readonly nowUtcMs: () => number;
   readonly scenarioTitle?: (scenarioId: string) => string | undefined;
 }) {
@@ -121,7 +122,7 @@ export function createFoundationSessionComposition(input: {
   const initial = deepFreeze<FoundationSessionCompositionState>({
     application: idleApplication,
     pacing: idlePacing,
-    saveMode: 'manual',
+    saveMode: input.initialSaveMode ?? 'manual',
     manualSaveAvailable: false,
     autosaveSaveAvailable: false,
     operation: 'idle',
@@ -154,11 +155,7 @@ export function createFoundationSessionComposition(input: {
     const scoped = targetFor(mode, application);
     return application.persistence.saves.some((save) => save.saveId === scoped)
       ? scoped
-      : application.persistence.saves.some(
-            (save) => save.saveId === legacySaveId(mode),
-          )
-        ? legacySaveId(mode)
-        : undefined;
+      : undefined;
   };
   const availability = (application: FoundationApplicationState) => ({
     manualSaveAvailable: existingTargetFor('manual', application) !== undefined,

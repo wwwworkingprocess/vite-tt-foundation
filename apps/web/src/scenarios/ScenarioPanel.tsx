@@ -11,8 +11,16 @@ const fetchText = async (url: string) => {
   return { ok: response.ok, text: () => response.text() };
 };
 
+export type ScenarioSelectionState = Readonly<{
+  requestedScenarioId?: string | undefined;
+  status: 'idle' | 'loading' | 'ready' | 'failed';
+  scenario?: CanonicalScenario | undefined;
+  message?: string | undefined;
+}>;
+
 export function ScenarioPanel(props: {
   readonly onScenarioReady?: (scenario: CanonicalScenario) => void;
+  readonly onSelectionChange?: (state: ScenarioSelectionState) => void;
   readonly onResolverReady?:
     | ((
         resolve: ReturnType<typeof createScenarioLoader>['resolveScenario'],
@@ -41,6 +49,23 @@ export function ScenarioPanel(props: {
   useEffect(() => {
     if (state.scenario) props.onScenarioReady?.(state.scenario);
   }, [props.onScenarioReady, state.scenario]);
+  useEffect(() => {
+    props.onSelectionChange?.(
+      Object.freeze({
+        requestedScenarioId: state.selectedScenarioId,
+        status:
+          state.status === 'loading-scenario'
+            ? 'loading'
+            : state.status === 'ready'
+              ? 'ready'
+              : state.status === 'failed'
+                ? 'failed'
+                : 'idle',
+        ...(state.scenario ? { scenario: state.scenario } : {}),
+        ...(state.message ? { message: state.message } : {}),
+      }),
+    );
+  }, [props.onSelectionChange, state]);
   const graph = state.graph;
   return (
     <section aria-labelledby="scenario-title">
@@ -68,6 +93,14 @@ export function ScenarioPanel(props: {
           ))}
         </select>
       </label>
+      {state.status === 'failed' && state.selectedScenarioId ? (
+        <button
+          type="button"
+          onClick={() => void loader.loadScenario(state.selectedScenarioId!)}
+        >
+          Retry selected scenario
+        </button>
+      ) : null}
       {graph ? (
         <dl aria-label="Scenario graph summary">
           <div>

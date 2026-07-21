@@ -117,10 +117,20 @@ describe('foundation screen', () => {
       'available',
     );
 
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '**/torrevieja-mini-v1/scenario.json',
+        times: 1,
+      },
+      (request) => {
+        request.continue((response) => response.setDelay(5_000));
+      },
+    ).as('loadMiniSelection');
     cy.get('select').select('torrevieja-mini-v1');
-    cy.get('[data-testid="selected-scenario"]').should(
+    cy.get('[data-testid="requested-scenario"]').should(
       'contain.text',
-      'torrevieja-mini-v1',
+      'torrevieja-mini-v1 (loading)',
     );
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
@@ -139,7 +149,15 @@ describe('foundation screen', () => {
     );
 
     cy.contains('button', 'Close transport Worker').click();
-    cy.contains('button', 'Start new transport session').click();
+    cy.contains('button', 'Start new transport session').should('be.disabled');
+    cy.wait('@loadMiniSelection');
+    cy.get('[data-testid="selected-scenario"]').should(
+      'contain.text',
+      'torrevieja-mini-v1',
+    );
+    cy.contains('button', 'Start new transport session')
+      .should('be.enabled')
+      .click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
@@ -188,6 +206,10 @@ describe('foundation screen', () => {
     cy.then(() => expectVehicleSvg(fullSvg));
     cy.get('[data-testid="command-revision"]').should('contain.text', '0');
     cy.get('[data-testid="stream-offset"]').should('contain.text', '0');
+    cy.get('[data-testid="persistence-status"]').should(
+      'have.text',
+      'Persistence status: idle',
+    );
 
     restoreScenario('torrevieja-mini-v1');
     cy.get('[data-testid="scenario-coordinate"]').should(

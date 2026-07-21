@@ -1,6 +1,9 @@
 import { parseGameId, parseTimelineId } from '@torrevieja-tycoon/protocol';
 import { describe, expect, it, vi } from 'vitest';
-import type { FoundationApplicationState } from './application/foundation-controller.js';
+import type {
+  ApplicationSaveSummary,
+  FoundationApplicationState,
+} from './application/foundation-controller.js';
 import {
   createFoundationSessionComposition,
   type FoundationSessionStack,
@@ -67,8 +70,9 @@ function harness(options?: {
 }) {
   const timer = fakeTimer();
   const saves = new Set<string>();
+  const seededSummaries = new Map<string, ApplicationSaveSummary>();
   const saveSources = new Map<string, string>();
-  const saveScenarios = new Map<string, string>();
+  const saveScenarios = new Map<string, ScenarioCoordinate>();
   const stacks: Array<{
     stack: FoundationSessionStack;
     app: ReturnType<typeof projection<FoundationApplicationState>>;
@@ -113,12 +117,17 @@ function harness(options?: {
         persistence: {
           status: 'idle',
           saves: [...saves].map((saveId) => ({
+            ...(seededSummaries.get(saveId) ?? {}),
             saveId,
             sourceTimelineId: saveSources.get(saveId),
             sourceSimulationTick: 0,
             ...(saveScenarios.get(saveId)
               ? {
-                  scenarioId: saveScenarios.get(saveId),
+                  scenarioSchemaVersion:
+                    saveScenarios.get(saveId)!.scenarioSchemaVersion,
+                  scenarioId: saveScenarios.get(saveId)!.scenarioId,
+                  scenarioVersion: saveScenarios.get(saveId)!.scenarioVersion,
+                  contentHash: saveScenarios.get(saveId)!.contentHash,
                   compatibility: 'current' as const,
                 }
               : {}),
@@ -135,11 +144,12 @@ function harness(options?: {
         throw failure;
       }
       saves.add(String(saveId));
+      seededSummaries.delete(String(saveId));
       const session = app.api.getState().session;
       if (session.status === 'ready')
         saveSources.set(String(saveId), session.timelineId);
       const scenario = app.api.getState().scenario;
-      if (scenario) saveScenarios.set(String(saveId), scenario.scenarioId);
+      if (scenario) saveScenarios.set(String(saveId), scenario);
       refreshSaves();
     });
     const restore = vi.fn(
@@ -236,6 +246,10 @@ function harness(options?: {
     timer,
     stacks,
     saves,
+    seedSave(summary: ApplicationSaveSummary) {
+      saves.add(summary.saveId);
+      seededSummaries.set(summary.saveId, summary);
+    },
     delaySave(promise: Promise<void>) {
       delayedSave = promise;
     },
@@ -265,7 +279,90 @@ const scenarioCoordinate = (
     contentHash,
   });
 
+const scenarioSummary = (
+  saveId: string,
+  coordinate: ScenarioCoordinate,
+  overrides: Partial<ApplicationSaveSummary> = {},
+): ApplicationSaveSummary =>
+  Object.freeze({
+    saveId,
+    sourceTimelineId: parseTimelineId('saved-timeline'),
+    sourceSimulationTick: 40,
+    createdAtUtcMs: 1,
+    updatedAtUtcMs: 1,
+    scenarioSchemaVersion: coordinate.scenarioSchemaVersion,
+    scenarioId: coordinate.scenarioId,
+    scenarioVersion: coordinate.scenarioVersion,
+    contentHash: coordinate.contentHash,
+    snapshotVersion: 2,
+    authoritativeEntityCount: 0,
+    compatibility: 'current',
+    ...overrides,
+  });
+
 describe('foundation session composition', () => {
+  it.each([
+    ['compatibility', { compatibility: 'legacy-incompatible' as const }],
+    ['scenario ID', { scenarioId: 'other-scenario' }],
+    ['schema version', { scenarioSchemaVersion: '2.0.0' }],
+    ['data version', { scenarioVersion: '2.0.0' }],
+    ['content hash', { contentHash: 'b'.repeat(64) }],
+  ])(
+    'does not treat an ID-only %s match as the active quick slot',
+    async (_name, mismatch) => {
+      const scenario = scenarioCoordinate('scenario-a', 'a'.repeat(64));
+      const target = createScenarioScopedSaveTarget('manual', scenario);
+      const confirm = vi.fn(() => true);
+      const test = harness({ confirm, scenarios: [scenario] });
+      test.seedSave(scenarioSummary(target, scenario, mismatch));
+      await test.composition.startNewSession();
+
+      const projection = test.composition.projection.getState();
+      expect(projection.manualSaveAvailable).toBe(false);
+      expect(Object.isFrozen(projection)).toBe(true);
+      expect(Object.isFrozen(projection.application.persistence.saves)).toBe(
+        true,
+      );
+      await test.composition.restoreManual();
+      expect(test.stacks[0]!.restore).not.toHaveBeenCalled();
+
+      await test.composition.saveManual();
+      expect(confirm).not.toHaveBeenCalled();
+      expect(test.stacks[0]!.save).toHaveBeenCalledOnce();
+    },
+  );
+
+  it.each(['current', 'migratable'] as const)(
+    'enables the exact %s scoped record and keeps compatible mismatches row-restorable',
+    async (compatibility) => {
+      const scenario = scenarioCoordinate('scenario-a', 'a'.repeat(64));
+      const target = createScenarioScopedSaveTarget('manual', scenario);
+      const test = harness({ scenarios: [scenario] });
+      test.seedSave(
+        scenarioSummary(target, scenario, {
+          compatibility,
+          snapshotVersion: compatibility === 'migratable' ? 1 : 2,
+        }),
+      );
+      await test.composition.startNewSession();
+      expect(test.composition.projection.getState().manualSaveAvailable).toBe(
+        true,
+      );
+      await test.composition.restoreManual();
+      expect(test.stacks[0]!.restore).toHaveBeenCalledWith(
+        expect.objectContaining({ saveId: target }),
+      );
+
+      const mismatched = scenarioSummary(target, scenario, {
+        scenarioId: 'different-scenario',
+      });
+      test.seedSave(mismatched);
+      await test.stacks[0]!.stack.application.listSaves();
+      await test.composition.restoreSave(target);
+      expect(test.stacks[0]!.restore).toHaveBeenCalledTimes(2);
+    },
+  );
+
   it('starts one autosave schedule when autosave is the browser-owned initial mode', async () => {
     const { composition, timer } = harness({ initialSaveMode: 'autosave' });
     expect(composition.projection.getState().saveMode).toBe('autosave');

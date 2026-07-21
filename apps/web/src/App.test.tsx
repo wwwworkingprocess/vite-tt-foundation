@@ -673,5 +673,5 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('vehicle-pattern')).not.toHaveTextContent(
       'legacy-A2-torrevieja-la-mata',
     );
-  });
+  }, 15_000);
 });

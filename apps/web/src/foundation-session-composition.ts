@@ -148,14 +148,31 @@ export function createFoundationSessionComposition(input: {
     application.scenario
       ? createScenarioScopedSaveTarget(mode, application.scenario)
       : legacySaveId(mode);
+  const ownsQuickSlot = (
+    save: ApplicationSaveSummary,
+    mode: FoundationSaveMode,
+    application: FoundationApplicationState,
+  ) => {
+    if (save.saveId !== targetFor(mode, application)) return false;
+    const coordinate = application.scenario;
+    if (!coordinate) return true;
+    return (
+      (save.compatibility === 'current' ||
+        save.compatibility === 'migratable') &&
+      save.scenarioSchemaVersion === coordinate.scenarioSchemaVersion &&
+      save.scenarioId === coordinate.scenarioId &&
+      save.scenarioVersion === coordinate.scenarioVersion &&
+      save.contentHash === coordinate.contentHash
+    );
+  };
   const existingTargetFor = (
     mode: FoundationSaveMode,
     application: FoundationApplicationState,
   ) => {
-    const scoped = targetFor(mode, application);
-    return application.persistence.saves.some((save) => save.saveId === scoped)
-      ? scoped
-      : undefined;
+    const save = application.persistence.saves.find((candidate) =>
+      ownsQuickSlot(candidate, mode, application),
+    );
+    return save?.saveId;
   };
   const availability = (application: FoundationApplicationState) => ({
     manualSaveAvailable: existingTargetFor('manual', application) !== undefined,
@@ -387,9 +404,8 @@ export function createFoundationSessionComposition(input: {
         await candidate.application.listSaves();
         if (!readyContext(candidate, token)) return;
         const application = candidate.application.projection.getState();
-        const target = targetFor(mode, application);
-        const exists = application.persistence.saves.some(
-          (save) => save.saveId === target,
+        const exists = application.persistence.saves.some((save) =>
+          ownsQuickSlot(save, mode, application),
         );
         if (exists) {
           set({ operation: 'confirming-save' });

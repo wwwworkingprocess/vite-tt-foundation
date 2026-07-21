@@ -13,6 +13,7 @@ import type {
   FoundationPacingState,
   createFoundationPacingController,
 } from './pacing/foundation-pacing-controller.js';
+import { createScenarioScopedSaveTarget } from './transport-simulation/scenario-save-target.js';
 
 type Pacing = ReturnType<typeof createFoundationPacingController>;
 type Driver = ReturnType<typeof createBrowserPacingDriver>;
@@ -102,7 +103,7 @@ const idlePacing = deepFreeze<FoundationPacingState>({
 });
 const errorMessage = (error: unknown) =>
   error instanceof Error ? error.message : 'Operation failed.';
-const saveId = (mode: FoundationSaveMode) =>
+const legacySaveId = (mode: FoundationSaveMode) =>
   mode === 'manual' ? 'foundation-slot' : 'foundation-autosave';
 
 export function createFoundationSessionComposition(input: {
@@ -111,6 +112,7 @@ export function createFoundationSessionComposition(input: {
   readonly timer: FoundationSessionTimer;
   readonly autosaveIntervalMs?: number;
   readonly nowUtcMs: () => number;
+  readonly scenarioTitle?: (scenarioId: string) => string | undefined;
 }) {
   const autosaveIntervalMs = input.autosaveIntervalMs ?? 30_000;
   if (!Number.isSafeInteger(autosaveIntervalMs) || autosaveIntervalMs <= 0)
@@ -138,13 +140,30 @@ export function createFoundationSessionComposition(input: {
   let closePromise: Promise<void> | undefined;
   const issuedRestoreTimelines = new Set<TimelineId>();
 
+  const targetFor = (
+    mode: FoundationSaveMode,
+    application: FoundationApplicationState,
+  ) =>
+    application.scenario
+      ? createScenarioScopedSaveTarget(mode, application.scenario)
+      : legacySaveId(mode);
+  const existingTargetFor = (
+    mode: FoundationSaveMode,
+    application: FoundationApplicationState,
+  ) => {
+    const scoped = targetFor(mode, application);
+    return application.persistence.saves.some((save) => save.saveId === scoped)
+      ? scoped
+      : application.persistence.saves.some(
+            (save) => save.saveId === legacySaveId(mode),
+          )
+        ? legacySaveId(mode)
+        : undefined;
+  };
   const availability = (application: FoundationApplicationState) => ({
-    manualSaveAvailable: application.persistence.saves.some(
-      (save) => save.saveId === 'foundation-slot',
-    ),
-    autosaveSaveAvailable: application.persistence.saves.some(
-      (save) => save.saveId === 'foundation-autosave',
-    ),
+    manualSaveAvailable: existingTargetFor('manual', application) !== undefined,
+    autosaveSaveAvailable:
+      existingTargetFor('autosave', application) !== undefined,
   });
   const set = (patch: Partial<FoundationSessionCompositionState>) =>
     store.setState(deepFreeze({ ...store.getState(), ...patch }), true);
@@ -182,9 +201,14 @@ export function createFoundationSessionComposition(input: {
   };
   const metadata = (mode: FoundationSaveMode) => {
     const now = input.nowUtcMs();
+    const application = store.getState().application;
+    const scenarioId = application.scenario?.scenarioId;
+    const title = scenarioId
+      ? (input.scenarioTitle?.(scenarioId) ?? scenarioId)
+      : 'Foundation';
     return {
-      saveId: saveId(mode),
-      label: mode === 'manual' ? 'Foundation slot' : 'Foundation autosave',
+      saveId: targetFor(mode, application),
+      label: `${title} ${mode === 'manual' ? 'manual save' : 'autosave'}`,
       createdAtUtcMs: now,
       updatedAtUtcMs: now,
     };
@@ -365,13 +389,15 @@ export function createFoundationSessionComposition(input: {
       if (mode === 'manual') {
         await candidate.application.listSaves();
         if (!readyContext(candidate, token)) return;
-        const exists = candidate.application.projection
-          .getState()
-          .persistence.saves.some((save) => save.saveId === saveId(mode));
+        const application = candidate.application.projection.getState();
+        const target = targetFor(mode, application);
+        const exists = application.persistence.saves.some(
+          (save) => save.saveId === target,
+        );
         if (exists) {
           set({ operation: 'confirming-save' });
           const accepted = await input.confirm(
-            'This will overwrite your previous saved session. Continue?',
+            `This will overwrite the manual save for ${application.scenario ? (input.scenarioTitle?.(application.scenario.scenarioId) ?? application.scenario.scenarioId) : 'this session'}. Continue?`,
           );
           if (!readyContext(candidate, token)) return;
           if (!accepted) return;
@@ -387,7 +413,7 @@ export function createFoundationSessionComposition(input: {
     }
   }
 
-  async function restoreManual() {
+  async function restoreSave(saveId: string) {
     const candidate = stack;
     const token = generation;
     if (
@@ -396,24 +422,22 @@ export function createFoundationSessionComposition(input: {
       store.getState().operation !== 'idle'
     )
       return;
-    const mode = store.getState().saveMode;
-    const target = saveId(mode);
-    const exists = store
+    const selected = store
       .getState()
-      .application.persistence.saves.some((save) => save.saveId === target);
-    if (!exists) return;
+      .application.persistence.saves.find((save) => save.saveId === saveId);
+    if (!selected || selected.compatibility === 'legacy-incompatible') return;
     cancelAutosave();
     set({ operation: 'confirming-restore', message: undefined });
     try {
       const accepted = await input.confirm(
-        'Restoring will replace your current gameplay with an earlier saved moment. Continue?',
+        `Restore ${selected.scenarioId ? (input.scenarioTitle?.(selected.scenarioId) ?? selected.scenarioId) : (selected.label ?? 'saved session')} at tick ${selected.sourceSimulationTick}? This will replace the current gameplay. Continue?`,
       );
       if (!readyContext(candidate, token)) return;
       if (!accepted) return;
       set({ operation: 'restoring' });
       await candidate.application.restore({
-        saveId: target,
-        newTimelineId: freshRestoreTimeline(target),
+        saveId,
+        newTimelineId: freshRestoreTimeline(saveId),
       });
       if (currentContext(candidate, token)) set({ message: undefined });
     } catch (error) {
@@ -421,6 +445,12 @@ export function createFoundationSessionComposition(input: {
     } finally {
       finish(candidate, token);
     }
+  }
+
+  async function restoreManual() {
+    const application = store.getState().application;
+    const target = existingTargetFor(store.getState().saveMode, application);
+    if (target) await restoreSave(target);
   }
 
   function closeSession(): Promise<void> {
@@ -459,6 +489,7 @@ export function createFoundationSessionComposition(input: {
     startNewSession,
     saveManual,
     restoreManual,
+    restoreSave,
     setSaveMode(mode: FoundationSaveMode) {
       if (
         (mode !== 'manual' && mode !== 'autosave') ||

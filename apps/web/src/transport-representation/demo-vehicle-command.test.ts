@@ -97,6 +97,25 @@ describe('authoritative demo vehicle command construction', () => {
     expect(JSON.stringify(fromA)).not.toContain('pattern-b');
   });
 
+  it('selects the next unused deterministic ID from the authoritative fleet', () => {
+    const first = createDemoVehicleCommandForAuthority(
+      createScenarioCoordinate(scenarioA),
+      resolve,
+      [],
+    );
+    expect(first.vehicleId).toBe('browser-demo-vehicle-001');
+    const third = createDemoVehicleCommandForAuthority(
+      createScenarioCoordinate(scenarioA),
+      resolve,
+      [
+        { vehicleId: 'browser-demo-vehicle-001' },
+        { vehicleId: 'browser-demo-vehicle-002' },
+      ] as never,
+    );
+    expect(third.vehicleId).toBe('browser-demo-vehicle-003');
+    expect(third.label).toBe('Demo vehicle 003');
+  });
+
   it('does not fall back when the authoritative package is unavailable', () => {
     expect(() =>
       createDemoVehicleCommandForAuthority(

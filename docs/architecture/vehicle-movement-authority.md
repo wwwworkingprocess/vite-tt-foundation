@@ -6,6 +6,14 @@ Creation parks a vehicle at its pattern origin. Starting is a zero-tick transiti
 
 Transport Snapshot V2 and Transport Save V2 preserve the ordered fleet and exact movement state. V1 remains separately parseable and is migrated deliberately to V2 with an empty fleet by the restore workflow. Direct, structured-clone, and Worker adapters validate and deeply freeze the same authority. Rendering receives integer progress/travel values only; interpolation is presentation work.
 
+One Transport Save V2 record is one exact authoritative scenario timeline
+snapshot: its scenario coordinate, simulation tick, complete ordered fleet,
+movement plans, and exact movement states travel together. It never combines
+unrelated scenarios. The browser save library is a separate collection and may
+hold records from any number of scenarios. New manual and autosave targets are
+therefore scoped by the complete active scenario coordinate; earlier global-slot
+records remain listed and explicitly restorable for compatibility.
+
 The Phase 4C application-owned transport client and dedicated-Worker wire
 contracts are version 2. Version 1 envelopes are rejected explicitly rather
 than interpreted as carrying vehicle and fleet fields.

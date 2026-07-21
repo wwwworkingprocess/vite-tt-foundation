@@ -91,7 +91,15 @@ export function createTransportFoundationApplication(input: {
         item.classification === 'current' ||
         item.classification === 'migratable-transport-v1' ||
         item.classification === 'legacy-foundation'
-          ? [item.summary]
+          ? [
+              (() => {
+                const { vehicleCount, ...summary } = item.summary;
+                return {
+                  ...summary,
+                  authoritativeEntityCount: vehicleCount,
+                };
+              })(),
+            ]
           : [],
       );
       if (!closed) publishPersistence({ status: 'idle', saves });

@@ -34,6 +34,12 @@ export interface ApplicationSaveSummary {
   readonly createdAtUtcMs: number;
   readonly updatedAtUtcMs: number;
   readonly label?: string | undefined;
+  readonly scenarioId?: string | undefined;
+  readonly scenarioSchemaVersion?: string | undefined;
+  readonly scenarioVersion?: string | undefined;
+  readonly contentHash?: string | undefined;
+  readonly snapshotVersion?: 1 | 2 | undefined;
+  readonly authoritativeEntityCount?: number | undefined;
   readonly compatibility?:
     'current' | 'migratable' | 'legacy-incompatible' | undefined;
 }

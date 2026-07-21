@@ -7,6 +7,8 @@ import {
   type FoundationSessionTimer,
 } from './foundation-session-composition.js';
 import type { FoundationPacingState } from './pacing/foundation-pacing-controller.js';
+import type { ScenarioCoordinate } from '@torrevieja-tycoon/simulation';
+import { createScenarioScopedSaveTarget } from './transport-simulation/scenario-save-target.js';
 
 function projection<T>(initial: T) {
   let state = initial;
@@ -60,6 +62,7 @@ function fakeTimer(): FoundationSessionTimer & {
 
 function harness(options?: {
   confirm?: (message: string) => boolean | Promise<boolean>;
+  scenarios?: readonly ScenarioCoordinate[];
 }) {
   const timer = fakeTimer();
   const saves = new Set<string>();
@@ -87,6 +90,9 @@ function harness(options?: {
     const stackIndex = stacks.length;
     const app = projection<FoundationApplicationState>({
       session: { status: 'idle' },
+      ...(options?.scenarios?.[stackIndex]
+        ? { scenario: options.scenarios[stackIndex] }
+        : {}),
       synchronization: { status: 'idle' },
       persistence: { status: 'idle', saves: [] },
     });
@@ -107,6 +113,12 @@ function harness(options?: {
           saves: [...saves].map((saveId) => ({
             saveId,
             sourceTimelineId: saveSources.get(saveId),
+            sourceSimulationTick: 0,
+            ...(saveId.includes('scenario-a')
+              ? { scenarioId: 'scenario-a', compatibility: 'current' }
+              : saveId.includes('scenario-b')
+                ? { scenarioId: 'scenario-b', compatibility: 'current' }
+                : {}),
           })) as never,
         },
       });
@@ -234,7 +246,66 @@ function harness(options?: {
   };
 }
 
+const scenarioCoordinate = (
+  scenarioId: string,
+  contentHash: string,
+): ScenarioCoordinate =>
+  Object.freeze({
+    scenarioSchemaVersion: '1.0.0',
+    scenarioId: scenarioId as ScenarioCoordinate['scenarioId'],
+    scenarioVersion: '1.0.0',
+    contentHash,
+  });
+
 describe('foundation session composition', () => {
+  it('scopes manual and autosave targets to exact active authority and restores any listed record', async () => {
+    const scenarioA = scenarioCoordinate('scenario-a', 'a'.repeat(64));
+    const scenarioB = scenarioCoordinate('scenario-b', 'b'.repeat(64));
+    const confirm = vi.fn(() => true);
+    const { composition, stacks, timer } = harness({
+      confirm,
+      scenarios: [scenarioA, scenarioB],
+    });
+    await composition.startNewSession();
+    await composition.saveManual();
+    const manualA = createScenarioScopedSaveTarget('manual', scenarioA);
+    expect(stacks[0]!.save).toHaveBeenLastCalledWith(
+      expect.objectContaining({ saveId: manualA }),
+    );
+    expect(confirm).not.toHaveBeenCalled();
+    await composition.saveManual();
+    expect(confirm).toHaveBeenCalledWith(
+      'This will overwrite the manual save for scenario-a. Continue?',
+    );
+    confirm.mockClear();
+    await composition.setSaveMode('autosave');
+    await timer.fire();
+    expect(stacks[0]!.save).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        saveId: createScenarioScopedSaveTarget('autosave', scenarioA),
+      }),
+    );
+
+    await composition.closeSession();
+    await composition.startNewSession();
+    await composition.setSaveMode('manual');
+    await composition.saveManual();
+    const manualB = createScenarioScopedSaveTarget('manual', scenarioB);
+    expect(stacks[1]!.save).toHaveBeenLastCalledWith(
+      expect.objectContaining({ saveId: manualB }),
+    );
+    expect(manualA).not.toBe(manualB);
+    expect(confirm).not.toHaveBeenCalled();
+
+    await composition.restoreSave(manualA);
+    expect(stacks[1]!.restore).toHaveBeenCalledWith(
+      expect.objectContaining({ saveId: manualA }),
+    );
+    expect(confirm).toHaveBeenCalledWith(
+      expect.stringContaining('scenario-a at tick'),
+    );
+  });
+
   it('ignores save-mode changes during save and restore confirmation', async () => {
     const answers: Array<(value: boolean) => void> = [];
     const { composition } = harness({
@@ -523,7 +594,7 @@ describe('foundation session composition', () => {
 
     await composition.saveManual();
     expect(confirm).toHaveBeenCalledWith(
-      'This will overwrite your previous saved session. Continue?',
+      'This will overwrite the manual save for this session. Continue?',
     );
     expect(stacks[0]?.save).toHaveBeenCalledOnce();
     expect(composition.projection.getState().operation).toBe('idle');

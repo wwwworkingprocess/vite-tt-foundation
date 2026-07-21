@@ -5,12 +5,30 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
+import { createScenarioCoordinate } from '@torrevieja-tycoon/simulation';
 import { useRef } from 'react';
+import { createScenarioScopedSaveTarget } from './transport-simulation/scenario-save-target.js';
+
+const fleetTuples = () =>
+  [...document.querySelectorAll('[data-testid^="vehicle-row-"]')].map(
+    (row) => ({
+      vehicleId: row.getAttribute('data-vehicle-id'),
+      patternId: row.getAttribute('data-pattern-id'),
+      plan: row.getAttribute('data-plan-travel-ticks'),
+      movementKind: row.getAttribute('data-movement-kind'),
+      stopId: row.getAttribute('data-stop-id'),
+      edgeId: row.getAttribute('data-edge-id'),
+      edgeSequence: row.getAttribute('data-edge-sequence'),
+      progress: row.getAttribute('data-progress-numerator'),
+      travel: row.getAttribute('data-progress-denominator'),
+    }),
+  );
 
 const fixture = join(
   import.meta.dirname,
@@ -270,13 +288,36 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-count')).toHaveTextContent('1'),
     );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Create demo vehicle' }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-count')).toHaveTextContent('2'),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Create demo vehicle' }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-count')).toHaveTextContent('3'),
+    );
+    for (const id of [
+      'browser-demo-vehicle-001',
+      'browser-demo-vehicle-002',
+      'browser-demo-vehicle-003',
+    ])
+      expect(screen.getByTestId(`vehicle-row-${id}`)).toHaveAttribute(
+        'data-vehicle-id',
+        id,
+      );
     expect(screen.getByTestId('vehicle-id')).toHaveTextContent(
-      'browser-demo-vehicle',
+      'browser-demo-vehicle-001',
     );
     expect(screen.getByTestId('vehicle-movement')).toHaveTextContent(
       'parked-at-stop',
     );
-    fireEvent.click(screen.getByRole('button', { name: 'Start demo vehicle' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Start browser-demo-vehicle-001' }),
+    );
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-movement')).toHaveTextContent(
         'running-at-stop',
@@ -292,8 +333,17 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByTestId('pacing-status')).toHaveTextContent('paused'),
     );
-    const position = screen.getByTestId('vehicle-position');
-    expect(position).toHaveAttribute('data-vehicle-id', 'browser-demo-vehicle');
+    const position = screen
+      .getAllByTestId('vehicle-position')
+      .find(
+        (element) =>
+          element.getAttribute('data-vehicle-id') ===
+          'browser-demo-vehicle-001',
+      )!;
+    expect(position).toHaveAttribute(
+      'data-vehicle-id',
+      'browser-demo-vehicle-001',
+    );
     const pausedPosition = [
       position.getAttribute('data-movement-kind'),
       position.getAttribute('data-edge-id'),
@@ -338,6 +388,26 @@ describe('foundation screen', () => {
       ).toBeEnabled(),
     );
 
+    for (const count of [1, 2, 3]) {
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Create demo vehicle' }),
+      );
+      await waitFor(() =>
+        expect(screen.getByTestId('vehicle-count')).toHaveTextContent(
+          String(count),
+        ),
+      );
+    }
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Start browser-demo-vehicle-001' }),
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
+      ).toHaveAttribute('data-movement-kind', 'running-at-stop'),
+    );
+    const fleetA = fleetTuples();
+
     fireEvent.click(
       screen.getByRole('button', { name: 'Save transport session' }),
     );
@@ -361,6 +431,30 @@ describe('foundation screen', () => {
       ),
     );
     await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Create demo vehicle' }),
+      ).toBeEnabled(),
+    );
+    for (const count of [1, 2]) {
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Create demo vehicle' }),
+      );
+      await waitFor(() =>
+        expect(screen.getByTestId('vehicle-count')).toHaveTextContent(
+          String(count),
+        ),
+      );
+    }
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Start browser-demo-vehicle-001' }),
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
+      ).toHaveAttribute('data-movement-kind', 'running-at-stop'),
+    );
+    const fleetB = fleetTuples();
+    await waitFor(() =>
       expect(screen.getByRole('radio', { name: 'Autosave' })).toBeEnabled(),
     );
     fireEvent.click(screen.getByRole('radio', { name: 'Autosave' }));
@@ -370,9 +464,16 @@ describe('foundation screen', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save autosave now' }));
     await waitFor(() =>
       expect(screen.getByTestId('autosave-availability')).toHaveTextContent(
-        'available',
+        /^Autosave: available$/,
       ),
     );
+    expect(
+      screen.getByTestId('save-library').querySelectorAll('[data-save-id]'),
+    ).toHaveLength(2);
+    expect(screen.getByTestId('save-library')).toHaveTextContent(
+      'torrevieja-mini-v1',
+    );
+    expect(screen.getByTestId('save-library')).toHaveTextContent('scenario-b');
 
     await waitFor(() =>
       expect(screen.getByRole('radio', { name: 'Manual' })).toBeEnabled(),
@@ -381,14 +482,12 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByRole('radio', { name: 'Manual' })).toBeChecked(),
     );
-    await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: 'Restore manual save' }),
-      ).toBeEnabled(),
+    const manualA = createScenarioScopedSaveTarget(
+      'manual',
+      createScenarioCoordinate(scenario),
     );
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Restore manual save' }),
-    );
+    const manualRow = document.querySelector(`[data-save-id="${manualA}"]`)!;
+    fireEvent.click(within(manualRow as HTMLElement).getByRole('button'));
     await waitFor(() => expect(confirm).toHaveBeenCalled());
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
@@ -398,6 +497,8 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
       'scenario-b',
     );
+    expect(screen.getByTestId('vehicle-count')).toHaveTextContent('3');
+    expect(fleetTuples()).toEqual(fleetA);
     await waitFor(() =>
       expect(
         screen.getByRole('button', { name: 'Create demo vehicle' }),
@@ -405,6 +506,9 @@ describe('foundation screen', () => {
     );
     fireEvent.click(
       screen.getByRole('button', { name: 'Create demo vehicle' }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-count')).toHaveTextContent('4'),
     );
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-pattern')).toHaveTextContent(
@@ -426,12 +530,21 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByRole('radio', { name: 'Autosave' })).toBeChecked(),
     );
-    fireEvent.click(screen.getByRole('button', { name: 'Restore autosave' }));
+    const autosaveB = createScenarioScopedSaveTarget(
+      'autosave',
+      createScenarioCoordinate(alternateScenario),
+    );
+    const autosaveRow = document.querySelector(
+      `[data-save-id="${autosaveB}"]`,
+    )!;
+    fireEvent.click(within(autosaveRow as HTMLElement).getByRole('button'));
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
         'scenario-b',
       ),
     );
+    expect(screen.getByTestId('vehicle-count')).toHaveTextContent('2');
+    expect(fleetTuples()).toEqual(fleetB);
     expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
       'torrevieja-mini-v1',
     );
@@ -442,6 +555,9 @@ describe('foundation screen', () => {
     );
     fireEvent.click(
       screen.getByRole('button', { name: 'Create demo vehicle' }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-count')).toHaveTextContent('3'),
     );
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-pattern')).toHaveTextContent(

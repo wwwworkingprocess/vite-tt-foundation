@@ -59,6 +59,7 @@ export interface TransportSaveRecord {
   readonly schemaVersion: 2;
   readonly saveId: FoundationSaveId;
   readonly label?: string | undefined;
+  readonly scenarioSchemaVersion?: string | undefined;
   readonly gameId: GameId;
   readonly sourceTimelineId: TimelineId;
   readonly sourceCommandRevision: number;
@@ -170,6 +171,7 @@ export function summarizeCompatibleSave(
     saveId: record.saveId,
     ...(record.label === undefined ? {} : { label: record.label }),
     scenarioId: record.scenario.scenarioId,
+    scenarioSchemaVersion: record.scenario.scenarioSchemaVersion,
     scenarioVersion: record.scenario.scenarioVersion,
     contentHash: record.scenario.contentHash,
     sourceTimelineId: record.sourceTimelineId,
@@ -189,6 +191,7 @@ function summarizeMigratableSave(
     saveId: record.saveId,
     ...(record.label === undefined ? {} : { label: record.label }),
     scenarioId: record.scenario.scenarioId,
+    scenarioSchemaVersion: record.scenario.scenarioSchemaVersion,
     scenarioVersion: record.scenario.scenarioVersion,
     contentHash: record.scenario.contentHash,
     sourceTimelineId: record.sourceTimelineId,

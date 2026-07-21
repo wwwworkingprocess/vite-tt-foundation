@@ -1,16 +1,23 @@
-type VehicleSvgState = Readonly<Record<string, string | null>>;
+type VehicleSvgState = readonly Readonly<Record<string, string | null>>[];
 const vehicleSvgState = (): Cypress.Chainable<VehicleSvgState> =>
-  cy.get('[data-testid="vehicle-position"]').then(($vehicle) => ({
-    vehicleId: $vehicle.attr('data-vehicle-id') ?? null,
-    movementKind: $vehicle.attr('data-movement-kind') ?? null,
-    edgeId: $vehicle.attr('data-edge-id') ?? null,
-    progressNumerator: $vehicle.attr('data-progress-numerator') ?? null,
-    progressDenominator: $vehicle.attr('data-progress-denominator') ?? null,
-    cx: $vehicle.attr('cx') ?? null,
-    cy: $vehicle.attr('cy') ?? null,
-  }));
+  cy.get('[data-testid="vehicle-position"]').then(($vehicles) =>
+    [...$vehicles].map((vehicle) => ({
+      vehicleId: vehicle.getAttribute('data-vehicle-id'),
+      movementKind: vehicle.getAttribute('data-movement-kind'),
+      edgeId: vehicle.getAttribute('data-edge-id'),
+      progressNumerator: vehicle.getAttribute('data-progress-numerator'),
+      progressDenominator: vehicle.getAttribute('data-progress-denominator'),
+      cx: vehicle.getAttribute('cx'),
+      cy: vehicle.getAttribute('cy'),
+    })),
+  );
 const expectVehicleSvg = (expected: VehicleSvgState) =>
   vehicleSvgState().should('deep.equal', expected);
+const restoreScenario = (scenarioId: string) =>
+  cy
+    .contains('[data-save-id]', scenarioId)
+    .contains('button', 'Restore')
+    .click();
 
 describe('foundation screen', () => {
   it('renders without a fatal application error', () => {
@@ -52,7 +59,11 @@ describe('foundation screen', () => {
     );
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
-    cy.contains('button', 'Start demo vehicle').click();
+    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
+    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '3');
+    cy.contains('button', 'Start browser-demo-vehicle-001').click();
     cy.get('[data-testid="vehicle-movement"]').should(
       'contain.text',
       'running-at-stop',
@@ -74,6 +85,15 @@ describe('foundation screen', () => {
       expect(`${$vehicle.attr('cx')}:${$vehicle.attr('cy')}`).not.to.equal(
         initialVehiclePosition,
       ),
+    );
+    cy.contains('button', 'Pause').click();
+    cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
+    cy.contains('button', 'Start browser-demo-vehicle-002').click();
+    cy.contains('button', /^Normal /).click();
+    cy.get('[data-testid="vehicle-row-browser-demo-vehicle-002"]').should(
+      'have.attr',
+      'data-movement-kind',
+      'running-on-edge',
     );
     cy.contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
@@ -127,7 +147,9 @@ describe('foundation screen', () => {
     );
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
-    cy.contains('button', 'Start demo vehicle').click();
+    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
+    cy.contains('button', 'Start browser-demo-vehicle-001').click();
     cy.contains('button', /^Normal /).click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0),
@@ -144,15 +166,17 @@ describe('foundation screen', () => {
       cy.wait(350);
       expectVehicleSvg(snapshot);
     });
-    cy.contains('label', 'Autosave').find('input').check();
-    cy.contains('button', 'Save autosave now').click();
-    cy.get('[data-testid="autosave-availability"]').should(
+    cy.contains('button', 'Save transport session').click();
+    cy.get('[data-testid="manual-save-availability"]').should(
       'contain.text',
       'available',
     );
+    cy.get('[data-testid="save-library"] [data-save-id]').should(
+      'have.length',
+      2,
+    );
 
-    cy.contains('label', 'Manual').find('input').check();
-    cy.contains('button', 'Restore manual save').click();
+    restoreScenario('torrevieja-v1');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
       'torrevieja-v1@1.0.0#',
@@ -160,13 +184,12 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(fullTick),
     );
-    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '3');
     cy.then(() => expectVehicleSvg(fullSvg));
     cy.get('[data-testid="command-revision"]').should('contain.text', '0');
     cy.get('[data-testid="stream-offset"]').should('contain.text', '0');
 
-    cy.contains('label', 'Autosave').find('input').check();
-    cy.contains('button', 'Restore autosave').click();
+    restoreScenario('torrevieja-mini-v1');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
       'torrevieja-mini-v1@1.0.0#',
@@ -179,7 +202,7 @@ describe('foundation screen', () => {
       'data-scenario-id',
       'torrevieja-mini-v1',
     );
-    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
     cy.then(() => expectVehicleSvg(miniSvg));
     cy.contains('button', /^Normal /).click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>

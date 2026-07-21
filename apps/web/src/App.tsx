@@ -40,11 +40,12 @@ type Actions = Readonly<{
   bonus: () => Promise<void>;
   save: () => Promise<void>;
   restore: () => Promise<void>;
+  restoreSave: (saveId: string) => Promise<void>;
   saveMode: (mode: 'manual' | 'autosave') => Promise<void>;
   close: () => Promise<void>;
   start: () => Promise<void>;
   createVehicle: () => Promise<void>;
-  startVehicle: () => Promise<void>;
+  startVehicle: (vehicleId: string) => Promise<void>;
 }>;
 
 const scenarioKey = (coordinate: ScenarioCoordinate) =>
@@ -173,6 +174,10 @@ export function App() {
         },
       },
       nowUtcMs: Date.now,
+      scenarioTitle: (scenarioId) =>
+        [...scenarioCache.current.values()].find(
+          (scenario) => scenario.manifest.scenarioId === scenarioId,
+        )?.manifest.title,
     });
     const remove = composition.projection.subscribe((next) => setState(next));
     setState(composition.projection.getState());
@@ -181,6 +186,7 @@ export function App() {
       bonus: composition.grantBonus,
       save: composition.saveManual,
       restore: composition.restoreManual,
+      restoreSave: composition.restoreSave,
       saveMode: composition.setSaveMode,
       close: composition.closeSession,
       start: composition.startNewSession,
@@ -191,6 +197,7 @@ export function App() {
           const command = createDemoVehicleCommandForAuthority(
             coordinate,
             (current) => scenarioCache.current.get(scenarioKey(current)),
+            currentApplication?.projection.getState().fleet ?? [],
           );
           setBrowserActionMessage(undefined);
           await sendVehicleCommand(command);
@@ -202,10 +209,10 @@ export function App() {
           );
         }
       },
-      startVehicle: () =>
+      startVehicle: (vehicleId) =>
         sendVehicleCommand({
           kind: 'transport.vehicle.start',
-          vehicleId: parseVehicleId('browser-demo-vehicle'),
+          vehicleId: parseVehicleId(vehicleId),
         }),
     });
     void composition.startNewSession();
@@ -301,9 +308,6 @@ export function App() {
             <button disabled={!ready} onClick={action(actions?.createVehicle)}>
               Create demo vehicle
             </button>
-            <button disabled={!ready} onClick={action(actions?.startVehicle)}>
-              Start demo vehicle
-            </button>
             <p data-testid="vehicle-count">
               Vehicle count: {fleet?.length ?? 0}
             </p>
@@ -328,6 +332,56 @@ export function App() {
                 ? `${firstVehicle.movement.progressTicks}/${firstVehicle.movement.travelTicks}`
                 : 'not-on-edge'}
             </p>
+            <div data-testid="vehicle-list" aria-label="Authoritative fleet">
+              {fleet?.map((vehicle) => {
+                const movement = vehicle.movement;
+                const onEdge = movement.kind === 'running-on-edge';
+                return (
+                  <div
+                    key={vehicle.vehicleId}
+                    data-testid={`vehicle-row-${vehicle.vehicleId}`}
+                    data-vehicle-id={vehicle.vehicleId}
+                    data-pattern-id={vehicle.patternId}
+                    data-plan-travel-ticks={vehicle.movementPlan.edgeTravelTicks.join(
+                      ',',
+                    )}
+                    data-movement-kind={movement.kind}
+                    data-stop-id={onEdge ? undefined : movement.stopNodeId}
+                    data-edge-id={onEdge ? movement.edgeId : undefined}
+                    data-edge-sequence={
+                      onEdge ? movement.edgeSequence : undefined
+                    }
+                    data-progress-numerator={
+                      onEdge ? movement.progressTicks : undefined
+                    }
+                    data-progress-denominator={
+                      onEdge ? movement.travelTicks : undefined
+                    }
+                  >
+                    <span>{vehicle.vehicleId}</span>{' '}
+                    <span>{vehicle.patternId}</span>{' '}
+                    <span>{movement.kind}</span>{' '}
+                    <span>
+                      {onEdge
+                        ? `${movement.edgeId} ${movement.progressTicks}/${movement.travelTicks}`
+                        : movement.stopNodeId}
+                    </span>{' '}
+                    {movement.kind === 'parked-at-stop' ? (
+                      <button
+                        disabled={!ready}
+                        onClick={action(
+                          () =>
+                            actions?.startVehicle(vehicle.vehicleId) ??
+                            Promise.resolve(),
+                        )}
+                      >
+                        Start {vehicle.vehicleId}
+                      </button>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
           </div>
           <div aria-label="Foundation pacing controls">
             <button
@@ -434,6 +488,45 @@ export function App() {
                 (save) => save.compatibility === 'legacy-incompatible',
               ).length ?? 0}
             </p>
+            <div data-testid="save-library" aria-label="Save library">
+              {application?.persistence.saves.map((save) => {
+                const title = save.scenarioId
+                  ? ([...scenarioCache.current.values()].find(
+                      (scenario) =>
+                        scenario.manifest.scenarioId === save.scenarioId,
+                    )?.manifest.title ?? save.scenarioId)
+                  : 'Legacy Foundation save';
+                const restorable =
+                  save.compatibility === 'current' ||
+                  save.compatibility === 'migratable';
+                return (
+                  <div key={save.saveId} data-save-id={save.saveId}>
+                    <span>{title}</span>{' '}
+                    <span>{save.scenarioId ?? 'foundation'}</span>{' '}
+                    <span>{save.scenarioSchemaVersion ?? 'legacy'}</span>{' '}
+                    <span>{save.scenarioVersion ?? 'legacy'}</span>{' '}
+                    <span>{save.contentHash?.slice(0, 8) ?? 'no-hash'}</span>{' '}
+                    <span>{save.label ?? 'Saved session'}</span>{' '}
+                    <span>tick {save.sourceSimulationTick}</span>{' '}
+                    <span>vehicles {save.authoritativeEntityCount ?? 0}</span>{' '}
+                    <span>snapshot {save.snapshotVersion ?? 'legacy'}</span>{' '}
+                    <span>{save.compatibility ?? 'legacy-incompatible'}</span>{' '}
+                    {restorable ? (
+                      <button
+                        disabled={!ready}
+                        onClick={action(
+                          () =>
+                            actions?.restoreSave(save.saveId) ??
+                            Promise.resolve(),
+                        )}
+                      >
+                        Restore {title} at tick {save.sourceSimulationTick}
+                      </button>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
             <p data-testid="persistence-status">
               Persistence status: {application?.persistence.status ?? 'idle'}
               {persistenceMessage ? `: ${persistenceMessage}` : ''}

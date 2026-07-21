@@ -15,6 +15,7 @@ const demoEdgeTravelTicks = 120;
 export function createDemoVehicleCommandForAuthority(
   coordinate: ScenarioCoordinate,
   resolve: (coordinate: ScenarioCoordinate) => CanonicalScenario | undefined,
+  fleet: readonly Readonly<{ vehicleId: string }>[] = [],
 ): Extract<TransportVehicleCommand, { kind: 'transport.vehicle.create' }> {
   const scenario = resolve(coordinate);
   if (
@@ -25,7 +26,13 @@ export function createDemoVehicleCommandForAuthority(
       'The authoritative scenario package is unavailable. Reload the scenario catalogue and try again.',
     );
   }
-  const pattern = scenario.routes.routes[0]?.patterns[0];
+  const patterns = scenario.routes.routes.flatMap((route) => route.patterns);
+  let index = 1;
+  const existing = new Set(fleet.map((vehicle) => vehicle.vehicleId));
+  while (existing.has(`browser-demo-vehicle-${String(index).padStart(3, '0')}`))
+    index += 1;
+  const suffix = String(index).padStart(3, '0');
+  const pattern = patterns[(index - 1) % patterns.length];
   if (!pattern) {
     throw new Error('The authoritative scenario has no vehicle route pattern.');
   }
@@ -34,8 +41,8 @@ export function createDemoVehicleCommandForAuthority(
   ).length;
   return Object.freeze({
     kind: 'transport.vehicle.create' as const,
-    vehicleId: parseVehicleId('browser-demo-vehicle'),
-    label: 'Demo vehicle',
+    vehicleId: parseVehicleId(`browser-demo-vehicle-${suffix}`),
+    label: `Demo vehicle ${suffix}`,
     patternId: pattern.patternId,
     movementPlan: Object.freeze({
       kind: 'vehicle-movement-plan-v1' as const,

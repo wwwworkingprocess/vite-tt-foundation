@@ -10,7 +10,10 @@ import {
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
+import {
+  buildDirectedScenarioGraph,
+  parseScenarioPackage,
+} from '@torrevieja-tycoon/transport-domain';
 import { createScenarioCoordinate } from '@torrevieja-tycoon/simulation';
 import { useRef } from 'react';
 import { createScenarioScopedSaveTarget } from './transport-simulation/scenario-save-target.js';
@@ -567,6 +570,102 @@ describe('foundation screen', () => {
         screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
       ).toHaveAttribute('data-route-id', 'legacy-B'),
     );
+  });
+
+  it('keeps selection non-destructive and replaces every authority-bound surface together', async () => {
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    await waitFor(() =>
+      expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
+    );
+    const initialGraph = buildDirectedScenarioGraph(scenario);
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Create demo vehicle' }),
+      ).toBeEnabled(),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Create demo vehicle' }),
+    );
+    await screen.findByTestId('vehicle-row-browser-demo-vehicle-001');
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Select legacy routes' }),
+    );
+    expect(screen.getByText(/will become active/)).toBeInTheDocument();
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-scenario-id',
+      scenario.manifest.scenarioId,
+    );
+    expect(screen.getByTestId('route-list')).not.toHaveTextContent(
+      'legacy-A-torrevieja-la-mata',
+    );
+    expect(
+      screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Close transport Worker' }),
+    );
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'Start new transport session',
+      }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('active-scenario')).toHaveTextContent(
+        legacyScenario.manifest.scenarioId,
+      ),
+    );
+    const legacyGraph = buildDirectedScenarioGraph(legacyScenario);
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-content-hash',
+      legacyScenario.manifest.contentHash,
+    );
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-node-count',
+      String(legacyGraph.nodes.length),
+    );
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-directed-edge-count',
+      String(legacyGraph.edges.length),
+    );
+    expect(
+      screen.queryByTestId('vehicle-row-browser-demo-vehicle-001'),
+    ).toBeNull();
+    expect(screen.getByTestId('route-list')).toHaveAttribute(
+      'data-authoritative-scenario-id',
+      legacyScenario.manifest.scenarioId,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select scenario A' }));
+    expect(screen.getByTestId('route-list')).toHaveAttribute(
+      'data-authoritative-scenario-id',
+      legacyScenario.manifest.scenarioId,
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Close transport Worker' }),
+    );
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'Start new transport session',
+      }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+        'data-scenario-id',
+        scenario.manifest.scenarioId,
+      ),
+    );
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-node-count',
+      String(initialGraph.nodes.length),
+    );
+    expect(
+      screen
+        .getByTestId('route-list')
+        .querySelector('[data-route-id="legacy-A"]'),
+    ).toBeNull();
   });
 
   it('constructs demo vehicle commands from restored disjoint authority, not selection or stack seed', async () => {

@@ -14,6 +14,9 @@ export function VehicleMovementSvg({
     <svg
       data-testid="vehicle-movement-svg"
       data-scenario-id={scenario.manifest.scenarioId}
+      data-content-hash={scenario.manifest.contentHash}
+      data-node-count={projection.nodes.length}
+      data-directed-edge-count={projection.edges.length}
       viewBox={projection.viewBox}
       role="img"
       aria-label="Authoritative vehicle movement"

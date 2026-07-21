@@ -324,6 +324,10 @@ export function restoreTransportSimulationState(
     tick: snapshot.state.tick,
     scenario,
     graph,
-    fleet: restoreVehicleFleet(graph, snapshot.state.fleet),
+    fleet: restoreVehicleFleet(
+      graph,
+      snapshot.state.fleet,
+      snapshot.state.tick,
+    ),
   });
 }

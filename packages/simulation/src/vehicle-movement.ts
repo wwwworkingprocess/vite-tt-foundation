@@ -7,7 +7,7 @@ import type {
   RoutePatternId,
   StopNodeId,
 } from '@torrevieja-tycoon/transport-domain';
-import type { TickAdvancement } from './time.js';
+import type { SimulationTick, TickAdvancement } from './time.js';
 
 declare const vehicleIdBrand: unique symbol;
 export type VehicleId = string & { readonly [vehicleIdBrand]: true };
@@ -500,6 +500,7 @@ export function advanceVehicleFleet(
 export function restoreVehicleFleet(
   graph: DirectedScenarioGraph,
   value: unknown,
+  snapshotTick: SimulationTick,
 ): readonly VehicleState[] {
   const parsed = parseVehicleFleetSnapshot(value);
   const ids = new Set<string>();
@@ -543,6 +544,14 @@ export function restoreVehicleFleet(
           JSON.stringify(legs[entry.routeLegIndex!]!.movementPlan)
       )
         throw new Error(`Vehicle ${vehicleId} active route leg is invalid.`);
+      if (entry.movement.kind === 'completed-at-stop')
+        throw new Error(
+          `Repeating route-cycle vehicle ${vehicleId} cannot be completed.`,
+        );
+      if (entry.completedRouteCycles! > snapshotTick)
+        throw new Error(
+          `Vehicle ${vehicleId} completed route cycles exceed the simulation tick.`,
+        );
       entry = freeze({ ...entry, routeLegs: legs });
     }
     const pattern = graph.pattern(entry.patternId);

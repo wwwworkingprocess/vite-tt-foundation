@@ -323,6 +323,19 @@ describe('repeating route-cycle movement', () => {
     expect(migrated).toMatchObject({ schemaVersion: 3 });
     expect(migrated.state.fleet[0]).not.toHaveProperty('routeId');
     expect(migrated.state.fleet[0]?.movement.kind).toBe('running-on-edge');
+    const completedV2 = structuredClone(v2);
+    completedV2.state.fleet[0]!.movement = {
+      kind: 'completed-at-stop',
+      stopNodeId: 'tv-stop-0108',
+    };
+    const restoredCompletedV2 = restoreTransportSimulationState(
+      migrateTransportSimulationSnapshotV2(completedV2),
+      routeScenario(),
+    );
+    expect(restoredCompletedV2.fleet[0]).toMatchObject({
+      patternId: 'route-return',
+      movement: { kind: 'completed-at-stop', stopNodeId: 'tv-stop-0108' },
+    });
     const routeShapedV2 = {
       ...snapshot,
       schemaVersion: 2,
@@ -373,6 +386,36 @@ describe('repeating route-cycle movement', () => {
         failure = error;
       }
       expect(failure, `malformed snapshot ${index}`).toBeInstanceOf(Error);
+    });
+
+    const completedRouteCycle = structuredClone(snapshot);
+    completedRouteCycle.state.fleet[0]!.movement = {
+      kind: 'completed-at-stop',
+      stopNodeId: 'tv-stop-0108',
+    };
+    expect(() =>
+      restoreTransportSimulationState(completedRouteCycle, routeScenario()),
+    ).toThrow('Repeating route-cycle vehicle');
+
+    const impossibleCycles = structuredClone(snapshot);
+    impossibleCycles.state.fleet[0]!.completedRouteCycles =
+      impossibleCycles.state.tick + 1;
+    expect(() =>
+      restoreTransportSimulationState(impossibleCycles, routeScenario()),
+    ).toThrow('completed route cycles');
+
+    const validTerminal = advanceTransportTicks(started(), 5);
+    const restoredTerminal = restoreTransportSimulationState(
+      createTransportSimulationSnapshot(validTerminal),
+      routeScenario(),
+    );
+    expect(restoredTerminal.fleet[0]?.movement).toMatchObject({
+      kind: 'running-at-stop',
+      nextEdgeSequence: 2,
+    });
+    expect(advanceTransportTicks(restoredTerminal, 1).fleet[0]).toMatchObject({
+      routeLegIndex: 1,
+      movement: { kind: 'running-on-edge', progressTicks: 1 },
     });
   });
 });

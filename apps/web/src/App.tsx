@@ -51,6 +51,13 @@ type Actions = Readonly<{
   startVehicle: (vehicleId: string) => Promise<void>;
 }>;
 
+type AuthoritativeScenarioPackageState = Readonly<{
+  status: 'idle' | 'loading' | 'ready' | 'failed';
+  coordinateKey?: string;
+  scenario?: CanonicalScenario;
+  message?: string;
+}>;
+
 const scenarioKey = (coordinate: ScenarioCoordinate) =>
   `${coordinate.scenarioSchemaVersion}:${coordinate.scenarioId}@${coordinate.scenarioVersion}#${coordinate.contentHash}`;
 
@@ -64,8 +71,14 @@ export function App() {
     useState<CanonicalScenario>();
   const [browserActionMessage, setBrowserActionMessage] = useState<string>();
   const [selectedRouteId, setSelectedRouteId] = useState<string>();
+  const [authoritativePackageState, setAuthoritativePackageState] =
+    useState<AuthoritativeScenarioPackageState>({ status: 'idle' });
   const selectedRouteIdRef = useRef<string | undefined>(undefined);
-  const [, setScenarioCacheRevision] = useState(0);
+  const authoritativePackageGeneration = useRef(0);
+  const authoritativeScenarioPackageRef = useRef<CanonicalScenario | undefined>(
+    undefined,
+  );
+  const [scenarioCacheRevision, setScenarioCacheRevision] = useState(0);
   const scenarioCache = useRef(new Map<string, CanonicalScenario>());
   const scenarioResolver = useRef<
     ((coordinate: ScenarioCoordinate) => Promise<CanonicalScenario>) | undefined
@@ -199,9 +212,17 @@ export function App() {
         const coordinate = currentApplication?.projection.getState().scenario;
         if (!coordinate) return;
         try {
+          const authoritativePackage = authoritativeScenarioPackageRef.current;
           const command = createDemoVehicleCommandForAuthority(
             coordinate,
-            (current) => scenarioCache.current.get(scenarioKey(current)),
+            (current) =>
+              authoritativePackage &&
+              scenarioCoordinatesEqual(
+                current,
+                createScenarioCoordinate(authoritativePackage),
+              )
+                ? authoritativePackage
+                : undefined,
             currentApplication?.projection.getState().fleet ?? [],
             selectedRouteIdRef.current,
           );
@@ -250,20 +271,103 @@ export function App() {
       | undefined
   )?.fleet;
   const firstVehicle = fleet?.[0];
-  const representedScenario = application?.scenario
-    ? scenarioCache.current.get(scenarioKey(application.scenario))
+  const authoritativeCoordinate = application?.scenario;
+  const authoritativeCoordinateKey = authoritativeCoordinate
+    ? scenarioKey(authoritativeCoordinate)
     : undefined;
+  const cachedAuthoritativeScenario = authoritativeCoordinateKey
+    ? scenarioCache.current.get(authoritativeCoordinateKey)
+    : undefined;
+  const authoritativeScenarioPackage =
+    cachedAuthoritativeScenario ??
+    (authoritativePackageState.status === 'ready' &&
+    authoritativePackageState.coordinateKey === authoritativeCoordinateKey
+      ? authoritativePackageState.scenario
+      : undefined);
+  const currentAuthoritativePackageState =
+    authoritativePackageState.coordinateKey === authoritativeCoordinateKey
+      ? authoritativePackageState
+      : undefined;
+  authoritativeScenarioPackageRef.current = authoritativeScenarioPackage;
   useEffect(() => {
-    if (!representedScenario) return;
-    const available = representedScenario.routes.routes.some(
+    const generation = ++authoritativePackageGeneration.current;
+    if (!authoritativeCoordinate || !authoritativeCoordinateKey) {
+      setAuthoritativePackageState({ status: 'idle' });
+      return;
+    }
+    const cached = scenarioCache.current.get(authoritativeCoordinateKey);
+    if (cached) {
+      setAuthoritativePackageState({
+        status: 'ready',
+        coordinateKey: authoritativeCoordinateKey,
+        scenario: cached,
+      });
+      return;
+    }
+    setAuthoritativePackageState({
+      status: 'loading',
+      coordinateKey: authoritativeCoordinateKey,
+    });
+    const resolve = scenarioResolver.current;
+    if (!resolve) {
+      setAuthoritativePackageState({
+        status: 'failed',
+        coordinateKey: authoritativeCoordinateKey,
+        message: 'The authoritative scenario package is unavailable.',
+      });
+      return;
+    }
+    void resolve(authoritativeCoordinate).then(
+      (resolved) => {
+        if (generation !== authoritativePackageGeneration.current) return;
+        if (
+          !scenarioCoordinatesEqual(
+            authoritativeCoordinate,
+            createScenarioCoordinate(resolved),
+          )
+        ) {
+          setAuthoritativePackageState({
+            status: 'failed',
+            coordinateKey: authoritativeCoordinateKey,
+            message:
+              'The resolved authoritative scenario package does not match the active session.',
+          });
+          return;
+        }
+        setAuthoritativePackageState({
+          status: 'ready',
+          coordinateKey: authoritativeCoordinateKey,
+          scenario: resolved,
+        });
+      },
+      (error: unknown) => {
+        if (generation !== authoritativePackageGeneration.current) return;
+        setAuthoritativePackageState({
+          status: 'failed',
+          coordinateKey: authoritativeCoordinateKey,
+          message:
+            error instanceof Error
+              ? error.message
+              : 'The authoritative scenario package could not be loaded.',
+        });
+      },
+    );
+  }, [authoritativeCoordinateKey, scenarioCacheRevision]);
+  useEffect(() => {
+    if (!authoritativeScenarioPackage) {
+      selectedRouteIdRef.current = undefined;
+      setSelectedRouteId(undefined);
+      return;
+    }
+    const available = authoritativeScenarioPackage.routes.routes.some(
       (route) => route.routeId === selectedRouteIdRef.current,
     );
     if (!available) {
-      const first = representedScenario.routes.routes[0]?.routeId;
+      const first = authoritativeScenarioPackage.routes.routes[0]?.routeId;
       selectedRouteIdRef.current = first;
       setSelectedRouteId(first);
     }
-  }, [representedScenario]);
+  }, [authoritativeScenarioPackage]);
   const action = (operation: (() => Promise<void>) | undefined) => () => {
     void operation?.();
   };
@@ -286,8 +390,11 @@ export function App() {
             <dd>version {protocolContractVersion}</dd>
           </div>
         </dl>
-        {representedScenario && fleet ? (
-          <VehicleMovementSvg scenario={representedScenario} fleet={fleet} />
+        {authoritativeScenarioPackage && fleet ? (
+          <VehicleMovementSvg
+            scenario={authoritativeScenarioPackage}
+            fleet={fleet}
+          />
         ) : null}
         <div aria-label="Authoritative transport Worker status">
           <p data-testid="worker-status">Worker status: {status}</p>
@@ -340,21 +447,30 @@ export function App() {
               Vehicle route
               <select
                 value={selectedRouteId ?? ''}
-                disabled={!ready || !representedScenario}
+                disabled={!ready || !authoritativeScenarioPackage}
                 onChange={(event) => {
                   selectedRouteIdRef.current = event.target.value;
                   setSelectedRouteId(event.target.value);
                 }}
               >
-                {representedScenario?.routes.routes.map((route) => (
+                {authoritativeScenarioPackage?.routes.routes.map((route) => (
                   <option key={route.routeId} value={route.routeId}>
                     {route.publicCode} — {route.name}
                   </option>
                 ))}
               </select>
             </label>
-            <div data-testid="route-list" aria-label="Canonical routes">
-              {representedScenario?.routes.routes.map((route) => (
+            <div
+              data-testid="route-list"
+              aria-label="Canonical routes"
+              data-authoritative-scenario-id={
+                authoritativeScenarioPackage?.manifest.scenarioId
+              }
+              data-authoritative-content-hash={
+                authoritativeScenarioPackage?.manifest.contentHash
+              }
+            >
+              {authoritativeScenarioPackage?.routes.routes.map((route) => (
                 <div key={route.routeId} data-route-id={route.routeId}>
                   <strong>
                     {route.publicCode} — {route.name}
@@ -374,9 +490,18 @@ export function App() {
                 </div>
               ))}
             </div>
-            <button disabled={!ready} onClick={action(actions?.createVehicle)}>
+            <button
+              disabled={!ready || !authoritativeScenarioPackage}
+              onClick={action(actions?.createVehicle)}
+            >
               Create demo vehicle
             </button>
+            {currentAuthoritativePackageState?.status === 'loading' ? (
+              <p>Authoritative scenario package loading.</p>
+            ) : null}
+            {currentAuthoritativePackageState?.status === 'failed' ? (
+              <p role="alert">{currentAuthoritativePackageState.message}</p>
+            ) : null}
             <p data-testid="vehicle-count">
               Vehicle count: {fleet?.length ?? 0}
             </p>
@@ -401,7 +526,16 @@ export function App() {
                 ? `${firstVehicle.movement.progressTicks}/${firstVehicle.movement.travelTicks}`
                 : 'not-on-edge'}
             </p>
-            <div data-testid="vehicle-list" aria-label="Authoritative fleet">
+            <div
+              data-testid="vehicle-list"
+              aria-label="Authoritative fleet"
+              data-authoritative-scenario-id={
+                authoritativeScenarioPackage?.manifest.scenarioId
+              }
+              data-authoritative-content-hash={
+                authoritativeScenarioPackage?.manifest.contentHash
+              }
+            >
               {fleet?.map((vehicle) => {
                 const movement = vehicle.movement;
                 const onEdge = movement.kind === 'running-on-edge';

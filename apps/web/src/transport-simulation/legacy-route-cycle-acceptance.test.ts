@@ -86,5 +86,27 @@ describe('legacy A/B/C route-cycle acceptance', () => {
         progressTicks: 1,
       },
     });
+    const returnTicks = command.legs[1]!.movementPlan.edgeTravelTicks.reduce(
+      (sum, ticks) => sum + ticks,
+      0,
+    );
+    const returnTerminal = advanceTransportTicks(terminal, returnTicks);
+    expect(returnTerminal.fleet[0]).toMatchObject({
+      routeId: 'legacy-C',
+      routeLegIndex: 1,
+      patternId: 'legacy-C-lomas-torrevieja-via-quiron',
+      completedRouteCycles: 0,
+      movement: {
+        kind: 'running-at-stop',
+        nextEdgeSequence: command.legs[1]!.movementPlan.edgeTravelTicks.length,
+      },
+    });
+    expect(advanceTransportTicks(returnTerminal, 1).fleet[0]).toMatchObject({
+      routeId: 'legacy-C',
+      routeLegIndex: 0,
+      patternId: 'legacy-C-torrevieja-lomas',
+      completedRouteCycles: 1,
+      movement: { kind: 'running-on-edge', progressTicks: 1 },
+    });
   });
 });

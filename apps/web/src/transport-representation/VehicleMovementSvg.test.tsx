@@ -68,4 +68,20 @@ it('renders authoritative stop, edge, and changing vehicle projections accessibl
   expect(screen.getByTestId('vehicle-movement-svg')).toHaveAccessibleName(
     'Authoritative vehicle movement',
   );
+  expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+    'data-scenario-id',
+    scenario.manifest.scenarioId,
+  );
+  expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+    'data-content-hash',
+    scenario.manifest.contentHash,
+  );
+  expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+    'data-node-count',
+    String(scenario.stops.stopNodes.length),
+  );
+  expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+    'data-directed-edge-count',
+    String(state.graph.summary.edges),
+  );
 });

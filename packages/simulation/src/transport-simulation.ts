@@ -27,7 +27,7 @@ export type ScenarioCompatibilityErrorCode =
   | 'scenario-version-mismatch'
   | 'scenario-content-hash-mismatch';
 
-export const transportSimulationSnapshotSchemaVersion = 2 as const;
+export const transportSimulationSnapshotSchemaVersion = 3 as const;
 
 export class ScenarioCompatibilityError extends Error {
   constructor(
@@ -73,7 +73,18 @@ export interface TransportSimulationSnapshotV2 {
   }>;
 }
 
-export type TransportSimulationSnapshot = TransportSimulationSnapshotV2;
+export interface TransportSimulationSnapshotV3 {
+  readonly kind: 'transport-simulation-snapshot';
+  readonly schemaVersion: 3;
+  readonly simulationVersion: 'transport-3';
+  readonly scenario: ScenarioCoordinate;
+  readonly state: Readonly<{
+    readonly tick: SimulationTick;
+    readonly fleet: readonly VehicleState[];
+  }>;
+}
+
+export type TransportSimulationSnapshot = TransportSimulationSnapshotV3;
 
 const hash = z.string().regex(/^[0-9a-f]{64}$/);
 const coordinateSchema = z.strictObject({
@@ -93,8 +104,18 @@ const snapshotV1Schema = z.strictObject({
 });
 const snapshotV2Schema = z.strictObject({
   kind: z.literal('transport-simulation-snapshot'),
-  schemaVersion: z.literal(transportSimulationSnapshotSchemaVersion),
+  schemaVersion: z.literal(2),
   simulationVersion: z.literal('transport-2'),
+  scenario: coordinateSchema,
+  state: z.strictObject({
+    tick: z.number().int().nonnegative().safe(),
+    fleet: z.array(z.unknown()),
+  }),
+});
+const snapshotV3Schema = z.strictObject({
+  kind: z.literal('transport-simulation-snapshot'),
+  schemaVersion: z.literal(transportSimulationSnapshotSchemaVersion),
+  simulationVersion: z.literal('transport-3'),
   scenario: coordinateSchema,
   state: z.strictObject({
     tick: z.number().int().nonnegative().safe(),
@@ -180,6 +201,25 @@ export function applyTransportVehicleCommand(
 export function parseTransportSimulationSnapshot(
   value: unknown,
 ): TransportSimulationSnapshot {
+  const result = snapshotV3Schema.safeParse(value);
+  if (!result.success)
+    throw new ScenarioCompatibilityError(
+      'unsupported-transport-snapshot',
+      result.error.issues[0]!.message,
+    );
+  return freeze({
+    ...result.data,
+    scenario: result.data.scenario as ScenarioCoordinate,
+    state: {
+      tick: parseSimulationTick(result.data.state.tick),
+      fleet: parseVehicleFleetSnapshot(result.data.state.fleet),
+    },
+  });
+}
+
+export function parseTransportSimulationSnapshotV2(
+  value: unknown,
+): TransportSimulationSnapshotV2 {
   const result = snapshotV2Schema.safeParse(value);
   if (!result.success)
     throw new ScenarioCompatibilityError(
@@ -214,13 +254,34 @@ export function parseTransportSimulationSnapshotV1(
 
 export function migrateTransportSimulationSnapshotV1(
   value: unknown,
-): TransportSimulationSnapshotV2 {
+): TransportSimulationSnapshotV3 {
   const snapshot = parseTransportSimulationSnapshotV1(value);
   return parseTransportSimulationSnapshot({
     ...snapshot,
-    schemaVersion: 2,
-    simulationVersion: 'transport-2',
+    schemaVersion: 3,
+    simulationVersion: 'transport-3',
     state: { tick: snapshot.state.tick, fleet: [] },
+  });
+}
+
+export function migrateTransportSimulationSnapshotV2(
+  value: unknown,
+): TransportSimulationSnapshotV3 {
+  const snapshot = parseTransportSimulationSnapshotV2(value);
+  return parseTransportSimulationSnapshot({
+    ...snapshot,
+    schemaVersion: 3,
+    simulationVersion: 'transport-3',
+    state: {
+      tick: snapshot.state.tick,
+      fleet: snapshot.state.fleet.map((vehicle) => ({
+        vehicleId: vehicle.vehicleId,
+        label: vehicle.label,
+        patternId: vehicle.patternId,
+        movementPlan: vehicle.movementPlan,
+        movement: vehicle.movement,
+      })),
+    },
   });
 }
 
@@ -229,8 +290,8 @@ export function createTransportSimulationSnapshot(
 ): TransportSimulationSnapshot {
   return parseTransportSimulationSnapshot({
     kind: 'transport-simulation-snapshot',
-    schemaVersion: 2,
-    simulationVersion: 'transport-2',
+    schemaVersion: 3,
+    simulationVersion: 'transport-3',
     scenario: createScenarioCoordinate(state.scenario),
     state: { tick: state.tick, fleet: state.fleet },
   });

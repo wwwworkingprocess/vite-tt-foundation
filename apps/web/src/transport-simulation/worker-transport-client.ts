@@ -122,7 +122,7 @@ export function startTransportWorkerRuntime(
       try {
         endpoint.postMessage({
           kind: 'transport-worker-failure',
-          contractVersion: 2,
+          contractVersion: 3,
           ...(validRequestId === undefined
             ? {}
             : { requestId: validRequestId }),
@@ -147,7 +147,7 @@ export function startTransportWorkerRuntime(
               next.subscribeReliableUpdates((update) =>
                 endpoint.postMessage({
                   kind: 'transport-worker-publication',
-                  contractVersion: 2,
+                  contractVersion: 3,
                   channel: 'reliable',
                   payload: update,
                 }),
@@ -157,7 +157,7 @@ export function startTransportWorkerRuntime(
               next.subscribeRenderSnapshots((snapshot) =>
                 endpoint.postMessage({
                   kind: 'transport-worker-publication',
-                  contractVersion: 2,
+                  contractVersion: 3,
                   channel: 'render',
                   payload: snapshot,
                 }),
@@ -207,14 +207,14 @@ export function startTransportWorkerRuntime(
               cleanupError === undefined
                 ? {
                     kind: 'transport-worker-result',
-                    contractVersion: 2,
+                    contractVersion: 3,
                     requestId,
                     operation: 'close',
                     payload: null,
                   }
                 : {
                     kind: 'transport-worker-failure',
-                    contractVersion: 2,
+                    contractVersion: 3,
                     requestId,
                     operation: 'close',
                     message: errorMessage(cleanupError),
@@ -234,7 +234,7 @@ export function startTransportWorkerRuntime(
         }
         endpoint.postMessage({
           kind: 'transport-worker-result',
-          contractVersion: 2,
+          contractVersion: 3,
           requestId,
           operation,
           payload,
@@ -243,7 +243,7 @@ export function startTransportWorkerRuntime(
         try {
           endpoint.postMessage({
             kind: 'transport-worker-failure',
-            contractVersion: 2,
+            contractVersion: 3,
             requestId,
             operation,
             message: errorMessage(error),
@@ -344,7 +344,7 @@ export function createWorkerTransportSimulationClient(input: {
         worker!.postMessage(
           parseTransportWorkerRequest({
             kind: 'transport-worker-request',
-            contractVersion: 2,
+            contractVersion: 3,
             requestId,
             operation,
             payload,

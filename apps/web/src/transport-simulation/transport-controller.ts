@@ -15,6 +15,7 @@ import {
 } from '@torrevieja-tycoon/protocol';
 import {
   migrateTransportSaveRecordV1,
+  migrateTransportSaveRecordV2,
   parseTransportSaveRecord,
   type PersistedSaveClassification,
   type TransportSaveRecord,
@@ -273,7 +274,7 @@ export function createTransportApplicationController(input: {
           candidate,
           {
             kind: 'transport-client-connect',
-            contractVersion: 2,
+            contractVersion: 3,
             mode: 'new',
             gameId,
             timelineId,
@@ -309,7 +310,8 @@ export function createTransportApplicationController(input: {
         }
         if (
           classified.classification !== 'current' &&
-          classified.classification !== 'migratable-transport-v1'
+          classified.classification !== 'migratable-transport-v1' &&
+          classified.classification !== 'migratable-transport-v2'
         ) {
           const error =
             classified.classification === 'unrelated'
@@ -321,7 +323,9 @@ export function createTransportApplicationController(input: {
         const restoredRecord =
           classified.classification === 'current'
             ? classified.record
-            : migrateTransportSaveRecordV1(classified.record);
+            : classified.classification === 'migratable-transport-v2'
+              ? migrateTransportSaveRecordV2(classified.record)
+              : migrateTransportSaveRecordV1(classified.record);
         let scenario: CanonicalScenario;
         try {
           scenario = await input.scenarioResolver.resolve(
@@ -362,7 +366,7 @@ export function createTransportApplicationController(input: {
             next,
             {
               kind: 'transport-client-connect',
-              contractVersion: 2,
+              contractVersion: 3,
               mode: 'restore',
               gameId: restoredRecord.gameId,
               timelineId,
@@ -407,7 +411,7 @@ export function createTransportApplicationController(input: {
           await input.repository.put(
             parseTransportSaveRecord({
               kind: 'transport-save-record',
-              schemaVersion: 2,
+              schemaVersion: 3,
               ...metadata,
               gameId: exported.gameId,
               sourceTimelineId: exported.timelineId,

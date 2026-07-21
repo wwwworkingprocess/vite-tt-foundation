@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-abc-v1",
+  "generatedAt": "2026-07-21T12:34:08Z",
+  "sources": [
+    {
+      "sourceId": "osm-torrevieja-bus-stops-2026-07-18",
+      "name": "OpenStreetMap",
+      "attribution": "© OpenStreetMap contributors",
+      "license": "ODbL-1.0",
+      "accessedAt": "2026-07-18T15:59:30.214Z",
+      "sourceFile": "source/torrevieja-osm-bus-stops.json"
+    },
+    {
+      "sourceId": "legacy-route-a-capture",
+      "name": "The Costas route A capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-a.json"
+    },
+    {
+      "sourceId": "legacy-route-b-capture",
+      "name": "The Costas route B capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-b.json"
+    },
+    {
+      "sourceId": "legacy-route-c-capture",
+      "name": "The Costas route C capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-c.json"
+    },
+    {
+      "sourceId": "torrevieja-stop-inventory-2019",
+      "name": "Ayuntamiento de Torrevieja urban bus stop inventory",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "source/municipal/torrevieja-stop-inventory-2019.pdf"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "canonical-stop-projection-v1",
+      "description": "Reuses the canonical directional StopNodes from torrevieja-v1 and projects independently captured ordered route patterns onto them. No reverse edge is inferred."
+    },
+    {
+      "transformationId": "legacy-abc-route-matching-v1",
+      "description": "Matches A, B and C stop occurrences using route order, municipal stop name/address/direction evidence, OSM names and geographic continuity."
+    }
+  ],
+  "warnings": [
+    "Line A contains both complete captured direction patterns: 22 outward and 26 return stop occurrences.",
+    "Line B contains 19 outward and 16 return stop occurrences. The source display numbering skips 12 on the return list; no synthetic stop was inserted.",
+    "Line B's C/ Nenúfares - Colegio occurrence is contextually mapped to the nearby canonical OSM node named Policía Local - Parque de Bomberos de Torrevieja - Habaneras and should be rechecked when a more explicit geocoded source becomes available.",
+    "Line C's return pattern represents the documented Hospital Quirón-serving variant; public information states that the hospital stop is not served on every circuit.",
+    "Line C's Cruz Roja occurrence maps to an unnamed canonical platform, and M. Fco. Casanovas maps to the canonical Patricio Zammit 67 node based on municipal address and route continuity.",
+    "The Ayuntamiento inventory was used as verification evidence only; no source photographs are distributed.",
+    "Review ODbL obligations before publicly distributing a derived database."
+  ]
+}

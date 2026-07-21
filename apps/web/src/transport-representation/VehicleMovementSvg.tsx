@@ -23,11 +23,13 @@ export function VehicleMovementSvg({
           <line
             key={edge.edgeId}
             data-edge-id={edge.edgeId}
+            data-route-id={edge.routeId}
+            data-pattern-id={edge.patternId}
             x1={edge.x1}
             y1={edge.y1}
             x2={edge.x2}
             y2={edge.y2}
-            stroke="currentColor"
+            stroke={edge.color ?? 'currentColor'}
             strokeWidth="0.6"
           />
         ))}
@@ -51,6 +53,10 @@ export function VehicleMovementSvg({
             data-testid="vehicle-position"
             data-vehicle-id={vehicle.vehicleId}
             data-movement-kind={vehicle.movementKind}
+            data-route-id={vehicle.routeId}
+            data-pattern-id={vehicle.patternId}
+            data-route-leg-index={vehicle.routeLegIndex}
+            data-completed-route-cycles={vehicle.completedRouteCycles}
             data-edge-id={vehicle.edgeId}
             data-progress-numerator={vehicle.progressNumerator}
             data-progress-denominator={vehicle.progressDenominator}

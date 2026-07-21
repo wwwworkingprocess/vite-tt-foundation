@@ -24,7 +24,7 @@ import type {
 } from './transport-client.js';
 import { transportClientContractVersion } from './transport-client.js';
 
-export const transportWorkerContractVersion = 2 as const;
+export const transportWorkerContractVersion = 3 as const;
 const requestId = z.number().int().positive().safe();
 const operation = z.enum([
   'connect',
@@ -86,16 +86,26 @@ const vehicleId = z
   .min(1)
   .max(128)
   .regex(/^[A-Za-z0-9][A-Za-z0-9._:-]*$/);
+const movementPlan = z.strictObject({
+  kind: z.literal('vehicle-movement-plan-v1'),
+  edgeTravelTicks: z.array(z.number().int().positive().safe()),
+});
 const vehicleCommand = z.discriminatedUnion('kind', [
   z.strictObject({
     kind: z.literal('transport.vehicle.create'),
     vehicleId,
     label: z.string().trim().min(1).max(128),
     patternId: z.string().min(1),
-    movementPlan: z.strictObject({
-      kind: z.literal('vehicle-movement-plan-v1'),
-      edgeTravelTicks: z.array(z.number().int().positive().safe()),
-    }),
+    movementPlan,
+  }),
+  z.strictObject({
+    kind: z.literal('transport.vehicle.create-route-cycle'),
+    vehicleId,
+    label: z.string().trim().min(1).max(128),
+    routeId: z.string().min(1),
+    legs: z
+      .array(z.strictObject({ patternId: z.string().min(1), movementPlan }))
+      .min(1),
   }),
   z.strictObject({
     kind: z.literal('transport.vehicle.start'),

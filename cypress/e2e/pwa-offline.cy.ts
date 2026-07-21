@@ -75,7 +75,7 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
-      '1.0.0:torrevieja-v1@1.0.0#',
+      '1.0.0:torrevieja-legacy-abc-v1@1.0.0#',
     );
     cy.window().then(async (win) => {
       await win.navigator.serviceWorker.ready;
@@ -107,10 +107,13 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.reload();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="legacy-save-count"]').should('contain.text', '1');
+    cy.contains('label', 'Vehicle route').find('select').select('legacy-A');
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.contains('label', 'Vehicle route').find('select').select('legacy-B');
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
+    cy.contains('label', 'Vehicle route').find('select').select('legacy-C');
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '3');
     cy.get('[data-testid="vehicle-movement-svg"]').should('be.visible');
@@ -138,26 +141,28 @@ describe('built foundation PWA offline lifecycle', () => {
     });
     cy.contains('button', 'Save transport session').click();
     cy.get('[data-testid="save-count"]').should('contain.text', '2');
-    cy.contains('[data-save-id]', 'torrevieja-v1').then(($row) => {
+    cy.contains('[data-save-id]', 'torrevieja-legacy-abc-v1').then(($row) => {
       fullSaveId = $row.attr('data-save-id')!;
     });
     cy.get('[data-testid="persistence-status"]').should(
       'have.text',
       'Persistence status: idle',
     );
-    cy.get('select').select('torrevieja-mini-v1');
+    cy.contains('label', 'Scenario')
+      .find('select')
+      .select('torrevieja-mini-v1');
     cy.get('[data-testid="requested-scenario"]').should(
       'contain.text',
       'torrevieja-mini-v1 (loading)',
     );
-    cy.get('select').should('be.disabled');
+    cy.contains('label', 'Scenario').find('select').should('be.disabled');
     cy.get('[data-testid="selected-scenario"]').should(
       'contain.text',
       'torrevieja-mini-v1',
     );
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
-      'torrevieja-v1',
+      'torrevieja-legacy-abc-v1',
     );
     cy.contains('button', 'Close transport Worker').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
@@ -211,7 +216,7 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
-      '1.0.0:torrevieja-v1@1.0.0#',
+      '1.0.0:torrevieja-legacy-abc-v1@1.0.0#',
     );
     cy.get('[data-testid="save-count"]').should('contain.text', '3');
     let currentTimeline = '';
@@ -233,7 +238,7 @@ describe('built foundation PWA offline lifecycle', () => {
       missing.snapshot.scenario.scenarioId = 'missing-scenario';
       await writeSave(win, missing as unknown as Record<string, unknown>);
     });
-    restoreScenario('torrevieja-v1');
+    restoreScenario('torrevieja-legacy-abc-v1');
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[role="alert"]').should('contain.text', 'exact saved scenario');
     cy.get('[data-testid="worker-timeline"]').should(($value) =>
@@ -252,7 +257,7 @@ describe('built foundation PWA offline lifecycle', () => {
       mismatch.snapshot.scenario.contentHash = 'b'.repeat(64);
       await writeSave(win, mismatch as unknown as Record<string, unknown>);
     });
-    restoreScenario('torrevieja-v1');
+    restoreScenario('torrevieja-legacy-abc-v1');
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[role="alert"]').should('contain.text', 'exact saved scenario');
     cy.get('[data-testid="worker-timeline"]').should(($value) =>
@@ -276,7 +281,7 @@ describe('built foundation PWA offline lifecycle', () => {
       transportV1.snapshot.state = { tick: savedTick };
       await writeSave(win, transportV1 as unknown as Record<string, unknown>);
     });
-    restoreScenario('torrevieja-v1');
+    restoreScenario('torrevieja-legacy-abc-v1');
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(savedTick),
     );
@@ -297,7 +302,7 @@ describe('built foundation PWA offline lifecycle', () => {
         expect((await response.blob()).size).to.be.greaterThan(0);
       }
     });
-    restoreScenario('torrevieja-v1');
+    restoreScenario('torrevieja-legacy-abc-v1');
     cy.get('[data-testid="worker-timeline"]').should(
       'contain.text',
       'browser-foundation-restored-',

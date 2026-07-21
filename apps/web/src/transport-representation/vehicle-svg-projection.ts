@@ -14,6 +14,9 @@ export interface VehicleSvgProjection {
   >[];
   readonly edges: readonly Readonly<{
     edgeId: string;
+    routeId: string;
+    patternId: string;
+    color?: string;
     x1: number;
     y1: number;
     x2: number;
@@ -24,6 +27,10 @@ export interface VehicleSvgProjection {
       vehicleId: string;
       label: string;
       movementKind: VehicleState['movement']['kind'];
+      routeId?: string;
+      patternId: string;
+      routeLegIndex?: number;
+      completedRouteCycles?: number;
       edgeId?: string;
       progressNumerator?: number;
       progressDenominator?: number;
@@ -104,8 +111,14 @@ export function projectVehicleMovementSvg(
   const edges = graph.edges.map((edge) => {
     const from = mapPosition(requireStop(edge.fromStopNodeId).position);
     const to = mapPosition(requireStop(edge.toStopNodeId).position);
+    const presentation = scenario.presentation as
+      { routeStyles?: Record<string, { color?: unknown }> } | undefined;
+    const color = presentation?.routeStyles?.[edge.routeId]?.color;
     return {
       edgeId: edge.edgeId,
+      routeId: edge.routeId,
+      patternId: edge.patternId,
+      ...(typeof color === 'string' ? { color } : {}),
       x1: from.cx,
       y1: from.cy,
       x2: to.cx,
@@ -120,6 +133,14 @@ export function projectVehicleMovementSvg(
         vehicleId: vehicle.vehicleId,
         label: vehicle.label,
         movementKind: movement.kind,
+        ...(vehicle.routeId ? { routeId: vehicle.routeId } : {}),
+        patternId: vehicle.patternId,
+        ...(vehicle.routeLegIndex === undefined
+          ? {}
+          : { routeLegIndex: vehicle.routeLegIndex }),
+        ...(vehicle.completedRouteCycles === undefined
+          ? {}
+          : { completedRouteCycles: vehicle.completedRouteCycles }),
         ...position,
       };
     }
@@ -145,6 +166,14 @@ export function projectVehicleMovementSvg(
       vehicleId: vehicle.vehicleId,
       label: vehicle.label,
       movementKind: movement.kind,
+      ...(vehicle.routeId ? { routeId: vehicle.routeId } : {}),
+      patternId: vehicle.patternId,
+      ...(vehicle.routeLegIndex === undefined
+        ? {}
+        : { routeLegIndex: vehicle.routeLegIndex }),
+      ...(vehicle.completedRouteCycles === undefined
+        ? {}
+        : { completedRouteCycles: vehicle.completedRouteCycles }),
       edgeId: movement.edgeId,
       progressNumerator: movement.progressTicks,
       progressDenominator: movement.travelTicks,

@@ -25,6 +25,18 @@
       "manifestPath": "torrevieja-mini-v1/scenario.json",
       "status": "test-fixture",
       "contentHash": "b00bc88317f248868960eb10a33d47b7d34699a617bb7db2ad36fbc7bc36c4ed"
+    },
+    {
+      "scenarioId": "torrevieja-legacy-abc-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Torrevieja Legacy Network - Lines A, B and C",
+      "primarySettlementId": "es-torrevieja",
+      "settlementIds": [
+        "es-torrevieja"
+      ],
+      "manifestPath": "torrevieja-legacy-abc-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "2a3345a69f038a89602fb098bd2edd0950c2c106ad1731679e2c3a6ba9a18d99"
     }
   ]
 }

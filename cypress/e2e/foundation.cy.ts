@@ -55,12 +55,20 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
-      'torrevieja-v1',
+      'torrevieja-legacy-abc-v1',
     );
+    cy.get('[data-testid="route-list"] [data-route-id]').should(
+      'have.length',
+      3,
+    );
+    cy.contains('[data-testid="route-list"]', 'A — Torrevieja - La Mata');
+    cy.contains('label', 'Vehicle route').find('select').select('legacy-A');
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
+    cy.contains('label', 'Vehicle route').find('select').select('legacy-B');
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
+    cy.contains('label', 'Vehicle route').find('select').select('legacy-C');
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '3');
     cy.contains('button', 'Start browser-demo-vehicle-001').click();
@@ -71,7 +79,22 @@ describe('foundation screen', () => {
     cy.get('[data-testid="vehicle-movement-svg"]').should(
       'have.attr',
       'data-scenario-id',
-      'torrevieja-v1',
+      'torrevieja-legacy-abc-v1',
+    );
+    cy.get('[data-testid="vehicle-row-browser-demo-vehicle-001"]').should(
+      'have.attr',
+      'data-route-id',
+      'legacy-A',
+    );
+    cy.get('[data-testid="vehicle-row-browser-demo-vehicle-002"]').should(
+      'have.attr',
+      'data-route-id',
+      'legacy-B',
+    );
+    cy.get('[data-testid="vehicle-row-browser-demo-vehicle-003"]').should(
+      'have.attr',
+      'data-route-id',
+      'legacy-C',
     );
     let initialVehiclePosition = '';
     cy.get('[data-testid="vehicle-position"]').then(($vehicle) => {
@@ -127,14 +150,16 @@ describe('foundation screen', () => {
         request.continue((response) => response.setDelay(5_000));
       },
     ).as('loadMiniSelection');
-    cy.get('select').select('torrevieja-mini-v1');
+    cy.contains('label', 'Scenario')
+      .find('select')
+      .select('torrevieja-mini-v1');
     cy.get('[data-testid="requested-scenario"]').should(
       'contain.text',
       'torrevieja-mini-v1 (loading)',
     );
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
-      'torrevieja-v1',
+      'torrevieja-legacy-abc-v1',
     );
     cy.get('[data-testid="worker-timeline"]').should(($timeline) =>
       expect($timeline.text()).to.equal(fullTimeline),
@@ -145,7 +170,7 @@ describe('foundation screen', () => {
     cy.get('[data-testid="vehicle-movement-svg"]').should(
       'have.attr',
       'data-scenario-id',
-      'torrevieja-v1',
+      'torrevieja-legacy-abc-v1',
     );
 
     cy.contains('button', 'Close transport Worker').click();
@@ -194,10 +219,10 @@ describe('foundation screen', () => {
       2,
     );
 
-    restoreScenario('torrevieja-v1');
+    restoreScenario('torrevieja-legacy-abc-v1');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
-      'torrevieja-v1@1.0.0#',
+      'torrevieja-legacy-abc-v1@1.0.0#',
     );
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(fullTick),

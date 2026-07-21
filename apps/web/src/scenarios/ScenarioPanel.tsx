@@ -5,6 +5,7 @@ import {
   createScenarioLoader,
   type ScenarioLoaderState,
 } from './scenario-loader.js';
+import { defaultScenarioId } from '../project-defaults.js';
 
 const fetchText = async (url: string) => {
   const response = await fetch(url);
@@ -41,8 +42,11 @@ export function ScenarioPanel(props: {
   useEffect(() => {
     const remove = loader.projection.subscribe(setState);
     void loader.loadCatalog().then(() => {
-      const first = loader.projection.getState().catalog?.scenarios[0];
-      if (first) void loader.loadScenario(first.scenarioId);
+      const catalog = loader.projection.getState().catalog;
+      const preferred = catalog?.scenarios.find(
+        (scenario) => scenario.scenarioId === defaultScenarioId,
+      );
+      if (preferred) void loader.loadScenario(preferred.scenarioId);
     });
     return remove;
   }, [loader]);

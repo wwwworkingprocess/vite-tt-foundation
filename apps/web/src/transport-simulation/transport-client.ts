@@ -33,12 +33,12 @@ import {
 } from '@torrevieja-tycoon/protocol';
 import { createDirectFoundationClient } from '../simulation-host/direct-client.js';
 
-export const transportClientContractVersion = 2 as const;
+export const transportClientContractVersion = 3 as const;
 
 export type TransportClientConnectRequest =
   | Readonly<{
       kind: 'transport-client-connect';
-      contractVersion: 2;
+      contractVersion: 3;
       mode: 'new';
       gameId: GameId;
       timelineId: TimelineId;
@@ -47,7 +47,7 @@ export type TransportClientConnectRequest =
     }>
   | Readonly<{
       kind: 'transport-client-connect';
-      contractVersion: 2;
+      contractVersion: 3;
       mode: 'restore';
       gameId: GameId;
       timelineId: TimelineId;

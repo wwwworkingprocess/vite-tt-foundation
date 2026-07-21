@@ -29,7 +29,11 @@ describe('public multi-scenario catalogue', () => {
         loader.projection
           .getState()
           .catalog?.scenarios.map((item) => item.scenarioId),
-      ).toEqual(['torrevieja-v1', 'torrevieja-mini-v1']);
+      ).toEqual([
+        'torrevieja-v1',
+        'torrevieja-mini-v1',
+        'torrevieja-legacy-abc-v1',
+      ]);
       await loader.loadScenario('torrevieja-v1');
       expect(loader.projection.getState()).toMatchObject({
         status: 'ready',
@@ -41,6 +45,11 @@ describe('public multi-scenario catalogue', () => {
         status: 'ready',
         selectedScenarioId: 'torrevieja-mini-v1',
         graph: { summary: { nodes: 7 } },
+      });
+      await loader.loadScenario('torrevieja-legacy-abc-v1');
+      expect(loader.projection.getState()).toMatchObject({
+        status: 'ready',
+        graph: { summary: { nodes: 98, routes: 3, patterns: 6, edges: 111 } },
       });
     },
   );

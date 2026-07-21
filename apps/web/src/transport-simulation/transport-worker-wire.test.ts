@@ -49,11 +49,31 @@ describe('transport Worker wire schemas', () => {
         payload: null,
       }),
     ).toThrow();
+    for (const contractVersion of [1, 2]) {
+      expect(() =>
+        parseTransportWorkerRequest({
+          kind: 'transport-worker-request',
+          contractVersion,
+          requestId: 1,
+          operation: 'close',
+          payload: null,
+        }),
+      ).toThrow();
+      expect(() =>
+        parseTransportWorkerResponse({
+          kind: 'transport-worker-result',
+          contractVersion,
+          requestId: 1,
+          operation: 'close',
+          payload: null,
+        }),
+      ).toThrow();
+    }
   });
   it('rejects unsafe IDs, operation/payload mismatches, markers, and unknown fields', () => {
     const close = {
       kind: 'transport-worker-request',
-      contractVersion: 2,
+      contractVersion: 3,
       requestId: 1,
       operation: 'close',
       payload: null,
@@ -72,7 +92,7 @@ describe('transport Worker wire schemas', () => {
   it('rejects malformed results, publications, failures, and operation mismatches', () => {
     const close = {
       kind: 'transport-worker-result',
-      contractVersion: 2,
+      contractVersion: 3,
       requestId: 1,
       operation: 'close',
       payload: null,
@@ -87,14 +107,14 @@ describe('transport Worker wire schemas', () => {
       { ...close, contractVersion: 9 },
       {
         kind: 'transport-worker-failure',
-        contractVersion: 2,
+        contractVersion: 3,
         requestId: 1,
         operation: 'close',
         message: '',
       },
       {
         kind: 'transport-worker-publication',
-        contractVersion: 2,
+        contractVersion: 3,
         channel: 'unknown',
         payload: {},
       },
@@ -105,7 +125,7 @@ describe('transport Worker wire schemas', () => {
   it('validates nested connect variants and every operation-specific result', () => {
     const envelope = {
       kind: 'transport-worker-request',
-      contractVersion: 2,
+      contractVersion: 3,
       requestId: 1,
       operation: 'connect',
     };
@@ -114,7 +134,7 @@ describe('transport Worker wire schemas', () => {
         ...envelope,
         payload: {
           kind: 'transport-client-connect',
-          contractVersion: 2,
+          contractVersion: 3,
           mode: 'new',
           gameId: 'game',
           timelineId: 'timeline',
@@ -128,7 +148,7 @@ describe('transport Worker wire schemas', () => {
         ...envelope,
         payload: {
           kind: 'transport-client-connect',
-          contractVersion: 2,
+          contractVersion: 3,
           mode: 'restore',
           gameId: 'game',
           timelineId: 'timeline',
@@ -145,7 +165,7 @@ describe('transport Worker wire schemas', () => {
       expect(() =>
         parseTransportWorkerResponse({
           kind: 'transport-worker-result',
-          contractVersion: 2,
+          contractVersion: 3,
           requestId: 1,
           operation,
           payload,
@@ -154,7 +174,7 @@ describe('transport Worker wire schemas', () => {
     expect(
       parseTransportWorkerResponse({
         kind: 'transport-worker-failure',
-        contractVersion: 2,
+        contractVersion: 3,
         message: 'invalid request',
       }),
     ).toMatchObject({ kind: 'transport-worker-failure' });
@@ -162,7 +182,7 @@ describe('transport Worker wire schemas', () => {
       expect(() =>
         parseTransportWorkerResponse({
           kind: 'transport-worker-publication',
-          contractVersion: 2,
+          contractVersion: 3,
           channel,
           payload: {},
         }),

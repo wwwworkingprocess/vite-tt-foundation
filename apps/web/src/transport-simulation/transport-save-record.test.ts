@@ -10,6 +10,7 @@ import { join } from 'node:path';
 import {
   classifyPersistedSaveRecord,
   migrateTransportSaveRecordV1,
+  migrateTransportSaveRecordV2,
   parseTransportSaveRecord,
   summarizeCompatibleSave,
 } from './transport-save-record.js';
@@ -40,7 +41,7 @@ const current = () => {
   const canonical = scenario();
   return {
     kind: 'transport-save-record',
-    schemaVersion: 2,
+    schemaVersion: 3,
     saveId: 'foundation-slot',
     label: 'Mini save',
     gameId: 'game-fixture',
@@ -71,7 +72,7 @@ describe('transport save compatibility', () => {
     expect(
       classifyPersistedSaveRecord({
         kind: 'transport-save-record',
-        schemaVersion: 3,
+        schemaVersion: 4,
       }),
     ).toMatchObject({ classification: 'unsupported-future' });
     for (const schemaVersion of [undefined, '3', -1, 1.5])
@@ -91,7 +92,7 @@ describe('transport save compatibility', () => {
       scenarioId: 'torrevieja-mini-v1',
       scenarioVersion: '1.0.0',
       contentHash: expect.any(String),
-      snapshotVersion: 2,
+      snapshotVersion: 3,
       vehicleCount: 0,
       sourceSimulationTick: 120,
     });
@@ -157,13 +158,39 @@ describe('transport save compatibility', () => {
       throw new Error('Expected a migratable Transport V1 record.');
     const migrated = migrateTransportSaveRecordV1(classified.record);
     expect(migrated).toMatchObject({
-      schemaVersion: 2,
+      schemaVersion: 3,
       snapshot: {
-        schemaVersion: 2,
+        schemaVersion: 3,
         state: { tick: 120, fleet: [] },
       },
     });
     expect(Object.isFrozen(migrated.snapshot.state.fleet)).toBe(true);
+  });
+
+  it('classifies Transport V2 as migratable without inferring a route cycle', () => {
+    const value = current();
+    const v2 = {
+      ...value,
+      schemaVersion: 2,
+      snapshot: {
+        ...value.snapshot,
+        schemaVersion: 2,
+        simulationVersion: 'transport-2',
+      },
+    };
+    const classified = classifyPersistedSaveRecord(v2);
+    expect(classified).toMatchObject({
+      classification: 'migratable-transport-v2',
+      summary: { compatibility: 'migratable', snapshotVersion: 2 },
+    });
+    if (classified.classification !== 'migratable-transport-v2')
+      throw new Error('Expected a migratable Transport V2 record.');
+    const migrated = migrateTransportSaveRecordV2(classified.record);
+    expect(migrated).toMatchObject({
+      schemaVersion: 3,
+      snapshot: { schemaVersion: 3 },
+    });
+    expect(migrated.snapshot.state.fleet).toEqual([]);
   });
 
   it('distinguishes malformed known and unsupported future records', () => {

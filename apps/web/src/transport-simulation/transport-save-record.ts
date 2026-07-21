@@ -1,11 +1,14 @@
 import { z } from 'zod';
 import {
   migrateTransportSimulationSnapshotV1,
+  migrateTransportSimulationSnapshotV2,
   parseTransportSimulationSnapshot,
   parseTransportSimulationSnapshotV1,
+  parseTransportSimulationSnapshotV2,
   type ScenarioCoordinate,
   type TransportSimulationSnapshot,
   type TransportSimulationSnapshotV1,
+  type TransportSimulationSnapshotV2,
 } from '@torrevieja-tycoon/simulation';
 import {
   parseCommandRevision,
@@ -22,7 +25,7 @@ import {
 } from '../persistence/save-record.js';
 
 const position = z.number().int().nonnegative().safe();
-export const transportSaveRecordSchemaVersion = 2 as const;
+export const transportSaveRecordSchemaVersion = 3 as const;
 const coordinateSchema = z.strictObject({
   scenarioSchemaVersion: z.literal('1.0.0'),
   scenarioId: z.string().trim().min(1),
@@ -53,10 +56,14 @@ const recordV1Schema = z.strictObject({
   ...recordFields,
   schemaVersion: z.literal(1),
 });
+const recordV2Schema = z.strictObject({
+  ...recordFields,
+  schemaVersion: z.literal(2),
+});
 
 export interface TransportSaveRecord {
   readonly kind: 'transport-save-record';
-  readonly schemaVersion: 2;
+  readonly schemaVersion: 3;
   readonly saveId: FoundationSaveId;
   readonly label?: string | undefined;
   readonly scenarioSchemaVersion?: string | undefined;
@@ -69,6 +76,14 @@ export interface TransportSaveRecord {
   readonly updatedAtUtcMs: number;
   readonly scenario: ScenarioCoordinate;
   readonly snapshot: TransportSimulationSnapshot;
+}
+
+export interface TransportSaveRecordV2 extends Omit<
+  TransportSaveRecord,
+  'schemaVersion' | 'snapshot'
+> {
+  readonly schemaVersion: 2;
+  readonly snapshot: TransportSimulationSnapshotV2;
 }
 
 export interface TransportSaveRecordV1 {
@@ -98,7 +113,7 @@ export interface TransportSaveSummary {
   readonly sourceSimulationTick: number;
   readonly createdAtUtcMs: number;
   readonly updatedAtUtcMs: number;
-  readonly snapshotVersion?: 1 | 2 | undefined;
+  readonly snapshotVersion?: 1 | 2 | 3 | undefined;
   readonly vehicleCount?: number | undefined;
   readonly compatibility: 'current' | 'migratable' | 'legacy-incompatible';
 }
@@ -155,13 +170,47 @@ export function parseTransportSaveRecordV1(
   });
 }
 
+export function parseTransportSaveRecordV2(
+  value: unknown,
+): TransportSaveRecordV2 {
+  const parsed = recordV2Schema.parse(value);
+  const snapshot = parseTransportSimulationSnapshotV2(parsed.snapshot);
+  const scenario = freeze(parsed.scenario as ScenarioCoordinate);
+  if (
+    JSON.stringify(snapshot.scenario) !== JSON.stringify(scenario) ||
+    snapshot.state.tick !== parsed.sourceSimulationTick ||
+    parsed.updatedAtUtcMs < parsed.createdAtUtcMs
+  )
+    throw new Error('Transport save record coordinates are inconsistent.');
+  return freeze({
+    ...parsed,
+    saveId: parseFoundationSaveId(parsed.saveId),
+    gameId: parseGameId(parsed.gameId),
+    sourceTimelineId: parseTimelineId(parsed.sourceTimelineId),
+    sourceCommandRevision: parseCommandRevision(parsed.sourceCommandRevision),
+    sourceStreamOffset: parseStreamOffset(parsed.sourceStreamOffset),
+    scenario,
+    snapshot,
+  });
+}
+
 export function migrateTransportSaveRecordV1(
   record: TransportSaveRecordV1,
 ): TransportSaveRecord {
   return parseTransportSaveRecord({
     ...record,
-    schemaVersion: 2,
+    schemaVersion: 3,
     snapshot: migrateTransportSimulationSnapshotV1(record.snapshot),
+  });
+}
+
+export function migrateTransportSaveRecordV2(
+  record: TransportSaveRecordV2,
+): TransportSaveRecord {
+  return parseTransportSaveRecord({
+    ...record,
+    schemaVersion: 3,
+    snapshot: migrateTransportSimulationSnapshotV2(record.snapshot),
   });
 }
 
@@ -179,9 +228,29 @@ export function summarizeCompatibleSave(
     sourceSimulationTick: record.sourceSimulationTick,
     createdAtUtcMs: record.createdAtUtcMs,
     updatedAtUtcMs: record.updatedAtUtcMs,
-    snapshotVersion: 2,
+    snapshotVersion: 3,
     vehicleCount: record.snapshot.state.fleet.length,
     compatibility: 'current',
+  });
+}
+
+function summarizeMigratableSaveV2(
+  record: TransportSaveRecordV2,
+): TransportSaveSummary {
+  return freeze({
+    saveId: record.saveId,
+    ...(record.label === undefined ? {} : { label: record.label }),
+    scenarioId: record.scenario.scenarioId,
+    scenarioSchemaVersion: record.scenario.scenarioSchemaVersion,
+    scenarioVersion: record.scenario.scenarioVersion,
+    contentHash: record.scenario.contentHash,
+    sourceTimelineId: record.sourceTimelineId,
+    sourceSimulationTick: record.sourceSimulationTick,
+    createdAtUtcMs: record.createdAtUtcMs,
+    updatedAtUtcMs: record.updatedAtUtcMs,
+    snapshotVersion: 2,
+    vehicleCount: record.snapshot.state.fleet.length,
+    compatibility: 'migratable',
   });
 }
 
@@ -217,6 +286,11 @@ export type PersistedSaveClassification =
       summary: TransportSaveSummary;
     }>
   | Readonly<{
+      classification: 'migratable-transport-v2';
+      record: TransportSaveRecordV2;
+      summary: TransportSaveSummary;
+    }>
+  | Readonly<{
       classification: 'legacy-foundation';
       summary: TransportSaveSummary;
     }>
@@ -237,7 +311,7 @@ export function classifyPersistedSaveRecord(
     raw.kind !== 'foundation-save-record'
   )
     return freeze({ classification: 'unrelated' });
-  const supportedVersion = raw.kind === 'transport-save-record' ? 2 : 1;
+  const supportedVersion = raw.kind === 'transport-save-record' ? 3 : 1;
   if (
     typeof raw.schemaVersion === 'number' &&
     Number.isSafeInteger(raw.schemaVersion) &&
@@ -255,6 +329,14 @@ export function classifyPersistedSaveRecord(
           classification: 'migratable-transport-v1',
           record,
           summary: summarizeMigratableSave(record),
+        });
+      }
+      if (raw.schemaVersion === 2) {
+        const record = parseTransportSaveRecordV2(value);
+        return freeze({
+          classification: 'migratable-transport-v2',
+          record,
+          summary: summarizeMigratableSaveV2(record),
         });
       }
       const record = parseTransportSaveRecord(value);

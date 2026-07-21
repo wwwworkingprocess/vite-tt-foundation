@@ -69,13 +69,13 @@ const movingState = () => {
   return advanceTransportTicks(state, 5);
 };
 
-describe('Transport Snapshot V2', () => {
+describe('Transport Snapshot V3 and legacy migration', () => {
   it('round-trips a compact, deeply immutable ordered fleet', () => {
     const snapshot = createTransportSimulationSnapshot(movingState());
     expect(snapshot).toMatchObject({
       kind: 'transport-simulation-snapshot',
-      schemaVersion: 2,
-      simulationVersion: 'transport-2',
+      schemaVersion: 3,
+      simulationVersion: 'transport-3',
       state: {
         tick: 15,
         fleet: [
@@ -106,7 +106,7 @@ describe('Transport Snapshot V2', () => {
     ).toEqual(createTransportSimulationSnapshot(movingState()));
   });
 
-  it('parses V1 separately and migrates explicitly to an empty V2 fleet', () => {
+  it('parses V1 separately and migrates explicitly to an empty V3 fleet', () => {
     expect(parseTransportSimulationSnapshotV1(v1)).toMatchObject({
       schemaVersion: 1,
       state: { tick: 12 },
@@ -115,8 +115,8 @@ describe('Transport Snapshot V2', () => {
     const migrated = migrateTransportSimulationSnapshotV1(v1);
     expect(migrated).toEqual({
       ...v1,
-      schemaVersion: 2,
-      simulationVersion: 'transport-2',
+      schemaVersion: 3,
+      simulationVersion: 'transport-3',
       state: { tick: 12, fleet: [] },
     });
     expect(Object.isFrozen(migrated.state.fleet)).toBe(true);
@@ -261,12 +261,12 @@ describe('Transport Snapshot V2', () => {
     ).toBe('completed-at-stop');
   });
 
-  it('rejects malformed V1 and V2 documents', () => {
+  it('rejects malformed V1 and V3 documents', () => {
     expect(() =>
       parseTransportSimulationSnapshotV1({ ...v1, state: {} }),
     ).toThrow();
     expect(() =>
-      parseTransportSimulationSnapshot({ ...v1, schemaVersion: 2 }),
+      parseTransportSimulationSnapshot({ ...v1, schemaVersion: 3 }),
     ).toThrow();
   });
 

@@ -1,10 +1,16 @@
 # Authoritative vehicle movement
 
-Phase 4C adds graph-native vehicles to the existing single transport authority. A vehicle owns a caller-supplied `VehicleId`, label, route-pattern assignment, exact per-edge integer travel-tick plan, and one discriminated location state. Static stops and edges remain owned by the canonical scenario graph and are never copied into snapshots.
+Phase 4C adds graph-native vehicles to the existing single transport authority. New V3 vehicles own a caller-supplied `VehicleId`, label, canonical `RouteId`, ordered route-pattern legs, an exact per-edge integer plan per leg, and one discriminated location state. Static stops and edges remain owned by the canonical scenario graph and are never copied into snapshots.
 
 Creation parks a vehicle at its pattern origin. Starting is a zero-tick transition. Positive authoritative tick advancement departs at zero cost, consumes integer progress on explicitly ordered directed edges, records exact arrivals as stop states, completes only at a non-loop terminal stop, and wraps only across an explicit loop-closing edge. No reverse, geographic, timing, or rendering inference is permitted. Split and batched advancement are equivalent.
 
-Transport Snapshot V2 and Transport Save V2 preserve the ordered fleet and exact movement state. V1 remains separately parseable and is migrated deliberately to V2 with an empty fleet by the restore workflow. Direct, structured-clone, and Worker adapters validate and deeply freeze the same authority. Rendering receives integer progress/travel values only; interpolation is presentation work.
+Transport Snapshot V3 and Transport Save V3 preserve the ordered fleet, RouteId, ordered legs, active leg/pattern, completed-cycle count, and exact movement state. V1 migrates deliberately to an empty V3 fleet. V2 migrates to explicit legacy single-pattern vehicles without inferred return legs. Direct, structured-clone, and Worker adapters validate and deeply freeze the same authority. Rendering receives integer progress/travel values only; interpolation is presentation work.
+
+At a leg terminal, exact arrival remains at that stop. The next positive tick,
+or remaining ticks in the same batch, performs a zero-tick handoff to the next
+pattern's explicit origin. After the final leg the vehicle returns to leg zero.
+Route C deliberately hands off from `tv-stop-0207` to `tv-stop-0209`; no edge,
+proximity movement, dwell, or hidden travel time is inferred.
 
 One Transport Save V2 record is one exact authoritative scenario timeline
 snapshot: its scenario coordinate, simulation tick, complete ordered fleet,

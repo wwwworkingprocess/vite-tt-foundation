@@ -1,11 +1,12 @@
 {
+  "defaultScenarioId": "torrevieja-legacy-abc-v1",
   "schemaVersions": {
-    "transportSimulationSnapshot": 2,
-    "transportSaveRecord": 2
+    "transportSimulationSnapshot": 3,
+    "transportSaveRecord": 3
   },
   "contractVersions": {
-    "transportClientContract": 2,
-    "transportWorkerContract": 2
+    "transportClientContract": 3,
+    "transportWorkerContract": 3
   },
   "criticalCoverage": {
     "statements": 95,

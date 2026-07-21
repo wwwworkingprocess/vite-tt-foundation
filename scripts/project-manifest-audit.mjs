@@ -5,6 +5,7 @@ const root = new URL('../', import.meta.url);
 const read = (path) => readFile(new URL(path, root), 'utf8');
 const manifest = z
   .strictObject({
+    defaultScenarioId: z.string().min(1),
     schemaVersions: z.strictObject({
       transportSimulationSnapshot: z.number().int().positive(),
       transportSaveRecord: z.number().int().positive(),
@@ -35,6 +36,16 @@ const manifest = z
     }),
   })
   .parse(JSON.parse(await read('torrevieja-project.json')));
+if (manifest.defaultScenarioId !== 'torrevieja-legacy-abc-v1')
+  throw new Error(
+    'defaultScenarioId must name the adopted legacy A/B/C scenario.',
+  );
+if (
+  !(await read('apps/web/src/project-defaults.ts')).includes(
+    `defaultScenarioId = '${manifest.defaultScenarioId}' as const`,
+  )
+)
+  throw new Error('Browser default scenario does not match project manifest.');
 const requiredCriticalFiles = [
   'apps/web/src/transport-simulation/transport-controller.ts',
   'apps/web/src/transport-simulation/transport-foundation-application.ts',

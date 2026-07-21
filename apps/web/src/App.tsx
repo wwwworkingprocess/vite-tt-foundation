@@ -11,6 +11,7 @@ import {
   scenarioCoordinatesEqual,
   simulationFoundationLabel,
   type ScenarioCoordinate,
+  type TransportVehicleCommand,
   type VehicleState,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
@@ -62,6 +63,8 @@ export function App() {
   const [stackSeedScenario, setStackSeedScenario] =
     useState<CanonicalScenario>();
   const [browserActionMessage, setBrowserActionMessage] = useState<string>();
+  const [selectedRouteId, setSelectedRouteId] = useState<string>();
+  const selectedRouteIdRef = useRef<string | undefined>(undefined);
   const [, setScenarioCacheRevision] = useState(0);
   const scenarioCache = useRef(new Map<string, CanonicalScenario>());
   const scenarioResolver = useRef<
@@ -109,23 +112,7 @@ export function App() {
     let currentApplication:
       ReturnType<typeof createTransportFoundationApplication> | undefined;
     let vehicleCommandSequence = 0;
-    const sendVehicleCommand = async (
-      command:
-        | Readonly<{
-            kind: 'transport.vehicle.create';
-            vehicleId: ReturnType<typeof parseVehicleId>;
-            label: string;
-            patternId: CanonicalScenario['routes']['routes'][number]['patterns'][number]['patternId'];
-            movementPlan: Readonly<{
-              kind: 'vehicle-movement-plan-v1';
-              edgeTravelTicks: readonly number[];
-            }>;
-          }>
-        | Readonly<{
-            kind: 'transport.vehicle.start';
-            vehicleId: ReturnType<typeof parseVehicleId>;
-          }>,
-    ) => {
+    const sendVehicleCommand = async (command: TransportVehicleCommand) => {
       const application = currentApplication;
       const session = application?.projection.getState().session;
       if (!application || session?.status !== 'ready') return;
@@ -216,6 +203,7 @@ export function App() {
             coordinate,
             (current) => scenarioCache.current.get(scenarioKey(current)),
             currentApplication?.projection.getState().fleet ?? [],
+            selectedRouteIdRef.current,
           );
           setBrowserActionMessage(undefined);
           await sendVehicleCommand(command);
@@ -265,6 +253,17 @@ export function App() {
   const representedScenario = application?.scenario
     ? scenarioCache.current.get(scenarioKey(application.scenario))
     : undefined;
+  useEffect(() => {
+    if (!representedScenario) return;
+    const available = representedScenario.routes.routes.some(
+      (route) => route.routeId === selectedRouteIdRef.current,
+    );
+    if (!available) {
+      const first = representedScenario.routes.routes[0]?.routeId;
+      selectedRouteIdRef.current = first;
+      setSelectedRouteId(first);
+    }
+  }, [representedScenario]);
   const action = (operation: (() => Promise<void>) | undefined) => () => {
     void operation?.();
   };
@@ -327,7 +326,54 @@ export function App() {
             Active authoritative scenario:{' '}
             {application?.scenario?.scenarioId ?? 'pending'}
           </p>
+          {selectedScenario &&
+          application?.scenario &&
+          selectedScenario.manifest.scenarioId !==
+            application.scenario.scenarioId ? (
+            <p>
+              Selected scenario will become active when a new session is
+              started.
+            </p>
+          ) : null}
           <div aria-label="Vehicle diagnostics">
+            <label>
+              Vehicle route
+              <select
+                value={selectedRouteId ?? ''}
+                disabled={!ready || !representedScenario}
+                onChange={(event) => {
+                  selectedRouteIdRef.current = event.target.value;
+                  setSelectedRouteId(event.target.value);
+                }}
+              >
+                {representedScenario?.routes.routes.map((route) => (
+                  <option key={route.routeId} value={route.routeId}>
+                    {route.publicCode} — {route.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div data-testid="route-list" aria-label="Canonical routes">
+              {representedScenario?.routes.routes.map((route) => (
+                <div key={route.routeId} data-route-id={route.routeId}>
+                  <strong>
+                    {route.publicCode} — {route.name}
+                  </strong>{' '}
+                  <span>{route.routeId}</span>
+                  <ol>
+                    {route.patterns.map((pattern) => (
+                      <li
+                        key={pattern.patternId}
+                        data-pattern-id={pattern.patternId}
+                      >
+                        {pattern.directionLabel} ({pattern.stopNodeIds.length}{' '}
+                        stops)
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ))}
+            </div>
             <button disabled={!ready} onClick={action(actions?.createVehicle)}>
               Create demo vehicle
             </button>
@@ -365,6 +411,9 @@ export function App() {
                     data-testid={`vehicle-row-${vehicle.vehicleId}`}
                     data-vehicle-id={vehicle.vehicleId}
                     data-pattern-id={vehicle.patternId}
+                    data-route-id={vehicle.routeId}
+                    data-route-leg-index={vehicle.routeLegIndex}
+                    data-completed-route-cycles={vehicle.completedRouteCycles}
                     data-plan-travel-ticks={vehicle.movementPlan.edgeTravelTicks.join(
                       ',',
                     )}

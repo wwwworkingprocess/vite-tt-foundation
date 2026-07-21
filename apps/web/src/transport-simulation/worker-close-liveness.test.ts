@@ -35,7 +35,7 @@ const scenario = () =>
 const connectRequest = () =>
   ({
     kind: 'transport-client-connect',
-    contractVersion: 2,
+    contractVersion: 3,
     mode: 'new',
     gameId: 'game',
     timelineId: 'timeline',
@@ -220,7 +220,7 @@ describe('paired transport Worker close liveness', () => {
       payload: unknown,
     ) => ({
       kind: 'transport-worker-request',
-      contractVersion: 2,
+      contractVersion: 3,
       requestId,
       operation,
       payload,
@@ -248,14 +248,14 @@ describe('paired transport Worker close liveness', () => {
     await loopback.client.connect(connectRequest() as never);
     loopback.emitToBrowser({
       kind: 'transport-worker-failure',
-      contractVersion: 2,
+      contractVersion: 3,
       requestId: 999,
       operation: 'connect',
       message: 'unknown request',
     });
     loopback.emitToBrowser({
       kind: 'transport-worker-failure',
-      contractVersion: 2,
+      contractVersion: 3,
       message: 'uncorrelated failure',
     });
     expect(loopback.client.getLifecycle()).toMatchObject({ state: 'ready' });

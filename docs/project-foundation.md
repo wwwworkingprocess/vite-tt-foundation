@@ -64,6 +64,7 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`architecture/transport-simulation-authority.md`](architecture/transport-simulation-authority.md) — Phase 4B authoritative scenario and snapshot boundary.
 - [`architecture/vehicle-movement-authority.md`](architecture/vehicle-movement-authority.md) — Phase 4C deterministic vehicle authority.
 - [`architecture/decisions/0009-graph-native-vehicle-movement.md`](architecture/decisions/0009-graph-native-vehicle-movement.md) — graph-native movement and V2 compatibility decision.
+- [`architecture/decisions/0010-repeating-route-cycle-assignment.md`](architecture/decisions/0010-repeating-route-cycle-assignment.md) — canonical RouteId assignment and repeating ordered-leg operation.
 - [`architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md`](architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md) — exact scenario-coordinate compatibility decision.
 - [`architecture/decisions/0007-scenario-package-and-directed-graph.md`](architecture/decisions/0007-scenario-package-and-directed-graph.md) — scenario package and directed-edge decision.
 - [`architecture/decisions/0002-simulation-host-transport-readiness.md`](architecture/decisions/0002-simulation-host-transport-readiness.md) — Socket.IO-readiness research and transport-boundary decision.
@@ -106,8 +107,10 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   exact scenario coordinate plus dynamic tick; legacy foundation saves remain
   explicitly incompatible rather than being assigned invented scenario data.
 - Phase 4C adds strict graph-native vehicles, integer per-edge movement plans,
-  atomic tick advancement, and explicit Transport Snapshot/Save V2 with named
-  V1-to-V2 empty-fleet migration. Transport client and Worker contracts are V2,
-  and a read-only SVG diagnostic proves active-authority movement without
-  adding render authority. Scheduling and gameplay remain deferred.
+  atomic tick advancement, and explicit versioned snapshots and saves. Its
+  final refinement assigns new vehicles to canonical RouteIds, repeats each
+  route's ordered direction patterns with zero-tick terminal handoffs, and
+  advances Snapshot, Save, client, and Worker contracts to V3. V1 migrates to
+  an empty fleet; V2 migrates as legacy single-pattern authority. A read-only
+  SVG proves active-authority movement. Scheduling remains deferred.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

@@ -65,7 +65,8 @@ belong to `torrevieja-project.json`. The intended reusable Foundation Template
 snapshot is commit `c26be29`; current Phase 4
 HEAD must not be tagged as Foundation Template v1.0.0.
 
-Phase 4C advances both application-owned transport contract markers to V2 for
-vehicle commands, fleet publications, and Transport Snapshot V2 results.
-Contract-V1 connect and Worker envelopes are rejected explicitly; snapshot V1
-remains supported only through the named empty-fleet migration path.
+Final Phase 4C advances both application-owned transport contract markers to
+V3 for canonical RouteId assignments and repeating ordered-leg publications.
+Older connect and Worker envelopes are rejected explicitly. Snapshot V1 uses
+the named empty-fleet migration; V2 remains an explicit legacy single-pattern
+migration and never infers a return leg.

@@ -50,6 +50,23 @@ const scenario = parseScenarioPackage({
   presentation: json('presentation.json'),
   provenance: json('provenance.json'),
 });
+const legacyFixture = join(
+  import.meta.dirname,
+  '..',
+  'public',
+  'scenarios',
+  'torrevieja-legacy-abc-v1',
+);
+const legacyJson = (name: string) =>
+  JSON.parse(readFileSync(join(legacyFixture, name), 'utf8')) as unknown;
+const legacyScenario = parseScenarioPackage({
+  manifest: legacyJson('scenario.json'),
+  settlements: legacyJson('settlements.json'),
+  stops: legacyJson('stops.json'),
+  routes: legacyJson('routes.json'),
+  presentation: legacyJson('presentation.json'),
+  provenance: legacyJson('provenance.json'),
+});
 const alternate = (name: string) =>
   JSON.parse(
     JSON.stringify(json(name)).replaceAll('torrevieja-mini-v1', 'scenario-b'),
@@ -108,9 +125,11 @@ vi.mock('./scenarios/ScenarioPanel.js', () => ({
       queueMicrotask(() => {
         onResolverReady?.((coordinate) =>
           Promise.resolve(
-            coordinate.scenarioId === alternateScenario.manifest.scenarioId
-              ? alternateScenario
-              : scenario,
+            coordinate.scenarioId === legacyScenario.manifest.scenarioId
+              ? (legacyScenario as typeof scenario)
+              : coordinate.scenarioId === alternateScenario.manifest.scenarioId
+                ? alternateScenario
+                : scenario,
           ),
         );
         onScenarioReady(scenario);
@@ -147,6 +166,18 @@ vi.mock('./scenarios/ScenarioPanel.js', () => ({
           }}
         >
           Select scenario A
+        </button>
+        <button
+          onClick={() => {
+            onScenarioReady(legacyScenario);
+            onSelectionChange?.({
+              requestedScenarioId: legacyScenario.manifest.scenarioId,
+              status: 'ready',
+              scenario: legacyScenario as typeof scenario,
+            });
+          }}
+        >
+          Select legacy routes
         </button>
         <button
           onClick={() =>
@@ -477,6 +508,64 @@ describe('foundation screen', () => {
         position.getAttribute('cx'),
         position.getAttribute('cy'),
       ]).not.toEqual(pausedPosition),
+    );
+  });
+
+  it('lists canonical legacy routes and creates a vehicle on the chosen RouteId', async () => {
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    await waitFor(() =>
+      expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Select legacy routes' }),
+    );
+    expect(screen.getByTestId('active-scenario')).not.toHaveTextContent(
+      'torrevieja-legacy-abc-v1',
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Close transport Worker' }),
+    );
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'Start new transport session',
+      }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('active-scenario')).toHaveTextContent(
+        'torrevieja-legacy-abc-v1',
+      ),
+    );
+    expect(
+      within(screen.getByTestId('route-list')).getByText(
+        'A — Torrevieja - La Mata',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByTestId('route-list')).getByText(
+        'B — Torrevieja - Torretas - San Luis',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByTestId('route-list')).getByText(
+        'C — Torrevieja - Lomas',
+      ),
+    ).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('Vehicle route'), {
+      target: { value: 'legacy-B' },
+    });
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Create demo vehicle' }),
+      ).toBeEnabled(),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Create demo vehicle' }),
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
+      ).toHaveAttribute('data-route-id', 'legacy-B'),
     );
   });
 

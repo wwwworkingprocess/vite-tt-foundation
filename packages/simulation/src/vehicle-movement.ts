@@ -3,6 +3,7 @@ import type {
   DirectedEdge,
   DirectedEdgeId,
   DirectedScenarioGraph,
+  RouteId,
   RoutePatternId,
   StopNodeId,
 } from '@torrevieja-tycoon/transport-domain';
@@ -14,6 +15,11 @@ export type VehicleId = string & { readonly [vehicleIdBrand]: true };
 export interface VehicleMovementPlanV1 {
   readonly kind: 'vehicle-movement-plan-v1';
   readonly edgeTravelTicks: readonly number[];
+}
+
+export interface VehicleRouteLeg {
+  readonly patternId: RoutePatternId;
+  readonly movementPlan: VehicleMovementPlanV1;
 }
 
 export type VehicleMovementState =
@@ -47,6 +53,10 @@ export interface VehicleState {
   readonly patternId: RoutePatternId;
   readonly movementPlan: VehicleMovementPlanV1;
   readonly movement: VehicleMovementState;
+  readonly routeId?: RouteId;
+  readonly routeLegs?: readonly VehicleRouteLeg[];
+  readonly routeLegIndex?: number;
+  readonly completedRouteCycles?: number;
 }
 
 export type TransportVehicleCommand =
@@ -56,6 +66,13 @@ export type TransportVehicleCommand =
       label: string;
       patternId: RoutePatternId;
       movementPlan: VehicleMovementPlanV1;
+    }>
+  | Readonly<{
+      kind: 'transport.vehicle.create-route-cycle';
+      vehicleId: VehicleId;
+      label: string;
+      routeId: RouteId;
+      legs: readonly VehicleRouteLeg[];
     }>
   | Readonly<{
       kind: 'transport.vehicle.start';
@@ -88,7 +105,25 @@ const startSchema = z.strictObject({
   kind: z.literal('transport.vehicle.start'),
   vehicleId: vehicleIdSchema,
 });
-const commandSchema = z.discriminatedUnion('kind', [createSchema, startSchema]);
+const routeCycleCreateSchema = z.strictObject({
+  kind: z.literal('transport.vehicle.create-route-cycle'),
+  vehicleId: vehicleIdSchema,
+  label: z.string().trim().min(1).max(128),
+  routeId: z.string().min(1),
+  legs: z
+    .array(
+      z.strictObject({
+        patternId: z.string().min(1),
+        movementPlan: planSchema,
+      }),
+    )
+    .min(1),
+});
+const commandSchema = z.discriminatedUnion('kind', [
+  createSchema,
+  routeCycleCreateSchema,
+  startSchema,
+]);
 const movementSchema = z.discriminatedUnion('kind', [
   z.strictObject({
     kind: z.literal('parked-at-stop'),
@@ -120,6 +155,17 @@ const vehicleSchema = z.strictObject({
   patternId: z.string().min(1),
   movementPlan: planSchema,
   movement: movementSchema,
+  routeId: z.string().min(1).optional(),
+  routeLegs: z
+    .array(
+      z.strictObject({
+        patternId: z.string().min(1),
+        movementPlan: planSchema,
+      }),
+    )
+    .optional(),
+  routeLegIndex: z.number().int().nonnegative().safe().optional(),
+  completedRouteCycles: z.number().int().nonnegative().safe().optional(),
 });
 
 export const parseVehicleId = (value: unknown): VehicleId =>
@@ -147,6 +193,37 @@ export function parseTransportVehicleCommand(
   const command = commandSchema.parse(value);
   if (command.kind === 'transport.vehicle.start')
     return freeze({ ...command, vehicleId: parseVehicleId(command.vehicleId) });
+  if (command.kind === 'transport.vehicle.create-route-cycle') {
+    const route = graph.route(command.routeId);
+    if (!route) throw new Error(`Unknown route: ${command.routeId}.`);
+    if (
+      command.legs.length !== route.patterns.length ||
+      command.legs.some(
+        (leg, index) => leg.patternId !== route.patterns[index]!.patternId,
+      ) ||
+      new Set(command.legs.map((leg) => leg.patternId)).size !==
+        command.legs.length
+    )
+      throw new Error(
+        `Route ${command.routeId} legs must match canonical order.`,
+      );
+    const legs = command.legs.map((leg) => {
+      const edges = graph.patternEdges(leg.patternId);
+      return {
+        patternId: route.patterns.find(
+          (pattern) => pattern.patternId === leg.patternId,
+        )!.patternId,
+        movementPlan: parseVehicleMovementPlan(leg.movementPlan, edges.length),
+      };
+    });
+    return freeze({
+      kind: command.kind,
+      vehicleId: parseVehicleId(command.vehicleId),
+      label: command.label,
+      routeId: route.routeId,
+      legs,
+    });
+  }
   const pattern = graph.pattern(command.patternId);
   if (!pattern) throw new Error(`Unknown route pattern: ${command.patternId}.`);
   const edges = graph.patternEdges(pattern.patternId);
@@ -180,6 +257,30 @@ export function applyVehicleCommand(
         label: command.label,
         patternId: command.patternId,
         movementPlan: command.movementPlan,
+        movement: {
+          kind: 'parked-at-stop',
+          stopNodeId: firstEdge.fromStopNodeId,
+          nextEdgeSequence: 0,
+        },
+      },
+    ]);
+  }
+  if (command.kind === 'transport.vehicle.create-route-cycle') {
+    if (existing)
+      throw new Error(`Duplicate vehicle ID: ${command.vehicleId}.`);
+    const firstLeg = command.legs[0]!;
+    const firstEdge = graph.patternEdges(firstLeg.patternId)[0]!;
+    return freeze([
+      ...fleet,
+      {
+        vehicleId: command.vehicleId,
+        label: command.label,
+        routeId: command.routeId,
+        routeLegs: command.legs,
+        routeLegIndex: 0,
+        completedRouteCycles: 0,
+        patternId: firstLeg.patternId,
+        movementPlan: firstLeg.movementPlan,
         movement: {
           kind: 'parked-at-stop',
           stopNodeId: firstEdge.fromStopNodeId,
@@ -239,6 +340,8 @@ function advanceVehicle(
     vehicle.movement.kind === 'completed-at-stop'
   )
     return vehicle;
+  if (vehicle.routeId && vehicle.routeLegs)
+    return advanceRouteCycleVehicle(graph, vehicle, count);
   const edges = graph.patternEdges(vehicle.patternId);
   // Created and restored vehicles have already passed graph-bound validation.
   const pattern = graph.pattern(vehicle.patternId)!;
@@ -301,6 +404,90 @@ function advanceVehicle(
   return freeze({ ...vehicle, movement });
 }
 
+function safeRouteCycleTicks(legs: readonly VehicleRouteLeg[]) {
+  let total = 0;
+  for (const leg of legs)
+    for (const ticks of leg.movementPlan.edgeTravelTicks) {
+      if (ticks > Number.MAX_SAFE_INTEGER - total) return undefined;
+      total += ticks;
+    }
+  return total === 0 ? undefined : total;
+}
+
+function advanceRouteCycleVehicle(
+  graph: DirectedScenarioGraph,
+  input: VehicleState,
+  count: TickAdvancement,
+): VehicleState {
+  const legs = input.routeLegs!;
+  let remaining = count as number;
+  let vehicle = input;
+  let movement: ActiveMovement = input.movement as ActiveMovement;
+  const cycleTicks = safeRouteCycleTicks(legs);
+  while (remaining > 0) {
+    let legIndex = vehicle.routeLegIndex!;
+    let leg = legs[legIndex]!;
+    let edges = graph.patternEdges(leg.patternId);
+    if (
+      movement.kind === 'running-at-stop' &&
+      movement.nextEdgeSequence === edges.length
+    ) {
+      const nextLegIndex = (legIndex + 1) % legs.length;
+      const wrapped = nextLegIndex === 0;
+      legIndex = nextLegIndex;
+      leg = legs[legIndex]!;
+      edges = graph.patternEdges(leg.patternId);
+      movement = freeze({
+        kind: 'running-at-stop',
+        stopNodeId: edges[0]!.fromStopNodeId,
+        nextEdgeSequence: 0,
+      });
+      vehicle = freeze({
+        ...vehicle,
+        routeLegIndex: legIndex,
+        completedRouteCycles: vehicle.completedRouteCycles! + (wrapped ? 1 : 0),
+        patternId: leg.patternId,
+        movementPlan: leg.movementPlan,
+        movement,
+      });
+    }
+    if (
+      movement.kind === 'running-at-stop' &&
+      cycleTicks !== undefined &&
+      remaining > cycleTicks
+    ) {
+      const skipped = Math.floor((remaining - 1) / cycleTicks);
+      remaining -= skipped * cycleTicks;
+      vehicle = freeze({
+        ...vehicle,
+        completedRouteCycles: vehicle.completedRouteCycles! + skipped,
+      });
+    }
+    const sequence =
+      movement.kind === 'running-at-stop'
+        ? movement.nextEdgeSequence
+        : movement.edgeSequence;
+    const edge = edges[sequence]!;
+    const travelTicks = leg.movementPlan.edgeTravelTicks[sequence]!;
+    const progress =
+      movement.kind === 'running-on-edge' ? movement.progressTicks : 0;
+    const untilArrival = travelTicks - progress;
+    if (remaining < untilArrival) {
+      movement = onEdge(edge, travelTicks, progress + remaining);
+      remaining = 0;
+    } else {
+      remaining -= untilArrival;
+      movement = freeze({
+        kind: 'running-at-stop',
+        stopNodeId: edge.toStopNodeId,
+        nextEdgeSequence: sequence + 1,
+      });
+    }
+    vehicle = freeze({ ...vehicle, movement });
+  }
+  return vehicle;
+}
+
 export function advanceVehicleFleet(
   graph: DirectedScenarioGraph,
   fleet: readonly VehicleState[],
@@ -321,6 +508,43 @@ export function restoreVehicleFleet(
     if (ids.has(vehicleId))
       throw new Error(`Duplicate vehicle ID: ${vehicleId}.`);
     ids.add(vehicleId);
+    const routeFields = [
+      entry.routeId,
+      entry.routeLegs,
+      entry.routeLegIndex,
+      entry.completedRouteCycles,
+    ];
+    const routeCycle = routeFields.every((field) => field !== undefined);
+    if (!routeCycle && routeFields.some((field) => field !== undefined))
+      throw new Error(`Vehicle ${vehicleId} route assignment is incomplete.`);
+    if (routeCycle) {
+      const route = graph.route(entry.routeId!);
+      if (
+        !route ||
+        entry.routeLegs!.length !== route.patterns.length ||
+        entry.routeLegIndex! >= entry.routeLegs!.length ||
+        entry.routeLegs!.some(
+          (leg, index) => leg.patternId !== route.patterns[index]!.patternId,
+        ) ||
+        new Set(entry.routeLegs!.map((leg) => leg.patternId)).size !==
+          entry.routeLegs!.length
+      )
+        throw new Error(`Vehicle ${vehicleId} route assignment is invalid.`);
+      const legs = entry.routeLegs!.map((leg) => ({
+        patternId: graph.pattern(leg.patternId)!.patternId,
+        movementPlan: parseVehicleMovementPlan(
+          leg.movementPlan,
+          graph.patternEdges(leg.patternId).length,
+        ),
+      }));
+      if (
+        entry.patternId !== legs[entry.routeLegIndex!]!.patternId ||
+        JSON.stringify(entry.movementPlan) !==
+          JSON.stringify(legs[entry.routeLegIndex!]!.movementPlan)
+      )
+        throw new Error(`Vehicle ${vehicleId} active route leg is invalid.`);
+      entry = freeze({ ...entry, routeLegs: legs });
+    }
     const pattern = graph.pattern(entry.patternId);
     if (!pattern) throw new Error(`Unknown route pattern: ${entry.patternId}.`);
     const edges = graph.patternEdges(pattern.patternId);
@@ -334,7 +558,14 @@ export function restoreVehicleFleet(
         throw new Error(`Vehicle ${vehicleId} parked origin is invalid.`);
     } else if (movement.kind === 'running-at-stop') {
       const edge = edges[movement.nextEdgeSequence];
-      if (!edge || edge.fromStopNodeId !== movement.stopNodeId)
+      const routeTerminal =
+        routeCycle &&
+        movement.nextEdgeSequence === edges.length &&
+        edges.at(-1)?.toStopNodeId === movement.stopNodeId;
+      if (
+        (!edge || edge.fromStopNodeId !== movement.stopNodeId) &&
+        !routeTerminal
+      )
         throw new Error(`Vehicle ${vehicleId} next edge is invalid.`);
     } else if (movement.kind === 'running-on-edge') {
       const edge = edges[movement.edgeSequence];
@@ -363,6 +594,14 @@ export function restoreVehicleFleet(
       patternId: pattern.patternId,
       movementPlan,
       movement,
+      ...(routeCycle
+        ? {
+            routeId: entry.routeId!,
+            routeLegs: entry.routeLegs!,
+            routeLegIndex: entry.routeLegIndex!,
+            completedRouteCycles: entry.completedRouteCycles!,
+          }
+        : {}),
     };
   });
   return freeze(fleet);
@@ -376,7 +615,7 @@ export function parseVehicleFleetSnapshot(
       .array(vehicleSchema)
       .parse(value)
       .map((entry) => ({
-        ...entry,
+        label: entry.label,
         vehicleId: parseVehicleId(entry.vehicleId),
         patternId: entry.patternId as RoutePatternId,
         movementPlan: freeze({
@@ -384,6 +623,20 @@ export function parseVehicleFleetSnapshot(
           edgeTravelTicks: [...entry.movementPlan.edgeTravelTicks],
         }),
         movement: entry.movement as VehicleMovementState,
+        ...(entry.routeId === undefined
+          ? {}
+          : {
+              routeId: entry.routeId as RouteId,
+              routeLegs: entry.routeLegs!.map((leg) => ({
+                patternId: leg.patternId as RoutePatternId,
+                movementPlan: freeze({
+                  ...leg.movementPlan,
+                  edgeTravelTicks: [...leg.movementPlan.edgeTravelTicks],
+                }),
+              })),
+              routeLegIndex: entry.routeLegIndex!,
+              completedRouteCycles: entry.completedRouteCycles!,
+            }),
       })),
   );
 }

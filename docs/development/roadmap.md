@@ -117,8 +117,9 @@ Phase 4B hardening rather than Phase 4C mechanics.
 Freeze candidate: authoritative vehicles use immutable graph-native location
 states and integer per-edge plans. Create/start commands and the existing tick
 command operate through the single Worker/application/pacing/persistence stack.
-Transport Snapshot/Save V2 preserve fleets; V1 migration is explicit and empty.
-Transport client/Worker contracts are marked V2. A deliberately plain SVG
+Transport Snapshot/Save V3 preserve RouteId assignments and repeating ordered
+route legs; V1 migration is explicit and empty, while V2 remains explicit
+single-pattern authority. Transport client/Worker contracts are marked V3. A deliberately plain SVG
 diagnostic maps the active canonical graph and integer fleet progress for
 acceptance evidence only; it owns no simulation clock or state.
 

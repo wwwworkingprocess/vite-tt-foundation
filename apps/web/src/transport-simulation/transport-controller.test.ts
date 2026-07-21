@@ -41,7 +41,7 @@ const record = () => {
   const canonical = scenario();
   return parseTransportSaveRecord({
     kind: 'transport-save-record',
-    schemaVersion: 2,
+    schemaVersion: 3,
     saveId: 'slot',
     gameId: 'game-fixture',
     sourceTimelineId: 'timeline-source',
@@ -58,6 +58,40 @@ const record = () => {
 };
 
 describe('transport application controller', () => {
+  it('deliberately migrates a Transport Save V2 before activation', async () => {
+    const v2 = structuredClone(record()) as unknown as {
+      schemaVersion: number;
+      snapshot: { schemaVersion: number; simulationVersion: string };
+    };
+    v2.schemaVersion = 2;
+    v2.snapshot.schemaVersion = 2;
+    v2.snapshot.simulationVersion = 'transport-2';
+    const controller = createTransportApplicationController({
+      createClient: () => createDirectTransportSimulationClient(),
+      repository: {
+        get: async () => classifyPersistedSaveRecord(v2),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: scenario(),
+    });
+    await controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('timeline-v2-restored'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-v2-restored',
+      simulationTick: 120,
+      fleet: [],
+    });
+    await controller.close();
+  });
+
   it('publishes failed and permits retry after synchronous initial construction failure', async () => {
     const reliable = vi.fn();
     const render = vi.fn();

@@ -58,8 +58,8 @@ describe('authoritative transport simulation', () => {
     const snapshot = createTransportSimulationSnapshot(state);
     expect(snapshot).toEqual({
       kind: 'transport-simulation-snapshot',
-      schemaVersion: 2,
-      simulationVersion: 'transport-2',
+      schemaVersion: 3,
+      simulationVersion: 'transport-3',
       scenario: {
         scenarioSchemaVersion: '1.0.0',
         scenarioId: 'torrevieja-mini-v1',

@@ -18,7 +18,13 @@ const fake = vi.hoisted(() => ({
     settlementCount: 1,
     routeCount: 1,
     catalog: {
-      scenarios: [{ scenarioId: 'torrevieja-v1', title: 'Torrevieja' }],
+      scenarios: [
+        { scenarioId: 'torrevieja-v1', title: 'Torrevieja' },
+        {
+          scenarioId: 'torrevieja-legacy-abc-v1',
+          title: 'Torrevieja Legacy Network',
+        },
+      ],
     },
     graph: { summary: { nodes: 231, routes: 1, patterns: 2, edges: 6 } },
     scenario: { manifest: { scenarioId: 'torrevieja-v1' } },
@@ -63,6 +69,7 @@ it('presents the scenario and supplies it to the single session composition', as
   expect(screen.getByText('Directed edges').nextSibling).toHaveTextContent('6');
   expect(ready).toHaveBeenCalledWith(fake.state.scenario);
   expect(resolver).toHaveBeenCalledWith(fake.resolveScenario);
+  expect(fake.loadScenario).toHaveBeenCalledWith('torrevieja-legacy-abc-v1');
   expect(selection).toHaveBeenCalledWith(
     expect.objectContaining({
       requestedScenarioId: 'torrevieja-v1',

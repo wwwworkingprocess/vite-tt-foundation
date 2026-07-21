@@ -1,7 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
+import {
+  buildDirectedScenarioGraph,
+  parseScenarioPackage,
+} from '@torrevieja-tycoon/transport-domain';
 import { parseVehicleId } from '@torrevieja-tycoon/simulation';
 import {
   parseClientId,
@@ -148,7 +151,7 @@ describe.each(factories)(
       client.subscribeReliableUpdates((update) => updates.push(update));
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 2,
+        contractVersion: 3,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -177,7 +180,7 @@ describe.each(factories)(
         envelope(3, { type: 'foundation.advance-ticks', count: 5 }),
       );
       const exported = await client.exportSnapshot();
-      expect(exported.snapshot.schemaVersion).toBe(2);
+      expect(exported.snapshot.schemaVersion).toBe(3);
       expect(exported.snapshot.state.fleet[0]?.movement).toMatchObject({
         kind: 'running-on-edge',
         edgeSequence: 1,
@@ -190,13 +193,65 @@ describe.each(factories)(
       await client.close();
     });
 
+    it('preserves V3 repeating RouteId assignment through publications and export', async () => {
+      const client = createClient();
+      const canonical = scenario();
+      const graph = buildDirectedScenarioGraph(canonical);
+      const route = canonical.routes.routes[0]!;
+      await client.connect({
+        kind: 'transport-client-connect',
+        contractVersion: 3,
+        mode: 'new',
+        gameId: parseGameId('game'),
+        timelineId: parseTimelineId('timeline'),
+        initialSimulationTick: 0,
+        scenario: canonical,
+      });
+      await client.sendCommand(
+        envelope(101, {
+          kind: 'transport.vehicle.create-route-cycle',
+          vehicleId: parseVehicleId('route-vehicle'),
+          label: 'Route vehicle',
+          routeId: route.routeId,
+          legs: route.patterns.map((pattern) => ({
+            patternId: pattern.patternId,
+            movementPlan: {
+              kind: 'vehicle-movement-plan-v1',
+              edgeTravelTicks: graph
+                .patternEdges(pattern.patternId)
+                .map(() => 1),
+            },
+          })),
+        }),
+      );
+      await client.sendCommand(
+        envelope(102, {
+          kind: 'transport.vehicle.start',
+          vehicleId: parseVehicleId('route-vehicle'),
+        }),
+      );
+      await client.sendCommand(
+        envelope(103, { type: 'foundation.advance-ticks', count: 5 }),
+      );
+      const vehicle = (await client.exportSnapshot()).snapshot.state.fleet[0];
+      expect(vehicle).toMatchObject({
+        routeId: route.routeId,
+        routeLegIndex: 1,
+        patternId: route.patterns[1]!.patternId,
+        completedRouteCycles: 0,
+        movement: { kind: 'running-at-stop' },
+      });
+      expect(Object.isFrozen(vehicle?.routeLegs)).toBe(true);
+      await client.close();
+    });
+
     it('serializes concurrent vehicle commands without losing fleet entries', async () => {
       const client = createClient();
       const canonical = scenario();
       const patternId = canonical.routes.routes[0]!.patterns[0]!.patternId;
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 2,
+        contractVersion: 3,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -235,7 +290,7 @@ describe.each(factories)(
       client.subscribeReliableUpdates((value) => publications.push(value));
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 2,
+        contractVersion: 3,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -413,7 +468,7 @@ describe('direct vehicle client failure and idempotency behavior', () => {
     ).rejects.toThrow('not ready');
     await client.connect({
       kind: 'transport-client-connect',
-      contractVersion: 2,
+      contractVersion: 3,
       mode: 'new',
       gameId: parseGameId('game'),
       timelineId: parseTimelineId('timeline'),
@@ -423,7 +478,7 @@ describe('direct vehicle client failure and idempotency behavior', () => {
     await expect(
       client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 2,
+        contractVersion: 3,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('other'),

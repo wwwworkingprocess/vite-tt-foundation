@@ -33,12 +33,12 @@ const scenario = () =>
 const request = (requestId: number, timelineId: string) => ({
   data: {
     kind: 'transport-worker-request',
-    contractVersion: 2,
+    contractVersion: 3,
     requestId,
     operation: 'connect',
     payload: {
       kind: 'transport-client-connect',
-      contractVersion: 2,
+      contractVersion: 3,
       mode: 'new',
       gameId: 'game',
       timelineId,

@@ -22,6 +22,7 @@ const packageInput = (
   scenarioId: string,
   patternId: string,
   stopCount: number,
+  secondRoute = false,
 ) => {
   const manifest = structuredClone(json('scenario.json'));
   const settlements = structuredClone(json('settlements.json'));
@@ -53,6 +54,20 @@ const packageInput = (
       stopNodeIds: source.stopNodeIds.slice(0, stopCount),
     },
   ];
+  if (secondRoute)
+    routes.routes.push({
+      ...structuredClone(routes.routes[0]!),
+      routeId: `${scenarioId}-route-b`,
+      patterns: [
+        {
+          ...structuredClone(routes.routes[0]!.patterns[0]!),
+          patternId: `${patternId}-return`,
+          stopNodeIds: [
+            ...routes.routes[0]!.patterns[0]!.stopNodeIds,
+          ].reverse(),
+        },
+      ],
+    });
   return parseScenarioPackage({
     manifest,
     settlements,
@@ -84,16 +99,18 @@ describe('authoritative demo vehicle command construction', () => {
       createScenarioCoordinate(scenarioB),
       resolve,
     );
-    expect(fromB).toMatchObject({ patternId: 'pattern-b' });
-    expect(fromB.movementPlan.edgeTravelTicks).toHaveLength(2);
+    expect(fromB).toMatchObject({ routeId: 'scenario-b-route' });
+    expect(fromB.legs[0]?.patternId).toBe('pattern-b');
+    expect(fromB.legs[0]?.movementPlan.edgeTravelTicks).toHaveLength(2);
     expect(JSON.stringify(fromB)).not.toContain('pattern-a');
 
     const fromA = createDemoVehicleCommandForAuthority(
       createScenarioCoordinate(scenarioA),
       resolve,
     );
-    expect(fromA).toMatchObject({ patternId: 'pattern-a' });
-    expect(fromA.movementPlan.edgeTravelTicks).toHaveLength(4);
+    expect(fromA).toMatchObject({ routeId: 'scenario-a-route' });
+    expect(fromA.legs[0]?.patternId).toBe('pattern-a');
+    expect(fromA.legs[0]?.movementPlan.edgeTravelTicks).toHaveLength(4);
     expect(JSON.stringify(fromA)).not.toContain('pattern-b');
   });
 
@@ -114,6 +131,29 @@ describe('authoritative demo vehicle command construction', () => {
     );
     expect(third.vehicleId).toBe('browser-demo-vehicle-003');
     expect(third.label).toBe('Demo vehicle 003');
+  });
+
+  it('builds the chosen canonical RouteId and exact ordered leg plans', () => {
+    const multi = packageInput('scenario-routes', 'route-a-pattern', 5, true);
+    const command = createDemoVehicleCommandForAuthority(
+      createScenarioCoordinate(multi),
+      () => multi,
+      [],
+      'scenario-routes-route-b',
+    );
+    expect(command.routeId).toBe('scenario-routes-route-b');
+    expect(command.legs.map((leg) => leg.patternId)).toEqual([
+      'route-a-pattern-return',
+    ]);
+    expect(command.legs[0]?.movementPlan.edgeTravelTicks).toHaveLength(4);
+    expect(() =>
+      createDemoVehicleCommandForAuthority(
+        createScenarioCoordinate(multi),
+        () => multi,
+        [],
+        'missing-route',
+      ),
+    ).toThrow('selected route is unavailable');
   });
 
   it('does not fall back when the authoritative package is unavailable', () => {
@@ -145,6 +185,6 @@ describe('authoritative demo vehicle command construction', () => {
         createScenarioCoordinate(scenarioA),
         () => withoutRoutes,
       ),
-    ).toThrow('no vehicle route pattern');
+    ).toThrow('selected route is unavailable');
   });
 });

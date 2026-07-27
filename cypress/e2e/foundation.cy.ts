@@ -18,6 +18,15 @@ const restoreScenario = (scenarioId: string) =>
     .contains('[data-save-id]', scenarioId)
     .contains('button', 'Restore')
     .click();
+const openDialog = (name: 'Simulation controls' | 'Load') => {
+  cy.get('body').then(($body) => {
+    const close = $body.find('[role="dialog"] button[aria-label^="Close "]');
+    if (close.length) cy.wrap(close).click();
+  });
+  cy.contains('button', name).click();
+};
+const openSimulationControls = () => openDialog('Simulation controls');
+const openSessionControls = () => openDialog('Load');
 
 describe('foundation screen', () => {
   it('renders without a fatal application error', () => {
@@ -35,6 +44,14 @@ describe('foundation screen', () => {
       'data-view',
       'three',
     );
+    cy.get('[data-testid="scenario-menu-trigger"]').click();
+    cy.get('.scenario-menu-panel').then(($menu) => {
+      cy.get('[data-testid="secondary-minimap"]').then(($minimap) => {
+        expect(Number(getComputedStyle($menu[0]).zIndex)).to.be.greaterThan(
+          Number(getComputedStyle($minimap[0]).zIndex),
+        );
+      });
+    });
     cy.document()
       .its('documentElement.scrollHeight')
       .then((height) => {
@@ -50,8 +67,10 @@ describe('foundation screen', () => {
     cy.get('[role="dialog"]').should('contain.text', 'Project foundation');
     cy.get('body').type('{esc}');
     cy.contains('button', 'Project info').should('have.focus');
-    cy.contains('button', 'Simulation controls').click();
+    openSimulationControls();
     cy.get('canvas').should('be.visible');
+    cy.get('[data-testid="simulation-controls-content"]').should('exist');
+    cy.get('[data-testid="save-library"]').should('not.exist');
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="worker-tick"]').should('contain.text', '0');
     cy.contains('button', 'Normal 20×').click();
@@ -68,9 +87,19 @@ describe('foundation screen', () => {
         cy.wait(350);
         cy.get('[data-testid="worker-tick"]').should('have.text', pausedTick);
       });
+    cy.get('button[aria-label="Close Simulation controls"]').click();
+    cy.contains('button', 'Save').click();
+    cy.get('.navigation-status').should('contain.text', 'Save completed.');
+    openSessionControls();
+    cy.get('[data-testid="session-controls-content"]').should('be.visible');
+    cy.get('[data-testid="save-library"]').should('exist');
+    cy.get('[data-testid="worker-tick"]').should('not.exist');
     cy.contains('button', 'Close transport Worker').click();
+    openSimulationControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
+    openSessionControls();
     cy.contains('button', 'Start new transport session').click();
+    openSimulationControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="worker-timeline"]').should(
       'contain.text',
@@ -81,7 +110,7 @@ describe('foundation screen', () => {
   it('keeps selection separate from authority and restores both scenarios', () => {
     cy.visit('/');
     cy.get('[data-testid="scenario-menu-trigger"]').click();
-    cy.contains('button', 'Simulation controls').click();
+    openSimulationControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
@@ -164,11 +193,13 @@ describe('foundation screen', () => {
       cy.wait(350);
       expectVehicleSvg(snapshot);
     });
+    openSessionControls();
     cy.contains('button', 'Save transport session').click();
     cy.get('[data-testid="manual-save-availability"]').should(
       'contain.text',
       'available',
     );
+    openSimulationControls();
 
     cy.intercept(
       {
@@ -203,16 +234,20 @@ describe('foundation screen', () => {
       'torrevieja-legacy-abc-v1',
     );
 
+    openSessionControls();
     cy.contains('button', 'Close transport Worker').click();
     cy.contains('button', 'Start new transport session').should('be.disabled');
     cy.wait('@loadMiniSelection');
+    openSimulationControls();
     cy.get('[data-testid="selected-scenario"]').should(
       'contain.text',
       'torrevieja-mini-v1',
     );
+    openSessionControls();
     cy.contains('button', 'Start new transport session')
       .should('be.enabled')
       .click();
+    openSimulationControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
@@ -239,6 +274,7 @@ describe('foundation screen', () => {
       cy.wait(350);
       expectVehicleSvg(snapshot);
     });
+    openSessionControls();
     cy.contains('button', 'Save transport session').click();
     cy.get('[data-testid="manual-save-availability"]').should(
       'contain.text',
@@ -250,6 +286,7 @@ describe('foundation screen', () => {
     );
 
     restoreScenario('torrevieja-legacy-abc-v1');
+    openSimulationControls();
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
       'torrevieja-legacy-abc-v1@1.0.0#',
@@ -261,12 +298,13 @@ describe('foundation screen', () => {
     cy.then(() => expectVehicleSvg(fullSvg));
     cy.get('[data-testid="command-revision"]').should('contain.text', '0');
     cy.get('[data-testid="stream-offset"]').should('contain.text', '0');
+    openSessionControls();
     cy.get('[data-testid="persistence-status"]').should(
       'have.text',
       'Persistence status: idle',
     );
-
     restoreScenario('torrevieja-mini-v1');
+    openSimulationControls();
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
       'torrevieja-mini-v1@1.0.0#',
@@ -296,7 +334,9 @@ describe('foundation screen', () => {
       cy.wait(350);
       expectVehicleSvg(snapshot);
     });
+    openSessionControls();
     cy.contains('button', 'Close transport Worker').click();
+    openSimulationControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
   });
 });

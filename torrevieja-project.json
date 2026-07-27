@@ -41,6 +41,9 @@
     "applicationEntry": 440000,
     "dialogShell": 8000,
     "projectInfo": 4000,
+    "simulationControls": 8000,
+    "sessionControls": 6000,
+    "svgRepresentation": 6000,
     "representation": 1200000,
     "transportWorker": 115000,
     "totalEmittedJavaScript": 1750000

@@ -117,6 +117,9 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   viewport-bound game shell: compact navigation, a full-workspace SVG
   diagnostic view, a swappable R3F minimap, and accessible project,
   simulation, and session dialogs. Shell state is presentation-only.
+  Simulation and persistence interfaces are independently lazy-loaded so Load
+  exposes only saved-session operations and the initial application entry keeps
+  reviewed budget headroom.
   City-filtered catalogues, campaign progression, and promotion of the R3F
   renderer to the production primary view remain explicit future seams.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

@@ -60,12 +60,22 @@ const vehicleSvgState = (): Cypress.Chainable<VehicleSvgState> =>
   );
 const expectVehicleSvg = (expected: VehicleSvgState) =>
   vehicleSvgState().should('deep.equal', expected);
-const restoreScenario = (scenarioId: string) =>
-  cy
-    .contains('[data-save-id]', scenarioId)
+const restoreScenario = (scenarioId: string) => {
+  openSessionControls();
+  cy.contains('[data-save-id]', scenarioId)
     .contains('button', 'Restore')
     .click();
-const openControls = () => cy.contains('button', 'Simulation controls').click();
+  openControls();
+};
+const openDialog = (name: 'Simulation controls' | 'Load') => {
+  cy.get('body').then(($body) => {
+    const close = $body.find('[role="dialog"] button[aria-label^="Close "]');
+    if (close.length) cy.wrap(close).click();
+  });
+  cy.contains('button', name).click();
+};
+const openControls = () => openDialog('Simulation controls');
+const openSessionControls = () => openDialog('Load');
 
 describe('built foundation PWA offline lifecycle', () => {
   afterEach(() => network(false));
@@ -86,6 +96,7 @@ describe('built foundation PWA offline lifecycle', () => {
     openControls();
     cy.window().its('navigator.serviceWorker.controller').should('not.be.null');
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
+    openSessionControls();
     cy.get('[data-testid="save-count"]').should('contain.text', '0');
     cy.window().then((win) =>
       writeSave(win, {
@@ -108,9 +119,10 @@ describe('built foundation PWA offline lifecycle', () => {
       }),
     );
     cy.reload();
+    openSessionControls();
+    cy.get('[data-testid="legacy-save-count"]').should('contain.text', '1');
     openControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
-    cy.get('[data-testid="legacy-save-count"]').should('contain.text', '1');
     cy.contains('label', 'Vehicle route').find('select').select('legacy-A');
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
@@ -143,6 +155,7 @@ describe('built foundation PWA offline lifecycle', () => {
       cy.wait(350);
       expectVehicleSvg(snapshot);
     });
+    openSessionControls();
     cy.contains('button', 'Save transport session').click();
     cy.get('[data-testid="save-count"]').should('contain.text', '2');
     cy.contains('[data-save-id]', 'torrevieja-legacy-abc-v1').then(($row) => {
@@ -152,6 +165,7 @@ describe('built foundation PWA offline lifecycle', () => {
       'have.text',
       'Persistence status: idle',
     );
+    openControls();
     cy.contains('label', 'Scenario')
       .find('select')
       .select('torrevieja-mini-v1', { force: true });
@@ -168,11 +182,15 @@ describe('built foundation PWA offline lifecycle', () => {
       'contain.text',
       'torrevieja-legacy-abc-v1',
     );
+    openSessionControls();
     cy.contains('button', 'Close transport Worker').click();
+    openControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
+    openSessionControls();
     cy.contains('button', 'Start new transport session')
       .should('be.enabled')
       .click();
+    openControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
@@ -207,6 +225,7 @@ describe('built foundation PWA offline lifecycle', () => {
       cy.wait(350);
       expectVehicleSvg(snapshot);
     });
+    openSessionControls();
     cy.contains('label', 'Autosave').find('input').check();
     cy.contains('button', 'Save autosave now').click();
     cy.get('[data-testid="autosave-availability"]').should(
@@ -214,6 +233,7 @@ describe('built foundation PWA offline lifecycle', () => {
       'available',
     );
     cy.contains('button', 'Close transport Worker').click();
+    openControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
     cy.then(() => network(true));
     cy.reload();
@@ -223,7 +243,9 @@ describe('built foundation PWA offline lifecycle', () => {
       'contain.text',
       '1.0.0:torrevieja-legacy-abc-v1@1.0.0#',
     );
+    openSessionControls();
     cy.get('[data-testid="save-count"]').should('contain.text', '3');
+    openControls();
     let currentTimeline = '';
     let currentTick = '';
     cy.get('[data-testid="worker-timeline"]').then(($value) => {
@@ -244,8 +266,10 @@ describe('built foundation PWA offline lifecycle', () => {
       await writeSave(win, missing as unknown as Record<string, unknown>);
     });
     restoreScenario('torrevieja-legacy-abc-v1');
-    cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
+    openSessionControls();
     cy.get('[role="alert"]').should('contain.text', 'exact saved scenario');
+    openControls();
+    cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="worker-timeline"]').should(($value) =>
       expect($value.text()).to.equal(currentTimeline),
     );
@@ -263,8 +287,10 @@ describe('built foundation PWA offline lifecycle', () => {
       await writeSave(win, mismatch as unknown as Record<string, unknown>);
     });
     restoreScenario('torrevieja-legacy-abc-v1');
-    cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
+    openSessionControls();
     cy.get('[role="alert"]').should('contain.text', 'exact saved scenario');
+    openControls();
+    cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="worker-timeline"]').should(($value) =>
       expect($value.text()).to.equal(currentTimeline),
     );
@@ -376,7 +402,9 @@ describe('built foundation PWA offline lifecycle', () => {
       cy.wait(350);
       expectVehicleSvg(snapshot);
     });
+    openSessionControls();
     cy.contains('button', 'Close transport Worker').click();
+    openControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
     cy.then(() => network(false));
   });

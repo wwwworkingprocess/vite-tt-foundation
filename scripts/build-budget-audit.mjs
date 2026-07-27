@@ -26,6 +26,9 @@ const workerChunks = javascript.filter((file) =>
 const entry = one(/^index-[\w-]+\.js$/);
 const dialogShell = one(/^AccessibleDialog-[\w-]+\.js$/);
 const projectInfo = one(/^ProjectInfo-[\w-]+\.js$/);
+const simulationControls = one(/^SimulationControls-[\w-]+\.js$/);
+const sessionControls = one(/^SessionControls-[\w-]+\.js$/);
+const svgRepresentation = one(/^VehicleMovementSvg-[\w-]+\.js$/);
 const representation = one(/^foundation-scene-[\w-]+\.js$/);
 const register = one(/^registerSW\.js$/);
 const serviceWorker = one(/^sw\.js$/);
@@ -34,6 +37,9 @@ for (const [name, matches] of Object.entries({
   application: entry,
   dialogShell,
   projectInfo,
+  simulationControls,
+  sessionControls,
+  svgRepresentation,
   representation,
   transportWorker,
   registerSW: register,
@@ -60,6 +66,9 @@ const sizes = {
   applicationEntry: await size(entry[0]),
   dialogShell: await size(dialogShell[0]),
   projectInfo: await size(projectInfo[0]),
+  simulationControls: await size(simulationControls[0]),
+  sessionControls: await size(sessionControls[0]),
+  svgRepresentation: await size(svgRepresentation[0]),
   representation: await size(representation[0]),
   transportWorker: await size(transportWorker[0]),
   totalEmittedJavaScript: (await Promise.all(javascript.map(size))).reduce(

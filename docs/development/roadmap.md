@@ -7,6 +7,8 @@ visualization-first browser shell. Project metadata and detailed
 simulation/persistence diagnostics are available through accessible dialogs;
 scenario and principal session actions remain in compact navigation. SVG and
 R3F views can exchange primary/minimap roles without changing authority.
+Simulation and saved-session dialog bodies are independently lazy-loaded and
+consume existing immutable projections without introducing application state.
 
 This does not begin Phase 4D. A future city filter may narrow the scenario
 catalogue using stable Wikidata Q-codes, and a later campaign screen may own

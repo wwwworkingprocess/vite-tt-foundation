@@ -478,6 +478,8 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.includes('apps/web/src/transport-simulation') ||
     normalized.includes('apps/web/src/transport-representation') ||
     normalized.endsWith('apps/web/src/App.tsx') ||
+    normalized.endsWith('apps/web/src/ui/SessionControls.tsx') ||
+    normalized.endsWith('apps/web/src/ui/SimulationControls.tsx') ||
     normalized.endsWith('packages/simulation/src/transport-simulation.ts') ||
     normalized.endsWith('packages/simulation/src/vehicle-movement.ts') ||
     normalized.endsWith('packages/simulation/src/index.ts');

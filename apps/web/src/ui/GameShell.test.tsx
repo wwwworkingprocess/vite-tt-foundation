@@ -4,8 +4,7 @@ import { GameShell } from './GameShell.js';
 
 afterEach(cleanup);
 
-const renderShell = () => {
-  const save = vi.fn();
+const renderShell = (save = vi.fn(async () => {})) => {
   const restart = vi.fn();
   render(
     <GameShell
@@ -19,6 +18,11 @@ const renderShell = () => {
             Route choice
             <input />
           </label>
+        </>
+      }
+      sessionControls={
+        <>
+          <p>Save mode</p>
           <p>Save library</p>
         </>
       }
@@ -85,6 +89,19 @@ it.each([
   },
 );
 
+it('keeps simulation and saved-session content separate', async () => {
+  renderShell();
+  fireEvent.click(screen.getByRole('button', { name: 'Simulation controls' }));
+  expect(await screen.findByRole('dialog')).toHaveTextContent('Route choice');
+  expect(screen.getByRole('dialog')).not.toHaveTextContent('Save library');
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Close Simulation controls' }),
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Load' }));
+  expect(await screen.findByRole('dialog')).toHaveTextContent('Save library');
+  expect(screen.getByRole('dialog')).not.toHaveTextContent('Route choice');
+});
+
 it('closes dialogs from the backdrop and keeps direct session actions accessible', async () => {
   const { save, restart } = renderShell();
   fireEvent.click(screen.getByRole('button', { name: 'Project info' }));
@@ -96,4 +113,21 @@ it('closes dialogs from the backdrop and keeps direct session actions accessible
   fireEvent.click(screen.getByRole('button', { name: 'Restart' }));
   expect(save).toHaveBeenCalledOnce();
   expect(restart).toHaveBeenCalledOnce();
+});
+
+it('announces successful and failed navigation saves', async () => {
+  const success = vi.fn(async () => {});
+  renderShell(success);
+  fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+  expect(await screen.findByText(/Save completed\./)).toBeInTheDocument();
+  cleanup();
+
+  const failure = vi.fn(async () => {
+    throw new Error('Repository unavailable.');
+  });
+  renderShell(failure);
+  fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+  expect(
+    await screen.findByText(/Repository unavailable\./),
+  ).toBeInTheDocument();
 });

@@ -4,8 +4,8 @@
   background: #eee8dc;
   font-synthesis: none;
   --navigation-height: clamp(4rem, 10dvh, 6.5rem);
-  --layer-navigation: 10;
-  --layer-minimap: 20;
+  --layer-minimap: 10;
+  --layer-navigation: 20;
   --layer-menu: 30;
   --layer-dialog: 50;
 }

@@ -58,6 +58,11 @@ and the R3F renderer stay mounted behind stable view boundaries; swapping their
 roles does not replace the Worker, controller, scenario, fleet, persistence, or
 camera authority.
 
+Simulation operations and saved-session operations are separate lazy
+presentation boundaries. They receive the same immutable application
+projections and existing callbacks from the shell composition; neither owns a
+subscription, repository, controller, or mirrored fleet/save model.
+
 Scenario navigation remains an application boundary: a requested selection is
 not active authority until the established close/start or restore lifecycle
 resolves its exact package. The navigation accepts the available scenario

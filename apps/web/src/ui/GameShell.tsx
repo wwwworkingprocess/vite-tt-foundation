@@ -16,13 +16,14 @@ export interface GameShellProps {
   readonly persistenceStatus: string;
   readonly projectInfo: ReactNode;
   readonly simulationControls: ReactNode;
+  readonly sessionControls: ReactNode;
   readonly scenarioControl: ReactNode;
   readonly primaryVisualization: ReactNode;
   readonly secondaryVisualization: ReactNode;
   readonly saveDisabled?: boolean;
   readonly restartDisabled?: boolean;
   readonly onPauseResume: () => void;
-  readonly onSave: () => void;
+  readonly onSave: () => Promise<void>;
   readonly onRestart: () => void;
 }
 
@@ -32,6 +33,7 @@ export function GameShell({
   persistenceStatus,
   projectInfo,
   simulationControls,
+  sessionControls,
   scenarioControl,
   primaryVisualization,
   secondaryVisualization,
@@ -43,6 +45,7 @@ export function GameShell({
 }: GameShellProps) {
   const [openDialog, setOpenDialog] = useState<DialogName>();
   const [threePrimary, setThreePrimary] = useState(false);
+  const [saveFeedback, setSaveFeedback] = useState<string>();
   const trigger = useRef<HTMLElement | undefined>(undefined);
   const open =
     (dialog: DialogName) => (event: ReactMouseEvent<HTMLElement>) => {
@@ -61,6 +64,19 @@ export function GameShell({
     document.addEventListener('keydown', escape);
     return () => document.removeEventListener('keydown', escape);
   }, [openDialog]);
+  const save = async () => {
+    setSaveFeedback(undefined);
+    try {
+      await onSave();
+      setSaveFeedback('Save completed.');
+    } catch (error) {
+      setSaveFeedback(
+        error instanceof Error && error.message
+          ? error.message
+          : 'Save failed.',
+      );
+    }
+  };
   return (
     <main className="game-shell" data-testid="game-shell">
       <nav className="top-navigation" data-testid="top-navigation">
@@ -70,7 +86,7 @@ export function GameShell({
           <button onClick={open('project')}>Project info</button>
           <button onClick={open('simulation')}>Simulation controls</button>
           <button onClick={open('session')}>Load</button>
-          <button disabled={saveDisabled} onClick={onSave}>
+          <button disabled={saveDisabled} onClick={() => void save()}>
             Save
           </button>
           <button disabled={restartDisabled} onClick={onRestart}>
@@ -83,6 +99,7 @@ export function GameShell({
         <div className="navigation-status" aria-live="polite">
           Session: {status} · Pacing: {pacingStatus} · Persistence:{' '}
           {persistenceStatus}
+          {saveFeedback ? ` · ${saveFeedback}` : ''}
         </div>
       </nav>
       <section
@@ -136,7 +153,7 @@ export function GameShell({
       {openDialog === 'session' ? (
         <Suspense fallback={null}>
           <AccessibleDialog title="Saved sessions" onClose={close}>
-            {simulationControls}
+            {sessionControls}
           </AccessibleDialog>
         </Suspense>
       ) : null}

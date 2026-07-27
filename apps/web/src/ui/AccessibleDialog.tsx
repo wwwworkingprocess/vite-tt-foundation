@@ -17,10 +17,11 @@ export default function AccessibleDialog({
 }) {
   const headingId = useId();
   const panel = useRef<HTMLDivElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    panel.current?.focus();
+    closeButton.current?.focus();
     return () => {
       document.body.style.overflow = previousOverflow;
     };
@@ -36,6 +37,10 @@ export default function AccessibleDialog({
     const last = focusable.at(-1);
     if (!first || !last) {
       event.preventDefault();
+      panel.current?.focus();
+    } else if (event.shiftKey && document.activeElement === panel.current) {
+      event.preventDefault();
+      last.focus();
     } else if (event.shiftKey && document.activeElement === first) {
       event.preventDefault();
       last.focus();
@@ -63,7 +68,12 @@ export default function AccessibleDialog({
       >
         <header className="dialog-heading">
           <h2 id={headingId}>{title}</h2>
-          <button type="button" onClick={onClose} aria-label={`Close ${title}`}>
+          <button
+            ref={closeButton}
+            type="button"
+            onClick={onClose}
+            aria-label={`Close ${title}`}
+          >
             Close
           </button>
         </header>

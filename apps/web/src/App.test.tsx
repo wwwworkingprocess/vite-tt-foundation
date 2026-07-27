@@ -264,6 +264,21 @@ const renderAppWithControls = () => {
   fireEvent.click(screen.getByRole('button', { name: 'Simulation controls' }));
 };
 
+const openDialog = (name: 'Simulation controls' | 'Load') => {
+  const dialog = screen.queryByRole('dialog');
+  if (dialog) {
+    fireEvent.click(
+      within(dialog).getByRole('button', {
+        name: /^Close (Project information|Simulation controls|Saved sessions)$/,
+      }),
+    );
+  }
+  fireEvent.click(screen.getByRole('button', { name }));
+};
+
+const openSimulationControls = () => openDialog('Simulation controls');
+const openSessionControls = () => openDialog('Load');
+
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
@@ -294,21 +309,32 @@ describe('foundation screen', () => {
         screen.getByRole('button', { name: 'Create demo vehicle' }),
       ).toBeEnabled(),
     );
+    openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-tick')).toHaveTextContent('0'),
     );
     expect(screen.getByTestId('scenario-coordinate')).toHaveTextContent(
       '1.0.0:torrevieja-mini-v1@1.0.0#',
     );
+    openSessionControls();
     fireEvent.click(
-      screen.getByRole('button', { name: 'Close transport Worker' }),
+      await screen.findByRole(
+        'button',
+        { name: 'Close transport Worker' },
+        { timeout: 5_000 },
+      ),
     );
+    openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('closed'),
     );
+    openSessionControls();
     fireEvent.click(
-      screen.getByRole('button', { name: 'Start new transport session' }),
+      await screen.findByRole('button', {
+        name: 'Start new transport session',
+      }),
     );
+    openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -330,6 +356,7 @@ describe('foundation screen', () => {
       'data-scenario-id',
       'torrevieja-mini-v1',
     );
+    openSessionControls();
     await waitFor(() =>
       expect(screen.getByRole('radio', { name: 'Autosave' })).toBeEnabled(),
     );
@@ -341,6 +368,7 @@ describe('foundation screen', () => {
       ([, milliseconds]) => milliseconds === 30_000,
     ).length;
     fireEvent.click(screen.getByRole('button', { name: 'Select scenario B' }));
+    openSimulationControls();
     expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
       'scenario-b',
     );
@@ -356,18 +384,21 @@ describe('foundation screen', () => {
       'data-scenario-id',
       'torrevieja-mini-v1',
     );
+    openSessionControls();
     fireEvent.click(
-      screen.getByRole('button', { name: 'Close transport Worker' }),
+      await screen.findByRole('button', { name: 'Close transport Worker' }),
     );
     const start = await screen.findByRole('button', {
       name: 'Start new transport session',
     });
     fireEvent.click(start);
+    openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
         'scenario-b',
       ),
     );
+    openSessionControls();
     await waitFor(() => {
       expect(screen.getByRole('radio', { name: 'Autosave' })).toBeChecked();
       expect(screen.getByRole('radio', { name: 'Autosave' })).toBeEnabled();
@@ -377,8 +408,11 @@ describe('foundation screen', () => {
         ),
       ).toHaveLength(initialAutosaveSchedules + 1);
     });
+    openSimulationControls();
     expect(clears).toHaveBeenCalled();
-    expect(screen.getByTestId('worker-status')).toHaveTextContent('ready');
+    expect(await screen.findByTestId('worker-status')).toHaveTextContent(
+      'ready',
+    );
     expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
       'data-scenario-id',
       'scenario-b',
@@ -391,13 +425,15 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
+    openSessionControls();
     fireEvent.click(
-      screen.getByRole('button', { name: 'Close transport Worker' }),
+      await screen.findByRole('button', { name: 'Close transport Worker' }),
     );
     const start = await screen.findByRole('button', {
       name: 'Start new transport session',
     });
     fireEvent.click(screen.getByRole('button', { name: 'Request scenario B' }));
+    openSimulationControls();
     expect(screen.getByTestId('requested-scenario')).toHaveTextContent(
       'scenario-b (loading)',
     );
@@ -409,8 +445,18 @@ describe('foundation screen', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Fail scenario B' }));
     expect(start).toBeDisabled();
     fireEvent.click(screen.getByRole('button', { name: 'Select scenario B' }));
-    await waitFor(() => expect(start).toBeEnabled());
-    fireEvent.click(start);
+    await waitFor(() =>
+      expect(screen.getByTestId('requested-scenario')).toHaveTextContent(
+        'scenario-b (ready)',
+      ),
+    );
+    openSessionControls();
+    const readyStart = await screen.findByRole('button', {
+      name: 'Start new transport session',
+    });
+    await waitFor(() => expect(readyStart).toBeEnabled());
+    fireEvent.click(readyStart);
+    openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
         'scenario-b',
@@ -537,14 +583,16 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('active-scenario')).not.toHaveTextContent(
       'torrevieja-legacy-abc-v1',
     );
+    openSessionControls();
     fireEvent.click(
-      screen.getByRole('button', { name: 'Close transport Worker' }),
+      await screen.findByRole('button', { name: 'Close transport Worker' }),
     );
     fireEvent.click(
       await screen.findByRole('button', {
         name: 'Start new transport session',
       }),
     );
+    openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
         'torrevieja-legacy-abc-v1',
@@ -615,14 +663,16 @@ describe('foundation screen', () => {
       screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
     ).toBeInTheDocument();
 
+    openSessionControls();
     fireEvent.click(
-      screen.getByRole('button', { name: 'Close transport Worker' }),
+      await screen.findByRole('button', { name: 'Close transport Worker' }),
     );
     fireEvent.click(
       await screen.findByRole('button', {
         name: 'Start new transport session',
       }),
     );
+    openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
         legacyScenario.manifest.scenarioId,
@@ -654,14 +704,16 @@ describe('foundation screen', () => {
       'data-authoritative-scenario-id',
       legacyScenario.manifest.scenarioId,
     );
+    openSessionControls();
     fireEvent.click(
-      screen.getByRole('button', { name: 'Close transport Worker' }),
+      await screen.findByRole('button', { name: 'Close transport Worker' }),
     );
     fireEvent.click(
       await screen.findByRole('button', {
         name: 'Start new transport session',
       }),
     );
+    openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
         'data-scenario-id',
@@ -687,11 +739,13 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
+    openSessionControls();
     await waitFor(() =>
       expect(
         screen.getByRole('button', { name: 'Save transport session' }),
       ).toBeEnabled(),
     );
+    openSimulationControls();
 
     for (const count of [1, 2, 3]) {
       fireEvent.click(
@@ -713,6 +767,7 @@ describe('foundation screen', () => {
     );
     const fleetA = fleetTuples();
 
+    openSessionControls();
     fireEvent.click(
       screen.getByRole('button', { name: 'Save transport session' }),
     );
@@ -723,13 +778,14 @@ describe('foundation screen', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: 'Select scenario B' }));
     fireEvent.click(
-      screen.getByRole('button', { name: 'Close transport Worker' }),
+      await screen.findByRole('button', { name: 'Close transport Worker' }),
     );
     fireEvent.click(
       await screen.findByRole('button', {
         name: 'Start new transport session',
       }),
     );
+    openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
         'scenario-b',
@@ -759,6 +815,7 @@ describe('foundation screen', () => {
       ).toHaveAttribute('data-movement-kind', 'running-at-stop'),
     );
     const fleetB = fleetTuples();
+    openSessionControls();
     await waitFor(() =>
       expect(screen.getByRole('radio', { name: 'Autosave' })).toBeEnabled(),
     );
@@ -793,6 +850,7 @@ describe('foundation screen', () => {
     );
     const manualRow = document.querySelector(`[data-save-id="${manualA}"]`)!;
     fireEvent.click(within(manualRow as HTMLElement).getByRole('button'));
+    openSimulationControls();
     await waitFor(() => expect(confirm).toHaveBeenCalled());
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
@@ -828,6 +886,7 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
       'torrevieja-mini-v1',
     );
+    openSessionControls();
     await waitFor(() =>
       expect(screen.getByRole('radio', { name: 'Autosave' })).toBeEnabled(),
     );
@@ -843,6 +902,7 @@ describe('foundation screen', () => {
       `[data-save-id="${autosaveB}"]`,
     )!;
     fireEvent.click(within(autosaveRow as HTMLElement).getByRole('button'));
+    openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
         'scenario-b',

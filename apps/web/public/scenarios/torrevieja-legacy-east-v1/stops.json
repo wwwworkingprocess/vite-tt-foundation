@@ -1,0 +1,2234 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-east-v1",
+  "stopPlaces": [],
+  "stopNodes": [
+    {
+      "stopNodeId": "tv-stop-0031",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": null,
+      "position": {
+        "latitude": 37.9946473,
+        "longitude": -0.67369
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3252437431"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-platform"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0044",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Altos de la Bahía",
+      "position": {
+        "latitude": 37.9988257,
+        "longitude": -0.6609585
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "way",
+          "sourceId": "way/1332985182",
+          "sourceRef": "505"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831586",
+          "sourceRef": "505"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 8.63
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0045",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Altos de la Bahía",
+      "position": {
+        "latitude": 37.9988435,
+        "longitude": -0.6611493
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3273418075",
+          "sourceRef": "508"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831585",
+          "sourceRef": "508"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.933
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0051",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Argonautas",
+      "position": {
+        "latitude": 38.0032604,
+        "longitude": -0.6643029
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3287648415",
+          "sourceRef": "563"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831513",
+          "sourceRef": "563"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.979
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0053",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avda. Alemania (Esq. Europeos)",
+      "position": {
+        "latitude": 38.0207066,
+        "longitude": -0.6541589
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/5034179723",
+          "sourceRef": "418"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989118",
+          "sourceRef": "418"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.882
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0054",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avenida Alfredo Nobel, 121",
+      "position": {
+        "latitude": 37.9906199,
+        "longitude": -0.6562807
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3241113769",
+          "sourceRef": "432"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-platform"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0056",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avda Alfredo Nobel, 143",
+      "position": {
+        "latitude": 37.9931852,
+        "longitude": -0.6560436
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3244635774",
+          "sourceRef": "431"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-platform"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0058",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avda Antonio Machado, 137",
+      "position": {
+        "latitude": 37.9798005,
+        "longitude": -0.6753999
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10204987888",
+          "sourceRef": "439"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987889",
+          "sourceRef": "439"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.412
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0059",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avenida Bélgica",
+      "position": {
+        "latitude": 38.0181107,
+        "longitude": -0.6573174
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10204987908",
+          "sourceRef": "424"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987909",
+          "sourceRef": "424"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 3.478
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0065",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Av. de los Daneses (Petanca)",
+      "position": {
+        "latitude": 38.0236326,
+        "longitude": -0.6547415
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10204987911",
+          "sourceRef": "422"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987912",
+          "sourceRef": "422"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.439
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0066",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avenida de los Europeos",
+      "position": {
+        "latitude": 38.0205325,
+        "longitude": -0.6551851
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3240915584",
+          "sourceRef": "423"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987910",
+          "sourceRef": "423"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.302
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0067",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avda.del Mar",
+      "position": {
+        "latitude": 38.0278659,
+        "longitude": -0.6552697
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10202357044",
+          "sourceRef": "420"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987914",
+          "sourceRef": "420"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 2.147
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0069",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avda. Diego Ramírez - La Gaviota",
+      "position": {
+        "latitude": 37.9807789,
+        "longitude": -0.6835213
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/6487645533",
+          "sourceRef": "440"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987887",
+          "sourceRef": "440"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.391
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0071",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avenida Francia, 2",
+      "position": {
+        "latitude": 38.0167545,
+        "longitude": -0.6558577
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/6594803687",
+          "sourceRef": "425"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987907",
+          "sourceRef": "425"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.332
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0072",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avenida Habaneras, 36",
+      "position": {
+        "latitude": 37.9802411,
+        "longitude": -0.6724681
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10204987890",
+          "sourceRef": "438"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987891",
+          "sourceRef": "438"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.004
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0073",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avenida Habaneras, 95",
+      "position": {
+        "latitude": 37.9805873,
+        "longitude": -0.6667263
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3261387923",
+          "sourceRef": "437"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987892",
+          "sourceRef": "437"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.447
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0074",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avenida Mariano Ruíz, 24",
+      "position": {
+        "latitude": 37.9828678,
+        "longitude": -0.6613733
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3244651505",
+          "sourceRef": "435"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/31332837",
+          "sourceRef": "435"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 2.344
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0075",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avenida Mariano Ruíz, 5",
+      "position": {
+        "latitude": 37.9811166,
+        "longitude": -0.6632016
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10204987894",
+          "sourceRef": "436"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987893",
+          "sourceRef": "436"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 9.41
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0078",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Avda. Virgen del Carmen",
+      "position": {
+        "latitude": 38.0249407,
+        "longitude": -0.6549414
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10202357045",
+          "sourceRef": "419"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987915",
+          "sourceRef": "419"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.895
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0079",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Bar Restaurante Carlos",
+      "position": {
+        "latitude": 37.9965853,
+        "longitude": -0.670043
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3287410173"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/1566333626"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 9.219
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0081",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Bruselas",
+      "position": {
+        "latitude": 37.9840515,
+        "longitude": -0.6671054
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3252467479",
+          "sourceRef": "502"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831590",
+          "sourceRef": "502"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.73
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0082",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Bruselas",
+      "position": {
+        "latitude": 37.9842306,
+        "longitude": -0.667155
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3252467478",
+          "sourceRef": "511"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831582",
+          "sourceRef": "511"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.557
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0084",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Cabo Cervera 1",
+      "position": {
+        "latitude": 38.0021151,
+        "longitude": -0.6503449
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3630983731",
+          "sourceRef": "411"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989125",
+          "sourceRef": "411"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.925
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0086",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Cabo Cervera 2",
+      "position": {
+        "latitude": 38.0050911,
+        "longitude": -0.6492915
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3630983732"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989124",
+          "sourceRef": "412"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.883
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0093",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Calle Mayor - Encarnación Puchol",
+      "position": {
+        "latitude": 38.0270112,
+        "longitude": -0.6541129
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3240956611",
+          "sourceRef": "421"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989117",
+          "sourceRef": "421"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 2.672
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0101",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Calle San Policarpo, 41",
+      "position": {
+        "latitude": 37.979003,
+        "longitude": -0.686855
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10204987886",
+          "sourceRef": "441"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987885"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-medium",
+        "distanceMetres": 5.311
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0108",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Centro de Salud La Mata",
+      "position": {
+        "latitude": 38.0182751,
+        "longitude": -0.6587336
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3240949320",
+          "sourceRef": "417"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989119",
+          "sourceRef": "417"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 8.929
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0109",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Centro Salud Lomas",
+      "position": {
+        "latitude": 37.9837841,
+        "longitude": -0.6730629
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3274341958",
+          "sourceRef": "501"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831591",
+          "sourceRef": "501"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.709
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0110",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Centro Salud Lomas",
+      "position": {
+        "latitude": 37.9841768,
+        "longitude": -0.6737791
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3305738181",
+          "sourceRef": "512"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831581",
+          "sourceRef": "512"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.751
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0113",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Corinto, 25",
+      "position": {
+        "latitude": 38.0111893,
+        "longitude": -0.6633859
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3287434808",
+          "sourceRef": "560"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831515",
+          "sourceRef": "560"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.455
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0114",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Corinto, 7",
+      "position": {
+        "latitude": 38.007712,
+        "longitude": -0.6655801
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3287410172",
+          "sourceRef": "559"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831516",
+          "sourceRef": "559"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.314
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0123",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Eras de la Sal",
+      "position": {
+        "latitude": 37.9761175,
+        "longitude": -0.6851273
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3253509981",
+          "sourceRef": "442"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987884"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-medium",
+        "distanceMetres": 9.543
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0126",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Estación de Autobuses de Torrevieja",
+      "position": {
+        "latitude": 37.9793948,
+        "longitude": -0.6756139
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/6781893685"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-platform"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0128",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Gasolinera BP",
+      "position": {
+        "latitude": 37.9826934,
+        "longitude": -0.6862107
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "way",
+          "sourceId": "way/1292890398",
+          "sourceRef": "550"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831554",
+          "sourceRef": "550"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 8.543
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0129",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Gasolinera BP - Colegio Público Inmaculada",
+      "position": {
+        "latitude": 37.9826038,
+        "longitude": -0.686485
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3273514239",
+          "sourceRef": "514"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831580",
+          "sourceRef": "514"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.497
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0130",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Gasolinera Repsol",
+      "position": {
+        "latitude": 37.9961854,
+        "longitude": -0.6553338
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3260526790",
+          "sourceRef": "409"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13563663793",
+          "sourceRef": "409"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.868
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0131",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Gasolinera Repsol",
+      "position": {
+        "latitude": 37.996212,
+        "longitude": -0.655593
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3260526805",
+          "sourceRef": "430"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987916",
+          "sourceRef": "430"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 8.835
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0136",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Hospital San Jaime",
+      "position": {
+        "latitude": 38.006314,
+        "longitude": -0.6728552
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3305626134",
+          "sourceRef": "565"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831511",
+          "sourceRef": "565"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 9.163
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0137",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Hotel Fontana",
+      "position": {
+        "latitude": 37.9772793,
+        "longitude": -0.6797518
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3244824801",
+          "sourceRef": "400"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989132",
+          "sourceRef": "400"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.761
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0138",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Hotel Masa",
+      "position": {
+        "latitude": 37.9989952,
+        "longitude": -0.6525521
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3260331506",
+          "sourceRef": "410"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987882",
+          "sourceRef": "410"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.845
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0139",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Hotel Masa",
+      "position": {
+        "latitude": 37.9990133,
+        "longitude": -0.6526851
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3260331507",
+          "sourceRef": "443"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831593",
+          "sourceRef": "443"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 3.486
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0145",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "La Tejera",
+      "position": {
+        "latitude": 37.9843566,
+        "longitude": -0.6832612
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10690263292",
+          "sourceRef": "513"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10690263291",
+          "sourceRef": "513"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.725
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0152",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Los Arcos",
+      "position": {
+        "latitude": 37.989771,
+        "longitude": -0.6688138
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3248186195"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831529"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 8.744
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0153",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Los Arcos",
+      "position": {
+        "latitude": 37.9898889,
+        "longitude": -0.6687904
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3248186196",
+          "sourceRef": "553"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831530",
+          "sourceRef": "553"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 4.449
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0155",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Los Frutales",
+      "position": {
+        "latitude": 37.9906599,
+        "longitude": -0.6561323
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3241113773",
+          "sourceRef": "407"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-platform"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0156",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Magani",
+      "position": {
+        "latitude": 38.0042739,
+        "longitude": -0.6556726
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3241113772",
+          "sourceRef": "414"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989122",
+          "sourceRef": "414"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.976
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0157",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Magani",
+      "position": {
+        "latitude": 38.0043627,
+        "longitude": -0.6560142
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3241113771",
+          "sourceRef": "428"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831594",
+          "sourceRef": "428"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.268
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0160",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Mercadona centro Alpe",
+      "position": {
+        "latitude": 38.0004615,
+        "longitude": -0.6701164
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831510",
+          "sourceRef": "566"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-stop"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0161",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Mercadona centro Alpe",
+      "position": {
+        "latitude": 38.0007909,
+        "longitude": -0.6698777
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831518",
+          "sourceRef": "557"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-stop"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0162",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Molino Blanco",
+      "position": {
+        "latitude": 38.0092495,
+        "longitude": -0.6570126
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3241086863",
+          "sourceRef": "415"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989121",
+          "sourceRef": "415"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 8.814
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0163",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Molino Blanco - Super Valu",
+      "position": {
+        "latitude": 38.0090985,
+        "longitude": -0.6572353
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/2401932780",
+          "sourceRef": "427"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987897",
+          "sourceRef": "427"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 8.864
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0172",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Palacio de Deportes",
+      "position": {
+        "latitude": 37.9964562,
+        "longitude": -0.675362
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/1995374534",
+          "sourceRef": "556"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831525",
+          "sourceRef": "556"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.351
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0173",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Panorama",
+      "position": {
+        "latitude": 37.9932974,
+        "longitude": -0.6558989
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3244635776",
+          "sourceRef": "408"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-platform"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0178",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Patricio Zammit 67",
+      "position": {
+        "latitude": 37.9821346,
+        "longitude": -0.6762306
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3305689943",
+          "sourceRef": "600"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831577",
+          "sourceRef": "600"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 2.757
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0179",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Perseo",
+      "position": {
+        "latitude": 38.0019458,
+        "longitude": -0.6627633
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3287466167",
+          "sourceRef": "562"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831514",
+          "sourceRef": "562"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.345
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0180",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Playa del Cura 1",
+      "position": {
+        "latitude": 37.9769813,
+        "longitude": -0.6713453
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3258737301",
+          "sourceRef": "401"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989131",
+          "sourceRef": "401"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 3.066
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0181",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Playa del Cura 2",
+      "position": {
+        "latitude": 37.977963,
+        "longitude": -0.6661104
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3244666656",
+          "sourceRef": "403"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989130",
+          "sourceRef": "403"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.076
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0182",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Playa Los Locos",
+      "position": {
+        "latitude": 37.9844601,
+        "longitude": -0.6586511
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3244649930",
+          "sourceRef": "405"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989128",
+          "sourceRef": "405"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 8.972
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0183",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Playa Los Locos",
+      "position": {
+        "latitude": 37.9846228,
+        "longitude": -0.6586738
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3244649912",
+          "sourceRef": "434"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831592",
+          "sourceRef": "434"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.449
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0184",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Playa Los Locos 1",
+      "position": {
+        "latitude": 37.9819307,
+        "longitude": -0.6621328
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3244651506",
+          "sourceRef": "404"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989129",
+          "sourceRef": "404"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 3.594
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0185",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Plaza de Sevilla",
+      "position": {
+        "latitude": 37.9888856,
+        "longitude": -0.6636201
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3273417068",
+          "sourceRef": "503"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/11165731993",
+          "sourceRef": "503"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.496
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0186",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Plaza de Sevilla",
+      "position": {
+        "latitude": 37.988938,
+        "longitude": -0.6637882
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3273417070",
+          "sourceRef": "510"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831589",
+          "sourceRef": "510"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.432
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0190",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Purisima, 10",
+      "position": {
+        "latitude": 37.9778113,
+        "longitude": -0.6692099
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13563663795",
+          "sourceRef": "402"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-stop"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0194",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Residencia Tercera Edad",
+      "position": {
+        "latitude": 37.9906479,
+        "longitude": -0.672092
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3287410174",
+          "sourceRef": "568"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831528",
+          "sourceRef": "568"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.094
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0195",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Residencia Tercera Edad",
+      "position": {
+        "latitude": 37.9907496,
+        "longitude": -0.6720335
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3287410170",
+          "sourceRef": "554"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831527",
+          "sourceRef": "554"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.17
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0196",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Residencial Mar Bella",
+      "position": {
+        "latitude": 37.9869454,
+        "longitude": -0.6568705
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3241113770",
+          "sourceRef": "406"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10202357037",
+          "sourceRef": "406"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.518
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0197",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Residencial Mar Bella",
+      "position": {
+        "latitude": 37.9870598,
+        "longitude": -0.6569863
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3241113768",
+          "sourceRef": "433"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204987895",
+          "sourceRef": "433"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.789
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0200",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Resturante Pinocchio",
+      "position": {
+        "latitude": 37.9939861,
+        "longitude": -0.6628239
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3273417067",
+          "sourceRef": "509"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-platform"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0201",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Resturante Pinocchio",
+      "position": {
+        "latitude": 37.9940616,
+        "longitude": -0.662581
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3273417069",
+          "sourceRef": "504"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831588",
+          "sourceRef": "504"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.373
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0203",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Ronda - Parquemar 2",
+      "position": {
+        "latitude": 38.0123653,
+        "longitude": -0.6601195
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3240979767",
+          "sourceRef": "426"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831595",
+          "sourceRef": "426"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.702
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0205",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Ronda - Parquemar 2",
+      "position": {
+        "latitude": 38.0125018,
+        "longitude": -0.6599401
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/10202357046",
+          "sourceRef": "416"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-platform"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0206",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Ronda Ricardo La Fuente",
+      "position": {
+        "latitude": 37.9842638,
+        "longitude": -0.683147
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831532",
+          "sourceRef": "551"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-stop"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0207",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Ronda S. García - Calle Helena",
+      "position": {
+        "latitude": 38.0036107,
+        "longitude": -0.658971
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3480689395",
+          "sourceRef": "506"
+        }
+      ],
+      "resolution": {
+        "status": "singleton-platform"
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0209",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Ronda S. García - Calle Helena",
+      "position": {
+        "latitude": 38.0036429,
+        "longitude": -0.6591807
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3273427016",
+          "sourceRef": "507"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831583",
+          "sourceRef": "507"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 8.158
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0219",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Torre del Moro",
+      "position": {
+        "latitude": 38.0022284,
+        "longitude": -0.6531112
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3241113766",
+          "sourceRef": "429"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831596",
+          "sourceRef": "429"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.515
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0220",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Torre del Moro",
+      "position": {
+        "latitude": 38.0023224,
+        "longitude": -0.653023
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3241113767",
+          "sourceRef": "413"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/10204989123",
+          "sourceRef": "413"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 6.273
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0221",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Torreblanca - Depuradora de agua",
+      "position": {
+        "latitude": 38.0059021,
+        "longitude": -0.666655
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3287412384",
+          "sourceRef": "558"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831517",
+          "sourceRef": "558"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 5.75
+      }
+    },
+    {
+      "stopNodeId": "tv-stop-0222",
+      "stopPlaceId": null,
+      "settlementId": "es-torrevieja",
+      "name": "Torreblanca - Depuradora de agua",
+      "position": {
+        "latitude": 38.005997,
+        "longitude": -0.6659362
+      },
+      "sourceReferences": [
+        {
+          "source": "openstreetmap",
+          "role": "platform",
+          "sourceType": "node",
+          "sourceId": "node/3305620580",
+          "sourceRef": "564"
+        },
+        {
+          "source": "openstreetmap",
+          "role": "stop-position",
+          "sourceType": "node",
+          "sourceId": "node/13571831512",
+          "sourceRef": "564"
+        }
+      ],
+      "resolution": {
+        "status": "automatic-high",
+        "distanceMetres": 7.284
+      }
+    }
+  ]
+}

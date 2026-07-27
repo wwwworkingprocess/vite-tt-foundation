@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-urban-abc-v1",
+  "title": "Elche Urban Network - Lines A, B and C",
+  "initialView": {
+    "center": {
+      "latitude": 38.2709983,
+      "longitude": -0.7084972
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "elche-A": {
+      "label": "A",
+      "color": "#e11d48"
+    },
+    "elche-B": {
+      "label": "B",
+      "color": "#db2777"
+    },
+    "elche-C": {
+      "label": "C",
+      "color": "#0b72b9"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

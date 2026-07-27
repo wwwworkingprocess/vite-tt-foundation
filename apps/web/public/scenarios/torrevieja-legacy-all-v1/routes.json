@@ -1,0 +1,562 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-all-v1",
+  "routes": [
+    {
+      "routeId": "legacy-A",
+      "publicCode": "A",
+      "name": "Torrevieja - La Mata",
+      "dataStatus": "complete-reviewed-legacy-capture",
+      "patterns": [
+        {
+          "patternId": "legacy-A-torrevieja-la-mata",
+          "directionLabel": "Torrevieja - La Mata",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 22
+          },
+          "stopNodeIds": [
+            "tv-stop-0137",
+            "tv-stop-0180",
+            "tv-stop-0190",
+            "tv-stop-0181",
+            "tv-stop-0184",
+            "tv-stop-0182",
+            "tv-stop-0196",
+            "tv-stop-0155",
+            "tv-stop-0173",
+            "tv-stop-0130",
+            "tv-stop-0138",
+            "tv-stop-0084",
+            "tv-stop-0086",
+            "tv-stop-0220",
+            "tv-stop-0156",
+            "tv-stop-0162",
+            "tv-stop-0205",
+            "tv-stop-0108",
+            "tv-stop-0053",
+            "tv-stop-0078",
+            "tv-stop-0067",
+            "tv-stop-0093"
+          ]
+        },
+        {
+          "patternId": "legacy-A-la-mata-torrevieja",
+          "directionLabel": "La Mata - Torrevieja",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 26
+          },
+          "stopNodeIds": [
+            "tv-stop-0093",
+            "tv-stop-0065",
+            "tv-stop-0066",
+            "tv-stop-0059",
+            "tv-stop-0071",
+            "tv-stop-0203",
+            "tv-stop-0163",
+            "tv-stop-0157",
+            "tv-stop-0219",
+            "tv-stop-0084",
+            "tv-stop-0086",
+            "tv-stop-0139",
+            "tv-stop-0131",
+            "tv-stop-0056",
+            "tv-stop-0054",
+            "tv-stop-0197",
+            "tv-stop-0183",
+            "tv-stop-0074",
+            "tv-stop-0075",
+            "tv-stop-0073",
+            "tv-stop-0072",
+            "tv-stop-0058",
+            "tv-stop-0069",
+            "tv-stop-0101",
+            "tv-stop-0123",
+            "tv-stop-0137"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-A",
+          "sourceFile": "source/legacy-routes/route-a.json"
+        }
+      ]
+    },
+    {
+      "routeId": "legacy-A2",
+      "publicCode": "A2",
+      "name": "Torrevieja - La Mata via Avenida de París",
+      "dataStatus": "complete-reviewed-legacy-capture",
+      "patterns": [
+        {
+          "patternId": "legacy-A2-torrevieja-la-mata",
+          "directionLabel": "Torrevieja - La Mata via Avenida de París",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "tv-stop-0137",
+            "tv-stop-0109",
+            "tv-stop-0081",
+            "tv-stop-0185",
+            "tv-stop-0201",
+            "tv-stop-0044",
+            "tv-stop-0207",
+            "tv-stop-0162",
+            "tv-stop-0205",
+            "tv-stop-0108",
+            "tv-stop-0053",
+            "tv-stop-0078",
+            "tv-stop-0067",
+            "tv-stop-0093"
+          ]
+        },
+        {
+          "patternId": "legacy-A2-la-mata-torrevieja",
+          "directionLabel": "La Mata - Torrevieja via Avenida de París",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "tv-stop-0093",
+            "tv-stop-0065",
+            "tv-stop-0066",
+            "tv-stop-0059",
+            "tv-stop-0071",
+            "tv-stop-0203",
+            "tv-stop-0163",
+            "tv-stop-0209",
+            "tv-stop-0045",
+            "tv-stop-0200",
+            "tv-stop-0186",
+            "tv-stop-0082",
+            "tv-stop-0110",
+            "tv-stop-0145",
+            "tv-stop-0129",
+            "tv-stop-0101",
+            "tv-stop-0123",
+            "tv-stop-0137"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-A2",
+          "sourceFile": "source/legacy-routes/route-a2.json"
+        }
+      ]
+    },
+    {
+      "routeId": "legacy-B",
+      "publicCode": "B",
+      "name": "Torrevieja - Torretas - San Luis",
+      "dataStatus": "complete-source-order-with-contextual-matches",
+      "patterns": [
+        {
+          "patternId": "legacy-B-torrevieja-san-luis",
+          "directionLabel": "Torrevieja - Torretas - San Luis",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "tv-stop-0123",
+            "tv-stop-0137",
+            "tv-stop-0178",
+            "tv-stop-0126",
+            "tv-stop-0069",
+            "tv-stop-0128",
+            "tv-stop-0103",
+            "tv-stop-0092",
+            "tv-stop-0225",
+            "tv-stop-0226",
+            "tv-stop-0227",
+            "tv-stop-0224",
+            "tv-stop-0033",
+            "tv-stop-0159",
+            "tv-stop-0133",
+            "tv-stop-0230",
+            "tv-stop-0049",
+            "tv-stop-0106",
+            "tv-stop-0215"
+          ]
+        },
+        {
+          "patternId": "legacy-B-san-luis-torrevieja",
+          "directionLabel": "San Luis - Torretas - Torrevieja",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "tv-stop-0215",
+            "tv-stop-0049",
+            "tv-stop-0231",
+            "tv-stop-0132",
+            "tv-stop-0158",
+            "tv-stop-0111",
+            "tv-stop-0223",
+            "tv-stop-0228",
+            "tv-stop-0165",
+            "tv-stop-0187",
+            "tv-stop-0104",
+            "tv-stop-0105",
+            "tv-stop-0129",
+            "tv-stop-0120",
+            "tv-stop-0107",
+            "tv-stop-0123"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-B",
+          "sourceFile": "source/legacy-routes/route-b.json"
+        }
+      ]
+    },
+    {
+      "routeId": "legacy-C",
+      "publicCode": "C",
+      "name": "Torrevieja - Lomas",
+      "dataStatus": "complete-reviewed-quiron-variant",
+      "patterns": [
+        {
+          "patternId": "legacy-C-torrevieja-lomas",
+          "directionLabel": "Torrevieja - Lomas",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "tv-stop-0123",
+            "tv-stop-0128",
+            "tv-stop-0206",
+            "tv-stop-0109",
+            "tv-stop-0081",
+            "tv-stop-0185",
+            "tv-stop-0153",
+            "tv-stop-0195",
+            "tv-stop-0079",
+            "tv-stop-0172",
+            "tv-stop-0161",
+            "tv-stop-0221",
+            "tv-stop-0114",
+            "tv-stop-0113",
+            "tv-stop-0205",
+            "tv-stop-0162",
+            "tv-stop-0207"
+          ]
+        },
+        {
+          "patternId": "legacy-C-lomas-torrevieja-via-quiron",
+          "directionLabel": "Lomas - Torrevieja via Hospital Quirón",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "tv-stop-0209",
+            "tv-stop-0179",
+            "tv-stop-0051",
+            "tv-stop-0222",
+            "tv-stop-0136",
+            "tv-stop-0160",
+            "tv-stop-0172",
+            "tv-stop-0031",
+            "tv-stop-0194",
+            "tv-stop-0152",
+            "tv-stop-0186",
+            "tv-stop-0082",
+            "tv-stop-0110",
+            "tv-stop-0178",
+            "tv-stop-0126",
+            "tv-stop-0069",
+            "tv-stop-0123"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-C",
+          "sourceFile": "source/legacy-routes/route-c.json"
+        }
+      ]
+    },
+    {
+      "routeId": "legacy-DF",
+      "publicCode": "D-F",
+      "name": "Torrevieja - Los Altos - Rocío del Mar",
+      "dataStatus": "complete-reviewed-legacy-capture",
+      "patterns": [
+        {
+          "patternId": "legacy-DF-torrevieja-los-altos-rocio-del-mar",
+          "directionLabel": "Torrevieja - Los Altos - Rocío del Mar",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "tv-stop-0123",
+            "tv-stop-0107",
+            "tv-stop-0077",
+            "tv-stop-0118",
+            "tv-stop-0116",
+            "tv-stop-0177",
+            "tv-stop-0070",
+            "tv-stop-0112",
+            "tv-stop-0135",
+            "tv-stop-0218",
+            "tv-stop-0213",
+            "tv-stop-0214",
+            "tv-stop-0212",
+            "tv-stop-0164",
+            "tv-stop-0083",
+            "tv-stop-0124",
+            "tv-stop-0167"
+          ]
+        },
+        {
+          "patternId": "legacy-DF-rocio-del-mar-los-altos-torrevieja",
+          "directionLabel": "Rocío del Mar - Los Altos - Torrevieja",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "tv-stop-0168",
+            "tv-stop-0125",
+            "tv-stop-0213",
+            "tv-stop-0214",
+            "tv-stop-0212",
+            "tv-stop-0164",
+            "tv-stop-0083",
+            "tv-stop-0198",
+            "tv-stop-0217",
+            "tv-stop-0135",
+            "tv-stop-0177",
+            "tv-stop-0070",
+            "tv-stop-0112",
+            "tv-stop-0117",
+            "tv-stop-0119",
+            "tv-stop-0068",
+            "tv-stop-0143",
+            "tv-stop-0123"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-DF",
+          "sourceFile": "source/legacy-routes/route-df.json"
+        }
+      ]
+    },
+    {
+      "routeId": "legacy-E",
+      "publicCode": "E",
+      "name": "Torrevieja - Los Balcones - Lago Jardín",
+      "dataStatus": "complete-reviewed-legacy-capture",
+      "patterns": [
+        {
+          "patternId": "legacy-E-torrevieja-los-balcones-lago-jardin",
+          "directionLabel": "Torrevieja - Los Balcones - Lago Jardín",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "tv-stop-0123",
+            "tv-stop-0137",
+            "tv-stop-0109",
+            "tv-stop-0027",
+            "tv-stop-0178",
+            "tv-stop-0126",
+            "tv-stop-0069",
+            "tv-stop-0120",
+            "tv-stop-0107",
+            "tv-stop-0077",
+            "tv-stop-0118",
+            "tv-stop-0116",
+            "tv-stop-0135",
+            "tv-stop-0014",
+            "tv-stop-0052",
+            "tv-stop-0060",
+            "tv-stop-0061",
+            "tv-stop-0191",
+            "tv-stop-0047",
+            "tv-stop-0048",
+            "tv-stop-0115",
+            "tv-stop-0147",
+            "tv-stop-0146"
+          ]
+        },
+        {
+          "patternId": "legacy-E-lago-jardin-los-balcones-torrevieja",
+          "directionLabel": "Lago Jardín - Los Balcones - Torrevieja",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "tv-stop-0146",
+            "tv-stop-0170",
+            "tv-stop-0169",
+            "tv-stop-0135",
+            "tv-stop-0117",
+            "tv-stop-0119",
+            "tv-stop-0068",
+            "tv-stop-0100",
+            "tv-stop-0123"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-E",
+          "sourceFile": "source/legacy-routes/route-e.json"
+        }
+      ]
+    },
+    {
+      "routeId": "legacy-G",
+      "publicCode": "G",
+      "name": "Torrevieja - San Luis",
+      "dataStatus": "complete-reviewed-legacy-capture",
+      "patterns": [
+        {
+          "patternId": "legacy-G-torrevieja-san-luis",
+          "directionLabel": "Torrevieja - San Luis",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "tv-stop-0137",
+            "tv-stop-0178",
+            "tv-stop-0126",
+            "tv-stop-0069",
+            "tv-stop-0120",
+            "tv-stop-0176",
+            "tv-stop-0142",
+            "tv-stop-0187",
+            "tv-stop-0104",
+            "tv-stop-0127",
+            "tv-stop-0064",
+            "tv-stop-0106",
+            "tv-stop-0211",
+            "tv-stop-0192",
+            "tv-stop-0122",
+            "tv-stop-0050",
+            "tv-stop-0171",
+            "tv-stop-0189",
+            "tv-stop-0038",
+            "tv-stop-0080",
+            "tv-stop-0215"
+          ]
+        },
+        {
+          "patternId": "legacy-G-san-luis-torrevieja",
+          "directionLabel": "San Luis - Torrevieja",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 13
+          },
+          "stopNodeIds": [
+            "tv-stop-0215",
+            "tv-stop-0039",
+            "tv-stop-0036",
+            "tv-stop-0210",
+            "tv-stop-0037",
+            "tv-stop-0063",
+            "tv-stop-0127",
+            "tv-stop-0103",
+            "tv-stop-0188",
+            "tv-stop-0141",
+            "tv-stop-0175",
+            "tv-stop-0123",
+            "tv-stop-0137"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-G",
+          "sourceFile": "source/legacy-routes/route-g.json"
+        }
+      ]
+    },
+    {
+      "routeId": "legacy-H",
+      "publicCode": "H",
+      "name": "Torrevieja - Friday Market",
+      "dataStatus": "complete-reviewed-legacy-capture",
+      "patterns": [
+        {
+          "patternId": "legacy-H-torrevieja-market",
+          "directionLabel": "Torrevieja - Friday Market",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 6
+          },
+          "stopNodeIds": [
+            "tv-stop-0123",
+            "tv-stop-0137",
+            "tv-stop-0178",
+            "tv-stop-0126",
+            "tv-stop-0128",
+            "tv-stop-0076"
+          ]
+        },
+        {
+          "patternId": "legacy-H-market-torrevieja",
+          "directionLabel": "Friday Market - Torrevieja",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 4
+          },
+          "stopNodeIds": [
+            "tv-stop-0076",
+            "tv-stop-0129",
+            "tv-stop-0069",
+            "tv-stop-0123"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-H",
+          "sourceFile": "source/legacy-routes/route-h.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-south-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Torrevieja Legacy South Network - Lines D-F and E",
+  "primarySettlementId": "es-torrevieja",
+  "settlementIds": [
+    "es-torrevieja"
+  ],
+  "contentHash": "775fc914eaaa276cdd525961743679f3c07b472200a06145df46dab43b63786e",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "6f71c6daa3ee64d2f31fea33770562830fa0f3ecbcdcb03535a29707d80fe22a"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "cfdf65bc2da040387c76d154750c7b25bb0e308cd98566a1368090b8cf56b585"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "7cad2b691e68ca2ce6ea57815647cc38430887bbf868c6072aeb3b0ae071d683"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "751e1a1a08b390ab526b5f99fef19d5481de94def39d9ee0af3b8be98a99c52b"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "56177865071529e93be2adcdec5799ffb28726aa4dc9cb12f15fb2ecf46d78f5"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

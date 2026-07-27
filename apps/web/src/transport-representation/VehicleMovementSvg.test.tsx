@@ -85,3 +85,63 @@ it('renders authoritative stop, edge, and changing vehicle projections accessibl
     String(state.graph.summary.edges),
   );
 });
+
+it('renders arrowheads to show edge orientation', () => {
+  const svg = screen.getByTestId('vehicle-movement-svg');
+
+  const renderedEdges = [
+    ...svg.querySelectorAll<SVGLineElement>('line[data-edge-id]'),
+  ];
+  const renderedArrows = [
+    ...svg.querySelectorAll<SVGPolygonElement>(
+      'polygon[data-testid="edge-direction"]',
+    ),
+  ];
+
+  expect(renderedArrows).toHaveLength(renderedEdges.length);
+
+  const firstEdge = renderedEdges[0]!;
+  const firstArrow = renderedArrows[0]!;
+
+  expect(firstArrow).toHaveAttribute(
+    'data-direction-edge-id',
+    firstEdge.getAttribute('data-edge-id'),
+  );
+
+  const points = firstArrow
+    .getAttribute('points')!
+    .split(' ')
+    .map((point) => point.split(',').map(Number));
+
+  const [tip, left, right] = points as [
+    [number, number],
+    [number, number],
+    [number, number],
+  ];
+
+  const baseX = (left[0] + right[0]) / 2;
+  const baseY = (left[1] + right[1]) / 2;
+
+  const edgeDx =
+    Number(firstEdge.getAttribute('x2')) - Number(firstEdge.getAttribute('x1'));
+  const edgeDy =
+    Number(firstEdge.getAttribute('y2')) - Number(firstEdge.getAttribute('y1'));
+
+  const arrowDx = tip[0] - baseX;
+  const arrowDy = tip[1] - baseY;
+
+  // Positive dot product proves that the triangle points from x1/y1 to x2/y2.
+  expect(arrowDx * edgeDx + arrowDy * edgeDy).toBeGreaterThan(0);
+
+  // The arrow is centred halfway between the two canonical stops.
+  expect((tip[0] + baseX) / 2).toBeCloseTo(
+    (Number(firstEdge.getAttribute('x1')) +
+      Number(firstEdge.getAttribute('x2'))) /
+      2,
+  );
+  expect((tip[1] + baseY) / 2).toBeCloseTo(
+    (Number(firstEdge.getAttribute('y1')) +
+      Number(firstEdge.getAttribute('y2'))) /
+      2,
+  );
+});

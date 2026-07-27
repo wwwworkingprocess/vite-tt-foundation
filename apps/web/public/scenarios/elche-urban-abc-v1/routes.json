@@ -1,0 +1,215 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-urban-abc-v1",
+  "routes": [
+    {
+      "routeId": "elche-A",
+      "publicCode": "A",
+      "name": "Centre - Toscar",
+      "dataStatus": "complete-textual-order-provisional-geography",
+      "patterns": [
+        {
+          "patternId": "elche-A-centre-toscar",
+          "directionLabel": "Toscar",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 26
+          },
+          "stopNodeIds": [
+            "elche-stop-001",
+            "elche-stop-002",
+            "elche-stop-003",
+            "elche-stop-004",
+            "elche-stop-005",
+            "elche-stop-006",
+            "elche-stop-007",
+            "elche-stop-008",
+            "elche-stop-009",
+            "elche-stop-010",
+            "elche-stop-011",
+            "elche-stop-012",
+            "elche-stop-013",
+            "elche-stop-014",
+            "elche-stop-015",
+            "elche-stop-016",
+            "elche-stop-017",
+            "elche-stop-018",
+            "elche-stop-209",
+            "elche-stop-224",
+            "elche-stop-019",
+            "elche-stop-020",
+            "elche-stop-021",
+            "elche-stop-022",
+            "elche-stop-023",
+            "elche-stop-024"
+          ]
+        },
+        {
+          "patternId": "elche-A-toscar-centre",
+          "directionLabel": "Centro",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 26
+          },
+          "stopNodeIds": [
+            "elche-stop-014",
+            "elche-stop-015",
+            "elche-stop-016",
+            "elche-stop-017",
+            "elche-stop-018",
+            "elche-stop-209",
+            "elche-stop-224",
+            "elche-stop-019",
+            "elche-stop-020",
+            "elche-stop-021",
+            "elche-stop-022",
+            "elche-stop-023",
+            "elche-stop-024",
+            "elche-stop-013",
+            "elche-stop-001",
+            "elche-stop-002",
+            "elche-stop-003",
+            "elche-stop-004",
+            "elche-stop-005",
+            "elche-stop-006",
+            "elche-stop-007",
+            "elche-stop-008",
+            "elche-stop-009",
+            "elche-stop-010",
+            "elche-stop-011",
+            "elche-stop-012"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "A",
+          "sourceFile": "external-web-reference"
+        },
+        {
+          "source": "moovit-current-route-order",
+          "sourceRouteId": "5736043",
+          "sourceFile": "external-web-reference"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-B",
+      "publicCode": "B",
+      "name": "Toscar - El Pla - Hospital General",
+      "dataStatus": "complete-textual-order-provisional-geography",
+      "patterns": [
+        {
+          "patternId": "elche-B-circular",
+          "directionLabel": "Hospital General",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 34
+          },
+          "stopNodeIds": [
+            "elche-stop-126",
+            "elche-stop-207",
+            "elche-stop-042",
+            "elche-stop-043",
+            "elche-stop-044",
+            "elche-stop-045",
+            "elche-stop-159",
+            "elche-stop-046",
+            "elche-stop-047",
+            "elche-stop-048",
+            "elche-stop-049",
+            "elche-stop-050",
+            "elche-stop-051",
+            "elche-stop-052",
+            "elche-stop-053",
+            "elche-stop-054",
+            "elche-stop-055",
+            "elche-stop-026",
+            "elche-stop-027",
+            "elche-stop-025",
+            "elche-stop-028",
+            "elche-stop-029",
+            "elche-stop-030",
+            "elche-stop-031",
+            "elche-stop-032",
+            "elche-stop-033",
+            "elche-stop-034",
+            "elche-stop-035",
+            "elche-stop-036",
+            "elche-stop-037",
+            "elche-stop-038",
+            "elche-stop-039",
+            "elche-stop-040",
+            "elche-stop-160"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "B",
+          "sourceFile": "external-web-reference"
+        },
+        {
+          "source": "moovit-current-route-order",
+          "sourceRouteId": "5736044",
+          "sourceFile": "external-web-reference"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-C",
+      "publicCode": "C",
+      "name": "Centre - Carrús",
+      "dataStatus": "complete-textual-order-provisional-geography",
+      "patterns": [
+        {
+          "patternId": "elche-C-circular",
+          "directionLabel": "Carrús",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "elche-stop-001",
+            "elche-stop-002",
+            "elche-stop-056",
+            "elche-stop-057",
+            "elche-stop-060",
+            "elche-stop-061",
+            "elche-stop-062",
+            "elche-stop-063",
+            "elche-stop-064",
+            "elche-stop-065",
+            "elche-stop-041",
+            "elche-stop-066",
+            "elche-stop-067",
+            "elche-stop-068",
+            "elche-stop-069",
+            "elche-stop-045",
+            "elche-stop-159",
+            "elche-stop-070",
+            "elche-stop-071"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "C",
+          "sourceFile": "external-web-reference"
+        },
+        {
+          "source": "moovit-current-route-order",
+          "sourceRouteId": "5736045",
+          "sourceFile": "external-web-reference"
+        }
+      ]
+    }
+  ]
+}

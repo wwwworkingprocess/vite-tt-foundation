@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-all-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Torrevieja Legacy Network - All Old Lines",
+  "primarySettlementId": "es-torrevieja",
+  "settlementIds": [
+    "es-torrevieja"
+  ],
+  "contentHash": "998b030827a5350b5178c7fe558fe2193b8e2c3457e4949fbff01fd645f382fa",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "cc3431aa423778c6b44e09562dd57d8a3a0eb6e30e4b4bceeacd0a13d10b1976"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "a68b9a401a99116bf6095c20178a6ffb2603cfa3640267fb4c84ab466d38157f"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "bbfdd3bc7916667e58b0b53c985ca7685c766d3acd42f3d1c39273baef661aed"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "24c67ab388d9f7825c1127b578fffd605cc2a66eb66df243ff76b703b3d35b6c"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "f1ae3947a5a16babd34267cc7beef044a4d82bb164f70835d8f07bba579ae999"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

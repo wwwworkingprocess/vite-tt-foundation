@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-urban-abc-v1",
+  "settlements": [
+    {
+      "settlementId": "es-elche",
+      "name": "Elche",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.2709983,
+        "longitude": -0.7084972
+      },
+      "bounds": {
+        "south": 38.25887,
+        "west": -0.723636,
+        "north": 38.2807188,
+        "east": -0.68442
+      }
+    }
+  ]
+}

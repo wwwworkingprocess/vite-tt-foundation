@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-urban-abc-v1",
+  "generatedAt": "2026-07-21T16:55:18+00:00",
+  "sources": [
+    {
+      "sourceId": "wikidata-elche-q10509",
+      "name": "Wikidata settlement identity",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "https://www.wikidata.org/wiki/Q10509"
+    },
+    {
+      "sourceId": "buselche-official-2026-07-21",
+      "name": "BusElche / Avanza official urban-line directory",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "external-web-reference"
+    },
+    {
+      "sourceId": "moovit-elche-abc-2026-07-21",
+      "name": "Current Elche A, B and C ordered stop lists",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "external-web-reference"
+    },
+    {
+      "sourceId": "osm-elche-route-inventory-2026-07-21",
+      "name": "OpenStreetMap Elche bus-route relation inventory",
+      "attribution": "© OpenStreetMap contributors",
+      "license": "ODbL-1.0",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "external-web-reference"
+    },
+    {
+      "sourceId": "osm-derived-elche-anchor-points-2026-07-21",
+      "name": "OSM-derived landmark anchors used for map projection",
+      "attribution": "© OpenStreetMap contributors",
+      "license": "ODbL-1.0",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "external-web-reference"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "assistant-city-profile-v1",
+      "description": "Creates the city profile from settlement name Elche and mandatory Wikidata identifier Q10509."
+    },
+    {
+      "transformationId": "elche-current-route-capture-v1",
+      "description": "Captures the current ordered stop sequences for urban Lines A, B and C, keeping Line A's two published directions independent and representing Lines B and C as explicit circular patterns."
+    },
+    {
+      "transformationId": "schematic-route-map-projection-v1",
+      "description": "Projects route-map stop-marker pixels into approximate latitude/longitude coordinates with per-route affine transforms calibrated from OSM-derived landmarks. Shared municipal stop codes are unified into stable StopNodes."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Writes the established scenario schema, computes all asset SHA-256 values and the aggregate contentHash, and registers the scenario in the existing catalog."
+    },
+    {
+      "transformationId": "transport-domain-osm-source-reference-amendment-v1",
+      "description": "Removes non-OpenStreetMap build evidence from the strict runtime StopNode sourceReferences field. No synthetic or falsely labelled OSM object identifiers are introduced; route topology, StopNode identity, coordinates and official-source provenance are unchanged."
+    }
+  ],
+  "warnings": [
+    "Runtime StopNode sourceReferences are intentionally empty in this interim package because the transport-domain accepts only genuine OpenStreetMap platform or stop_position source components there.",
+    "BusElche municipal stop codes, Moovit matches and route-map pixel projection evidence remain build-time provenance; they were not mislabelled as OpenStreetMap source components.",
+    "The future Elche OSM projector must replace each empty sourceReferences array with genuine openstreetmap platform and/or stop-position references before this dataset is treated as a production geospatial scenario.",
+    "This is a workflow goal/reference artifact, not a production-grade geospatial dataset.",
+    "The A, B and C stop orders are complete as captured from current public route pages on 2026-07-21.",
+    "Stop coordinates are provisional affine projections from current route-map marker positions and OSM-derived landmark anchors; they are not surveyed boarding-point coordinates.",
+    "The future automated workflow should replace these positions with canonical OpenStreetMap platform plus stop_position projections where available.",
+    "OpenStreetMap relations 1835858, 1835925 and 1837445 exist for A, B and C, but the public OSM route inventory reports mixed or partial route/stop completeness; they were treated as secondary evidence.",
+    "Line A retains two independent published direction patterns and no reverse pattern is inferred.",
+    "Lines B and C are stored without repeating the first StopNode at the end; closesLoop=true adds the final-to-first edge exactly once.",
+    "Municipal stop code is the stable identity within this goal package. A future OSM-based creator must preserve these IDs through an identity registry or emit an explicit migration.",
+    "No source route-map image is distributed in the scenario package.",
+    "Review source terms and ODbL obligations before public or commercial distribution of a derived database."
+  ]
+}

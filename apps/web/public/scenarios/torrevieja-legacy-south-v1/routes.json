@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-south-v1",
+  "routes": [
+    {
+      "routeId": "legacy-DF",
+      "publicCode": "D-F",
+      "name": "Torrevieja - Los Altos - Rocío del Mar",
+      "dataStatus": "complete-reviewed-legacy-capture",
+      "patterns": [
+        {
+          "patternId": "legacy-DF-torrevieja-los-altos-rocio-del-mar",
+          "directionLabel": "Torrevieja - Los Altos - Rocío del Mar",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "tv-stop-0123",
+            "tv-stop-0107",
+            "tv-stop-0077",
+            "tv-stop-0118",
+            "tv-stop-0116",
+            "tv-stop-0177",
+            "tv-stop-0070",
+            "tv-stop-0112",
+            "tv-stop-0135",
+            "tv-stop-0218",
+            "tv-stop-0213",
+            "tv-stop-0214",
+            "tv-stop-0212",
+            "tv-stop-0164",
+            "tv-stop-0083",
+            "tv-stop-0124",
+            "tv-stop-0167"
+          ]
+        },
+        {
+          "patternId": "legacy-DF-rocio-del-mar-los-altos-torrevieja",
+          "directionLabel": "Rocío del Mar - Los Altos - Torrevieja",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "tv-stop-0168",
+            "tv-stop-0125",
+            "tv-stop-0213",
+            "tv-stop-0214",
+            "tv-stop-0212",
+            "tv-stop-0164",
+            "tv-stop-0083",
+            "tv-stop-0198",
+            "tv-stop-0217",
+            "tv-stop-0135",
+            "tv-stop-0177",
+            "tv-stop-0070",
+            "tv-stop-0112",
+            "tv-stop-0117",
+            "tv-stop-0119",
+            "tv-stop-0068",
+            "tv-stop-0143",
+            "tv-stop-0123"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-DF",
+          "sourceFile": "source/legacy-routes/route-df.json"
+        }
+      ]
+    },
+    {
+      "routeId": "legacy-E",
+      "publicCode": "E",
+      "name": "Torrevieja - Los Balcones - Lago Jardín",
+      "dataStatus": "complete-reviewed-legacy-capture",
+      "patterns": [
+        {
+          "patternId": "legacy-E-torrevieja-los-balcones-lago-jardin",
+          "directionLabel": "Torrevieja - Los Balcones - Lago Jardín",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "tv-stop-0123",
+            "tv-stop-0137",
+            "tv-stop-0109",
+            "tv-stop-0027",
+            "tv-stop-0178",
+            "tv-stop-0126",
+            "tv-stop-0069",
+            "tv-stop-0120",
+            "tv-stop-0107",
+            "tv-stop-0077",
+            "tv-stop-0118",
+            "tv-stop-0116",
+            "tv-stop-0135",
+            "tv-stop-0014",
+            "tv-stop-0052",
+            "tv-stop-0060",
+            "tv-stop-0061",
+            "tv-stop-0191",
+            "tv-stop-0047",
+            "tv-stop-0048",
+            "tv-stop-0115",
+            "tv-stop-0147",
+            "tv-stop-0146"
+          ]
+        },
+        {
+          "patternId": "legacy-E-lago-jardin-los-balcones-torrevieja",
+          "directionLabel": "Lago Jardín - Los Balcones - Torrevieja",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "tv-stop-0146",
+            "tv-stop-0170",
+            "tv-stop-0169",
+            "tv-stop-0135",
+            "tv-stop-0117",
+            "tv-stop-0119",
+            "tv-stop-0068",
+            "tv-stop-0100",
+            "tv-stop-0123"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "the-costas",
+          "sourceRouteId": "legacy-E",
+          "sourceFile": "source/legacy-routes/route-e.json"
+        }
+      ]
+    }
+  ]
+}

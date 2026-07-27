@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-all-v1",
+  "title": "Torrevieja Legacy Network - All Old Lines",
+  "initialView": {
+    "center": {
+      "latitude": 37.9849994,
+      "longitude": -0.6887842
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "legacy-A": {
+      "label": "A",
+      "color": "#e67e22"
+    },
+    "legacy-A2": {
+      "label": "A2",
+      "color": "#a93226"
+    },
+    "legacy-B": {
+      "label": "B",
+      "color": "#2f55a4"
+    },
+    "legacy-C": {
+      "label": "C",
+      "color": "#1b9e77"
+    },
+    "legacy-DF": {
+      "label": "D-F",
+      "color": "#c2185b"
+    },
+    "legacy-E": {
+      "label": "E",
+      "color": "#168aad"
+    },
+    "legacy-G": {
+      "label": "G",
+      "color": "#087f5b"
+    },
+    "legacy-H": {
+      "label": "H",
+      "color": "#e85d04"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-north-v1",
+  "generatedAt": "2026-07-21T00:00:00Z",
+  "sources": [
+    {
+      "sourceId": "osm-torrevieja-bus-stops-2026-07-18",
+      "name": "OpenStreetMap",
+      "attribution": "© OpenStreetMap contributors",
+      "license": "ODbL-1.0",
+      "accessedAt": "2026-07-18T15:59:30.214Z",
+      "sourceFile": "source/torrevieja-osm-bus-stops.json"
+    },
+    {
+      "sourceId": "legacy-route-b-capture",
+      "name": "The Costas route B capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-b.json"
+    },
+    {
+      "sourceId": "legacy-route-g-capture",
+      "name": "The Costas route G capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-g.json"
+    },
+    {
+      "sourceId": "legacy-route-h-capture",
+      "name": "The Costas route H capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-h.json"
+    },
+    {
+      "sourceId": "torrevieja-stop-inventory-2019",
+      "name": "Ayuntamiento de Torrevieja urban bus stop inventory",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "source/municipal/torrevieja-stop-inventory-2019.pdf"
+    },
+    {
+      "sourceId": "torrevieja-com-and-torreviejactual-route-sequences-2026",
+      "name": "Torrevieja.com and TorreviejActual route sequences",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "external-web-reference"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "canonical-stop-projection-v1",
+      "description": "Reuses canonical directional StopNodes from torrevieja-v1 and projects independently captured ordered route patterns onto them. No reverse edge is inferred."
+    },
+    {
+      "transformationId": "legacy-north-route-matching-v1",
+      "description": "Reuses the reviewed complete Line B mapping from torrevieja-legacy-abc-v1 and matches Lines G and H using source direction order, the municipal direction inventory, OSM names and source refs, exact street addresses, paired/opposite platforms, and geographic continuity."
+    }
+  ],
+  "warnings": [
+    "Line B is reused byte-for-byte at route-object level from the reviewed torrevieja-legacy-abc-v1 routes asset.",
+    "Line B contains 19 outward and 16 return stop occurrences; its source numbering anomaly is not used as graph order.",
+    "Line G contains both captured direction patterns: 21 outward and 13 return stop occurrences.",
+    "Line G uses separate opposite-direction OSM platform candidates for Parque de las Naciones, Torretas, Policía Local, Jardín del Mar and Centro de Salud San Luis where the source data supports them.",
+    "Line G's Avenida Robleda and El Salado occurrences map provisionally to the two unnamed nearby OSM platforms tv-stop-0038 and tv-stop-0037 respectively.",
+    "Line G's CV-905 / Mercadona San Luis occurrence maps provisionally to unnamed OSM platform tv-stop-0039.",
+    "Line G's return Gasolinera Shell / San Remo occurrence maps to unnamed OSM platform tv-stop-0036, located opposite the named outbound San Remo stop.",
+    "The municipal inventory distinguishes separate directional Doña Inés records, but the OSM universe currently supplies only one canonical candidate; tv-stop-0127 is therefore shared by the two patterns.",
+    "Line H contains both complete captured patterns: 6 outward and 4 return stop occurrences and operates only on Fridays.",
+    "Line H's Hotel Juan Carlos / Calle Apolo return occurrence maps provisionally to tv-stop-0129, the nearby opposite-direction BP/Inmaculada canonical node.",
+    "Line H's DOMTI occurrence shares tv-stop-0069 with La Gaviota because the municipal address is Avenida Diego Ramírez Pastor 125.",
+    "The Ayuntamiento inventory was used as verification evidence only; no source photographs are distributed.",
+    "Review ODbL obligations before publicly distributing a derived database."
+  ]
+}

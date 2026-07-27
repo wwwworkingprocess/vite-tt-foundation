@@ -149,24 +149,46 @@ const movementSchema = z.discriminatedUnion('kind', [
     stopNodeId: z.string().min(1),
   }),
 ]);
-const vehicleSchema = z.strictObject({
-  vehicleId: vehicleIdSchema,
-  label: z.string().trim().min(1).max(128),
-  patternId: z.string().min(1),
-  movementPlan: planSchema,
-  movement: movementSchema,
-  routeId: z.string().min(1).optional(),
-  routeLegs: z
-    .array(
-      z.strictObject({
-        patternId: z.string().min(1),
-        movementPlan: planSchema,
-      }),
-    )
-    .optional(),
-  routeLegIndex: z.number().int().nonnegative().safe().optional(),
-  completedRouteCycles: z.number().int().nonnegative().safe().optional(),
-});
+
+const routeFieldNames = [
+  'routeId',
+  'routeLegs',
+  'routeLegIndex',
+  'completedRouteCycles',
+] as const;
+
+const vehicleSchema = z
+  .strictObject({
+    vehicleId: vehicleIdSchema,
+    label: z.string().trim().min(1).max(128),
+    patternId: z.string().min(1),
+    movementPlan: planSchema,
+    movement: movementSchema,
+    routeId: z.string().min(1).optional(),
+    routeLegs: z
+      .array(
+        z.strictObject({
+          patternId: z.string().min(1),
+          movementPlan: planSchema,
+        }),
+      )
+      .optional(),
+    routeLegIndex: z.number().int().nonnegative().safe().optional(),
+    completedRouteCycles: z.number().int().nonnegative().safe().optional(),
+  })
+  .superRefine((vehicle, context) => {
+    const present = routeFieldNames.filter(
+      (field) => vehicle[field] !== undefined,
+    );
+
+    if (present.length !== 0 && present.length !== routeFieldNames.length) {
+      context.addIssue({
+        code: 'custom',
+        message:
+          'Route-cycle assignment must provide routeId, routeLegs, routeLegIndex, and completedRouteCycles together.',
+      });
+    }
+  });
 
 export const parseVehicleId = (value: unknown): VehicleId =>
   vehicleIdSchema.parse(value) as VehicleId;

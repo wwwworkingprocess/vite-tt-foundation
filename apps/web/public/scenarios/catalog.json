@@ -37,6 +37,66 @@
       "manifestPath": "torrevieja-legacy-abc-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "2a3345a69f038a89602fb098bd2edd0950c2c106ad1731679e2c3a6ba9a18d99"
+    },
+    {
+      "scenarioId": "torrevieja-legacy-east-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Torrevieja Legacy East Network - Lines A, A2 and C",
+      "primarySettlementId": "es-torrevieja",
+      "settlementIds": [
+        "es-torrevieja"
+      ],
+      "manifestPath": "torrevieja-legacy-east-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "97b085714559b52f6cae62d2a4ea30fd968606fdfb46d82cc7d1e68a9da22dac"
+    },
+    {
+      "scenarioId": "torrevieja-legacy-south-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Torrevieja Legacy South Network - Lines D-F and E",
+      "primarySettlementId": "es-torrevieja",
+      "settlementIds": [
+        "es-torrevieja"
+      ],
+      "manifestPath": "torrevieja-legacy-south-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "775fc914eaaa276cdd525961743679f3c07b472200a06145df46dab43b63786e"
+    },
+    {
+      "scenarioId": "torrevieja-legacy-north-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Torrevieja Legacy North Network - Lines B, G and H",
+      "primarySettlementId": "es-torrevieja",
+      "settlementIds": [
+        "es-torrevieja"
+      ],
+      "manifestPath": "torrevieja-legacy-north-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "c533e31ae6d355c47f629ef03a01dfd5528b1e1dd6bb3f3aacb259d5f253b0b7"
+    },
+    {
+      "scenarioId": "torrevieja-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Torrevieja Legacy Network - All Old Lines",
+      "primarySettlementId": "es-torrevieja",
+      "settlementIds": [
+        "es-torrevieja"
+      ],
+      "manifestPath": "torrevieja-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "998b030827a5350b5178c7fe558fe2193b8e2c3457e4949fbff01fd645f382fa"
+    },
+    {
+      "scenarioId": "elche-urban-abc-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Urban Network - Lines A, B and C",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-urban-abc-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "83066ee4b45218bc6d630305c90ab7c1638a8beeb962b4928fbd689bb55d9f3d"
     }
   ]
 }

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-north-v1",
+  "title": "Torrevieja Legacy North Network - Lines B, G and H",
+  "initialView": {
+    "center": {
+      "latitude": 38.00181,
+      "longitude": -0.69135
+    },
+    "zoom": 12.4
+  },
+  "routeStyles": {
+    "legacy-B": {
+      "label": "B",
+      "color": "#2f55a4"
+    },
+    "legacy-G": {
+      "label": "G",
+      "color": "#087f5b"
+    },
+    "legacy-H": {
+      "label": "H",
+      "color": "#e85d04"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

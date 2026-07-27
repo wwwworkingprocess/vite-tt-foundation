@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-urban-abc-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Urban Network - Lines A, B and C",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "83066ee4b45218bc6d630305c90ab7c1638a8beeb962b4928fbd689bb55d9f3d",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "2825d23e744cac268b91bb72ea70ef6e0cb0a6632966e40d2966aba621c355a9"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "9fbdd8787590d22a06312843271809a57ebb3585c362e593a5c2271a2d4facfa"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "0d22256f05e5d7989cede64d82d5d7c16d559889346e18297f1b5bb83c2a3eb7"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "08cb48a373d407e3f6de8d11057b7852eada118683ffeaccb793dced3eded97e"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "4dfda3684d85cd4f85ed0639fcc069ade23a5e0e70c465ad905be12919915f00"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

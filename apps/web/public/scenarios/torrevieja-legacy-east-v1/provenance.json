@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-east-v1",
+  "generatedAt": "2026-07-21T00:00:00Z",
+  "sources": [
+    {
+      "sourceId": "osm-torrevieja-bus-stops-2026-07-18",
+      "name": "OpenStreetMap",
+      "attribution": "© OpenStreetMap contributors",
+      "license": "ODbL-1.0",
+      "accessedAt": "2026-07-18T15:59:30.214Z",
+      "sourceFile": "source/torrevieja-osm-bus-stops.json"
+    },
+    {
+      "sourceId": "legacy-route-a-capture",
+      "name": "The Costas route A capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-a.json"
+    },
+    {
+      "sourceId": "legacy-route-a2-capture",
+      "name": "The Costas route A2 capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-a2.json"
+    },
+    {
+      "sourceId": "legacy-route-c-capture",
+      "name": "The Costas route C capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-c.json"
+    },
+    {
+      "sourceId": "torrevieja-stop-inventory-2019",
+      "name": "Ayuntamiento de Torrevieja urban bus stop inventory",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "source/municipal/torrevieja-stop-inventory-2019.pdf"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "canonical-stop-projection-v1",
+      "description": "Reuses canonical directional StopNodes from torrevieja-v1 and projects independently captured ordered route patterns onto them. No reverse edge is inferred."
+    },
+    {
+      "transformationId": "legacy-east-route-matching-v1",
+      "description": "Combines the reviewed complete Route A and Route C mappings from torrevieja-legacy-abc-v1 with a complete Route A2 projection. A2 is matched using source order, the directional OSM ref sequence 501-514, shared Route A terminal/corridor nodes, names, coordinates, and geographic continuity."
+    }
+  ],
+  "warnings": [
+    "Line A contains both complete captured direction patterns: 22 outward and 26 return stop occurrences.",
+    "Line A2 contains both complete captured direction patterns: 14 outward and 18 return stop occurrences.",
+    "Line A2 intentionally reuses the established Route A StopNodes for Hotel Fontana, La Mata, Molino Blanco, Parquemar, San Policarpo and Eras de la Sal where the physical directional stop is shared.",
+    "Line A2's outbound Calle Helena occurrence uses the passenger platform StopNode tv-stop-0207; the nearby roadway stop-position is retained only as source evidence in the canonical universe.",
+    "Line A2's return Pinocchio occurrence uses passenger platform StopNode tv-stop-0200; its nearby roadway stop-position remains a separate source component because the original 10 metre projection threshold did not pair them.",
+    "Line C's return pattern represents the documented Hospital Quirón-serving variant; public information states that the hospital stop is not served on every circuit.",
+    "Line C's Cruz Roja occurrence maps to an unnamed canonical platform, and M. Fco. Casanovas maps to the canonical Patricio Zammit 67 node based on municipal address and route continuity.",
+    "The Ayuntamiento inventory was used as verification evidence only; no source photographs are distributed.",
+    "Review ODbL obligations before publicly distributing a derived database."
+  ]
+}

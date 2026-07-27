@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-east-v1",
+  "title": "Torrevieja Legacy East Network - Lines A, A2 and C",
+  "initialView": {
+    "center": {
+      "latitude": 38.0019917,
+      "longitude": -0.66807325
+    },
+    "zoom": 12.8
+  },
+  "routeStyles": {
+    "legacy-A": {
+      "label": "A",
+      "color": "#e67e22"
+    },
+    "legacy-A2": {
+      "label": "A2",
+      "color": "#a93226"
+    },
+    "legacy-C": {
+      "label": "C",
+      "color": "#1b9e77"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

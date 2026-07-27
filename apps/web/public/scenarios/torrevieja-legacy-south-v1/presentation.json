@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-south-v1",
+  "title": "Torrevieja Legacy South Network - Lines D-F and E",
+  "initialView": {
+    "center": {
+      "latitude": 37.961862,
+      "longitude": -0.71428
+    },
+    "zoom": 12.6
+  },
+  "routeStyles": {
+    "legacy-DF": {
+      "label": "D-F",
+      "color": "#c2185b"
+    },
+    "legacy-E": {
+      "label": "E",
+      "color": "#168aad"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

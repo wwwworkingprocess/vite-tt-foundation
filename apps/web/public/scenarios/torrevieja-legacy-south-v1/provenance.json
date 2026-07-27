@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-legacy-south-v1",
+  "generatedAt": "2026-07-21T00:00:00Z",
+  "sources": [
+    {
+      "sourceId": "osm-torrevieja-bus-stops-2026-07-18",
+      "name": "OpenStreetMap",
+      "attribution": "© OpenStreetMap contributors",
+      "license": "ODbL-1.0",
+      "accessedAt": "2026-07-18T15:59:30.214Z",
+      "sourceFile": "source/torrevieja-osm-bus-stops.json"
+    },
+    {
+      "sourceId": "legacy-route-df-capture",
+      "name": "The Costas route D-F capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-df.json"
+    },
+    {
+      "sourceId": "legacy-route-e-capture",
+      "name": "The Costas route E capture",
+      "capturedAt": "2026-07-18",
+      "sourceFile": "source/legacy-routes/route-e.json"
+    },
+    {
+      "sourceId": "torrevieja-stop-inventory-2019",
+      "name": "Ayuntamiento de Torrevieja urban bus stop inventory",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "source/municipal/torrevieja-stop-inventory-2019.pdf"
+    },
+    {
+      "sourceId": "torrevieja-com-address-sequences-2026",
+      "name": "Torrevieja.com route address sequences",
+      "accessedAt": "2026-07-21",
+      "sourceFile": "external-web-reference"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "canonical-stop-projection-v1",
+      "description": "Reuses canonical directional StopNodes from torrevieja-v1 and projects independently captured ordered route patterns onto them. No reverse edge is inferred."
+    },
+    {
+      "transformationId": "legacy-south-route-matching-v1",
+      "description": "Matches Lines D-F and E using source direction order, municipal direction associations, OSM names and refs, exact street addresses, and geographic continuity through the shared Acequión, Desiderio Rodríguez, La Veleta and hospital corridor."
+    }
+  ],
+  "warnings": [
+    "Line D-F contains both captured direction patterns: 17 outward and 18 return stop occurrences.",
+    "The D-F source repeats displayed sequence numbers in the return direction; clean order follows captured occurrence order.",
+    "A longer address-style D-F listing contains additional Avenida de las Olas detail; this scenario follows the independently captured two-direction lists and does not silently add another occurrence.",
+    "Line E contains both captured direction patterns: 23 outward and 9 return stop occurrences.",
+    "Line E's M. Fco. Casanovas occurrence maps provisionally to unnamed OSM platform tv-stop-0027, distinct from the following Patricio Zammit node.",
+    "Line E's Los Balcones / Super Valú occurrence maps to unnamed OSM platform tv-stop-0014 using address and geographic continuity.",
+    "Line E's Calle Amazonas and Ángel García Rogel labels use directional OSM points whose mapped names are street-number or cross-street variants.",
+    "Hotel Doña Monse uses different directional StopNodes: tv-stop-0115 outbound and tv-stop-0170 return.",
+    "The Ayuntamiento inventory was used as verification evidence only; no source photographs are distributed.",
+    "Review ODbL obligations before publicly distributing a derived database."
+  ]
+}

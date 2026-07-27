@@ -87,6 +87,7 @@ it('renders authoritative stop, edge, and changing vehicle projections accessibl
 });
 
 it('renders arrowheads to show edge orientation', () => {
+  render(<VehicleMovementSvg scenario={scenario} fleet={[]} />);
   const svg = screen.getByTestId('vehicle-movement-svg');
 
   const renderedEdges = [

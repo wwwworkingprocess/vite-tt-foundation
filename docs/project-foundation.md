@@ -113,4 +113,10 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   advances Snapshot, Save, client, and Worker contracts to V3. V1 migrates to
   an empty fleet; V2 migrates as legacy single-pattern authority. A read-only
   SVG proves active-authority movement. Scheduling remains deferred.
+- The pre-Phase-4D browser refinement presents the accepted authority through a
+  viewport-bound game shell: compact navigation, a full-workspace SVG
+  diagnostic view, a swappable R3F minimap, and accessible project,
+  simulation, and session dialogs. Shell state is presentation-only.
+  City-filtered catalogues, campaign progression, and promotion of the R3F
+  renderer to the production primary view remain explicit future seams.
 - Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.

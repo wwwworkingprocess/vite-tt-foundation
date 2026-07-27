@@ -33,6 +33,11 @@ describe('public multi-scenario catalogue', () => {
         'torrevieja-v1',
         'torrevieja-mini-v1',
         'torrevieja-legacy-abc-v1',
+        'torrevieja-legacy-east-v1',
+        'torrevieja-legacy-south-v1',
+        'torrevieja-legacy-north-v1',
+        'torrevieja-legacy-all-v1',
+        'elche-urban-abc-v1',
       ]);
       await loader.loadScenario('torrevieja-v1');
       expect(loader.projection.getState()).toMatchObject({

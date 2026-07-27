@@ -30,6 +30,8 @@ const manifest = z
     }),
     buildBudgetsBytes: z.strictObject({
       applicationEntry: z.number().int().positive(),
+      dialogShell: z.number().int().positive(),
+      projectInfo: z.number().int().positive(),
       representation: z.number().int().positive(),
       transportWorker: z.number().int().positive(),
       totalEmittedJavaScript: z.number().int().positive(),

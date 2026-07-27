@@ -52,6 +52,18 @@ Examples:
 
 Presentation state may influence which command the user chooses, but it must not silently alter authoritative state.
 
+The visualization-first browser shell keeps dialog visibility and the
+primary/minimap choice as presentation state. Both the SVG diagnostic renderer
+and the R3F renderer stay mounted behind stable view boundaries; swapping their
+roles does not replace the Worker, controller, scenario, fleet, persistence, or
+camera authority.
+
+Scenario navigation remains an application boundary: a requested selection is
+not active authority until the established close/start or restore lifecycle
+resolves its exact package. The navigation accepts the available scenario
+catalogue as input so a future Wikidata-Q-code city filter can be inserted
+without moving city or campaign state into the shell.
+
 ## Persistence policy
 
 Persist by explicit allow-list, not by serializing entire stores.

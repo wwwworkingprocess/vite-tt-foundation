@@ -39,6 +39,8 @@
   },
   "buildBudgetsBytes": {
     "applicationEntry": 440000,
+    "dialogShell": 8000,
+    "projectInfo": 4000,
     "representation": 1200000,
     "transportWorker": 115000,
     "totalEmittedJavaScript": 1750000

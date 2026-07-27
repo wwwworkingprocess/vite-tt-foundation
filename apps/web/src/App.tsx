@@ -3,13 +3,11 @@ import {
   parseCommandId,
   parseCorrelationId,
   parseSessionId,
-  protocolContractVersion,
 } from '@torrevieja-tycoon/protocol';
 import {
   createScenarioCoordinate,
   parseVehicleId,
   scenarioCoordinatesEqual,
-  simulationFoundationLabel,
   type ScenarioCoordinate,
   type TransportVehicleCommand,
   type VehicleState,
@@ -37,6 +35,7 @@ import { createTransportFoundationApplication } from './transport-simulation/tra
 import { createDexieTransportSaveRepository } from './transport-simulation/transport-save-repository.js';
 import { createWorkerTransportSimulationClient } from './transport-simulation/worker-transport-client.js';
 import type { ScenarioSelectionState } from './scenarios/ScenarioPanel.js';
+import { GameShell } from './ui/GameShell.js';
 
 type Actions = Readonly<{
   mode: (mode: 'paused' | 'normal' | 'fast' | 'maximum') => Promise<void>;
@@ -372,433 +371,468 @@ export function App() {
     void operation?.();
   };
 
-  return (
-    <main>
-      <section aria-labelledby="foundation-title">
-        <p className="eyebrow">Project foundation</p>
-        <h1 id="foundation-title">Torrevieja Tycoon</h1>
+  const simulationControls = (
+    <div
+      className="simulation-control-groups"
+      aria-label="Authoritative transport Worker status"
+    >
+      <p data-testid="worker-status">Worker status: {status}</p>
+      <p data-testid="worker-tick">
+        Worker tick: {application?.authoritative?.simulationTick ?? 'pending'}
+      </p>
+      <p data-testid="worker-timeline">
+        Timeline: {session?.status === 'ready' ? session.timelineId : 'pending'}
+      </p>
+      <p data-testid="command-revision">
+        Command revision:{' '}
+        {application?.authoritative?.commandRevision ?? 'pending'}
+      </p>
+      <p data-testid="stream-offset">
+        Stream offset: {application?.authoritative?.streamOffset ?? 'pending'}
+      </p>
+      <p data-testid="scenario-coordinate">
+        Scenario coordinate:{' '}
+        {application?.scenario
+          ? `${application.scenario.scenarioSchemaVersion}:${application.scenario.scenarioId}@${application.scenario.scenarioVersion}#${application.scenario.contentHash}`
+          : 'pending'}
+      </p>
+      <p data-testid="selected-scenario">
+        Selected scenario: {selectedScenario?.manifest.scenarioId ?? 'pending'}
+      </p>
+      <p data-testid="requested-scenario">
+        Requested scenario: {scenarioSelection.requestedScenarioId ?? 'pending'}{' '}
+        ({scenarioSelection.status})
+      </p>
+      <p data-testid="active-scenario">
+        Active authoritative scenario:{' '}
+        {application?.scenario?.scenarioId ?? 'pending'}
+      </p>
+      {selectedScenario &&
+      application?.scenario &&
+      selectedScenario.manifest.scenarioId !==
+        application.scenario.scenarioId ? (
         <p>
-          A strict workspace for a standalone simulation and its browser client.
+          Selected scenario will become active when a new session is started.
         </p>
-        <dl aria-label="Workspace package status">
-          <div>
-            <dt>Simulation</dt>
-            <dd>{simulationFoundationLabel}</dd>
-          </div>
-          <div>
-            <dt>Protocol contract</dt>
-            <dd>version {protocolContractVersion}</dd>
-          </div>
-        </dl>
-        {authoritativeScenarioPackage && fleet ? (
+      ) : null}
+      <div aria-label="Vehicle diagnostics">
+        <label>
+          Vehicle route
+          <select
+            value={selectedRouteId ?? ''}
+            disabled={!ready || !authoritativeScenarioPackage}
+            onChange={(event) => {
+              selectedRouteIdRef.current = event.target.value;
+              setSelectedRouteId(event.target.value);
+            }}
+          >
+            {authoritativeScenarioPackage?.routes.routes.map((route) => (
+              <option key={route.routeId} value={route.routeId}>
+                {route.publicCode} — {route.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div
+          data-testid="route-list"
+          aria-label="Canonical routes"
+          data-authoritative-scenario-id={
+            authoritativeScenarioPackage?.manifest.scenarioId
+          }
+          data-authoritative-content-hash={
+            authoritativeScenarioPackage?.manifest.contentHash
+          }
+        >
+          {authoritativeScenarioPackage?.routes.routes.map((route) => (
+            <div key={route.routeId} data-route-id={route.routeId}>
+              <strong>
+                {route.publicCode} — {route.name}
+              </strong>{' '}
+              <span>{route.routeId}</span>
+              <ol>
+                {route.patterns.map((pattern) => (
+                  <li
+                    key={pattern.patternId}
+                    data-pattern-id={pattern.patternId}
+                  >
+                    {pattern.directionLabel} ({pattern.stopNodeIds.length}{' '}
+                    stops)
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </div>
+        <button
+          disabled={!ready || !authoritativeScenarioPackage}
+          onClick={action(actions?.createVehicle)}
+        >
+          Create demo vehicle
+        </button>
+        {currentAuthoritativePackageState?.status === 'loading' ? (
+          <p>Authoritative scenario package loading.</p>
+        ) : null}
+        {currentAuthoritativePackageState?.status === 'failed' ? (
+          <p role="alert">{currentAuthoritativePackageState.message}</p>
+        ) : null}
+        <p data-testid="vehicle-count">Vehicle count: {fleet?.length ?? 0}</p>
+        <p data-testid="vehicle-id">
+          Vehicle: {firstVehicle?.vehicleId ?? 'none'}
+        </p>
+        <p data-testid="vehicle-pattern">
+          Pattern: {firstVehicle?.patternId ?? 'none'}
+        </p>
+        <p data-testid="vehicle-movement">
+          Movement: {firstVehicle?.movement.kind ?? 'none'}
+        </p>
+        <p data-testid="vehicle-location">
+          Location:{' '}
+          {firstVehicle?.movement.kind === 'running-on-edge'
+            ? firstVehicle.movement.edgeId
+            : (firstVehicle?.movement.stopNodeId ?? 'none')}
+        </p>
+        <p data-testid="vehicle-progress">
+          Progress:{' '}
+          {firstVehicle?.movement.kind === 'running-on-edge'
+            ? `${firstVehicle.movement.progressTicks}/${firstVehicle.movement.travelTicks}`
+            : 'not-on-edge'}
+        </p>
+        <div
+          data-testid="vehicle-list"
+          aria-label="Authoritative fleet"
+          data-authoritative-scenario-id={
+            authoritativeScenarioPackage?.manifest.scenarioId
+          }
+          data-authoritative-content-hash={
+            authoritativeScenarioPackage?.manifest.contentHash
+          }
+        >
+          {fleet?.map((vehicle) => {
+            const movement = vehicle.movement;
+            const onEdge = movement.kind === 'running-on-edge';
+            return (
+              <div
+                key={vehicle.vehicleId}
+                data-testid={`vehicle-row-${vehicle.vehicleId}`}
+                data-vehicle-id={vehicle.vehicleId}
+                data-pattern-id={vehicle.patternId}
+                data-route-id={vehicle.routeId}
+                data-route-leg-index={vehicle.routeLegIndex}
+                data-completed-route-cycles={vehicle.completedRouteCycles}
+                data-plan-travel-ticks={vehicle.movementPlan.edgeTravelTicks.join(
+                  ',',
+                )}
+                data-movement-kind={movement.kind}
+                data-stop-id={onEdge ? undefined : movement.stopNodeId}
+                data-edge-id={onEdge ? movement.edgeId : undefined}
+                data-edge-sequence={onEdge ? movement.edgeSequence : undefined}
+                data-progress-numerator={
+                  onEdge ? movement.progressTicks : undefined
+                }
+                data-progress-denominator={
+                  onEdge ? movement.travelTicks : undefined
+                }
+              >
+                <span>{vehicle.vehicleId}</span>{' '}
+                <span>{vehicle.patternId}</span> <span>{movement.kind}</span>{' '}
+                <span>
+                  {onEdge
+                    ? `${movement.edgeId} ${movement.progressTicks}/${movement.travelTicks}`
+                    : movement.stopNodeId}
+                </span>{' '}
+                {movement.kind === 'parked-at-stop' ? (
+                  <button
+                    disabled={!ready}
+                    onClick={action(
+                      () =>
+                        actions?.startVehicle(vehicle.vehicleId) ??
+                        Promise.resolve(),
+                    )}
+                  >
+                    Start {vehicle.vehicleId}
+                  </button>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div aria-label="Foundation pacing controls">
+        <button
+          disabled={!ready}
+          onClick={action(() => actions?.mode('paused') ?? Promise.resolve())}
+        >
+          Pause
+        </button>
+        <button
+          disabled={!ready}
+          onClick={action(() => actions?.mode('normal') ?? Promise.resolve())}
+        >
+          Normal 20×
+        </button>
+        <button
+          disabled={!ready}
+          onClick={action(() => actions?.mode('fast') ?? Promise.resolve())}
+        >
+          Fast 50×
+        </button>
+        <button
+          disabled={!ready}
+          onClick={action(() => actions?.mode('maximum') ?? Promise.resolve())}
+        >
+          Maximum 60×
+        </button>
+        <button disabled={!ready} onClick={action(actions?.bonus)}>
+          Grant demo 2× bonus
+        </button>
+        <p data-testid="pacing-rate">
+          Effective rate: {pacing?.effectiveRate ?? 0}×
+        </p>
+        <p data-testid="pacing-status">
+          Pacing status: {pacing?.status ?? 'idle'}
+          {pacing?.message ? `: ${pacing.message}` : ''}
+        </p>
+        <p data-testid="bonus-ticks">
+          Bonus ticks remaining: {pacing?.remainingDoubleSpeedBonusTicks ?? 0}
+        </p>
+        <p data-testid="pacing-credit">
+          Pacing credit: {pacing?.creditGameMicroseconds ?? 0}
+        </p>
+        <fieldset>
+          <legend>Save mode</legend>
+          <label>
+            <input
+              type="radio"
+              name="save-mode"
+              checked={(state?.saveMode ?? 'manual') === 'manual'}
+              disabled={!actions || state?.operation !== 'idle'}
+              onChange={action(
+                () => actions?.saveMode('manual') ?? Promise.resolve(),
+              )}
+            />
+            Manual
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="save-mode"
+              checked={state?.saveMode === 'autosave'}
+              disabled={!actions || state?.operation !== 'idle'}
+              onChange={action(
+                () => actions?.saveMode('autosave') ?? Promise.resolve(),
+              )}
+            />
+            Autosave
+          </label>
+        </fieldset>
+        <button disabled={!ready} onClick={action(actions?.save)}>
+          {state?.saveMode === 'autosave'
+            ? 'Save autosave now'
+            : 'Save transport session'}
+        </button>
+        <button
+          disabled={!ready || !selectedSaveAvailable}
+          onClick={action(actions?.restore)}
+        >
+          {state?.saveMode === 'autosave'
+            ? 'Restore autosave'
+            : 'Restore manual save'}
+        </button>
+        <p data-testid="manual-save-availability">
+          Manual save:{' '}
+          {state?.manualSaveAvailable ? 'available' : 'not available'}
+        </p>
+        <p data-testid="autosave-availability">
+          Autosave:{' '}
+          {state?.autosaveSaveAvailable ? 'available' : 'not available'}
+        </p>
+        <p data-testid="save-count">
+          Saved sessions: {application?.persistence.saves.length ?? 0}
+        </p>
+        <p data-testid="legacy-save-count">
+          Legacy incompatible saves:{' '}
+          {application?.persistence.saves.filter(
+            (save) => save.compatibility === 'legacy-incompatible',
+          ).length ?? 0}
+        </p>
+        <div data-testid="save-library" aria-label="Save library">
+          {application?.persistence.saves.map((save) => {
+            const title = save.scenarioId
+              ? ([...scenarioCache.current.values()].find(
+                  (scenario) =>
+                    scenario.manifest.scenarioId === save.scenarioId,
+                )?.manifest.title ?? save.scenarioId)
+              : 'Legacy Foundation save';
+            const restorable =
+              save.compatibility === 'current' ||
+              save.compatibility === 'migratable';
+            return (
+              <div key={save.saveId} data-save-id={save.saveId}>
+                <span>{title}</span>{' '}
+                <span>{save.scenarioId ?? 'foundation'}</span>{' '}
+                <span>{save.scenarioSchemaVersion ?? 'legacy'}</span>{' '}
+                <span>{save.scenarioVersion ?? 'legacy'}</span>{' '}
+                <span>{save.contentHash?.slice(0, 8) ?? 'no-hash'}</span>{' '}
+                <span>{save.label ?? 'Saved session'}</span>{' '}
+                <span>tick {save.sourceSimulationTick}</span>{' '}
+                <span>vehicles {save.authoritativeEntityCount ?? 0}</span>{' '}
+                <span>snapshot {save.snapshotVersion ?? 'legacy'}</span>{' '}
+                <span>{save.compatibility ?? 'legacy-incompatible'}</span>{' '}
+                {restorable ? (
+                  <button
+                    disabled={!ready}
+                    onClick={action(
+                      () =>
+                        actions?.restoreSave(save.saveId) ?? Promise.resolve(),
+                    )}
+                  >
+                    Restore {title} at tick {save.sourceSimulationTick}
+                  </button>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+        <p data-testid="persistence-status">
+          Persistence status: {application?.persistence.status ?? 'idle'}
+          {persistenceMessage ? `: ${persistenceMessage}` : ''}
+        </p>
+        {state?.message ? (
+          <p role="alert">Session action failed: {state.message}</p>
+        ) : null}
+        {browserActionMessage ? (
+          <p role="alert" data-testid="browser-action-message">
+            {browserActionMessage}
+          </p>
+        ) : null}
+      </div>
+      {state?.canStartNewSession ? (
+        <button
+          type="button"
+          disabled={
+            !actions ||
+            scenarioSelection.status !== 'ready' ||
+            !selectedScenario ||
+            selectedScenario.manifest.scenarioId !==
+              scenarioSelection.requestedScenarioId
+          }
+          onClick={action(async () => {
+            if (
+              selectedScenario &&
+              stackSeedScenario &&
+              !scenarioCoordinatesEqual(
+                createScenarioCoordinate(selectedScenario),
+                createScenarioCoordinate(stackSeedScenario),
+              )
+            ) {
+              setStackSeedScenario(selectedScenario);
+              return;
+            }
+            await actions?.start();
+          })}
+        >
+          Start new transport session
+        </button>
+      ) : (
+        <button
+          type="button"
+          disabled={!actions || state?.operation === 'closing'}
+          onClick={action(actions?.close)}
+        >
+          Close transport Worker
+        </button>
+      )}
+    </div>
+  );
+  const scenarioControl = (
+    <details className="scenario-menu">
+      <summary data-testid="scenario-menu-trigger">
+        Scenario: {selectedScenario?.manifest.title ?? 'Loading'}
+      </summary>
+      <div className="scenario-menu-panel">
+        <Suspense fallback={<p>Loading scenario catalogue…</p>}>
+          <ScenarioPanel
+            onResolverReady={handleResolverReady}
+            onScenarioReady={handleScenarioReady}
+            onSelectionChange={handleSelectionChange}
+          />
+        </Suspense>
+      </div>
+    </details>
+  );
+  const restart = async () => {
+    if (
+      !window.confirm(
+        'Restarting will replace your current gameplay. Continue?',
+      )
+    ) {
+      setBrowserActionMessage('Restart cancelled.');
+      return;
+    }
+    setBrowserActionMessage(undefined);
+    await actions?.close();
+    if (
+      selectedScenario &&
+      stackSeedScenario &&
+      !scenarioCoordinatesEqual(
+        createScenarioCoordinate(selectedScenario),
+        createScenarioCoordinate(stackSeedScenario),
+      )
+    ) {
+      setStackSeedScenario(selectedScenario);
+      return;
+    }
+    await actions?.start();
+  };
+  return (
+    <GameShell
+      status={
+        browserActionMessage ?? state?.message ?? persistenceMessage ?? status
+      }
+      pacingStatus={pacing?.status ?? 'idle'}
+      persistenceStatus={application?.persistence.status ?? 'idle'}
+      saveDisabled={!ready}
+      restartDisabled={
+        !actions ||
+        scenarioSelection.status !== 'ready' ||
+        !selectedScenario ||
+        state?.operation !== 'idle'
+      }
+      onSave={action(actions?.save)}
+      onRestart={action(restart)}
+      onPauseResume={action(
+        () =>
+          actions?.mode(pacing?.mode === 'paused' ? 'normal' : 'paused') ??
+          Promise.resolve(),
+      )}
+      scenarioControl={scenarioControl}
+      projectInfo={
+        <Suspense fallback={<p>Loading project information…</p>}>
+          <ProjectInfo />
+        </Suspense>
+      }
+      simulationControls={simulationControls}
+      primaryVisualization={
+        authoritativeScenarioPackage && fleet ? (
           <VehicleMovementSvg
             scenario={authoritativeScenarioPackage}
             fleet={fleet}
           />
-        ) : null}
-        <div aria-label="Authoritative transport Worker status">
-          <p data-testid="worker-status">Worker status: {status}</p>
-          <p data-testid="worker-tick">
-            Worker tick:{' '}
-            {application?.authoritative?.simulationTick ?? 'pending'}
-          </p>
-          <p data-testid="worker-timeline">
-            Timeline:{' '}
-            {session?.status === 'ready' ? session.timelineId : 'pending'}
-          </p>
-          <p data-testid="command-revision">
-            Command revision:{' '}
-            {application?.authoritative?.commandRevision ?? 'pending'}
-          </p>
-          <p data-testid="stream-offset">
-            Stream offset:{' '}
-            {application?.authoritative?.streamOffset ?? 'pending'}
-          </p>
-          <p data-testid="scenario-coordinate">
-            Scenario coordinate:{' '}
-            {application?.scenario
-              ? `${application.scenario.scenarioSchemaVersion}:${application.scenario.scenarioId}@${application.scenario.scenarioVersion}#${application.scenario.contentHash}`
-              : 'pending'}
-          </p>
-          <p data-testid="selected-scenario">
-            Selected scenario:{' '}
-            {selectedScenario?.manifest.scenarioId ?? 'pending'}
-          </p>
-          <p data-testid="requested-scenario">
-            Requested scenario:{' '}
-            {scenarioSelection.requestedScenarioId ?? 'pending'} (
-            {scenarioSelection.status})
-          </p>
-          <p data-testid="active-scenario">
-            Active authoritative scenario:{' '}
-            {application?.scenario?.scenarioId ?? 'pending'}
-          </p>
-          {selectedScenario &&
-          application?.scenario &&
-          selectedScenario.manifest.scenarioId !==
-            application.scenario.scenarioId ? (
-            <p>
-              Selected scenario will become active when a new session is
-              started.
-            </p>
-          ) : null}
-          <div aria-label="Vehicle diagnostics">
-            <label>
-              Vehicle route
-              <select
-                value={selectedRouteId ?? ''}
-                disabled={!ready || !authoritativeScenarioPackage}
-                onChange={(event) => {
-                  selectedRouteIdRef.current = event.target.value;
-                  setSelectedRouteId(event.target.value);
-                }}
-              >
-                {authoritativeScenarioPackage?.routes.routes.map((route) => (
-                  <option key={route.routeId} value={route.routeId}>
-                    {route.publicCode} — {route.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <div
-              data-testid="route-list"
-              aria-label="Canonical routes"
-              data-authoritative-scenario-id={
-                authoritativeScenarioPackage?.manifest.scenarioId
-              }
-              data-authoritative-content-hash={
-                authoritativeScenarioPackage?.manifest.contentHash
-              }
-            >
-              {authoritativeScenarioPackage?.routes.routes.map((route) => (
-                <div key={route.routeId} data-route-id={route.routeId}>
-                  <strong>
-                    {route.publicCode} — {route.name}
-                  </strong>{' '}
-                  <span>{route.routeId}</span>
-                  <ol>
-                    {route.patterns.map((pattern) => (
-                      <li
-                        key={pattern.patternId}
-                        data-pattern-id={pattern.patternId}
-                      >
-                        {pattern.directionLabel} ({pattern.stopNodeIds.length}{' '}
-                        stops)
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              ))}
-            </div>
-            <button
-              disabled={!ready || !authoritativeScenarioPackage}
-              onClick={action(actions?.createVehicle)}
-            >
-              Create demo vehicle
-            </button>
-            {currentAuthoritativePackageState?.status === 'loading' ? (
-              <p>Authoritative scenario package loading.</p>
-            ) : null}
-            {currentAuthoritativePackageState?.status === 'failed' ? (
-              <p role="alert">{currentAuthoritativePackageState.message}</p>
-            ) : null}
-            <p data-testid="vehicle-count">
-              Vehicle count: {fleet?.length ?? 0}
-            </p>
-            <p data-testid="vehicle-id">
-              Vehicle: {firstVehicle?.vehicleId ?? 'none'}
-            </p>
-            <p data-testid="vehicle-pattern">
-              Pattern: {firstVehicle?.patternId ?? 'none'}
-            </p>
-            <p data-testid="vehicle-movement">
-              Movement: {firstVehicle?.movement.kind ?? 'none'}
-            </p>
-            <p data-testid="vehicle-location">
-              Location:{' '}
-              {firstVehicle?.movement.kind === 'running-on-edge'
-                ? firstVehicle.movement.edgeId
-                : (firstVehicle?.movement.stopNodeId ?? 'none')}
-            </p>
-            <p data-testid="vehicle-progress">
-              Progress:{' '}
-              {firstVehicle?.movement.kind === 'running-on-edge'
-                ? `${firstVehicle.movement.progressTicks}/${firstVehicle.movement.travelTicks}`
-                : 'not-on-edge'}
-            </p>
-            <div
-              data-testid="vehicle-list"
-              aria-label="Authoritative fleet"
-              data-authoritative-scenario-id={
-                authoritativeScenarioPackage?.manifest.scenarioId
-              }
-              data-authoritative-content-hash={
-                authoritativeScenarioPackage?.manifest.contentHash
-              }
-            >
-              {fleet?.map((vehicle) => {
-                const movement = vehicle.movement;
-                const onEdge = movement.kind === 'running-on-edge';
-                return (
-                  <div
-                    key={vehicle.vehicleId}
-                    data-testid={`vehicle-row-${vehicle.vehicleId}`}
-                    data-vehicle-id={vehicle.vehicleId}
-                    data-pattern-id={vehicle.patternId}
-                    data-route-id={vehicle.routeId}
-                    data-route-leg-index={vehicle.routeLegIndex}
-                    data-completed-route-cycles={vehicle.completedRouteCycles}
-                    data-plan-travel-ticks={vehicle.movementPlan.edgeTravelTicks.join(
-                      ',',
-                    )}
-                    data-movement-kind={movement.kind}
-                    data-stop-id={onEdge ? undefined : movement.stopNodeId}
-                    data-edge-id={onEdge ? movement.edgeId : undefined}
-                    data-edge-sequence={
-                      onEdge ? movement.edgeSequence : undefined
-                    }
-                    data-progress-numerator={
-                      onEdge ? movement.progressTicks : undefined
-                    }
-                    data-progress-denominator={
-                      onEdge ? movement.travelTicks : undefined
-                    }
-                  >
-                    <span>{vehicle.vehicleId}</span>{' '}
-                    <span>{vehicle.patternId}</span>{' '}
-                    <span>{movement.kind}</span>{' '}
-                    <span>
-                      {onEdge
-                        ? `${movement.edgeId} ${movement.progressTicks}/${movement.travelTicks}`
-                        : movement.stopNodeId}
-                    </span>{' '}
-                    {movement.kind === 'parked-at-stop' ? (
-                      <button
-                        disabled={!ready}
-                        onClick={action(
-                          () =>
-                            actions?.startVehicle(vehicle.vehicleId) ??
-                            Promise.resolve(),
-                        )}
-                      >
-                        Start {vehicle.vehicleId}
-                      </button>
-                    ) : null}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div aria-label="Foundation pacing controls">
-            <button
-              disabled={!ready}
-              onClick={action(
-                () => actions?.mode('paused') ?? Promise.resolve(),
-              )}
-            >
-              Pause
-            </button>
-            <button
-              disabled={!ready}
-              onClick={action(
-                () => actions?.mode('normal') ?? Promise.resolve(),
-              )}
-            >
-              Normal 20×
-            </button>
-            <button
-              disabled={!ready}
-              onClick={action(() => actions?.mode('fast') ?? Promise.resolve())}
-            >
-              Fast 50×
-            </button>
-            <button
-              disabled={!ready}
-              onClick={action(
-                () => actions?.mode('maximum') ?? Promise.resolve(),
-              )}
-            >
-              Maximum 60×
-            </button>
-            <button disabled={!ready} onClick={action(actions?.bonus)}>
-              Grant demo 2× bonus
-            </button>
-            <p data-testid="pacing-rate">
-              Effective rate: {pacing?.effectiveRate ?? 0}×
-            </p>
-            <p data-testid="pacing-status">
-              Pacing status: {pacing?.status ?? 'idle'}
-              {pacing?.message ? `: ${pacing.message}` : ''}
-            </p>
-            <p data-testid="bonus-ticks">
-              Bonus ticks remaining:{' '}
-              {pacing?.remainingDoubleSpeedBonusTicks ?? 0}
-            </p>
-            <p data-testid="pacing-credit">
-              Pacing credit: {pacing?.creditGameMicroseconds ?? 0}
-            </p>
-            <fieldset>
-              <legend>Save mode</legend>
-              <label>
-                <input
-                  type="radio"
-                  name="save-mode"
-                  checked={(state?.saveMode ?? 'manual') === 'manual'}
-                  disabled={!actions || state?.operation !== 'idle'}
-                  onChange={action(
-                    () => actions?.saveMode('manual') ?? Promise.resolve(),
-                  )}
-                />
-                Manual
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="save-mode"
-                  checked={state?.saveMode === 'autosave'}
-                  disabled={!actions || state?.operation !== 'idle'}
-                  onChange={action(
-                    () => actions?.saveMode('autosave') ?? Promise.resolve(),
-                  )}
-                />
-                Autosave
-              </label>
-            </fieldset>
-            <button disabled={!ready} onClick={action(actions?.save)}>
-              {state?.saveMode === 'autosave'
-                ? 'Save autosave now'
-                : 'Save transport session'}
-            </button>
-            <button
-              disabled={!ready || !selectedSaveAvailable}
-              onClick={action(actions?.restore)}
-            >
-              {state?.saveMode === 'autosave'
-                ? 'Restore autosave'
-                : 'Restore manual save'}
-            </button>
-            <p data-testid="manual-save-availability">
-              Manual save:{' '}
-              {state?.manualSaveAvailable ? 'available' : 'not available'}
-            </p>
-            <p data-testid="autosave-availability">
-              Autosave:{' '}
-              {state?.autosaveSaveAvailable ? 'available' : 'not available'}
-            </p>
-            <p data-testid="save-count">
-              Saved sessions: {application?.persistence.saves.length ?? 0}
-            </p>
-            <p data-testid="legacy-save-count">
-              Legacy incompatible saves:{' '}
-              {application?.persistence.saves.filter(
-                (save) => save.compatibility === 'legacy-incompatible',
-              ).length ?? 0}
-            </p>
-            <div data-testid="save-library" aria-label="Save library">
-              {application?.persistence.saves.map((save) => {
-                const title = save.scenarioId
-                  ? ([...scenarioCache.current.values()].find(
-                      (scenario) =>
-                        scenario.manifest.scenarioId === save.scenarioId,
-                    )?.manifest.title ?? save.scenarioId)
-                  : 'Legacy Foundation save';
-                const restorable =
-                  save.compatibility === 'current' ||
-                  save.compatibility === 'migratable';
-                return (
-                  <div key={save.saveId} data-save-id={save.saveId}>
-                    <span>{title}</span>{' '}
-                    <span>{save.scenarioId ?? 'foundation'}</span>{' '}
-                    <span>{save.scenarioSchemaVersion ?? 'legacy'}</span>{' '}
-                    <span>{save.scenarioVersion ?? 'legacy'}</span>{' '}
-                    <span>{save.contentHash?.slice(0, 8) ?? 'no-hash'}</span>{' '}
-                    <span>{save.label ?? 'Saved session'}</span>{' '}
-                    <span>tick {save.sourceSimulationTick}</span>{' '}
-                    <span>vehicles {save.authoritativeEntityCount ?? 0}</span>{' '}
-                    <span>snapshot {save.snapshotVersion ?? 'legacy'}</span>{' '}
-                    <span>{save.compatibility ?? 'legacy-incompatible'}</span>{' '}
-                    {restorable ? (
-                      <button
-                        disabled={!ready}
-                        onClick={action(
-                          () =>
-                            actions?.restoreSave(save.saveId) ??
-                            Promise.resolve(),
-                        )}
-                      >
-                        Restore {title} at tick {save.sourceSimulationTick}
-                      </button>
-                    ) : null}
-                  </div>
-                );
-              })}
-            </div>
-            <p data-testid="persistence-status">
-              Persistence status: {application?.persistence.status ?? 'idle'}
-              {persistenceMessage ? `: ${persistenceMessage}` : ''}
-            </p>
-            {state?.message ? (
-              <p role="alert">Session action failed: {state.message}</p>
-            ) : null}
-            {browserActionMessage ? (
-              <p role="alert" data-testid="browser-action-message">
-                {browserActionMessage}
-              </p>
-            ) : null}
-          </div>
-          {state?.canStartNewSession ? (
-            <button
-              type="button"
-              disabled={
-                !actions ||
-                scenarioSelection.status !== 'ready' ||
-                !selectedScenario ||
-                selectedScenario.manifest.scenarioId !==
-                  scenarioSelection.requestedScenarioId
-              }
-              onClick={action(async () => {
-                if (
-                  selectedScenario &&
-                  stackSeedScenario &&
-                  !scenarioCoordinatesEqual(
-                    createScenarioCoordinate(selectedScenario),
-                    createScenarioCoordinate(stackSeedScenario),
-                  )
-                ) {
-                  setStackSeedScenario(selectedScenario);
-                  return;
-                }
-                await actions?.start();
-              })}
-            >
-              Start new transport session
-            </button>
-          ) : (
-            <button
-              type="button"
-              disabled={!actions || state?.operation === 'closing'}
-              onClick={action(actions?.close)}
-            >
-              Close transport Worker
-            </button>
-          )}
-        </div>
-      </section>
-      <Suspense fallback={<p>Loading scenario catalogue…</p>}>
-        <ScenarioPanel
-          onResolverReady={handleResolverReady}
-          onScenarioReady={handleScenarioReady}
-          onSelectionChange={handleSelectionChange}
-        />
-      </Suspense>
-      <Suspense fallback={<p>Loading representation…</p>}>
-        <FoundationScene />
-      </Suspense>
-    </main>
+        ) : (
+          <p>Authoritative scenario representation loading.</p>
+        )
+      }
+      secondaryVisualization={
+        <Suspense fallback={<p>Loading representation…</p>}>
+          <FoundationScene />
+        </Suspense>
+      }
+    />
   );
 }
 
 const FoundationScene = lazy(() => import('./foundation-scene.js'));
+const ProjectInfo = lazy(() => import('./ui/ProjectInfo.js'));
 const ScenarioPanel = lazy(() =>
   import('./scenarios/ScenarioPanel.js').then(({ ScenarioPanel }) => ({
     default: ScenarioPanel,

@@ -24,12 +24,16 @@ const workerChunks = javascript.filter((file) =>
   /(?:^|\/)\w[\w.-]*\.worker-[\w-]+\.js$/.test(file),
 );
 const entry = one(/^index-[\w-]+\.js$/);
+const dialogShell = one(/^AccessibleDialog-[\w-]+\.js$/);
+const projectInfo = one(/^ProjectInfo-[\w-]+\.js$/);
 const representation = one(/^foundation-scene-[\w-]+\.js$/);
 const register = one(/^registerSW\.js$/);
 const serviceWorker = one(/^sw\.js$/);
 const workbox = one(/^workbox-[\w-]+\.js$/);
 for (const [name, matches] of Object.entries({
   application: entry,
+  dialogShell,
+  projectInfo,
   representation,
   transportWorker,
   registerSW: register,
@@ -54,6 +58,8 @@ const configured = JSON.parse(
 const size = async (file) => (await stat(new URL(file, dist))).size;
 const sizes = {
   applicationEntry: await size(entry[0]),
+  dialogShell: await size(dialogShell[0]),
+  projectInfo: await size(projectInfo[0]),
   representation: await size(representation[0]),
   transportWorker: await size(transportWorker[0]),
   totalEmittedJavaScript: (await Promise.all(javascript.map(size))).reduce(

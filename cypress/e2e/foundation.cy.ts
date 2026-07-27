@@ -23,6 +23,34 @@ describe('foundation screen', () => {
   it('renders without a fatal application error', () => {
     cy.visit('/');
     cy.contains('h1', 'Torrevieja Tycoon').should('be.visible');
+    cy.get('[data-testid="game-shell"]').should('be.visible');
+    cy.get('[data-testid="top-navigation"]').should('be.visible');
+    cy.get('[data-testid="primary-visualization"]').should(
+      'have.attr',
+      'data-view',
+      'transport',
+    );
+    cy.get('[data-testid="secondary-minimap"]').should(
+      'have.attr',
+      'data-view',
+      'three',
+    );
+    cy.document()
+      .its('documentElement.scrollHeight')
+      .then((height) => {
+        cy.window().its('innerHeight').should('equal', height);
+      });
+    cy.contains('button', 'Swap visualizations').click();
+    cy.get('[data-testid="primary-visualization"]').should(
+      'have.attr',
+      'data-view',
+      'three',
+    );
+    cy.contains('button', 'Project info').focus().click();
+    cy.get('[role="dialog"]').should('contain.text', 'Project foundation');
+    cy.get('body').type('{esc}');
+    cy.contains('button', 'Project info').should('have.focus');
+    cy.contains('button', 'Simulation controls').click();
     cy.get('canvas').should('be.visible');
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="worker-tick"]').should('contain.text', '0');
@@ -33,7 +61,7 @@ describe('foundation screen', () => {
     cy.contains('button', 'Grant demo 2× bonus').click();
     cy.get('[data-testid="pacing-rate"]').should('contain.text', '40×');
     cy.get('[data-testid="bonus-ticks"]').should('not.contain.text', '24');
-    cy.contains('button', 'Pause').click();
+    cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="worker-tick"]')
       .invoke('text')
       .then((pausedTick) => {
@@ -52,6 +80,8 @@ describe('foundation screen', () => {
 
   it('keeps selection separate from authority and restores both scenarios', () => {
     cy.visit('/');
+    cy.get('[data-testid="scenario-menu-trigger"]').click();
+    cy.contains('button', 'Simulation controls').click();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
@@ -109,7 +139,7 @@ describe('foundation screen', () => {
         initialVehiclePosition,
       ),
     );
-    cy.contains('button', 'Pause').click();
+    cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     cy.contains('button', 'Start browser-demo-vehicle-002').click();
     cy.contains('button', /^Normal /).click();
@@ -118,7 +148,7 @@ describe('foundation screen', () => {
       'data-movement-kind',
       'running-on-edge',
     );
-    cy.contains('button', 'Pause').click();
+    cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     let fullTick = 0;
     let fullTimeline = '';
@@ -152,7 +182,7 @@ describe('foundation screen', () => {
     ).as('loadMiniSelection');
     cy.contains('label', 'Scenario')
       .find('select')
-      .select('torrevieja-mini-v1');
+      .select('torrevieja-mini-v1', { force: true });
     cy.get('[data-testid="requested-scenario"]').should(
       'contain.text',
       'torrevieja-mini-v1 (loading)',
@@ -197,7 +227,7 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0),
     );
-    cy.contains('button', 'Pause').click();
+    cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     let miniTick = 0;
     let miniSvg: VehicleSvgState;
@@ -260,7 +290,7 @@ describe('foundation screen', () => {
         expect(current).not.to.deep.equal(miniSvg),
       ),
     );
-    cy.contains('button', 'Pause').click();
+    cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     vehicleSvgState().then((snapshot) => {
       cy.wait(350);

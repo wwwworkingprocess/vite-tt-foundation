@@ -1,5 +1,20 @@
 # Development Roadmap
 
+## Pre-Phase-4D shell refinement
+
+The Phase 4C authority is presented through a single-screen,
+visualization-first browser shell. Project metadata and detailed
+simulation/persistence diagnostics are available through accessible dialogs;
+scenario and principal session actions remain in compact navigation. SVG and
+R3F views can exchange primary/minimap roles without changing authority.
+
+This does not begin Phase 4D. A future city filter may narrow the scenario
+catalogue using stable Wikidata Q-codes, and a later campaign screen may own
+city progression. The current shell introduces neither state. The SVG remains
+the authoritative diagnostic representation while the R3F boundary remains
+available for a later production renderer based on line segments and instanced
+elements.
+
 The roadmap separates platform construction, architecture research, simulation development, representation, and game mechanics.
 
 ## Phase 0 — Architecture contract

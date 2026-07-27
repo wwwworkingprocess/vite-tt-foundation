@@ -258,6 +258,12 @@ vi.mock('./transport-simulation/browser-transport-worker.js', async () => {
 
 import { App } from './App.js';
 
+const renderAppWithControls = () => {
+  render(<App />);
+  fireEvent.click(screen.getByTestId('scenario-menu-trigger'));
+  fireEvent.click(screen.getByRole('button', { name: 'Simulation controls' }));
+};
+
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
@@ -269,15 +275,16 @@ describe('foundation screen', () => {
     expect(
       screen.getByRole('heading', { name: 'Torrevieja Tycoon' }),
     ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Project info' }));
     expect(
-      screen.getByText('standalone simulation package'),
+      await screen.findByText('standalone simulation package'),
     ).toBeInTheDocument();
     expect(await screen.findByTestId('r3f-canvas')).toBeInTheDocument();
   });
 
   it('reports Worker readiness, advancement, and cleanup', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
-    render(<App />);
+    renderAppWithControls();
 
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
@@ -314,7 +321,7 @@ describe('foundation screen', () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
     const intervals = vi.spyOn(window, 'setInterval');
     const clears = vi.spyOn(window, 'clearInterval');
-    render(<App />);
+    renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -380,7 +387,7 @@ describe('foundation screen', () => {
 
   it('never starts the previous ready package while a requested selection is pending or failed', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
-    render(<App />);
+    renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -413,7 +420,7 @@ describe('foundation screen', () => {
 
   it('exposes deterministic vehicle diagnostics from the authoritative Worker', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
-    render(<App />);
+    renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -469,7 +476,11 @@ describe('foundation screen', () => {
         /running-on-edge|running-at-stop|completed-at-stop/,
       ),
     );
-    fireEvent.click(screen.getByRole('button', { name: 'Pause' }));
+    fireEvent.click(
+      within(
+        screen.getByRole('dialog', { name: 'Simulation controls' }),
+      ).getByRole('button', { name: 'Pause' }),
+    );
     await waitFor(() =>
       expect(screen.getByTestId('pacing-status')).toHaveTextContent('paused'),
     );
@@ -516,7 +527,7 @@ describe('foundation screen', () => {
 
   it('lists canonical legacy routes and creates a vehicle on the chosen RouteId', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
-    render(<App />);
+    renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -574,7 +585,7 @@ describe('foundation screen', () => {
 
   it('keeps selection non-destructive and replaces every authority-bound surface together', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
-    render(<App />);
+    renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -672,7 +683,7 @@ describe('foundation screen', () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
     const confirm = vi.fn(() => true);
     vi.stubGlobal('confirm', confirm);
-    render(<App />);
+    renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );

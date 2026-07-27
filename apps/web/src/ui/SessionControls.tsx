@@ -1,5 +1,6 @@
 import type {
   FoundationSaveMode,
+  FoundationSaveOutcome,
   FoundationSessionCompositionState,
 } from '../foundation-session-composition.js';
 
@@ -10,7 +11,7 @@ export interface SessionControlsProps {
   readonly persistenceMessage?: string | undefined;
   readonly browserActionMessage?: string | undefined;
   readonly scenarioTitle: (scenarioId: string) => string | undefined;
-  readonly onSave?: (() => Promise<void>) | undefined;
+  readonly onSave?: (() => Promise<FoundationSaveOutcome>) | undefined;
   readonly onRestore?: (() => Promise<void>) | undefined;
   readonly onRestoreSave?: ((saveId: string) => Promise<void>) | undefined;
   readonly onSaveMode?:
@@ -20,7 +21,7 @@ export interface SessionControlsProps {
   readonly startDisabled: boolean;
 }
 
-const run = (operation: (() => Promise<void>) | undefined) => () => {
+const run = (operation: (() => Promise<unknown>) | undefined) => () => {
   void operation?.();
 };
 

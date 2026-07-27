@@ -61,6 +61,11 @@ export interface FoundationSessionTimer {
 }
 
 export type FoundationSaveMode = 'manual' | 'autosave';
+export type FoundationSaveOutcome =
+  | { readonly status: 'saved' }
+  | { readonly status: 'cancelled' }
+  | { readonly status: 'ignored' }
+  | { readonly status: 'failed'; readonly message: string };
 export type FoundationSessionOperation =
   | 'idle'
   | 'starting'
@@ -105,6 +110,15 @@ const errorMessage = (error: unknown) =>
   error instanceof Error ? error.message : 'Operation failed.';
 const legacySaveId = (mode: FoundationSaveMode) =>
   mode === 'manual' ? 'foundation-slot' : 'foundation-autosave';
+const savedOutcome = Object.freeze<FoundationSaveOutcome>({
+  status: 'saved',
+});
+const cancelledOutcome = Object.freeze<FoundationSaveOutcome>({
+  status: 'cancelled',
+});
+const ignoredOutcome = Object.freeze<FoundationSaveOutcome>({
+  status: 'ignored',
+});
 
 export function createFoundationSessionComposition(input: {
   readonly createStack: () => FoundationSessionStack;
@@ -387,7 +401,7 @@ export function createFoundationSessionComposition(input: {
     }
   }
 
-  async function saveManual() {
+  async function saveManual(): Promise<FoundationSaveOutcome> {
     const candidate = stack;
     const token = generation;
     if (
@@ -395,14 +409,14 @@ export function createFoundationSessionComposition(input: {
       !readyContext(candidate, token) ||
       store.getState().operation !== 'idle'
     )
-      return;
+      return ignoredOutcome;
     cancelAutosave();
     const mode = store.getState().saveMode;
     set({ operation: 'saving', message: undefined });
     try {
       if (mode === 'manual') {
         await candidate.application.listSaves();
-        if (!readyContext(candidate, token)) return;
+        if (!readyContext(candidate, token)) return ignoredOutcome;
         const application = candidate.application.projection.getState();
         const exists = application.persistence.saves.some((save) =>
           ownsQuickSlot(save, mode, application),
@@ -412,15 +426,22 @@ export function createFoundationSessionComposition(input: {
           const accepted = await input.confirm(
             `This will overwrite the manual save for ${application.scenario ? (input.scenarioTitle?.(application.scenario.scenarioId) ?? application.scenario.scenarioId) : 'this session'}. Continue?`,
           );
-          if (!readyContext(candidate, token)) return;
-          if (!accepted) return;
+          if (!readyContext(candidate, token)) return ignoredOutcome;
+          if (!accepted) return cancelledOutcome;
           set({ operation: 'saving' });
         }
       }
       await candidate.application.save(metadata(mode));
-      if (currentContext(candidate, token)) set({ message: undefined });
+      if (!currentContext(candidate, token)) return ignoredOutcome;
+      set({ message: undefined });
+      return savedOutcome;
     } catch (error) {
+      if (!currentContext(candidate, token)) return ignoredOutcome;
       recordError(error, candidate, token);
+      return deepFreeze({
+        status: 'failed',
+        message: errorMessage(error),
+      });
     } finally {
       finish(candidate, token);
     }

@@ -400,7 +400,9 @@ describe('foundation session composition', () => {
       scenarios: [scenarioA, scenarioB],
     });
     await composition.startNewSession();
-    await composition.saveManual();
+    await expect(composition.saveManual()).resolves.toEqual({
+      status: 'saved',
+    });
     const manualA = createScenarioScopedSaveTarget('manual', scenarioA);
     expect(stacks[0]!.save).toHaveBeenLastCalledWith(
       expect.objectContaining({ saveId: manualA }),
@@ -436,6 +438,32 @@ describe('foundation session composition', () => {
     );
     expect(confirm).toHaveBeenCalledWith(
       expect.stringContaining('scenario-a at tick'),
+    );
+  });
+
+  it('reports saved, cancelled, ignored, and failed manual save outcomes truthfully', async () => {
+    const answers = [false];
+    const { composition, stacks } = harness({
+      confirm: () => answers.shift() ?? true,
+    });
+
+    await expect(composition.saveManual()).resolves.toEqual({
+      status: 'ignored',
+    });
+    await composition.startNewSession();
+    await expect(composition.saveManual()).resolves.toEqual({
+      status: 'saved',
+    });
+    await expect(composition.saveManual()).resolves.toEqual({
+      status: 'cancelled',
+    });
+    stacks[0]!.save.mockRejectedValueOnce(new Error('Repository unavailable.'));
+    await expect(composition.saveManual()).resolves.toEqual({
+      status: 'failed',
+      message: 'Repository unavailable.',
+    });
+    expect(composition.projection.getState().message).toBe(
+      'Repository unavailable.',
     );
   });
 
@@ -880,7 +908,10 @@ describe('foundation session composition', () => {
     const { composition, stacks } = harness({ confirm });
     await expect(composition.startNewSession()).resolves.toBeUndefined();
     await composition.saveManual();
-    await expect(composition.saveManual()).resolves.toBeUndefined();
+    await expect(composition.saveManual()).resolves.toEqual({
+      status: 'failed',
+      message: 'dialog unavailable',
+    });
     expect(composition.projection.getState().message).toBe(
       'dialog unavailable',
     );

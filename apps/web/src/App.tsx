@@ -24,6 +24,7 @@ import {
 import {
   createFoundationSessionComposition,
   type FoundationSaveMode,
+  type FoundationSaveOutcome,
   type FoundationSessionCompositionState,
 } from './foundation-session-composition.js';
 import { createDefaultBrowserPacingDriver } from './pacing/browser-pacing-driver.js';
@@ -47,7 +48,7 @@ const VehicleMovementSvg = lazy(() =>
 type Actions = Readonly<{
   mode: (mode: 'paused' | 'normal' | 'fast' | 'maximum') => Promise<void>;
   bonus: () => Promise<void>;
-  save: () => Promise<void>;
+  save: () => Promise<FoundationSaveOutcome>;
   restore: () => Promise<void>;
   restoreSave: (saveId: string) => Promise<void>;
   saveMode: (mode: 'manual' | 'autosave') => Promise<void>;
@@ -498,7 +499,10 @@ export function App() {
         !selectedScenario ||
         state?.operation !== 'idle'
       }
-      onSave={() => actions?.save() ?? Promise.resolve()}
+      onSave={() =>
+        actions?.save() ??
+        Promise.resolve(Object.freeze({ status: 'ignored' as const }))
+      }
       onRestart={action(restart)}
       onPauseResume={action(
         () =>

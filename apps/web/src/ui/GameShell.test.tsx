@@ -1,10 +1,15 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
+import type { FoundationSaveOutcome } from '../foundation-session-composition.js';
 import { GameShell } from './GameShell.js';
 
 afterEach(cleanup);
 
-const renderShell = (save = vi.fn(async () => {})) => {
+const renderShell = (
+  save: () => Promise<FoundationSaveOutcome> = vi.fn(
+    async (): Promise<FoundationSaveOutcome> => ({ status: 'saved' }),
+  ),
+) => {
   const restart = vi.fn();
   render(
     <GameShell
@@ -115,19 +120,35 @@ it('closes dialogs from the backdrop and keeps direct session actions accessible
   expect(restart).toHaveBeenCalledOnce();
 });
 
-it('announces successful and failed navigation saves', async () => {
-  const success = vi.fn(async () => {});
+it('announces only truthful navigation save outcomes', async () => {
+  const success = vi.fn(async () => ({ status: 'saved' as const }));
   renderShell(success);
   fireEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect(await screen.findByText(/Save completed\./)).toBeInTheDocument();
   cleanup();
 
-  const failure = vi.fn(async () => {
-    throw new Error('Repository unavailable.');
-  });
+  const cancelled = vi.fn(async () => ({ status: 'cancelled' as const }));
+  renderShell(cancelled);
+  fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+  expect(await screen.findByText(/Save cancelled\./)).toBeInTheDocument();
+  expect(screen.queryByText(/Save completed\./)).toBeNull();
+  cleanup();
+
+  const ignored = vi.fn(async () => ({ status: 'ignored' as const }));
+  renderShell(ignored);
+  fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+  await vi.waitFor(() => expect(ignored).toHaveBeenCalledOnce());
+  expect(screen.queryByText(/Save completed\./)).toBeNull();
+  cleanup();
+
+  const failure = vi.fn(async () => ({
+    status: 'failed' as const,
+    message: 'Repository unavailable.',
+  }));
   renderShell(failure);
   fireEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect(
     await screen.findByText(/Repository unavailable\./),
   ).toBeInTheDocument();
+  expect(screen.queryByText(/Save completed\./)).toBeNull();
 });

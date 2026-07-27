@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { FoundationSaveOutcome } from '../foundation-session-composition.js';
 
 type DialogName = 'project' | 'simulation' | 'session';
 
@@ -23,7 +24,7 @@ export interface GameShellProps {
   readonly saveDisabled?: boolean;
   readonly restartDisabled?: boolean;
   readonly onPauseResume: () => void;
-  readonly onSave: () => Promise<void>;
+  readonly onSave: () => Promise<FoundationSaveOutcome>;
   readonly onRestart: () => void;
 }
 
@@ -67,8 +68,12 @@ export function GameShell({
   const save = async () => {
     setSaveFeedback(undefined);
     try {
-      await onSave();
-      setSaveFeedback('Save completed.');
+      const outcome = await onSave();
+      if (outcome.status === 'saved') setSaveFeedback('Save completed.');
+      else if (outcome.status === 'cancelled')
+        setSaveFeedback('Save cancelled.');
+      else if (outcome.status === 'failed')
+        setSaveFeedback(outcome.message || 'Save failed.');
     } catch (error) {
       setSaveFeedback(
         error instanceof Error && error.message

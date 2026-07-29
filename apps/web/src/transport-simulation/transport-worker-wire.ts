@@ -2,6 +2,8 @@ import { z } from 'zod';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import {
   createTransportSimulationState,
+  parsePassengerDemandPlan,
+  parsePassengerDemandProjection,
   parseSimulationTick,
   parseTransportSimulationSnapshot,
   parseVehicleFleetSnapshot,
@@ -62,6 +64,20 @@ const transportSnapshot = z.unknown().transform((value, context) => {
     return z.NEVER;
   }
 });
+const passengerDemandPlan = z
+  .unknown()
+  .transform((value, context) => {
+    try {
+      return parsePassengerDemandPlan(value);
+    } catch {
+      context.addIssue({
+        code: 'custom',
+        message: 'Invalid passenger demand plan.',
+      });
+      return z.NEVER;
+    }
+  })
+  .optional();
 const identity = { gameId: z.string(), timelineId: z.string() };
 const connectPayload = z.discriminatedUnion('mode', [
   z.strictObject({
@@ -71,6 +87,7 @@ const connectPayload = z.discriminatedUnion('mode', [
     ...identity,
     initialSimulationTick: z.number().int().nonnegative().safe(),
     scenario: canonicalScenario,
+    passengerDemandPlan,
   }),
   z.strictObject({
     kind: z.literal('transport-client-connect'),
@@ -79,6 +96,7 @@ const connectPayload = z.discriminatedUnion('mode', [
     ...identity,
     scenario: canonicalScenario,
     snapshot: transportSnapshot,
+    passengerDemandPlan,
   }),
 ]);
 const vehicleId = z
@@ -178,6 +196,7 @@ const publication = z.discriminatedUnion('channel', [
     channel: z.literal('reliable'),
     payload: foundationStateUpdateSchema.extend({
       fleet: z.array(z.unknown()).readonly(),
+      passengerDemand: z.unknown(),
     }),
   }),
   z.strictObject({
@@ -186,6 +205,7 @@ const publication = z.discriminatedUnion('channel', [
     channel: z.literal('render'),
     payload: foundationRenderSnapshotSchema.extend({
       fleet: z.array(z.unknown()).readonly(),
+      passengerDemand: z.unknown(),
     }),
   }),
 ]);
@@ -210,12 +230,14 @@ export function parseTransportSynchronizationResult(
       foundation: z.unknown(),
       scenario: coordinate,
       fleet: z.array(z.unknown()).readonly(),
+      passengerDemand: z.unknown(),
     })
     .parse(value);
   return deepFreeze({
     ...parsed,
     foundation: parseFoundationSynchronizationResponse(parsed.foundation),
     fleet: parseVehicleFleetSnapshot(parsed.fleet),
+    passengerDemand: parsePassengerDemandProjection(parsed.passengerDemand),
   }) as TransportSynchronizationResponse;
 }
 
@@ -269,6 +291,9 @@ export function parseTransportWorkerResponse(
       payload: {
         ...parsed.payload,
         fleet: parseVehicleFleetSnapshot(parsed.payload.fleet),
+        passengerDemand: parsePassengerDemandProjection(
+          parsed.payload.passengerDemand,
+        ),
       },
     }) as TransportWorkerResponse;
   if (parsed.kind !== 'transport-worker-result') return parsed;

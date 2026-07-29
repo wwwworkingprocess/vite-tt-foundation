@@ -1,7 +1,11 @@
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
-import type {
-  ScenarioCoordinate,
-  VehicleState,
+import {
+  projectPassengerDemand,
+  type ActivePassengerDemandState,
+  type PassengerDemandPlanV1,
+  type PassengerDemandProjection,
+  type ScenarioCoordinate,
+  type VehicleState,
 } from '@torrevieja-tycoon/simulation';
 import {
   parseClientId,
@@ -16,6 +20,7 @@ import {
 import {
   migrateTransportSaveRecordV1,
   migrateTransportSaveRecordV2,
+  migrateTransportSaveRecordV3,
   parseTransportSaveRecord,
   type PersistedSaveClassification,
   type TransportSaveRecord,
@@ -28,6 +33,11 @@ import type {
 
 export interface ScenarioResolver {
   resolve(coordinate: ScenarioCoordinate): Promise<CanonicalScenario>;
+}
+export interface PassengerDemandPlanResolver {
+  resolve(
+    coordinate: ActivePassengerDemandState['demandPlanCoordinate'],
+  ): Promise<PassengerDemandPlanV1>;
 }
 
 export interface TransportSaveRepositoryPort {
@@ -46,6 +56,7 @@ export interface TransportApplicationProjection {
   readonly commandRevision?: number | undefined;
   readonly streamOffset?: number | undefined;
   readonly fleet?: readonly VehicleState[] | undefined;
+  readonly passengerDemand?: PassengerDemandProjection | undefined;
   readonly message?: string | undefined;
 }
 
@@ -61,6 +72,7 @@ export function createTransportApplicationController(input: {
   readonly createClient: () => TransportSimulationClient;
   readonly repository: TransportSaveRepositoryPort;
   readonly scenarioResolver: ScenarioResolver;
+  readonly passengerDemandPlanResolver?: PassengerDemandPlanResolver;
 }) {
   let state = freeze<TransportApplicationProjection>({ status: 'idle' });
   let client: TransportSimulationClient | undefined;
@@ -130,6 +142,7 @@ export function createTransportApplicationController(input: {
           commandRevision: update.commandRevision,
           streamOffset: update.streamOffset,
           fleet: update.fleet,
+          passengerDemand: update.passengerDemand,
         });
       }),
     );
@@ -209,6 +222,9 @@ export function createTransportApplicationController(input: {
         commandRevision: baseline.commandRevision,
         streamOffset: baseline.lastIncludedStreamOffset,
         fleet: exported.snapshot.state.fleet,
+        passengerDemand: projectPassengerDemand(
+          exported.snapshot.state.passengerDemand,
+        ),
       });
     } catch (error) {
       if (generation === token) generation += 1;
@@ -252,6 +268,7 @@ export function createTransportApplicationController(input: {
       gameId: GameId;
       timelineId: TimelineId;
       scenario: CanonicalScenario;
+      passengerDemandPlan?: PassengerDemandPlanV1;
       initialSimulationTick?: number;
     }) {
       if (sessionClaimed || closing || closed)
@@ -280,6 +297,9 @@ export function createTransportApplicationController(input: {
             timelineId,
             initialSimulationTick: request.initialSimulationTick ?? 0,
             scenario: request.scenario,
+            ...(request.passengerDemandPlan === undefined
+              ? {}
+              : { passengerDemandPlan: request.passengerDemandPlan }),
           },
           token,
         );
@@ -311,7 +331,8 @@ export function createTransportApplicationController(input: {
         if (
           classified.classification !== 'current' &&
           classified.classification !== 'migratable-transport-v1' &&
-          classified.classification !== 'migratable-transport-v2'
+          classified.classification !== 'migratable-transport-v2' &&
+          classified.classification !== 'migratable-transport-v3'
         ) {
           const error =
             classified.classification === 'unrelated'
@@ -323,14 +344,28 @@ export function createTransportApplicationController(input: {
         const restoredRecord =
           classified.classification === 'current'
             ? classified.record
-            : classified.classification === 'migratable-transport-v2'
-              ? migrateTransportSaveRecordV2(classified.record)
-              : migrateTransportSaveRecordV1(classified.record);
+            : classified.classification === 'migratable-transport-v3'
+              ? migrateTransportSaveRecordV3(classified.record)
+              : classified.classification === 'migratable-transport-v2'
+                ? migrateTransportSaveRecordV2(classified.record)
+                : migrateTransportSaveRecordV1(classified.record);
         let scenario: CanonicalScenario;
+        let passengerDemandPlan: PassengerDemandPlanV1 | undefined;
         try {
           scenario = await input.scenarioResolver.resolve(
             restoredRecord.scenario,
           );
+          if (
+            restoredRecord.snapshot.state.passengerDemand.status === 'active'
+          ) {
+            if (!input.passengerDemandPlanResolver)
+              throw new Error('Passenger demand plan resolver is unavailable.');
+            passengerDemandPlan =
+              await input.passengerDemandPlanResolver.resolve(
+                restoredRecord.snapshot.state.passengerDemand
+                  .demandPlanCoordinate,
+              );
+          }
         } catch (error) {
           if (client === previous && !closing && !closed)
             set({ ...previousState, message: errorMessage(error) });
@@ -372,6 +407,9 @@ export function createTransportApplicationController(input: {
               timelineId,
               scenario,
               snapshot: restoredRecord.snapshot,
+              ...(passengerDemandPlan === undefined
+                ? {}
+                : { passengerDemandPlan }),
             },
             token,
           );
@@ -449,6 +487,9 @@ export function createTransportApplicationController(input: {
                 commandRevision: exported.commandRevision,
                 streamOffset: exported.streamOffset,
                 fleet: exported.snapshot.state.fleet,
+                passengerDemand: projectPassengerDemand(
+                  exported.snapshot.state.passengerDemand,
+                ),
                 message: undefined,
               });
           }
@@ -492,6 +533,9 @@ export function createTransportApplicationController(input: {
               commandRevision: exported.commandRevision,
               streamOffset: exported.streamOffset,
               fleet: exported.snapshot.state.fleet,
+              passengerDemand: projectPassengerDemand(
+                exported.snapshot.state.passengerDemand,
+              ),
               message: undefined,
             });
         }

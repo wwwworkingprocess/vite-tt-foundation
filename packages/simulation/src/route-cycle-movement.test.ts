@@ -286,8 +286,8 @@ describe('repeating route-cycle movement', () => {
     const moving = advanceTransportTicks(started(), 9);
     const snapshot = createTransportSimulationSnapshot(moving);
     expect(snapshot).toMatchObject({
-      schemaVersion: 3,
-      simulationVersion: 'transport-3',
+      schemaVersion: 4,
+      simulationVersion: 'transport-4',
       state: {
         fleet: [
           {
@@ -309,7 +309,7 @@ describe('repeating route-cycle movement', () => {
       schemaVersion: 2,
       simulationVersion: 'transport-2',
       state: {
-        ...snapshot.state,
+        tick: snapshot.state.tick,
         fleet: snapshot.state.fleet.map((vehicle) => ({
           vehicleId: vehicle.vehicleId,
           label: vehicle.label,
@@ -320,7 +320,7 @@ describe('repeating route-cycle movement', () => {
       },
     };
     const migrated = migrateTransportSimulationSnapshotV2(v2);
-    expect(migrated).toMatchObject({ schemaVersion: 3 });
+    expect(migrated).toMatchObject({ schemaVersion: 4 });
     expect(migrated.state.fleet[0]).not.toHaveProperty('routeId');
     expect(migrated.state.fleet[0]?.movement.kind).toBe('running-on-edge');
     const completedV2 = structuredClone(v2);
@@ -340,6 +340,10 @@ describe('repeating route-cycle movement', () => {
       ...snapshot,
       schemaVersion: 2,
       simulationVersion: 'transport-2',
+      state: {
+        tick: snapshot.state.tick,
+        fleet: snapshot.state.fleet,
+      },
     };
     expect(
       migrateTransportSimulationSnapshotV2(routeShapedV2).state.fleet[0],

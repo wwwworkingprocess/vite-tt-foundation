@@ -33,6 +33,15 @@ export interface StopCatchmentStopSummary {
 }
 
 export interface StopCatchmentResult {
+  readonly scenario: Readonly<{
+    scenarioSchemaVersion: '1.0.0';
+    scenarioId: CanonicalScenario['manifest']['scenarioId'];
+    scenarioVersion: string;
+    contentHash: string;
+  }>;
+  readonly catchmentPolicy: Readonly<{
+    maxAccessDistanceCells: number;
+  }>;
   readonly grid: Readonly<{
     cityId: CityId;
     populationGridSchemaVersion: '1.0.0';
@@ -229,6 +238,15 @@ export function buildStopCatchments(input: {
       ? 10_000
       : Math.floor((servedPopulationWeight / totalPopulationWeight) * 10_000);
   return deepFreeze({
+    scenario: {
+      scenarioSchemaVersion: input.scenario.manifest.schemaVersion,
+      scenarioId: input.scenario.manifest.scenarioId,
+      scenarioVersion: input.scenario.manifest.scenarioVersion,
+      contentHash: input.scenario.manifest.contentHash,
+    },
+    catchmentPolicy: {
+      maxAccessDistanceCells: input.maxAccessDistanceCells,
+    },
     grid: {
       cityId: input.grid.cityId,
       populationGridSchemaVersion: input.grid.schemaVersion,

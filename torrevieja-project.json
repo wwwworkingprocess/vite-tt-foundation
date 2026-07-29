@@ -1,7 +1,7 @@
 {
   "defaultScenarioId": "torrevieja-legacy-abc-v1",
   "schemaVersions": {
-    "transportSimulationSnapshot": 3,
+    "transportSimulationSnapshot": 4,
     "transportSaveRecord": 3
   },
   "contractVersions": {
@@ -34,7 +34,8 @@
     "branches": 95,
     "files": [
       "packages/simulation/src/vehicle-movement.ts",
-      "packages/simulation/src/transport-simulation.ts"
+      "packages/simulation/src/transport-simulation.ts",
+      "packages/simulation/src/passenger-demand.ts"
     ]
   },
   "transportDomainCriticalCoverage": {
@@ -48,14 +49,14 @@
     ]
   },
   "buildBudgetsBytes": {
-    "applicationEntry": 440000,
+    "applicationEntry": 445000,
     "dialogShell": 8000,
     "projectInfo": 4000,
     "simulationControls": 8000,
     "sessionControls": 6000,
     "svgRepresentation": 6000,
     "representation": 1200000,
-    "transportWorker": 115000,
+    "transportWorker": 130000,
     "totalEmittedJavaScript": 1750000
   }
 }

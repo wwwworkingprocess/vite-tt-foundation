@@ -3,9 +3,11 @@ import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
+  advanceTransportTicks,
   createScenarioCoordinate,
   createTransportSimulationSnapshot,
   createTransportSimulationState,
+  parsePassengerDemandPlan,
 } from '@torrevieja-tycoon/simulation';
 import { parseGameId, parseTimelineId } from '@torrevieja-tycoon/protocol';
 import {
@@ -56,16 +58,159 @@ const record = () => {
     ),
   });
 };
+const demandPlan = () => {
+  const canonical = scenario();
+  return parsePassengerDemandPlan({
+    schemaVersion: '1.0.0',
+    demandModelContentHash: 'd'.repeat(64),
+    scenario: createScenarioCoordinate(canonical),
+    grid: {
+      cityId: 'Q36730',
+      populationGridSchemaVersion: '1.0.0',
+      gridVersion: '1.0.0',
+      rows: 1,
+      columns: 1,
+      resolutionDegrees: 0.001,
+      totalActiveCellCount: 1,
+      totalPopulationWeight: 1,
+    },
+    catchmentPolicy: { maxAccessDistanceCells: 5 },
+    emissionPolicy: {
+      emissionCreditsPerWeightPerTick: 1,
+      creditsPerPassenger: 1,
+    },
+    accessPolicy: { accessTicksPerCell: 1 },
+    cells: [
+      {
+        cellId: 'r0c0',
+        row: 0,
+        column: 0,
+        populationWeight: 1,
+        assignedStopPlaceId: 'fixture-stop',
+        distanceSquaredCells: 0,
+      },
+    ],
+    stops: [{ stopPlaceId: 'fixture-stop' }],
+  });
+};
 
 describe('transport application controller', () => {
+  it('deliberately migrates a Transport Save V1 before activation', async () => {
+    const canonical = scenario();
+    const value = record();
+    const v1 = {
+      ...value,
+      schemaVersion: 1,
+      snapshot: {
+        kind: 'transport-simulation-snapshot',
+        schemaVersion: 1,
+        simulationVersion: 'transport-1',
+        scenario: createScenarioCoordinate(canonical),
+        state: { tick: value.sourceSimulationTick },
+      },
+    };
+    const controller = createTransportApplicationController({
+      createClient: () => createDirectTransportSimulationClient(),
+      repository: {
+        get: async () => classifyPersistedSaveRecord(v1),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => canonical },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: canonical,
+    });
+    await controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('timeline-v1-restored'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-v1-restored',
+      simulationTick: 120,
+      fleet: [],
+      passengerDemand: { status: 'disabled' },
+    });
+    await controller.close();
+  });
+
+  it('resolves the exact active demand plan before restore teardown', async () => {
+    const canonical = scenario();
+    const plan = demandPlan();
+    const activeRecord = parseTransportSaveRecord({
+      ...record(),
+      saveId: 'active-demand',
+      sourceSimulationTick: 2,
+      snapshot: createTransportSimulationSnapshot(
+        advanceTransportTicks(
+          createTransportSimulationState(canonical, 0, plan),
+          2,
+        ),
+      ),
+    });
+    let resolutionFails = true;
+    const resolver = vi.fn(async () => {
+      if (resolutionFails) throw new Error('demand plan unavailable');
+      return plan;
+    });
+    const controller = createTransportApplicationController({
+      createClient: () => createDirectTransportSimulationClient(),
+      repository: {
+        get: async () => classifyPersistedSaveRecord(activeRecord),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => canonical },
+      passengerDemandPlanResolver: { resolve: resolver },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: canonical,
+    });
+    await expect(
+      controller.restore({
+        saveId: 'active-demand',
+        timelineId: parseTimelineId('timeline-demand'),
+      }),
+    ).rejects.toThrow('demand plan unavailable');
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-current',
+      passengerDemand: { status: 'disabled' },
+    });
+    resolutionFails = false;
+    await controller.restore({
+      saveId: 'active-demand',
+      timelineId: parseTimelineId('timeline-demand'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-demand',
+      passengerDemand: {
+        status: 'active',
+        processedThroughTick: 2,
+        totalEmittedPassengerCount: 2,
+      },
+    });
+    expect(resolver).toHaveBeenCalledTimes(2);
+    await controller.close();
+  });
+
   it('deliberately migrates a Transport Save V2 before activation', async () => {
     const v2 = structuredClone(record()) as unknown as {
       schemaVersion: number;
-      snapshot: { schemaVersion: number; simulationVersion: string };
+      snapshot: {
+        schemaVersion: number;
+        simulationVersion: string;
+        state: { passengerDemand?: unknown };
+      };
     };
     v2.schemaVersion = 2;
     v2.snapshot.schemaVersion = 2;
     v2.snapshot.simulationVersion = 'transport-2';
+    delete v2.snapshot.state.passengerDemand;
     const controller = createTransportApplicationController({
       createClient: () => createDirectTransportSimulationClient(),
       repository: {
@@ -88,6 +233,47 @@ describe('transport application controller', () => {
       timelineId: 'timeline-v2-restored',
       simulationTick: 120,
       fleet: [],
+    });
+    await controller.close();
+  });
+
+  it('deliberately migrates a Transport Save V3 before activation', async () => {
+    const value = structuredClone(record());
+    const v3 = {
+      ...value,
+      snapshot: {
+        kind: value.snapshot.kind,
+        scenario: value.snapshot.scenario,
+        schemaVersion: 3,
+        simulationVersion: 'transport-3',
+        state: {
+          tick: value.snapshot.state.tick,
+          fleet: value.snapshot.state.fleet,
+        },
+      },
+    };
+    const controller = createTransportApplicationController({
+      createClient: () => createDirectTransportSimulationClient(),
+      repository: {
+        get: async () => classifyPersistedSaveRecord(v3),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: scenario(),
+    });
+    await controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('timeline-v3-restored'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-v3-restored',
+      simulationTick: 120,
+      passengerDemand: { status: 'disabled' },
     });
     await controller.close();
   });

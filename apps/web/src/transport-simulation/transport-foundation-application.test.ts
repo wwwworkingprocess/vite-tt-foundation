@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
   createScenarioCoordinate,
+  parsePassengerDemandPlan,
   scenarioCoordinatesEqual,
 } from '@torrevieja-tycoon/simulation';
 import { parseGameId, parseTimelineId } from '@torrevieja-tycoon/protocol';
@@ -33,6 +34,38 @@ const scenario = parseScenarioPackage({
   routes: json('routes.json'),
   presentation: json('presentation.json'),
   provenance: json('provenance.json'),
+});
+const demandPlan = parsePassengerDemandPlan({
+  schemaVersion: '1.0.0',
+  demandModelContentHash: 'd'.repeat(64),
+  scenario: createScenarioCoordinate(scenario),
+  grid: {
+    cityId: 'Q36730',
+    populationGridSchemaVersion: '1.0.0',
+    gridVersion: '1.0.0',
+    rows: 1,
+    columns: 1,
+    resolutionDegrees: 0.001,
+    totalActiveCellCount: 1,
+    totalPopulationWeight: 1,
+  },
+  catchmentPolicy: { maxAccessDistanceCells: 5 },
+  emissionPolicy: {
+    emissionCreditsPerWeightPerTick: 1,
+    creditsPerPassenger: 1,
+  },
+  accessPolicy: { accessTicksPerCell: 1 },
+  cells: [
+    {
+      cellId: 'r0c0',
+      row: 0,
+      column: 0,
+      populationWeight: 1,
+      assignedStopPlaceId: 'fixture-stop',
+      distanceSquaredCells: 0,
+    },
+  ],
+  stops: [{ stopPlaceId: 'fixture-stop' }],
 });
 const legacy = {
   kind: 'foundation-save-record',
@@ -65,6 +98,7 @@ describe('transport-backed foundation application port', () => {
       gameId: parseGameId('game'),
       timelineId: parseTimelineId('timeline'),
       initialSimulationTick: 3,
+      passengerDemandPlan: demandPlan,
     });
     await application.save({
       saveId: 'slot',
@@ -78,6 +112,12 @@ describe('transport-backed foundation application port', () => {
     expect(Object.isFrozen(first.scenario)).toBe(true);
     expect(Object.isFrozen(first.authoritative)).toBe(true);
     expect(Object.isFrozen(first.synchronization)).toBe(true);
+    expect(first.passengerDemand).toMatchObject({
+      status: 'active',
+      processedThroughTick: 3,
+      totalEmittedPassengerCount: 0,
+    });
+    expect(Object.isFrozen(first.passengerDemand)).toBe(true);
     expect(Object.isFrozen(first.persistence)).toBe(true);
     expect(Object.isFrozen(first.persistence.saves)).toBe(true);
     expect(Object.isFrozen(first.persistence.saves[0])).toBe(true);

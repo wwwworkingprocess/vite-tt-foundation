@@ -197,6 +197,32 @@ describe('canonical StopPlace eligibility', () => {
 });
 
 describe('deterministic stop catchments', () => {
+  it('carries exact immutable scenario and catchment-policy identity', () => {
+    const input = structuredClone(scenarioA);
+    const result = buildStopCatchments({
+      grid,
+      scenario: input,
+      maxAccessDistanceCells: 2,
+    });
+    expect(result.scenario).toEqual({
+      scenarioSchemaVersion: scenarioA.manifest.schemaVersion,
+      scenarioId: scenarioA.manifest.scenarioId,
+      scenarioVersion: scenarioA.manifest.scenarioVersion,
+      contentHash: scenarioA.manifest.contentHash,
+    });
+    expect(result.catchmentPolicy).toEqual({ maxAccessDistanceCells: 2 });
+    expect(Object.isFrozen(result.scenario)).toBe(true);
+    expect(Object.isFrozen(result.catchmentPolicy)).toBe(true);
+    expect(input).toEqual(scenarioA);
+    expect(
+      buildStopCatchments({
+        grid,
+        scenario: scenarioB,
+        maxAccessDistanceCells: 2,
+      }).scenario,
+    ).not.toEqual(result.scenario);
+  });
+
   it('uses equal WGS84 angular weights, lexical ties, boundaries, and explicit unserved cells', () => {
     const result = buildStopCatchments({
       grid,

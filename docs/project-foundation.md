@@ -117,8 +117,13 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - Phase 4E0 adds a transport-domain-owned City Population Grid V1 and pure
   scenario-derived StopPlace catchments. Native cells remain individual
   `0.001° × 0.001°` WGS84 angular samples with conserved relative weights.
-  Dynamic passenger emission, browser integration, and real city assets remain
-  deferred.
+  Real city assets remain deferred.
+- Phase 4E1 adds simulation-owned fixed-point passenger emission from an exact
+  immutable demand plan. Served groups use implicit WGS84 grid-cell access
+  timing before aggregating at physical StopPlaces; unserved demand remains
+  explicit at source. Snapshot V4 stores only dynamic demand state and requires
+  the exact plan during active restore. Destination choice, queues, boarding,
+  capacity, services, UI, and rendering remain deferred.
 - The pre-Phase-4D browser refinement presents the accepted authority through a
   viewport-bound game shell: compact navigation, a full-workspace SVG
   diagnostic view, a swappable R3F minimap, and accessible project,

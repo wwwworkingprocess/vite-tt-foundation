@@ -78,6 +78,14 @@ const requiredTransportDomainCriticalFiles = [
   'packages/transport-domain/src/city-population-grid.ts',
   'packages/transport-domain/src/stop-catchment.ts',
 ];
+const requiredSimulationCriticalFiles = [
+  'packages/simulation/src/vehicle-movement.ts',
+  'packages/simulation/src/transport-simulation.ts',
+  'packages/simulation/src/passenger-demand.ts',
+];
+for (const path of requiredSimulationCriticalFiles)
+  if (!manifest.simulationCriticalCoverage.files.includes(path))
+    throw new Error(`simulationCriticalCoverage.files is missing ${path}.`);
 for (const path of requiredTransportDomainCriticalFiles)
   if (!manifest.transportDomainCriticalCoverage.files.includes(path))
     throw new Error(

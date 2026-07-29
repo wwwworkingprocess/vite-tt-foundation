@@ -153,7 +153,7 @@ nearest physical StopPlace catchments using WGS84 angular grid-cell units.
 Coverage totals conserve relative integer weights and keep out-of-range cells
 explicitly unserved.
 
-No real city population asset, city selector, passenger state, emission,
+No real city population asset, city selector, destination assignment,
 walking, queueing, boarding, capacity, fare, economics, UI, or rendering is
 included. The next planned layer is deterministic emission credit over this
 static foundation.

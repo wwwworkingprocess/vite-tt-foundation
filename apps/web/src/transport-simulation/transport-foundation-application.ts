@@ -1,11 +1,16 @@
 import { createStore } from 'zustand/vanilla';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
-import type { VehicleState } from '@torrevieja-tycoon/simulation';
+import type {
+  PassengerDemandPlanV1,
+  PassengerDemandProjection,
+  VehicleState,
+} from '@torrevieja-tycoon/simulation';
 import type { FoundationApplicationState } from '../application/foundation-controller.js';
 import type { TransportSaveSummary } from './transport-save-record.js';
 import type { TransportSaveRepository } from './transport-save-repository.js';
 import {
   createTransportApplicationController,
+  type PassengerDemandPlanResolver,
   type ScenarioResolver,
   type TransportApplicationProjection,
 } from './transport-controller.js';
@@ -20,13 +25,17 @@ const empty = Object.freeze([]) as readonly TransportSaveSummary[];
 const errorMessage = (error: unknown, fallback: string) =>
   error instanceof Error ? error.message : fallback;
 type TransportFoundationApplicationState = FoundationApplicationState &
-  Readonly<{ fleet?: readonly VehicleState[] | undefined }>;
+  Readonly<{
+    fleet?: readonly VehicleState[] | undefined;
+    passengerDemand?: PassengerDemandProjection | undefined;
+  }>;
 
 export function createTransportFoundationApplication(input: {
   readonly scenario: CanonicalScenario;
   readonly repository: TransportSaveRepository;
   readonly createClient: () => TransportSimulationClient;
   readonly scenarioResolver: ScenarioResolver;
+  readonly passengerDemandPlanResolver?: PassengerDemandPlanResolver;
 }) {
   const transport = createTransportApplicationController(input);
   const store = createStore<TransportFoundationApplicationState>(() =>
@@ -65,6 +74,7 @@ export function createTransportFoundationApplication(input: {
             synchronization: { status: 'synchronized' },
             persistence,
             fleet: state.fleet!,
+            passengerDemand: state.passengerDemand!,
           }
         : {
             session:
@@ -90,6 +100,8 @@ export function createTransportFoundationApplication(input: {
       const saves = classified.flatMap((item) =>
         item.classification === 'current' ||
         item.classification === 'migratable-transport-v1' ||
+        item.classification === 'migratable-transport-v2' ||
+        item.classification === 'migratable-transport-v3' ||
         item.classification === 'legacy-foundation'
           ? [
               (() => {
@@ -123,6 +135,7 @@ export function createTransportFoundationApplication(input: {
       gameId: Parameters<typeof transport.startNew>[0]['gameId'];
       timelineId: Parameters<typeof transport.startNew>[0]['timelineId'];
       initialSimulationTick: number;
+      passengerDemandPlan?: PassengerDemandPlanV1;
     }) {
       if (closed) return Promise.reject(closedError());
       return transport.startNew({ ...request, scenario: input.scenario });

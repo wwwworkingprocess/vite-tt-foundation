@@ -19,6 +19,16 @@ import {
   restoreVehicleFleet,
   type VehicleState,
 } from './vehicle-movement.js';
+import {
+  advancePassengerDemandToTick,
+  createDisabledPassengerDemandState,
+  createInitialPassengerDemandState,
+  parsePassengerDemandState,
+  parsePassengerDemandPlan,
+  validatePassengerDemandState,
+  type PassengerDemandPlanV1,
+  type PassengerDemandState,
+} from './passenger-demand.js';
 
 export type ScenarioCompatibilityErrorCode =
   | 'unsupported-transport-snapshot'
@@ -27,7 +37,7 @@ export type ScenarioCompatibilityErrorCode =
   | 'scenario-version-mismatch'
   | 'scenario-content-hash-mismatch';
 
-export const transportSimulationSnapshotSchemaVersion = 3 as const;
+export const transportSimulationSnapshotSchemaVersion = 4 as const;
 
 export class ScenarioCompatibilityError extends Error {
   constructor(
@@ -52,6 +62,8 @@ export interface TransportSimulationState {
   readonly scenario: CanonicalScenario;
   readonly graph: DirectedScenarioGraph;
   readonly fleet: readonly VehicleState[];
+  readonly passengerDemandPlan: PassengerDemandPlanV1 | null;
+  readonly passengerDemand: PassengerDemandState;
 }
 
 export interface TransportSimulationSnapshotV1 {
@@ -84,7 +96,19 @@ export interface TransportSimulationSnapshotV3 {
   }>;
 }
 
-export type TransportSimulationSnapshot = TransportSimulationSnapshotV3;
+export interface TransportSimulationSnapshotV4 {
+  readonly kind: 'transport-simulation-snapshot';
+  readonly schemaVersion: 4;
+  readonly simulationVersion: 'transport-4';
+  readonly scenario: ScenarioCoordinate;
+  readonly state: Readonly<{
+    readonly tick: SimulationTick;
+    readonly fleet: readonly VehicleState[];
+    readonly passengerDemand: PassengerDemandState;
+  }>;
+}
+
+export type TransportSimulationSnapshot = TransportSimulationSnapshotV4;
 
 const hash = z.string().regex(/^[0-9a-f]{64}$/);
 const coordinateSchema = z.strictObject({
@@ -114,12 +138,23 @@ const snapshotV2Schema = z.strictObject({
 });
 const snapshotV3Schema = z.strictObject({
   kind: z.literal('transport-simulation-snapshot'),
-  schemaVersion: z.literal(transportSimulationSnapshotSchemaVersion),
+  schemaVersion: z.literal(3),
   simulationVersion: z.literal('transport-3'),
   scenario: coordinateSchema,
   state: z.strictObject({
     tick: z.number().int().nonnegative().safe(),
     fleet: z.array(z.unknown()),
+  }),
+});
+const snapshotV4Schema = z.strictObject({
+  kind: z.literal('transport-simulation-snapshot'),
+  schemaVersion: z.literal(transportSimulationSnapshotSchemaVersion),
+  simulationVersion: z.literal('transport-4'),
+  scenario: coordinateSchema,
+  state: z.strictObject({
+    tick: z.number().int().nonnegative().safe(),
+    fleet: z.array(z.unknown()),
+    passengerDemand: z.unknown(),
   }),
 });
 
@@ -165,13 +200,32 @@ export function scenarioCoordinatesEqual(
 export function createTransportSimulationState(
   inputScenario: CanonicalScenario,
   tick: number,
+  passengerDemandPlan?: PassengerDemandPlanV1,
 ): TransportSimulationState {
   const scenario = reparseScenario(inputScenario);
+  const scenarioCoordinate = createScenarioCoordinate(scenario);
+  const parsedPlan =
+    passengerDemandPlan === undefined
+      ? undefined
+      : parsePassengerDemandPlan(passengerDemandPlan);
+  if (
+    parsedPlan !== undefined &&
+    !scenarioCoordinatesEqual(parsedPlan.scenario, scenarioCoordinate)
+  )
+    throw new ScenarioCompatibilityError(
+      'scenario-id-mismatch',
+      'passenger demand plan scenario',
+    );
   return freeze({
     tick: parseSimulationTick(tick),
     scenario,
     graph: buildDirectedScenarioGraph(scenario),
     fleet: [],
+    passengerDemandPlan: parsedPlan ?? null,
+    passengerDemand:
+      parsedPlan === undefined
+        ? createDisabledPassengerDemandState()
+        : createInitialPassengerDemandState(parsedPlan, tick),
   });
 }
 
@@ -180,11 +234,21 @@ export function advanceTransportTicks(
   count: TickAdvancement | number,
 ): TransportSimulationState {
   const tickCount = parseTickAdvancement(count);
+  const tick = parseSimulationTick(state.tick + tickCount);
   return freeze({
-    tick: parseSimulationTick(state.tick + tickCount),
+    tick,
     scenario: state.scenario,
     graph: state.graph,
     fleet: advanceVehicleFleet(state.graph, state.fleet, tickCount),
+    passengerDemandPlan: state.passengerDemandPlan,
+    passengerDemand:
+      state.passengerDemand.status === 'disabled'
+        ? state.passengerDemand
+        : advancePassengerDemandToTick(
+            state.passengerDemandPlan!,
+            state.passengerDemand,
+            tick,
+          ),
   });
 }
 
@@ -201,6 +265,28 @@ export function applyTransportVehicleCommand(
 export function parseTransportSimulationSnapshot(
   value: unknown,
 ): TransportSimulationSnapshot {
+  const result = snapshotV4Schema.safeParse(value);
+  if (!result.success)
+    throw new ScenarioCompatibilityError(
+      'unsupported-transport-snapshot',
+      result.error.issues[0]!.message,
+    );
+  return freeze({
+    ...result.data,
+    scenario: result.data.scenario as ScenarioCoordinate,
+    state: {
+      tick: parseSimulationTick(result.data.state.tick),
+      fleet: parseVehicleFleetSnapshot(result.data.state.fleet),
+      passengerDemand: parsePassengerDemandState(
+        result.data.state.passengerDemand,
+      ),
+    },
+  });
+}
+
+export function parseTransportSimulationSnapshotV3(
+  value: unknown,
+): TransportSimulationSnapshotV3 {
   const result = snapshotV3Schema.safeParse(value);
   if (!result.success)
     throw new ScenarioCompatibilityError(
@@ -254,24 +340,28 @@ export function parseTransportSimulationSnapshotV1(
 
 export function migrateTransportSimulationSnapshotV1(
   value: unknown,
-): TransportSimulationSnapshotV3 {
+): TransportSimulationSnapshotV4 {
   const snapshot = parseTransportSimulationSnapshotV1(value);
   return parseTransportSimulationSnapshot({
     ...snapshot,
-    schemaVersion: 3,
-    simulationVersion: 'transport-3',
-    state: { tick: snapshot.state.tick, fleet: [] },
+    schemaVersion: 4,
+    simulationVersion: 'transport-4',
+    state: {
+      tick: snapshot.state.tick,
+      fleet: [],
+      passengerDemand: createDisabledPassengerDemandState(),
+    },
   });
 }
 
 export function migrateTransportSimulationSnapshotV2(
   value: unknown,
-): TransportSimulationSnapshotV3 {
+): TransportSimulationSnapshotV4 {
   const snapshot = parseTransportSimulationSnapshotV2(value);
   return parseTransportSimulationSnapshot({
     ...snapshot,
-    schemaVersion: 3,
-    simulationVersion: 'transport-3',
+    schemaVersion: 4,
+    simulationVersion: 'transport-4',
     state: {
       tick: snapshot.state.tick,
       fleet: snapshot.state.fleet.map((vehicle) => ({
@@ -281,6 +371,22 @@ export function migrateTransportSimulationSnapshotV2(
         movementPlan: vehicle.movementPlan,
         movement: vehicle.movement,
       })),
+      passengerDemand: createDisabledPassengerDemandState(),
+    },
+  });
+}
+
+export function migrateTransportSimulationSnapshotV3(
+  value: unknown,
+): TransportSimulationSnapshotV4 {
+  const snapshot = parseTransportSimulationSnapshotV3(value);
+  return parseTransportSimulationSnapshot({
+    ...snapshot,
+    schemaVersion: 4,
+    simulationVersion: 'transport-4',
+    state: {
+      ...snapshot.state,
+      passengerDemand: createDisabledPassengerDemandState(),
     },
   });
 }
@@ -290,10 +396,14 @@ export function createTransportSimulationSnapshot(
 ): TransportSimulationSnapshot {
   return parseTransportSimulationSnapshot({
     kind: 'transport-simulation-snapshot',
-    schemaVersion: 3,
-    simulationVersion: 'transport-3',
+    schemaVersion: 4,
+    simulationVersion: 'transport-4',
     scenario: createScenarioCoordinate(state.scenario),
-    state: { tick: state.tick, fleet: state.fleet },
+    state: {
+      tick: state.tick,
+      fleet: state.fleet,
+      passengerDemand: state.passengerDemand,
+    },
   });
 }
 
@@ -315,15 +425,36 @@ function assertCoordinate(
 export function restoreTransportSimulationState(
   snapshotValue: unknown,
   scenarioValue: CanonicalScenario,
+  passengerDemandPlan?: PassengerDemandPlanV1,
 ): TransportSimulationState {
   const snapshot = parseTransportSimulationSnapshot(snapshotValue);
   const scenario = reparseScenario(scenarioValue);
   assertCoordinate(snapshot.scenario, createScenarioCoordinate(scenario));
   const graph = buildDirectedScenarioGraph(scenario);
+  const parsedPlan =
+    passengerDemandPlan === undefined
+      ? undefined
+      : parsePassengerDemandPlan(passengerDemandPlan);
+  let passengerDemand: PassengerDemandState;
+  if (snapshot.state.passengerDemand.status === 'disabled') {
+    passengerDemand = createDisabledPassengerDemandState();
+  } else {
+    if (parsedPlan === undefined)
+      throw new Error('Exact passenger demand plan is required.');
+    if (!scenarioCoordinatesEqual(parsedPlan.scenario, snapshot.scenario))
+      throw new Error('Passenger demand plan scenario mismatch.');
+    passengerDemand = validatePassengerDemandState(
+      parsedPlan,
+      snapshot.state.passengerDemand,
+    );
+  }
   return freeze({
     tick: snapshot.state.tick,
     scenario,
     graph,
+    passengerDemandPlan:
+      passengerDemand.status === 'active' ? parsedPlan! : null,
+    passengerDemand,
     fleet: restoreVehicleFleet(
       graph,
       snapshot.state.fleet,

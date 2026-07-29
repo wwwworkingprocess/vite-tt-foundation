@@ -11,6 +11,7 @@ import {
   classifyPersistedSaveRecord,
   migrateTransportSaveRecordV1,
   migrateTransportSaveRecordV2,
+  migrateTransportSaveRecordV3,
   parseTransportSaveRecord,
   summarizeCompatibleSave,
 } from './transport-save-record.js';
@@ -92,7 +93,7 @@ describe('transport save compatibility', () => {
       scenarioId: 'torrevieja-mini-v1',
       scenarioVersion: '1.0.0',
       contentHash: expect.any(String),
-      snapshotVersion: 3,
+      snapshotVersion: 4,
       vehicleCount: 0,
       sourceSimulationTick: 120,
     });
@@ -160,8 +161,12 @@ describe('transport save compatibility', () => {
     expect(migrated).toMatchObject({
       schemaVersion: 3,
       snapshot: {
-        schemaVersion: 3,
-        state: { tick: 120, fleet: [] },
+        schemaVersion: 4,
+        state: {
+          tick: 120,
+          fleet: [],
+          passengerDemand: { status: 'disabled' },
+        },
       },
     });
     expect(Object.isFrozen(migrated.snapshot.state.fleet)).toBe(true);
@@ -173,9 +178,14 @@ describe('transport save compatibility', () => {
       ...value,
       schemaVersion: 2,
       snapshot: {
-        ...value.snapshot,
+        kind: value.snapshot.kind,
+        scenario: value.snapshot.scenario,
         schemaVersion: 2,
         simulationVersion: 'transport-2',
+        state: {
+          tick: value.snapshot.state.tick,
+          fleet: value.snapshot.state.fleet,
+        },
       },
     };
     const classified = classifyPersistedSaveRecord(v2);
@@ -188,9 +198,40 @@ describe('transport save compatibility', () => {
     const migrated = migrateTransportSaveRecordV2(classified.record);
     expect(migrated).toMatchObject({
       schemaVersion: 3,
-      snapshot: { schemaVersion: 3 },
+      snapshot: { schemaVersion: 4 },
     });
     expect(migrated.snapshot.state.fleet).toEqual([]);
+  });
+
+  it('classifies Transport V3 as migratable with passenger demand disabled', () => {
+    const value = current();
+    const v3 = {
+      ...value,
+      snapshot: {
+        kind: value.snapshot.kind,
+        scenario: value.snapshot.scenario,
+        schemaVersion: 3,
+        simulationVersion: 'transport-3',
+        state: {
+          tick: value.snapshot.state.tick,
+          fleet: value.snapshot.state.fleet,
+        },
+      },
+    };
+    const classified = classifyPersistedSaveRecord(v3);
+    expect(classified).toMatchObject({
+      classification: 'migratable-transport-v3',
+      summary: { compatibility: 'migratable', snapshotVersion: 3 },
+    });
+    if (classified.classification !== 'migratable-transport-v3')
+      throw new Error('Expected a migratable Transport V3 record.');
+    expect(migrateTransportSaveRecordV3(classified.record)).toMatchObject({
+      schemaVersion: 3,
+      snapshot: {
+        schemaVersion: 4,
+        state: { passengerDemand: { status: 'disabled' } },
+      },
+    });
   });
 
   it('distinguishes malformed known and unsupported future records', () => {

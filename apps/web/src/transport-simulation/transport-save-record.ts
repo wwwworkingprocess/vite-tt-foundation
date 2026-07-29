@@ -2,13 +2,16 @@ import { z } from 'zod';
 import {
   migrateTransportSimulationSnapshotV1,
   migrateTransportSimulationSnapshotV2,
+  migrateTransportSimulationSnapshotV3,
   parseTransportSimulationSnapshot,
   parseTransportSimulationSnapshotV1,
   parseTransportSimulationSnapshotV2,
+  parseTransportSimulationSnapshotV3,
   type ScenarioCoordinate,
   type TransportSimulationSnapshot,
   type TransportSimulationSnapshotV1,
   type TransportSimulationSnapshotV2,
+  type TransportSimulationSnapshotV3,
 } from '@torrevieja-tycoon/simulation';
 import {
   parseCommandRevision,
@@ -85,6 +88,12 @@ export interface TransportSaveRecordV2 extends Omit<
   readonly schemaVersion: 2;
   readonly snapshot: TransportSimulationSnapshotV2;
 }
+export interface TransportSaveRecordV3 extends Omit<
+  TransportSaveRecord,
+  'snapshot'
+> {
+  readonly snapshot: TransportSimulationSnapshotV3;
+}
 
 export interface TransportSaveRecordV1 {
   readonly kind: 'transport-save-record';
@@ -113,7 +122,7 @@ export interface TransportSaveSummary {
   readonly sourceSimulationTick: number;
   readonly createdAtUtcMs: number;
   readonly updatedAtUtcMs: number;
-  readonly snapshotVersion?: 1 | 2 | 3 | undefined;
+  readonly snapshotVersion?: 1 | 2 | 3 | 4 | undefined;
   readonly vehicleCount?: number | undefined;
   readonly compatibility: 'current' | 'migratable' | 'legacy-incompatible';
 }
@@ -194,6 +203,30 @@ export function parseTransportSaveRecordV2(
   });
 }
 
+export function parseTransportSaveRecordV3(
+  value: unknown,
+): TransportSaveRecordV3 {
+  const parsed = recordSchema.parse(value);
+  const snapshot = parseTransportSimulationSnapshotV3(parsed.snapshot);
+  const scenario = freeze(parsed.scenario as ScenarioCoordinate);
+  if (
+    JSON.stringify(snapshot.scenario) !== JSON.stringify(scenario) ||
+    snapshot.state.tick !== parsed.sourceSimulationTick ||
+    parsed.updatedAtUtcMs < parsed.createdAtUtcMs
+  )
+    throw new Error('Transport save record coordinates are inconsistent.');
+  return freeze({
+    ...parsed,
+    saveId: parseFoundationSaveId(parsed.saveId),
+    gameId: parseGameId(parsed.gameId),
+    sourceTimelineId: parseTimelineId(parsed.sourceTimelineId),
+    sourceCommandRevision: parseCommandRevision(parsed.sourceCommandRevision),
+    sourceStreamOffset: parseStreamOffset(parsed.sourceStreamOffset),
+    scenario,
+    snapshot,
+  });
+}
+
 export function migrateTransportSaveRecordV1(
   record: TransportSaveRecordV1,
 ): TransportSaveRecord {
@@ -214,6 +247,15 @@ export function migrateTransportSaveRecordV2(
   });
 }
 
+export function migrateTransportSaveRecordV3(
+  record: TransportSaveRecordV3,
+): TransportSaveRecord {
+  return parseTransportSaveRecord({
+    ...record,
+    snapshot: migrateTransportSimulationSnapshotV3(record.snapshot),
+  });
+}
+
 export function summarizeCompatibleSave(
   record: TransportSaveRecord,
 ): TransportSaveSummary {
@@ -228,7 +270,7 @@ export function summarizeCompatibleSave(
     sourceSimulationTick: record.sourceSimulationTick,
     createdAtUtcMs: record.createdAtUtcMs,
     updatedAtUtcMs: record.updatedAtUtcMs,
-    snapshotVersion: 3,
+    snapshotVersion: 4,
     vehicleCount: record.snapshot.state.fleet.length,
     compatibility: 'current',
   });
@@ -249,6 +291,26 @@ function summarizeMigratableSaveV2(
     createdAtUtcMs: record.createdAtUtcMs,
     updatedAtUtcMs: record.updatedAtUtcMs,
     snapshotVersion: 2,
+    vehicleCount: record.snapshot.state.fleet.length,
+    compatibility: 'migratable',
+  });
+}
+
+function summarizeMigratableSaveV3(
+  record: TransportSaveRecordV3,
+): TransportSaveSummary {
+  return freeze({
+    saveId: record.saveId,
+    ...(record.label === undefined ? {} : { label: record.label }),
+    scenarioId: record.scenario.scenarioId,
+    scenarioSchemaVersion: record.scenario.scenarioSchemaVersion,
+    scenarioVersion: record.scenario.scenarioVersion,
+    contentHash: record.scenario.contentHash,
+    sourceTimelineId: record.sourceTimelineId,
+    sourceSimulationTick: record.sourceSimulationTick,
+    createdAtUtcMs: record.createdAtUtcMs,
+    updatedAtUtcMs: record.updatedAtUtcMs,
+    snapshotVersion: 3,
     vehicleCount: record.snapshot.state.fleet.length,
     compatibility: 'migratable',
   });
@@ -288,6 +350,11 @@ export type PersistedSaveClassification =
   | Readonly<{
       classification: 'migratable-transport-v2';
       record: TransportSaveRecordV2;
+      summary: TransportSaveSummary;
+    }>
+  | Readonly<{
+      classification: 'migratable-transport-v3';
+      record: TransportSaveRecordV3;
       summary: TransportSaveSummary;
     }>
   | Readonly<{
@@ -339,12 +406,25 @@ export function classifyPersistedSaveRecord(
           summary: summarizeMigratableSaveV2(record),
         });
       }
-      const record = parseTransportSaveRecord(value);
-      return freeze({
-        classification: 'current',
-        record,
-        summary: summarizeCompatibleSave(record),
-      });
+      try {
+        const record = parseTransportSaveRecord(value);
+        return freeze({
+          classification: 'current',
+          record,
+          summary: summarizeCompatibleSave(record),
+        });
+      } catch (currentError) {
+        try {
+          const record = parseTransportSaveRecordV3(value);
+          return freeze({
+            classification: 'migratable-transport-v3',
+            record,
+            summary: summarizeMigratableSaveV3(record),
+          });
+        } catch {
+          throw currentError;
+        }
+      }
     }
     const legacy = parseFoundationSaveRecord(value);
     return freeze({

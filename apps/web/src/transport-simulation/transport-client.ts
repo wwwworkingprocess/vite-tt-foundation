@@ -7,9 +7,13 @@ import {
   createTransportSimulationSnapshot,
   createTransportSimulationState,
   parseTickAdvancement,
+  parsePassengerDemandPlan,
+  projectPassengerDemand,
   parseTransportVehicleCommand,
   restoreTransportSimulationState,
   type ScenarioCoordinate,
+  type PassengerDemandPlanV1,
+  type PassengerDemandProjection,
   type TransportSimulationSnapshot,
   type TransportSimulationState,
   type TransportVehicleCommand,
@@ -44,6 +48,7 @@ export type TransportClientConnectRequest =
       timelineId: TimelineId;
       initialSimulationTick: number;
       scenario: CanonicalScenario;
+      passengerDemandPlan?: PassengerDemandPlanV1;
     }>
   | Readonly<{
       kind: 'transport-client-connect';
@@ -53,6 +58,7 @@ export type TransportClientConnectRequest =
       timelineId: TimelineId;
       scenario: CanonicalScenario;
       snapshot: TransportSimulationSnapshot;
+      passengerDemandPlan?: PassengerDemandPlanV1;
     }>;
 
 export type TransportClientLifecycle =
@@ -82,10 +88,16 @@ export type TransportCommandEnvelope = Readonly<
 >;
 
 export type TransportStateUpdate = Readonly<
-  FoundationStateUpdate & { readonly fleet: readonly VehicleState[] }
+  FoundationStateUpdate & {
+    readonly fleet: readonly VehicleState[];
+    readonly passengerDemand: PassengerDemandProjection;
+  }
 >;
 export type TransportRenderSnapshot = Readonly<
-  FoundationRenderSnapshot & { readonly fleet: readonly VehicleState[] }
+  FoundationRenderSnapshot & {
+    readonly fleet: readonly VehicleState[];
+    readonly passengerDemand: PassengerDemandProjection;
+  }
 >;
 
 export type TransportSynchronizationResponse =
@@ -95,6 +107,7 @@ export type TransportSynchronizationResponse =
       foundation: FoundationSynchronizationResponse;
       scenario: ScenarioCoordinate;
       fleet: readonly VehicleState[];
+      passengerDemand: PassengerDemandProjection;
     }>;
 
 export interface TransportSimulationClient {
@@ -235,11 +248,19 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
   const publishAuthority = () => {
     publish(
       reliableListeners,
-      freeze({ ...latestFoundationUpdate!, fleet: authority!.fleet }),
+      freeze({
+        ...latestFoundationUpdate!,
+        fleet: authority!.fleet,
+        passengerDemand: projectPassengerDemand(authority!.passengerDemand),
+      }),
     );
     publish(
       renderListeners,
-      freeze({ ...latestFoundationRender!, fleet: authority!.fleet }),
+      freeze({
+        ...latestFoundationRender!,
+        fleet: authority!.fleet,
+        passengerDemand: projectPassengerDemand(authority!.passengerDemand),
+      }),
     );
   };
   const enqueueOperation = <T>(operation: () => Promise<T>): Promise<T> => {
@@ -256,13 +277,22 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
       if (lifecycle.state !== 'idle')
         throw new Error('Transport client can connect only from idle.');
       assertConnectShape(request);
+      const passengerDemandPlan =
+        request.passengerDemandPlan === undefined
+          ? undefined
+          : parsePassengerDemandPlan(request.passengerDemandPlan);
       const nextAuthority =
         request.mode === 'new'
           ? createTransportSimulationState(
               request.scenario,
               request.initialSimulationTick,
+              passengerDemandPlan,
             )
-          : restoreTransportSimulationState(request.snapshot, request.scenario);
+          : restoreTransportSimulationState(
+              request.snapshot,
+              request.scenario,
+              passengerDemandPlan,
+            );
       publishLifecycle({ state: 'connecting' });
       try {
         authority = nextAuthority;
@@ -410,6 +440,7 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
           foundation: response,
           scenario: createScenarioCoordinate(current.scenario),
           fleet: current.fleet,
+          passengerDemand: projectPassengerDemand(current.passengerDemand),
         });
       });
     },

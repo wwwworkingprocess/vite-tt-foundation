@@ -5,7 +5,11 @@ import {
   buildDirectedScenarioGraph,
   parseScenarioPackage,
 } from '@torrevieja-tycoon/transport-domain';
-import { parseVehicleId } from '@torrevieja-tycoon/simulation';
+import {
+  createScenarioCoordinate,
+  parsePassengerDemandPlan,
+  parseVehicleId,
+} from '@torrevieja-tycoon/simulation';
 import {
   parseClientId,
   parseCommandId,
@@ -49,6 +53,55 @@ const scenario = () =>
     routes: json('routes.json'),
     presentation: json('presentation.json'),
     provenance: json('provenance.json'),
+  });
+const demandPlan = (canonical: ReturnType<typeof scenario>) =>
+  parsePassengerDemandPlan({
+    schemaVersion: '1.0.0',
+    demandModelContentHash: 'd'.repeat(64),
+    scenario: createScenarioCoordinate(canonical),
+    grid: {
+      cityId: 'Q36730',
+      populationGridSchemaVersion: '1.0.0',
+      gridVersion: '1.0.0',
+      rows: 1,
+      columns: 3,
+      resolutionDegrees: 0.001,
+      totalActiveCellCount: 3,
+      totalPopulationWeight: 6,
+    },
+    catchmentPolicy: { maxAccessDistanceCells: 5 },
+    emissionPolicy: {
+      emissionCreditsPerWeightPerTick: 2,
+      creditsPerPassenger: 3,
+    },
+    accessPolicy: { accessTicksPerCell: 2 },
+    cells: [
+      {
+        cellId: 'r0c0',
+        row: 0,
+        column: 0,
+        populationWeight: 1,
+        assignedStopPlaceId: 'stop-a',
+        distanceSquaredCells: 0,
+      },
+      {
+        cellId: 'r0c1',
+        row: 0,
+        column: 1,
+        populationWeight: 3,
+        assignedStopPlaceId: 'stop-b',
+        distanceSquaredCells: 1,
+      },
+      {
+        cellId: 'r0c2',
+        row: 0,
+        column: 2,
+        populationWeight: 2,
+        assignedStopPlaceId: null,
+        distanceSquaredCells: null,
+      },
+    ],
+    stops: [{ stopPlaceId: 'stop-b' }, { stopPlaceId: 'stop-a' }],
   });
 
 class LoopbackWorker implements TransportWorkerLike {
@@ -180,7 +233,10 @@ describe.each(factories)(
         envelope(3, { type: 'foundation.advance-ticks', count: 5 }),
       );
       const exported = await client.exportSnapshot();
-      expect(exported.snapshot.schemaVersion).toBe(3);
+      expect(exported.snapshot.schemaVersion).toBe(4);
+      expect(exported.snapshot.state.passengerDemand).toEqual({
+        status: 'disabled',
+      });
       expect(exported.snapshot.state.fleet[0]?.movement).toMatchObject({
         kind: 'running-on-edge',
         edgeSequence: 1,
@@ -190,6 +246,45 @@ describe.each(factories)(
       expect(updates).toHaveLength(3);
       expect(Object.isFrozen(exported.snapshot.state.fleet)).toBe(true);
       expect(Object.isFrozen(updates[2])).toBe(true);
+      await client.close();
+    });
+
+    it('advances identical fixed-point passenger authority and projections', async () => {
+      const client = createClient();
+      const canonical = scenario();
+      const reliable: unknown[] = [];
+      client.subscribeReliableUpdates((update) => reliable.push(update));
+      await client.connect({
+        kind: 'transport-client-connect',
+        contractVersion: 3,
+        mode: 'new',
+        gameId: parseGameId('game'),
+        timelineId: parseTimelineId('timeline'),
+        initialSimulationTick: 0,
+        scenario: canonical,
+        passengerDemandPlan: demandPlan(canonical),
+      });
+      await client.sendCommand(
+        envelope(90, { type: 'foundation.advance-ticks', count: 3 }),
+      );
+      const exported = await client.exportSnapshot();
+      expect(exported.snapshot.state.passengerDemand).toMatchObject({
+        status: 'active',
+        processedThroughTick: 3,
+        totalEmittedPassengerCount: 12,
+        servedEmittedPassengerCount: 8,
+        unservedAtSourcePassengerCount: 4,
+      });
+      expect(reliable.at(-1)).toMatchObject({
+        passengerDemand: {
+          status: 'active',
+          totalEmittedPassengerCount: 12,
+          unservedAtSourcePassengerCount: 4,
+        },
+      });
+      expect(Object.isFrozen(exported.snapshot.state.passengerDemand)).toBe(
+        true,
+      );
       await client.close();
     });
 

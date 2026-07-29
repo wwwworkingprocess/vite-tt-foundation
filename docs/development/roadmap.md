@@ -143,6 +143,21 @@ acceptance evidence only; it owns no simulation clock or state.
 Services, schedules, dwell, dispatch, passengers, capacity, economics, traffic,
 maps, and render interpolation remain deferred to Phase 4D or later.
 
+## Phase 4E0 — City population and stop-catchment foundation
+
+### Status
+
+Implemented as a core-only transport-domain milestone. A strict immutable
+Wikidata-city population grid derives row-major active cells and deterministic
+nearest physical StopPlace catchments using WGS84 angular grid-cell units.
+Coverage totals conserve relative integer weights and keep out-of-range cells
+explicitly unserved.
+
+No real city population asset, city selector, passenger state, emission,
+walking, queueing, boarding, capacity, fare, economics, UI, or rendering is
+included. The next planned layer is deterministic emission credit over this
+static foundation.
+
 ## Phase 5 — React Three Fiber visualization POC
 
 ### Goal

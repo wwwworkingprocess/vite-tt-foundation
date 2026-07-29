@@ -28,6 +28,13 @@ const manifest = z
       branches: z.literal(95),
       files: z.array(z.string().min(1)).min(1),
     }),
+    transportDomainCriticalCoverage: z.strictObject({
+      statements: z.literal(95),
+      lines: z.literal(95),
+      functions: z.literal(95),
+      branches: z.literal(95),
+      files: z.array(z.string().min(1)).min(1),
+    }),
     buildBudgetsBytes: z.strictObject({
       applicationEntry: z.number().int().positive(),
       dialogShell: z.number().int().positive(),
@@ -67,6 +74,15 @@ const requiredCriticalFiles = [
 for (const path of requiredCriticalFiles)
   if (!manifest.criticalCoverage.files.includes(path))
     throw new Error(`criticalCoverage.files is missing ${path}.`);
+const requiredTransportDomainCriticalFiles = [
+  'packages/transport-domain/src/city-population-grid.ts',
+  'packages/transport-domain/src/stop-catchment.ts',
+];
+for (const path of requiredTransportDomainCriticalFiles)
+  if (!manifest.transportDomainCriticalCoverage.files.includes(path))
+    throw new Error(
+      `transportDomainCriticalCoverage.files is missing ${path}.`,
+    );
 const checks = [
   [
     'schemaVersions.transportSimulationSnapshot',

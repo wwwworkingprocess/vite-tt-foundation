@@ -65,6 +65,7 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`architecture/vehicle-movement-authority.md`](architecture/vehicle-movement-authority.md) — Phase 4C deterministic vehicle authority.
 - [`architecture/decisions/0009-graph-native-vehicle-movement.md`](architecture/decisions/0009-graph-native-vehicle-movement.md) — graph-native movement and V2 compatibility decision.
 - [`architecture/decisions/0010-repeating-route-cycle-assignment.md`](architecture/decisions/0010-repeating-route-cycle-assignment.md) — canonical RouteId assignment and repeating ordered-leg operation.
+- [`architecture/decisions/0011-city-population-grid-and-stop-catchments.md`](architecture/decisions/0011-city-population-grid-and-stop-catchments.md) — WGS84 population-grid and physical StopPlace catchment decision.
 - [`architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md`](architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md) — exact scenario-coordinate compatibility decision.
 - [`architecture/decisions/0007-scenario-package-and-directed-graph.md`](architecture/decisions/0007-scenario-package-and-directed-graph.md) — scenario package and directed-edge decision.
 - [`architecture/decisions/0002-simulation-host-transport-readiness.md`](architecture/decisions/0002-simulation-host-transport-readiness.md) — Socket.IO-readiness research and transport-boundary decision.
@@ -113,6 +114,11 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   advances Snapshot, Save, client, and Worker contracts to V3. V1 migrates to
   an empty fleet; V2 migrates as legacy single-pattern authority. A read-only
   SVG proves active-authority movement. Scheduling remains deferred.
+- Phase 4E0 adds a transport-domain-owned City Population Grid V1 and pure
+  scenario-derived StopPlace catchments. Native cells remain individual
+  `0.001° × 0.001°` WGS84 angular samples with conserved relative weights.
+  Dynamic passenger emission, browser integration, and real city assets remain
+  deferred.
 - The pre-Phase-4D browser refinement presents the accepted authority through a
   viewport-bound game shell: compact navigation, a full-workspace SVG
   diagnostic view, a swappable R3F minimap, and accessible project,

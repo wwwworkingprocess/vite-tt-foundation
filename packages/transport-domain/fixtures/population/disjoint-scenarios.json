@@ -1,0 +1,42 @@
+{
+  "scenarioA": {
+    "scenarioId": "catchment-a",
+    "stopPlaces": [
+      {
+        "stopPlaceId": "place-a",
+        "position": { "latitude": 10.001, "longitude": 20.001 },
+        "nodeIds": ["node-a-outbound", "node-a-inbound"]
+      },
+      {
+        "stopPlaceId": "place-b",
+        "position": { "latitude": 10.001, "longitude": 20.003 },
+        "nodeIds": ["node-b"]
+      },
+      {
+        "stopPlaceId": "place-zero",
+        "position": { "latitude": 9.99, "longitude": 20.02 },
+        "nodeIds": ["node-zero"]
+      },
+      {
+        "stopPlaceId": "place-unreferenced",
+        "position": { "latitude": 10.002, "longitude": 20.005 },
+        "nodeIds": []
+      }
+    ]
+  },
+  "scenarioB": {
+    "scenarioId": "catchment-b",
+    "stopPlaces": [
+      {
+        "stopPlaceId": "place-x",
+        "position": { "latitude": 10.002, "longitude": 20.005 },
+        "nodeIds": ["node-x"]
+      },
+      {
+        "stopPlaceId": "place-y",
+        "position": { "latitude": 9.998, "longitude": 20 },
+        "nodeIds": ["node-y"]
+      }
+    ]
+  }
+}

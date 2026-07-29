@@ -59,6 +59,14 @@ export function transportDomainTerms(text, file = '') {
     'schedules',
     'vehicles',
     'economies',
+    'population',
+    'populations',
+    'demand',
+    'demands',
+    'catchment',
+    'catchments',
+    'emission',
+    'emissions',
   ]);
   return [...new Set(tokens.filter((token) => forbidden.has(token)))];
 }
@@ -560,6 +568,12 @@ const transportGenericFixture = await source(
 const vehicleAuthorityForbiddenFixture = await source(
   'scripts/fixtures/architecture/vehicle-authority-forbidden.txt',
 );
+const populationExtensionFixture = await source(
+  'scripts/fixtures/architecture/population-extension-allowed.txt',
+);
+const populationGenericFixture = await source(
+  'scripts/fixtures/architecture/population-generic-forbidden.txt',
+);
 for (const expected of [
   'route',
   'bus',
@@ -583,6 +597,10 @@ if (transportDomainTerms(allowedFixture, 'browser-pacing-driver.ts').length)
   fail('legitimate foundation fixture was rejected.');
 if (!transportDomainTerms(transportGenericFixture).length)
   fail('generic transport-domain boundary fixture was not rejected.');
+if (transportDomainTerms(populationExtensionFixture).length === 0)
+  fail('population extension fixture did not exercise domain terminology.');
+if (!transportDomainTerms(populationGenericFixture).length)
+  fail('generic population-domain boundary fixture was not rejected.');
 if (
   environmentNeutralViolations(transportExtensionFixture).length ||
   topLevelSingletons(transportExtensionFixture).length

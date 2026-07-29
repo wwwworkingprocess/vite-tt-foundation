@@ -109,6 +109,9 @@ await auditGroup(manifest.criticalCoverage, [
 await auditGroup(manifest.simulationCriticalCoverage, [
   'coverage/simulation/coverage-final.json',
 ]);
+await auditGroup(manifest.transportDomainCriticalCoverage, [
+  'coverage/transport-domain/coverage-final.json',
+]);
 if (failures.length)
   throw new Error(`Critical coverage audit failed:\n${failures.join('\n')}`);
 console.log(`Critical coverage audit passed: ${JSON.stringify(results)}`);

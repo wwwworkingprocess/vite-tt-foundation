@@ -1,0 +1,4 @@
+export const populationCatchment = Object.freeze({
+  population: 12,
+  catchment: 'Q36730',
+});

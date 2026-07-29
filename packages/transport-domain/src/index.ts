@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+export * from './city-population-grid.js';
+export * from './stop-catchment.js';
+
 export const scenarioSchemaVersion = '1.0.0' as const;
 
 export type ScenarioErrorCode =

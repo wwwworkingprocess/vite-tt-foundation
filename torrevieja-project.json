@@ -37,6 +37,16 @@
       "packages/simulation/src/transport-simulation.ts"
     ]
   },
+  "transportDomainCriticalCoverage": {
+    "statements": 95,
+    "lines": 95,
+    "functions": 95,
+    "branches": 95,
+    "files": [
+      "packages/transport-domain/src/city-population-grid.ts",
+      "packages/transport-domain/src/stop-catchment.ts"
+    ]
+  },
   "buildBudgetsBytes": {
     "applicationEntry": 440000,
     "dialogShell": 8000,

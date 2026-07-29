@@ -271,15 +271,25 @@ export function parseTransportSimulationSnapshot(
       'unsupported-transport-snapshot',
       result.error.issues[0]!.message,
     );
+  const passengerDemand = parsePassengerDemandState(
+    result.data.state.passengerDemand,
+  );
+  const tick = parseSimulationTick(result.data.state.tick);
+  if (
+    passengerDemand.status === 'active' &&
+    passengerDemand.processedThroughTick !== tick
+  )
+    throw new ScenarioCompatibilityError(
+      'unsupported-transport-snapshot',
+      'Passenger demand processed tick must equal the snapshot tick.',
+    );
   return freeze({
     ...result.data,
     scenario: result.data.scenario as ScenarioCoordinate,
     state: {
-      tick: parseSimulationTick(result.data.state.tick),
+      tick,
       fleet: parseVehicleFleetSnapshot(result.data.state.fleet),
-      passengerDemand: parsePassengerDemandState(
-        result.data.state.passengerDemand,
-      ),
+      passengerDemand,
     },
   });
 }

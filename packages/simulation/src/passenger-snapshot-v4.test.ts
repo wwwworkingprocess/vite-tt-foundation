@@ -68,7 +68,7 @@ const plan = () => {
         column: 0,
         populationWeight: 5,
         assignedStopPlaceId: 'fixture-stop',
-        distanceSquaredCells: 0,
+        distanceSquaredCells: 1,
       },
     ],
     stops: [{ stopPlaceId: 'fixture-stop' }],
@@ -196,5 +196,72 @@ describe('Transport Snapshot V4 passenger authority', () => {
         simulationVersion: 'transport-3',
       }),
     ).toThrow('unsupported-transport-snapshot');
+  });
+
+  it.each([
+    ['behind', 1],
+    ['ahead', 3],
+  ])(
+    'rejects active passenger time %s the Snapshot V4 tick',
+    (_name, processedThroughTick) => {
+      const snapshot = structuredClone(
+        createTransportSimulationSnapshot(
+          advanceTransportTicks(
+            createTransportSimulationState(scenario(), 0, plan()),
+            2,
+          ),
+        ),
+      );
+      if (snapshot.state.passengerDemand.status !== 'active')
+        throw new Error('Expected active passenger demand.');
+      (
+        snapshot.state.passengerDemand as {
+          processedThroughTick: number;
+        }
+      ).processedThroughTick = processedThroughTick;
+      expect(() => parseTransportSimulationSnapshot(snapshot)).toThrow(
+        /passenger.*tick/i,
+      );
+    },
+  );
+
+  it('keeps disabled passenger snapshots valid without a passenger tick', () => {
+    const snapshot = createTransportSimulationSnapshot(
+      createTransportSimulationState(scenario(), 2),
+    );
+    expect(parseTransportSimulationSnapshot(snapshot)).toEqual(snapshot);
+  });
+
+  it('rejects non-canonical accessing-group order instead of sorting it', () => {
+    const demandPlan = plan();
+    const snapshot = structuredClone(
+      createTransportSimulationSnapshot(
+        advanceTransportTicks(
+          createTransportSimulationState(scenario(), 0, demandPlan),
+          2,
+        ),
+      ),
+    );
+    if (snapshot.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger demand.');
+    const passenger = snapshot.state.passengerDemand as {
+      accessingGroups: Array<{
+        passengerGroupId: string;
+        arrivalTick: number;
+      }>;
+    };
+    passenger.accessingGroups = [
+      {
+        ...passenger.accessingGroups[0]!,
+        passengerGroupId: 'passenger-group-2',
+      },
+      {
+        ...passenger.accessingGroups[0]!,
+        passengerGroupId: 'passenger-group-1',
+      },
+    ];
+    expect(() =>
+      restoreTransportSimulationState(snapshot, scenario(), demandPlan),
+    ).toThrow(/order/i);
   });
 });

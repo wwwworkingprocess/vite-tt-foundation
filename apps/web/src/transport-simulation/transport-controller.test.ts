@@ -8,6 +8,7 @@ import {
   createTransportSimulationSnapshot,
   createTransportSimulationState,
   parsePassengerDemandPlan,
+  type PassengerDemandPlanV1,
 } from '@torrevieja-tycoon/simulation';
 import { parseGameId, parseTimelineId } from '@torrevieja-tycoon/protocol';
 import {
@@ -195,6 +196,113 @@ describe('transport application controller', () => {
       },
     });
     expect(resolver).toHaveBeenCalledTimes(2);
+    await controller.close();
+  });
+
+  it('preflights resolved active plans before touching current authority', async () => {
+    const canonical = scenario();
+    const plan = demandPlan();
+    const activeRecord = parseTransportSaveRecord({
+      ...record(),
+      saveId: 'active-demand-preflight',
+      sourceSimulationTick: 2,
+      snapshot: createTransportSimulationSnapshot(
+        advanceTransportTicks(
+          createTransportSimulationState(canonical, 0, plan),
+          2,
+        ),
+      ),
+    });
+    const current = createDirectTransportSimulationClient();
+    const currentClose = vi.fn(() => current.close());
+    let clientCreations = 0;
+    let resolved: unknown = plan;
+    const controller = createTransportApplicationController({
+      createClient: () => {
+        clientCreations += 1;
+        return clientCreations === 1
+          ? Object.freeze({ ...current, close: currentClose })
+          : createDirectTransportSimulationClient();
+      },
+      repository: {
+        get: async () => classifyPersistedSaveRecord(activeRecord),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => canonical },
+      passengerDemandPlanResolver: {
+        resolve: async () => resolved as PassengerDemandPlanV1,
+      },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: canonical,
+      passengerDemandPlan: plan,
+    });
+    await controller.advanceTicks(1);
+    const expected = controller.projection.getState();
+
+    const wrongHash = structuredClone(plan);
+    (wrongHash as { demandModelContentHash: string }).demandModelContentHash =
+      'e'.repeat(64);
+    resolved = wrongHash;
+    await expect(
+      controller.restore({
+        saveId: 'active-demand-preflight',
+        timelineId: parseTimelineId('timeline-wrong'),
+      }),
+    ).rejects.toThrow(/demand plan/i);
+    expect(controller.projection.getState()).toEqual({
+      ...expected,
+      message: expect.stringMatching(/demand plan/i),
+    });
+    expect(currentClose).not.toHaveBeenCalled();
+    expect(clientCreations).toBe(1);
+
+    resolved = {};
+    await expect(
+      controller.restore({
+        saveId: 'active-demand-preflight',
+        timelineId: parseTimelineId('timeline-malformed'),
+      }),
+    ).rejects.toThrow();
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-current',
+      simulationTick: expected.simulationTick,
+      fleet: expected.fleet,
+      passengerDemand: expected.passengerDemand,
+    });
+    expect(currentClose).not.toHaveBeenCalled();
+    expect(clientCreations).toBe(1);
+
+    const inconsistent = structuredClone(plan);
+    (
+      inconsistent as { accessPolicy: { accessTicksPerCell: number } }
+    ).accessPolicy.accessTicksPerCell = 2;
+    resolved = inconsistent;
+    await expect(
+      controller.restore({
+        saveId: 'active-demand-preflight',
+        timelineId: parseTimelineId('timeline-inconsistent'),
+      }),
+    ).rejects.toThrow(/demand plan/i);
+    expect(currentClose).not.toHaveBeenCalled();
+    expect(clientCreations).toBe(1);
+
+    resolved = plan;
+    await controller.restore({
+      saveId: 'active-demand-preflight',
+      timelineId: parseTimelineId('timeline-restored'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-restored',
+      simulationTick: 2,
+      passengerDemand: { status: 'active', processedThroughTick: 2 },
+    });
+    expect(currentClose).toHaveBeenCalledTimes(1);
+    expect(clientCreations).toBe(2);
     await controller.close();
   });
 

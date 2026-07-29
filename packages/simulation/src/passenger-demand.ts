@@ -280,6 +280,17 @@ const validatePlanSemantics = (
   );
   if (new Set(cells.map((cell) => cell.cellId)).size !== cells.length)
     throw new Error('Passenger demand plan has duplicate cell IDs.');
+  const occupiedCells = new Set<string>();
+  for (const cell of cells) {
+    const coordinate = `${cell.row}:${cell.column}`;
+    if (occupiedCells.has(coordinate))
+      throw new Error('Passenger demand plan has duplicate cell coordinates.');
+    occupiedCells.add(coordinate);
+    if (cell.row >= parsed.grid.rows || cell.column >= parsed.grid.columns)
+      throw new Error('Passenger demand plan cell is outside grid bounds.');
+    if (cell.cellId !== `r${cell.row}c${cell.column}`)
+      throw new Error('Passenger demand plan cell identity is inconsistent.');
+  }
   if (new Set(stops.map((stop) => stop.stopPlaceId)).size !== stops.length)
     throw new Error('Passenger demand plan has duplicate StopPlace IDs.');
   const stopIds = new Set(stops.map((stop) => stop.stopPlaceId));
@@ -468,6 +479,14 @@ export function validatePassengerDemandState(
   const cells = new Map(parsedPlan.cells.map((cell) => [cell.cellId, cell]));
   const groupIds = new Set<string>();
   let inAccess = 0;
+  for (let index = 1; index < parsed.accessingGroups.length; index += 1)
+    if (
+      compareGroups(
+        parsed.accessingGroups[index - 1] as AccessingPassengerGroup,
+        parsed.accessingGroups[index] as AccessingPassengerGroup,
+      ) >= 0
+    )
+      throw new Error('Accessing passenger group order is non-canonical.');
   for (const group of parsed.accessingGroups) {
     const cell = cells.get(group.cellId as CityPopulationCellId);
     const sequence = Number(
@@ -517,9 +536,7 @@ export function validatePassengerDemandState(
     demandPlanCoordinate:
       parsed.demandPlanCoordinate as ActivePassengerDemandState['demandPlanCoordinate'],
     cellCredits: parsed.cellCredits as PassengerCellCreditState[],
-    accessingGroups: (
-      [...parsed.accessingGroups] as AccessingPassengerGroup[]
-    ).sort(compareGroups),
+    accessingGroups: parsed.accessingGroups as AccessingPassengerGroup[],
     stopArrivals: parsed.stopArrivals as StopPlaceArrivalState[],
   });
 }

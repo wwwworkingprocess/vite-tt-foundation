@@ -1,6 +1,7 @@
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import {
   projectPassengerDemand,
+  restoreTransportSimulationState,
   type ActivePassengerDemandState,
   type PassengerDemandPlanV1,
   type PassengerDemandProjection,
@@ -366,6 +367,11 @@ export function createTransportApplicationController(input: {
                   .demandPlanCoordinate,
               );
           }
+          restoreTransportSimulationState(
+            restoredRecord.snapshot,
+            scenario,
+            passengerDemandPlan,
+          );
         } catch (error) {
           if (client === previous && !closing && !closed)
             set({ ...previousState, message: errorMessage(error) });

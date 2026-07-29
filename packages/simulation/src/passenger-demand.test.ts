@@ -103,10 +103,17 @@ const createPlan = () =>
 type MutablePlan = {
   schemaVersion: string;
   demandModelContentHash: string;
-  grid: { totalPopulationWeight: number };
+  grid: {
+    rows: number;
+    columns: number;
+    totalPopulationWeight: number;
+  };
   emissionPolicy: { emissionCreditsPerWeightPerTick: number };
   accessPolicy: { accessTicksPerCell: number };
   cells: Array<{
+    cellId?: string;
+    row?: number;
+    column?: number;
     populationWeight: number;
     assignedStopPlaceId: string | null;
     distanceSquaredCells: number | null;
@@ -219,6 +226,47 @@ describe('Passenger Demand Plan V1', () => {
     raw.cells[1]!.populationWeight = Number.MAX_SAFE_INTEGER;
     raw.grid.totalPopulationWeight = Number.MAX_SAFE_INTEGER;
     expect(() => parsePassengerDemandPlan(raw)).toThrow(/overflow/i);
+  });
+
+  it.each([
+    [
+      'cell identity',
+      (plan: MutablePlan) => {
+        plan.cells[0]!.cellId = 'r1c1';
+      },
+    ],
+    [
+      'row bounds',
+      (plan: MutablePlan) => {
+        plan.cells[0]!.row = plan.grid.rows;
+        plan.cells[0]!.cellId = `r${plan.grid.rows}c0`;
+      },
+    ],
+    [
+      'column bounds',
+      (plan: MutablePlan) => {
+        plan.cells[0]!.column = plan.grid.columns;
+        plan.cells[0]!.cellId = `r0c${plan.grid.columns}`;
+      },
+    ],
+    [
+      'duplicate coordinates',
+      (plan: MutablePlan) => {
+        plan.cells[1]!.row = plan.cells[0]!.row;
+        plan.cells[1]!.column = plan.cells[0]!.column;
+      },
+    ],
+  ])('rejects invalid plan-cell %s', (_name, mutate) => {
+    const raw = structuredClone(createPlan()) as unknown as MutablePlan;
+    mutate(raw);
+    expect(() => parsePassengerDemandPlan(raw)).toThrow();
+  });
+
+  it('normalizes shuffled valid cells to identical row-major output', () => {
+    const expected = createPlan();
+    const shuffled = structuredClone(expected) as unknown as MutablePlan;
+    shuffled.cells.reverse();
+    expect(parsePassengerDemandPlan(shuffled)).toEqual(expected);
   });
 });
 

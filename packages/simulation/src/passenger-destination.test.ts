@@ -177,4 +177,78 @@ describe('deterministic passenger destination allocation', () => {
       allocatePassengerDestinations([candidates[0], candidates[0]], 0, 1),
     ).toThrow();
   });
+
+  it('wraps a maximum-safe weighted cycle without unsafe cursor addition', () => {
+    const maximum = Number.MAX_SAFE_INTEGER;
+    const passengerCount = maximum - 2;
+    const result = allocatePassengerDestinations(
+      [
+        {
+          cellId: 'r0c0',
+          row: 0,
+          column: 0,
+          destinationStopPlaceId: 'a',
+          weight: maximum,
+        },
+      ],
+      maximum - 1,
+      passengerCount,
+    );
+    expect(result.allocations[0]?.count).toBe(passengerCount);
+    expect(result.nextCursor).toBe(maximum - 3);
+  });
+
+  it('conserves near-limit multi-candidate split and batched allocation', () => {
+    const maximum = Number.MAX_SAFE_INTEGER;
+    const candidates = [
+      {
+        cellId: 'r0c0',
+        row: 0,
+        column: 0,
+        destinationStopPlaceId: 'a',
+        weight: maximum - 10,
+      },
+      {
+        cellId: 'r0c1',
+        row: 0,
+        column: 1,
+        destinationStopPlaceId: 'b',
+        weight: 10,
+      },
+    ] as const;
+    const original = structuredClone(candidates);
+    const cursor = maximum - 5;
+    const firstCount = maximum - 20;
+    const secondCount = 18;
+    const batch = allocatePassengerDestinations(
+      candidates,
+      cursor,
+      firstCount + secondCount,
+    );
+    const first = allocatePassengerDestinations(candidates, cursor, firstCount);
+    const second = allocatePassengerDestinations(
+      candidates,
+      first.nextCursor,
+      secondCount,
+    );
+    const splitTotals = first.allocations.map(
+      (allocation, index) =>
+        allocation.count + second.allocations[index]!.count,
+    );
+    expect(batch.allocations.map(({ count }) => count)).toEqual(splitTotals);
+    expect(
+      batch.allocations.reduce(
+        (total, allocation) => total + allocation.count,
+        0,
+      ),
+    ).toBe(firstCount + secondCount);
+    expect(
+      batch.allocations.every((allocation) =>
+        Number.isSafeInteger(allocation.count),
+      ),
+    ).toBe(true);
+    expect(batch.nextCursor).toBe(second.nextCursor);
+    expect(batch.nextCursor).toBe(maximum - 7);
+    expect(candidates).toEqual(original);
+  });
 });

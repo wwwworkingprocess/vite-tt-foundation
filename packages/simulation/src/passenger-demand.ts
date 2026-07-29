@@ -373,7 +373,7 @@ export function allocatePassengerDestinations(
     !Number.isSafeInteger(passengerCount) ||
     passengerCount < 0
   )
-    throw new Error('Invalid destination allocation input.');
+    throw new Error('Invalid allocation.');
   const candidates = [...candidatesInput].sort(
     (left, right) => left.row - right.row || left.column - right.column,
   );
@@ -389,7 +389,7 @@ export function allocatePassengerDestinations(
       candidate.column < 0 ||
       keys.has(candidate.cellId)
     )
-      throw new Error('Invalid destination candidate.');
+      throw new Error('Invalid candidate.');
     keys.add(candidate.cellId);
     totalWeight = checkedAdd(
       totalWeight,
@@ -398,16 +398,18 @@ export function allocatePassengerDestinations(
     );
   }
   if (totalWeight === 0) {
-    if (cursor !== 0) throw new Error('Invalid empty destination cursor.');
+    if (cursor !== 0) throw new Error('Invalid empty cursor.');
     return deepFreeze({ allocations: [], nextCursor: 0 });
   }
-  if (cursor >= totalWeight)
-    throw new Error('Destination cursor is out of range.');
+  if (cursor >= totalWeight) throw new Error('Invalid cursor.');
   const fullCycles = Math.floor(passengerCount / totalWeight);
   const remainder = passengerCount % totalWeight;
-  const firstEnd = Math.min(totalWeight, cursor + remainder);
-  const wrappedEnd = Math.max(0, cursor + remainder - totalWeight);
+  const distanceToCycleEnd = totalWeight - cursor;
+  const wraps = remainder >= distanceToCycleEnd;
+  const firstEnd = wraps ? totalWeight : cursor + remainder;
+  const wrappedEnd = wraps ? remainder - distanceToCycleEnd : 0;
   let intervalStart = 0;
+  let allocated = 0;
   const allocations = candidates.map((candidate) => {
     const intervalEnd = checkedAdd(
       intervalStart,
@@ -423,12 +425,15 @@ export function allocatePassengerDestinations(
       intervalOverlap(intervalStart, intervalEnd, cursor, firstEnd) +
       intervalOverlap(intervalStart, intervalEnd, 0, wrappedEnd);
     const count = checkedAdd(base, extra, 'destination allocation');
+    allocated = checkedAdd(allocated, count, 'allocation total');
     intervalStart = intervalEnd;
     return { ...candidate, count };
   });
+  if (allocated !== passengerCount)
+    throw new Error('Allocation conservation failed.');
   return deepFreeze({
     allocations,
-    nextCursor: (cursor + remainder) % totalWeight,
+    nextCursor: wraps ? wrappedEnd : firstEnd,
   });
 }
 

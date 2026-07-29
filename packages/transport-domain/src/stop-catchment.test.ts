@@ -12,6 +12,7 @@ import {
 
 type StopFixture = {
   scenarioId: string;
+  patternNodeIds?: string[];
   stopPlaces: Array<{
     stopPlaceId: string;
     position?: { latitude: number; longitude: number };
@@ -43,6 +44,8 @@ const scenarioFrom = (fixture: StopFixture): CanonicalScenario => {
       resolution: { status: 'fixture' },
     })),
   );
+  const patternNodeIds =
+    fixture.patternNodeIds ?? nodes.map((node) => node.stopNodeId);
   return parseScenarioPackage({
     manifest: {
       schemaVersion: '1.0.0',
@@ -116,7 +119,7 @@ const scenarioFrom = (fixture: StopFixture): CanonicalScenario => {
               patternId: 'fixture-pattern',
               directionLabel: 'Fixture',
               closesLoop: false,
-              stopNodeIds: [nodes[0]!.stopNodeId, nodes[1]!.stopNodeId],
+              stopNodeIds: patternNodeIds,
             },
           ],
         },
@@ -130,7 +133,7 @@ const scenarioA = scenarioFrom(scenarios.scenarioA);
 const scenarioB = scenarioFrom(scenarios.scenarioB);
 
 describe('canonical StopPlace eligibility', () => {
-  it('deduplicates directional nodes, excludes unreferenced places, and orders by StopPlaceId', () => {
+  it('uses only pattern-referenced nodes, deduplicates physical places, and orders by StopPlaceId', () => {
     const eligible = listEligibleStopPlaces(scenarioA);
     expect(eligible.map((place) => place.stopPlaceId)).toEqual([
       'place-a',
@@ -143,6 +146,34 @@ describe('canonical StopPlace eligibility', () => {
     expect(eligible).not.toContainEqual(
       expect.objectContaining({ stopPlaceId: 'place-unreferenced' }),
     );
+    expect(eligible).not.toContainEqual(
+      expect.objectContaining({ stopPlaceId: 'place-orphan' }),
+    );
+    expect(eligible).toContainEqual(
+      expect.objectContaining({ stopPlaceId: 'place-b' }),
+    );
+  });
+
+  it('keeps one magnet when used and unused directional nodes share a StopPlace', () => {
+    const mixed = scenarioFrom({
+      scenarioId: 'mixed-used-unused',
+      patternNodeIds: ['mixed-used', 'terminal-used'],
+      stopPlaces: [
+        {
+          stopPlaceId: 'mixed-place',
+          position: { latitude: 10, longitude: 20 },
+          nodeIds: ['mixed-used', 'mixed-unused'],
+        },
+        {
+          stopPlaceId: 'terminal-place',
+          position: { latitude: 10, longitude: 20.001 },
+          nodeIds: ['terminal-used'],
+        },
+      ],
+    });
+    expect(
+      listEligibleStopPlaces(mixed).map((place) => place.stopPlaceId),
+    ).toEqual(['mixed-place', 'terminal-place']);
   });
 
   it('fails actionably when a referenced physical StopPlace has no valid position', () => {
@@ -238,9 +269,19 @@ describe('deterministic stop catchments', () => {
   it('is independent of eligible-stop source ordering and retains zero summaries', () => {
     const reversed = structuredClone(scenarioA) as unknown as {
       stops: { stopPlaces: unknown[]; stopNodes: unknown[] };
+      routes: {
+        routes: Array<{
+          patterns: Array<{ stopNodeIds: unknown[] }>;
+        }>;
+      };
     };
     reversed.stops.stopPlaces.reverse();
     reversed.stops.stopNodes.reverse();
+    reversed.routes.routes.reverse();
+    for (const route of reversed.routes.routes) {
+      route.patterns.reverse();
+      for (const pattern of route.patterns) pattern.stopNodeIds.reverse();
+    }
     const expected = buildStopCatchments({
       grid,
       scenario: scenarioA,
@@ -252,6 +293,11 @@ describe('deterministic stop catchments', () => {
       maxAccessDistanceCells: 2,
     });
     expect(actual).toEqual(expected);
+    expect(
+      actual.cellAssignments.some(
+        (assignment) => assignment.assignedStopPlaceId === 'place-orphan',
+      ),
+    ).toBe(false);
     expect(
       actual.stopSummaries.find(
         (summary) => summary.stopPlaceId === 'place-zero',

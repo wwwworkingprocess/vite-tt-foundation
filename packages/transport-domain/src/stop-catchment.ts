@@ -84,9 +84,16 @@ const isValidPosition = (
 export function listEligibleStopPlaces(
   scenario: CanonicalScenario,
 ): readonly Readonly<EligibleStopPlace>[] {
+  const usedStopNodeIds = new Set(
+    scenario.routes.routes.flatMap((route) =>
+      route.patterns.flatMap((pattern) => pattern.stopNodeIds),
+    ),
+  );
   const referenced = new Set(
     scenario.stops.stopNodes.flatMap((node) =>
-      node.stopPlaceId === null ? [] : [node.stopPlaceId],
+      usedStopNodeIds.has(node.stopNodeId) && node.stopPlaceId !== null
+        ? [node.stopPlaceId]
+        : [],
     ),
   );
   const eligible = scenario.stops.stopPlaces

@@ -1,6 +1,12 @@
 {
   "scenarioA": {
     "scenarioId": "catchment-a",
+    "patternNodeIds": [
+      "node-a-outbound",
+      "node-a-inbound",
+      "node-b",
+      "node-zero"
+    ],
     "stopPlaces": [
       {
         "stopPlaceId": "place-a",
@@ -21,11 +27,17 @@
         "stopPlaceId": "place-unreferenced",
         "position": { "latitude": 10.002, "longitude": 20.005 },
         "nodeIds": []
+      },
+      {
+        "stopPlaceId": "place-orphan",
+        "position": { "latitude": 10.002, "longitude": 20.004 },
+        "nodeIds": ["node-orphan"]
       }
     ]
   },
   "scenarioB": {
     "scenarioId": "catchment-b",
+    "patternNodeIds": ["node-x", "node-y"],
     "stopPlaces": [
       {
         "stopPlaceId": "place-x",

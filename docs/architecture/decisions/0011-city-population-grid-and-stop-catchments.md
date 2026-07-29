@@ -30,6 +30,10 @@ StopPlaceId, and the maximum access distance is an explicit dimensionless
 grid-cell distance. Coverage is reported using conserved integer weights and
 integer basis points.
 
+A StopPlace becomes a catchment magnet only through a StopNode referenced by
+at least one canonical route pattern; merely existing in `stops.json` is
+insufficient. Route-pattern membership is the Phase 4E0 serviceability boundary.
+
 The same city field can therefore produce different catchments for different
 canonical scenarios without changing either input.
 

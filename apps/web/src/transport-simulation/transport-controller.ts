@@ -22,6 +22,7 @@ import {
   migrateTransportSaveRecordV1,
   migrateTransportSaveRecordV2,
   migrateTransportSaveRecordV3,
+  migrateTransportSaveRecordV4,
   parseTransportSaveRecord,
   type PersistedSaveClassification,
   type TransportSaveRecord,
@@ -333,7 +334,8 @@ export function createTransportApplicationController(input: {
           classified.classification !== 'current' &&
           classified.classification !== 'migratable-transport-v1' &&
           classified.classification !== 'migratable-transport-v2' &&
-          classified.classification !== 'migratable-transport-v3'
+          classified.classification !== 'migratable-transport-v3' &&
+          classified.classification !== 'migratable-transport-v4'
         ) {
           const error =
             classified.classification === 'unrelated'
@@ -345,11 +347,13 @@ export function createTransportApplicationController(input: {
         const restoredRecord =
           classified.classification === 'current'
             ? classified.record
-            : classified.classification === 'migratable-transport-v3'
-              ? migrateTransportSaveRecordV3(classified.record)
-              : classified.classification === 'migratable-transport-v2'
-                ? migrateTransportSaveRecordV2(classified.record)
-                : migrateTransportSaveRecordV1(classified.record);
+            : classified.classification === 'migratable-transport-v4'
+              ? migrateTransportSaveRecordV4(classified.record)
+              : classified.classification === 'migratable-transport-v3'
+                ? migrateTransportSaveRecordV3(classified.record)
+                : classified.classification === 'migratable-transport-v2'
+                  ? migrateTransportSaveRecordV2(classified.record)
+                  : migrateTransportSaveRecordV1(classified.record);
         let scenario: CanonicalScenario;
         let passengerDemandPlan: PassengerDemandPlanV1 | undefined;
         try {

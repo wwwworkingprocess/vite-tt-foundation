@@ -233,7 +233,7 @@ describe.each(factories)(
         envelope(3, { type: 'foundation.advance-ticks', count: 5 }),
       );
       const exported = await client.exportSnapshot();
-      expect(exported.snapshot.schemaVersion).toBe(4);
+      expect(exported.snapshot.schemaVersion).toBe(5);
       expect(exported.snapshot.state.passengerDemand).toEqual({
         status: 'disabled',
       });

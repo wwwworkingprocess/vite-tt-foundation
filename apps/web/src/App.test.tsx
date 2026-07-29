@@ -211,6 +211,8 @@ vi.mock('./scenarios/ScenarioPanel.js', () => ({
 vi.mock('./transport-simulation/browser-transport-worker.js', async () => {
   const { startTransportWorkerRuntime } =
     await import('./transport-simulation/worker-transport-client.js');
+  const { createDirectTransportSimulationClient } =
+    await import('./transport-simulation/transport-client.js');
   return {
     createBrowserTransportWorker: () => {
       const clientListeners = new Set<(event: { data: unknown }) => void>();
@@ -218,17 +220,20 @@ vi.mock('./transport-simulation/browser-transport-worker.js', async () => {
         (event: { data: unknown; error?: unknown }) => void
       >();
       const runtimeListeners = new Set<(event: { data: unknown }) => void>();
-      const runtime = startTransportWorkerRuntime({
-        postMessage: (message) =>
-          queueMicrotask(() =>
-            clientListeners.forEach((listener) =>
-              listener({ data: structuredClone(message) }),
+      const runtime = startTransportWorkerRuntime(
+        {
+          postMessage: (message) =>
+            queueMicrotask(() =>
+              clientListeners.forEach((listener) =>
+                listener({ data: structuredClone(message) }),
+              ),
             ),
-          ),
-        addEventListener: (_type, listener) => runtimeListeners.add(listener),
-        removeEventListener: (_type, listener) =>
-          runtimeListeners.delete(listener),
-      });
+          addEventListener: (_type, listener) => runtimeListeners.add(listener),
+          removeEventListener: (_type, listener) =>
+            runtimeListeners.delete(listener),
+        },
+        createDirectTransportSimulationClient,
+      );
       return {
         postMessage: (message: unknown) =>
           queueMicrotask(() =>

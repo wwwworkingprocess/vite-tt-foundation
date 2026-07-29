@@ -11,7 +11,6 @@ import {
   type FoundationCommandResult,
 } from '@torrevieja-tycoon/protocol';
 import {
-  createDirectTransportSimulationClient,
   transportClientContractVersion,
   type TransportCommandEnvelope,
   type TransportClientConnectRequest,
@@ -72,7 +71,7 @@ const errorMessage = (error: unknown) =>
 
 export function startTransportWorkerRuntime(
   endpoint: TransportWorkerEndpoint,
-  createClient: () => TransportSimulationClient = createDirectTransportSimulationClient,
+  createClient: () => TransportSimulationClient,
 ) {
   let client: TransportSimulationClient | undefined;
   let closed = false;

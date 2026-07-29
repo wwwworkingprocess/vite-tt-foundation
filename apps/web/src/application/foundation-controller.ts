@@ -38,7 +38,7 @@ export interface ApplicationSaveSummary {
   readonly scenarioSchemaVersion?: string | undefined;
   readonly scenarioVersion?: string | undefined;
   readonly contentHash?: string | undefined;
-  readonly snapshotVersion?: 1 | 2 | 3 | 4 | undefined;
+  readonly snapshotVersion?: 1 | 2 | 3 | 4 | 5 | undefined;
   readonly authoritativeEntityCount?: number | undefined;
   readonly compatibility?:
     'current' | 'migratable' | 'legacy-incompatible' | undefined;

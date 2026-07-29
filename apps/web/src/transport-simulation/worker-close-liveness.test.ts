@@ -89,7 +89,7 @@ function createLoopback(input: {
   };
   const runtime = startTransportWorkerRuntime(
     endpoint,
-    input.createRuntimeClient,
+    input.createRuntimeClient ?? createDirectTransportSimulationClient,
   );
   const worker: TransportWorkerLike = {
     postMessage: (message) =>

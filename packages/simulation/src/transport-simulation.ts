@@ -23,11 +23,14 @@ import {
   advancePassengerDemandToTick,
   createDisabledPassengerDemandState,
   createInitialPassengerDemandState,
+  migratePassengerDemandStateV4,
   parsePassengerDemandState,
+  parsePassengerDemandStateV4,
   parsePassengerDemandPlan,
   validatePassengerDemandState,
   type PassengerDemandPlanV1,
   type PassengerDemandState,
+  type PassengerDemandStateV4,
 } from './passenger-demand.js';
 
 export type ScenarioCompatibilityErrorCode =
@@ -37,7 +40,7 @@ export type ScenarioCompatibilityErrorCode =
   | 'scenario-version-mismatch'
   | 'scenario-content-hash-mismatch';
 
-export const transportSimulationSnapshotSchemaVersion = 4 as const;
+export const transportSimulationSnapshotSchemaVersion = 5 as const;
 
 export class ScenarioCompatibilityError extends Error {
   constructor(
@@ -104,11 +107,23 @@ export interface TransportSimulationSnapshotV4 {
   readonly state: Readonly<{
     readonly tick: SimulationTick;
     readonly fleet: readonly VehicleState[];
+    readonly passengerDemand: PassengerDemandStateV4;
+  }>;
+}
+
+export interface TransportSimulationSnapshotV5 {
+  readonly kind: 'transport-simulation-snapshot';
+  readonly schemaVersion: 5;
+  readonly simulationVersion: 'transport-5';
+  readonly scenario: ScenarioCoordinate;
+  readonly state: Readonly<{
+    readonly tick: SimulationTick;
+    readonly fleet: readonly VehicleState[];
     readonly passengerDemand: PassengerDemandState;
   }>;
 }
 
-export type TransportSimulationSnapshot = TransportSimulationSnapshotV4;
+export type TransportSimulationSnapshot = TransportSimulationSnapshotV5;
 
 const hash = z.string().regex(/^[0-9a-f]{64}$/);
 const coordinateSchema = z.strictObject({
@@ -148,8 +163,19 @@ const snapshotV3Schema = z.strictObject({
 });
 const snapshotV4Schema = z.strictObject({
   kind: z.literal('transport-simulation-snapshot'),
-  schemaVersion: z.literal(transportSimulationSnapshotSchemaVersion),
+  schemaVersion: z.literal(4),
   simulationVersion: z.literal('transport-4'),
+  scenario: coordinateSchema,
+  state: z.strictObject({
+    tick: z.number().int().nonnegative().safe(),
+    fleet: z.array(z.unknown()),
+    passengerDemand: z.unknown(),
+  }),
+});
+const snapshotV5Schema = z.strictObject({
+  kind: z.literal('transport-simulation-snapshot'),
+  schemaVersion: z.literal(transportSimulationSnapshotSchemaVersion),
+  simulationVersion: z.literal('transport-5'),
   scenario: coordinateSchema,
   state: z.strictObject({
     tick: z.number().int().nonnegative().safe(),
@@ -265,13 +291,45 @@ export function applyTransportVehicleCommand(
 export function parseTransportSimulationSnapshot(
   value: unknown,
 ): TransportSimulationSnapshot {
-  const result = snapshotV4Schema.safeParse(value);
+  const result = snapshotV5Schema.safeParse(value);
   if (!result.success)
     throw new ScenarioCompatibilityError(
       'unsupported-transport-snapshot',
       result.error.issues[0]!.message,
     );
   const passengerDemand = parsePassengerDemandState(
+    result.data.state.passengerDemand,
+  );
+  const tick = parseSimulationTick(result.data.state.tick);
+  if (
+    passengerDemand.status === 'active' &&
+    passengerDemand.processedThroughTick !== tick
+  )
+    throw new ScenarioCompatibilityError(
+      'unsupported-transport-snapshot',
+      'Passenger demand processed tick must equal the snapshot tick.',
+    );
+  return freeze({
+    ...result.data,
+    scenario: result.data.scenario as ScenarioCoordinate,
+    state: {
+      tick,
+      fleet: parseVehicleFleetSnapshot(result.data.state.fleet),
+      passengerDemand,
+    },
+  });
+}
+
+export function parseTransportSimulationSnapshotV4(
+  value: unknown,
+): TransportSimulationSnapshotV4 {
+  const result = snapshotV4Schema.safeParse(value);
+  if (!result.success)
+    throw new ScenarioCompatibilityError(
+      'unsupported-transport-snapshot',
+      result.error.issues[0]!.message,
+    );
+  const passengerDemand = parsePassengerDemandStateV4(
     result.data.state.passengerDemand,
   );
   const tick = parseSimulationTick(result.data.state.tick);
@@ -350,12 +408,12 @@ export function parseTransportSimulationSnapshotV1(
 
 export function migrateTransportSimulationSnapshotV1(
   value: unknown,
-): TransportSimulationSnapshotV4 {
+): TransportSimulationSnapshotV5 {
   const snapshot = parseTransportSimulationSnapshotV1(value);
   return parseTransportSimulationSnapshot({
     ...snapshot,
-    schemaVersion: 4,
-    simulationVersion: 'transport-4',
+    schemaVersion: 5,
+    simulationVersion: 'transport-5',
     state: {
       tick: snapshot.state.tick,
       fleet: [],
@@ -366,12 +424,12 @@ export function migrateTransportSimulationSnapshotV1(
 
 export function migrateTransportSimulationSnapshotV2(
   value: unknown,
-): TransportSimulationSnapshotV4 {
+): TransportSimulationSnapshotV5 {
   const snapshot = parseTransportSimulationSnapshotV2(value);
   return parseTransportSimulationSnapshot({
     ...snapshot,
-    schemaVersion: 4,
-    simulationVersion: 'transport-4',
+    schemaVersion: 5,
+    simulationVersion: 'transport-5',
     state: {
       tick: snapshot.state.tick,
       fleet: snapshot.state.fleet.map((vehicle) => ({
@@ -388,15 +446,32 @@ export function migrateTransportSimulationSnapshotV2(
 
 export function migrateTransportSimulationSnapshotV3(
   value: unknown,
-): TransportSimulationSnapshotV4 {
+): TransportSimulationSnapshotV5 {
   const snapshot = parseTransportSimulationSnapshotV3(value);
   return parseTransportSimulationSnapshot({
     ...snapshot,
-    schemaVersion: 4,
-    simulationVersion: 'transport-4',
+    schemaVersion: 5,
+    simulationVersion: 'transport-5',
     state: {
       ...snapshot.state,
       passengerDemand: createDisabledPassengerDemandState(),
+    },
+  });
+}
+
+export function migrateTransportSimulationSnapshotV4(
+  value: unknown,
+): TransportSimulationSnapshotV5 {
+  const snapshot = parseTransportSimulationSnapshotV4(value);
+  return parseTransportSimulationSnapshot({
+    ...snapshot,
+    schemaVersion: 5,
+    simulationVersion: 'transport-5',
+    state: {
+      ...snapshot.state,
+      passengerDemand: migratePassengerDemandStateV4(
+        snapshot.state.passengerDemand,
+      ),
     },
   });
 }
@@ -406,8 +481,8 @@ export function createTransportSimulationSnapshot(
 ): TransportSimulationSnapshot {
   return parseTransportSimulationSnapshot({
     kind: 'transport-simulation-snapshot',
-    schemaVersion: 4,
-    simulationVersion: 'transport-4',
+    schemaVersion: 5,
+    simulationVersion: 'transport-5',
     scenario: createScenarioCoordinate(state.scenario),
     state: {
       tick: state.tick,

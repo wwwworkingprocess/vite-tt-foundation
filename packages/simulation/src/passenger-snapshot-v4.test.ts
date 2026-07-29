@@ -8,6 +8,7 @@ import {
   migrateTransportSimulationSnapshotV1,
   migrateTransportSimulationSnapshotV2,
   migrateTransportSimulationSnapshotV3,
+  migrateTransportSimulationSnapshotV4,
   parseTransportSimulationSnapshot,
   parseTransportSimulationSnapshotV3,
   parsePassengerDemandPlan,
@@ -75,7 +76,7 @@ const plan = () => {
   });
 };
 
-describe('Transport Snapshot V4 passenger authority', () => {
+describe('Transport Snapshot V5 passenger destination authority', () => {
   it('round-trips active dynamic demand without embedding the static plan', () => {
     const demandPlan = plan();
     const state = advanceTransportTicks(
@@ -84,8 +85,8 @@ describe('Transport Snapshot V4 passenger authority', () => {
     );
     const snapshot = createTransportSimulationSnapshot(state);
     expect(snapshot).toMatchObject({
-      schemaVersion: 4,
-      simulationVersion: 'transport-4',
+      schemaVersion: 5,
+      simulationVersion: 'transport-5',
       state: {
         tick: 3,
         passengerDemand: { status: 'active', processedThroughTick: 3 },
@@ -98,6 +99,70 @@ describe('Transport Snapshot V4 passenger authority', () => {
         restoreTransportSimulationState(snapshot, scenario(), demandPlan),
       ),
     ).toEqual(snapshot);
+  });
+
+  it('migrates active V4 backlog without inventing destination assignments', () => {
+    const demandPlan = plan();
+    const current = createTransportSimulationSnapshot(
+      advanceTransportTicks(
+        createTransportSimulationState(scenario(), 0, demandPlan),
+        1,
+      ),
+    );
+    const legacy = structuredClone(current) as unknown as {
+      schemaVersion: number;
+      simulationVersion: string;
+      state: {
+        passengerDemand: Record<string, unknown>;
+      };
+    };
+    legacy.schemaVersion = 4;
+    legacy.simulationVersion = 'transport-4';
+    delete legacy.state.passengerDemand.nextPassengerJourneyGroupSequence;
+    delete legacy.state.passengerDemand.destinationCursors;
+    delete legacy.state.passengerDemand.destinationAssignedGroups;
+    delete legacy.state.passengerDemand.totalDestinationAssignedPassengerCount;
+    delete legacy.state.passengerDemand
+      .destinationUnavailableAtStopPassengerCount;
+    const passenger = legacy.state.passengerDemand;
+    passenger.totalArrivedAtStopPassengerCount = 2;
+    passenger.servedEmittedPassengerCount = 2;
+    passenger.totalEmittedPassengerCount = 2;
+    passenger.unservedAtSourcePassengerCount = 0;
+    passenger.accessingGroups = [];
+    passenger.stopArrivals = [
+      { stopPlaceId: 'fixture-stop', awaitingDestinationCount: 2 },
+    ];
+    const migrated = migrateTransportSimulationSnapshotV4(legacy);
+    expect(migrated).toMatchObject({
+      schemaVersion: 5,
+      simulationVersion: 'transport-5',
+      state: {
+        passengerDemand: {
+          nextPassengerJourneyGroupSequence: 1,
+          destinationAssignedGroups: [],
+          totalDestinationAssignedPassengerCount: 0,
+          destinationUnavailableAtStopPassengerCount: 0,
+          stopArrivals: [
+            { stopPlaceId: 'fixture-stop', awaitingDestinationCount: 2 },
+          ],
+        },
+      },
+    });
+    const restored = restoreTransportSimulationState(
+      migrated,
+      scenario(),
+      demandPlan,
+    );
+    const advanced = advanceTransportTicks(restored, 1);
+    expect(advanced.passengerDemand).toMatchObject({
+      status: 'active',
+      stopArrivals: [
+        { stopPlaceId: 'fixture-stop', awaitingDestinationCount: 0 },
+      ],
+      totalDestinationAssignedPassengerCount: 0,
+      destinationUnavailableAtStopPassengerCount: 2,
+    });
   });
 
   it('round-trips disabled demand without a resolver', () => {
@@ -145,7 +210,7 @@ describe('Transport Snapshot V4 passenger authority', () => {
       migrateTransportSimulationSnapshotV3(v3),
     ])
       expect(migrated).toMatchObject({
-        schemaVersion: 4,
+        schemaVersion: 5,
         state: { passengerDemand: { status: 'disabled' } },
       });
   });

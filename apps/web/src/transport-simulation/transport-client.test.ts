@@ -64,7 +64,10 @@ const createLoopbackWorker = (): TransportWorkerLike => {
     addEventListener: (_type, listener) => runtimeListeners.add(listener),
     removeEventListener: (_type, listener) => runtimeListeners.delete(listener),
   };
-  const runtime = startTransportWorkerRuntime(endpoint);
+  const runtime = startTransportWorkerRuntime(
+    endpoint,
+    createDirectTransportSimulationClient,
+  );
   return {
     postMessage(message) {
       const cloned = structuredClone(message);

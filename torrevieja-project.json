@@ -1,7 +1,7 @@
 {
   "defaultScenarioId": "torrevieja-legacy-abc-v1",
   "schemaVersions": {
-    "transportSimulationSnapshot": 4,
+    "transportSimulationSnapshot": 5,
     "transportSaveRecord": 3
   },
   "contractVersions": {

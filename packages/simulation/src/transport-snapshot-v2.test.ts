@@ -69,13 +69,13 @@ const movingState = () => {
   return advanceTransportTicks(state, 5);
 };
 
-describe('Transport Snapshot V4 and legacy migration', () => {
+describe('Transport Snapshot V5 and legacy migration', () => {
   it('round-trips a compact, deeply immutable ordered fleet', () => {
     const snapshot = createTransportSimulationSnapshot(movingState());
     expect(snapshot).toMatchObject({
       kind: 'transport-simulation-snapshot',
-      schemaVersion: 4,
-      simulationVersion: 'transport-4',
+      schemaVersion: 5,
+      simulationVersion: 'transport-5',
       state: {
         tick: 15,
         fleet: [
@@ -106,7 +106,7 @@ describe('Transport Snapshot V4 and legacy migration', () => {
     ).toEqual(createTransportSimulationSnapshot(movingState()));
   });
 
-  it('parses V1 separately and migrates explicitly to an empty V4 authority', () => {
+  it('parses V1 separately and migrates explicitly to an empty V5 authority', () => {
     expect(parseTransportSimulationSnapshotV1(v1)).toMatchObject({
       schemaVersion: 1,
       state: { tick: 12 },
@@ -115,8 +115,8 @@ describe('Transport Snapshot V4 and legacy migration', () => {
     const migrated = migrateTransportSimulationSnapshotV1(v1);
     expect(migrated).toEqual({
       ...v1,
-      schemaVersion: 4,
-      simulationVersion: 'transport-4',
+      schemaVersion: 5,
+      simulationVersion: 'transport-5',
       state: {
         tick: 12,
         fleet: [],

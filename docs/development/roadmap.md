@@ -158,6 +158,20 @@ walking, queueing, boarding, capacity, fare, economics, UI, or rendering is
 included. The next planned layer is deterministic emission credit over this
 static foundation.
 
+## Phase 4E2 — Deterministic destination assignment
+
+### Status
+
+Implemented as a core-only simulation milestone. Passengers arriving at a
+physical StopPlace are assigned to served population cells at other
+StopPlaces through per-origin weighted cyclic cursors. Assignments aggregate
+into bounded immutable groups awaiting itinerary resolution; origins without a
+candidate record an explicit unavailable count. Snapshot V5 is current and V4
+active authority migrates without consuming its backlog until the next tick.
+
+Directional StopNodes, route and transfer search, services, boarding,
+capacity, UI, geo-background data, and economics remain deferred.
+
 ## Phase 5 — React Three Fiber visualization POC
 
 ### Goal

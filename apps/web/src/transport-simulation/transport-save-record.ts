@@ -3,15 +3,18 @@ import {
   migrateTransportSimulationSnapshotV1,
   migrateTransportSimulationSnapshotV2,
   migrateTransportSimulationSnapshotV3,
+  migrateTransportSimulationSnapshotV4,
   parseTransportSimulationSnapshot,
   parseTransportSimulationSnapshotV1,
   parseTransportSimulationSnapshotV2,
   parseTransportSimulationSnapshotV3,
+  parseTransportSimulationSnapshotV4,
   type ScenarioCoordinate,
   type TransportSimulationSnapshot,
   type TransportSimulationSnapshotV1,
   type TransportSimulationSnapshotV2,
   type TransportSimulationSnapshotV3,
+  type TransportSimulationSnapshotV4,
 } from '@torrevieja-tycoon/simulation';
 import {
   parseCommandRevision,
@@ -94,6 +97,12 @@ export interface TransportSaveRecordV3 extends Omit<
 > {
   readonly snapshot: TransportSimulationSnapshotV3;
 }
+export interface TransportSaveRecordV4 extends Omit<
+  TransportSaveRecord,
+  'snapshot'
+> {
+  readonly snapshot: TransportSimulationSnapshotV4;
+}
 
 export interface TransportSaveRecordV1 {
   readonly kind: 'transport-save-record';
@@ -122,7 +131,7 @@ export interface TransportSaveSummary {
   readonly sourceSimulationTick: number;
   readonly createdAtUtcMs: number;
   readonly updatedAtUtcMs: number;
-  readonly snapshotVersion?: 1 | 2 | 3 | 4 | undefined;
+  readonly snapshotVersion?: 1 | 2 | 3 | 4 | 5 | undefined;
   readonly vehicleCount?: number | undefined;
   readonly compatibility: 'current' | 'migratable' | 'legacy-incompatible';
 }
@@ -133,9 +142,21 @@ const freeze = <T>(value: T): T => {
   return Object.isFrozen(value) ? value : Object.freeze(value);
 };
 
-export function parseTransportSaveRecord(value: unknown): TransportSaveRecord {
-  const parsed = recordSchema.parse(value);
-  const snapshot = parseTransportSimulationSnapshot(parsed.snapshot);
+type ParsedRecordFields =
+  | z.infer<typeof recordSchema>
+  | z.infer<typeof recordV1Schema>
+  | z.infer<typeof recordV2Schema>;
+
+const parseRecordWithSnapshot = <TSnapshot>(
+  value: unknown,
+  parseFields: (input: unknown) => ParsedRecordFields,
+  parseSnapshot: (snapshot: unknown) => TSnapshot & {
+    readonly scenario: ScenarioCoordinate;
+    readonly state: { readonly tick: number };
+  },
+) => {
+  const parsed = parseFields(value);
+  const snapshot = parseSnapshot(parsed.snapshot);
   const scenario = freeze(parsed.scenario as ScenarioCoordinate);
   if (
     JSON.stringify(snapshot.scenario) !== JSON.stringify(scenario) ||
@@ -153,78 +174,60 @@ export function parseTransportSaveRecord(value: unknown): TransportSaveRecord {
     scenario,
     snapshot,
   });
+};
+
+export function parseTransportSaveRecord(value: unknown): TransportSaveRecord {
+  return parseVersionThreeRecord(value, parseTransportSimulationSnapshot);
 }
 
 export function parseTransportSaveRecordV1(
   value: unknown,
 ): TransportSaveRecordV1 {
-  const parsed = recordV1Schema.parse(value);
-  const snapshot = parseTransportSimulationSnapshotV1(parsed.snapshot);
-  const scenario = freeze(parsed.scenario as ScenarioCoordinate);
-  if (
-    JSON.stringify(snapshot.scenario) !== JSON.stringify(scenario) ||
-    snapshot.state.tick !== parsed.sourceSimulationTick ||
-    parsed.updatedAtUtcMs < parsed.createdAtUtcMs
-  )
-    throw new Error('Transport save record coordinates are inconsistent.');
-  return freeze({
-    ...parsed,
-    saveId: parseFoundationSaveId(parsed.saveId),
-    gameId: parseGameId(parsed.gameId),
-    sourceTimelineId: parseTimelineId(parsed.sourceTimelineId),
-    sourceCommandRevision: parseCommandRevision(parsed.sourceCommandRevision),
-    sourceStreamOffset: parseStreamOffset(parsed.sourceStreamOffset),
-    scenario,
-    snapshot,
-  });
+  return parseRecordWithSnapshot(
+    value,
+    (input) => recordV1Schema.parse(input),
+    parseTransportSimulationSnapshotV1,
+  ) as TransportSaveRecordV1;
 }
 
 export function parseTransportSaveRecordV2(
   value: unknown,
 ): TransportSaveRecordV2 {
-  const parsed = recordV2Schema.parse(value);
-  const snapshot = parseTransportSimulationSnapshotV2(parsed.snapshot);
-  const scenario = freeze(parsed.scenario as ScenarioCoordinate);
-  if (
-    JSON.stringify(snapshot.scenario) !== JSON.stringify(scenario) ||
-    snapshot.state.tick !== parsed.sourceSimulationTick ||
-    parsed.updatedAtUtcMs < parsed.createdAtUtcMs
-  )
-    throw new Error('Transport save record coordinates are inconsistent.');
-  return freeze({
-    ...parsed,
-    saveId: parseFoundationSaveId(parsed.saveId),
-    gameId: parseGameId(parsed.gameId),
-    sourceTimelineId: parseTimelineId(parsed.sourceTimelineId),
-    sourceCommandRevision: parseCommandRevision(parsed.sourceCommandRevision),
-    sourceStreamOffset: parseStreamOffset(parsed.sourceStreamOffset),
-    scenario,
-    snapshot,
-  });
+  return parseRecordWithSnapshot(
+    value,
+    (input) => recordV2Schema.parse(input),
+    parseTransportSimulationSnapshotV2,
+  ) as TransportSaveRecordV2;
 }
+
+const parseVersionThreeRecord = <
+  TSnapshot extends
+    | TransportSimulationSnapshot
+    | TransportSimulationSnapshotV3
+    | TransportSimulationSnapshotV4,
+>(
+  value: unknown,
+  parseSnapshot: (snapshot: unknown) => TSnapshot,
+): Omit<TransportSaveRecord, 'snapshot'> & { readonly snapshot: TSnapshot } => {
+  return parseRecordWithSnapshot(
+    value,
+    (input) => recordSchema.parse(input),
+    parseSnapshot,
+  ) as Omit<TransportSaveRecord, 'snapshot'> & {
+    readonly snapshot: TSnapshot;
+  };
+};
 
 export function parseTransportSaveRecordV3(
   value: unknown,
 ): TransportSaveRecordV3 {
-  const parsed = recordSchema.parse(value);
-  const snapshot = parseTransportSimulationSnapshotV3(parsed.snapshot);
-  const scenario = freeze(parsed.scenario as ScenarioCoordinate);
-  if (
-    JSON.stringify(snapshot.scenario) !== JSON.stringify(scenario) ||
-    snapshot.state.tick !== parsed.sourceSimulationTick ||
-    parsed.updatedAtUtcMs < parsed.createdAtUtcMs
-  )
-    throw new Error('Transport save record coordinates are inconsistent.');
-  return freeze({
-    ...parsed,
-    saveId: parseFoundationSaveId(parsed.saveId),
-    gameId: parseGameId(parsed.gameId),
-    sourceTimelineId: parseTimelineId(parsed.sourceTimelineId),
-    sourceCommandRevision: parseCommandRevision(parsed.sourceCommandRevision),
-    sourceStreamOffset: parseStreamOffset(parsed.sourceStreamOffset),
-    scenario,
-    snapshot,
-  });
+  return parseVersionThreeRecord(value, parseTransportSimulationSnapshotV3);
+}
+
+export function parseTransportSaveRecordV4(
+  value: unknown,
+): TransportSaveRecordV4 {
+  return parseVersionThreeRecord(value, parseTransportSimulationSnapshotV4);
 }
 
 export function migrateTransportSaveRecordV1(
@@ -256,6 +259,15 @@ export function migrateTransportSaveRecordV3(
   });
 }
 
+export function migrateTransportSaveRecordV4(
+  record: TransportSaveRecordV4,
+): TransportSaveRecord {
+  return parseTransportSaveRecord({
+    ...record,
+    snapshot: migrateTransportSimulationSnapshotV4(record.snapshot),
+  });
+}
+
 export function summarizeCompatibleSave(
   record: TransportSaveRecord,
 ): TransportSaveSummary {
@@ -270,7 +282,7 @@ export function summarizeCompatibleSave(
     sourceSimulationTick: record.sourceSimulationTick,
     createdAtUtcMs: record.createdAtUtcMs,
     updatedAtUtcMs: record.updatedAtUtcMs,
-    snapshotVersion: 4,
+    snapshotVersion: 5,
     vehicleCount: record.snapshot.state.fleet.length,
     compatibility: 'current',
   });
@@ -296,10 +308,11 @@ function summarizeMigratableSaveV2(
   });
 }
 
-function summarizeMigratableSaveV3(
-  record: TransportSaveRecordV3,
-): TransportSaveSummary {
-  return freeze({
+const summarizeVersionThreeMigration = (
+  record: TransportSaveRecordV3 | TransportSaveRecordV4,
+  snapshotVersion: 3 | 4,
+): TransportSaveSummary =>
+  freeze({
     saveId: record.saveId,
     ...(record.label === undefined ? {} : { label: record.label }),
     scenarioId: record.scenario.scenarioId,
@@ -310,11 +323,10 @@ function summarizeMigratableSaveV3(
     sourceSimulationTick: record.sourceSimulationTick,
     createdAtUtcMs: record.createdAtUtcMs,
     updatedAtUtcMs: record.updatedAtUtcMs,
-    snapshotVersion: 3,
+    snapshotVersion,
     vehicleCount: record.snapshot.state.fleet.length,
     compatibility: 'migratable',
   });
-}
 
 function summarizeMigratableSave(
   record: TransportSaveRecordV1,
@@ -355,6 +367,11 @@ export type PersistedSaveClassification =
   | Readonly<{
       classification: 'migratable-transport-v3';
       record: TransportSaveRecordV3;
+      summary: TransportSaveSummary;
+    }>
+  | Readonly<{
+      classification: 'migratable-transport-v4';
+      record: TransportSaveRecordV4;
       summary: TransportSaveSummary;
     }>
   | Readonly<{
@@ -415,14 +432,23 @@ export function classifyPersistedSaveRecord(
         });
       } catch (currentError) {
         try {
-          const record = parseTransportSaveRecordV3(value);
+          const record = parseTransportSaveRecordV4(value);
           return freeze({
-            classification: 'migratable-transport-v3',
+            classification: 'migratable-transport-v4',
             record,
-            summary: summarizeMigratableSaveV3(record),
+            summary: summarizeVersionThreeMigration(record, 4),
           });
         } catch {
-          throw currentError;
+          try {
+            const record = parseTransportSaveRecordV3(value);
+            return freeze({
+              classification: 'migratable-transport-v3',
+              record,
+              summary: summarizeVersionThreeMigration(record, 3),
+            });
+          } catch {
+            throw currentError;
+          }
         }
       }
     }

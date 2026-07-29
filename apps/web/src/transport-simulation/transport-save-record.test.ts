@@ -12,6 +12,7 @@ import {
   migrateTransportSaveRecordV1,
   migrateTransportSaveRecordV2,
   migrateTransportSaveRecordV3,
+  migrateTransportSaveRecordV4,
   parseTransportSaveRecord,
   summarizeCompatibleSave,
 } from './transport-save-record.js';
@@ -73,7 +74,7 @@ describe('transport save compatibility', () => {
     expect(
       classifyPersistedSaveRecord({
         kind: 'transport-save-record',
-        schemaVersion: 4,
+        schemaVersion: 5,
       }),
     ).toMatchObject({ classification: 'unsupported-future' });
     for (const schemaVersion of [undefined, '3', -1, 1.5])
@@ -93,7 +94,7 @@ describe('transport save compatibility', () => {
       scenarioId: 'torrevieja-mini-v1',
       scenarioVersion: '1.0.0',
       contentHash: expect.any(String),
-      snapshotVersion: 4,
+      snapshotVersion: 5,
       vehicleCount: 0,
       sourceSimulationTick: 120,
     });
@@ -161,7 +162,7 @@ describe('transport save compatibility', () => {
     expect(migrated).toMatchObject({
       schemaVersion: 3,
       snapshot: {
-        schemaVersion: 4,
+        schemaVersion: 5,
         state: {
           tick: 120,
           fleet: [],
@@ -198,7 +199,7 @@ describe('transport save compatibility', () => {
     const migrated = migrateTransportSaveRecordV2(classified.record);
     expect(migrated).toMatchObject({
       schemaVersion: 3,
-      snapshot: { schemaVersion: 4 },
+      snapshot: { schemaVersion: 5 },
     });
     expect(migrated.snapshot.state.fleet).toEqual([]);
   });
@@ -228,9 +229,37 @@ describe('transport save compatibility', () => {
     expect(migrateTransportSaveRecordV3(classified.record)).toMatchObject({
       schemaVersion: 3,
       snapshot: {
-        schemaVersion: 4,
+        schemaVersion: 5,
         state: { passengerDemand: { status: 'disabled' } },
       },
+    });
+  });
+
+  it('classifies Snapshot V4 as migratable without assigning destinations', () => {
+    const legacy = structuredClone(current()) as unknown as {
+      snapshot: {
+        schemaVersion: number;
+        simulationVersion: string;
+        state: { passengerDemand: Record<string, unknown> };
+      };
+    };
+    legacy.snapshot.schemaVersion = 4;
+    legacy.snapshot.simulationVersion = 'transport-4';
+    const passenger = legacy.snapshot.state.passengerDemand;
+    if (passenger.status === 'active') {
+      delete passenger.nextPassengerJourneyGroupSequence;
+      delete passenger.destinationCursors;
+      delete passenger.destinationAssignedGroups;
+      delete passenger.totalDestinationAssignedPassengerCount;
+      delete passenger.destinationUnavailableAtStopPassengerCount;
+    }
+    const classified = classifyPersistedSaveRecord(legacy);
+    expect(classified.classification).toBe('migratable-transport-v4');
+    if (classified.classification !== 'migratable-transport-v4')
+      throw new Error('Expected a migratable Transport V4 record.');
+    expect(migrateTransportSaveRecordV4(classified.record)).toMatchObject({
+      schemaVersion: 3,
+      snapshot: { schemaVersion: 5 },
     });
   });
 

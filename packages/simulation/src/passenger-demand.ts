@@ -21,6 +21,10 @@ const passengerGroupIdSchema = z
   .string()
   .regex(/^passenger-group-[1-9]\d*$/)
   .brand<'PassengerGroupId'>();
+const passengerJourneyGroupIdSchema = z
+  .string()
+  .regex(/^passenger-journey-group-[1-9]\d*$/)
+  .brand<'PassengerJourneyGroupId'>();
 const scenarioCoordinateSchema = z.strictObject({
   scenarioSchemaVersion: z.literal('1.0.0'),
   scenarioId: z.string().trim().min(1),
@@ -72,6 +76,9 @@ const planSchema = z.strictObject({
 
 export type PassengerDemandModelHash = z.infer<typeof demandModelHashSchema>;
 export type PassengerGroupId = z.infer<typeof passengerGroupIdSchema>;
+export type PassengerJourneyGroupId = z.infer<
+  typeof passengerJourneyGroupIdSchema
+>;
 
 export interface PassengerDemandPlanCell {
   readonly cellId: CityPopulationCellId;
@@ -129,6 +136,29 @@ export interface StopPlaceArrivalState {
   readonly awaitingDestinationCount: number;
 }
 
+export interface PassengerDestinationCandidate {
+  readonly cellId: CityPopulationCellId;
+  readonly row: number;
+  readonly column: number;
+  readonly destinationStopPlaceId: StopPlaceId;
+  readonly weight: number;
+}
+
+export interface PassengerDestinationCursorState {
+  readonly stopPlaceId: StopPlaceId;
+  readonly destinationCursor: number;
+}
+
+export interface DestinationAssignedPassengerGroup {
+  readonly passengerJourneyGroupId: PassengerJourneyGroupId;
+  readonly originStopPlaceId: StopPlaceId;
+  readonly destinationCellId: CityPopulationCellId;
+  readonly destinationStopPlaceId: StopPlaceId;
+  readonly count: number;
+  readonly firstAssignedTick: SimulationTick;
+  readonly lastAssignedTick: SimulationTick;
+}
+
 export interface DisabledPassengerDemandState {
   readonly status: 'disabled';
 }
@@ -146,13 +176,18 @@ export interface ActivePassengerDemandState {
   }>;
   readonly processedThroughTick: SimulationTick;
   readonly nextPassengerGroupSequence: number;
+  readonly nextPassengerJourneyGroupSequence: number;
   readonly cellCredits: readonly Readonly<PassengerCellCreditState>[];
   readonly accessingGroups: readonly Readonly<AccessingPassengerGroup>[];
   readonly stopArrivals: readonly Readonly<StopPlaceArrivalState>[];
+  readonly destinationCursors: readonly Readonly<PassengerDestinationCursorState>[];
+  readonly destinationAssignedGroups: readonly Readonly<DestinationAssignedPassengerGroup>[];
   readonly totalEmittedPassengerCount: number;
   readonly servedEmittedPassengerCount: number;
   readonly unservedAtSourcePassengerCount: number;
   readonly totalArrivedAtStopPassengerCount: number;
+  readonly totalDestinationAssignedPassengerCount: number;
+  readonly destinationUnavailableAtStopPassengerCount: number;
 }
 
 export type PassengerDemandState =
@@ -173,6 +208,7 @@ const stateSchema = z.discriminatedUnion('status', [
     }),
     processedThroughTick: nonnegativeSafeInteger,
     nextPassengerGroupSequence: positiveSafeInteger,
+    nextPassengerJourneyGroupSequence: positiveSafeInteger,
     cellCredits: z.array(
       z.strictObject({
         cellId: planCellSchema.shape.cellId,
@@ -195,12 +231,42 @@ const stateSchema = z.discriminatedUnion('status', [
         awaitingDestinationCount: nonnegativeSafeInteger,
       }),
     ),
+    destinationCursors: z.array(
+      z.strictObject({
+        stopPlaceId: z.string().min(1),
+        destinationCursor: nonnegativeSafeInteger,
+      }),
+    ),
+    destinationAssignedGroups: z.array(
+      z.strictObject({
+        passengerJourneyGroupId: passengerJourneyGroupIdSchema,
+        originStopPlaceId: z.string().min(1),
+        destinationCellId: planCellSchema.shape.cellId,
+        destinationStopPlaceId: z.string().min(1),
+        count: positiveSafeInteger,
+        firstAssignedTick: nonnegativeSafeInteger,
+        lastAssignedTick: nonnegativeSafeInteger,
+      }),
+    ),
     totalEmittedPassengerCount: nonnegativeSafeInteger,
     servedEmittedPassengerCount: nonnegativeSafeInteger,
     unservedAtSourcePassengerCount: nonnegativeSafeInteger,
     totalArrivedAtStopPassengerCount: nonnegativeSafeInteger,
+    totalDestinationAssignedPassengerCount: nonnegativeSafeInteger,
+    destinationUnavailableAtStopPassengerCount: nonnegativeSafeInteger,
   }),
 ]);
+const stateV4Schema = z.discriminatedUnion('status', [
+  stateSchema.options[0],
+  stateSchema.options[1].omit({
+    nextPassengerJourneyGroupSequence: true,
+    destinationCursors: true,
+    destinationAssignedGroups: true,
+    totalDestinationAssignedPassengerCount: true,
+    destinationUnavailableAtStopPassengerCount: true,
+  }),
+]);
+export type PassengerDemandStateV4 = z.infer<typeof stateV4Schema>;
 const projectionSchema = z.discriminatedUnion('status', [
   z.strictObject({ status: z.literal('disabled') }),
   z.strictObject({
@@ -212,6 +278,12 @@ const projectionSchema = z.discriminatedUnion('status', [
     inAccessPassengerCount: nonnegativeSafeInteger,
     accessingGroupCount: nonnegativeSafeInteger,
     totalAwaitingDestinationCount: nonnegativeSafeInteger,
+    totalDestinationAssignedPassengerCount: nonnegativeSafeInteger,
+    destinationUnavailableAtStopPassengerCount: nonnegativeSafeInteger,
+    destinationAssignedGroupCount: nonnegativeSafeInteger,
+    passengersAwaitingItineraryCount: nonnegativeSafeInteger,
+    destinationAssignedGroups:
+      stateSchema.options[1].shape.destinationAssignedGroups,
     stopArrivals: stateSchema.options[1].shape.stopArrivals,
   }),
 ]);
@@ -227,6 +299,11 @@ export type PassengerDemandProjection = Readonly<
       readonly inAccessPassengerCount: number;
       readonly accessingGroupCount: number;
       readonly totalAwaitingDestinationCount: number;
+      readonly totalDestinationAssignedPassengerCount: number;
+      readonly destinationUnavailableAtStopPassengerCount: number;
+      readonly destinationAssignedGroupCount: number;
+      readonly passengersAwaitingItineraryCount: number;
+      readonly destinationAssignedGroups: readonly Readonly<DestinationAssignedPassengerGroup>[];
       readonly stopArrivals: readonly Readonly<StopPlaceArrivalState>[];
     }
 >;
@@ -248,6 +325,112 @@ const checkedMultiply = (left: number, right: number, context: string) => {
   if (!Number.isSafeInteger(result)) throw new Error(`${context} overflow.`);
   return result;
 };
+
+export function listPassengerDestinationCandidates(
+  plan: PassengerDemandPlanV1,
+  originStopPlaceId: StopPlaceId | string,
+): readonly Readonly<PassengerDestinationCandidate>[] {
+  const parsedPlan = parsePassengerDemandPlan(plan);
+  if (!parsedPlan.stops.some((stop) => stop.stopPlaceId === originStopPlaceId))
+    throw new Error('Unknown origin StopPlace.');
+  return deepFreeze(
+    parsedPlan.cells
+      .filter(
+        (cell) =>
+          cell.assignedStopPlaceId !== null &&
+          cell.assignedStopPlaceId !== originStopPlaceId,
+      )
+      .map((cell) => ({
+        cellId: cell.cellId,
+        row: cell.row,
+        column: cell.column,
+        destinationStopPlaceId: cell.assignedStopPlaceId!,
+        weight: cell.populationWeight,
+      })),
+  );
+}
+
+const intervalOverlap = (
+  start: number,
+  end: number,
+  segmentStart: number,
+  segmentEnd: number,
+) => Math.max(0, Math.min(end, segmentEnd) - Math.max(start, segmentStart));
+
+export function allocatePassengerDestinations(
+  candidatesInput: readonly Readonly<PassengerDestinationCandidate>[],
+  cursor: number,
+  passengerCount: number,
+): Readonly<{
+  readonly allocations: readonly Readonly<
+    PassengerDestinationCandidate & { readonly count: number }
+  >[];
+  readonly nextCursor: number;
+}> {
+  if (
+    !Number.isSafeInteger(cursor) ||
+    cursor < 0 ||
+    !Number.isSafeInteger(passengerCount) ||
+    passengerCount < 0
+  )
+    throw new Error('Invalid destination allocation input.');
+  const candidates = [...candidatesInput].sort(
+    (left, right) => left.row - right.row || left.column - right.column,
+  );
+  let totalWeight = 0;
+  const keys = new Set<string>();
+  for (const candidate of candidates) {
+    if (
+      !Number.isSafeInteger(candidate.weight) ||
+      candidate.weight <= 0 ||
+      !Number.isSafeInteger(candidate.row) ||
+      candidate.row < 0 ||
+      !Number.isSafeInteger(candidate.column) ||
+      candidate.column < 0 ||
+      keys.has(candidate.cellId)
+    )
+      throw new Error('Invalid destination candidate.');
+    keys.add(candidate.cellId);
+    totalWeight = checkedAdd(
+      totalWeight,
+      candidate.weight,
+      'destination candidate weight',
+    );
+  }
+  if (totalWeight === 0) {
+    if (cursor !== 0) throw new Error('Invalid empty destination cursor.');
+    return deepFreeze({ allocations: [], nextCursor: 0 });
+  }
+  if (cursor >= totalWeight)
+    throw new Error('Destination cursor is out of range.');
+  const fullCycles = Math.floor(passengerCount / totalWeight);
+  const remainder = passengerCount % totalWeight;
+  const firstEnd = Math.min(totalWeight, cursor + remainder);
+  const wrappedEnd = Math.max(0, cursor + remainder - totalWeight);
+  let intervalStart = 0;
+  const allocations = candidates.map((candidate) => {
+    const intervalEnd = checkedAdd(
+      intervalStart,
+      candidate.weight,
+      'destination interval',
+    );
+    const base = checkedMultiply(
+      fullCycles,
+      candidate.weight,
+      'destination allocation',
+    );
+    const extra =
+      intervalOverlap(intervalStart, intervalEnd, cursor, firstEnd) +
+      intervalOverlap(intervalStart, intervalEnd, 0, wrappedEnd);
+    const count = checkedAdd(base, extra, 'destination allocation');
+    intervalStart = intervalEnd;
+    return { ...candidate, count };
+  });
+  return deepFreeze({
+    allocations,
+    nextCursor: (cursor + remainder) % totalWeight,
+  });
+}
 
 const coordinateEqual = (
   left: Readonly<ScenarioCoordinate>,
@@ -368,6 +551,30 @@ export function createDisabledPassengerDemandState(): DisabledPassengerDemandSta
   return deepFreeze({ status: 'disabled' });
 }
 
+export function parsePassengerDemandStateV4(
+  value: unknown,
+): PassengerDemandStateV4 {
+  return deepFreeze(stateV4Schema.parse(value));
+}
+
+export function migratePassengerDemandStateV4(
+  value: unknown,
+): PassengerDemandState {
+  const parsed = parsePassengerDemandStateV4(value);
+  if (parsed.status === 'disabled') return createDisabledPassengerDemandState();
+  return parsePassengerDemandState({
+    ...parsed,
+    nextPassengerJourneyGroupSequence: 1,
+    destinationCursors: parsed.stopArrivals.map((stop) => ({
+      stopPlaceId: stop.stopPlaceId,
+      destinationCursor: 0,
+    })),
+    destinationAssignedGroups: [],
+    totalDestinationAssignedPassengerCount: 0,
+    destinationUnavailableAtStopPassengerCount: 0,
+  });
+}
+
 export function parsePassengerDemandState(
   value: unknown,
 ): PassengerDemandState {
@@ -381,6 +588,10 @@ export function parsePassengerDemandState(
     cellCredits: parsed.cellCredits as PassengerCellCreditState[],
     accessingGroups: parsed.accessingGroups as AccessingPassengerGroup[],
     stopArrivals: parsed.stopArrivals as StopPlaceArrivalState[],
+    destinationCursors:
+      parsed.destinationCursors as PassengerDestinationCursorState[],
+    destinationAssignedGroups:
+      parsed.destinationAssignedGroups as DestinationAssignedPassengerGroup[],
   });
 }
 
@@ -394,6 +605,7 @@ export function createInitialPassengerDemandState(
     demandPlanCoordinate: planCoordinate(parsedPlan),
     processedThroughTick: parseSimulationTick(initialTick),
     nextPassengerGroupSequence: 1,
+    nextPassengerJourneyGroupSequence: 1,
     cellCredits: parsedPlan.cells.map((cell) => ({
       cellId: cell.cellId,
       credit: 0,
@@ -403,10 +615,17 @@ export function createInitialPassengerDemandState(
       stopPlaceId: stop.stopPlaceId,
       awaitingDestinationCount: 0,
     })),
+    destinationCursors: parsedPlan.stops.map((stop) => ({
+      stopPlaceId: stop.stopPlaceId,
+      destinationCursor: 0,
+    })),
+    destinationAssignedGroups: [],
     totalEmittedPassengerCount: 0,
     servedEmittedPassengerCount: 0,
     unservedAtSourcePassengerCount: 0,
     totalArrivedAtStopPassengerCount: 0,
+    totalDestinationAssignedPassengerCount: 0,
+    destinationUnavailableAtStopPassengerCount: 0,
   });
 }
 
@@ -476,6 +695,30 @@ export function validatePassengerDemandState(
     )
   )
     throw new Error('Passenger StopPlace arrivals are inconsistent.');
+  if (
+    parsed.destinationCursors.length !== parsedPlan.stops.length ||
+    parsed.destinationCursors.some(
+      (cursor, index) =>
+        cursor.stopPlaceId !== parsedPlan.stops[index]!.stopPlaceId,
+    )
+  )
+    throw new Error('Invalid destination cursors.');
+  for (const cursor of parsed.destinationCursors) {
+    const candidates = listPassengerDestinationCandidates(
+      parsedPlan,
+      cursor.stopPlaceId,
+    );
+    const weight = candidates.reduce(
+      (total, candidate) =>
+        checkedAdd(total, candidate.weight, 'destination candidate weight'),
+      0,
+    );
+    if (
+      (weight === 0 && cursor.destinationCursor !== 0) ||
+      (weight > 0 && cursor.destinationCursor >= weight)
+    )
+      throw new Error('Invalid destination cursor.');
+  }
   const cells = new Map(parsedPlan.cells.map((cell) => [cell.cellId, cell]));
   const groupIds = new Set<string>();
   let inAccess = 0;
@@ -514,6 +757,56 @@ export function validatePassengerDemandState(
       ),
     0,
   );
+  const destinationGroupIds = new Set<string>();
+  const destinationKeys = new Set<string>();
+  let destinationAssigned = 0;
+  let previousDestinationGroup:
+    Readonly<DestinationAssignedPassengerGroup> | undefined;
+  for (const group of parsed.destinationAssignedGroups) {
+    const destinationCell = cells.get(
+      group.destinationCellId as CityPopulationCellId,
+    );
+    const sequence = Number(
+      group.passengerJourneyGroupId.slice('passenger-journey-group-'.length),
+    );
+    const key = `${group.originStopPlaceId}\u0000${group.destinationCellId}`;
+    if (
+      !parsedPlan.stops.some(
+        (stop) => stop.stopPlaceId === group.originStopPlaceId,
+      ) ||
+      destinationCell?.assignedStopPlaceId !== group.destinationStopPlaceId ||
+      group.destinationStopPlaceId === group.originStopPlaceId ||
+      destinationGroupIds.has(group.passengerJourneyGroupId) ||
+      destinationKeys.has(key) ||
+      group.firstAssignedTick > group.lastAssignedTick ||
+      group.lastAssignedTick > parsed.processedThroughTick ||
+      !Number.isSafeInteger(sequence) ||
+      sequence >= parsed.nextPassengerJourneyGroupSequence
+    )
+      throw new Error('Invalid destination group.');
+    if (
+      previousDestinationGroup !== undefined &&
+      (previousDestinationGroup.originStopPlaceId > group.originStopPlaceId ||
+        (previousDestinationGroup.originStopPlaceId ===
+          group.originStopPlaceId &&
+          (cells.get(previousDestinationGroup.destinationCellId)!.row >
+            destinationCell.row ||
+            (cells.get(previousDestinationGroup.destinationCellId)!.row ===
+              destinationCell.row &&
+              cells.get(previousDestinationGroup.destinationCellId)!.column >=
+                destinationCell.column))))
+    )
+      throw new Error('Invalid destination group order.');
+    previousDestinationGroup = group as DestinationAssignedPassengerGroup;
+    destinationGroupIds.add(group.passengerJourneyGroupId);
+    destinationKeys.add(key);
+    destinationAssigned = checkedAdd(
+      destinationAssigned,
+      group.count,
+      'destination-assigned passengers',
+    );
+  }
+  const awaitingDestination = arrived;
   if (
     parsed.totalEmittedPassengerCount !==
       checkedAdd(
@@ -527,7 +820,17 @@ export function validatePassengerDemandState(
         inAccess,
         'served passengers',
       ) ||
-    parsed.totalArrivedAtStopPassengerCount !== arrived
+    parsed.totalArrivedAtStopPassengerCount !==
+      checkedAdd(
+        checkedAdd(
+          parsed.totalDestinationAssignedPassengerCount,
+          parsed.destinationUnavailableAtStopPassengerCount,
+          'settled destination passengers',
+        ),
+        awaitingDestination,
+        'arrived passengers',
+      ) ||
+    parsed.totalDestinationAssignedPassengerCount !== destinationAssigned
   )
     throw new Error('Passenger demand conservation failed.');
   return deepFreeze({
@@ -538,6 +841,10 @@ export function validatePassengerDemandState(
     cellCredits: parsed.cellCredits as PassengerCellCreditState[],
     accessingGroups: parsed.accessingGroups as AccessingPassengerGroup[],
     stopArrivals: parsed.stopArrivals as StopPlaceArrivalState[],
+    destinationCursors:
+      parsed.destinationCursors as PassengerDestinationCursorState[],
+    destinationAssignedGroups:
+      parsed.destinationAssignedGroups as DestinationAssignedPassengerGroup[],
   });
 }
 
@@ -559,9 +866,13 @@ export function advancePassengerDemandToTick(
   ) {
     const tick = parseSimulationTick(tickValue);
     let nextSequence = current.nextPassengerGroupSequence;
+    let nextJourneySequence = current.nextPassengerJourneyGroupSequence;
     let totalEmitted = current.totalEmittedPassengerCount;
     let servedEmitted = current.servedEmittedPassengerCount;
     let unserved = current.unservedAtSourcePassengerCount;
+    let destinationAssigned = current.totalDestinationAssignedPassengerCount;
+    let destinationUnavailable =
+      current.destinationUnavailableAtStopPassengerCount;
     const groups: AccessingPassengerGroup[] = [...current.accessingGroups];
     const cellCredits = parsedPlan.cells.map((cell, index) => {
       const added = checkedMultiply(
@@ -644,21 +955,119 @@ export function advancePassengerDemandToTick(
           'arrived passengers',
         );
       } else accessingGroups.push(group);
+    const destinationCursors = new Map(
+      current.destinationCursors.map((cursor) => [
+        cursor.stopPlaceId,
+        cursor.destinationCursor,
+      ]),
+    );
+    const destinationGroups: DestinationAssignedPassengerGroup[] =
+      current.destinationAssignedGroups.map((group) => ({ ...group }));
+    const destinationGroupIndexes = new Map(
+      destinationGroups.map((group, index) => [
+        `${group.originStopPlaceId}\u0000${group.destinationCellId}`,
+        index,
+      ]),
+    );
+    for (const stop of parsedPlan.stops) {
+      const waiting = arrivals.get(stop.stopPlaceId)!;
+      if (waiting === 0) continue;
+      const candidates = listPassengerDestinationCandidates(
+        parsedPlan,
+        stop.stopPlaceId,
+      );
+      if (candidates.length === 0) {
+        destinationUnavailable = checkedAdd(
+          destinationUnavailable,
+          waiting,
+          'destination-unavailable passengers',
+        );
+        arrivals.set(stop.stopPlaceId, 0);
+        continue;
+      }
+      const allocation = allocatePassengerDestinations(
+        candidates,
+        destinationCursors.get(stop.stopPlaceId)!,
+        waiting,
+      );
+      destinationCursors.set(stop.stopPlaceId, allocation.nextCursor);
+      for (const candidate of allocation.allocations) {
+        if (candidate.count === 0) continue;
+        const key = `${stop.stopPlaceId}\u0000${candidate.cellId}`;
+        const existingIndex = destinationGroupIndexes.get(key);
+        if (existingIndex !== undefined) {
+          const existing = destinationGroups[existingIndex]!;
+          destinationGroups[existingIndex] = {
+            ...existing,
+            count: checkedAdd(
+              existing.count,
+              candidate.count,
+              'destination passenger group count',
+            ),
+            lastAssignedTick: tick,
+          };
+        } else {
+          const group: DestinationAssignedPassengerGroup = {
+            passengerJourneyGroupId: passengerJourneyGroupIdSchema.parse(
+              `passenger-journey-group-${nextJourneySequence}`,
+            ),
+            originStopPlaceId: stop.stopPlaceId,
+            destinationCellId: candidate.cellId,
+            destinationStopPlaceId: candidate.destinationStopPlaceId,
+            count: candidate.count,
+            firstAssignedTick: tick,
+            lastAssignedTick: tick,
+          };
+          destinationGroupIndexes.set(key, destinationGroups.length);
+          destinationGroups.push(group);
+          nextJourneySequence = checkedAdd(
+            nextJourneySequence,
+            1,
+            'passenger journey group sequence',
+          );
+        }
+      }
+      destinationAssigned = checkedAdd(
+        destinationAssigned,
+        waiting,
+        'destination-assigned passengers',
+      );
+      arrivals.set(stop.stopPlaceId, 0);
+    }
+    destinationGroups.sort((left, right) => {
+      if (left.originStopPlaceId !== right.originStopPlaceId)
+        return left.originStopPlaceId < right.originStopPlaceId ? -1 : 1;
+      const leftCell = parsedPlan.cells.find(
+        (cell) => cell.cellId === left.destinationCellId,
+      )!;
+      const rightCell = parsedPlan.cells.find(
+        (cell) => cell.cellId === right.destinationCellId,
+      )!;
+      return leftCell.row - rightCell.row || leftCell.column - rightCell.column;
+    });
     current = validatePassengerDemandState(parsedPlan, {
       status: 'active',
       demandPlanCoordinate: current.demandPlanCoordinate,
       processedThroughTick: tick,
       nextPassengerGroupSequence: nextSequence,
+      nextPassengerJourneyGroupSequence: nextJourneySequence,
       cellCredits,
       accessingGroups: accessingGroups.sort(compareGroups),
       stopArrivals: parsedPlan.stops.map((stop) => ({
         stopPlaceId: stop.stopPlaceId,
         awaitingDestinationCount: arrivals.get(stop.stopPlaceId)!,
       })),
+      destinationCursors: parsedPlan.stops.map((stop) => ({
+        stopPlaceId: stop.stopPlaceId,
+        destinationCursor: destinationCursors.get(stop.stopPlaceId)!,
+      })),
+      destinationAssignedGroups: destinationGroups,
       totalEmittedPassengerCount: totalEmitted,
       servedEmittedPassengerCount: servedEmitted,
       unservedAtSourcePassengerCount: unserved,
       totalArrivedAtStopPassengerCount: arrivedTotal,
+      totalDestinationAssignedPassengerCount: destinationAssigned,
+      destinationUnavailableAtStopPassengerCount: destinationUnavailable,
     });
   }
   return current;
@@ -679,6 +1088,8 @@ export function parsePassengerDemandProjection(
           demandPlanCoordinate:
             parsed.demandPlanCoordinate as ActivePassengerDemandState['demandPlanCoordinate'],
           stopArrivals: parsed.stopArrivals as StopPlaceArrivalState[],
+          destinationAssignedGroups:
+            parsed.destinationAssignedGroups as DestinationAssignedPassengerGroup[],
         },
   );
 }
@@ -693,6 +1104,15 @@ export function projectPassengerDemand(
       checkedAdd(total, group.count, 'projected in-access passengers'),
     0,
   );
+  const totalAwaitingDestinationCount = state.stopArrivals.reduce(
+    (total, stop) =>
+      checkedAdd(
+        total,
+        stop.awaitingDestinationCount,
+        'projected awaiting-destination passengers',
+      ),
+    0,
+  );
   return parsePassengerDemandProjection({
     status: 'active' as const,
     demandPlanCoordinate: state.demandPlanCoordinate,
@@ -701,7 +1121,15 @@ export function projectPassengerDemand(
     unservedAtSourcePassengerCount: state.unservedAtSourcePassengerCount,
     inAccessPassengerCount,
     accessingGroupCount: state.accessingGroups.length,
-    totalAwaitingDestinationCount: state.totalArrivedAtStopPassengerCount,
+    totalAwaitingDestinationCount,
+    totalDestinationAssignedPassengerCount:
+      state.totalDestinationAssignedPassengerCount,
+    destinationUnavailableAtStopPassengerCount:
+      state.destinationUnavailableAtStopPassengerCount,
+    destinationAssignedGroupCount: state.destinationAssignedGroups.length,
+    passengersAwaitingItineraryCount:
+      state.totalDestinationAssignedPassengerCount,
+    destinationAssignedGroups: state.destinationAssignedGroups,
     stopArrivals: state.stopArrivals,
   });
 }

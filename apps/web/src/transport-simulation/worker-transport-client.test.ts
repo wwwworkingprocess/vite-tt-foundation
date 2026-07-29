@@ -37,15 +37,18 @@ describe('transport Worker boundary failures', () => {
   it('shuts down when invalid-request failure publication throws', async () => {
     let listener!: (event: { data: unknown }) => void;
     const remove = vi.fn();
-    const runtime = startTransportWorkerRuntime({
-      postMessage() {
-        throw new Error('failure post failed');
+    const runtime = startTransportWorkerRuntime(
+      {
+        postMessage() {
+          throw new Error('failure post failed');
+        },
+        addEventListener: (_type, next) => {
+          listener = next;
+        },
+        removeEventListener: remove,
       },
-      addEventListener: (_type, next) => {
-        listener = next;
-      },
-      removeEventListener: remove,
-    });
+      createDirectTransportSimulationClient,
+    );
     listener({ data: { requestId: 1, invalid: true } });
     await vi.waitFor(() => expect(remove).toHaveBeenCalledOnce());
     await expect(runtime.close()).resolves.toBeUndefined();
@@ -119,7 +122,10 @@ describe('transport Worker boundary failures', () => {
       },
       removeEventListener: remove,
     };
-    const runtime = startTransportWorkerRuntime(endpoint);
+    const runtime = startTransportWorkerRuntime(
+      endpoint,
+      createDirectTransportSimulationClient,
+    );
     listener({
       data: {
         kind: 'transport-worker-request',
@@ -295,7 +301,10 @@ describe('transport Worker boundary failures', () => {
       },
       removeEventListener: vi.fn(),
     };
-    startTransportWorkerRuntime(endpoint);
+    startTransportWorkerRuntime(
+      endpoint,
+      createDirectTransportSimulationClient,
+    );
     listener({ data: { nope: true } });
     listener({
       data: {

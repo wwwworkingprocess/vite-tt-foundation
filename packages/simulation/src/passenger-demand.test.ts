@@ -285,8 +285,9 @@ describe('deterministic passenger emission and access', () => {
     expect(
       tick3.stopArrivals.find((stop) => stop.stopPlaceId === 'stop-a')
         ?.awaitingDestinationCount,
-    ).toBeGreaterThan(0);
+    ).toBe(0);
     expect(tick3.totalArrivedAtStopPassengerCount).toBeGreaterThan(0);
+    expect(tick3.totalDestinationAssignedPassengerCount).toBeGreaterThan(0);
     expect(
       tick3.accessingGroups.every(
         (group) => group.arrivalTick > tick3.processedThroughTick,
@@ -334,7 +335,9 @@ describe('deterministic passenger emission and access', () => {
     expect(projection.totalEmittedPassengerCount).toBe(80);
     expect(
       projection.inAccessPassengerCount +
-        projection.totalAwaitingDestinationCount,
+        projection.totalAwaitingDestinationCount +
+        projection.totalDestinationAssignedPassengerCount +
+        projection.destinationUnavailableAtStopPassengerCount,
     ).toBe(56);
   });
 
@@ -422,6 +425,88 @@ describe('deterministic passenger emission and access', () => {
     expect(
       parsePassengerDemandProjection(projectPassengerDemand(active)),
     ).toEqual(projectPassengerDemand(active));
+    expect(
+      projectPassengerDemand(createDisabledPassengerDemandState()),
+    ).toEqual({ status: 'disabled' });
+  });
+
+  it('merges bounded destination groups and rejects corrupted destination authority', () => {
+    const plan = createPlan();
+    const active = advancePassengerDemandToTick(
+      plan,
+      createInitialPassengerDemandState(plan, 0),
+      20,
+    );
+    expect(active.destinationAssignedGroups.length).toBeGreaterThan(0);
+    expect(
+      active.destinationAssignedGroups.some(
+        (group) => group.firstAssignedTick < group.lastAssignedTick,
+      ),
+    ).toBe(true);
+    expect(
+      active.destinationAssignedGroups.reduce(
+        (total, group) => total + group.count,
+        0,
+      ),
+    ).toBe(active.totalDestinationAssignedPassengerCount);
+    const corruptions = [
+      (state: Record<string, unknown>) =>
+        ((
+          state.destinationCursors as Array<Record<string, unknown>>
+        )[0]!.destinationCursor = Number.MAX_SAFE_INTEGER),
+      (state: Record<string, unknown>) =>
+        (state.nextPassengerJourneyGroupSequence = 1),
+      (state: Record<string, unknown>) => {
+        const groups = state.destinationAssignedGroups as Array<
+          Record<string, unknown>
+        >;
+        groups.push(structuredClone(groups[0]!));
+      },
+      (state: Record<string, unknown>) => {
+        const groups = state.destinationAssignedGroups as Array<
+          Record<string, unknown>
+        >;
+        groups[0]!.destinationStopPlaceId = groups[0]!.originStopPlaceId;
+      },
+      (state: Record<string, unknown>) => {
+        const groups = state.destinationAssignedGroups as Array<
+          Record<string, unknown>
+        >;
+        groups.reverse();
+      },
+      (state: Record<string, unknown>) =>
+        ((state.totalDestinationAssignedPassengerCount as number) += 1),
+    ];
+    for (const mutate of corruptions) {
+      const corrupt = structuredClone(active) as unknown as Record<
+        string,
+        unknown
+      >;
+      mutate(corrupt);
+      expect(() => validatePassengerDemandState(plan, corrupt)).toThrow();
+    }
+  });
+
+  it('consumes arrivals explicitly when an origin has no other-stop destination', () => {
+    const raw = structuredClone(createPlan()) as unknown as MutablePlan;
+    raw.cells[2]!.assignedStopPlaceId = 'stop-a';
+    raw.stops = [{ stopPlaceId: 'stop-a' }];
+    const oneStopPlan = parsePassengerDemandPlan(raw);
+    const state = advancePassengerDemandToTick(
+      oneStopPlan,
+      createInitialPassengerDemandState(oneStopPlan, 0),
+      10,
+    );
+    expect(state.totalArrivedAtStopPassengerCount).toBeGreaterThan(0);
+    expect(state.destinationAssignedGroups).toEqual([]);
+    expect(state.totalDestinationAssignedPassengerCount).toBe(0);
+    expect(state.destinationUnavailableAtStopPassengerCount).toBe(
+      state.totalArrivedAtStopPassengerCount,
+    );
+    expect(state.stopArrivals[0]?.awaitingDestinationCount).toBe(0);
+    expect(state.destinationCursors).toEqual([
+      { stopPlaceId: 'stop-a', destinationCursor: 0 },
+    ]);
   });
 
   it.each([

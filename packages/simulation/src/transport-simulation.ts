@@ -31,8 +31,9 @@ import {
 } from './passenger-demand.js';
 import {
   buildPassengerDirectItineraryPlan,
-  validatePassengerDirectItineraryPlan,
+  createPassengerDirectItineraryRuntimeIndex,
   type PassengerDirectItineraryPlanV1,
+  type PassengerDirectItineraryRuntimeIndex,
 } from './passenger-direct-itinerary.js';
 
 export type ScenarioCompatibilityErrorCode =
@@ -69,6 +70,7 @@ export interface TransportSimulationState {
   readonly fleet: readonly VehicleState[];
   readonly passengerDemandPlan: PassengerDemandPlanV1 | null;
   readonly passengerDirectItineraryPlan: PassengerDirectItineraryPlanV1 | null;
+  readonly passengerDirectItineraryIndex: PassengerDirectItineraryRuntimeIndex | null;
   readonly passengerDemand: PassengerDemandState;
 }
 
@@ -172,6 +174,14 @@ export function createTransportSimulationState(
           scenario,
           demandPlan: parsedPlan,
         });
+  const itineraryIndex =
+    itineraryPlan === undefined
+      ? undefined
+      : createPassengerDirectItineraryRuntimeIndex({
+          plan: itineraryPlan,
+          scenario,
+          demandPlan: parsedPlan!,
+        });
   return freeze({
     tick: parseSimulationTick(tick),
     scenario,
@@ -179,6 +189,7 @@ export function createTransportSimulationState(
     fleet: [],
     passengerDemandPlan: parsedPlan ?? null,
     passengerDirectItineraryPlan: itineraryPlan ?? null,
+    passengerDirectItineraryIndex: itineraryIndex ?? null,
     passengerDemand:
       parsedPlan === undefined
         ? createDisabledPassengerDemandState()
@@ -199,12 +210,13 @@ export function advanceTransportTicks(
     fleet: advanceVehicleFleet(state.graph, state.fleet, tickCount),
     passengerDemandPlan: state.passengerDemandPlan,
     passengerDirectItineraryPlan: state.passengerDirectItineraryPlan,
+    passengerDirectItineraryIndex: state.passengerDirectItineraryIndex,
     passengerDemand:
       state.passengerDemand.status === 'disabled'
         ? state.passengerDemand
         : advancePassengerDemandToTick(
             state.passengerDemandPlan!,
-            state.passengerDirectItineraryPlan!,
+            state.passengerDirectItineraryIndex!,
             state.passengerDemand,
             tick,
           ),
@@ -300,13 +312,17 @@ export function restoreTransportSimulationState(
   const itineraryPlan =
     parsedPlan === undefined
       ? undefined
-      : validatePassengerDirectItineraryPlan({
-          plan: buildPassengerDirectItineraryPlan({
-            scenario,
-            demandPlan: parsedPlan,
-          }),
+      : buildPassengerDirectItineraryPlan({
           scenario,
           demandPlan: parsedPlan,
+        });
+  const itineraryIndex =
+    itineraryPlan === undefined
+      ? undefined
+      : createPassengerDirectItineraryRuntimeIndex({
+          plan: itineraryPlan,
+          scenario,
+          demandPlan: parsedPlan!,
         });
   let passengerDemand: PassengerDemandState;
   if (snapshot.state.passengerDemand.status === 'disabled') {
@@ -318,7 +334,7 @@ export function restoreTransportSimulationState(
       throw new Error('Passenger demand plan scenario mismatch.');
     passengerDemand = validatePassengerDemandState(
       parsedPlan,
-      itineraryPlan!,
+      itineraryIndex!,
       snapshot.state.passengerDemand,
     );
   }
@@ -330,6 +346,8 @@ export function restoreTransportSimulationState(
       passengerDemand.status === 'active' ? parsedPlan! : null,
     passengerDirectItineraryPlan:
       passengerDemand.status === 'active' ? itineraryPlan! : null,
+    passengerDirectItineraryIndex:
+      passengerDemand.status === 'active' ? itineraryIndex! : null,
     passengerDemand,
     fleet: restoreVehicleFleet(
       graph,

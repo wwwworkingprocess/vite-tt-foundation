@@ -133,6 +133,14 @@ export interface PassengerDirectItineraryPlanV1 {
   readonly entries: readonly Readonly<PassengerDirectItineraryEntry>[];
 }
 
+export interface PassengerDirectItineraryRuntimeIndex {
+  readonly plan: PassengerDirectItineraryPlanV1;
+  readonly find: (
+    originStopPlaceId: string,
+    destinationStopPlaceId: string,
+  ) => Readonly<PassengerDirectItineraryEntry>;
+}
+
 function deepFreeze<T>(value: T): T {
   if (value === null || typeof value !== 'object') return value;
   for (const child of Object.values(value)) deepFreeze(child);
@@ -393,25 +401,61 @@ export function validatePassengerDirectItineraryPlan(input: {
   return parsed;
 }
 
+function indexedEntry(
+  plan: PassengerDirectItineraryPlanV1,
+  stopPlaceIndices: ReadonlyMap<string, number>,
+  originStopPlaceId: string,
+  destinationStopPlaceId: string,
+): Readonly<PassengerDirectItineraryEntry> {
+  if (originStopPlaceId === destinationStopPlaceId)
+    throw new Error('Passenger itinerary requires distinct StopPlaces.');
+  const originIndex = stopPlaceIndices.get(originStopPlaceId);
+  const destinationIndex = stopPlaceIndices.get(destinationStopPlaceId);
+  if (originIndex === undefined || destinationIndex === undefined)
+    throw new Error('Unknown passenger itinerary StopPlace.');
+  const entriesPerOrigin = plan.stopPlaceIds.length - 1;
+  // parsePlan has already checked N × (N - 1) as a safe integer and proved
+  // the complete canonical matrix, so both derived index operations are safe.
+  const originOffset = originIndex * entriesPerOrigin;
+  const destinationOffset =
+    destinationIndex < originIndex ? destinationIndex : destinationIndex - 1;
+  const entryIndex = originOffset + destinationOffset;
+  return plan.entries[entryIndex]!;
+}
+
+export function createPassengerDirectItineraryRuntimeIndex(input: {
+  readonly plan: unknown;
+  readonly scenario: CanonicalScenario;
+  readonly demandPlan: PassengerDemandPlanV1;
+}): PassengerDirectItineraryRuntimeIndex {
+  const plan = validatePassengerDirectItineraryPlan(input);
+  const stopPlaceIndices = new Map(
+    plan.stopPlaceIds.map((stopPlaceId, index) => [stopPlaceId, index]),
+  );
+  return Object.freeze({
+    plan,
+    find: (originStopPlaceId: string, destinationStopPlaceId: string) =>
+      indexedEntry(
+        plan,
+        stopPlaceIndices,
+        originStopPlaceId,
+        destinationStopPlaceId,
+      ),
+  });
+}
+
 export function findPassengerDirectItinerary(
   planInput: PassengerDirectItineraryPlanV1,
   originStopPlaceId: string,
   destinationStopPlaceId: string,
 ): Readonly<PassengerDirectItineraryEntry> {
   const plan = parsePlan(planInput);
-  if (originStopPlaceId === destinationStopPlaceId)
-    throw new Error('Passenger itinerary requires distinct StopPlaces.');
-  const stopPlaces = new Set<string>(plan.stopPlaceIds);
-  if (
-    !stopPlaces.has(originStopPlaceId) ||
-    !stopPlaces.has(destinationStopPlaceId)
-  )
-    throw new Error('Unknown passenger itinerary StopPlace.');
-  const entry = plan.entries.find(
-    (candidate) =>
-      candidate.originStopPlaceId === originStopPlaceId &&
-      candidate.destinationStopPlaceId === destinationStopPlaceId,
+  return indexedEntry(
+    plan,
+    new Map(
+      plan.stopPlaceIds.map((stopPlaceId, index) => [stopPlaceId, index]),
+    ),
+    originStopPlaceId,
+    destinationStopPlaceId,
   );
-  if (!entry) throw new Error('Passenger direct itinerary plan is incomplete.');
-  return entry;
 }

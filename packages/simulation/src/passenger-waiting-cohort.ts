@@ -6,10 +6,9 @@ import type {
   StopNodeId,
   StopPlaceId,
 } from '@torrevieja-tycoon/transport-domain';
-import {
-  findPassengerDirectItinerary,
-  type PassengerDirectItinerary,
-  type PassengerDirectItineraryPlanV1,
+import type {
+  PassengerDirectItinerary,
+  PassengerDirectItineraryRuntimeIndex,
 } from './passenger-direct-itinerary.js';
 import {
   parsePassengerDemandPlan,
@@ -143,7 +142,7 @@ export interface PassengerItineraryActivationResult {
 }
 
 export function activatePassengerDirectItineraries(input: {
-  readonly itineraryPlan: PassengerDirectItineraryPlanV1;
+  readonly itineraryIndex: PassengerDirectItineraryRuntimeIndex;
   readonly demandPlan: PassengerDemandPlanV1;
   readonly destinationAssignedGroups: readonly Readonly<DestinationAssignedPassengerGroup>[];
   readonly waitingCohorts: readonly Readonly<PassengerWaitingCohort>[];
@@ -170,8 +169,7 @@ export function activatePassengerDirectItineraries(input: {
   for (let index = 0; index < cohorts.length; index += 1) {
     const cohort = cohorts[index]!;
     const destinationCell = cells.get(cohort.destinationCellId);
-    const itinerary = findPassengerDirectItinerary(
-      input.itineraryPlan,
+    const itinerary = input.itineraryIndex.find(
       cohort.originStopPlaceId,
       cohort.destinationStopPlaceId,
     );
@@ -217,8 +215,7 @@ export function activatePassengerDirectItineraries(input: {
       destinationCell?.assignedStopPlaceId !== assignment.destinationStopPlaceId
     )
       throw new Error('Destination assignment does not match its cell.');
-    const itinerary = findPassengerDirectItinerary(
-      input.itineraryPlan,
+    const itinerary = input.itineraryIndex.find(
       assignment.originStopPlaceId,
       assignment.destinationStopPlaceId,
     );

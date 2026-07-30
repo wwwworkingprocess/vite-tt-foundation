@@ -14,6 +14,9 @@ histogram. Matching assignments merge with checked arithmetic; unavailable
 direct journeys are consumed and counted explicitly.
 
 The itinerary plan is derived input and is not embedded in authority.
+Each authority builds one immutable runtime index from the validated plan;
+tick processing uses its canonical omitted-diagonal pair index rather than
+reparsing or scanning the complete plan per cohort.
 Snapshot V6 and Transport Save V4 are the only supported pre-release
 persistence contracts. Earlier snapshots and saves were intentionally
 discarded at Phase 4E3B.

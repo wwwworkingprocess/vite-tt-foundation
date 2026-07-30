@@ -7,7 +7,7 @@ import type {
 } from '@torrevieja-tycoon/transport-domain';
 import { parseSimulationTick, type SimulationTick } from './time.js';
 import type { ScenarioCoordinate } from './transport-simulation.js';
-import type { PassengerDirectItineraryPlanV1 } from './passenger-direct-itinerary.js';
+import type { PassengerDirectItineraryRuntimeIndex } from './passenger-direct-itinerary.js';
 import {
   activatePassengerDirectItineraries,
   passengerWaitingCohortSchema,
@@ -626,7 +626,7 @@ const compareGroups = (
 
 export function validatePassengerDemandState(
   plan: PassengerDemandPlanV1,
-  itineraryPlan: PassengerDirectItineraryPlanV1,
+  itineraryIndex: PassengerDirectItineraryRuntimeIndex,
   value: unknown,
 ): ActivePassengerDemandState {
   const parsedPlan = parsePassengerDemandPlan(plan);
@@ -664,10 +664,13 @@ export function validatePassengerDemandState(
     parsed.stopArrivals.length !== parsedPlan.stops.length ||
     parsed.stopArrivals.some(
       (arrival, index) =>
-        arrival.stopPlaceId !== parsedPlan.stops[index]!.stopPlaceId,
+        arrival.stopPlaceId !== parsedPlan.stops[index]!.stopPlaceId ||
+        arrival.awaitingDestinationCount !== 0,
     )
   )
-    throw new Error('Passenger StopPlace arrivals are inconsistent.');
+    throw new Error(
+      'Passenger StopPlace arrivals contain invalid destination backlog.',
+    );
   if (
     parsed.destinationCursors.length !== parsedPlan.stops.length ||
     parsed.destinationCursors.some(
@@ -731,7 +734,7 @@ export function validatePassengerDemandState(
     0,
   );
   const waitingAuthority = activatePassengerDirectItineraries({
-    itineraryPlan,
+    itineraryIndex,
     demandPlan: parsedPlan,
     destinationAssignedGroups: [],
     waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
@@ -797,12 +800,12 @@ export function validatePassengerDemandState(
 
 export function advancePassengerDemandToTick(
   plan: PassengerDemandPlanV1,
-  itineraryPlan: PassengerDirectItineraryPlanV1,
+  itineraryIndex: PassengerDirectItineraryRuntimeIndex,
   state: ActivePassengerDemandState,
   targetTickValue: number,
 ): ActivePassengerDemandState {
   const parsedPlan = parsePassengerDemandPlan(plan);
-  let current = validatePassengerDemandState(parsedPlan, itineraryPlan, state);
+  let current = validatePassengerDemandState(parsedPlan, itineraryIndex, state);
   const targetTick = parseSimulationTick(targetTickValue);
   if (targetTick < current.processedThroughTick)
     throw new Error('Passenger demand cannot advance backwards.');
@@ -959,7 +962,7 @@ export function advancePassengerDemandToTick(
       arrivals.set(stop.stopPlaceId, 0);
     }
     const activation = activatePassengerDirectItineraries({
-      itineraryPlan,
+      itineraryIndex,
       demandPlan: parsedPlan,
       destinationAssignedGroups: destinationGroups,
       waitingCohorts: current.waitingCohorts,
@@ -969,7 +972,7 @@ export function advancePassengerDemandToTick(
         current.directItineraryUnavailablePassengerCount,
       activationTick: tick,
     });
-    current = validatePassengerDemandState(parsedPlan, itineraryPlan, {
+    current = validatePassengerDemandState(parsedPlan, itineraryIndex, {
       status: 'active',
       demandPlanCoordinate: current.demandPlanCoordinate,
       processedThroughTick: tick,

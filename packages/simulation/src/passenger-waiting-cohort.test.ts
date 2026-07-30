@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import { parsePassengerDemandPlan } from './passenger-demand.js';
-import { buildPassengerDirectItineraryPlan } from './passenger-direct-itinerary.js';
+import {
+  buildPassengerDirectItineraryPlan,
+  createPassengerDirectItineraryRuntimeIndex,
+} from './passenger-direct-itinerary.js';
 import { activatePassengerDirectItineraries } from './passenger-waiting-cohort.js';
 
 const scenario = parseScenarioPackage({
@@ -133,11 +136,16 @@ const itineraryPlan = buildPassengerDirectItineraryPlan({
   scenario,
   demandPlan,
 });
+const itineraryIndex = createPassengerDirectItineraryRuntimeIndex({
+  plan: itineraryPlan,
+  scenario,
+  demandPlan,
+});
 
 describe('directional passenger waiting cohorts', () => {
   it('activates direct assignments, merges stable cohorts, and counts unavailable journeys', () => {
     const first = activatePassengerDirectItineraries({
-      itineraryPlan,
+      itineraryIndex,
       demandPlan,
       destinationAssignedGroups: [
         {
@@ -187,7 +195,7 @@ describe('directional passenger waiting cohorts', () => {
     });
 
     const merged = activatePassengerDirectItineraries({
-      itineraryPlan,
+      itineraryIndex,
       demandPlan,
       destinationAssignedGroups: [
         {
@@ -219,7 +227,7 @@ describe('directional passenger waiting cohorts', () => {
 
   it('rejects malformed authority and assignment references without mutation', () => {
     const base = {
-      itineraryPlan,
+      itineraryIndex,
       demandPlan,
       destinationAssignedGroups: [],
       waitingCohorts: [],
@@ -276,7 +284,7 @@ describe('directional passenger waiting cohorts', () => {
 
   it('rejects corrupted restored cohorts and duplicate canonical keys', () => {
     const activated = activatePassengerDirectItineraries({
-      itineraryPlan,
+      itineraryIndex,
       demandPlan,
       destinationAssignedGroups: [
         {
@@ -296,7 +304,7 @@ describe('directional passenger waiting cohorts', () => {
     });
     const cohort = activated.waitingCohorts[0]!;
     const base = {
-      itineraryPlan,
+      itineraryIndex,
       demandPlan,
       destinationAssignedGroups: [],
       nextPassengerWaitingCohortSequence: 2,
@@ -321,6 +329,56 @@ describe('directional passenger waiting cohorts', () => {
         waitingCohorts: [{ ...cohort, destinationStopNodeId: 'node-C' }],
       }),
     ).toThrow('directional waiting cohort');
+  });
+
+  it('performs exactly one indexed lookup per cohort and new assignment', () => {
+    let lookups = 0;
+    const countedIndex = Object.freeze({
+      plan: itineraryIndex.plan,
+      find: (origin: string, destination: string) => {
+        lookups += 1;
+        return itineraryIndex.find(origin, destination);
+      },
+    });
+    const first = activatePassengerDirectItineraries({
+      itineraryIndex: countedIndex,
+      demandPlan,
+      destinationAssignedGroups: Array.from({ length: 20 }, (_, index) => ({
+        passengerJourneyGroupId: `passenger-journey-group-${index + 1}`,
+        originStopPlaceId: 'A',
+        destinationCellId: 'r0c1',
+        destinationStopPlaceId: 'B',
+        count: 1,
+        firstAssignedTick: 1,
+        lastAssignedTick: 1,
+      })),
+      waitingCohorts: [],
+      nextPassengerWaitingCohortSequence: 1,
+      directItineraryUnavailablePassengerCount: 0,
+      activationTick: 1,
+    });
+    expect(lookups).toBe(20);
+    expect(first.waitingCohorts).toHaveLength(1);
+    lookups = 0;
+    activatePassengerDirectItineraries({
+      itineraryIndex: countedIndex,
+      demandPlan,
+      destinationAssignedGroups: Array.from({ length: 15 }, (_, index) => ({
+        passengerJourneyGroupId: `passenger-journey-group-${index + 21}`,
+        originStopPlaceId: 'A',
+        destinationCellId: 'r0c1',
+        destinationStopPlaceId: 'B',
+        count: 1,
+        firstAssignedTick: 2,
+        lastAssignedTick: 2,
+      })),
+      waitingCohorts: first.waitingCohorts,
+      nextPassengerWaitingCohortSequence:
+        first.nextPassengerWaitingCohortSequence,
+      directItineraryUnavailablePassengerCount: 0,
+      activationTick: 2,
+    });
+    expect(lookups).toBe(16);
   });
 
   it('activates a real Torrevieja direct pair without inventing platform connectivity', () => {
@@ -396,11 +454,16 @@ describe('directional passenger waiting cohorts', () => {
       scenario: canonical,
       demandPlan: realDemand,
     });
+    const realItineraryIndex = createPassengerDirectItineraryRuntimeIndex({
+      plan: realItineraries,
+      scenario: canonical,
+      demandPlan: realDemand,
+    });
     expect(realItineraries.stopPlaceIds).toHaveLength(134);
     expect(realItineraries.directPairCount).toBeGreaterThan(0);
     expect(realItineraries.unavailablePairCount).toBeGreaterThan(0);
     const result = activatePassengerDirectItineraries({
-      itineraryPlan: realItineraries,
+      itineraryIndex: realItineraryIndex,
       demandPlan: realDemand,
       destinationAssignedGroups: [
         {

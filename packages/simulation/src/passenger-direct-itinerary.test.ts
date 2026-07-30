@@ -6,6 +6,7 @@ import {
 import { parsePassengerDemandPlan } from './passenger-demand.js';
 import {
   buildPassengerDirectItineraryPlan,
+  createPassengerDirectItineraryRuntimeIndex,
   findPassengerDirectItinerary,
   validatePassengerDirectItineraryPlan,
 } from './passenger-direct-itinerary.js';
@@ -948,6 +949,25 @@ describe('Passenger Direct Itinerary Plan V1', () => {
     if (_name === 'multi-route Torrevieja') {
       expect(first.stopPlaceIds.length).toBeGreaterThan(0);
       expect(first.pairCount).toBeGreaterThan(0);
+      const runtime = createPassengerDirectItineraryRuntimeIndex({
+        plan: first,
+        scenario: canonical,
+        demandPlan: demand,
+      });
+      const direct = first.entries.find((entry) => entry.status === 'direct')!;
+      const unavailable = first.entries.find(
+        (entry) => entry.status === 'unavailable',
+      )!;
+      for (const entry of [direct, unavailable])
+        expect(
+          runtime.find(entry.originStopPlaceId, entry.destinationStopPlaceId),
+        ).toEqual(
+          findPassengerDirectItinerary(
+            first,
+            entry.originStopPlaceId,
+            entry.destinationStopPlaceId,
+          ),
+        );
     }
     expect(second).toEqual(first);
     expect(
@@ -976,6 +996,49 @@ describe('Passenger Direct Itinerary Plan V1', () => {
         );
       }
     }
+  });
+
+  it('indexes every ordered pair exactly like the defensive finder', () => {
+    const canonical = scenario();
+    const demand = demandPlan(canonical);
+    const plan = buildPassengerDirectItineraryPlan({
+      scenario: canonical,
+      demandPlan: demand,
+    });
+    const runtime = createPassengerDirectItineraryRuntimeIndex({
+      plan,
+      scenario: canonical,
+      demandPlan: demand,
+    });
+    for (const origin of plan.stopPlaceIds)
+      for (const destination of plan.stopPlaceIds) {
+        if (origin === destination) continue;
+        expect(runtime.find(origin, destination)).toEqual(
+          findPassengerDirectItinerary(plan, origin, destination),
+        );
+      }
+    expect(runtime.find('A', 'B')).toEqual(plan.entries[0]);
+    expect(runtime.find('A', 'U')).toEqual(plan.entries[7]);
+    expect(runtime.find('B', 'A')).toEqual(plan.entries[8]);
+    expect(runtime.find('U', 'H')).toEqual(plan.entries.at(-1));
+  });
+
+  it('rejects a runtime index whose scenario or demand identity mismatches', () => {
+    const canonical = scenario();
+    const demand = demandPlan(canonical);
+    const plan = buildPassengerDirectItineraryPlan({
+      scenario: canonical,
+      demandPlan: demand,
+    });
+    const wrongDemand = structuredClone(demand);
+    wrongDemand.demandModelContentHash = 'f'.repeat(64);
+    expect(() =>
+      createPassengerDirectItineraryRuntimeIndex({
+        plan,
+        scenario: canonical,
+        demandPlan: wrongDemand,
+      }),
+    ).toThrow();
   });
 });
 import { readFileSync } from 'node:fs';

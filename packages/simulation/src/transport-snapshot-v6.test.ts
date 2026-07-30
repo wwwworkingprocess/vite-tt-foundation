@@ -139,6 +139,38 @@ describe('Transport Snapshot V6', () => {
     ).toThrow('scenario-id-mismatch');
   });
 
+  it('rejects any non-zero current destination backlog without normalization', () => {
+    const canonical = scenario();
+    const plan = demandPlan();
+    const snapshot = createTransportSimulationSnapshot(
+      advanceTransportTicks(
+        createTransportSimulationState(canonical, 0, plan),
+        2,
+      ),
+    );
+    expect(
+      snapshot.state.passengerDemand.status === 'active' &&
+        snapshot.state.passengerDemand.stopArrivals.every(
+          (arrival) => arrival.awaitingDestinationCount === 0,
+        ),
+    ).toBe(true);
+    const corrupted = structuredClone(snapshot);
+    if (corrupted.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active fixture.');
+    corrupted.state.passengerDemand.stopArrivals[0]!.awaitingDestinationCount = 1;
+    corrupted.state.passengerDemand.totalArrivedAtStopPassengerCount += 1;
+    corrupted.state.passengerDemand.servedEmittedPassengerCount += 1;
+    corrupted.state.passengerDemand.totalEmittedPassengerCount += 1;
+    expect(() =>
+      restoreTransportSimulationState(corrupted, canonical, plan),
+    ).toThrow(/destination backlog/i);
+    expect(
+      createTransportSimulationSnapshot(
+        restoreTransportSimulationState(snapshot, canonical, plan),
+      ),
+    ).toEqual(snapshot);
+  });
+
   it('rejects every coordinate mismatch and corrupted fleet identity', () => {
     const canonical = scenario();
     let state = createTransportSimulationState(canonical, 0);

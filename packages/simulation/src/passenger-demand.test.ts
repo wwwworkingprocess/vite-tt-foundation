@@ -13,7 +13,10 @@ import {
   projectPassengerDemand,
   validatePassengerDemandState,
 } from './passenger-demand.js';
-import { buildPassengerDirectItineraryPlan } from './passenger-direct-itinerary.js';
+import {
+  buildPassengerDirectItineraryPlan,
+  createPassengerDirectItineraryRuntimeIndex,
+} from './passenger-direct-itinerary.js';
 
 const catchment = {
   scenario: {
@@ -199,11 +202,18 @@ const itineraryScenario = parseScenarioPackage({
   },
 });
 
-const createItineraryPlan = () =>
-  buildPassengerDirectItineraryPlan({
+const createItineraryIndex = () => {
+  const demandPlan = createPlan();
+  const plan = buildPassengerDirectItineraryPlan({
     scenario: itineraryScenario,
-    demandPlan: createPlan(),
+    demandPlan,
   });
+  return createPassengerDirectItineraryRuntimeIndex({
+    plan,
+    scenario: itineraryScenario,
+    demandPlan,
+  });
+};
 
 type MutablePlan = {
   schemaVersion: string;
@@ -382,7 +392,7 @@ describe('deterministic passenger emission and access', () => {
     expect(initial.cellCredits.every((cell) => cell.credit === 0)).toBe(true);
     const tick1 = advancePassengerDemandToTick(
       plan,
-      createItineraryPlan(),
+      createItineraryIndex(),
       initial,
       1,
     );
@@ -393,7 +403,7 @@ describe('deterministic passenger emission and access', () => {
     expect(tick1.totalArrivedAtStopPassengerCount).toBe(0);
     const tick3 = advancePassengerDemandToTick(
       plan,
-      createItineraryPlan(),
+      createItineraryIndex(),
       tick1,
       3,
     );
@@ -413,7 +423,7 @@ describe('deterministic passenger emission and access', () => {
   it('uses exact integer distance bands and orders groups by arrival then ID', () => {
     const state = advancePassengerDemandToTick(
       createPlan(),
-      createItineraryPlan(),
+      createItineraryIndex(),
       createInitialPassengerDemandState(createPlan(), 0),
       2,
     );
@@ -437,7 +447,7 @@ describe('deterministic passenger emission and access', () => {
     const plan = createPlan();
     const state = advancePassengerDemandToTick(
       plan,
-      createItineraryPlan(),
+      createItineraryIndex(),
       createInitialPassengerDemandState(plan, 0),
       20,
     );
@@ -446,7 +456,7 @@ describe('deterministic passenger emission and access', () => {
     expect(state.unservedAtSourcePassengerCount).toBe(24);
     expect(state.cellCredits.every((cell) => cell.credit === 0)).toBe(true);
     expect(
-      validatePassengerDemandState(plan, createItineraryPlan(), state),
+      validatePassengerDemandState(plan, createItineraryIndex(), state),
     ).toEqual(state);
     expect(Object.isFrozen(state.accessingGroups)).toBe(true);
     expect(Object.isFrozen(state.stopArrivals[0])).toBe(true);
@@ -466,22 +476,22 @@ describe('deterministic passenger emission and access', () => {
     const initial = createInitialPassengerDemandState(plan, 0);
     const batch = advancePassengerDemandToTick(
       plan,
-      createItineraryPlan(),
+      createItineraryIndex(),
       initial,
       20,
     );
     const split = advancePassengerDemandToTick(
       plan,
-      createItineraryPlan(),
-      advancePassengerDemandToTick(plan, createItineraryPlan(), initial, 7),
+      createItineraryIndex(),
+      advancePassengerDemandToTick(plan, createItineraryIndex(), initial, 7),
       20,
     );
     expect(split).toEqual(batch);
     expect(
-      advancePassengerDemandToTick(plan, createItineraryPlan(), batch, 20),
+      advancePassengerDemandToTick(plan, createItineraryIndex(), batch, 20),
     ).toBe(batch);
     expect(() =>
-      advancePassengerDemandToTick(plan, createItineraryPlan(), batch, 19),
+      advancePassengerDemandToTick(plan, createItineraryIndex(), batch, 19),
     ).toThrow();
     expect(initial).toEqual(createInitialPassengerDemandState(plan, 0));
   });
@@ -495,17 +505,17 @@ describe('deterministic passenger emission and access', () => {
     expect(() =>
       advancePassengerDemandToTick(
         parsePassengerDemandPlan(overflowPlan),
-        createItineraryPlan(),
+        createItineraryIndex(),
         initial,
         1,
       ),
     ).toThrow(/overflow/i);
     const corrupt = structuredClone(
-      advancePassengerDemandToTick(plan, createItineraryPlan(), initial, 2),
+      advancePassengerDemandToTick(plan, createItineraryIndex(), initial, 2),
     ) as unknown as MutablePassengerState;
     corrupt.totalEmittedPassengerCount += 1;
     expect(() =>
-      validatePassengerDemandState(plan, createItineraryPlan(), corrupt),
+      validatePassengerDemandState(plan, createItineraryIndex(), corrupt),
     ).toThrow();
   });
 
@@ -513,14 +523,14 @@ describe('deterministic passenger emission and access', () => {
     const plan = createPlan();
     const active = advancePassengerDemandToTick(
       plan,
-      createItineraryPlan(),
+      createItineraryIndex(),
       createInitialPassengerDemandState(plan, 0),
       2,
     );
     expect(() =>
       validatePassengerDemandState(
         plan,
-        createItineraryPlan(),
+        createItineraryIndex(),
         createDisabledPassengerDemandState(),
       ),
     ).toThrow(/active/i);
@@ -556,7 +566,7 @@ describe('deterministic passenger emission and access', () => {
       >;
       mutate(corrupt);
       expect(() =>
-        validatePassengerDemandState(plan, createItineraryPlan(), corrupt),
+        validatePassengerDemandState(plan, createItineraryIndex(), corrupt),
       ).toThrow();
     }
     expect(parsePassengerDemandProjection({ status: 'disabled' })).toEqual({
@@ -574,7 +584,7 @@ describe('deterministic passenger emission and access', () => {
     const plan = createPlan();
     const active = advancePassengerDemandToTick(
       plan,
-      createItineraryPlan(),
+      createItineraryIndex(),
       createInitialPassengerDemandState(plan, 0),
       20,
     );
@@ -616,7 +626,7 @@ describe('deterministic passenger emission and access', () => {
       >;
       mutate(corrupt);
       expect(() =>
-        validatePassengerDemandState(plan, createItineraryPlan(), corrupt),
+        validatePassengerDemandState(plan, createItineraryIndex(), corrupt),
       ).toThrow();
     }
   });
@@ -669,14 +679,14 @@ describe('deterministic passenger emission and access', () => {
     const state = structuredClone(
       advancePassengerDemandToTick(
         plan,
-        createItineraryPlan(),
+        createItineraryIndex(),
         createInitialPassengerDemandState(plan, 0),
         2,
       ),
     ) as unknown as MutablePassengerState;
     mutate(state);
     expect(() =>
-      validatePassengerDemandState(plan, createItineraryPlan(), state),
+      validatePassengerDemandState(plan, createItineraryIndex(), state),
     ).toThrow();
   });
 });

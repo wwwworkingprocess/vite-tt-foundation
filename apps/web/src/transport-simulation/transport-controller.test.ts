@@ -213,6 +213,7 @@ describe('transport application controller', () => {
     const currentClose = vi.fn(() => current.close());
     let clientCreations = 0;
     let resolved: unknown = plan;
+    let storedRecord = activeRecord;
     const controller = createTransportApplicationController({
       createClient: () => {
         clientCreations += 1;
@@ -221,7 +222,7 @@ describe('transport application controller', () => {
           : createDirectTransportSimulationClient();
       },
       repository: {
-        get: async () => classifyPersistedSaveRecord(activeRecord),
+        get: async () => classifyPersistedSaveRecord(storedRecord),
         put: async () => undefined,
       },
       scenarioResolver: { resolve: async () => canonical },
@@ -272,6 +273,36 @@ describe('transport application controller', () => {
     expect(currentClose).not.toHaveBeenCalled();
     expect(clientCreations).toBe(1);
 
+    resolved = plan;
+    const backlog = structuredClone(activeRecord);
+    if (backlog.snapshot.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active fixture.');
+    const mutableDemand = backlog.snapshot.state.passengerDemand as unknown as {
+      stopArrivals: Array<{ awaitingDestinationCount: number }>;
+      totalArrivedAtStopPassengerCount: number;
+      servedEmittedPassengerCount: number;
+      totalEmittedPassengerCount: number;
+    };
+    mutableDemand.stopArrivals[0]!.awaitingDestinationCount = 1;
+    mutableDemand.totalArrivedAtStopPassengerCount += 1;
+    mutableDemand.servedEmittedPassengerCount += 1;
+    mutableDemand.totalEmittedPassengerCount += 1;
+    storedRecord = parseTransportSaveRecord(backlog);
+    await expect(
+      controller.restore({
+        saveId: 'active-demand-preflight',
+        timelineId: parseTimelineId('timeline-backlog'),
+      }),
+    ).rejects.toThrow(/destination backlog/i);
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-current',
+      simulationTick: expected.simulationTick,
+    });
+    expect(currentClose).not.toHaveBeenCalled();
+    expect(clientCreations).toBe(1);
+
+    storedRecord = activeRecord;
     const inconsistent = structuredClone(plan);
     (
       inconsistent as { accessPolicy: { accessTicksPerCell: number } }

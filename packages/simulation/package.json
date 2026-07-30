@@ -8,6 +8,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./passenger-direct-itinerary": {
+      "types": "./dist/passenger-direct-itinerary.d.ts",
+      "import": "./dist/passenger-direct-itinerary.js"
     }
   },
   "files": [

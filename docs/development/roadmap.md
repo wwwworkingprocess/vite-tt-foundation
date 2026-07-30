@@ -172,6 +172,22 @@ active authority migrates without consuming its backlog until the next tick.
 Directional StopNodes, route and transfer search, services, boarding,
 capacity, UI, geo-background data, and economics remain deferred.
 
+## Phase 4E3A — Static direct-itinerary plan
+
+### Status
+
+Implemented as a core-only simulation milestone. Passenger Direct Itinerary
+Plan V1 resolves every ordered physical StopPlace pair as either one
+deterministic forward canonical-pattern segment or explicitly unavailable.
+Directional StopNodes and repeated occurrences are preserved exactly, while
+non-loop wrapping, transfers, graph-wide search, and vehicle-cycle handoffs are
+forbidden.
+
+Destination-assigned passenger groups remain awaiting itinerary. Snapshot V5,
+Save V3, clients, Workers, persistence, UI, and rendering are unchanged. Phase
+4E3B may deliberately introduce bounded waiting cohorts and dynamic itinerary
+activation after waiting-age semantics are decided.
+
 ## Phase 5 — React Three Fiber visualization POC
 
 ### Goal

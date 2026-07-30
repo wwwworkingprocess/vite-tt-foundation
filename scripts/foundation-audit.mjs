@@ -67,9 +67,28 @@ export function transportDomainTerms(text, file = '') {
     'catchments',
     'emission',
     'emissions',
+    'itinerary',
+    'itineraries',
+    'routing',
+    'transfer',
+    'transfers',
   ]);
   return [...new Set(tokens.filter((token) => forbidden.has(token)))];
 }
+const itineraryDomainTerms = (text) => {
+  const tokens = text
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .toLowerCase()
+    .split(/[^a-z0-9]+/);
+  const forbidden = new Set([
+    'itinerary',
+    'itineraries',
+    'routing',
+    'transfer',
+    'transfers',
+  ]);
+  return [...new Set(tokens.filter((token) => forbidden.has(token)))];
+};
 const parse = (text) =>
   ts.createSourceFile(
     'audit.tsx',
@@ -436,6 +455,7 @@ const simulation = await walk('packages/simulation/src');
 const protocol = await walk('packages/protocol/src');
 const transport = await walk('packages/transport-domain/src');
 const web = await walk('apps/web/src');
+const publicScenarios = await walk('apps/web/public/scenarios');
 for (const file of [...simulation, ...protocol, ...transport]) {
   const text = await source(file);
   if (
@@ -490,6 +510,9 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('apps/web/src/ui/SimulationControls.tsx') ||
     normalized.endsWith('packages/simulation/src/transport-simulation.ts') ||
     normalized.endsWith('packages/simulation/src/passenger-demand.ts') ||
+    normalized.endsWith(
+      'packages/simulation/src/passenger-direct-itinerary.ts',
+    ) ||
     normalized.endsWith('packages/simulation/src/vehicle-movement.ts') ||
     normalized.endsWith('packages/simulation/src/index.ts');
   const domain = transportExtension ? [] : transportDomainTerms(text, file);
@@ -499,6 +522,25 @@ for (const file of [...simulation, ...protocol, ...web]) {
     fail(
       `${file} creates a top-level authoritative/store/host/database singleton.`,
     );
+}
+for (const file of [
+  ...simulation.filter(
+    (path) =>
+      !path
+        .replaceAll('\\', '/')
+        .endsWith('packages/simulation/src/passenger-demand.ts') &&
+      !path
+        .replaceAll('\\', '/')
+        .endsWith('packages/simulation/src/passenger-direct-itinerary.ts'),
+  ),
+  ...protocol,
+  ...transport,
+  ...web,
+  ...publicScenarios,
+]) {
+  const terms = itineraryDomainTerms(await source(file));
+  if (terms.length)
+    fail(`${file} contains direct-itinerary terms: ${terms.join(', ')}.`);
 }
 for (const file of transport) {
   const text = await source(file);
@@ -575,6 +617,12 @@ const populationExtensionFixture = await source(
 const populationGenericFixture = await source(
   'scripts/fixtures/architecture/population-generic-forbidden.txt',
 );
+const itineraryExtensionFixture = await source(
+  'scripts/fixtures/architecture/itinerary-extension-allowed.txt',
+);
+const itineraryGenericFixture = await source(
+  'scripts/fixtures/architecture/itinerary-generic-forbidden.txt',
+);
 for (const expected of [
   'route',
   'bus',
@@ -602,6 +650,10 @@ if (transportDomainTerms(populationExtensionFixture).length === 0)
   fail('population extension fixture did not exercise domain terminology.');
 if (!transportDomainTerms(populationGenericFixture).length)
   fail('generic population-domain boundary fixture was not rejected.');
+if (itineraryDomainTerms(itineraryExtensionFixture).length === 0)
+  fail('itinerary extension fixture did not exercise domain terminology.');
+if (!itineraryDomainTerms(itineraryGenericFixture).length)
+  fail('generic itinerary-domain boundary fixture was not rejected.');
 if (
   environmentNeutralViolations(transportExtensionFixture).length ||
   topLevelSingletons(transportExtensionFixture).length

@@ -67,6 +67,7 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`architecture/decisions/0010-repeating-route-cycle-assignment.md`](architecture/decisions/0010-repeating-route-cycle-assignment.md) — canonical RouteId assignment and repeating ordered-leg operation.
 - [`architecture/decisions/0011-city-population-grid-and-stop-catchments.md`](architecture/decisions/0011-city-population-grid-and-stop-catchments.md) — WGS84 population-grid and physical StopPlace catchment decision.
 - [`architecture/decisions/0013-deterministic-passenger-destination-assignment.md`](architecture/decisions/0013-deterministic-passenger-destination-assignment.md) — weighted destination-cell assignment and Snapshot V5 decision.
+- [`architecture/decisions/0014-deterministic-direct-passenger-itineraries.md`](architecture/decisions/0014-deterministic-direct-passenger-itineraries.md) — static single-pattern itinerary and directional StopNode decision.
 - [`architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md`](architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md) — exact scenario-coordinate compatibility decision.
 - [`architecture/decisions/0007-scenario-package-and-directed-graph.md`](architecture/decisions/0007-scenario-package-and-directed-graph.md) — scenario package and directed-edge decision.
 - [`architecture/decisions/0002-simulation-host-transport-readiness.md`](architecture/decisions/0002-simulation-host-transport-readiness.md) — Socket.IO-readiness research and transport-boundary decision.
@@ -129,8 +130,13 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   cells through deterministic weighted cyclic allocation. Per-origin cursors,
   bounded origin/destination-cell groups, explicit unavailable totals, and
   exact conservation are authoritative in Snapshot V5. Active V4 migration
-  preserves backlog without inventing destinations; itinerary and directional
-  StopNode resolution remain deferred.
+  preserves backlog without inventing destinations. Dynamic itinerary
+  activation and waiting authority remain deferred.
+- Phase 4E3A adds a static simulation-owned Passenger Direct Itinerary Plan V1.
+  Every ordered distinct physical StopPlace pair is either one canonical
+  forward-pattern segment with exact directional StopNodes or explicitly
+  unavailable. Dynamic passenger groups remain awaiting itinerary; Snapshot
+  V5, Save V3, clients, Workers, persistence, UI, and rendering are unchanged.
 - The pre-Phase-4D browser refinement presents the accepted authority through a
   viewport-bound game shell: compact navigation, a full-workspace SVG
   diagnostic view, a swappable R3F minimap, and accessible project,

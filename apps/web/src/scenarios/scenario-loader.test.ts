@@ -39,7 +39,7 @@ describe('browser scenario loader', () => {
         createHash('sha256').update(text).digest('hex'),
     });
     await loader.loadCatalog();
-    await loader.loadScenario('torrevieja-v1');
+    await loader.loadScenario('torrevieja-mini-v1');
     expect(loader.projection.getState().graph).toBeDefined();
     const loadingB = loader.loadScenario('scenario-b');
     expect(loader.projection.getState()).toMatchObject({
@@ -65,7 +65,7 @@ describe('browser scenario loader', () => {
       status: 'loading-catalogue',
     });
     await reload;
-    await loader.loadScenario('torrevieja-v1');
+    await loader.loadScenario('torrevieja-mini-v1');
     failCatalog = true;
     await loader.loadCatalog();
     expect(loader.projection.getState()).toMatchObject({ status: 'failed' });
@@ -81,7 +81,7 @@ describe('browser scenario loader', () => {
       ) as { scenarios: Array<Record<string, unknown>> };
       const sourceManifest = JSON.parse(
         readFileSync(
-          join(publicRoot, 'scenarios', 'torrevieja-v1', 'scenario.json'),
+          join(publicRoot, 'scenarios', 'torrevieja-mini-v1', 'scenario.json'),
           'utf8',
         ),
       ) as Record<string, unknown>;
@@ -124,7 +124,7 @@ describe('browser scenario loader', () => {
         try {
           const value = JSON.parse(
             readFileSync(
-              join(publicRoot, 'scenarios', 'torrevieja-v1', filename),
+              join(publicRoot, 'scenarios', 'torrevieja-mini-v1', filename),
               'utf8',
             ),
           ) as Record<string, unknown>;
@@ -297,22 +297,22 @@ describe('browser scenario loader', () => {
         createHash('sha256').update(text).digest('hex'),
     });
     await loader.loadCatalog();
-    await loader.loadScenario('torrevieja-v1');
+    await loader.loadScenario('torrevieja-legacy-all-v1');
     expect(loader.projection.getState()).toMatchObject({
       status: 'ready',
-      title: 'Torrevieja',
+      title: 'Torrevieja Legacy Network - All Old Lines',
       settlementCount: 1,
-      routeCount: 1,
-      graph: { summary: { nodes: 231, edges: 6, routes: 1, patterns: 2 } },
+      routeCount: 8,
+      graph: { summary: { nodes: 161, edges: 244, routes: 8, patterns: 16 } },
     });
     expect(fetchText).toHaveBeenCalledWith(
-      '/vite-tt-foundation/scenarios/torrevieja-v1/stops.json',
+      '/vite-tt-foundation/scenarios/torrevieja-legacy-all-v1/stops.json',
     );
     const selectedState = loader.projection.getState();
     const resolved = await loader.resolveScenario(
       createScenarioCoordinate(selectedState.scenario!),
     );
-    expect(resolved.manifest.scenarioId).toBe('torrevieja-v1');
+    expect(resolved.manifest.scenarioId).toBe('torrevieja-legacy-all-v1');
     expect(loader.projection.getState()).toBe(selectedState);
     await expect(
       loader.resolveScenario({
@@ -333,7 +333,7 @@ describe('browser scenario loader', () => {
       digestSha256: async () => '0'.repeat(64),
     });
     await mismatch.loadCatalog();
-    await mismatch.loadScenario('torrevieja-v1');
+    await mismatch.loadScenario('torrevieja-legacy-all-v1');
     expect(mismatch.projection.getState()).toMatchObject({
       status: 'failed',
       message: expect.stringContaining('content-integrity-mismatch'),

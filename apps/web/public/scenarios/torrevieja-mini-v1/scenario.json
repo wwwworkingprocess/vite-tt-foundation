@@ -1,45 +1,45 @@
 {
-    "schemaVersion":  "1.0.0",
-    "scenarioId":  "torrevieja-mini-v1",
-    "scenarioVersion":  "1.0.0",
-    "status":  "test-fixture",
-    "title":  "Torrevieja Mini — Test Scenario",
-    "primarySettlementId":  "torrevieja",
-    "settlementIds":  [
-                          "torrevieja"
-                      ],
-    "contentHash":  "b00bc88317f248868960eb10a33d47b7d34699a617bb7db2ad36fbc7bc36c4ed",
-    "assets":  {
-                   "settlements":  {
-                                       "path":  "settlements.json",
-                                       "required":  true,
-                                         "sha256":  "0b3ae48aea4f4d02eff318cf88bb0c27c130c59c5efe626e1efb32fe008e1796"
-                                   },
-                   "stops":  {
-                                 "path":  "stops.json",
-                                 "required":  true,
-                                    "sha256":  "2fc7a0be9ae28f7923f93ac099cc184930c4572e9454aa05e8701d1036cf67f1"
-                             },
-                   "routes":  {
-                                  "path":  "routes.json",
-                                  "required":  true,
-                                     "sha256":  "5ffd4975e15caf7498c955275c99dec84fd255145e6128642a5cd1db8edbb821"
-                              },
-                   "presentation":  {
-                                        "path":  "presentation.json",
-                                        "required":  false,
-                                           "sha256":  "9d8382be88e5f30ebafb2153cc88c91addb059380f4eb8ed5322801731eaa712"
-                                    },
-                   "provenance":  {
-                                      "path":  "provenance.json",
-                                      "required":  false,
-                                        "sha256":  "19b74336ef087b11e9907310390e0731b78158859ff2b66ea9d12c56796c0de8"
-                                  }
-               },
-    "graphContract":  {
-                          "vertexSource":  "stops.stopNodes",
-                          "edgeDerivation":  "consecutive-stopNodeIds",
-                          "closeLoopPolicy":  "add-last-to-first-only-when-closesLoop-is-true",
-                          "reverseEdgePolicy":  "never-infer"
-                      }
+  "schemaVersion": "1.0.0",
+  "scenarioId": "torrevieja-mini-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "test-fixture",
+  "title": "Torrevieja Mini — Test Scenario",
+  "primarySettlementId": "torrevieja",
+  "settlementIds": [
+    "torrevieja"
+  ],
+  "contentHash": "b2bb5b38a696e04e0dde2d40398301bb9f998cbee0e6d26859ca9dd1e4841b7a",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "0b3ae48aea4f4d02eff318cf88bb0c27c130c59c5efe626e1efb32fe008e1796"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "51faaa2bf11e46a918e28c76d7acc0abec31f14d721d8bc0727eab59a218b760"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "5ffd4975e15caf7498c955275c99dec84fd255145e6128642a5cd1db8edbb821"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "9d8382be88e5f30ebafb2153cc88c91addb059380f4eb8ed5322801731eaa712"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "1a85949cb602bd67b13dcfeb66f7b653d9c5f8fc695062c7daf420025c73188c"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
 }

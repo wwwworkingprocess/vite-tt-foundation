@@ -8,7 +8,7 @@
   "settlementIds": [
     "es-torrevieja"
   ],
-  "contentHash": "998b030827a5350b5178c7fe558fe2193b8e2c3457e4949fbff01fd645f382fa",
+  "contentHash": "b6891aeb3bff38dcc037d21314f3d623fba83e86150dbd5a6564e7aaf8310c3f",
   "assets": {
     "settlements": {
       "path": "settlements.json",
@@ -18,7 +18,7 @@
     "stops": {
       "path": "stops.json",
       "required": true,
-      "sha256": "a68b9a401a99116bf6095c20178a6ffb2603cfa3640267fb4c84ab466d38157f"
+      "sha256": "cf1e78e76671ccbabec7cb1c05433298730e772eac25b35b4f0c98f2170d10e5"
     },
     "routes": {
       "path": "routes.json",
@@ -33,7 +33,7 @@
     "provenance": {
       "path": "provenance.json",
       "required": false,
-      "sha256": "f1ae3947a5a16babd34267cc7beef044a4d82bb164f70835d8f07bba579ae999"
+      "sha256": "17037c1befc7c07983fe2dbc9353bfe06800d25a9ab3ff247969ace437bfdb2d"
     }
   },
   "graphContract": {

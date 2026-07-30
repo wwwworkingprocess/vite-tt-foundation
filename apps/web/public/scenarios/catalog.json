@@ -3,18 +3,6 @@
   "catalogId": "torrevieja-tycoon-scenarios",
   "scenarios": [
     {
-      "scenarioId": "torrevieja-v1",
-      "scenarioVersion": "1.0.0",
-      "title": "Torrevieja",
-      "primarySettlementId": "es-torrevieja",
-      "settlementIds": [
-        "es-torrevieja"
-      ],
-      "manifestPath": "torrevieja-v1/scenario.json",
-      "status": "development-seed",
-      "contentHash": "02b87c9b831ada20fb8d72d4bac507ce71d17d5faf39d32bd2992fe7252f88f9"
-    },
-    {
       "scenarioId": "torrevieja-mini-v1",
       "scenarioVersion": "1.0.0",
       "title": "Torrevieja Mini — Test Scenario",
@@ -24,7 +12,7 @@
       ],
       "manifestPath": "torrevieja-mini-v1/scenario.json",
       "status": "test-fixture",
-      "contentHash": "b00bc88317f248868960eb10a33d47b7d34699a617bb7db2ad36fbc7bc36c4ed"
+      "contentHash": "b2bb5b38a696e04e0dde2d40398301bb9f998cbee0e6d26859ca9dd1e4841b7a"
     },
     {
       "scenarioId": "torrevieja-legacy-abc-v1",
@@ -36,7 +24,7 @@
       ],
       "manifestPath": "torrevieja-legacy-abc-v1/scenario.json",
       "status": "development-seed",
-      "contentHash": "2a3345a69f038a89602fb098bd2edd0950c2c106ad1731679e2c3a6ba9a18d99"
+      "contentHash": "7fc35b5842bb98d23a42508174482f2c7528ed856d32415878b6f6b7dd5d0b73"
     },
     {
       "scenarioId": "torrevieja-legacy-east-v1",
@@ -48,7 +36,7 @@
       ],
       "manifestPath": "torrevieja-legacy-east-v1/scenario.json",
       "status": "development-seed",
-      "contentHash": "97b085714559b52f6cae62d2a4ea30fd968606fdfb46d82cc7d1e68a9da22dac"
+      "contentHash": "c6edb4f60d455814226aba5cddcca013b81e153104104062e552474eec500d85"
     },
     {
       "scenarioId": "torrevieja-legacy-south-v1",
@@ -60,7 +48,7 @@
       ],
       "manifestPath": "torrevieja-legacy-south-v1/scenario.json",
       "status": "development-seed",
-      "contentHash": "775fc914eaaa276cdd525961743679f3c07b472200a06145df46dab43b63786e"
+      "contentHash": "3b96d22230923120792fd4dbda3dfe11447445cae199a8dd7b882bb0f0722de9"
     },
     {
       "scenarioId": "torrevieja-legacy-north-v1",
@@ -72,7 +60,7 @@
       ],
       "manifestPath": "torrevieja-legacy-north-v1/scenario.json",
       "status": "development-seed",
-      "contentHash": "c533e31ae6d355c47f629ef03a01dfd5528b1e1dd6bb3f3aacb259d5f253b0b7"
+      "contentHash": "0caf5913afc603a56e6a37270a6caac3c858a9b63aed7d60d92da351a10a1b06"
     },
     {
       "scenarioId": "torrevieja-legacy-all-v1",
@@ -84,7 +72,7 @@
       ],
       "manifestPath": "torrevieja-legacy-all-v1/scenario.json",
       "status": "development-seed",
-      "contentHash": "998b030827a5350b5178c7fe558fe2193b8e2c3457e4949fbff01fd645f382fa"
+      "contentHash": "b6891aeb3bff38dcc037d21314f3d623fba83e86150dbd5a6564e7aaf8310c3f"
     },
     {
       "scenarioId": "elche-urban-abc-v1",

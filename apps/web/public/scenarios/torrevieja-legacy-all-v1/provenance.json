@@ -98,6 +98,10 @@
     {
       "transformationId": "legacy-north-route-matching-v1",
       "description": "Carries forward the validated complete mappings for Lines B, G and H from torrevieja-legacy-north-v1."
+    },
+    {
+      "transformationId": "physical-stop-place-projection-v1",
+      "description": "Assigns stable physical tv-place identifiers from the conservative torrevieja-stop-node-to-stop-place-v1 registry. Exact-name, close, complementary-direction pairs may share a StopPlace; every other mapped StopNode remains a singleton. Route and pattern assets are unchanged."
     }
   ],
   "warnings": [
@@ -131,6 +135,7 @@
     "The municipal inventory distinguishes separate directional Doña Inés records, but the OSM universe currently supplies only one canonical candidate; tv-stop-0127 is therefore shared by the two patterns.",
     "Line H contains both complete captured patterns: 6 outward and 4 return stop occurrences and operates only on Fridays.",
     "Line H's Hotel Juan Carlos / Calle Apolo return occurrence maps provisionally to tv-stop-0129, the nearby opposite-direction BP/Inmaculada canonical node.",
-    "Line H's DOMTI occurrence shares tv-stop-0069 with La Gaviota because the municipal address is Avenida Diego Ramírez Pastor 125."
+    "Line H's DOMTI occurrence shares tv-stop-0069 with La Gaviota because the municipal address is Avenida Diego Ramírez Pastor 125.",
+    "StopPlace grouping does not create passenger route edges, reverse edges, or vehicle-cycle handoff edges. In particular, tv-stop-0207 and tv-stop-0209 share a physical StopPlace while remaining distinct graph vertices."
   ]
 }

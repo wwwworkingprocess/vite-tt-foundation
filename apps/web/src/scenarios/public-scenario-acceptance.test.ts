@@ -2,13 +2,42 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import {
+  buildDirectedScenarioGraph,
+  parseScenarioPackage,
+  type CanonicalScenario,
+} from '@torrevieja-tycoon/transport-domain';
 import { createScenarioLoader } from './scenario-loader.js';
 
 const publicRoot = join(import.meta.dirname, '..', '..', 'public');
+const torreviejaScenarioIds = [
+  'torrevieja-legacy-all-v1',
+  'torrevieja-legacy-abc-v1',
+  'torrevieja-legacy-east-v1',
+  'torrevieja-legacy-north-v1',
+  'torrevieja-legacy-south-v1',
+  'torrevieja-mini-v1',
+] as const;
+
+async function loadCanonicalScenario(
+  scenarioId: string,
+): Promise<CanonicalScenario> {
+  const root = join(publicRoot, 'scenarios', scenarioId);
+  const json = async (name: string) =>
+    JSON.parse(await readFile(join(root, name), 'utf8')) as unknown;
+  return parseScenarioPackage({
+    manifest: await json('scenario.json'),
+    settlements: await json('settlements.json'),
+    stops: await json('stops.json'),
+    routes: await json('routes.json'),
+    presentation: await json('presentation.json'),
+    provenance: await json('provenance.json'),
+  });
+}
 
 describe('public multi-scenario catalogue', () => {
   it.each(['/', '/vite-tt-foundation/'])(
-    'loads and verifies both packages under base %s',
+    'loads and verifies every catalogue package under base %s',
     async (baseUrl) => {
       const loader = createScenarioLoader({
         baseUrl,
@@ -30,7 +59,6 @@ describe('public multi-scenario catalogue', () => {
           .getState()
           .catalog?.scenarios.map((item) => item.scenarioId),
       ).toEqual([
-        'torrevieja-v1',
         'torrevieja-mini-v1',
         'torrevieja-legacy-abc-v1',
         'torrevieja-legacy-east-v1',
@@ -39,23 +67,14 @@ describe('public multi-scenario catalogue', () => {
         'torrevieja-legacy-all-v1',
         'elche-urban-abc-v1',
       ]);
-      await loader.loadScenario('torrevieja-v1');
-      expect(loader.projection.getState()).toMatchObject({
-        status: 'ready',
-        selectedScenarioId: 'torrevieja-v1',
-        graph: { summary: { nodes: 231 } },
-      });
-      await loader.loadScenario('torrevieja-mini-v1');
-      expect(loader.projection.getState()).toMatchObject({
-        status: 'ready',
-        selectedScenarioId: 'torrevieja-mini-v1',
-        graph: { summary: { nodes: 7 } },
-      });
-      await loader.loadScenario('torrevieja-legacy-abc-v1');
-      expect(loader.projection.getState()).toMatchObject({
-        status: 'ready',
-        graph: { summary: { nodes: 98, routes: 3, patterns: 6, edges: 111 } },
-      });
+      for (const descriptor of loader.projection.getState().catalog!
+        .scenarios) {
+        await loader.loadScenario(descriptor.scenarioId);
+        expect(loader.projection.getState()).toMatchObject({
+          status: 'ready',
+          selectedScenarioId: descriptor.scenarioId,
+        });
+      }
     },
   );
 
@@ -87,5 +106,120 @@ describe('public multi-scenario catalogue', () => {
       status: 'failed',
       message: 'Scenario loading failed.',
     });
+  });
+
+  it('accepts the physical Torrevieja StopPlace projection consistently', async () => {
+    const scenarios = await Promise.all(
+      torreviejaScenarioIds.map(loadCanonicalScenario),
+    );
+    const nodeMappings = new Map<string, string>();
+    const placeIdentities = new Map<
+      string,
+      Readonly<{ name: string; latitude: number; longitude: number }>
+    >();
+
+    for (const canonical of scenarios) {
+      const routedNodeIds = new Set(
+        canonical.routes.routes.flatMap((route) =>
+          route.patterns.flatMap((pattern) => pattern.stopNodeIds),
+        ),
+      );
+      const nodes = new Map(
+        canonical.stops.stopNodes.map((node) => [node.stopNodeId, node]),
+      );
+      const places = new Map(
+        canonical.stops.stopPlaces.map((place) => [place.stopPlaceId, place]),
+      );
+      const routedPlaceIds = new Set<string>();
+
+      for (const stopNodeId of routedNodeIds) {
+        const node = nodes.get(stopNodeId)!;
+        expect(node.stopPlaceId).not.toBeNull();
+        const stopPlaceId = node.stopPlaceId!;
+        const place = places.get(stopPlaceId);
+        expect(place).toBeDefined();
+        expect(place?.position).toBeDefined();
+        if (!place?.position) throw new Error('Expected positioned StopPlace.');
+        expect(Number.isFinite(place.position.latitude)).toBe(true);
+        expect(Number.isFinite(place.position.longitude)).toBe(true);
+        expect(
+          canonical.settlements.settlements.some(
+            ({ settlementId }) => settlementId === place.settlementId,
+          ),
+        ).toBe(true);
+        routedPlaceIds.add(stopPlaceId);
+
+        const previousMapping = nodeMappings.get(stopNodeId);
+        if (previousMapping === undefined)
+          nodeMappings.set(stopNodeId, stopPlaceId);
+        else expect(stopPlaceId).toBe(previousMapping);
+
+        const identity = {
+          name: place.name,
+          latitude: place.position.latitude,
+          longitude: place.position.longitude,
+        };
+        const previousIdentity = placeIdentities.get(stopPlaceId);
+        if (previousIdentity === undefined)
+          placeIdentities.set(stopPlaceId, identity);
+        else expect(identity).toEqual(previousIdentity);
+      }
+
+      expect([...places.keys()].sort()).toEqual([...routedPlaceIds].sort());
+    }
+
+    const master = scenarios[0]!;
+    const masterRoutedNodes = new Set(
+      master.routes.routes.flatMap((route) =>
+        route.patterns.flatMap((pattern) => pattern.stopNodeIds),
+      ),
+    );
+    const masterNodes = new Map(
+      master.stops.stopNodes.map((node) => [node.stopNodeId, node]),
+    );
+    const routedPlaceCounts = new Map<string, number>();
+    for (const stopNodeId of masterRoutedNodes) {
+      const stopPlaceId = masterNodes.get(stopNodeId)!.stopPlaceId!;
+      routedPlaceCounts.set(
+        stopPlaceId,
+        (routedPlaceCounts.get(stopPlaceId) ?? 0) + 1,
+      );
+    }
+
+    expect(master.manifest.contentHash).toBe(
+      'b6891aeb3bff38dcc037d21314f3d623fba83e86150dbd5a6564e7aaf8310c3f',
+    );
+    expect(master.stops.stopNodes).toHaveLength(161);
+    expect(masterRoutedNodes.size).toBe(161);
+    expect(master.stops.stopPlaces).toHaveLength(134);
+    expect(
+      [...routedPlaceCounts.values()].filter((count) => count === 1),
+    ).toHaveLength(107);
+    expect(
+      161 -
+        [...routedPlaceCounts.values()].reduce(
+          (count, occurrences) => count + Math.min(occurrences, 1),
+          0,
+        ),
+    ).toBe(27);
+    expect(
+      master.stops.stopNodes.find(
+        ({ stopNodeId }) => stopNodeId === 'tv-stop-0207',
+      )!.stopPlaceId,
+    ).toBe('tv-place-0207');
+    expect(
+      master.stops.stopNodes.find(
+        ({ stopNodeId }) => stopNodeId === 'tv-stop-0209',
+      )!.stopPlaceId,
+    ).toBe('tv-place-0207');
+    expect(
+      buildDirectedScenarioGraph(master).edges.some(
+        ({ fromStopNodeId, toStopNodeId }) =>
+          fromStopNodeId === 'tv-stop-0207' && toStopNodeId === 'tv-stop-0209',
+      ),
+    ).toBe(false);
+
+    const elche = await loadCanonicalScenario('elche-urban-abc-v1');
+    expect(elche.stops.stopPlaces).toEqual([]);
   });
 });

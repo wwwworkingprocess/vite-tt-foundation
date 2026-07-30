@@ -44,6 +44,10 @@
     {
       "transformationId": "legacy-south-route-matching-v1",
       "description": "Matches Lines D-F and E using source direction order, municipal direction associations, OSM names and refs, exact street addresses, and geographic continuity through the shared Acequión, Desiderio Rodríguez, La Veleta and hospital corridor."
+    },
+    {
+      "transformationId": "physical-stop-place-projection-v1",
+      "description": "Assigns stable physical tv-place identifiers from the conservative torrevieja-stop-node-to-stop-place-v1 registry. Exact-name, close, complementary-direction pairs may share a StopPlace; every other mapped StopNode remains a singleton. Route and pattern assets are unchanged."
     }
   ],
   "warnings": [
@@ -56,6 +60,7 @@
     "Line E's Calle Amazonas and Ángel García Rogel labels use directional OSM points whose mapped names are street-number or cross-street variants.",
     "Hotel Doña Monse uses different directional StopNodes: tv-stop-0115 outbound and tv-stop-0170 return.",
     "The Ayuntamiento inventory was used as verification evidence only; no source photographs are distributed.",
-    "Review ODbL obligations before publicly distributing a derived database."
+    "Review ODbL obligations before publicly distributing a derived database.",
+    "StopPlace grouping does not create passenger route edges, reverse edges, or vehicle-cycle handoff edges. In particular, tv-stop-0207 and tv-stop-0209 share a physical StopPlace while remaining distinct graph vertices."
   ]
 }

@@ -945,6 +945,10 @@ describe('Passenger Direct Itinerary Plan V1', () => {
       scenario: canonical,
       demandPlan: structuredClone(demand),
     });
+    if (_name === 'multi-route Torrevieja') {
+      expect(first.stopPlaceIds.length).toBeGreaterThan(0);
+      expect(first.pairCount).toBeGreaterThan(0);
+    }
     expect(second).toEqual(first);
     expect(
       validatePassengerDirectItineraryPlan({

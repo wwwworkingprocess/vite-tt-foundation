@@ -1,11 +1,561 @@
 {
   "schemaVersion": "1.0.0",
   "scenarioId": "torrevieja-legacy-east-v1",
-  "stopPlaces": [],
+  "stopPlaces": [
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0031",
+      "name": "Cruz Roja",
+      "position": {
+        "latitude": 37.9946473,
+        "longitude": -0.67369
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0044",
+      "name": "Altos de la Bahía",
+      "position": {
+        "latitude": 37.9988346,
+        "longitude": -0.6610539
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0051",
+      "name": "Argonautas",
+      "position": {
+        "latitude": 38.0032604,
+        "longitude": -0.6643029
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0053",
+      "name": "Avda. Alemania (Esq. Europeos)",
+      "position": {
+        "latitude": 38.0207066,
+        "longitude": -0.6541589
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0054",
+      "name": "Avenida Alfredo Nobel, 121",
+      "position": {
+        "latitude": 37.9906199,
+        "longitude": -0.6562807
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0056",
+      "name": "Avda Alfredo Nobel, 143",
+      "position": {
+        "latitude": 37.9931852,
+        "longitude": -0.6560436
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0058",
+      "name": "Avda Antonio Machado, 137",
+      "position": {
+        "latitude": 37.9798005,
+        "longitude": -0.6753999
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0059",
+      "name": "Avenida Bélgica",
+      "position": {
+        "latitude": 38.0181107,
+        "longitude": -0.6573174
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0065",
+      "name": "Av. de los Daneses (Petanca)",
+      "position": {
+        "latitude": 38.0236326,
+        "longitude": -0.6547415
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0066",
+      "name": "Avenida de los Europeos",
+      "position": {
+        "latitude": 38.0205325,
+        "longitude": -0.6551851
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0067",
+      "name": "Avda.del Mar",
+      "position": {
+        "latitude": 38.0278659,
+        "longitude": -0.6552697
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0069",
+      "name": "Avda. Diego Ramírez - La Gaviota",
+      "position": {
+        "latitude": 37.9807789,
+        "longitude": -0.6835213
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0071",
+      "name": "Avenida Francia, 2",
+      "position": {
+        "latitude": 38.0167545,
+        "longitude": -0.6558577
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0072",
+      "name": "Avenida Habaneras, 36",
+      "position": {
+        "latitude": 37.9802411,
+        "longitude": -0.6724681
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0073",
+      "name": "Avenida Habaneras, 95",
+      "position": {
+        "latitude": 37.9805873,
+        "longitude": -0.6667263
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0074",
+      "name": "Avenida Mariano Ruíz, 24",
+      "position": {
+        "latitude": 37.9828678,
+        "longitude": -0.6613733
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0075",
+      "name": "Avenida Mariano Ruíz, 5",
+      "position": {
+        "latitude": 37.9811166,
+        "longitude": -0.6632016
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0078",
+      "name": "Avda. Virgen del Carmen",
+      "position": {
+        "latitude": 38.0249407,
+        "longitude": -0.6549414
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0079",
+      "name": "Bar Restaurante Carlos",
+      "position": {
+        "latitude": 37.9965853,
+        "longitude": -0.670043
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0081",
+      "name": "Bruselas",
+      "position": {
+        "latitude": 37.984141,
+        "longitude": -0.6671302
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0084",
+      "name": "Cabo Cervera 1",
+      "position": {
+        "latitude": 38.0021151,
+        "longitude": -0.6503449
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0086",
+      "name": "Cabo Cervera 2",
+      "position": {
+        "latitude": 38.0050911,
+        "longitude": -0.6492915
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0093",
+      "name": "Calle Mayor - Encarnación Puchol",
+      "position": {
+        "latitude": 38.0270112,
+        "longitude": -0.6541129
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0101",
+      "name": "Calle San Policarpo, 41",
+      "position": {
+        "latitude": 37.979003,
+        "longitude": -0.686855
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0108",
+      "name": "Centro de Salud La Mata",
+      "position": {
+        "latitude": 38.0182751,
+        "longitude": -0.6587336
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0109",
+      "name": "Centro Salud Lomas",
+      "position": {
+        "latitude": 37.9839805,
+        "longitude": -0.673421
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0113",
+      "name": "Corinto, 25",
+      "position": {
+        "latitude": 38.0111893,
+        "longitude": -0.6633859
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0114",
+      "name": "Corinto, 7",
+      "position": {
+        "latitude": 38.007712,
+        "longitude": -0.6655801
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0123",
+      "name": "Eras de la Sal",
+      "position": {
+        "latitude": 37.9761175,
+        "longitude": -0.6851273
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0126",
+      "name": "Estación de Autobuses de Torrevieja",
+      "position": {
+        "latitude": 37.9793948,
+        "longitude": -0.6756139
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0128",
+      "name": "Gasolinera BP",
+      "position": {
+        "latitude": 37.9826934,
+        "longitude": -0.6862107
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0129",
+      "name": "Gasolinera BP - Colegio Público Inmaculada",
+      "position": {
+        "latitude": 37.9826038,
+        "longitude": -0.686485
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0130",
+      "name": "Gasolinera Repsol",
+      "position": {
+        "latitude": 37.9961987,
+        "longitude": -0.6554634
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0136",
+      "name": "Hospital San Jaime",
+      "position": {
+        "latitude": 38.006314,
+        "longitude": -0.6728552
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0137",
+      "name": "Hotel Fontana",
+      "position": {
+        "latitude": 37.9772793,
+        "longitude": -0.6797518
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0138",
+      "name": "Hotel Masa",
+      "position": {
+        "latitude": 37.9990042,
+        "longitude": -0.6526186
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0145",
+      "name": "La Tejera",
+      "position": {
+        "latitude": 37.9843566,
+        "longitude": -0.6832612
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0152",
+      "name": "Los Arcos",
+      "position": {
+        "latitude": 37.98983,
+        "longitude": -0.6688021
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0155",
+      "name": "Los Frutales",
+      "position": {
+        "latitude": 37.9906599,
+        "longitude": -0.6561323
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0156",
+      "name": "Magani",
+      "position": {
+        "latitude": 38.0043183,
+        "longitude": -0.6558434
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0160",
+      "name": "Mercadona centro Alpe",
+      "position": {
+        "latitude": 38.0006262,
+        "longitude": -0.669997
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0162",
+      "name": "Molino Blanco",
+      "position": {
+        "latitude": 38.0092495,
+        "longitude": -0.6570126
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0163",
+      "name": "Molino Blanco - Super Valu",
+      "position": {
+        "latitude": 38.0090985,
+        "longitude": -0.6572353
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0172",
+      "name": "Palacio de Deportes",
+      "position": {
+        "latitude": 37.9964562,
+        "longitude": -0.675362
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0173",
+      "name": "Panorama",
+      "position": {
+        "latitude": 37.9932974,
+        "longitude": -0.6558989
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0178",
+      "name": "Patricio Zammit 67",
+      "position": {
+        "latitude": 37.9821346,
+        "longitude": -0.6762306
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0179",
+      "name": "Perseo",
+      "position": {
+        "latitude": 38.0019458,
+        "longitude": -0.6627633
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0180",
+      "name": "Playa del Cura 1",
+      "position": {
+        "latitude": 37.9769813,
+        "longitude": -0.6713453
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0181",
+      "name": "Playa del Cura 2",
+      "position": {
+        "latitude": 37.977963,
+        "longitude": -0.6661104
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0182",
+      "name": "Playa Los Locos",
+      "position": {
+        "latitude": 37.9845414,
+        "longitude": -0.6586625
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0184",
+      "name": "Playa Los Locos 1",
+      "position": {
+        "latitude": 37.9819307,
+        "longitude": -0.6621328
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0185",
+      "name": "Plaza de Sevilla",
+      "position": {
+        "latitude": 37.9889118,
+        "longitude": -0.6637042
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0190",
+      "name": "Purisima, 10",
+      "position": {
+        "latitude": 37.9778113,
+        "longitude": -0.6692099
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0194",
+      "name": "Residencia Tercera Edad",
+      "position": {
+        "latitude": 37.9906987,
+        "longitude": -0.6720628
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0196",
+      "name": "Residencial Mar Bella",
+      "position": {
+        "latitude": 37.9870026,
+        "longitude": -0.6569284
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0200",
+      "name": "Resturante Pinocchio",
+      "position": {
+        "latitude": 37.9940239,
+        "longitude": -0.6627025
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0203",
+      "name": "Ronda - Parquemar 2",
+      "position": {
+        "latitude": 38.0124335,
+        "longitude": -0.6600298
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0206",
+      "name": "Ronda Ricardo La Fuente",
+      "position": {
+        "latitude": 37.9842638,
+        "longitude": -0.683147
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0207",
+      "name": "Ronda S. García - Calle Helena",
+      "position": {
+        "latitude": 38.0036268,
+        "longitude": -0.6590759
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0219",
+      "name": "Torre del Moro",
+      "position": {
+        "latitude": 38.0022754,
+        "longitude": -0.6530671
+      }
+    },
+    {
+      "settlementId": "es-torrevieja",
+      "stopPlaceId": "tv-place-0221",
+      "name": "Torreblanca - Depuradora de agua",
+      "position": {
+        "latitude": 38.0059495,
+        "longitude": -0.6662956
+      }
+    }
+  ],
   "stopNodes": [
     {
       "stopNodeId": "tv-stop-0031",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0031",
       "settlementId": "es-torrevieja",
       "name": null,
       "position": {
@@ -26,7 +576,7 @@
     },
     {
       "stopNodeId": "tv-stop-0044",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0044",
       "settlementId": "es-torrevieja",
       "name": "Altos de la Bahía",
       "position": {
@@ -56,7 +606,7 @@
     },
     {
       "stopNodeId": "tv-stop-0045",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0044",
       "settlementId": "es-torrevieja",
       "name": "Altos de la Bahía",
       "position": {
@@ -86,7 +636,7 @@
     },
     {
       "stopNodeId": "tv-stop-0051",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0051",
       "settlementId": "es-torrevieja",
       "name": "Argonautas",
       "position": {
@@ -116,7 +666,7 @@
     },
     {
       "stopNodeId": "tv-stop-0053",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0053",
       "settlementId": "es-torrevieja",
       "name": "Avda. Alemania (Esq. Europeos)",
       "position": {
@@ -146,7 +696,7 @@
     },
     {
       "stopNodeId": "tv-stop-0054",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0054",
       "settlementId": "es-torrevieja",
       "name": "Avenida Alfredo Nobel, 121",
       "position": {
@@ -168,7 +718,7 @@
     },
     {
       "stopNodeId": "tv-stop-0056",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0056",
       "settlementId": "es-torrevieja",
       "name": "Avda Alfredo Nobel, 143",
       "position": {
@@ -190,7 +740,7 @@
     },
     {
       "stopNodeId": "tv-stop-0058",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0058",
       "settlementId": "es-torrevieja",
       "name": "Avda Antonio Machado, 137",
       "position": {
@@ -220,7 +770,7 @@
     },
     {
       "stopNodeId": "tv-stop-0059",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0059",
       "settlementId": "es-torrevieja",
       "name": "Avenida Bélgica",
       "position": {
@@ -250,7 +800,7 @@
     },
     {
       "stopNodeId": "tv-stop-0065",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0065",
       "settlementId": "es-torrevieja",
       "name": "Av. de los Daneses (Petanca)",
       "position": {
@@ -280,7 +830,7 @@
     },
     {
       "stopNodeId": "tv-stop-0066",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0066",
       "settlementId": "es-torrevieja",
       "name": "Avenida de los Europeos",
       "position": {
@@ -310,7 +860,7 @@
     },
     {
       "stopNodeId": "tv-stop-0067",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0067",
       "settlementId": "es-torrevieja",
       "name": "Avda.del Mar",
       "position": {
@@ -340,7 +890,7 @@
     },
     {
       "stopNodeId": "tv-stop-0069",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0069",
       "settlementId": "es-torrevieja",
       "name": "Avda. Diego Ramírez - La Gaviota",
       "position": {
@@ -370,7 +920,7 @@
     },
     {
       "stopNodeId": "tv-stop-0071",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0071",
       "settlementId": "es-torrevieja",
       "name": "Avenida Francia, 2",
       "position": {
@@ -400,7 +950,7 @@
     },
     {
       "stopNodeId": "tv-stop-0072",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0072",
       "settlementId": "es-torrevieja",
       "name": "Avenida Habaneras, 36",
       "position": {
@@ -430,7 +980,7 @@
     },
     {
       "stopNodeId": "tv-stop-0073",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0073",
       "settlementId": "es-torrevieja",
       "name": "Avenida Habaneras, 95",
       "position": {
@@ -460,7 +1010,7 @@
     },
     {
       "stopNodeId": "tv-stop-0074",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0074",
       "settlementId": "es-torrevieja",
       "name": "Avenida Mariano Ruíz, 24",
       "position": {
@@ -490,7 +1040,7 @@
     },
     {
       "stopNodeId": "tv-stop-0075",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0075",
       "settlementId": "es-torrevieja",
       "name": "Avenida Mariano Ruíz, 5",
       "position": {
@@ -520,7 +1070,7 @@
     },
     {
       "stopNodeId": "tv-stop-0078",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0078",
       "settlementId": "es-torrevieja",
       "name": "Avda. Virgen del Carmen",
       "position": {
@@ -550,7 +1100,7 @@
     },
     {
       "stopNodeId": "tv-stop-0079",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0079",
       "settlementId": "es-torrevieja",
       "name": "Bar Restaurante Carlos",
       "position": {
@@ -578,7 +1128,7 @@
     },
     {
       "stopNodeId": "tv-stop-0081",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0081",
       "settlementId": "es-torrevieja",
       "name": "Bruselas",
       "position": {
@@ -608,7 +1158,7 @@
     },
     {
       "stopNodeId": "tv-stop-0082",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0081",
       "settlementId": "es-torrevieja",
       "name": "Bruselas",
       "position": {
@@ -638,7 +1188,7 @@
     },
     {
       "stopNodeId": "tv-stop-0084",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0084",
       "settlementId": "es-torrevieja",
       "name": "Cabo Cervera 1",
       "position": {
@@ -668,7 +1218,7 @@
     },
     {
       "stopNodeId": "tv-stop-0086",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0086",
       "settlementId": "es-torrevieja",
       "name": "Cabo Cervera 2",
       "position": {
@@ -697,7 +1247,7 @@
     },
     {
       "stopNodeId": "tv-stop-0093",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0093",
       "settlementId": "es-torrevieja",
       "name": "Calle Mayor - Encarnación Puchol",
       "position": {
@@ -727,7 +1277,7 @@
     },
     {
       "stopNodeId": "tv-stop-0101",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0101",
       "settlementId": "es-torrevieja",
       "name": "Calle San Policarpo, 41",
       "position": {
@@ -756,7 +1306,7 @@
     },
     {
       "stopNodeId": "tv-stop-0108",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0108",
       "settlementId": "es-torrevieja",
       "name": "Centro de Salud La Mata",
       "position": {
@@ -786,7 +1336,7 @@
     },
     {
       "stopNodeId": "tv-stop-0109",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0109",
       "settlementId": "es-torrevieja",
       "name": "Centro Salud Lomas",
       "position": {
@@ -816,7 +1366,7 @@
     },
     {
       "stopNodeId": "tv-stop-0110",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0109",
       "settlementId": "es-torrevieja",
       "name": "Centro Salud Lomas",
       "position": {
@@ -846,7 +1396,7 @@
     },
     {
       "stopNodeId": "tv-stop-0113",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0113",
       "settlementId": "es-torrevieja",
       "name": "Corinto, 25",
       "position": {
@@ -876,7 +1426,7 @@
     },
     {
       "stopNodeId": "tv-stop-0114",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0114",
       "settlementId": "es-torrevieja",
       "name": "Corinto, 7",
       "position": {
@@ -906,7 +1456,7 @@
     },
     {
       "stopNodeId": "tv-stop-0123",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0123",
       "settlementId": "es-torrevieja",
       "name": "Eras de la Sal",
       "position": {
@@ -935,7 +1485,7 @@
     },
     {
       "stopNodeId": "tv-stop-0126",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0126",
       "settlementId": "es-torrevieja",
       "name": "Estación de Autobuses de Torrevieja",
       "position": {
@@ -956,7 +1506,7 @@
     },
     {
       "stopNodeId": "tv-stop-0128",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0128",
       "settlementId": "es-torrevieja",
       "name": "Gasolinera BP",
       "position": {
@@ -986,7 +1536,7 @@
     },
     {
       "stopNodeId": "tv-stop-0129",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0129",
       "settlementId": "es-torrevieja",
       "name": "Gasolinera BP - Colegio Público Inmaculada",
       "position": {
@@ -1016,7 +1566,7 @@
     },
     {
       "stopNodeId": "tv-stop-0130",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0130",
       "settlementId": "es-torrevieja",
       "name": "Gasolinera Repsol",
       "position": {
@@ -1046,7 +1596,7 @@
     },
     {
       "stopNodeId": "tv-stop-0131",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0130",
       "settlementId": "es-torrevieja",
       "name": "Gasolinera Repsol",
       "position": {
@@ -1076,7 +1626,7 @@
     },
     {
       "stopNodeId": "tv-stop-0136",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0136",
       "settlementId": "es-torrevieja",
       "name": "Hospital San Jaime",
       "position": {
@@ -1106,7 +1656,7 @@
     },
     {
       "stopNodeId": "tv-stop-0137",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0137",
       "settlementId": "es-torrevieja",
       "name": "Hotel Fontana",
       "position": {
@@ -1136,7 +1686,7 @@
     },
     {
       "stopNodeId": "tv-stop-0138",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0138",
       "settlementId": "es-torrevieja",
       "name": "Hotel Masa",
       "position": {
@@ -1166,7 +1716,7 @@
     },
     {
       "stopNodeId": "tv-stop-0139",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0138",
       "settlementId": "es-torrevieja",
       "name": "Hotel Masa",
       "position": {
@@ -1196,7 +1746,7 @@
     },
     {
       "stopNodeId": "tv-stop-0145",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0145",
       "settlementId": "es-torrevieja",
       "name": "La Tejera",
       "position": {
@@ -1226,7 +1776,7 @@
     },
     {
       "stopNodeId": "tv-stop-0152",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0152",
       "settlementId": "es-torrevieja",
       "name": "Los Arcos",
       "position": {
@@ -1254,7 +1804,7 @@
     },
     {
       "stopNodeId": "tv-stop-0153",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0152",
       "settlementId": "es-torrevieja",
       "name": "Los Arcos",
       "position": {
@@ -1284,7 +1834,7 @@
     },
     {
       "stopNodeId": "tv-stop-0155",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0155",
       "settlementId": "es-torrevieja",
       "name": "Los Frutales",
       "position": {
@@ -1306,7 +1856,7 @@
     },
     {
       "stopNodeId": "tv-stop-0156",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0156",
       "settlementId": "es-torrevieja",
       "name": "Magani",
       "position": {
@@ -1336,7 +1886,7 @@
     },
     {
       "stopNodeId": "tv-stop-0157",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0156",
       "settlementId": "es-torrevieja",
       "name": "Magani",
       "position": {
@@ -1366,7 +1916,7 @@
     },
     {
       "stopNodeId": "tv-stop-0160",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0160",
       "settlementId": "es-torrevieja",
       "name": "Mercadona centro Alpe",
       "position": {
@@ -1388,7 +1938,7 @@
     },
     {
       "stopNodeId": "tv-stop-0161",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0160",
       "settlementId": "es-torrevieja",
       "name": "Mercadona centro Alpe",
       "position": {
@@ -1410,7 +1960,7 @@
     },
     {
       "stopNodeId": "tv-stop-0162",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0162",
       "settlementId": "es-torrevieja",
       "name": "Molino Blanco",
       "position": {
@@ -1440,7 +1990,7 @@
     },
     {
       "stopNodeId": "tv-stop-0163",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0163",
       "settlementId": "es-torrevieja",
       "name": "Molino Blanco - Super Valu",
       "position": {
@@ -1470,7 +2020,7 @@
     },
     {
       "stopNodeId": "tv-stop-0172",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0172",
       "settlementId": "es-torrevieja",
       "name": "Palacio de Deportes",
       "position": {
@@ -1500,7 +2050,7 @@
     },
     {
       "stopNodeId": "tv-stop-0173",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0173",
       "settlementId": "es-torrevieja",
       "name": "Panorama",
       "position": {
@@ -1522,7 +2072,7 @@
     },
     {
       "stopNodeId": "tv-stop-0178",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0178",
       "settlementId": "es-torrevieja",
       "name": "Patricio Zammit 67",
       "position": {
@@ -1552,7 +2102,7 @@
     },
     {
       "stopNodeId": "tv-stop-0179",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0179",
       "settlementId": "es-torrevieja",
       "name": "Perseo",
       "position": {
@@ -1582,7 +2132,7 @@
     },
     {
       "stopNodeId": "tv-stop-0180",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0180",
       "settlementId": "es-torrevieja",
       "name": "Playa del Cura 1",
       "position": {
@@ -1612,7 +2162,7 @@
     },
     {
       "stopNodeId": "tv-stop-0181",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0181",
       "settlementId": "es-torrevieja",
       "name": "Playa del Cura 2",
       "position": {
@@ -1642,7 +2192,7 @@
     },
     {
       "stopNodeId": "tv-stop-0182",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0182",
       "settlementId": "es-torrevieja",
       "name": "Playa Los Locos",
       "position": {
@@ -1672,7 +2222,7 @@
     },
     {
       "stopNodeId": "tv-stop-0183",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0182",
       "settlementId": "es-torrevieja",
       "name": "Playa Los Locos",
       "position": {
@@ -1702,7 +2252,7 @@
     },
     {
       "stopNodeId": "tv-stop-0184",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0184",
       "settlementId": "es-torrevieja",
       "name": "Playa Los Locos 1",
       "position": {
@@ -1732,7 +2282,7 @@
     },
     {
       "stopNodeId": "tv-stop-0185",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0185",
       "settlementId": "es-torrevieja",
       "name": "Plaza de Sevilla",
       "position": {
@@ -1762,7 +2312,7 @@
     },
     {
       "stopNodeId": "tv-stop-0186",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0185",
       "settlementId": "es-torrevieja",
       "name": "Plaza de Sevilla",
       "position": {
@@ -1792,7 +2342,7 @@
     },
     {
       "stopNodeId": "tv-stop-0190",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0190",
       "settlementId": "es-torrevieja",
       "name": "Purisima, 10",
       "position": {
@@ -1814,7 +2364,7 @@
     },
     {
       "stopNodeId": "tv-stop-0194",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0194",
       "settlementId": "es-torrevieja",
       "name": "Residencia Tercera Edad",
       "position": {
@@ -1844,7 +2394,7 @@
     },
     {
       "stopNodeId": "tv-stop-0195",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0194",
       "settlementId": "es-torrevieja",
       "name": "Residencia Tercera Edad",
       "position": {
@@ -1874,7 +2424,7 @@
     },
     {
       "stopNodeId": "tv-stop-0196",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0196",
       "settlementId": "es-torrevieja",
       "name": "Residencial Mar Bella",
       "position": {
@@ -1904,7 +2454,7 @@
     },
     {
       "stopNodeId": "tv-stop-0197",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0196",
       "settlementId": "es-torrevieja",
       "name": "Residencial Mar Bella",
       "position": {
@@ -1934,7 +2484,7 @@
     },
     {
       "stopNodeId": "tv-stop-0200",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0200",
       "settlementId": "es-torrevieja",
       "name": "Resturante Pinocchio",
       "position": {
@@ -1956,7 +2506,7 @@
     },
     {
       "stopNodeId": "tv-stop-0201",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0200",
       "settlementId": "es-torrevieja",
       "name": "Resturante Pinocchio",
       "position": {
@@ -1986,7 +2536,7 @@
     },
     {
       "stopNodeId": "tv-stop-0203",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0203",
       "settlementId": "es-torrevieja",
       "name": "Ronda - Parquemar 2",
       "position": {
@@ -2016,7 +2566,7 @@
     },
     {
       "stopNodeId": "tv-stop-0205",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0203",
       "settlementId": "es-torrevieja",
       "name": "Ronda - Parquemar 2",
       "position": {
@@ -2038,7 +2588,7 @@
     },
     {
       "stopNodeId": "tv-stop-0206",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0206",
       "settlementId": "es-torrevieja",
       "name": "Ronda Ricardo La Fuente",
       "position": {
@@ -2060,7 +2610,7 @@
     },
     {
       "stopNodeId": "tv-stop-0207",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0207",
       "settlementId": "es-torrevieja",
       "name": "Ronda S. García - Calle Helena",
       "position": {
@@ -2082,7 +2632,7 @@
     },
     {
       "stopNodeId": "tv-stop-0209",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0207",
       "settlementId": "es-torrevieja",
       "name": "Ronda S. García - Calle Helena",
       "position": {
@@ -2112,7 +2662,7 @@
     },
     {
       "stopNodeId": "tv-stop-0219",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0219",
       "settlementId": "es-torrevieja",
       "name": "Torre del Moro",
       "position": {
@@ -2142,7 +2692,7 @@
     },
     {
       "stopNodeId": "tv-stop-0220",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0219",
       "settlementId": "es-torrevieja",
       "name": "Torre del Moro",
       "position": {
@@ -2172,7 +2722,7 @@
     },
     {
       "stopNodeId": "tv-stop-0221",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0221",
       "settlementId": "es-torrevieja",
       "name": "Torreblanca - Depuradora de agua",
       "position": {
@@ -2202,7 +2752,7 @@
     },
     {
       "stopNodeId": "tv-stop-0222",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0221",
       "settlementId": "es-torrevieja",
       "name": "Torreblanca - Depuradora de agua",
       "position": {

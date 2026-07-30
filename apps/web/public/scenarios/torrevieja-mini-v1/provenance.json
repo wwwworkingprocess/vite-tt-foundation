@@ -2,6 +2,14 @@
   "schemaVersion": "1.0.0",
   "scenarioId": "torrevieja-mini-v1",
   "purpose": "Small real-data TDD fixture extracted from the Torrevieja canonical stops and two contiguous A2 direction slices.",
-  "sourceScenarioId": "torrevieja-v1"
+  "sourceScenarioId": "torrevieja-v1",
+  "transformations": [
+    {
+      "transformationId": "physical-stop-place-projection-v1",
+      "description": "Assigns stable physical tv-place identifiers from the conservative torrevieja-stop-node-to-stop-place-v1 registry. Exact-name, close, complementary-direction pairs may share a StopPlace; every other mapped StopNode remains a singleton. Route and pattern assets are unchanged."
+    }
+  ],
+  "warnings": [
+    "StopPlace grouping does not create passenger route edges, reverse edges, or vehicle-cycle handoff edges. In particular, tv-stop-0207 and tv-stop-0209 share a physical StopPlace while remaining distinct graph vertices."
+  ]
 }
-

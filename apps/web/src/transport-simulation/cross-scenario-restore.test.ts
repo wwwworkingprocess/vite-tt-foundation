@@ -124,7 +124,7 @@ describe('exact cross-scenario restore', () => {
   });
 
   it('resolves saved coordinates before teardown and restores both directions', async () => {
-    const full = load('torrevieja-v1');
+    const full = load('torrevieja-legacy-all-v1');
     const mini = load('torrevieja-mini-v1');
     const repository = createInMemoryTransportSaveRepository([
       save(full, 'full', 41),
@@ -174,12 +174,15 @@ describe('exact cross-scenario restore', () => {
       commandRevision: 0,
       streamOffset: 0,
     });
-    expect(resolved).toEqual(['torrevieja-mini-v1', 'torrevieja-v1']);
+    expect(resolved).toEqual([
+      'torrevieja-mini-v1',
+      'torrevieja-legacy-all-v1',
+    ]);
     await controller.close();
   });
 
   it('leaves current authority usable when exact resolution fails', async () => {
-    const full = load('torrevieja-v1');
+    const full = load('torrevieja-legacy-all-v1');
     const mini = load('torrevieja-mini-v1');
     const repository = createInMemoryTransportSaveRepository([
       save(mini, 'mini', 17),
@@ -223,7 +226,7 @@ describe('exact cross-scenario restore', () => {
   });
 
   it('makes restore stale when terminal close begins during old-authority teardown', async () => {
-    const full = load('torrevieja-v1');
+    const full = load('torrevieja-legacy-all-v1');
     const mini = load('torrevieja-mini-v1');
     const repository = createInMemoryTransportSaveRepository([
       save(mini, 'mini', 17),

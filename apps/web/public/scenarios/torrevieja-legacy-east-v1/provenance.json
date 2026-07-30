@@ -44,6 +44,10 @@
     {
       "transformationId": "legacy-east-route-matching-v1",
       "description": "Combines the reviewed complete Route A and Route C mappings from torrevieja-legacy-abc-v1 with a complete Route A2 projection. A2 is matched using source order, the directional OSM ref sequence 501-514, shared Route A terminal/corridor nodes, names, coordinates, and geographic continuity."
+    },
+    {
+      "transformationId": "physical-stop-place-projection-v1",
+      "description": "Assigns stable physical tv-place identifiers from the conservative torrevieja-stop-node-to-stop-place-v1 registry. Exact-name, close, complementary-direction pairs may share a StopPlace; every other mapped StopNode remains a singleton. Route and pattern assets are unchanged."
     }
   ],
   "warnings": [
@@ -55,6 +59,7 @@
     "Line C's return pattern represents the documented Hospital Quirón-serving variant; public information states that the hospital stop is not served on every circuit.",
     "Line C's Cruz Roja occurrence maps to an unnamed canonical platform, and M. Fco. Casanovas maps to the canonical Patricio Zammit 67 node based on municipal address and route continuity.",
     "The Ayuntamiento inventory was used as verification evidence only; no source photographs are distributed.",
-    "Review ODbL obligations before publicly distributing a derived database."
+    "Review ODbL obligations before publicly distributing a derived database.",
+    "StopPlace grouping does not create passenger route edges, reverse edges, or vehicle-cycle handoff edges. In particular, tv-stop-0207 and tv-stop-0209 share a physical StopPlace while remaining distinct graph vertices."
   ]
 }

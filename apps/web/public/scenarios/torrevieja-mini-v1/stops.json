@@ -1,11 +1,75 @@
 {
   "schemaVersion": "1.0.0",
   "scenarioId": "torrevieja-mini-v1",
-  "stopPlaces": [],
+  "stopPlaces": [
+    {
+      "settlementId": "torrevieja",
+      "stopPlaceId": "tv-place-0053",
+      "name": "Avda. Alemania (Esq. Europeos)",
+      "position": {
+        "latitude": 38.0207066,
+        "longitude": -0.6541589
+      }
+    },
+    {
+      "settlementId": "torrevieja",
+      "stopPlaceId": "tv-place-0065",
+      "name": "Av. de los Daneses (Petanca)",
+      "position": {
+        "latitude": 38.0236326,
+        "longitude": -0.6547415
+      }
+    },
+    {
+      "settlementId": "torrevieja",
+      "stopPlaceId": "tv-place-0066",
+      "name": "Avenida de los Europeos",
+      "position": {
+        "latitude": 38.0205325,
+        "longitude": -0.6551851
+      }
+    },
+    {
+      "settlementId": "torrevieja",
+      "stopPlaceId": "tv-place-0067",
+      "name": "Avda.del Mar",
+      "position": {
+        "latitude": 38.0278659,
+        "longitude": -0.6552697
+      }
+    },
+    {
+      "settlementId": "torrevieja",
+      "stopPlaceId": "tv-place-0078",
+      "name": "Avda. Virgen del Carmen",
+      "position": {
+        "latitude": 38.0249407,
+        "longitude": -0.6549414
+      }
+    },
+    {
+      "settlementId": "torrevieja",
+      "stopPlaceId": "tv-place-0093",
+      "name": "Calle Mayor - Encarnación Puchol",
+      "position": {
+        "latitude": 38.0270112,
+        "longitude": -0.6541129
+      }
+    },
+    {
+      "settlementId": "torrevieja",
+      "stopPlaceId": "tv-place-0108",
+      "name": "Centro de Salud La Mata",
+      "position": {
+        "latitude": 38.0182751,
+        "longitude": -0.6587336
+      }
+    }
+  ],
   "stopNodes": [
     {
       "stopNodeId": "tv-stop-0053",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0053",
       "settlementId": "torrevieja",
       "name": "Avda. Alemania (Esq. Europeos)",
       "position": {
@@ -35,7 +99,7 @@
     },
     {
       "stopNodeId": "tv-stop-0065",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0065",
       "settlementId": "torrevieja",
       "name": "Av. de los Daneses (Petanca)",
       "position": {
@@ -65,7 +129,7 @@
     },
     {
       "stopNodeId": "tv-stop-0066",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0066",
       "settlementId": "torrevieja",
       "name": "Avenida de los Europeos",
       "position": {
@@ -95,7 +159,7 @@
     },
     {
       "stopNodeId": "tv-stop-0067",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0067",
       "settlementId": "torrevieja",
       "name": "Avda.del Mar",
       "position": {
@@ -125,7 +189,7 @@
     },
     {
       "stopNodeId": "tv-stop-0078",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0078",
       "settlementId": "torrevieja",
       "name": "Avda. Virgen del Carmen",
       "position": {
@@ -155,7 +219,7 @@
     },
     {
       "stopNodeId": "tv-stop-0093",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0093",
       "settlementId": "torrevieja",
       "name": "Calle Mayor - Encarnación Puchol",
       "position": {
@@ -185,7 +249,7 @@
     },
     {
       "stopNodeId": "tv-stop-0108",
-      "stopPlaceId": null,
+      "stopPlaceId": "tv-place-0108",
       "settlementId": "torrevieja",
       "name": "Centro de Salud La Mata",
       "position": {
@@ -215,4 +279,3 @@
     }
   ]
 }
-

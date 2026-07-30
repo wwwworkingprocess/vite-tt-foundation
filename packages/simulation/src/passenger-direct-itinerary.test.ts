@@ -173,7 +173,11 @@ function scenario(): CanonicalScenario {
   });
 }
 
-function demandPlan(canonical = scenario()) {
+function demandPlan(
+  canonical = scenario(),
+  includedStopPlaceIds: readonly string[] = stopPlaceIds,
+) {
+  const firstStopPlaceId = includedStopPlaceIds[0] ?? null;
   return parsePassengerDemandPlan({
     schemaVersion: '1.0.0',
     demandModelContentHash: 'b'.repeat(64),
@@ -205,11 +209,11 @@ function demandPlan(canonical = scenario()) {
         row: 0,
         column: 0,
         populationWeight: 1,
-        assignedStopPlaceId: 'A',
-        distanceSquaredCells: 0,
+        assignedStopPlaceId: firstStopPlaceId,
+        distanceSquaredCells: firstStopPlaceId === null ? null : 0,
       },
     ],
-    stops: stopPlaceIds.map((stopPlaceId) => ({ stopPlaceId })),
+    stops: includedStopPlaceIds.map((stopPlaceId) => ({ stopPlaceId })),
   });
 }
 
@@ -277,6 +281,7 @@ const mutable = (value: unknown) =>
     pairCount: number;
     directPairCount: number;
     unavailablePairCount: number;
+    stopPlaceIds?: string[];
     entries: Array<Record<string, unknown>>;
     extra?: boolean;
   };
@@ -304,6 +309,7 @@ describe('Passenger Direct Itinerary Plan V1', () => {
       },
       pairCount: 72,
     });
+    expect(plan.stopPlaceIds).toEqual(stopPlaceIds);
     expect(plan.entries).toHaveLength(9 * 8);
     expect(
       new Set(
@@ -321,6 +327,119 @@ describe('Passenger Direct Itinerary Plan V1', () => {
     expect(plan.directPairCount + plan.unavailablePairCount).toBe(
       plan.pairCount,
     );
+  });
+
+  it('rejects a concealed omitted StopPlace in the standalone finder', () => {
+    const canonical = scenario();
+    const complete = buildPassengerDirectItineraryPlan({
+      scenario: canonical,
+      demandPlan: demandPlan(canonical, ['A', 'B', 'C']),
+    });
+    const concealed = mutable(complete);
+    concealed.entries = concealed.entries.filter(
+      (entry) =>
+        entry.originStopPlaceId !== 'C' && entry.destinationStopPlaceId !== 'C',
+    );
+    concealed.pairCount = concealed.entries.length;
+    concealed.directPairCount = concealed.entries.filter(
+      (entry) => entry.status === 'direct',
+    ).length;
+    concealed.unavailablePairCount =
+      concealed.pairCount - concealed.directPairCount;
+
+    expect(() =>
+      findPassengerDirectItinerary(concealed as never, 'A', 'B'),
+    ).toThrow(/pair|complete/i);
+  });
+
+  it('supports normative zero- and one-StopPlace domains', () => {
+    const canonical = scenario();
+    const empty = buildPassengerDirectItineraryPlan({
+      scenario: canonical,
+      demandPlan: demandPlan(canonical, []),
+    });
+    const singleton = buildPassengerDirectItineraryPlan({
+      scenario: canonical,
+      demandPlan: demandPlan(canonical, ['A']),
+    });
+
+    expect(empty).toMatchObject({
+      stopPlaceIds: [],
+      pairCount: 0,
+      entries: [],
+    });
+    expect(singleton).toMatchObject({
+      stopPlaceIds: ['A'],
+      pairCount: 0,
+      entries: [],
+    });
+    expect(() =>
+      findPassengerDirectItinerary(singleton, 'A', 'missing'),
+    ).toThrow(/unknown/i);
+  });
+
+  it.each([
+    [
+      'a missing normative StopPlace',
+      (plan: ReturnType<typeof mutable>) => {
+        plan.stopPlaceIds = plan.stopPlaceIds!.filter((id) => id !== 'C');
+      },
+    ],
+    [
+      'an extra normative StopPlace without its pair matrix',
+      (plan: ReturnType<typeof mutable>) => {
+        plan.stopPlaceIds!.push('Z');
+      },
+    ],
+    [
+      'duplicate normative StopPlace IDs',
+      (plan: ReturnType<typeof mutable>) => {
+        plan.stopPlaceIds!.splice(1, 0, plan.stopPlaceIds![0]!);
+      },
+    ],
+    [
+      'non-lexical normative StopPlace IDs',
+      (plan: ReturnType<typeof mutable>) => {
+        plan.stopPlaceIds!.reverse();
+      },
+    ],
+    [
+      'an entry endpoint outside the normative StopPlace domain',
+      (plan: ReturnType<typeof mutable>) => {
+        plan.entries[0]!.destinationStopPlaceId = 'Z';
+      },
+    ],
+  ])('rejects %s in standalone lookup', (_name, mutatePlan) => {
+    const canonical = scenario();
+    const malformed = mutable(
+      buildPassengerDirectItineraryPlan({
+        scenario: canonical,
+        demandPlan: demandPlan(canonical, ['A', 'B', 'C']),
+      }),
+    );
+    malformed.stopPlaceIds = ['A', 'B', 'C'];
+    mutatePlan(malformed);
+    expect(() =>
+      findPassengerDirectItinerary(malformed as never, 'A', 'B'),
+    ).toThrow();
+  });
+
+  it('preserves and freezes the exact StopPlace identity across cloning', () => {
+    const canonical = scenario();
+    const original = buildPassengerDirectItineraryPlan({
+      scenario: canonical,
+      demandPlan: demandPlan(canonical),
+    });
+    const cloned = structuredClone(original);
+    const validated = validatePassengerDirectItineraryPlan({
+      plan: cloned,
+      scenario: canonical,
+      demandPlan: demandPlan(canonical),
+    });
+
+    expect(validated.stopPlaceIds).toEqual(stopPlaceIds);
+    expect(Object.isFrozen(validated.stopPlaceIds)).toBe(true);
+    expect(Reflect.set(validated.stopPlaceIds, '0', 'changed')).toBe(false);
   });
 
   it('resolves directional non-loop StopNodes and inclusive forward segments', () => {

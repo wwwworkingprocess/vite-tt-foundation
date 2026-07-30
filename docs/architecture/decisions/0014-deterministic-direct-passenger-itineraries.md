@@ -10,7 +10,11 @@ Phase 4E3A adds a static Passenger Direct Itinerary Plan V1 in
 `packages/simulation`. The plan is identified by the exact canonical scenario,
 Passenger Demand Plan, and `single-pattern-direct` routing-policy coordinates.
 It contains every ordered pair of distinct physical StopPlaces in the
-normalized demand plan. Each pair is explicitly direct or unavailable.
+normalized demand plan. The plan preserves that complete canonical StopPlace
+identity as one unique lexically ordered `stopPlaceIds` list, including stops
+with zero catchment weight. Pair completeness is validated against this
+normative list rather than inferred from the pair entries. Each pair is
+explicitly direct or unavailable.
 
 Direct means one forward traversal of one canonical route pattern. Directional
 origin and destination StopNodes are selected from their exact pattern

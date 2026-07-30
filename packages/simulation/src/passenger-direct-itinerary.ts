@@ -72,6 +72,7 @@ const planSchema = z.strictObject({
   }),
   scenario: scenarioSchema,
   demandPlan: demandPlanSchema,
+  stopPlaceIds: z.array(identifier),
   pairCount: safeCount,
   directPairCount: safeCount,
   unavailablePairCount: safeCount,
@@ -125,6 +126,7 @@ export interface PassengerDirectItineraryPlanV1 {
   >;
   readonly scenario: Readonly<PassengerDirectItineraryPlanScenario>;
   readonly demandPlan: Readonly<PassengerDirectItineraryPlanDemand>;
+  readonly stopPlaceIds: readonly StopPlaceId[];
   readonly pairCount: number;
   readonly directPairCount: number;
   readonly unavailablePairCount: number;
@@ -141,6 +143,16 @@ const lexical = (left: string, right: string) =>
   left < right ? -1 : left > right ? 1 : 0;
 const pairKey = (origin: string, destination: string) =>
   `${origin.length}:${origin}${destination}`;
+
+function checkedOrderedPairCount(stopPlaceCount: number): number {
+  const otherStopPlaceCount = stopPlaceCount === 0 ? 0 : stopPlaceCount - 1;
+  if (
+    otherStopPlaceCount > 0 &&
+    stopPlaceCount > Math.floor(Number.MAX_SAFE_INTEGER / otherStopPlaceCount)
+  )
+    throw new Error('Itinerary StopPlace pair count exceeds safe arithmetic.');
+  return stopPlaceCount * otherStopPlaceCount;
+}
 
 const scenarioIdentity = (
   scenario: CanonicalScenario,
@@ -288,12 +300,13 @@ function canonicalPlan(
           reason: 'no-direct-pattern',
         });
     }
-  const pairCount = entries.length;
+  const pairCount = checkedOrderedPairCount(stopPlaces.length);
   return deepFreeze({
     schemaVersion: passengerDirectItineraryPlanSchemaVersion,
     routingPolicy: passengerDirectItineraryRoutingPolicy,
     scenario: coordinate,
     demandPlan: demandIdentity(demandPlan),
+    stopPlaceIds: stopPlaces,
     pairCount,
     directPairCount,
     unavailablePairCount: pairCount - directPairCount,
@@ -305,19 +318,29 @@ function parsePlan(value: unknown): PassengerDirectItineraryPlanV1 {
   const parsed = planSchema.parse(
     value,
   ) as unknown as PassengerDirectItineraryPlanV1;
-  const stopPlaces = new Set<string>();
+  for (let index = 1; index < parsed.stopPlaceIds.length; index += 1)
+    if (
+      lexical(parsed.stopPlaceIds[index - 1]!, parsed.stopPlaceIds[index]!) >= 0
+    )
+      throw new Error(
+        'Itinerary StopPlace IDs must be unique and lexically ordered.',
+      );
+  const stopPlaces = new Set<string>(parsed.stopPlaceIds);
   const pairs = new Set<string>();
   let directCount = 0;
   let previousOrigin = '';
   let previousDestination = '';
   for (const entry of parsed.entries) {
+    if (
+      !stopPlaces.has(entry.originStopPlaceId) ||
+      !stopPlaces.has(entry.destinationStopPlaceId)
+    )
+      throw new Error('Itinerary entry references an unknown StopPlace.');
     if (entry.originStopPlaceId === entry.destinationStopPlaceId)
       throw new Error('Itinerary plan contains a same-origin pair.');
     const key = pairKey(entry.originStopPlaceId, entry.destinationStopPlaceId);
     if (pairs.has(key)) throw new Error('Itinerary plan contains a duplicate.');
     pairs.add(key);
-    stopPlaces.add(entry.originStopPlaceId);
-    stopPlaces.add(entry.destinationStopPlaceId);
     if (
       lexical(previousOrigin, entry.originStopPlaceId) > 0 ||
       (previousOrigin === entry.originStopPlaceId &&
@@ -328,8 +351,7 @@ function parsePlan(value: unknown): PassengerDirectItineraryPlanV1 {
     previousDestination = entry.destinationStopPlaceId;
     if (entry.status === 'direct') directCount += 1;
   }
-  const expectedPairCount =
-    stopPlaces.size === 0 ? 0 : stopPlaces.size * (stopPlaces.size - 1);
+  const expectedPairCount = checkedOrderedPairCount(parsed.stopPlaceIds.length);
   if (
     parsed.entries.length !== expectedPairCount ||
     parsed.pairCount !== expectedPairCount ||
@@ -379,11 +401,7 @@ export function findPassengerDirectItinerary(
   const plan = parsePlan(planInput);
   if (originStopPlaceId === destinationStopPlaceId)
     throw new Error('Passenger itinerary requires distinct StopPlaces.');
-  const stopPlaces = new Set<string>();
-  for (const entry of plan.entries) {
-    stopPlaces.add(entry.originStopPlaceId);
-    stopPlaces.add(entry.destinationStopPlaceId);
-  }
+  const stopPlaces = new Set<string>(plan.stopPlaceIds);
   if (
     !stopPlaces.has(originStopPlaceId) ||
     !stopPlaces.has(destinationStopPlaceId)

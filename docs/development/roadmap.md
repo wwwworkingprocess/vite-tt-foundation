@@ -183,10 +183,14 @@ Directional StopNodes and repeated occurrences are preserved exactly, while
 non-loop wrapping, transfers, graph-wide search, and vehicle-cycle handoffs are
 forbidden.
 
-Destination-assigned passenger groups remain awaiting itinerary. Snapshot V5,
-Save V3, clients, Workers, persistence, UI, and rendering are unchanged. Phase
-4E3B may deliberately introduce bounded waiting cohorts and dynamic itinerary
-activation after waiting-age semantics are decided.
+Phase 4E3B now activates destination intent into one bounded directional
+waiting cohort per itinerary/destination-cell key. Unavailable direct journeys
+are counted explicitly. Snapshot V6 and Save V4 are the only supported
+pre-release persistence contracts.
+
+The immediate sequence is: light Phase 4D operating-pattern and deterministic
+StopNode calls, Phase 4E4 boarding and capacity, Phase 4E5 alighting and
+journey completion, then Phase 4F economics.
 
 ## Phase 5 — React Three Fiber visualization POC
 

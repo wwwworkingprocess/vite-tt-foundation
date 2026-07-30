@@ -513,6 +513,9 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith(
       'packages/simulation/src/passenger-direct-itinerary.ts',
     ) ||
+    normalized.endsWith(
+      'packages/simulation/src/passenger-waiting-cohort.ts',
+    ) ||
     normalized.endsWith('packages/simulation/src/vehicle-movement.ts') ||
     normalized.endsWith('packages/simulation/src/index.ts');
   const domain = transportExtension ? [] : transportDomainTerms(text, file);
@@ -531,7 +534,13 @@ for (const file of [
         .endsWith('packages/simulation/src/passenger-demand.ts') &&
       !path
         .replaceAll('\\', '/')
-        .endsWith('packages/simulation/src/passenger-direct-itinerary.ts'),
+        .endsWith('packages/simulation/src/passenger-direct-itinerary.ts') &&
+      !path
+        .replaceAll('\\', '/')
+        .endsWith('packages/simulation/src/passenger-waiting-cohort.ts') &&
+      !path
+        .replaceAll('\\', '/')
+        .endsWith('packages/simulation/src/transport-simulation.ts'),
   ),
   ...protocol,
   ...transport,

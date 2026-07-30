@@ -18,11 +18,8 @@ const root = join(
   import.meta.dirname,
   '..',
   '..',
-  '..',
-  '..',
-  'packages',
-  'transport-domain',
-  'fixtures',
+  'public',
+  'scenarios',
   'torrevieja-mini-v1',
 );
 const json = (name: string) =>
@@ -61,11 +58,11 @@ const demandPlan = parsePassengerDemandPlan({
       row: 0,
       column: 0,
       populationWeight: 1,
-      assignedStopPlaceId: 'fixture-stop',
+      assignedStopPlaceId: 'tv-place-0053',
       distanceSquaredCells: 0,
     },
   ],
-  stops: [{ stopPlaceId: 'fixture-stop' }],
+  stops: [{ stopPlaceId: 'tv-place-0053' }],
 });
 const legacy = {
   kind: 'foundation-save-record',
@@ -176,9 +173,7 @@ describe('transport-backed foundation application port', () => {
       timelineId: parseTimelineId('timeline'),
       initialSimulationTick: 0,
     });
-    expect(await application.listSaves()).toMatchObject([
-      { saveId: 'legacy', compatibility: 'legacy-incompatible' },
-    ]);
+    expect(await application.listSaves()).toEqual([]);
     const pacing = createFoundationPacingController({ application });
     await pacing.setMode('normal');
     await pacing.advanceByElapsedMicroseconds(250_000);

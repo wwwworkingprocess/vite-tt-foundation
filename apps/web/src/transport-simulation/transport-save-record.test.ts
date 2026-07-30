@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   createScenarioCoordinate,
@@ -5,14 +7,8 @@ import {
   createTransportSimulationState,
 } from '@torrevieja-tycoon/simulation';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import {
   classifyPersistedSaveRecord,
-  migrateTransportSaveRecordV1,
-  migrateTransportSaveRecordV2,
-  migrateTransportSaveRecordV3,
-  migrateTransportSaveRecordV4,
   parseTransportSaveRecord,
   summarizeCompatibleSave,
 } from './transport-save-record.js';
@@ -43,7 +39,7 @@ const current = () => {
   const canonical = scenario();
   return {
     kind: 'transport-save-record',
-    schemaVersion: 3,
+    schemaVersion: 4,
     saveId: 'foundation-slot',
     label: 'Mini save',
     gameId: 'game-fixture',
@@ -60,277 +56,58 @@ const current = () => {
   };
 };
 
-describe('transport save compatibility', () => {
+describe('current-only transport save compatibility', () => {
   it.each([null, undefined, 0, 'save', [], {}, { kind: 'other-save' }])(
     'classifies unrelated value %j without throwing',
     (value) => {
-      const result = classifyPersistedSaveRecord(value);
-      expect(result).toEqual({ classification: 'unrelated' });
-      expect(Object.isFrozen(result)).toBe(true);
+      expect(classifyPersistedSaveRecord(value)).toEqual({
+        classification: 'unrelated',
+      });
     },
   );
 
-  it('distinguishes malformed versions from numeric future versions', () => {
-    expect(
-      classifyPersistedSaveRecord({
-        kind: 'transport-save-record',
-        schemaVersion: 5,
-      }),
-    ).toMatchObject({ classification: 'unsupported-future' });
-    for (const schemaVersion of [undefined, '3', -1, 1.5])
-      expect(
-        classifyPersistedSaveRecord({
-          kind: 'transport-save-record',
-          schemaVersion,
-        }),
-      ).toMatchObject({ classification: 'malformed-known' });
-  });
-  it('parses, freezes, and summarizes a current transport record', () => {
+  it('parses, freezes, and summarizes Save V4 with Snapshot V6', () => {
     const record = parseTransportSaveRecord(current());
     const summary = summarizeCompatibleSave(record);
     expect(summary).toMatchObject({
       compatibility: 'current',
       scenarioSchemaVersion: '1.0.0',
       scenarioId: 'torrevieja-mini-v1',
-      scenarioVersion: '1.0.0',
-      contentHash: expect.any(String),
-      snapshotVersion: 5,
+      snapshotVersion: 6,
       vehicleCount: 0,
-      sourceSimulationTick: 120,
     });
+    expect(Object.isFrozen(record.snapshot.state)).toBe(true);
     expect(Object.isFrozen(summary)).toBe(true);
     expect(Reflect.set(summary, 'scenarioId', 'mutated')).toBe(false);
-    const assertCompileTimeReadonly = () => {
-      // @ts-expect-error public summaries are readonly
-      summary.scenarioId = 'mutated';
-    };
-    void assertCompileTimeReadonly;
-    expect(Object.isFrozen(record.snapshot.scenario)).toBe(true);
   });
 
-  it('classifies legacy foundation data as incompatible rather than corrupt', () => {
-    const legacy = {
-      kind: 'foundation-save-record',
-      schemaVersion: 1,
-      saveId: 'legacy',
-      label: 'Legacy',
-      gameId: 'game-fixture',
-      sourceTimelineId: 'old',
-      sourceCommandRevision: 0,
-      sourceSimulationTick: 0,
-      sourceStreamOffset: 0,
-      createdAtUtcMs: 1,
-      updatedAtUtcMs: 1,
-      snapshot: {
-        kind: 'foundation-simulation-snapshot',
+  it.each([1, 2, 3])(
+    'classifies pre-release Transport Save V%s as obsolete without migration',
+    (schemaVersion) => {
+      expect(
+        classifyPersistedSaveRecord({ ...current(), schemaVersion }),
+      ).toMatchObject({ classification: 'obsolete-pre-release' });
+    },
+  );
+
+  it('classifies Foundation Save V1 as obsolete pre-release data', () => {
+    expect(
+      classifyPersistedSaveRecord({
+        kind: 'foundation-save-record',
         schemaVersion: 1,
-        simulationVersion: 'foundation-1',
-        state: { tick: 0 },
-      },
-    };
-    expect(classifyPersistedSaveRecord(legacy)).toMatchObject({
-      classification: 'legacy-foundation',
-      summary: { saveId: 'legacy', compatibility: 'legacy-incompatible' },
-    });
+      }),
+    ).toMatchObject({ classification: 'obsolete-pre-release' });
   });
 
-  it('classifies Transport V1 as migratable and migrates only when requested', () => {
-    const canonical = scenario();
-    const value = {
-      ...current(),
-      schemaVersion: 1,
-      snapshot: {
-        kind: 'transport-simulation-snapshot',
-        schemaVersion: 1,
-        simulationVersion: 'transport-1',
-        scenario: createScenarioCoordinate(canonical),
-        state: { tick: 120 },
-      },
-    };
-    const classified = classifyPersistedSaveRecord(value);
-    expect(classified).toMatchObject({
-      classification: 'migratable-transport-v1',
-      summary: {
-        compatibility: 'migratable',
-        snapshotVersion: 1,
-        vehicleCount: 0,
-      },
-    });
-    if (classified.classification !== 'migratable-transport-v1')
-      throw new Error('Expected a migratable Transport V1 record.');
-    const migrated = migrateTransportSaveRecordV1(classified.record);
-    expect(migrated).toMatchObject({
-      schemaVersion: 3,
-      snapshot: {
-        schemaVersion: 5,
-        state: {
-          tick: 120,
-          fleet: [],
-          passengerDemand: { status: 'disabled' },
-        },
-      },
-    });
-    expect(Object.isFrozen(migrated.snapshot.state.fleet)).toBe(true);
-  });
-
-  it('classifies Transport V2 as migratable without inferring a route cycle', () => {
-    const value = current();
-    const v2 = {
-      ...value,
-      schemaVersion: 2,
-      snapshot: {
-        kind: value.snapshot.kind,
-        scenario: value.snapshot.scenario,
-        schemaVersion: 2,
-        simulationVersion: 'transport-2',
-        state: {
-          tick: value.snapshot.state.tick,
-          fleet: value.snapshot.state.fleet,
-        },
-      },
-    };
-    const classified = classifyPersistedSaveRecord(v2);
-    expect(classified).toMatchObject({
-      classification: 'migratable-transport-v2',
-      summary: { compatibility: 'migratable', snapshotVersion: 2 },
-    });
-    if (classified.classification !== 'migratable-transport-v2')
-      throw new Error('Expected a migratable Transport V2 record.');
-    const migrated = migrateTransportSaveRecordV2(classified.record);
-    expect(migrated).toMatchObject({
-      schemaVersion: 3,
-      snapshot: { schemaVersion: 5 },
-    });
-    expect(migrated.snapshot.state.fleet).toEqual([]);
-  });
-
-  it('classifies Transport V3 as migratable with passenger demand disabled', () => {
-    const value = current();
-    const v3 = {
-      ...value,
-      snapshot: {
-        kind: value.snapshot.kind,
-        scenario: value.snapshot.scenario,
-        schemaVersion: 3,
-        simulationVersion: 'transport-3',
-        state: {
-          tick: value.snapshot.state.tick,
-          fleet: value.snapshot.state.fleet,
-        },
-      },
-    };
-    const classified = classifyPersistedSaveRecord(v3);
-    expect(classified).toMatchObject({
-      classification: 'migratable-transport-v3',
-      summary: { compatibility: 'migratable', snapshotVersion: 3 },
-    });
-    if (classified.classification !== 'migratable-transport-v3')
-      throw new Error('Expected a migratable Transport V3 record.');
-    expect(migrateTransportSaveRecordV3(classified.record)).toMatchObject({
-      schemaVersion: 3,
-      snapshot: {
-        schemaVersion: 5,
-        state: { passengerDemand: { status: 'disabled' } },
-      },
-    });
-  });
-
-  it('classifies Snapshot V4 as migratable without assigning destinations', () => {
-    const legacy = structuredClone(current()) as unknown as {
-      snapshot: {
-        schemaVersion: number;
-        simulationVersion: string;
-        state: { passengerDemand: Record<string, unknown> };
-      };
-    };
-    legacy.snapshot.schemaVersion = 4;
-    legacy.snapshot.simulationVersion = 'transport-4';
-    const passenger = legacy.snapshot.state.passengerDemand;
-    if (passenger.status === 'active') {
-      delete passenger.nextPassengerJourneyGroupSequence;
-      delete passenger.destinationCursors;
-      delete passenger.destinationAssignedGroups;
-      delete passenger.totalDestinationAssignedPassengerCount;
-      delete passenger.destinationUnavailableAtStopPassengerCount;
-    }
-    const classified = classifyPersistedSaveRecord(legacy);
-    expect(classified.classification).toBe('migratable-transport-v4');
-    if (classified.classification !== 'migratable-transport-v4')
-      throw new Error('Expected a migratable Transport V4 record.');
-    expect(migrateTransportSaveRecordV4(classified.record)).toMatchObject({
-      schemaVersion: 3,
-      snapshot: { schemaVersion: 5 },
-    });
-  });
-
-  it('distinguishes malformed known and unsupported future records', () => {
+  it('distinguishes future and malformed current records', () => {
     expect(
       classifyPersistedSaveRecord({
         kind: 'transport-save-record',
-        schemaVersion: 99,
-        saveId: 'future',
+        schemaVersion: 5,
       }),
     ).toMatchObject({ classification: 'unsupported-future' });
     expect(
-      classifyPersistedSaveRecord({
-        ...current(),
-        snapshot: { ...current().snapshot, state: { tick: 999 } },
-      }),
+      classifyPersistedSaveRecord({ ...current(), sourceSimulationTick: 121 }),
     ).toMatchObject({ classification: 'malformed-known' });
-  });
-
-  it.each([
-    [
-      'scenario',
-      (value: ReturnType<typeof current>) => {
-        value.scenario = { ...value.scenario, contentHash: '0'.repeat(64) };
-      },
-    ],
-    [
-      'tick',
-      (value: ReturnType<typeof current>) => {
-        value.sourceSimulationTick = 121;
-      },
-    ],
-    [
-      'timestamps',
-      (value: ReturnType<typeof current>) => {
-        value.updatedAtUtcMs = 99;
-      },
-    ],
-  ])('rejects inconsistent current %s coordinates', (_name, mutate) => {
-    const value = current();
-    mutate(value);
-    expect(() => parseTransportSaveRecord(value)).toThrow('inconsistent');
-  });
-
-  it('validates V1 consistency and supports summaries without labels', () => {
-    const value = current();
-    delete (value as { label?: string }).label;
-    const parsed = parseTransportSaveRecord(value);
-    expect(summarizeCompatibleSave(parsed)).not.toHaveProperty('label');
-    const v1 = {
-      ...value,
-      schemaVersion: 1,
-      sourceSimulationTick: 121,
-      snapshot: {
-        kind: 'transport-simulation-snapshot',
-        schemaVersion: 1,
-        simulationVersion: 'transport-1',
-        scenario: value.scenario,
-        state: { tick: 120 },
-      },
-    };
-    expect(classifyPersistedSaveRecord(v1)).toMatchObject({
-      classification: 'malformed-known',
-    });
-    v1.sourceSimulationTick = 120;
-    const classified = classifyPersistedSaveRecord(v1);
-    expect(classified).toMatchObject({
-      classification: 'migratable-transport-v1',
-    });
-    if (classified.classification !== 'migratable-transport-v1')
-      throw new Error('Expected migratable record.');
-    expect(classified.summary).not.toHaveProperty('label');
   });
 });

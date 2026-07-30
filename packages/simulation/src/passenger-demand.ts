@@ -7,6 +7,12 @@ import type {
 } from '@torrevieja-tycoon/transport-domain';
 import { parseSimulationTick, type SimulationTick } from './time.js';
 import type { ScenarioCoordinate } from './transport-simulation.js';
+import type { PassengerDirectItineraryPlanV1 } from './passenger-direct-itinerary.js';
+import {
+  activatePassengerDirectItineraries,
+  passengerWaitingCohortSchema,
+  type PassengerWaitingCohort,
+} from './passenger-waiting-cohort.js';
 
 export const passengerDemandPlanSchemaVersion = '1.0.0' as const;
 const distanceTieToleranceSquaredCells = 1e-9;
@@ -176,18 +182,20 @@ export interface ActivePassengerDemandState {
   }>;
   readonly processedThroughTick: SimulationTick;
   readonly nextPassengerGroupSequence: number;
-  readonly nextPassengerJourneyGroupSequence: number;
+  readonly nextPassengerWaitingCohortSequence: number;
   readonly cellCredits: readonly Readonly<PassengerCellCreditState>[];
   readonly accessingGroups: readonly Readonly<AccessingPassengerGroup>[];
   readonly stopArrivals: readonly Readonly<StopPlaceArrivalState>[];
   readonly destinationCursors: readonly Readonly<PassengerDestinationCursorState>[];
-  readonly destinationAssignedGroups: readonly Readonly<DestinationAssignedPassengerGroup>[];
+  readonly waitingCohorts: readonly Readonly<PassengerWaitingCohort>[];
   readonly totalEmittedPassengerCount: number;
   readonly servedEmittedPassengerCount: number;
   readonly unservedAtSourcePassengerCount: number;
   readonly totalArrivedAtStopPassengerCount: number;
   readonly totalDestinationAssignedPassengerCount: number;
   readonly destinationUnavailableAtStopPassengerCount: number;
+  readonly directItineraryUnavailablePassengerCount: number;
+  readonly totalWaitingForVehiclePassengerCount: number;
 }
 
 export type PassengerDemandState =
@@ -208,7 +216,7 @@ const stateSchema = z.discriminatedUnion('status', [
     }),
     processedThroughTick: nonnegativeSafeInteger,
     nextPassengerGroupSequence: positiveSafeInteger,
-    nextPassengerJourneyGroupSequence: positiveSafeInteger,
+    nextPassengerWaitingCohortSequence: positiveSafeInteger,
     cellCredits: z.array(
       z.strictObject({
         cellId: planCellSchema.shape.cellId,
@@ -237,36 +245,17 @@ const stateSchema = z.discriminatedUnion('status', [
         destinationCursor: nonnegativeSafeInteger,
       }),
     ),
-    destinationAssignedGroups: z.array(
-      z.strictObject({
-        passengerJourneyGroupId: passengerJourneyGroupIdSchema,
-        originStopPlaceId: z.string().min(1),
-        destinationCellId: planCellSchema.shape.cellId,
-        destinationStopPlaceId: z.string().min(1),
-        count: positiveSafeInteger,
-        firstAssignedTick: nonnegativeSafeInteger,
-        lastAssignedTick: nonnegativeSafeInteger,
-      }),
-    ),
+    waitingCohorts: z.array(passengerWaitingCohortSchema),
     totalEmittedPassengerCount: nonnegativeSafeInteger,
     servedEmittedPassengerCount: nonnegativeSafeInteger,
     unservedAtSourcePassengerCount: nonnegativeSafeInteger,
     totalArrivedAtStopPassengerCount: nonnegativeSafeInteger,
     totalDestinationAssignedPassengerCount: nonnegativeSafeInteger,
     destinationUnavailableAtStopPassengerCount: nonnegativeSafeInteger,
+    directItineraryUnavailablePassengerCount: nonnegativeSafeInteger,
+    totalWaitingForVehiclePassengerCount: nonnegativeSafeInteger,
   }),
 ]);
-const stateV4Schema = z.discriminatedUnion('status', [
-  stateSchema.options[0],
-  stateSchema.options[1].omit({
-    nextPassengerJourneyGroupSequence: true,
-    destinationCursors: true,
-    destinationAssignedGroups: true,
-    totalDestinationAssignedPassengerCount: true,
-    destinationUnavailableAtStopPassengerCount: true,
-  }),
-]);
-export type PassengerDemandStateV4 = z.infer<typeof stateV4Schema>;
 const projectionSchema = z.discriminatedUnion('status', [
   z.strictObject({ status: z.literal('disabled') }),
   z.strictObject({
@@ -280,10 +269,10 @@ const projectionSchema = z.discriminatedUnion('status', [
     totalAwaitingDestinationCount: nonnegativeSafeInteger,
     totalDestinationAssignedPassengerCount: nonnegativeSafeInteger,
     destinationUnavailableAtStopPassengerCount: nonnegativeSafeInteger,
-    destinationAssignedGroupCount: nonnegativeSafeInteger,
-    passengersAwaitingItineraryCount: nonnegativeSafeInteger,
-    destinationAssignedGroups:
-      stateSchema.options[1].shape.destinationAssignedGroups,
+    directItineraryUnavailablePassengerCount: nonnegativeSafeInteger,
+    totalWaitingForVehiclePassengerCount: nonnegativeSafeInteger,
+    waitingCohortCount: nonnegativeSafeInteger,
+    waitingCohorts: stateSchema.options[1].shape.waitingCohorts,
     stopArrivals: stateSchema.options[1].shape.stopArrivals,
   }),
 ]);
@@ -301,9 +290,10 @@ export type PassengerDemandProjection = Readonly<
       readonly totalAwaitingDestinationCount: number;
       readonly totalDestinationAssignedPassengerCount: number;
       readonly destinationUnavailableAtStopPassengerCount: number;
-      readonly destinationAssignedGroupCount: number;
-      readonly passengersAwaitingItineraryCount: number;
-      readonly destinationAssignedGroups: readonly Readonly<DestinationAssignedPassengerGroup>[];
+      readonly directItineraryUnavailablePassengerCount: number;
+      readonly totalWaitingForVehiclePassengerCount: number;
+      readonly waitingCohortCount: number;
+      readonly waitingCohorts: readonly Readonly<PassengerWaitingCohort>[];
       readonly stopArrivals: readonly Readonly<StopPlaceArrivalState>[];
     }
 >;
@@ -556,30 +546,6 @@ export function createDisabledPassengerDemandState(): DisabledPassengerDemandSta
   return deepFreeze({ status: 'disabled' });
 }
 
-export function parsePassengerDemandStateV4(
-  value: unknown,
-): PassengerDemandStateV4 {
-  return deepFreeze(stateV4Schema.parse(value));
-}
-
-export function migratePassengerDemandStateV4(
-  value: unknown,
-): PassengerDemandState {
-  const parsed = parsePassengerDemandStateV4(value);
-  if (parsed.status === 'disabled') return createDisabledPassengerDemandState();
-  return parsePassengerDemandState({
-    ...parsed,
-    nextPassengerJourneyGroupSequence: 1,
-    destinationCursors: parsed.stopArrivals.map((stop) => ({
-      stopPlaceId: stop.stopPlaceId,
-      destinationCursor: 0,
-    })),
-    destinationAssignedGroups: [],
-    totalDestinationAssignedPassengerCount: 0,
-    destinationUnavailableAtStopPassengerCount: 0,
-  });
-}
-
 export function parsePassengerDemandState(
   value: unknown,
 ): PassengerDemandState {
@@ -595,8 +561,7 @@ export function parsePassengerDemandState(
     stopArrivals: parsed.stopArrivals as StopPlaceArrivalState[],
     destinationCursors:
       parsed.destinationCursors as PassengerDestinationCursorState[],
-    destinationAssignedGroups:
-      parsed.destinationAssignedGroups as DestinationAssignedPassengerGroup[],
+    waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
   });
 }
 
@@ -610,7 +575,7 @@ export function createInitialPassengerDemandState(
     demandPlanCoordinate: planCoordinate(parsedPlan),
     processedThroughTick: parseSimulationTick(initialTick),
     nextPassengerGroupSequence: 1,
-    nextPassengerJourneyGroupSequence: 1,
+    nextPassengerWaitingCohortSequence: 1,
     cellCredits: parsedPlan.cells.map((cell) => ({
       cellId: cell.cellId,
       credit: 0,
@@ -624,13 +589,15 @@ export function createInitialPassengerDemandState(
       stopPlaceId: stop.stopPlaceId,
       destinationCursor: 0,
     })),
-    destinationAssignedGroups: [],
+    waitingCohorts: [],
     totalEmittedPassengerCount: 0,
     servedEmittedPassengerCount: 0,
     unservedAtSourcePassengerCount: 0,
     totalArrivedAtStopPassengerCount: 0,
     totalDestinationAssignedPassengerCount: 0,
     destinationUnavailableAtStopPassengerCount: 0,
+    directItineraryUnavailablePassengerCount: 0,
+    totalWaitingForVehiclePassengerCount: 0,
   });
 }
 
@@ -659,6 +626,7 @@ const compareGroups = (
 
 export function validatePassengerDemandState(
   plan: PassengerDemandPlanV1,
+  itineraryPlan: PassengerDirectItineraryPlanV1,
   value: unknown,
 ): ActivePassengerDemandState {
   const parsedPlan = parsePassengerDemandPlan(plan);
@@ -762,55 +730,17 @@ export function validatePassengerDemandState(
       ),
     0,
   );
-  const destinationGroupIds = new Set<string>();
-  const destinationKeys = new Set<string>();
-  let destinationAssigned = 0;
-  let previousDestinationGroup:
-    Readonly<DestinationAssignedPassengerGroup> | undefined;
-  for (const group of parsed.destinationAssignedGroups) {
-    const destinationCell = cells.get(
-      group.destinationCellId as CityPopulationCellId,
-    );
-    const sequence = Number(
-      group.passengerJourneyGroupId.slice('passenger-journey-group-'.length),
-    );
-    const key = `${group.originStopPlaceId}\u0000${group.destinationCellId}`;
-    if (
-      !parsedPlan.stops.some(
-        (stop) => stop.stopPlaceId === group.originStopPlaceId,
-      ) ||
-      destinationCell?.assignedStopPlaceId !== group.destinationStopPlaceId ||
-      group.destinationStopPlaceId === group.originStopPlaceId ||
-      destinationGroupIds.has(group.passengerJourneyGroupId) ||
-      destinationKeys.has(key) ||
-      group.firstAssignedTick > group.lastAssignedTick ||
-      group.lastAssignedTick > parsed.processedThroughTick ||
-      !Number.isSafeInteger(sequence) ||
-      sequence >= parsed.nextPassengerJourneyGroupSequence
-    )
-      throw new Error('Invalid destination group.');
-    if (
-      previousDestinationGroup !== undefined &&
-      (previousDestinationGroup.originStopPlaceId > group.originStopPlaceId ||
-        (previousDestinationGroup.originStopPlaceId ===
-          group.originStopPlaceId &&
-          (cells.get(previousDestinationGroup.destinationCellId)!.row >
-            destinationCell.row ||
-            (cells.get(previousDestinationGroup.destinationCellId)!.row ===
-              destinationCell.row &&
-              cells.get(previousDestinationGroup.destinationCellId)!.column >=
-                destinationCell.column))))
-    )
-      throw new Error('Invalid destination group order.');
-    previousDestinationGroup = group as DestinationAssignedPassengerGroup;
-    destinationGroupIds.add(group.passengerJourneyGroupId);
-    destinationKeys.add(key);
-    destinationAssigned = checkedAdd(
-      destinationAssigned,
-      group.count,
-      'destination-assigned passengers',
-    );
-  }
+  const waitingAuthority = activatePassengerDirectItineraries({
+    itineraryPlan,
+    demandPlan: parsedPlan,
+    destinationAssignedGroups: [],
+    waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
+    nextPassengerWaitingCohortSequence:
+      parsed.nextPassengerWaitingCohortSequence,
+    directItineraryUnavailablePassengerCount:
+      parsed.directItineraryUnavailablePassengerCount,
+    activationTick: parsed.processedThroughTick,
+  });
   const awaitingDestination = arrived;
   if (
     parsed.totalEmittedPassengerCount !==
@@ -828,14 +758,27 @@ export function validatePassengerDemandState(
     parsed.totalArrivedAtStopPassengerCount !==
       checkedAdd(
         checkedAdd(
-          parsed.totalDestinationAssignedPassengerCount,
           parsed.destinationUnavailableAtStopPassengerCount,
-          'settled destination passengers',
+          parsed.directItineraryUnavailablePassengerCount,
+          'unavailable itinerary passengers',
         ),
-        awaitingDestination,
+        checkedAdd(
+          parsed.totalWaitingForVehiclePassengerCount,
+          awaitingDestination,
+          'waiting passengers',
+        ),
         'arrived passengers',
       ) ||
-    parsed.totalDestinationAssignedPassengerCount !== destinationAssigned
+    parsed.totalDestinationAssignedPassengerCount !==
+      checkedAdd(
+        parsed.directItineraryUnavailablePassengerCount,
+        parsed.totalWaitingForVehiclePassengerCount,
+        'destination-assigned passengers',
+      ) ||
+    parsed.totalWaitingForVehiclePassengerCount !==
+      waitingAuthority.totalWaitingForVehiclePassengerCount ||
+    parsed.destinationUnavailableAtStopPassengerCount >
+      parsed.totalArrivedAtStopPassengerCount
   )
     throw new Error('Passenger demand conservation failed.');
   return deepFreeze({
@@ -848,18 +791,18 @@ export function validatePassengerDemandState(
     stopArrivals: parsed.stopArrivals as StopPlaceArrivalState[],
     destinationCursors:
       parsed.destinationCursors as PassengerDestinationCursorState[],
-    destinationAssignedGroups:
-      parsed.destinationAssignedGroups as DestinationAssignedPassengerGroup[],
+    waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
   });
 }
 
 export function advancePassengerDemandToTick(
   plan: PassengerDemandPlanV1,
+  itineraryPlan: PassengerDirectItineraryPlanV1,
   state: ActivePassengerDemandState,
   targetTickValue: number,
 ): ActivePassengerDemandState {
   const parsedPlan = parsePassengerDemandPlan(plan);
-  let current = validatePassengerDemandState(parsedPlan, state);
+  let current = validatePassengerDemandState(parsedPlan, itineraryPlan, state);
   const targetTick = parseSimulationTick(targetTickValue);
   if (targetTick < current.processedThroughTick)
     throw new Error('Passenger demand cannot advance backwards.');
@@ -871,7 +814,7 @@ export function advancePassengerDemandToTick(
   ) {
     const tick = parseSimulationTick(tickValue);
     let nextSequence = current.nextPassengerGroupSequence;
-    let nextJourneySequence = current.nextPassengerJourneyGroupSequence;
+    let nextJourneySequence = 1;
     let totalEmitted = current.totalEmittedPassengerCount;
     let servedEmitted = current.servedEmittedPassengerCount;
     let unserved = current.unservedAtSourcePassengerCount;
@@ -966,14 +909,7 @@ export function advancePassengerDemandToTick(
         cursor.destinationCursor,
       ]),
     );
-    const destinationGroups: DestinationAssignedPassengerGroup[] =
-      current.destinationAssignedGroups.map((group) => ({ ...group }));
-    const destinationGroupIndexes = new Map(
-      destinationGroups.map((group, index) => [
-        `${group.originStopPlaceId}\u0000${group.destinationCellId}`,
-        index,
-      ]),
-    );
+    const destinationGroups: DestinationAssignedPassengerGroup[] = [];
     for (const stop of parsedPlan.stops) {
       const waiting = arrivals.get(stop.stopPlaceId)!;
       if (waiting === 0) continue;
@@ -998,39 +934,22 @@ export function advancePassengerDemandToTick(
       destinationCursors.set(stop.stopPlaceId, allocation.nextCursor);
       for (const candidate of allocation.allocations) {
         if (candidate.count === 0) continue;
-        const key = `${stop.stopPlaceId}\u0000${candidate.cellId}`;
-        const existingIndex = destinationGroupIndexes.get(key);
-        if (existingIndex !== undefined) {
-          const existing = destinationGroups[existingIndex]!;
-          destinationGroups[existingIndex] = {
-            ...existing,
-            count: checkedAdd(
-              existing.count,
-              candidate.count,
-              'destination passenger group count',
-            ),
-            lastAssignedTick: tick,
-          };
-        } else {
-          const group: DestinationAssignedPassengerGroup = {
-            passengerJourneyGroupId: passengerJourneyGroupIdSchema.parse(
-              `passenger-journey-group-${nextJourneySequence}`,
-            ),
-            originStopPlaceId: stop.stopPlaceId,
-            destinationCellId: candidate.cellId,
-            destinationStopPlaceId: candidate.destinationStopPlaceId,
-            count: candidate.count,
-            firstAssignedTick: tick,
-            lastAssignedTick: tick,
-          };
-          destinationGroupIndexes.set(key, destinationGroups.length);
-          destinationGroups.push(group);
-          nextJourneySequence = checkedAdd(
-            nextJourneySequence,
-            1,
-            'passenger journey group sequence',
-          );
-        }
+        destinationGroups.push({
+          passengerJourneyGroupId: passengerJourneyGroupIdSchema.parse(
+            `passenger-journey-group-${nextJourneySequence}`,
+          ),
+          originStopPlaceId: stop.stopPlaceId,
+          destinationCellId: candidate.cellId,
+          destinationStopPlaceId: candidate.destinationStopPlaceId,
+          count: candidate.count,
+          firstAssignedTick: tick,
+          lastAssignedTick: tick,
+        });
+        nextJourneySequence = checkedAdd(
+          nextJourneySequence,
+          1,
+          'passenger journey group sequence',
+        );
       }
       destinationAssigned = checkedAdd(
         destinationAssigned,
@@ -1039,23 +958,24 @@ export function advancePassengerDemandToTick(
       );
       arrivals.set(stop.stopPlaceId, 0);
     }
-    destinationGroups.sort((left, right) => {
-      if (left.originStopPlaceId !== right.originStopPlaceId)
-        return left.originStopPlaceId < right.originStopPlaceId ? -1 : 1;
-      const leftCell = parsedPlan.cells.find(
-        (cell) => cell.cellId === left.destinationCellId,
-      )!;
-      const rightCell = parsedPlan.cells.find(
-        (cell) => cell.cellId === right.destinationCellId,
-      )!;
-      return leftCell.row - rightCell.row || leftCell.column - rightCell.column;
+    const activation = activatePassengerDirectItineraries({
+      itineraryPlan,
+      demandPlan: parsedPlan,
+      destinationAssignedGroups: destinationGroups,
+      waitingCohorts: current.waitingCohorts,
+      nextPassengerWaitingCohortSequence:
+        current.nextPassengerWaitingCohortSequence,
+      directItineraryUnavailablePassengerCount:
+        current.directItineraryUnavailablePassengerCount,
+      activationTick: tick,
     });
-    current = validatePassengerDemandState(parsedPlan, {
+    current = validatePassengerDemandState(parsedPlan, itineraryPlan, {
       status: 'active',
       demandPlanCoordinate: current.demandPlanCoordinate,
       processedThroughTick: tick,
       nextPassengerGroupSequence: nextSequence,
-      nextPassengerJourneyGroupSequence: nextJourneySequence,
+      nextPassengerWaitingCohortSequence:
+        activation.nextPassengerWaitingCohortSequence,
       cellCredits,
       accessingGroups: accessingGroups.sort(compareGroups),
       stopArrivals: parsedPlan.stops.map((stop) => ({
@@ -1066,13 +986,17 @@ export function advancePassengerDemandToTick(
         stopPlaceId: stop.stopPlaceId,
         destinationCursor: destinationCursors.get(stop.stopPlaceId)!,
       })),
-      destinationAssignedGroups: destinationGroups,
+      waitingCohorts: activation.waitingCohorts,
       totalEmittedPassengerCount: totalEmitted,
       servedEmittedPassengerCount: servedEmitted,
       unservedAtSourcePassengerCount: unserved,
       totalArrivedAtStopPassengerCount: arrivedTotal,
       totalDestinationAssignedPassengerCount: destinationAssigned,
       destinationUnavailableAtStopPassengerCount: destinationUnavailable,
+      directItineraryUnavailablePassengerCount:
+        activation.directItineraryUnavailablePassengerCount,
+      totalWaitingForVehiclePassengerCount:
+        activation.totalWaitingForVehiclePassengerCount,
     });
   }
   return current;
@@ -1093,8 +1017,7 @@ export function parsePassengerDemandProjection(
           demandPlanCoordinate:
             parsed.demandPlanCoordinate as ActivePassengerDemandState['demandPlanCoordinate'],
           stopArrivals: parsed.stopArrivals as StopPlaceArrivalState[],
-          destinationAssignedGroups:
-            parsed.destinationAssignedGroups as DestinationAssignedPassengerGroup[],
+          waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
         },
   );
 }
@@ -1131,10 +1054,12 @@ export function projectPassengerDemand(
       state.totalDestinationAssignedPassengerCount,
     destinationUnavailableAtStopPassengerCount:
       state.destinationUnavailableAtStopPassengerCount,
-    destinationAssignedGroupCount: state.destinationAssignedGroups.length,
-    passengersAwaitingItineraryCount:
-      state.totalDestinationAssignedPassengerCount,
-    destinationAssignedGroups: state.destinationAssignedGroups,
+    directItineraryUnavailablePassengerCount:
+      state.directItineraryUnavailablePassengerCount,
+    totalWaitingForVehiclePassengerCount:
+      state.totalWaitingForVehiclePassengerCount,
+    waitingCohortCount: state.waitingCohorts.length,
+    waitingCohorts: state.waitingCohorts,
     stopArrivals: state.stopArrivals,
   });
 }

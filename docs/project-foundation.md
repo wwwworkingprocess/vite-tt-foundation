@@ -137,6 +137,10 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   forward-pattern segment with exact directional StopNodes or explicitly
   unavailable. Dynamic passenger groups remain awaiting itinerary; Snapshot
   V5, Save V3, clients, Workers, persistence, UI, and rendering are unchanged.
+- Phase 4E3B activates destination intent through that exact derived plan into
+  bounded directional waiting cohorts. Unavailable direct journeys are counted
+  explicitly; transfers and boarding remain deferred. Snapshot V6 and
+  Transport Save V4 intentionally reset pre-release compatibility.
 - The pre-Phase-4D browser refinement presents the accepted authority through a
   viewport-bound game shell: compact navigation, a full-workspace SVG
   diagnostic view, a swappable R3F minimap, and accessible project,

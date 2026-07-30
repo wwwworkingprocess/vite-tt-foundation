@@ -19,10 +19,6 @@ import {
   type TimelineId,
 } from '@torrevieja-tycoon/protocol';
 import {
-  migrateTransportSaveRecordV1,
-  migrateTransportSaveRecordV2,
-  migrateTransportSaveRecordV3,
-  migrateTransportSaveRecordV4,
   parseTransportSaveRecord,
   type PersistedSaveClassification,
   type TransportSaveRecord,
@@ -323,20 +319,7 @@ export function createTransportApplicationController(input: {
           set({ ...previousState, message: error.message });
           throw error;
         }
-        if (classified.classification === 'legacy-foundation') {
-          const error = new Error(
-            'This save belongs to the foundation version and is incompatible.',
-          );
-          set({ ...previousState, message: error.message });
-          throw error;
-        }
-        if (
-          classified.classification !== 'current' &&
-          classified.classification !== 'migratable-transport-v1' &&
-          classified.classification !== 'migratable-transport-v2' &&
-          classified.classification !== 'migratable-transport-v3' &&
-          classified.classification !== 'migratable-transport-v4'
-        ) {
+        if (classified.classification !== 'current') {
           const error =
             classified.classification === 'unrelated'
               ? new Error('The selected record is not a transport save.')
@@ -344,16 +327,7 @@ export function createTransportApplicationController(input: {
           set({ ...previousState, message: error.message });
           throw error;
         }
-        const restoredRecord =
-          classified.classification === 'current'
-            ? classified.record
-            : classified.classification === 'migratable-transport-v4'
-              ? migrateTransportSaveRecordV4(classified.record)
-              : classified.classification === 'migratable-transport-v3'
-                ? migrateTransportSaveRecordV3(classified.record)
-                : classified.classification === 'migratable-transport-v2'
-                  ? migrateTransportSaveRecordV2(classified.record)
-                  : migrateTransportSaveRecordV1(classified.record);
+        const restoredRecord = classified.record;
         let scenario: CanonicalScenario;
         let passengerDemandPlan: PassengerDemandPlanV1 | undefined;
         try {
@@ -459,7 +433,7 @@ export function createTransportApplicationController(input: {
           await input.repository.put(
             parseTransportSaveRecord({
               kind: 'transport-save-record',
-              schemaVersion: 3,
+              schemaVersion: 4,
               ...metadata,
               gameId: exported.gameId,
               sourceTimelineId: exported.timelineId,

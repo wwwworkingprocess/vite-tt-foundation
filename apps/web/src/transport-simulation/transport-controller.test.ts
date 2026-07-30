@@ -22,11 +22,8 @@ const root = join(
   import.meta.dirname,
   '..',
   '..',
-  '..',
-  '..',
-  'packages',
-  'transport-domain',
-  'fixtures',
+  'public',
+  'scenarios',
   'torrevieja-mini-v1',
 );
 const json = (name: string) =>
@@ -44,7 +41,7 @@ const record = () => {
   const canonical = scenario();
   return parseTransportSaveRecord({
     kind: 'transport-save-record',
-    schemaVersion: 3,
+    schemaVersion: 4,
     saveId: 'slot',
     gameId: 'game-fixture',
     sourceTimelineId: 'timeline-source',
@@ -87,16 +84,16 @@ const demandPlan = () => {
         row: 0,
         column: 0,
         populationWeight: 1,
-        assignedStopPlaceId: 'fixture-stop',
+        assignedStopPlaceId: 'tv-place-0053',
         distanceSquaredCells: 0,
       },
     ],
-    stops: [{ stopPlaceId: 'fixture-stop' }],
+    stops: [{ stopPlaceId: 'tv-place-0053' }],
   });
 };
 
 describe('transport application controller', () => {
-  it('deliberately migrates a Transport Save V1 before activation', async () => {
+  it('rejects obsolete pre-release saves before replacing authority', async () => {
     const canonical = scenario();
     const value = record();
     const v1 = {
@@ -123,16 +120,15 @@ describe('transport application controller', () => {
       timelineId: parseTimelineId('timeline-current'),
       scenario: canonical,
     });
-    await controller.restore({
-      saveId: 'slot',
-      timelineId: parseTimelineId('timeline-v1-restored'),
-    });
+    await expect(
+      controller.restore({
+        saveId: 'slot',
+        timelineId: parseTimelineId('timeline-v1-restored'),
+      }),
+    ).rejects.toThrow('obsolete');
     expect(controller.projection.getState()).toMatchObject({
       status: 'ready',
-      timelineId: 'timeline-v1-restored',
-      simulationTick: 120,
-      fleet: [],
-      passengerDemand: { status: 'disabled' },
+      timelineId: 'timeline-current',
     });
     await controller.close();
   });
@@ -303,86 +299,6 @@ describe('transport application controller', () => {
     });
     expect(currentClose).toHaveBeenCalledTimes(1);
     expect(clientCreations).toBe(2);
-    await controller.close();
-  });
-
-  it('deliberately migrates a Transport Save V2 before activation', async () => {
-    const v2 = structuredClone(record()) as unknown as {
-      schemaVersion: number;
-      snapshot: {
-        schemaVersion: number;
-        simulationVersion: string;
-        state: { passengerDemand?: unknown };
-      };
-    };
-    v2.schemaVersion = 2;
-    v2.snapshot.schemaVersion = 2;
-    v2.snapshot.simulationVersion = 'transport-2';
-    delete v2.snapshot.state.passengerDemand;
-    const controller = createTransportApplicationController({
-      createClient: () => createDirectTransportSimulationClient(),
-      repository: {
-        get: async () => classifyPersistedSaveRecord(v2),
-        put: async () => undefined,
-      },
-      scenarioResolver: { resolve: async () => scenario() },
-    });
-    await controller.startNew({
-      gameId: parseGameId('game-fixture'),
-      timelineId: parseTimelineId('timeline-current'),
-      scenario: scenario(),
-    });
-    await controller.restore({
-      saveId: 'slot',
-      timelineId: parseTimelineId('timeline-v2-restored'),
-    });
-    expect(controller.projection.getState()).toMatchObject({
-      status: 'ready',
-      timelineId: 'timeline-v2-restored',
-      simulationTick: 120,
-      fleet: [],
-    });
-    await controller.close();
-  });
-
-  it('deliberately migrates a Transport Save V3 before activation', async () => {
-    const value = structuredClone(record());
-    const v3 = {
-      ...value,
-      snapshot: {
-        kind: value.snapshot.kind,
-        scenario: value.snapshot.scenario,
-        schemaVersion: 3,
-        simulationVersion: 'transport-3',
-        state: {
-          tick: value.snapshot.state.tick,
-          fleet: value.snapshot.state.fleet,
-        },
-      },
-    };
-    const controller = createTransportApplicationController({
-      createClient: () => createDirectTransportSimulationClient(),
-      repository: {
-        get: async () => classifyPersistedSaveRecord(v3),
-        put: async () => undefined,
-      },
-      scenarioResolver: { resolve: async () => scenario() },
-    });
-    await controller.startNew({
-      gameId: parseGameId('game-fixture'),
-      timelineId: parseTimelineId('timeline-current'),
-      scenario: scenario(),
-    });
-    await controller.restore({
-      saveId: 'slot',
-      timelineId: parseTimelineId('timeline-v3-restored'),
-    });
-    expect(controller.projection.getState()).toMatchObject({
-      status: 'ready',
-      timelineId: 'timeline-v3-restored',
-      simulationTick: 120,
-      passengerDemand: { status: 'disabled' },
-    });
     await controller.close();
   });
 
@@ -976,11 +892,11 @@ describe('transport application controller', () => {
         saveId: 'legacy',
         timelineId: parseTimelineId('timeline-restored'),
       }),
-    ).rejects.toThrow('incompatible');
+    ).rejects.toThrow('obsolete');
     expect(close).not.toHaveBeenCalled();
     expect(controller.projection.getState()).toMatchObject({
       status: 'ready',
-      message: expect.stringContaining('incompatible'),
+      message: expect.stringContaining('obsolete'),
     });
     const listener = vi.fn();
     const remove = controller.projection.subscribe(listener);
@@ -1037,7 +953,7 @@ describe('transport application controller', () => {
         saveId: 'malformed',
         timelineId: parseTimelineId('timeline-restored'),
       }),
-    ).rejects.toThrow('Malformed known');
+    ).rejects.toThrow('obsolete');
     await expect(
       controller.restore({
         saveId: 'unrelated',

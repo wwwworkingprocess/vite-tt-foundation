@@ -42,7 +42,7 @@ const record = () => {
   const value = scenario();
   return parseTransportSaveRecord({
     kind: 'transport-save-record',
-    schemaVersion: 3,
+    schemaVersion: 4,
     saveId: 'slot',
     gameId: 'game',
     sourceTimelineId: 'timeline',
@@ -116,8 +116,8 @@ it('classifies raw IndexedDB legacy, corruption, and future data on get and list
   const table = database.table('foundationSaves');
   await table.bulkPut([
     legacy,
-    { saveId: 'corrupt', kind: 'transport-save-record', schemaVersion: 1 },
-    { saveId: 'future', kind: 'transport-save-record', schemaVersion: 4 },
+    { saveId: 'corrupt', kind: 'transport-save-record', schemaVersion: 4 },
+    { saveId: 'future', kind: 'transport-save-record', schemaVersion: 5 },
     { saveId: 'unrelated', kind: 'another-product', schemaVersion: 99 },
   ]);
   database.close();
@@ -125,7 +125,7 @@ it('classifies raw IndexedDB legacy, corruption, and future data on get and list
     'transport-raw-contract',
   );
   await expect(repository.get('legacy')).resolves.toMatchObject({
-    classification: 'legacy-foundation',
+    classification: 'obsolete-pre-release',
   });
   await expect(repository.get('corrupt')).resolves.toMatchObject({
     classification: 'malformed-known',
@@ -138,7 +138,7 @@ it('classifies raw IndexedDB legacy, corruption, and future data on get and list
   });
   expect(await repository.list()).toEqual(
     expect.arrayContaining([
-      expect.objectContaining({ classification: 'legacy-foundation' }),
+      expect.objectContaining({ classification: 'obsolete-pre-release' }),
       expect.objectContaining({ classification: 'malformed-known' }),
       expect.objectContaining({ classification: 'unsupported-future' }),
       expect.objectContaining({ classification: 'unrelated' }),
@@ -160,7 +160,7 @@ it('validates repository construction and classifies seeded legacy data', async 
   ]);
   expect(await repository.list()).toEqual(
     expect.arrayContaining([
-      expect.objectContaining({ classification: 'legacy-foundation' }),
+      expect.objectContaining({ classification: 'obsolete-pre-release' }),
       expect.objectContaining({ classification: 'unrelated' }),
     ]),
   );

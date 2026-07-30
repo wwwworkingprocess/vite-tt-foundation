@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import type { StopCatchmentResult } from '@torrevieja-tycoon/transport-domain';
+import {
+  parseScenarioPackage,
+  type StopCatchmentResult,
+} from '@torrevieja-tycoon/transport-domain';
 import {
   advancePassengerDemandToTick,
   createInitialPassengerDemandState,
@@ -10,6 +13,7 @@ import {
   projectPassengerDemand,
   validatePassengerDemandState,
 } from './passenger-demand.js';
+import { buildPassengerDirectItineraryPlan } from './passenger-direct-itinerary.js';
 
 const catchment = {
   scenario: {
@@ -98,6 +102,107 @@ const createPlan = () =>
       creditsPerPassenger: 5,
     },
     accessPolicy: { accessTicksPerCell: 3 },
+  });
+
+const itineraryScenario = parseScenarioPackage({
+  manifest: {
+    schemaVersion: '1.0.0',
+    scenarioId: 'fixture-scenario',
+    scenarioVersion: '1.0.0',
+    status: 'test-fixture',
+    title: 'Demand fixture',
+    primarySettlementId: 'city',
+    settlementIds: ['city'],
+    contentHash: 'a'.repeat(64),
+    assets: {
+      settlements: {
+        path: 'settlements.json',
+        required: true,
+        sha256: '1'.repeat(64),
+      },
+      stops: {
+        path: 'stops.json',
+        required: true,
+        sha256: '2'.repeat(64),
+      },
+      routes: {
+        path: 'routes.json',
+        required: true,
+        sha256: '3'.repeat(64),
+      },
+    },
+    graphContract: {
+      vertexSource: 'stops.stopNodes',
+      edgeDerivation: 'consecutive-stopNodeIds',
+      closeLoopPolicy: 'add-last-to-first-only-when-closesLoop-is-true',
+      reverseEdgePolicy: 'never-infer',
+    },
+  },
+  settlements: {
+    schemaVersion: '1.0.0',
+    scenarioId: 'fixture-scenario',
+    settlements: [
+      {
+        settlementId: 'city',
+        name: 'City',
+        countryCode: 'ES',
+        adminArea: 'Fixture',
+        center: { latitude: 10, longitude: 20 },
+        bounds: { south: 9, west: 19, north: 11, east: 21 },
+      },
+    ],
+  },
+  stops: {
+    schemaVersion: '1.0.0',
+    scenarioId: 'fixture-scenario',
+    stopPlaces: ['stop-a', 'stop-b'].map((stopPlaceId, index) => ({
+      stopPlaceId,
+      settlementId: 'city',
+      name: stopPlaceId,
+      position: { latitude: 10, longitude: 20 + index * 0.001 },
+    })),
+    stopNodes: ['stop-a', 'stop-b'].map((stopPlaceId, index) => ({
+      stopNodeId: `node-${stopPlaceId}`,
+      stopPlaceId,
+      settlementId: 'city',
+      name: stopPlaceId,
+      position: { latitude: 10, longitude: 20 + index * 0.001 },
+      sourceReferences: [],
+      resolution: { status: 'fixture' },
+    })),
+  },
+  routes: {
+    schemaVersion: '1.0.0',
+    scenarioId: 'fixture-scenario',
+    routes: [
+      {
+        routeId: 'route',
+        publicCode: 'R',
+        name: 'Route',
+        dataStatus: 'fixture',
+        patterns: [
+          {
+            patternId: 'out',
+            directionLabel: 'Out',
+            closesLoop: false,
+            stopNodeIds: ['node-stop-a', 'node-stop-b'],
+          },
+          {
+            patternId: 'in',
+            directionLabel: 'In',
+            closesLoop: false,
+            stopNodeIds: ['node-stop-b', 'node-stop-a'],
+          },
+        ],
+      },
+    ],
+  },
+});
+
+const createItineraryPlan = () =>
+  buildPassengerDirectItineraryPlan({
+    scenario: itineraryScenario,
+    demandPlan: createPlan(),
   });
 
 type MutablePlan = {
@@ -275,13 +380,23 @@ describe('deterministic passenger emission and access', () => {
     const plan = createPlan();
     const initial = createInitialPassengerDemandState(plan, 0);
     expect(initial.cellCredits.every((cell) => cell.credit === 0)).toBe(true);
-    const tick1 = advancePassengerDemandToTick(plan, initial, 1);
+    const tick1 = advancePassengerDemandToTick(
+      plan,
+      createItineraryPlan(),
+      initial,
+      1,
+    );
     expect(tick1.cellCredits.map((cell) => cell.credit)).toEqual([2, 4, 3, 1]);
     expect(tick1.totalEmittedPassengerCount).toBe(2);
     expect(tick1.servedEmittedPassengerCount).toBe(1);
     expect(tick1.unservedAtSourcePassengerCount).toBe(1);
     expect(tick1.totalArrivedAtStopPassengerCount).toBe(0);
-    const tick3 = advancePassengerDemandToTick(plan, tick1, 3);
+    const tick3 = advancePassengerDemandToTick(
+      plan,
+      createItineraryPlan(),
+      tick1,
+      3,
+    );
     expect(
       tick3.stopArrivals.find((stop) => stop.stopPlaceId === 'stop-a')
         ?.awaitingDestinationCount,
@@ -298,6 +413,7 @@ describe('deterministic passenger emission and access', () => {
   it('uses exact integer distance bands and orders groups by arrival then ID', () => {
     const state = advancePassengerDemandToTick(
       createPlan(),
+      createItineraryPlan(),
       createInitialPassengerDemandState(createPlan(), 0),
       2,
     );
@@ -321,6 +437,7 @@ describe('deterministic passenger emission and access', () => {
     const plan = createPlan();
     const state = advancePassengerDemandToTick(
       plan,
+      createItineraryPlan(),
       createInitialPassengerDemandState(plan, 0),
       20,
     );
@@ -328,7 +445,9 @@ describe('deterministic passenger emission and access', () => {
     expect(state.servedEmittedPassengerCount).toBe(56);
     expect(state.unservedAtSourcePassengerCount).toBe(24);
     expect(state.cellCredits.every((cell) => cell.credit === 0)).toBe(true);
-    expect(validatePassengerDemandState(plan, state)).toEqual(state);
+    expect(
+      validatePassengerDemandState(plan, createItineraryPlan(), state),
+    ).toEqual(state);
     expect(Object.isFrozen(state.accessingGroups)).toBe(true);
     expect(Object.isFrozen(state.stopArrivals[0])).toBe(true);
     const projection = projectPassengerDemand(state);
@@ -336,23 +455,34 @@ describe('deterministic passenger emission and access', () => {
     expect(
       projection.inAccessPassengerCount +
         projection.totalAwaitingDestinationCount +
-        projection.totalDestinationAssignedPassengerCount +
-        projection.destinationUnavailableAtStopPassengerCount,
+        projection.destinationUnavailableAtStopPassengerCount +
+        projection.directItineraryUnavailablePassengerCount +
+        projection.totalWaitingForVehiclePassengerCount,
     ).toBe(56);
   });
 
   it('is split/batch equivalent, repeatable, immutable, and rejects backward advancement', () => {
     const plan = createPlan();
     const initial = createInitialPassengerDemandState(plan, 0);
-    const batch = advancePassengerDemandToTick(plan, initial, 20);
+    const batch = advancePassengerDemandToTick(
+      plan,
+      createItineraryPlan(),
+      initial,
+      20,
+    );
     const split = advancePassengerDemandToTick(
       plan,
-      advancePassengerDemandToTick(plan, initial, 7),
+      createItineraryPlan(),
+      advancePassengerDemandToTick(plan, createItineraryPlan(), initial, 7),
       20,
     );
     expect(split).toEqual(batch);
-    expect(advancePassengerDemandToTick(plan, batch, 20)).toBe(batch);
-    expect(() => advancePassengerDemandToTick(plan, batch, 19)).toThrow();
+    expect(
+      advancePassengerDemandToTick(plan, createItineraryPlan(), batch, 20),
+    ).toBe(batch);
+    expect(() =>
+      advancePassengerDemandToTick(plan, createItineraryPlan(), batch, 19),
+    ).toThrow();
     expect(initial).toEqual(createInitialPassengerDemandState(plan, 0));
   });
 
@@ -365,26 +495,34 @@ describe('deterministic passenger emission and access', () => {
     expect(() =>
       advancePassengerDemandToTick(
         parsePassengerDemandPlan(overflowPlan),
+        createItineraryPlan(),
         initial,
         1,
       ),
     ).toThrow(/overflow/i);
     const corrupt = structuredClone(
-      advancePassengerDemandToTick(plan, initial, 2),
+      advancePassengerDemandToTick(plan, createItineraryPlan(), initial, 2),
     ) as unknown as MutablePassengerState;
     corrupt.totalEmittedPassengerCount += 1;
-    expect(() => validatePassengerDemandState(plan, corrupt)).toThrow();
+    expect(() =>
+      validatePassengerDemandState(plan, createItineraryPlan(), corrupt),
+    ).toThrow();
   });
 
   it('validates exact plan coordinates, cell/stop ordering, and projection variants', () => {
     const plan = createPlan();
     const active = advancePassengerDemandToTick(
       plan,
+      createItineraryPlan(),
       createInitialPassengerDemandState(plan, 0),
       2,
     );
     expect(() =>
-      validatePassengerDemandState(plan, createDisabledPassengerDemandState()),
+      validatePassengerDemandState(
+        plan,
+        createItineraryPlan(),
+        createDisabledPassengerDemandState(),
+      ),
     ).toThrow(/active/i);
     for (const mutate of [
       (state: Record<string, unknown>) => {
@@ -417,7 +555,9 @@ describe('deterministic passenger emission and access', () => {
         unknown
       >;
       mutate(corrupt);
-      expect(() => validatePassengerDemandState(plan, corrupt)).toThrow();
+      expect(() =>
+        validatePassengerDemandState(plan, createItineraryPlan(), corrupt),
+      ).toThrow();
     }
     expect(parsePassengerDemandProjection({ status: 'disabled' })).toEqual({
       status: 'disabled',
@@ -430,48 +570,40 @@ describe('deterministic passenger emission and access', () => {
     ).toEqual({ status: 'disabled' });
   });
 
-  it('merges bounded destination groups and rejects corrupted destination authority', () => {
+  it('merges bounded directional cohorts and rejects corrupted waiting authority', () => {
     const plan = createPlan();
     const active = advancePassengerDemandToTick(
       plan,
+      createItineraryPlan(),
       createInitialPassengerDemandState(plan, 0),
       20,
     );
-    expect(active.destinationAssignedGroups.length).toBeGreaterThan(0);
+    expect(active.waitingCohorts.length).toBeGreaterThan(0);
     expect(
-      active.destinationAssignedGroups.some(
+      active.waitingCohorts.some(
         (group) => group.firstAssignedTick < group.lastAssignedTick,
       ),
     ).toBe(true);
     expect(
-      active.destinationAssignedGroups.reduce(
-        (total, group) => total + group.count,
-        0,
-      ),
-    ).toBe(active.totalDestinationAssignedPassengerCount);
+      active.waitingCohorts.reduce((total, group) => total + group.count, 0),
+    ).toBe(active.totalWaitingForVehiclePassengerCount);
     const corruptions = [
       (state: Record<string, unknown>) =>
         ((
           state.destinationCursors as Array<Record<string, unknown>>
         )[0]!.destinationCursor = Number.MAX_SAFE_INTEGER),
       (state: Record<string, unknown>) =>
-        (state.nextPassengerJourneyGroupSequence = 1),
+        (state.nextPassengerWaitingCohortSequence = 1),
       (state: Record<string, unknown>) => {
-        const groups = state.destinationAssignedGroups as Array<
-          Record<string, unknown>
-        >;
+        const groups = state.waitingCohorts as Array<Record<string, unknown>>;
         groups.push(structuredClone(groups[0]!));
       },
       (state: Record<string, unknown>) => {
-        const groups = state.destinationAssignedGroups as Array<
-          Record<string, unknown>
-        >;
+        const groups = state.waitingCohorts as Array<Record<string, unknown>>;
         groups[0]!.destinationStopPlaceId = groups[0]!.originStopPlaceId;
       },
       (state: Record<string, unknown>) => {
-        const groups = state.destinationAssignedGroups as Array<
-          Record<string, unknown>
-        >;
+        const groups = state.waitingCohorts as Array<Record<string, unknown>>;
         groups.reverse();
       },
       (state: Record<string, unknown>) =>
@@ -483,7 +615,9 @@ describe('deterministic passenger emission and access', () => {
         unknown
       >;
       mutate(corrupt);
-      expect(() => validatePassengerDemandState(plan, corrupt)).toThrow();
+      expect(() =>
+        validatePassengerDemandState(plan, createItineraryPlan(), corrupt),
+      ).toThrow();
     }
   });
 
@@ -494,11 +628,15 @@ describe('deterministic passenger emission and access', () => {
     const oneStopPlan = parsePassengerDemandPlan(raw);
     const state = advancePassengerDemandToTick(
       oneStopPlan,
+      buildPassengerDirectItineraryPlan({
+        scenario: itineraryScenario,
+        demandPlan: oneStopPlan,
+      }),
       createInitialPassengerDemandState(oneStopPlan, 0),
       10,
     );
     expect(state.totalArrivedAtStopPassengerCount).toBeGreaterThan(0);
-    expect(state.destinationAssignedGroups).toEqual([]);
+    expect(state.waitingCohorts).toEqual([]);
     expect(state.totalDestinationAssignedPassengerCount).toBe(0);
     expect(state.destinationUnavailableAtStopPassengerCount).toBe(
       state.totalArrivedAtStopPassengerCount,
@@ -531,11 +669,14 @@ describe('deterministic passenger emission and access', () => {
     const state = structuredClone(
       advancePassengerDemandToTick(
         plan,
+        createItineraryPlan(),
         createInitialPassengerDemandState(plan, 0),
         2,
       ),
     ) as unknown as MutablePassengerState;
     mutate(state);
-    expect(() => validatePassengerDemandState(plan, state)).toThrow();
+    expect(() =>
+      validatePassengerDemandState(plan, createItineraryPlan(), state),
+    ).toThrow();
   });
 });

@@ -10,9 +10,7 @@ import {
   applyTransportVehicleCommand,
   createTransportSimulationSnapshot,
   createTransportSimulationState,
-  migrateTransportSimulationSnapshotV2,
   parseTransportVehicleCommand,
-  parseTransportSimulationSnapshotV2,
   restoreTransportSimulationState,
 } from './index.js';
 
@@ -282,12 +280,12 @@ describe('repeating route-cycle movement', () => {
     });
   });
 
-  it('round-trips V3 route-cycle state and migrates V2 as legacy single-pattern', () => {
+  it('round-trips current route-cycle state and rejects malformed authority', () => {
     const moving = advanceTransportTicks(started(), 9);
     const snapshot = createTransportSimulationSnapshot(moving);
     expect(snapshot).toMatchObject({
-      schemaVersion: 5,
-      simulationVersion: 'transport-5',
+      schemaVersion: 6,
+      simulationVersion: 'transport-6',
       state: {
         fleet: [
           {
@@ -303,54 +301,6 @@ describe('repeating route-cycle movement', () => {
         restoreTransportSimulationState(snapshot, routeScenario()),
       ),
     ).toEqual(snapshot);
-
-    const v2 = {
-      ...snapshot,
-      schemaVersion: 2,
-      simulationVersion: 'transport-2',
-      state: {
-        tick: snapshot.state.tick,
-        fleet: snapshot.state.fleet.map((vehicle) => ({
-          vehicleId: vehicle.vehicleId,
-          label: vehicle.label,
-          patternId: vehicle.patternId,
-          movementPlan: vehicle.movementPlan,
-          movement: vehicle.movement,
-        })),
-      },
-    };
-    const migrated = migrateTransportSimulationSnapshotV2(v2);
-    expect(migrated).toMatchObject({ schemaVersion: 5 });
-    expect(migrated.state.fleet[0]).not.toHaveProperty('routeId');
-    expect(migrated.state.fleet[0]?.movement.kind).toBe('running-on-edge');
-    const completedV2 = structuredClone(v2);
-    completedV2.state.fleet[0]!.movement = {
-      kind: 'completed-at-stop',
-      stopNodeId: 'tv-stop-0108',
-    };
-    const restoredCompletedV2 = restoreTransportSimulationState(
-      migrateTransportSimulationSnapshotV2(completedV2),
-      routeScenario(),
-    );
-    expect(restoredCompletedV2.fleet[0]).toMatchObject({
-      patternId: 'route-return',
-      movement: { kind: 'completed-at-stop', stopNodeId: 'tv-stop-0108' },
-    });
-    const routeShapedV2 = {
-      ...snapshot,
-      schemaVersion: 2,
-      simulationVersion: 'transport-2',
-      state: {
-        tick: snapshot.state.tick,
-        fleet: snapshot.state.fleet,
-      },
-    };
-    expect(
-      migrateTransportSimulationSnapshotV2(routeShapedV2).state.fleet[0],
-    ).not.toHaveProperty('routeId');
-    expect(() =>
-      parseTransportSimulationSnapshotV2({ ...v2, schemaVersion: 99 }),
-    ).toThrow('unsupported-transport-snapshot');
 
     const malformedSnapshots = [
       (() => {

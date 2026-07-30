@@ -36,11 +36,8 @@ const fixtureRoot = join(
   import.meta.dirname,
   '..',
   '..',
-  '..',
-  '..',
-  'packages',
-  'transport-domain',
-  'fixtures',
+  'public',
+  'scenarios',
   'torrevieja-mini-v1',
 );
 const json = (name: string) =>
@@ -81,7 +78,7 @@ const demandPlan = (canonical: ReturnType<typeof scenario>) =>
         row: 0,
         column: 0,
         populationWeight: 1,
-        assignedStopPlaceId: 'stop-a',
+        assignedStopPlaceId: 'tv-place-0053',
         distanceSquaredCells: 0,
       },
       {
@@ -89,7 +86,7 @@ const demandPlan = (canonical: ReturnType<typeof scenario>) =>
         row: 0,
         column: 1,
         populationWeight: 3,
-        assignedStopPlaceId: 'stop-b',
+        assignedStopPlaceId: 'tv-place-0065',
         distanceSquaredCells: 1,
       },
       {
@@ -101,7 +98,7 @@ const demandPlan = (canonical: ReturnType<typeof scenario>) =>
         distanceSquaredCells: null,
       },
     ],
-    stops: [{ stopPlaceId: 'stop-b' }, { stopPlaceId: 'stop-a' }],
+    stops: [{ stopPlaceId: 'tv-place-0065' }, { stopPlaceId: 'tv-place-0053' }],
   });
 
 class LoopbackWorker implements TransportWorkerLike {
@@ -233,7 +230,7 @@ describe.each(factories)(
         envelope(3, { type: 'foundation.advance-ticks', count: 5 }),
       );
       const exported = await client.exportSnapshot();
-      expect(exported.snapshot.schemaVersion).toBe(5);
+      expect(exported.snapshot.schemaVersion).toBe(6);
       expect(exported.snapshot.state.passengerDemand).toEqual({
         status: 'disabled',
       });

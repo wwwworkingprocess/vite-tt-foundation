@@ -98,11 +98,7 @@ export function createTransportFoundationApplication(input: {
     try {
       const classified = await input.repository.list();
       const saves = classified.flatMap((item) =>
-        item.classification === 'current' ||
-        item.classification === 'migratable-transport-v1' ||
-        item.classification === 'migratable-transport-v2' ||
-        item.classification === 'migratable-transport-v3' ||
-        item.classification === 'legacy-foundation'
+        item.classification === 'current'
           ? [
               (() => {
                 const { vehicleCount, ...summary } = item.summary;

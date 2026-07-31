@@ -5,8 +5,10 @@ import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
   advanceTransportTicks,
   applyTransportVehicleCommand,
+  completedLoopEventsAtElapsedTick,
   createTransportSimulationSnapshot,
   createTransportSimulationState,
+  deriveVehicleOperationTransition,
   fastForwardVehicleOperation,
   restoreTransportSimulationState,
   vehicleCallCanServeWaitingCohort,
@@ -94,6 +96,56 @@ function started(
     vehicleId: 'bus-1',
   });
 }
+
+function closedLoopStarted() {
+  const routes = structuredClone(json('routes.json')) as {
+    routes: Array<{
+      patterns: Array<{
+        patternId: string;
+        closesLoop: boolean;
+        stopNodeIds: string[];
+      }>;
+    }>;
+  };
+  const pattern = routes.routes[0]!.patterns[0]!;
+  pattern.patternId = 'closed-loop';
+  pattern.closesLoop = true;
+  pattern.stopNodeIds = ['tv-stop-0108', 'tv-stop-0053', 'tv-stop-0078'];
+  routes.routes[0]!.patterns = [pattern];
+  const canonical = parseScenarioPackage({
+    manifest: json('scenario.json'),
+    settlements: json('settlements.json'),
+    stops: json('stops.json'),
+    routes,
+    presentation: json('presentation.json'),
+    provenance: json('provenance.json'),
+  });
+  let state = createTransportSimulationState(canonical, 0);
+  state = applyTransportVehicleCommand(state, {
+    kind: 'transport.vehicle.create',
+    vehicleId: 'loop-bus',
+    label: 'Loop bus',
+    patternId: 'closed-loop',
+    movementPlan: {
+      kind: 'vehicle-movement-plan-v1',
+      edgeTravelTicks: [2, 2, 2],
+    },
+  });
+  return applyTransportVehicleCommand(state, {
+    kind: 'transport.vehicle.start',
+    vehicleId: 'loop-bus',
+  });
+}
+
+const repeatTicks = (
+  state: ReturnType<typeof createTransportSimulationState>,
+  count: number,
+) => {
+  let result = state;
+  for (let index = 0; index < count; index += 1)
+    result = advanceTransportTicks(result, 1);
+  return result;
+};
 
 describe('light vehicle pattern runs and StopNode calls', () => {
   it('creates one immutable origin call and emits destinations only on arrival', () => {
@@ -296,7 +348,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     wrongOccurrence.state.currentStopCalls[0]!.occurrenceIndex = 0;
     expect(() =>
       restoreTransportSimulationState(wrongOccurrence, scenario()),
-    ).toThrow('canonical authority');
+    ).toThrow('canonical');
     const missing = structuredClone(snapshot);
     missing.state.vehicleOperations = [];
     expect(() => restoreTransportSimulationState(missing, scenario())).toThrow(
@@ -305,7 +357,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
 
     const corruptions: Array<[string, (value: typeof snapshot) => void]> = [
       [
-        'identity',
+        'same order',
         (value) => {
           value.state.vehicleOperations[0]!.vehicleId = 'unknown';
         },
@@ -317,19 +369,19 @@ describe('light vehicle pattern runs and StopNode calls', () => {
         },
       ],
       [
-        'authority',
+        'canonical',
         (value) => {
           value.state.currentStopCalls[0]!.tick = 0;
         },
       ],
       [
-        'canonical authority',
+        'canonical',
         (value) => {
           value.state.currentStopCalls[0]!.routeId = 'missing';
         },
       ],
       [
-        'persisted counter',
+        'counter',
         (value) => {
           value.state.vehicleOperations[0]!.stopCallSequence += 1;
         },
@@ -348,7 +400,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     );
     initial.state.currentStopCalls = [];
     expect(() => restoreTransportSimulationState(initial, scenario())).toThrow(
-      'origin call',
+      /current/i,
     );
 
     const twoCalls = createTransportSimulationSnapshot(
@@ -359,7 +411,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     noncontiguous.state.vehicleOperations[0]!.stopCallSequence += 1;
     expect(() =>
       restoreTransportSimulationState(noncontiguous, scenario()),
-    ).toThrow('contiguous');
+    ).toThrow('counter');
     const unordered = structuredClone(twoCalls);
     unordered.state.currentStopCalls.reverse();
     expect(() =>
@@ -407,9 +459,8 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     value.state.vehicleOperations[0]!.stopCallSequence =
       Number.MAX_SAFE_INTEGER;
     value.state.currentStopCalls[0]!.stopCallSequence = Number.MAX_SAFE_INTEGER;
-    const restored = restoreTransportSimulationState(value, scenario());
-    expect(() => advanceTransportTicks(restored, 1)).toThrow(
-      'StopNode-call sequence overflow',
+    expect(() => restoreTransportSimulationState(value, scenario())).toThrow(
+      'counter',
     );
 
     const current = started();
@@ -443,43 +494,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
   });
 
   it('fast-forwards a closed loop from a later occurrence', () => {
-    const routes = structuredClone(json('routes.json')) as {
-      routes: Array<{
-        patterns: Array<{
-          patternId: string;
-          closesLoop: boolean;
-          stopNodeIds: string[];
-        }>;
-      }>;
-    };
-    const pattern = routes.routes[0]!.patterns[0]!;
-    pattern.patternId = 'closed-loop';
-    pattern.closesLoop = true;
-    pattern.stopNodeIds = ['tv-stop-0108', 'tv-stop-0053', 'tv-stop-0078'];
-    routes.routes[0]!.patterns = [pattern];
-    const canonical = parseScenarioPackage({
-      manifest: json('scenario.json'),
-      settlements: json('settlements.json'),
-      stops: json('stops.json'),
-      routes,
-      presentation: json('presentation.json'),
-      provenance: json('provenance.json'),
-    });
-    let state = createTransportSimulationState(canonical, 0);
-    state = applyTransportVehicleCommand(state, {
-      kind: 'transport.vehicle.create',
-      vehicleId: 'loop-bus',
-      label: 'Loop bus',
-      patternId: 'closed-loop',
-      movementPlan: {
-        kind: 'vehicle-movement-plan-v1',
-        edgeTravelTicks: [2, 2, 2],
-      },
-    });
-    state = applyTransportVehicleCommand(state, {
-      kind: 'transport.vehicle.start',
-      vehicleId: 'loop-bus',
-    });
+    let state = closedLoopStarted();
     state = advanceTransportTicks(state, 2);
     const oneTick = advanceTransportTicks(state, 1);
     expect(
@@ -499,5 +514,366 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     expect(advanced.vehicleOperations[0]!.patternRunSequence).toBeGreaterThan(
       state.vehicleOperations[0]!.patternRunSequence,
     );
+  });
+
+  it.each([
+    ['occurrence zero', 0],
+    ['later stop occurrence', 2],
+    ['partway through an edge', 3],
+    ['immediately before restart', 5],
+    ['immediately after restart', 6],
+  ])(
+    'matches 10,001 one-tick closed-loop reductions from %s',
+    (_label, offset) => {
+      const state = repeatTicks(closedLoopStarted(), offset);
+      const reference = repeatTicks(state, 10_001);
+      const batched = advanceTransportTicks(state, 10_001);
+      expect({
+        tick: batched.tick,
+        fleet: batched.fleet,
+        vehicleOperations: batched.vehicleOperations,
+        currentStopCalls: batched.currentStopCalls,
+      }).toEqual({
+        tick: reference.tick,
+        fleet: reference.fleet,
+        vehicleOperations: reference.vehicleOperations,
+        currentStopCalls: reference.currentStopCalls,
+      });
+      expect(batched.vehicleOperations[0]!.stopCallSequence).toBe(
+        reference.vehicleOperations[0]!.stopCallSequence,
+      );
+    },
+  );
+
+  it('preserves a parked vehicle run start until an actual run boundary', () => {
+    let state = createTransportSimulationState(scenario(), 0);
+    state = applyTransportVehicleCommand(state, {
+      kind: 'transport.vehicle.create-route-cycle',
+      vehicleId: 'late-start',
+      label: 'Late start',
+      routeId: 'route-a',
+      legs: [
+        {
+          patternId: 'outbound',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [10_000, 10_000],
+          },
+        },
+        {
+          patternId: 'return',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [10_000, 10_000],
+          },
+        },
+      ],
+    });
+    state = advanceTransportTicks(state, 7);
+    state = applyTransportVehicleCommand(state, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'late-start',
+    });
+    const reference = repeatTicks(state, 1_001);
+    const batched = advanceTransportTicks(state, 1_001);
+    expect(batched).toEqual(reference);
+    expect(batched.vehicleOperations[0]!.patternRunStartedAtTick).toBe(0);
+
+    const crossingReference = repeatTicks(state, 20_001);
+    const crossingBatch = advanceTransportTicks(state, 20_001);
+    expect(crossingBatch).toEqual(crossingReference);
+    expect(crossingBatch.vehicleOperations[0]!.patternRunStartedAtTick).toBe(
+      crossingReference.vehicleOperations[0]!.patternRunStartedAtTick,
+    );
+  });
+
+  it('rejects positional operation swaps and exact counter corruption', () => {
+    let state = started();
+    state = applyTransportVehicleCommand(state, {
+      kind: 'transport.vehicle.create-route-cycle',
+      vehicleId: 'bus-2',
+      label: 'Bus 2',
+      routeId: 'route-a',
+      legs: [
+        {
+          patternId: 'outbound',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [2, 3],
+          },
+        },
+        {
+          patternId: 'return',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [4, 5],
+          },
+        },
+      ],
+    });
+    state = advanceTransportTicks(state, 3);
+    const snapshot = createTransportSimulationSnapshot(state);
+    const reversed = structuredClone(snapshot);
+    reversed.state.vehicleOperations.reverse();
+    expect(() => restoreTransportSimulationState(reversed, scenario())).toThrow(
+      /same order/i,
+    );
+
+    for (const field of ['patternRunSequence', 'stopCallSequence'] as const) {
+      for (const delta of [-1, 1]) {
+        const corrupt = structuredClone(snapshot);
+        corrupt.state.vehicleOperations[0]![field] += delta;
+        expect(() =>
+          restoreTransportSimulationState(corrupt, scenario()),
+        ).toThrow(/counter|sequence/i);
+      }
+    }
+  });
+
+  it('rejects calls that are canonical-looking but false for the current tick', () => {
+    const arrival = createTransportSimulationSnapshot(
+      advanceTransportTicks(started(), 1),
+    );
+    const corruptions: Array<(value: typeof arrival) => void> = [
+      (value) => {
+        value.state.currentStopCalls[0]!.stopNodeId = 'tv-stop-0078';
+        value.state.currentStopCalls[0]!.occurrenceIndex = 2;
+      },
+      (value) => {
+        value.state.currentStopCalls[0]!.patternId = 'return';
+      },
+      (value) => {
+        value.state.currentStopCalls[0]!.routeId = null;
+      },
+      (value) => {
+        value.state.currentStopCalls = [];
+      },
+    ];
+    for (const corrupt of corruptions) {
+      const value = structuredClone(arrival);
+      corrupt(value);
+      expect(() => restoreTransportSimulationState(value, scenario())).toThrow(
+        /current|canonical|call/i,
+      );
+    }
+
+    const midEdge = createTransportSimulationSnapshot(
+      advanceTransportTicks(
+        started([
+          [2, 2],
+          [2, 2],
+        ]),
+        1,
+      ),
+    );
+    const extra = structuredClone(midEdge);
+    extra.state.currentStopCalls = [
+      {
+        ...arrival.state.currentStopCalls[0]!,
+        tick: extra.state.tick,
+      },
+    ];
+    expect(() => restoreTransportSimulationState(extra, scenario())).toThrow(
+      /current|canonical|call/i,
+    );
+
+    const afterArrival = advanceTransportTicks(
+      advanceTransportTicks(
+        started([
+          [2, 2],
+          [2, 2],
+        ]),
+        2,
+      ),
+      1,
+    );
+    const relabelled = structuredClone(
+      createTransportSimulationSnapshot(afterArrival),
+    );
+    relabelled.state.currentStopCalls = [
+      {
+        ...arrival.state.currentStopCalls[0]!,
+        tick: relabelled.state.tick,
+      },
+    ];
+    expect(() =>
+      restoreTransportSimulationState(relabelled, scenario()),
+    ).toThrow(/current|canonical|call/i);
+  });
+
+  it('derives exact counters for route, closed-loop, and non-loop vehicles', () => {
+    const routeSnapshot = createTransportSimulationSnapshot(
+      advanceTransportTicks(started(), 3),
+    );
+    const closedSnapshot = createTransportSimulationSnapshot(
+      repeatTicks(closedLoopStarted(), 7),
+    );
+    let nonLoop = createTransportSimulationState(scenario(), 0);
+    nonLoop = applyTransportVehicleCommand(nonLoop, {
+      kind: 'transport.vehicle.create',
+      vehicleId: 'one-way',
+      label: 'One way',
+      patternId: 'outbound',
+      movementPlan: {
+        kind: 'vehicle-movement-plan-v1',
+        edgeTravelTicks: [1, 1],
+      },
+    });
+    nonLoop = applyTransportVehicleCommand(nonLoop, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'one-way',
+    });
+    const nonLoopSnapshot = createTransportSimulationSnapshot(
+      advanceTransportTicks(nonLoop, 2),
+    );
+    for (const [label, snapshot, canonical] of [
+      ['route', routeSnapshot, scenario()],
+      ['closed loop', closedSnapshot, closedLoopStarted().scenario],
+      ['non-loop', nonLoopSnapshot, scenario()],
+    ] as const) {
+      expect(
+        () => restoreTransportSimulationState(snapshot, canonical),
+        label,
+      ).not.toThrow();
+      for (const field of ['patternRunSequence', 'stopCallSequence'] as const) {
+        for (const delta of [-1, 1]) {
+          const corrupt = structuredClone(snapshot);
+          corrupt.state.vehicleOperations[0]![field] += delta;
+          expect(() =>
+            restoreTransportSimulationState(corrupt, canonical),
+          ).toThrow(/counter|sequence/i);
+        }
+      }
+    }
+  });
+
+  it('round-trips each canonical current-call shape', () => {
+    const initial = started();
+    const ordinaryArrival = advanceTransportTicks(initial, 1);
+    const terminal = advanceTransportTicks(initial, 2);
+    const handoffAndArrival = advanceTransportTicks(terminal, 1);
+    const closedRestart = repeatTicks(closedLoopStarted(), 6);
+    for (const state of [
+      initial,
+      ordinaryArrival,
+      terminal,
+      handoffAndArrival,
+      closedRestart,
+    ])
+      expect(
+        restoreTransportSimulationState(
+          createTransportSimulationSnapshot(state),
+          state.scenario,
+        ).currentStopCalls,
+      ).toEqual(state.currentStopCalls);
+  });
+
+  it('defensively rejects transitions across different vehicle identities', () => {
+    const state = started();
+    const after = advanceTransportTicks(state, 1);
+    expect(() =>
+      deriveVehicleOperationTransition({
+        graph: state.graph,
+        before: state.fleet[0]!,
+        after: { ...after.fleet[0]!, vehicleId: 'another-bus' },
+        operation: state.vehicleOperations[0]!,
+        tick: after.tick,
+      }),
+    ).toThrow(/vehicle identity/i);
+    expect(() =>
+      fastForwardVehicleOperation({
+        graph: state.graph,
+        before: state.fleet[0]!,
+        after: { ...after.fleet[0]!, vehicleId: 'another-bus' },
+        operation: state.vehicleOperations[0]!,
+        tick: after.tick,
+        advancement: 1,
+      }),
+    ).toThrow(/vehicle identity/i);
+  });
+
+  it('checks cumulative loop arithmetic and operation additions for overflow', () => {
+    expect(() =>
+      completedLoopEventsAtElapsedTick(
+        [Number.MAX_SAFE_INTEGER, 1],
+        Number.MAX_SAFE_INTEGER,
+      ),
+    ).toThrow(/cycle tick overflow/i);
+    const state = closedLoopStarted();
+    const after = advanceTransportTicks(state, 1);
+    expect(() =>
+      fastForwardVehicleOperation({
+        graph: state.graph,
+        before: state.fleet[0]!,
+        after: after.fleet[0]!,
+        operation: {
+          ...state.vehicleOperations[0]!,
+          stopCallSequence: Number.MAX_SAFE_INTEGER,
+        },
+        tick: after.tick,
+        advancement: 2,
+      }),
+    ).toThrow(/operating sequence overflow/i);
+    const arriving = started();
+    const arrived = advanceTransportTicks(arriving, 1);
+    expect(() =>
+      deriveVehicleOperationTransition({
+        graph: arriving.graph,
+        before: arriving.fleet[0]!,
+        after: arrived.fleet[0]!,
+        operation: {
+          ...arriving.vehicleOperations[0]!,
+          stopCallSequence: Number.MAX_SAFE_INTEGER,
+        },
+        tick: arrived.tick,
+      }),
+    ).toThrow(/StopNode-call sequence overflow/);
+
+    const routeState = started();
+    expect(() =>
+      fastForwardVehicleOperation({
+        graph: routeState.graph,
+        before: routeState.fleet[0]!,
+        after: {
+          ...routeState.fleet[0]!,
+          completedRouteCycles: Number.MAX_SAFE_INTEGER,
+        },
+        operation: routeState.vehicleOperations[0]!,
+        tick: Number.MAX_SAFE_INTEGER,
+        advancement: 1,
+      }),
+    ).toThrow(/pattern-run position overflow/i);
+  });
+
+  it('validates parked authority and a completed vehicle after its call tick', () => {
+    let parked = createTransportSimulationState(scenario(), 0);
+    parked = applyTransportVehicleCommand(parked, {
+      kind: 'transport.vehicle.create',
+      vehicleId: 'parked',
+      label: 'Parked',
+      patternId: 'outbound',
+      movementPlan: {
+        kind: 'vehicle-movement-plan-v1',
+        edgeTravelTicks: [1, 1],
+      },
+    });
+    expect(() =>
+      restoreTransportSimulationState(
+        createTransportSimulationSnapshot(parked),
+        scenario(),
+      ),
+    ).not.toThrow();
+    let completed = applyTransportVehicleCommand(parked, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'parked',
+    });
+    completed = advanceTransportTicks(completed, 3);
+    expect(completed.currentStopCalls).toEqual([]);
+    expect(() =>
+      restoreTransportSimulationState(
+        createTransportSimulationSnapshot(completed),
+        scenario(),
+      ),
+    ).not.toThrow();
   });
 });

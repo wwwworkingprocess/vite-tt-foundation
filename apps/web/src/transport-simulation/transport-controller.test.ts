@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
   advanceTransportTicks,
+  applyTransportVehicleCommand,
   createScenarioCoordinate,
   createTransportSimulationSnapshot,
   createTransportSimulationState,
@@ -327,6 +328,121 @@ describe('transport application controller', () => {
       timelineId: 'timeline-restored',
       simulationTick: 2,
       passengerDemand: { status: 'active', processedThroughTick: 2 },
+    });
+    expect(currentClose).toHaveBeenCalledTimes(1);
+    expect(clientCreations).toBe(2);
+    await controller.close();
+  });
+
+  it('preflights Snapshot V7 operation corruption before replacing authority', async () => {
+    const canonical = scenario();
+    let savedState = createTransportSimulationState(canonical, 0);
+    for (const vehicleId of ['saved-a', 'saved-b'])
+      savedState = applyTransportVehicleCommand(savedState, {
+        kind: 'transport.vehicle.create',
+        vehicleId,
+        label: vehicleId,
+        patternId: 'legacy-A2-torrevieja-la-mata',
+        movementPlan: {
+          kind: 'vehicle-movement-plan-v1',
+          edgeTravelTicks: [1, 2, 3, 4],
+        },
+      });
+    savedState = applyTransportVehicleCommand(savedState, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'saved-a',
+    });
+    savedState = advanceTransportTicks(savedState, 1);
+    const validRecord = parseTransportSaveRecord({
+      ...record(),
+      saveId: 'operation-preflight',
+      sourceSimulationTick: savedState.tick,
+      snapshot: createTransportSimulationSnapshot(savedState),
+    });
+    let stored: unknown = validRecord;
+    const current = createDirectTransportSimulationClient();
+    const currentClose = vi.fn(() => current.close());
+    let clientCreations = 0;
+    const controller = createTransportApplicationController({
+      createClient: () => {
+        clientCreations += 1;
+        return clientCreations === 1
+          ? Object.freeze({ ...current, close: currentClose })
+          : createDirectTransportSimulationClient();
+      },
+      repository: {
+        get: async () => classifyPersistedSaveRecord(stored),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => canonical },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: canonical,
+      initialSimulationTick: 5,
+    });
+    const expected = controller.projection.getState();
+    const corruptions: Array<(value: typeof validRecord) => void> = [
+      (value) => {
+        (
+          value.snapshot.state.vehicleOperations as unknown as Array<{
+            vehicleId: string;
+          }>
+        ).reverse();
+      },
+      (value) => {
+        (
+          value.snapshot.state.vehicleOperations[0] as unknown as {
+            stopCallSequence: number;
+          }
+        ).stopCallSequence += 1;
+      },
+      (value) => {
+        (
+          value.snapshot.state as unknown as {
+            currentStopCalls: unknown[];
+          }
+        ).currentStopCalls = [];
+      },
+      (value) => {
+        (
+          value.snapshot.state.currentStopCalls[0] as unknown as {
+            routeId: string | null;
+          }
+        ).routeId = 'legacy-A2';
+      },
+    ];
+    for (const [index, corrupt] of corruptions.entries()) {
+      const value = structuredClone(validRecord);
+      corrupt(value);
+      stored = value;
+      await expect(
+        controller.restore({
+          saveId: 'operation-preflight',
+          timelineId: parseTimelineId(`timeline-corrupt-${index}`),
+        }),
+      ).rejects.toThrow();
+      expect(controller.projection.getState()).toEqual({
+        ...expected,
+        message: expect.any(String),
+      });
+      expect(currentClose).not.toHaveBeenCalled();
+      expect(clientCreations).toBe(1);
+    }
+
+    stored = validRecord;
+    await controller.restore({
+      saveId: 'operation-preflight',
+      timelineId: parseTimelineId('timeline-valid-operation'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-valid-operation',
+      simulationTick: 1,
+      fleet: savedState.fleet,
+      vehicleOperations: savedState.vehicleOperations,
+      currentStopCalls: savedState.currentStopCalls,
     });
     expect(currentClose).toHaveBeenCalledTimes(1);
     expect(clientCreations).toBe(2);

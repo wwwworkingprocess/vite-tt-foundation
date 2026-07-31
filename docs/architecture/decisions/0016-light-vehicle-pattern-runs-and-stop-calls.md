@@ -27,6 +27,15 @@ authoritative tick order remains passenger-demand advancement, vehicle
 movement, canonical call production, then publication. Phase 4E4 may insert
 boarding after call production and before publication.
 
+Closed-loop fast-forward counts calls from checked cumulative edge-boundary
+positions, excluding every event at or before the starting offset. Route-cycle
+and closed-loop skipping preserve the existing run-start tick unless a new run
+actually begins, and calculate the final run's start tick exactly when it does.
+Snapshot V7 stores vehicle operations in fleet order; each position must own
+the same VehicleId. Restore derives the only valid run and call counters from
+canonical fleet movement and reconstructs the exact possible current-tick call
+suffix rather than treating serialized calls as evidence of their own truth.
+
 Transport Snapshot V7 and Transport Save V5 are the sole current pre-release
 contracts. They retain dynamic movement, passenger state, minimal pattern-run
 state, call counters, and current-tick calls, but no scenario routes, itinerary

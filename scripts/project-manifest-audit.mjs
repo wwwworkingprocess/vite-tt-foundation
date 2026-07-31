@@ -83,6 +83,8 @@ const requiredSimulationCriticalFiles = [
   'packages/simulation/src/transport-simulation.ts',
   'packages/simulation/src/passenger-demand.ts',
   'packages/simulation/src/passenger-direct-itinerary.ts',
+  'packages/simulation/src/passenger-waiting-cohort.ts',
+  'packages/simulation/src/vehicle-operation.ts',
 ];
 for (const path of requiredSimulationCriticalFiles)
   if (!manifest.simulationCriticalCoverage.files.includes(path))

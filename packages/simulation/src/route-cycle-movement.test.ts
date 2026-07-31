@@ -284,8 +284,8 @@ describe('repeating route-cycle movement', () => {
     const moving = advanceTransportTicks(started(), 9);
     const snapshot = createTransportSimulationSnapshot(moving);
     expect(snapshot).toMatchObject({
-      schemaVersion: 6,
-      simulationVersion: 'transport-6',
+      schemaVersion: 7,
+      simulationVersion: 'transport-7',
       state: {
         fleet: [
           {

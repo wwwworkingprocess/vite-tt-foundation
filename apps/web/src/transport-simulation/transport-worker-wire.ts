@@ -7,6 +7,8 @@ import {
   parseSimulationTick,
   parseTransportSimulationSnapshot,
   parseVehicleFleetSnapshot,
+  parseVehicleOperationAuthority,
+  parseVehicleStopNodeCalls,
 } from '@torrevieja-tycoon/simulation';
 import {
   foundationCommandEnvelopeSchema,
@@ -197,6 +199,8 @@ const publication = z.discriminatedUnion('channel', [
     payload: foundationStateUpdateSchema.extend({
       fleet: z.array(z.unknown()).readonly(),
       passengerDemand: z.unknown(),
+      vehicleOperations: z.unknown(),
+      currentStopCalls: z.unknown(),
     }),
   }),
   z.strictObject({
@@ -206,6 +210,8 @@ const publication = z.discriminatedUnion('channel', [
     payload: foundationRenderSnapshotSchema.extend({
       fleet: z.array(z.unknown()).readonly(),
       passengerDemand: z.unknown(),
+      vehicleOperations: z.unknown(),
+      currentStopCalls: z.unknown(),
     }),
   }),
 ]);
@@ -231,6 +237,8 @@ export function parseTransportSynchronizationResult(
       scenario: coordinate,
       fleet: z.array(z.unknown()).readonly(),
       passengerDemand: z.unknown(),
+      vehicleOperations: z.unknown(),
+      currentStopCalls: z.unknown(),
     })
     .parse(value);
   return deepFreeze({
@@ -238,6 +246,8 @@ export function parseTransportSynchronizationResult(
     foundation: parseFoundationSynchronizationResponse(parsed.foundation),
     fleet: parseVehicleFleetSnapshot(parsed.fleet),
     passengerDemand: parsePassengerDemandProjection(parsed.passengerDemand),
+    vehicleOperations: parseVehicleOperationAuthority(parsed.vehicleOperations),
+    currentStopCalls: parseVehicleStopNodeCalls(parsed.currentStopCalls),
   }) as TransportSynchronizationResponse;
 }
 
@@ -293,6 +303,12 @@ export function parseTransportWorkerResponse(
         fleet: parseVehicleFleetSnapshot(parsed.payload.fleet),
         passengerDemand: parsePassengerDemandProjection(
           parsed.payload.passengerDemand,
+        ),
+        vehicleOperations: parseVehicleOperationAuthority(
+          parsed.payload.vehicleOperations,
+        ),
+        currentStopCalls: parseVehicleStopNodeCalls(
+          parsed.payload.currentStopCalls,
         ),
       },
     }) as TransportWorkerResponse;

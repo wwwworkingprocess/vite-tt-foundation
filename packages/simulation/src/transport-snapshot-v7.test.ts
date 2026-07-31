@@ -79,7 +79,7 @@ const demandPlan = () => {
   });
 };
 
-describe('Transport Snapshot V6', () => {
+describe('Transport Snapshot V7', () => {
   it('round-trips active waiting authority without embedding static plans', () => {
     const canonical = scenario();
     const plan = demandPlan();
@@ -89,8 +89,8 @@ describe('Transport Snapshot V6', () => {
     );
     const snapshot = createTransportSimulationSnapshot(state);
     expect(snapshot).toMatchObject({
-      schemaVersion: 6,
-      simulationVersion: 'transport-6',
+      schemaVersion: 7,
+      simulationVersion: 'transport-7',
       state: {
         passengerDemand: {
           status: 'active',

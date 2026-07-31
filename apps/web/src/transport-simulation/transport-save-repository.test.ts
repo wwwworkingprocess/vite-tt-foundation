@@ -42,7 +42,7 @@ const record = () => {
   const value = scenario();
   return parseTransportSaveRecord({
     kind: 'transport-save-record',
-    schemaVersion: 4,
+    schemaVersion: 5,
     saveId: 'slot',
     gameId: 'game',
     sourceTimelineId: 'timeline',
@@ -116,8 +116,8 @@ it('classifies raw IndexedDB legacy, corruption, and future data on get and list
   const table = database.table('foundationSaves');
   await table.bulkPut([
     legacy,
-    { saveId: 'corrupt', kind: 'transport-save-record', schemaVersion: 4 },
-    { saveId: 'future', kind: 'transport-save-record', schemaVersion: 5 },
+    { saveId: 'corrupt', kind: 'transport-save-record', schemaVersion: 5 },
+    { saveId: 'future', kind: 'transport-save-record', schemaVersion: 6 },
     { saveId: 'unrelated', kind: 'another-product', schemaVersion: 99 },
   ]);
   database.close();

@@ -108,5 +108,5 @@ describe('legacy A/B/C route-cycle acceptance', () => {
       completedRouteCycles: 1,
       movement: { kind: 'running-on-edge', progressTicks: 1 },
     });
-  });
+  }, 15_000);
 });

@@ -517,6 +517,7 @@ for (const file of [...simulation, ...protocol, ...web]) {
       'packages/simulation/src/passenger-waiting-cohort.ts',
     ) ||
     normalized.endsWith('packages/simulation/src/vehicle-movement.ts') ||
+    normalized.endsWith('packages/simulation/src/vehicle-operation.ts') ||
     normalized.endsWith('packages/simulation/src/index.ts');
   const domain = transportExtension ? [] : transportDomainTerms(text, file);
   if (domain.length)

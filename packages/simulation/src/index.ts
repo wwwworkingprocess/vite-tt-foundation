@@ -10,3 +10,4 @@ export * from './passenger-waiting-cohort.js';
 export * from './time.js';
 export * from './transport-simulation.js';
 export * from './vehicle-movement.js';
+export * from './vehicle-operation.js';

@@ -35,6 +35,16 @@ import {
   type PassengerDirectItineraryPlanV1,
   type PassengerDirectItineraryRuntimeIndex,
 } from './passenger-direct-itinerary.js';
+import {
+  createVehicleOperationAuthority,
+  deriveVehicleOperationTransition,
+  fastForwardVehicleOperation,
+  parseVehicleOperationAuthority,
+  parseVehicleStopNodeCalls,
+  validateVehicleOperationAuthority,
+  type VehiclePatternRunState,
+  type VehicleStopNodeCall,
+} from './vehicle-operation.js';
 
 export type ScenarioCompatibilityErrorCode =
   | 'unsupported-transport-snapshot'
@@ -43,7 +53,7 @@ export type ScenarioCompatibilityErrorCode =
   | 'scenario-version-mismatch'
   | 'scenario-content-hash-mismatch';
 
-export const transportSimulationSnapshotSchemaVersion = 6 as const;
+export const transportSimulationSnapshotSchemaVersion = 7 as const;
 
 export class ScenarioCompatibilityError extends Error {
   constructor(
@@ -72,21 +82,25 @@ export interface TransportSimulationState {
   readonly passengerDirectItineraryPlan: PassengerDirectItineraryPlanV1 | null;
   readonly passengerDirectItineraryIndex: PassengerDirectItineraryRuntimeIndex | null;
   readonly passengerDemand: PassengerDemandState;
+  readonly vehicleOperations: readonly VehiclePatternRunState[];
+  readonly currentStopCalls: readonly VehicleStopNodeCall[];
 }
 
-export interface TransportSimulationSnapshotV6 {
+export interface TransportSimulationSnapshotV7 {
   readonly kind: 'transport-simulation-snapshot';
-  readonly schemaVersion: 6;
-  readonly simulationVersion: 'transport-6';
+  readonly schemaVersion: 7;
+  readonly simulationVersion: 'transport-7';
   readonly scenario: ScenarioCoordinate;
   readonly state: Readonly<{
     readonly tick: SimulationTick;
     readonly fleet: readonly VehicleState[];
     readonly passengerDemand: PassengerDemandState;
+    readonly vehicleOperations: readonly VehiclePatternRunState[];
+    readonly currentStopCalls: readonly VehicleStopNodeCall[];
   }>;
 }
 
-export type TransportSimulationSnapshot = TransportSimulationSnapshotV6;
+export type TransportSimulationSnapshot = TransportSimulationSnapshotV7;
 
 const hash = z.string().regex(/^[0-9a-f]{64}$/);
 const coordinateSchema = z.strictObject({
@@ -97,15 +111,17 @@ const coordinateSchema = z.strictObject({
     .regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/),
   contentHash: hash,
 });
-const snapshotV6Schema = z.strictObject({
+const snapshotV7Schema = z.strictObject({
   kind: z.literal('transport-simulation-snapshot'),
   schemaVersion: z.literal(transportSimulationSnapshotSchemaVersion),
-  simulationVersion: z.literal('transport-6'),
+  simulationVersion: z.literal('transport-7'),
   scenario: coordinateSchema,
   state: z.strictObject({
     tick: z.number().int().nonnegative().safe(),
     fleet: z.array(z.unknown()),
     passengerDemand: z.unknown(),
+    vehicleOperations: z.unknown(),
+    currentStopCalls: z.unknown(),
   }),
 });
 
@@ -194,6 +210,8 @@ export function createTransportSimulationState(
       parsedPlan === undefined
         ? createDisabledPassengerDemandState()
         : createInitialPassengerDemandState(parsedPlan, tick),
+    vehicleOperations: [],
+    currentStopCalls: [],
   });
 }
 
@@ -201,42 +219,116 @@ export function advanceTransportTicks(
   state: TransportSimulationState,
   count: TickAdvancement | number,
 ): TransportSimulationState {
-  const tickCount = parseTickAdvancement(count);
-  const tick = parseSimulationTick(state.tick + tickCount);
-  return freeze({
-    tick,
-    scenario: state.scenario,
-    graph: state.graph,
-    fleet: advanceVehicleFleet(state.graph, state.fleet, tickCount),
-    passengerDemandPlan: state.passengerDemandPlan,
-    passengerDirectItineraryPlan: state.passengerDirectItineraryPlan,
-    passengerDirectItineraryIndex: state.passengerDirectItineraryIndex,
-    passengerDemand:
-      state.passengerDemand.status === 'disabled'
-        ? state.passengerDemand
-        : advancePassengerDemandToTick(
-            state.passengerDemandPlan!,
-            state.passengerDirectItineraryIndex!,
-            state.passengerDemand,
-            tick,
-          ),
-  });
+  const tickCount = parseTickAdvancement(count) as number;
+  let current = state;
+  if (
+    tickCount > 100 &&
+    state.passengerDemand.status === 'disabled' &&
+    state.fleet.every(
+      (vehicle) =>
+        vehicle.movement.kind !== 'parked-at-stop' &&
+        vehicle.movement.kind !== 'completed-at-stop' &&
+        (vehicle.routeLegs !== undefined ||
+          state.graph.pattern(vehicle.patternId)?.closesLoop === true),
+    )
+  ) {
+    const skipped = tickCount - 1;
+    const tick = parseSimulationTick(state.tick + skipped);
+    const fleet = advanceVehicleFleet(
+      state.graph,
+      state.fleet,
+      parseTickAdvancement(skipped),
+    );
+    current = freeze({
+      ...state,
+      tick,
+      fleet,
+      vehicleOperations: fleet.map((vehicle, index) =>
+        fastForwardVehicleOperation({
+          graph: state.graph,
+          before: state.fleet[index]!,
+          after: vehicle,
+          operation: state.vehicleOperations[index]!,
+          tick,
+          advancement: skipped,
+        }),
+      ),
+      currentStopCalls: [],
+    });
+  }
+  const remainingTicks = current === state ? tickCount : 1;
+  for (let index = 0; index < remainingTicks; index += 1) {
+    const tick = parseSimulationTick(current.tick + 1);
+    const fleet = advanceVehicleFleet(
+      current.graph,
+      current.fleet,
+      parseTickAdvancement(1),
+    );
+    const operations: VehiclePatternRunState[] = [];
+    const calls: VehicleStopNodeCall[] = [];
+    for (let vehicleIndex = 0; vehicleIndex < fleet.length; vehicleIndex += 1) {
+      const transition = deriveVehicleOperationTransition({
+        graph: current.graph,
+        before: current.fleet[vehicleIndex]!,
+        after: fleet[vehicleIndex]!,
+        operation: current.vehicleOperations[vehicleIndex]!,
+        tick,
+      });
+      operations.push(transition.operation);
+      calls.push(...transition.calls);
+    }
+    calls.sort(
+      (left, right) =>
+        left.vehicleId.localeCompare(right.vehicleId) ||
+        left.stopCallSequence - right.stopCallSequence,
+    );
+    current = freeze({
+      ...current,
+      tick,
+      fleet,
+      vehicleOperations: operations,
+      currentStopCalls: calls,
+      passengerDemand:
+        current.passengerDemand.status === 'disabled'
+          ? current.passengerDemand
+          : advancePassengerDemandToTick(
+              current.passengerDemandPlan!,
+              current.passengerDirectItineraryIndex!,
+              current.passengerDemand,
+              tick,
+            ),
+    });
+  }
+  return current;
 }
 
 export function applyTransportVehicleCommand(
   state: TransportSimulationState,
   command: unknown,
 ): TransportSimulationState {
+  const fleet = applyVehicleCommand(state.graph, state.fleet, command);
+  if (fleet.length === state.fleet.length) return freeze({ ...state, fleet });
+  const created = createVehicleOperationAuthority(
+    state.graph,
+    fleet.at(-1)!,
+    state.tick,
+  );
   return freeze({
     ...state,
-    fleet: applyVehicleCommand(state.graph, state.fleet, command),
+    fleet,
+    vehicleOperations: [...state.vehicleOperations, created.operation],
+    currentStopCalls: [...state.currentStopCalls, created.call].sort(
+      (left, right) =>
+        left.vehicleId.localeCompare(right.vehicleId) ||
+        left.stopCallSequence - right.stopCallSequence,
+    ),
   });
 }
 
 export function parseTransportSimulationSnapshot(
   value: unknown,
 ): TransportSimulationSnapshot {
-  const result = snapshotV6Schema.safeParse(value);
+  const result = snapshotV7Schema.safeParse(value);
   if (!result.success)
     throw new ScenarioCompatibilityError(
       'unsupported-transport-snapshot',
@@ -246,6 +338,13 @@ export function parseTransportSimulationSnapshot(
     result.data.state.passengerDemand,
   );
   const tick = parseSimulationTick(result.data.state.tick);
+  const fleet = parseVehicleFleetSnapshot(result.data.state.fleet);
+  const vehicleOperations = parseVehicleOperationAuthority(
+    result.data.state.vehicleOperations,
+  );
+  const currentStopCalls = parseVehicleStopNodeCalls(
+    result.data.state.currentStopCalls,
+  );
   if (
     passengerDemand.status === 'active' &&
     passengerDemand.processedThroughTick !== tick
@@ -259,8 +358,10 @@ export function parseTransportSimulationSnapshot(
     scenario: result.data.scenario as ScenarioCoordinate,
     state: {
       tick,
-      fleet: parseVehicleFleetSnapshot(result.data.state.fleet),
+      fleet,
       passengerDemand,
+      vehicleOperations,
+      currentStopCalls,
     },
   });
 }
@@ -270,13 +371,15 @@ export function createTransportSimulationSnapshot(
 ): TransportSimulationSnapshot {
   return parseTransportSimulationSnapshot({
     kind: 'transport-simulation-snapshot',
-    schemaVersion: 6,
-    simulationVersion: 'transport-6',
+    schemaVersion: 7,
+    simulationVersion: 'transport-7',
     scenario: createScenarioCoordinate(state.scenario),
     state: {
       tick: state.tick,
       fleet: state.fleet,
       passengerDemand: state.passengerDemand,
+      vehicleOperations: state.vehicleOperations,
+      currentStopCalls: state.currentStopCalls,
     },
   });
 }
@@ -338,6 +441,18 @@ export function restoreTransportSimulationState(
       snapshot.state.passengerDemand,
     );
   }
+  const fleet = restoreVehicleFleet(
+    graph,
+    snapshot.state.fleet,
+    snapshot.state.tick,
+  );
+  const operating = validateVehicleOperationAuthority({
+    graph,
+    fleet,
+    operations: snapshot.state.vehicleOperations,
+    calls: snapshot.state.currentStopCalls,
+    tick: snapshot.state.tick,
+  });
   return freeze({
     tick: snapshot.state.tick,
     scenario,
@@ -349,10 +464,8 @@ export function restoreTransportSimulationState(
     passengerDirectItineraryIndex:
       passengerDemand.status === 'active' ? itineraryIndex! : null,
     passengerDemand,
-    fleet: restoreVehicleFleet(
-      graph,
-      snapshot.state.fleet,
-      snapshot.state.tick,
-    ),
+    fleet,
+    vehicleOperations: operating.operations,
+    currentStopCalls: operating.calls,
   });
 }

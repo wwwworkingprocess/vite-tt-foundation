@@ -230,7 +230,7 @@ describe.each(factories)(
         envelope(3, { type: 'foundation.advance-ticks', count: 5 }),
       );
       const exported = await client.exportSnapshot();
-      expect(exported.snapshot.schemaVersion).toBe(6);
+      expect(exported.snapshot.schemaVersion).toBe(7);
       expect(exported.snapshot.state.passengerDemand).toEqual({
         status: 'disabled',
       });
@@ -240,7 +240,24 @@ describe.each(factories)(
         progressTicks: 2,
         travelTicks: 4,
       });
+      expect(exported.snapshot.state.vehicleOperations).toEqual([
+        expect.objectContaining({
+          vehicleId: 'vehicle-demo-1',
+          patternRunSequence: 1,
+          patternRunStartedAtTick: 0,
+          stopCallSequence: 2,
+        }),
+      ]);
+      expect(exported.snapshot.state.currentStopCalls).toEqual([]);
       expect(updates).toHaveLength(3);
+      expect(updates[0]).toMatchObject({
+        vehicleOperations: [{ stopCallSequence: 1 }],
+        currentStopCalls: [{ occurrenceIndex: 0, stopCallSequence: 1 }],
+      });
+      expect(updates[2]).toMatchObject({
+        vehicleOperations: [{ stopCallSequence: 2 }],
+        currentStopCalls: [],
+      });
       expect(Object.isFrozen(exported.snapshot.state.fleet)).toBe(true);
       expect(Object.isFrozen(updates[2])).toBe(true);
       await client.close();

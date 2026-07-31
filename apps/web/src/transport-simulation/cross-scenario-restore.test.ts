@@ -42,7 +42,7 @@ const load = (directory: string): CanonicalScenario => {
 const save = (scenario: CanonicalScenario, saveId: string, tick: number) =>
   parseTransportSaveRecord({
     kind: 'transport-save-record',
-    schemaVersion: 4,
+    schemaVersion: 5,
     saveId,
     gameId: 'game',
     sourceTimelineId: `source-${saveId}`,

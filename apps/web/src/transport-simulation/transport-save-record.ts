@@ -18,7 +18,7 @@ import {
 } from '../persistence/save-record.js';
 
 const position = z.number().int().nonnegative().safe();
-export const transportSaveRecordSchemaVersion = 4 as const;
+export const transportSaveRecordSchemaVersion = 5 as const;
 const coordinateSchema = z.strictObject({
   scenarioSchemaVersion: z.literal('1.0.0'),
   scenarioId: z.string().trim().min(1),
@@ -45,7 +45,7 @@ const recordSchema = z.strictObject({
 
 export interface TransportSaveRecord {
   readonly kind: 'transport-save-record';
-  readonly schemaVersion: 4;
+  readonly schemaVersion: 5;
   readonly saveId: FoundationSaveId;
   readonly label?: string | undefined;
   readonly gameId: GameId;
@@ -70,7 +70,7 @@ export interface TransportSaveSummary {
   readonly sourceSimulationTick: number;
   readonly createdAtUtcMs: number;
   readonly updatedAtUtcMs: number;
-  readonly snapshotVersion: 6;
+  readonly snapshotVersion: 7;
   readonly vehicleCount: number;
   readonly compatibility: 'current';
 }
@@ -117,7 +117,7 @@ export function summarizeCompatibleSave(
     sourceSimulationTick: record.sourceSimulationTick,
     createdAtUtcMs: record.createdAtUtcMs,
     updatedAtUtcMs: record.updatedAtUtcMs,
-    snapshotVersion: 6,
+    snapshotVersion: 7,
     vehicleCount: record.snapshot.state.fleet.length,
     compatibility: 'current',
   });

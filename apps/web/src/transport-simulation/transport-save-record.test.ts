@@ -39,7 +39,7 @@ const current = () => {
   const canonical = scenario();
   return {
     kind: 'transport-save-record',
-    schemaVersion: 4,
+    schemaVersion: 5,
     saveId: 'foundation-slot',
     label: 'Mini save',
     gameId: 'game-fixture',
@@ -66,14 +66,14 @@ describe('current-only transport save compatibility', () => {
     },
   );
 
-  it('parses, freezes, and summarizes Save V4 with Snapshot V6', () => {
+  it('parses, freezes, and summarizes Save V5 with Snapshot V7', () => {
     const record = parseTransportSaveRecord(current());
     const summary = summarizeCompatibleSave(record);
     expect(summary).toMatchObject({
       compatibility: 'current',
       scenarioSchemaVersion: '1.0.0',
       scenarioId: 'torrevieja-mini-v1',
-      snapshotVersion: 6,
+      snapshotVersion: 7,
       vehicleCount: 0,
     });
     expect(Object.isFrozen(record.snapshot.state)).toBe(true);
@@ -99,11 +99,20 @@ describe('current-only transport save compatibility', () => {
     ).toMatchObject({ classification: 'obsolete-pre-release' });
   });
 
+  it('classifies the immediately preceding Save V4 as obsolete pre-release data', () => {
+    expect(
+      classifyPersistedSaveRecord({
+        ...current(),
+        schemaVersion: 4,
+      }),
+    ).toMatchObject({ classification: 'obsolete-pre-release' });
+  });
+
   it('distinguishes future and malformed current records', () => {
     expect(
       classifyPersistedSaveRecord({
         kind: 'transport-save-record',
-        schemaVersion: 5,
+        schemaVersion: 6,
       }),
     ).toMatchObject({ classification: 'unsupported-future' });
     expect(

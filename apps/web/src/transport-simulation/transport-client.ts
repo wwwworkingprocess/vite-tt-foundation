@@ -18,6 +18,8 @@ import {
   type TransportSimulationState,
   type TransportVehicleCommand,
   type VehicleState,
+  type VehiclePatternRunState,
+  type VehicleStopNodeCall,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import type {
@@ -91,12 +93,16 @@ export type TransportStateUpdate = Readonly<
   FoundationStateUpdate & {
     readonly fleet: readonly VehicleState[];
     readonly passengerDemand: PassengerDemandProjection;
+    readonly vehicleOperations: readonly VehiclePatternRunState[];
+    readonly currentStopCalls: readonly VehicleStopNodeCall[];
   }
 >;
 export type TransportRenderSnapshot = Readonly<
   FoundationRenderSnapshot & {
     readonly fleet: readonly VehicleState[];
     readonly passengerDemand: PassengerDemandProjection;
+    readonly vehicleOperations: readonly VehiclePatternRunState[];
+    readonly currentStopCalls: readonly VehicleStopNodeCall[];
   }
 >;
 
@@ -108,6 +114,8 @@ export type TransportSynchronizationResponse =
       scenario: ScenarioCoordinate;
       fleet: readonly VehicleState[];
       passengerDemand: PassengerDemandProjection;
+      vehicleOperations: readonly VehiclePatternRunState[];
+      currentStopCalls: readonly VehicleStopNodeCall[];
     }>;
 
 export interface TransportSimulationClient {
@@ -252,6 +260,8 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         ...latestFoundationUpdate!,
         fleet: authority!.fleet,
         passengerDemand: projectPassengerDemand(authority!.passengerDemand),
+        vehicleOperations: authority!.vehicleOperations,
+        currentStopCalls: authority!.currentStopCalls,
       }),
     );
     publish(
@@ -260,6 +270,8 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         ...latestFoundationRender!,
         fleet: authority!.fleet,
         passengerDemand: projectPassengerDemand(authority!.passengerDemand),
+        vehicleOperations: authority!.vehicleOperations,
+        currentStopCalls: authority!.currentStopCalls,
       }),
     );
   };
@@ -441,6 +453,8 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
           scenario: createScenarioCoordinate(current.scenario),
           fleet: current.fleet,
           passengerDemand: projectPassengerDemand(current.passengerDemand),
+          vehicleOperations: current.vehicleOperations,
+          currentStopCalls: current.currentStopCalls,
         });
       });
     },

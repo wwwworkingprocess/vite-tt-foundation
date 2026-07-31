@@ -7,6 +7,8 @@ import {
   type PassengerDemandProjection,
   type ScenarioCoordinate,
   type VehicleState,
+  type VehiclePatternRunState,
+  type VehicleStopNodeCall,
 } from '@torrevieja-tycoon/simulation';
 import {
   parseClientId,
@@ -55,6 +57,8 @@ export interface TransportApplicationProjection {
   readonly streamOffset?: number | undefined;
   readonly fleet?: readonly VehicleState[] | undefined;
   readonly passengerDemand?: PassengerDemandProjection | undefined;
+  readonly vehicleOperations?: readonly VehiclePatternRunState[] | undefined;
+  readonly currentStopCalls?: readonly VehicleStopNodeCall[] | undefined;
   readonly message?: string | undefined;
 }
 
@@ -141,6 +145,8 @@ export function createTransportApplicationController(input: {
           streamOffset: update.streamOffset,
           fleet: update.fleet,
           passengerDemand: update.passengerDemand,
+          vehicleOperations: update.vehicleOperations,
+          currentStopCalls: update.currentStopCalls,
         });
       }),
     );
@@ -223,6 +229,8 @@ export function createTransportApplicationController(input: {
         passengerDemand: projectPassengerDemand(
           exported.snapshot.state.passengerDemand,
         ),
+        vehicleOperations: exported.snapshot.state.vehicleOperations,
+        currentStopCalls: exported.snapshot.state.currentStopCalls,
       });
     } catch (error) {
       if (generation === token) generation += 1;
@@ -433,7 +441,7 @@ export function createTransportApplicationController(input: {
           await input.repository.put(
             parseTransportSaveRecord({
               kind: 'transport-save-record',
-              schemaVersion: 4,
+              schemaVersion: 5,
               ...metadata,
               gameId: exported.gameId,
               sourceTimelineId: exported.timelineId,
@@ -474,6 +482,8 @@ export function createTransportApplicationController(input: {
                 passengerDemand: projectPassengerDemand(
                   exported.snapshot.state.passengerDemand,
                 ),
+                vehicleOperations: exported.snapshot.state.vehicleOperations,
+                currentStopCalls: exported.snapshot.state.currentStopCalls,
                 message: undefined,
               });
           }
@@ -520,6 +530,8 @@ export function createTransportApplicationController(input: {
               passengerDemand: projectPassengerDemand(
                 exported.snapshot.state.passengerDemand,
               ),
+              vehicleOperations: exported.snapshot.state.vehicleOperations,
+              currentStopCalls: exported.snapshot.state.currentStopCalls,
               message: undefined,
             });
         }

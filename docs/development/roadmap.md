@@ -183,14 +183,15 @@ Directional StopNodes and repeated occurrences are preserved exactly, while
 non-loop wrapping, transfers, graph-wide search, and vehicle-cycle handoffs are
 forbidden.
 
-Phase 4E3B now activates destination intent into one bounded directional
+Phase 4E3B activates destination intent into one bounded directional
 waiting cohort per itinerary/destination-cell key. Unavailable direct journeys
-are counted explicitly. Snapshot V6 and Save V4 are the only supported
-pre-release persistence contracts.
+are counted explicitly.
 
-The immediate sequence is: light Phase 4D operating-pattern and deterministic
-StopNode calls, Phase 4E4 boarding and capacity, Phase 4E5 alighting and
-journey completion, then Phase 4F economics.
+Light Phase 4D is now the current milestone: existing route-cycle vehicles own
+deterministic pattern-run sequences and emit exact directional canonical
+StopNode calls. Snapshot V7 and Save V5 are the sole current pre-release
+contracts. No passenger boards yet. Next are Phase 4E4 boarding and capacity,
+Phase 4E5 alighting and journey completion, then Phase 4F economics.
 
 ## Phase 5 — React Three Fiber visualization POC
 

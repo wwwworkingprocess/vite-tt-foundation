@@ -9,6 +9,13 @@ import { parseSimulationTick, type SimulationTick } from './time.js';
 import type { ScenarioCoordinate } from './transport-simulation.js';
 import type { PassengerDirectItineraryRuntimeIndex } from './passenger-direct-itinerary.js';
 import {
+  checkedAdd,
+  checkedMultiply,
+  deepFreeze,
+  nonnegativeSafeInteger,
+  positiveSafeInteger,
+} from './authority-utils.js';
+import {
   activatePassengerDirectItineraries,
   passengerWaitingCohortSchema,
   type PassengerWaitingCohort,
@@ -17,8 +24,6 @@ import {
 export const passengerDemandPlanSchemaVersion = '1.0.0' as const;
 const distanceTieToleranceSquaredCells = 1e-9;
 
-const positiveSafeInteger = z.number().int().positive().safe();
-const nonnegativeSafeInteger = z.number().int().nonnegative().safe();
 const demandModelHashSchema = z
   .string()
   .regex(/^[0-9a-f]{64}$/)
@@ -297,24 +302,6 @@ export type PassengerDemandProjection = Readonly<
       readonly stopArrivals: readonly Readonly<StopPlaceArrivalState>[];
     }
 >;
-
-const deepFreeze = <T>(value: T): T => {
-  if (value === null || typeof value !== 'object') return value;
-  for (const child of Object.values(value)) deepFreeze(child);
-  return Object.isFrozen(value) ? value : Object.freeze(value);
-};
-
-const checkedAdd = (left: number, right: number, context: string) => {
-  const result = left + right;
-  if (!Number.isSafeInteger(result)) throw new Error(`${context} overflow.`);
-  return result;
-};
-
-const checkedMultiply = (left: number, right: number, context: string) => {
-  const result = left * right;
-  if (!Number.isSafeInteger(result)) throw new Error(`${context} overflow.`);
-  return result;
-};
 
 export function listPassengerDestinationCandidates(
   plan: PassengerDemandPlanV1,

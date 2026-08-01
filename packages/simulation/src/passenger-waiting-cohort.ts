@@ -16,6 +16,13 @@ import {
   type PassengerDemandPlanV1,
 } from './passenger-demand.js';
 import { parseSimulationTick, type SimulationTick } from './time.js';
+import {
+  checkedAdd,
+  deepFreeze,
+  lexical,
+  nonnegativeSafeInteger,
+  positiveSafeInteger,
+} from './authority-utils.js';
 
 export const passengerWaitingCohortIdSchema = z
   .string()
@@ -25,8 +32,6 @@ export type PassengerWaitingCohortId = z.infer<
   typeof passengerWaitingCohortIdSchema
 >;
 
-const positiveSafeInteger = z.number().int().positive().safe();
-const nonnegativeSafeInteger = z.number().int().nonnegative().safe();
 export const passengerWaitingCohortSchema = z.strictObject({
   passengerWaitingCohortId: passengerWaitingCohortIdSchema,
   originStopPlaceId: z.string().min(1),
@@ -62,21 +67,6 @@ export interface PassengerWaitingCohort {
   readonly firstAssignedTick: SimulationTick;
   readonly lastAssignedTick: SimulationTick;
 }
-
-const deepFreeze = <T>(value: T): T => {
-  if (value === null || typeof value !== 'object') return value;
-  for (const child of Object.values(value)) deepFreeze(child);
-  return Object.isFrozen(value) ? value : Object.freeze(value);
-};
-
-const checkedAdd = (left: number, right: number, context: string) => {
-  const result = left + right;
-  if (!Number.isSafeInteger(result)) throw new Error(`${context} overflow.`);
-  return result;
-};
-
-const lexical = (left: string, right: string) =>
-  left < right ? -1 : left > right ? 1 : 0;
 
 const cohortKey = (
   group: Pick<

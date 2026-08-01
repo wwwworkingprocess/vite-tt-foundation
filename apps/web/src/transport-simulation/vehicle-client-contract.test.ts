@@ -245,6 +245,7 @@ describe.each(factories)(
           vehicleId: 'vehicle-demo-1',
           patternRunSequence: 1,
           patternRunStartedAtTick: 0,
+          movementStartedAtTick: 0,
           stopCallSequence: 2,
         }),
       ]);

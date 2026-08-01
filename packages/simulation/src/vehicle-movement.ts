@@ -8,6 +8,7 @@ import type {
   StopNodeId,
 } from '@torrevieja-tycoon/transport-domain';
 import type { SimulationTick, TickAdvancement } from './time.js';
+import { deepFreeze as freeze } from './authority-utils.js';
 
 declare const vehicleIdBrand: unique symbol;
 export type VehicleId = string & { readonly [vehicleIdBrand]: true };
@@ -78,12 +79,6 @@ export type TransportVehicleCommand =
       kind: 'transport.vehicle.start';
       vehicleId: VehicleId;
     }>;
-
-const freeze = <T>(value: T): T => {
-  if (value === null || typeof value !== 'object') return value;
-  for (const child of Object.values(value)) freeze(child);
-  return Object.isFrozen(value) ? value : Object.freeze(value);
-};
 
 const vehicleIdSchema = z
   .string()

@@ -11,6 +11,7 @@ import {
   type PassengerDemandModelHash,
   type PassengerDemandPlanV1,
 } from './passenger-demand.js';
+import { deepFreeze, lexical } from './authority-utils.js';
 
 export const passengerDirectItineraryPlanSchemaVersion = '1.0.0' as const;
 export const passengerDirectItineraryRoutingPolicy = Object.freeze({
@@ -141,14 +142,6 @@ export interface PassengerDirectItineraryRuntimeIndex {
   ) => Readonly<PassengerDirectItineraryEntry>;
 }
 
-function deepFreeze<T>(value: T): T {
-  if (value === null || typeof value !== 'object') return value;
-  for (const child of Object.values(value)) deepFreeze(child);
-  return Object.isFrozen(value) ? value : Object.freeze(value);
-}
-
-const lexical = (left: string, right: string) =>
-  left < right ? -1 : left > right ? 1 : 0;
 const pairKey = (origin: string, destination: string) =>
   `${origin.length}:${origin}${destination}`;
 

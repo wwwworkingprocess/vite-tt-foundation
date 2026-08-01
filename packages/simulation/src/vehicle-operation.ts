@@ -7,11 +7,19 @@ import type {
 } from '@torrevieja-tycoon/transport-domain';
 import type { SimulationTick } from './time.js';
 import type { VehicleId, VehicleState } from './vehicle-movement.js';
+import {
+  checkedAdd,
+  checkedMultiply,
+  deepFreeze as freeze,
+  nonnegativeSafeInteger,
+  positiveSafeInteger,
+} from './authority-utils.js';
 
 export interface VehiclePatternRunState {
   readonly vehicleId: VehicleId;
   readonly patternRunSequence: number;
   readonly patternRunStartedAtTick: SimulationTick;
+  readonly movementStartedAtTick: SimulationTick | null;
   readonly stopCallSequence: number;
 }
 
@@ -32,12 +40,15 @@ export interface WaitingCohortCallIdentity {
   readonly originStopNodeId: StopNodeId | string;
 }
 
-const positiveSafeInteger = z.number().int().positive().safe();
-const nonnegativeSafeInteger = z.number().int().nonnegative().safe();
+const invalidOperation =
+  'Invalid vehicle operation authority: must match the fleet; future canonical counter, sequence, same order, run start, movement-start, origin, terminal, or current call.';
+const operationContext = 'Vehicle operation';
+const sequenceOverflow = 'Vehicle operating sequence overflow.';
 const operationSchema = z.strictObject({
   vehicleId: z.string().min(1),
   patternRunSequence: positiveSafeInteger,
   patternRunStartedAtTick: nonnegativeSafeInteger,
+  movementStartedAtTick: nonnegativeSafeInteger.nullable(),
   stopCallSequence: positiveSafeInteger,
 });
 const callSchema = z.strictObject({
@@ -51,31 +62,9 @@ const callSchema = z.strictObject({
   tick: nonnegativeSafeInteger,
 });
 
-const freeze = <T>(value: T): T => {
-  if (value === null || typeof value !== 'object') return value;
-  for (const child of Object.values(value)) freeze(child);
-  return Object.isFrozen(value) ? value : Object.freeze(value);
-};
-
 const checkedIncrement = (value: number, label: string): number => {
   if (value >= Number.MAX_SAFE_INTEGER) throw new Error(`${label} overflow.`);
   return value + 1;
-};
-
-const checkedAdd = (left: number, right: number, label: string): number => {
-  if (right < 0 || left > Number.MAX_SAFE_INTEGER - right)
-    throw new Error(`${label} overflow.`);
-  return left + right;
-};
-
-const checkedMultiply = (
-  left: number,
-  right: number,
-  label: string,
-): number => {
-  if (left !== 0 && right > Math.floor(Number.MAX_SAFE_INTEGER / left))
-    throw new Error(`${label} overflow.`);
-  return left * right;
 };
 
 const occurrenceForArrival = (
@@ -100,7 +89,7 @@ const makeCall = (
     vehicleId: vehicle.vehicleId,
     stopCallSequence: checkedIncrement(
       operation.stopCallSequence,
-      'StopNode-call sequence',
+      operationContext,
     ),
     patternRunSequence: operation.patternRunSequence,
     routeId: vehicle.routeId ?? null,
@@ -142,6 +131,7 @@ export function createVehicleOperationAuthority(
     vehicleId: vehicle.vehicleId,
     patternRunSequence: 1,
     patternRunStartedAtTick: tick,
+    movementStartedAtTick: null,
     stopCallSequence: 1,
   });
   return freeze({
@@ -208,7 +198,7 @@ export function deriveVehicleOperationTransition(input: {
       ...operation,
       patternRunSequence: checkedIncrement(
         operation.patternRunSequence,
-        'Pattern-run sequence',
+        operationContext,
       ),
       patternRunStartedAtTick: input.tick,
     });
@@ -265,20 +255,20 @@ const routeEventPosition = (vehicle: VehicleState): number => {
     eventsPerCycle = checkedAdd(
       eventsPerCycle,
       leg.movementPlan.edgeTravelTicks.length + 1,
-      'Route event position',
+      operationContext,
     );
   let position = checkedMultiply(
     vehicle.completedRouteCycles!,
     eventsPerCycle,
-    'Route event position',
+    operationContext,
   );
   for (let index = 0; index < vehicle.routeLegIndex!; index += 1)
     position = checkedAdd(
       position,
       legs[index]!.movementPlan.edgeTravelTicks.length + 1,
-      'Route event position',
+      operationContext,
     );
-  return checkedAdd(position, completedEdges(vehicle), 'Route event position');
+  return checkedAdd(position, completedEdges(vehicle), operationContext);
 };
 
 const elapsedWithinPatternRun = (vehicle: VehicleState): number => {
@@ -288,13 +278,13 @@ const elapsedWithinPatternRun = (vehicle: VehicleState): number => {
     elapsed = checkedAdd(
       elapsed,
       vehicle.movementPlan.edgeTravelTicks[index]!,
-      'Pattern elapsed tick',
+      operationContext,
     );
   if (vehicle.movement.kind === 'running-on-edge')
     elapsed = checkedAdd(
       elapsed,
       vehicle.movement.progressTicks,
-      'Pattern elapsed tick',
+      operationContext,
     );
   return elapsed;
 };
@@ -305,19 +295,15 @@ export function completedLoopEventsAtElapsedTick(
 ): number {
   let cycleTicks = 0;
   for (const ticks of plan)
-    cycleTicks = checkedAdd(cycleTicks, ticks, 'Loop cycle tick');
+    cycleTicks = checkedAdd(cycleTicks, ticks, operationContext);
   const completeCycles = Math.floor(elapsed / cycleTicks);
   const remainder = elapsed % cycleTicks;
-  let events = checkedMultiply(
-    completeCycles,
-    plan.length,
-    'Loop event position',
-  );
+  let events = checkedMultiply(completeCycles, plan.length, operationContext);
   let boundary = 0;
   for (const ticks of plan) {
-    boundary = checkedAdd(boundary, ticks, 'Loop edge boundary');
+    boundary = checkedAdd(boundary, ticks, operationContext);
     if (boundary <= remainder)
-      events = checkedIncrement(events, 'Loop event position');
+      events = checkedIncrement(events, operationContext);
   }
   return events;
 }
@@ -342,8 +328,8 @@ export function fastForwardVehicleOperation(input: {
     const offset = elapsedWithinPatternRun(input.before);
     let cycleTicks = 0;
     for (const ticks of plan)
-      cycleTicks = checkedAdd(cycleTicks, ticks, 'Loop cycle tick');
-    const end = checkedAdd(offset, input.advancement, 'Loop elapsed endpoint');
+      cycleTicks = checkedAdd(cycleTicks, ticks, operationContext);
+    const end = checkedAdd(offset, input.advancement, operationContext);
     const completedRuns = Math.floor(end / cycleTicks);
     const remainder = end % cycleTicks;
     const completedCalls =
@@ -355,7 +341,7 @@ export function fastForwardVehicleOperation(input: {
       input.operation.stopCallSequence >
         Number.MAX_SAFE_INTEGER - completedCalls
     )
-      throw new Error('Vehicle operating sequence overflow.');
+      throw new Error(sequenceOverflow);
     return freeze({
       vehicleId: input.operation.vehicleId,
       patternRunSequence: input.operation.patternRunSequence + completedRuns,
@@ -363,28 +349,12 @@ export function fastForwardVehicleOperation(input: {
         completedRuns === 0
           ? input.operation.patternRunStartedAtTick
           : ((input.tick - remainder) as SimulationTick),
+      movementStartedAtTick: input.operation.movementStartedAtTick,
       stopCallSequence: input.operation.stopCallSequence + completedCalls,
     });
   }
-  const legs = input.after.routeLegs;
-  const beforeRun = checkedAdd(
-    checkedMultiply(
-      input.before.completedRouteCycles!,
-      legs.length,
-      'Pattern-run position',
-    ),
-    input.before.routeLegIndex!,
-    'Pattern-run position',
-  );
-  const afterRun = checkedAdd(
-    checkedMultiply(
-      input.after.completedRouteCycles!,
-      legs.length,
-      'Pattern-run position',
-    ),
-    input.after.routeLegIndex!,
-    'Pattern-run position',
-  );
+  const beforeRun = routeRunIndex(input.before);
+  const afterRun = routeRunIndex(input.after);
   const runDelta = afterRun - beforeRun;
   const callDelta =
     routeEventPosition(input.after) - routeEventPosition(input.before);
@@ -394,7 +364,7 @@ export function fastForwardVehicleOperation(input: {
     input.operation.patternRunSequence > Number.MAX_SAFE_INTEGER - runDelta ||
     input.operation.stopCallSequence > Number.MAX_SAFE_INTEGER - callDelta
   )
-    throw new Error('Vehicle operating sequence overflow.');
+    throw new Error(sequenceOverflow);
   const elapsed = elapsedWithinPatternRun(input.after);
   return freeze({
     vehicleId: input.operation.vehicleId,
@@ -403,6 +373,7 @@ export function fastForwardVehicleOperation(input: {
       runDelta === 0
         ? input.operation.patternRunStartedAtTick
         : ((input.tick - elapsed + 1) as SimulationTick),
+    movementStartedAtTick: input.operation.movementStartedAtTick,
     stopCallSequence: input.operation.stopCallSequence + callDelta,
   });
 }
@@ -453,29 +424,140 @@ const expectedCall = (
   });
 };
 
+const movementPlanTicks = (plan: readonly number[]): number => {
+  let total = 0;
+  for (const ticks of plan) total = checkedAdd(total, ticks, operationContext);
+  return total;
+};
+
+const routeRunIndex = (vehicle: VehicleState): number =>
+  checkedAdd(
+    checkedMultiply(
+      vehicle.completedRouteCycles!,
+      vehicle.routeLegs!.length,
+      operationContext,
+    ),
+    vehicle.routeLegIndex!,
+    operationContext,
+  );
+
+const routeElapsedBeforeRun = (vehicle: VehicleState): number => {
+  const runIndex = routeRunIndex(vehicle);
+  const legs = vehicle.routeLegs!;
+  const completeCycles = Math.floor(runIndex / legs.length);
+  const remainingLegs = runIndex % legs.length;
+  let cycleTicks = 0;
+  for (const leg of legs)
+    cycleTicks = checkedAdd(
+      cycleTicks,
+      movementPlanTicks(leg.movementPlan.edgeTravelTicks),
+      operationContext,
+    );
+  let elapsed = checkedMultiply(completeCycles, cycleTicks, operationContext);
+  for (let index = 0; index < remainingLegs; index += 1)
+    elapsed = checkedAdd(
+      elapsed,
+      movementPlanTicks(legs[index]!.movementPlan.edgeTravelTicks),
+      operationContext,
+    );
+  return elapsed;
+};
+
+const routeRunStartedAtTick = (
+  vehicle: VehicleState,
+  movementStartedAtTick: SimulationTick,
+): SimulationTick =>
+  checkedAdd(
+    movementStartedAtTick,
+    checkedIncrement(routeElapsedBeforeRun(vehicle), operationContext),
+    operationContext,
+  ) as SimulationTick;
+
+const validateMovementTimeline = (
+  graph: DirectedScenarioGraph,
+  vehicle: VehicleState,
+  operation: VehiclePatternRunState,
+  tick: SimulationTick,
+): void => {
+  if (vehicle.movement.kind === 'parked-at-stop') {
+    if (operation.movementStartedAtTick !== null)
+      throw new Error(invalidOperation);
+    return;
+  }
+  if (
+    operation.movementStartedAtTick === null ||
+    operation.movementStartedAtTick > tick
+  )
+    throw new Error(invalidOperation);
+  let expectedElapsed = elapsedWithinPatternRun(vehicle);
+  if (vehicle.routeLegs)
+    expectedElapsed = checkedAdd(
+      expectedElapsed,
+      routeElapsedBeforeRun(vehicle),
+      operationContext,
+    );
+  else if (graph.pattern(vehicle.patternId)!.closesLoop) {
+    expectedElapsed = checkedAdd(
+      expectedElapsed,
+      checkedMultiply(
+        operation.patternRunSequence - 1,
+        movementPlanTicks(vehicle.movementPlan.edgeTravelTicks),
+        operationContext,
+      ),
+      operationContext,
+    );
+  }
+  const actualElapsed = tick - operation.movementStartedAtTick;
+  if (
+    vehicle.movement.kind === 'completed-at-stop'
+      ? actualElapsed < expectedElapsed
+      : actualElapsed !== expectedElapsed
+  )
+    throw new Error(invalidOperation);
+};
+
 export function deriveExpectedCurrentVehicleCalls(input: {
   readonly graph: DirectedScenarioGraph;
   readonly vehicle: VehicleState;
   readonly operation: VehiclePatternRunState;
   readonly tick: SimulationTick;
-  readonly serializedCalls?: readonly VehicleStopNodeCall[];
 }): readonly VehicleStopNodeCall[] {
-  const { movement } = input.vehicle;
   const calls: VehicleStopNodeCall[] = [];
-  const originIsCurrent =
-    input.operation.patternRunStartedAtTick === input.tick &&
-    (movement.kind === 'parked-at-stop' ||
-      movement.kind === 'running-on-edge' ||
-      (movement.kind === 'running-at-stop' && movement.nextEdgeSequence === 0));
-  const arrivedAtStop =
-    movement.kind === 'running-at-stop' && movement.nextEdgeSequence > 0;
-  if (
-    originIsCurrent ||
-    (arrivedAtStop && input.operation.patternRunStartedAtTick === input.tick)
-  ) {
-    const originSequence = arrivedAtStop
-      ? input.operation.stopCallSequence - 1
-      : input.operation.stopCallSequence;
+  const initialOriginIsCurrent =
+    input.operation.stopCallSequence === 1 &&
+    input.operation.patternRunStartedAtTick === input.tick;
+  const laterRunOriginIsCurrent =
+    input.operation.patternRunSequence > 1 &&
+    input.operation.patternRunStartedAtTick === input.tick;
+  const completed = completedEdges(input.vehicle);
+  let arrivalIsCurrent = false;
+  if (completed > 0 && input.operation.movementStartedAtTick !== null) {
+    let elapsed = 0;
+    for (let index = 0; index < completed; index += 1)
+      elapsed = checkedAdd(
+        elapsed,
+        input.vehicle.movementPlan.edgeTravelTicks[index]!,
+        operationContext,
+      );
+    const firstRouteRun =
+      input.vehicle.routeLegs !== undefined &&
+      routeRunIndex(input.vehicle) === 0;
+    const baseTick = firstRouteRun
+      ? input.operation.movementStartedAtTick
+      : input.vehicle.routeLegs
+        ? input.operation.patternRunStartedAtTick - 1
+        : input.operation.patternRunSequence === 1
+          ? input.operation.movementStartedAtTick
+          : input.operation.patternRunStartedAtTick;
+    arrivalIsCurrent =
+      checkedAdd(baseTick, elapsed, operationContext) === input.tick;
+  }
+  const originIsCurrent = initialOriginIsCurrent || laterRunOriginIsCurrent;
+  if (originIsCurrent) {
+    const originSequence =
+      arrivalIsCurrent && completed > 0
+        ? input.operation.stopCallSequence - 1
+        : input.operation.stopCallSequence;
     calls.push(
       expectedCall(
         input.graph,
@@ -487,27 +569,16 @@ export function deriveExpectedCurrentVehicleCalls(input: {
       ),
     );
   }
-  if (arrivedAtStop)
+  if (arrivalIsCurrent && completed > 0)
     calls.push(
       expectedCall(
         input.graph,
         input.vehicle,
         input.operation,
-        movement.nextEdgeSequence,
-        input.operation.stopCallSequence,
-        input.tick,
-      ),
-    );
-  if (
-    movement.kind === 'completed-at-stop' &&
-    (input.serializedCalls?.length ?? 0) > 0
-  )
-    calls.push(
-      expectedCall(
-        input.graph,
-        input.vehicle,
-        input.operation,
-        input.vehicle.movementPlan.edgeTravelTicks.length,
+        input.graph.pattern(input.vehicle.patternId)!.closesLoop &&
+          completed === input.vehicle.movementPlan.edgeTravelTicks.length
+          ? 0
+          : completed,
         input.operation.stopCallSequence,
         input.tick,
       ),
@@ -528,59 +599,91 @@ export function validateVehicleOperationAuthority(input: {
   const operations = parseVehicleOperationAuthority(input.operations);
   const calls = parseVehicleStopNodeCalls(input.calls);
   if (operations.length !== input.fleet.length)
-    throw new Error('Vehicle operating state must match the fleet exactly.');
+    throw new Error(invalidOperation);
   for (let index = 0; index < operations.length; index += 1) {
     const operation = operations[index]!;
     const vehicle = input.fleet[index]!;
     if (operation.vehicleId !== vehicle.vehicleId)
-      throw new Error(
-        'Vehicle operating state must use the same order as the fleet.',
-      );
+      throw new Error(invalidOperation);
     if (operation.patternRunStartedAtTick > input.tick)
-      throw new Error('Pattern-run start tick cannot be in the future.');
+      throw new Error(invalidOperation);
     let expectedRunSequence = 1;
     let expectedStopCallSequence: number;
     if (vehicle.routeLegs) {
-      expectedRunSequence = checkedAdd(
-        checkedMultiply(
-          vehicle.completedRouteCycles!,
-          vehicle.routeLegs.length,
-          'Pattern-run sequence',
-        ),
-        vehicle.routeLegIndex! + 1,
-        'Pattern-run sequence',
-      );
+      const runIndex = routeRunIndex(vehicle);
+      expectedRunSequence = checkedIncrement(runIndex, operationContext);
+      if (runIndex === 0) {
+        if (
+          operation.movementStartedAtTick !== null &&
+          operation.patternRunStartedAtTick > operation.movementStartedAtTick
+        )
+          throw new Error(invalidOperation);
+      } else if (
+        operation.patternRunStartedAtTick !==
+        routeRunStartedAtTick(vehicle, operation.movementStartedAtTick!)
+      )
+        throw new Error(invalidOperation);
       expectedStopCallSequence = checkedAdd(
         1,
         routeEventPosition(vehicle),
-        'StopNode-call sequence',
+        operationContext,
       );
     } else if (input.graph.pattern(vehicle.patternId)!.closesLoop) {
-      expectedRunSequence = operation.patternRunSequence;
+      if (operation.movementStartedAtTick === null) expectedRunSequence = 1;
+      else {
+        const cycleTicks = movementPlanTicks(
+          vehicle.movementPlan.edgeTravelTicks,
+        );
+        const completedRuns = Math.floor(
+          (input.tick - operation.movementStartedAtTick) / cycleTicks,
+        );
+        expectedRunSequence = checkedIncrement(completedRuns, operationContext);
+        if (completedRuns === 0) {
+          if (
+            operation.patternRunStartedAtTick > operation.movementStartedAtTick
+          )
+            throw new Error(invalidOperation);
+        } else if (
+          operation.patternRunStartedAtTick !==
+          checkedAdd(
+            operation.movementStartedAtTick,
+            checkedMultiply(completedRuns, cycleTicks, operationContext),
+            operationContext,
+          )
+        )
+          throw new Error(invalidOperation);
+      }
       expectedStopCallSequence = checkedAdd(
         1,
         checkedAdd(
           checkedMultiply(
-            operation.patternRunSequence - 1,
+            expectedRunSequence - 1,
             vehicle.movementPlan.edgeTravelTicks.length,
-            'StopNode-call sequence',
+            operationContext,
           ),
           completedEdges(vehicle),
-          'StopNode-call sequence',
+          operationContext,
         ),
-        'StopNode-call sequence',
+        operationContext,
       );
     } else {
+      if (
+        operation.patternRunSequence !== 1 ||
+        (operation.movementStartedAtTick !== null &&
+          operation.patternRunStartedAtTick > operation.movementStartedAtTick)
+      )
+        throw new Error(invalidOperation);
       expectedStopCallSequence = checkedAdd(
         1,
         completedEdges(vehicle),
-        'StopNode-call sequence',
+        operationContext,
       );
     }
     if (operation.patternRunSequence !== expectedRunSequence)
-      throw new Error('Pattern-run sequence counter is not canonical.');
+      throw new Error(invalidOperation);
+    validateMovementTimeline(input.graph, vehicle, operation, input.tick);
     if (operation.stopCallSequence !== expectedStopCallSequence)
-      throw new Error('StopNode-call sequence counter is not canonical.');
+      throw new Error(invalidOperation);
   }
   const expectedCalls = input.fleet
     .flatMap((vehicle, index) =>
@@ -589,9 +692,6 @@ export function validateVehicleOperationAuthority(input: {
         vehicle,
         operation: operations[index]!,
         tick: input.tick,
-        serializedCalls: calls.filter(
-          ({ vehicleId }) => vehicleId === vehicle.vehicleId,
-        ),
       }),
     )
     .sort(
@@ -600,6 +700,6 @@ export function validateVehicleOperationAuthority(input: {
         left.stopCallSequence - right.stopCallSequence,
     );
   if (JSON.stringify(calls) !== JSON.stringify(expectedCalls))
-    throw new Error('Current StopNode calls are not canonical for this tick.');
+    throw new Error(invalidOperation);
   return freeze({ operations, calls });
 }

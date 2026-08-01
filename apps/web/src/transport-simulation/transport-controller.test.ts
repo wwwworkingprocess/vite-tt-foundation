@@ -449,6 +449,95 @@ describe('transport application controller', () => {
     await controller.close();
   });
 
+  it('preflights missing and fabricated terminal calls before teardown', async () => {
+    const canonical = scenario();
+    let terminal = createTransportSimulationState(canonical, 0);
+    terminal = applyTransportVehicleCommand(terminal, {
+      kind: 'transport.vehicle.create',
+      vehicleId: 'terminal-preflight',
+      label: 'Terminal preflight',
+      patternId: 'legacy-A2-torrevieja-la-mata',
+      movementPlan: {
+        kind: 'vehicle-movement-plan-v1',
+        edgeTravelTicks: [1, 1, 1, 1],
+      },
+    });
+    terminal = applyTransportVehicleCommand(terminal, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'terminal-preflight',
+    });
+    terminal = advanceTransportTicks(terminal, 4);
+    const validRecord = parseTransportSaveRecord({
+      ...record(),
+      saveId: 'terminal-preflight',
+      sourceSimulationTick: terminal.tick,
+      snapshot: createTransportSimulationSnapshot(terminal),
+    });
+    const missing = structuredClone(validRecord);
+    (
+      missing.snapshot.state as unknown as { currentStopCalls: unknown[] }
+    ).currentStopCalls = [];
+    const laterState = advanceTransportTicks(terminal, 1);
+    const fabricatedLater = structuredClone(
+      parseTransportSaveRecord({
+        ...validRecord,
+        sourceSimulationTick: laterState.tick,
+        snapshot: createTransportSimulationSnapshot(laterState),
+      }),
+    );
+    (
+      fabricatedLater.snapshot.state as unknown as {
+        currentStopCalls: unknown[];
+      }
+    ).currentStopCalls = [
+      {
+        ...terminal.currentStopCalls[0]!,
+        tick: laterState.tick,
+      },
+    ];
+
+    let stored: unknown = missing;
+    const current = createDirectTransportSimulationClient();
+    const currentClose = vi.fn(() => current.close());
+    let clientCreations = 0;
+    const controller = createTransportApplicationController({
+      createClient: () => {
+        clientCreations += 1;
+        return clientCreations === 1
+          ? Object.freeze({ ...current, close: currentClose })
+          : createDirectTransportSimulationClient();
+      },
+      repository: {
+        get: async () => classifyPersistedSaveRecord(stored),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => canonical },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: canonical,
+      initialSimulationTick: 6,
+    });
+    const expected = controller.projection.getState();
+    for (const [index, corrupt] of [missing, fabricatedLater].entries()) {
+      stored = corrupt;
+      await expect(
+        controller.restore({
+          saveId: 'terminal-preflight',
+          timelineId: parseTimelineId(`terminal-corrupt-${index}`),
+        }),
+      ).rejects.toThrow();
+      expect(controller.projection.getState()).toEqual({
+        ...expected,
+        message: expect.any(String),
+      });
+      expect(currentClose).not.toHaveBeenCalled();
+      expect(clientCreations).toBe(1);
+    }
+    await controller.close();
+  });
+
   it('publishes failed and permits retry after synchronous initial construction failure', async () => {
     const reliable = vi.fn();
     const render = vi.fn();

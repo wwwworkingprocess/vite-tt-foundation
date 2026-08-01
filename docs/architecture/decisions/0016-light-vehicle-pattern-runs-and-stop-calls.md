@@ -31,6 +31,9 @@ Closed-loop fast-forward counts calls from checked cumulative edge-boundary
 positions, excluding every event at or before the starting offset. Route-cycle
 and closed-loop skipping preserve the existing run-start tick unless a new run
 actually begins, and calculate the final run's start tick exactly when it does.
+Each operation also retains the canonical tick when movement first started;
+that timestamp, movement authority, and run timing determine current-tick calls
+without consulting the serialized call suffix. No-call ticks preserve it.
 Snapshot V7 stores vehicle operations in fleet order; each position must own
 the same VehicleId. Restore derives the only valid run and call counters from
 canonical fleet movement and reconstructs the exact possible current-tick call

@@ -6,6 +6,7 @@ import {
   type ScenarioId,
 } from '@torrevieja-tycoon/transport-domain';
 import { z } from 'zod';
+import { deepFreeze as freeze } from './authority-utils.js';
 import {
   parseSimulationTick,
   parseTickAdvancement,
@@ -124,12 +125,6 @@ const snapshotV7Schema = z.strictObject({
     currentStopCalls: z.unknown(),
   }),
 });
-
-const freeze = <T>(value: T): T => {
-  if (value === null || typeof value !== 'object') return value;
-  for (const child of Object.values(value)) freeze(child);
-  return Object.isFrozen(value) ? value : Object.freeze(value);
-};
 
 const reparseScenario = (scenario: CanonicalScenario) =>
   parseScenarioPackage({
@@ -307,7 +302,18 @@ export function applyTransportVehicleCommand(
   command: unknown,
 ): TransportSimulationState {
   const fleet = applyVehicleCommand(state.graph, state.fleet, command);
-  if (fleet.length === state.fleet.length) return freeze({ ...state, fleet });
+  if (fleet.length === state.fleet.length) {
+    const vehicleOperations = state.vehicleOperations.map((operation, index) =>
+      state.fleet[index]!.movement.kind === 'parked-at-stop' &&
+      fleet[index]!.movement.kind === 'running-at-stop'
+        ? freeze({
+            ...operation,
+            movementStartedAtTick: state.tick,
+          })
+        : operation,
+    );
+    return freeze({ ...state, fleet, vehicleOperations });
+  }
   const created = createVehicleOperationAuthority(
     state.graph,
     fleet.at(-1)!,

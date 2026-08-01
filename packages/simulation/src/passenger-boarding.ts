@@ -37,6 +37,10 @@ export type PassengerOnboardGroupId = z.infer<
   typeof passengerOnboardGroupIdSchema
 >;
 
+export const passengerOnboardGroupSequence = (
+  id: PassengerOnboardGroupId,
+): number => Number(id.slice('passenger-onboard-group-'.length));
+
 export interface VehiclePassengerCapacity {
   readonly vehicleId: VehicleId;
   readonly passengerCapacity: number;
@@ -45,11 +49,21 @@ export interface VehiclePassengerCapacity {
 export interface VehiclePassengerLoadProjection extends VehiclePassengerCapacity {
   readonly onboardPassengerCount: number;
   readonly remainingPassengerCapacity: number;
+  readonly currentAlightedPassengerCount: number;
+  readonly currentBoardedPassengerCount: number;
 }
 
 export function projectVehiclePassengerLoads(
   capacities: readonly Readonly<VehiclePassengerCapacity>[],
   onboardGroups: readonly Readonly<PassengerOnboardGroup>[],
+  currentAlightingEvents: readonly Readonly<{
+    vehicleId: VehicleId;
+    alightedPassengerCount: number;
+  }>[] = [],
+  currentBoardingEvents: readonly Readonly<{
+    vehicleId: VehicleId;
+    boardedPassengerCount: number;
+  }>[] = [],
 ): readonly Readonly<VehiclePassengerLoadProjection>[] {
   const counts = new Map<VehicleId, number>();
   for (const group of onboardGroups)
@@ -59,6 +73,26 @@ export function projectVehiclePassengerLoads(
         counts.get(group.vehicleId) ?? 0,
         group.count,
         'vehicle onboard passengers',
+      ),
+    );
+  const alightedCounts = new Map<VehicleId, number>();
+  for (const event of currentAlightingEvents)
+    alightedCounts.set(
+      event.vehicleId,
+      checkedAdd(
+        alightedCounts.get(event.vehicleId) ?? 0,
+        event.alightedPassengerCount,
+        'current alighted passengers',
+      ),
+    );
+  const boardedCounts = new Map<VehicleId, number>();
+  for (const event of currentBoardingEvents)
+    boardedCounts.set(
+      event.vehicleId,
+      checkedAdd(
+        boardedCounts.get(event.vehicleId) ?? 0,
+        event.boardedPassengerCount,
+        'current boarded passengers',
       ),
     );
   return deepFreeze(
@@ -71,6 +105,10 @@ export function projectVehiclePassengerLoads(
         onboardPassengerCount,
         remainingPassengerCapacity:
           capacity.passengerCapacity - onboardPassengerCount,
+        currentAlightedPassengerCount:
+          alightedCounts.get(capacity.vehicleId) ?? 0,
+        currentBoardedPassengerCount:
+          boardedCounts.get(capacity.vehicleId) ?? 0,
       };
     }),
   );
@@ -123,6 +161,8 @@ export const vehiclePassengerLoadProjectionSchema =
   vehiclePassengerCapacitySchema.extend({
     onboardPassengerCount: nonnegativeSafeInteger,
     remainingPassengerCapacity: nonnegativeSafeInteger,
+    currentAlightedPassengerCount: nonnegativeSafeInteger,
+    currentBoardedPassengerCount: nonnegativeSafeInteger,
   });
 
 export const passengerOnboardGroupSchema = z.strictObject({
@@ -286,17 +326,12 @@ export function validatePassengerBoardingAuthority(input: {
     );
   }
   onboardSequences.sort((left, right) => left - right);
-  if (
-    input.nextPassengerOnboardGroupSequence !== onboardSequences.length + 1 ||
-    onboardSequences.some((sequence, index) => sequence !== index + 1)
-  )
-    throw new Error('Onboard passenger group sequence is not contiguous.');
   for (const [vehicleId, count] of perVehicle)
     if (count > capacities.get(vehicleId)!)
       throw new Error('Vehicle passenger capacity exceeded.');
   if (
     onboardTotal !== input.totalOnboardPassengerCount ||
-    onboardTotal !== input.totalBoardedPassengerCount
+    onboardTotal > input.totalBoardedPassengerCount
   )
     throw new Error('Onboard passenger conservation failed.');
 
@@ -355,17 +390,15 @@ export function validatePassengerBoardingAuthority(input: {
     }
   }
   reconstructed.sort(comparePassengerWaitingCohorts);
-  const priorBoarded = priorGroups.reduce(
-    (total, group) =>
-      checkedAdd(total, group.count, 'prior boarded passengers'),
-    0,
-  );
   const replay = boardPassengersAtVehicleCalls({
     tick: input.tick,
     waitingCohorts: reconstructed,
     onboardGroups: priorGroups,
-    nextPassengerOnboardGroupSequence: priorGroups.length + 1,
-    totalBoardedPassengerCount: priorBoarded,
+    nextPassengerOnboardGroupSequence:
+      input.nextPassengerOnboardGroupSequence - currentGroups.length,
+    totalBoardedPassengerCount:
+      input.totalBoardedPassengerCount -
+      currentGroups.reduce((total, group) => total + group.count, 0),
     capacities: input.capacities,
     vehicleOperations: input.vehicleOperations,
     currentStopCalls: input.currentStopCalls,
@@ -587,7 +620,8 @@ export const comparePassengerOnboardGroups = (
     left.destinationOccurrenceIndex - right.destinationOccurrenceIndex ||
     leftRow - rightRow ||
     leftColumn - rightColumn ||
-    lexical(left.passengerOnboardGroupId, right.passengerOnboardGroupId)
+    passengerOnboardGroupSequence(left.passengerOnboardGroupId) -
+      passengerOnboardGroupSequence(right.passengerOnboardGroupId)
   );
 };
 
@@ -629,7 +663,7 @@ export function boardPassengersAtVehicleCalls(
     (total, count) => checkedAdd(total, count, 'onboard passengers'),
     0,
   );
-  if (onboardBefore !== input.totalBoardedPassengerCount)
+  if (onboardBefore > input.totalBoardedPassengerCount)
     throw new Error('Invalid boarded passenger total.');
   const capacities = new Map(
     input.capacities.map((item) => [item.vehicleId, item.passengerCapacity]),

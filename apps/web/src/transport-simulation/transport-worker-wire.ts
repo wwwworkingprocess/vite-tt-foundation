@@ -11,6 +11,8 @@ import {
   parseVehicleStopNodeCalls,
   parseVehiclePassengerCapacities,
   parseCurrentBoardingEvents,
+  parseCurrentAlightingEvents,
+  parsePassengerJourneyCompletionEvents,
   parseVehiclePassengerLoadProjections,
 } from '@torrevieja-tycoon/simulation';
 import {
@@ -208,6 +210,8 @@ const publication = z.discriminatedUnion('channel', [
       currentStopCalls: z.unknown(),
       vehicleCapacities: z.unknown(),
       currentBoardingEvents: z.unknown(),
+      currentAlightingEvents: z.unknown(),
+      currentJourneyCompletionEvents: z.unknown(),
       vehiclePassengerLoads: z.unknown(),
     }),
   }),
@@ -222,6 +226,8 @@ const publication = z.discriminatedUnion('channel', [
       currentStopCalls: z.unknown(),
       vehicleCapacities: z.unknown(),
       currentBoardingEvents: z.unknown(),
+      currentAlightingEvents: z.unknown(),
+      currentJourneyCompletionEvents: z.unknown(),
       vehiclePassengerLoads: z.unknown(),
     }),
   }),
@@ -252,6 +258,8 @@ export function parseTransportSynchronizationResult(
       currentStopCalls: z.unknown(),
       vehicleCapacities: z.unknown(),
       currentBoardingEvents: z.unknown(),
+      currentAlightingEvents: z.unknown(),
+      currentJourneyCompletionEvents: z.unknown(),
       vehiclePassengerLoads: z.unknown(),
     })
     .parse(value);
@@ -267,6 +275,12 @@ export function parseTransportSynchronizationResult(
     ),
     currentBoardingEvents: parseCurrentBoardingEvents(
       parsed.currentBoardingEvents,
+    ),
+    currentAlightingEvents: parseCurrentAlightingEvents(
+      parsed.currentAlightingEvents,
+    ),
+    currentJourneyCompletionEvents: parsePassengerJourneyCompletionEvents(
+      parsed.currentJourneyCompletionEvents,
     ),
     vehiclePassengerLoads: parseVehiclePassengerLoadProjections(
       parsed.vehiclePassengerLoads,
@@ -338,6 +352,12 @@ export function parseTransportWorkerResponse(
         ),
         currentBoardingEvents: parseCurrentBoardingEvents(
           parsed.payload.currentBoardingEvents,
+        ),
+        currentAlightingEvents: parseCurrentAlightingEvents(
+          parsed.payload.currentAlightingEvents,
+        ),
+        currentJourneyCompletionEvents: parsePassengerJourneyCompletionEvents(
+          parsed.payload.currentJourneyCompletionEvents,
         ),
         vehiclePassengerLoads: parseVehiclePassengerLoadProjections(
           parsed.payload.vehiclePassengerLoads,

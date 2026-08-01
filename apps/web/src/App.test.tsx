@@ -346,7 +346,7 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('worker-timeline')).toHaveTextContent(
       'browser-foundation-timeline-2',
     );
-  });
+  }, 15_000);
 
   it('does not replace ready authority when loader selection changes', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});

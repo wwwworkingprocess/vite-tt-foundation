@@ -231,7 +231,7 @@ describe.each(factories)(
         envelope(3, { type: 'foundation.advance-ticks', count: 5 }),
       );
       const exported = await client.exportSnapshot();
-      expect(exported.snapshot.schemaVersion).toBe(8);
+      expect(exported.snapshot.schemaVersion).toBe(9);
       expect(exported.snapshot.state.passengerDemand).toEqual({
         status: 'disabled',
       });
@@ -251,6 +251,11 @@ describe.each(factories)(
         }),
       ]);
       expect(exported.snapshot.state.currentStopCalls).toEqual([]);
+      expect(exported.snapshot.state.currentAlightingEvents).toEqual([]);
+      expect(exported.snapshot.state.currentBoardingEvents).toEqual([]);
+      expect(exported.snapshot.state.currentJourneyCompletionEvents).toEqual(
+        [],
+      );
       expect(exported.snapshot.state.vehicleCapacities).toEqual([
         { vehicleId: 'vehicle-demo-1', passengerCapacity: 3 },
       ]);
@@ -264,8 +269,13 @@ describe.each(factories)(
             passengerCapacity: 3,
             onboardPassengerCount: 0,
             remainingPassengerCapacity: 3,
+            currentAlightedPassengerCount: 0,
+            currentBoardedPassengerCount: 0,
           },
         ],
+        currentAlightingEvents: [],
+        currentBoardingEvents: [],
+        currentJourneyCompletionEvents: [],
       });
       expect(updates[2]).toMatchObject({
         vehicleOperations: [{ stopCallSequence: 2 }],

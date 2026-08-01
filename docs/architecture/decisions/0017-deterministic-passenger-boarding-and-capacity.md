@@ -33,8 +33,9 @@ A wrapped closed-loop itinerary targets the next pattern-run sequence. Current
 boarding events are bounded, current-tick, already-processed output and never a
 trigger for replay.
 
-Snapshot V8 and Transport Save V6 are the only current pre-release persistence
-contracts; older developer data is obsolete without migration.
+Snapshot V8 and Transport Save V6 were the Phase 4E4 pre-release persistence
+contracts. ADR 0018 supersedes them with Snapshot V9 and Transport Save V7;
+older developer data is obsolete without migration.
 
 ## Deferred boundary
 

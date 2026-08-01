@@ -191,10 +191,16 @@ Light Phase 4D is complete: existing route-cycle vehicles own
 deterministic pattern-run sequences and emit exact directional canonical
 StopNode calls. Phase 4E3B directional waiting cohorts are also complete.
 
-Phase 4E4 is current: exact canonical calls board deterministic cohort portions
-into immutable capacity-bounded onboard groups. Snapshot V8 and Save V6 are the
-sole current pre-release contracts. Next are Phase 4E5 alighting and journey
-completion, then Phase 4F economics.
+Phase 4E0 population and catchments, Phase 4E1 emission and StopPlace access,
+Phase 4E2 destination assignment, Phase 4E3A static direct itineraries, Phase
+4E3B directional waiting cohorts, light Phase 4D pattern-run calls, and Phase
+4E4 boarding and capacity are complete.
+
+Phase 4E5 is current: exact destination calls alight before boarding,
+destination access completes deterministically, and bounded lineage and
+completed-journey authority are current in Snapshot V9 and Save V7. Next is a
+diagnostic/game UI for live passenger authority, followed by Phase 4F economics
+and objectives. Transfers and advanced services remain later work.
 
 ## Phase 5 — React Three Fiber visualization POC
 

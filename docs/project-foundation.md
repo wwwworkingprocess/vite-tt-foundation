@@ -71,6 +71,7 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
 - [`architecture/decisions/0015-directional-passenger-waiting-cohorts.md`](architecture/decisions/0015-directional-passenger-waiting-cohorts.md) — bounded directional waiting authority.
 - [`architecture/decisions/0016-light-vehicle-pattern-runs-and-stop-calls.md`](architecture/decisions/0016-light-vehicle-pattern-runs-and-stop-calls.md) — canonical current-tick vehicle StopNode calls.
 - [`architecture/decisions/0017-deterministic-passenger-boarding-and-capacity.md`](architecture/decisions/0017-deterministic-passenger-boarding-and-capacity.md) — deterministic boarding and immutable capacity authority.
+- [`architecture/decisions/0018-deterministic-passenger-alighting-and-journey-completion.md`](architecture/decisions/0018-deterministic-passenger-alighting-and-journey-completion.md) — exact alighting, bounded destination access, and completed-journey authority.
 - [`architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md`](architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md) — exact scenario-coordinate compatibility decision.
 - [`architecture/decisions/0007-scenario-package-and-directed-graph.md`](architecture/decisions/0007-scenario-package-and-directed-graph.md) — scenario package and directed-edge decision.
 - [`architecture/decisions/0002-simulation-host-transport-readiness.md`](architecture/decisions/0002-simulation-host-transport-readiness.md) — Socket.IO-readiness research and transport-boundary decision.
@@ -149,10 +150,12 @@ The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, 
   calls. Terminal arrival and the next positive-tick pattern-origin handoff
   remain distinct. Its Snapshot V7 and Transport Save V5 contracts are now
   obsolete pre-release data.
-- Phase 4E4 boards directional waiting cohorts only at exact canonical
-  current-tick StopNode calls. Immutable vehicle capacity, bounded onboard
-  groups, and current boarding events are authoritative in Snapshot V8 and
-  Transport Save V6. Alighting and completed journeys remain deferred.
+- Phase 4E5 completes the first deterministic passenger journey chain. Exact
+  directional calls alight before boarding, released capacity is immediately
+  reusable, and implicit destination access completes at its exact angular-grid
+  tick. Bounded lineage watermarks, current events, and cumulative completion
+  authority are persisted in Snapshot V9 and Transport Save V7. Transfers,
+  UI, economics, geo-background work, and advanced services remain deferred.
 - The pre-Phase-4D browser refinement presents the accepted authority through a
   viewport-bound game shell: compact navigation, a full-workspace SVG
   diagnostic view, a swappable R3F minimap, and accessible project,

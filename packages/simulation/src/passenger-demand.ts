@@ -17,6 +17,7 @@ import {
 } from './authority-utils.js';
 import {
   activatePassengerDirectItineraries,
+  passengerWaitingCohortMatchesItinerary,
   passengerWaitingCohortIdSchema,
   passengerWaitingCohortSchema,
   type PassengerWaitingCohort,
@@ -25,6 +26,13 @@ import {
   passengerOnboardGroupSchema,
   type PassengerOnboardGroup,
 } from './passenger-boarding.js';
+import {
+  passengerDestinationAccessGroupSchema,
+  validatePassengerTransitCollections,
+  waitingGenerationLineageWatermarkSchema,
+  type PassengerDestinationAccessGroup,
+  type WaitingGenerationLineageWatermark,
+} from './passenger-transit.js';
 
 export const passengerDemandPlanSchemaVersion = '1.0.0' as const;
 const distanceTieToleranceSquaredCells = 1e-9;
@@ -194,12 +202,15 @@ export interface ActivePassengerDemandState {
   readonly nextPassengerGroupSequence: number;
   readonly nextPassengerWaitingCohortSequence: number;
   readonly nextPassengerOnboardGroupSequence: number;
+  readonly nextPassengerDestinationAccessGroupSequence: number;
   readonly cellCredits: readonly Readonly<PassengerCellCreditState>[];
   readonly accessingGroups: readonly Readonly<AccessingPassengerGroup>[];
   readonly stopArrivals: readonly Readonly<StopPlaceArrivalState>[];
   readonly destinationCursors: readonly Readonly<PassengerDestinationCursorState>[];
   readonly waitingCohorts: readonly Readonly<PassengerWaitingCohort>[];
+  readonly waitingGenerationLineageWatermarks: readonly Readonly<WaitingGenerationLineageWatermark>[];
   readonly onboardGroups: readonly Readonly<PassengerOnboardGroup>[];
+  readonly destinationAccessGroups: readonly Readonly<PassengerDestinationAccessGroup>[];
   readonly totalEmittedPassengerCount: number;
   readonly servedEmittedPassengerCount: number;
   readonly unservedAtSourcePassengerCount: number;
@@ -210,6 +221,9 @@ export interface ActivePassengerDemandState {
   readonly totalWaitingForVehiclePassengerCount: number;
   readonly totalBoardedPassengerCount: number;
   readonly totalOnboardPassengerCount: number;
+  readonly totalAlightedPassengerCount: number;
+  readonly totalInDestinationAccessPassengerCount: number;
+  readonly totalCompletedJourneyPassengerCount: number;
 }
 
 export type PassengerDemandState =
@@ -232,6 +246,7 @@ const stateSchema = z.discriminatedUnion('status', [
     nextPassengerGroupSequence: positiveSafeInteger,
     nextPassengerWaitingCohortSequence: positiveSafeInteger,
     nextPassengerOnboardGroupSequence: positiveSafeInteger,
+    nextPassengerDestinationAccessGroupSequence: positiveSafeInteger,
     cellCredits: z.array(
       z.strictObject({
         cellId: planCellSchema.shape.cellId,
@@ -261,7 +276,11 @@ const stateSchema = z.discriminatedUnion('status', [
       }),
     ),
     waitingCohorts: z.array(passengerWaitingCohortSchema),
+    waitingGenerationLineageWatermarks: z.array(
+      waitingGenerationLineageWatermarkSchema,
+    ),
     onboardGroups: z.array(passengerOnboardGroupSchema),
+    destinationAccessGroups: z.array(passengerDestinationAccessGroupSchema),
     totalEmittedPassengerCount: nonnegativeSafeInteger,
     servedEmittedPassengerCount: nonnegativeSafeInteger,
     unservedAtSourcePassengerCount: nonnegativeSafeInteger,
@@ -272,6 +291,9 @@ const stateSchema = z.discriminatedUnion('status', [
     totalWaitingForVehiclePassengerCount: nonnegativeSafeInteger,
     totalBoardedPassengerCount: nonnegativeSafeInteger,
     totalOnboardPassengerCount: nonnegativeSafeInteger,
+    totalAlightedPassengerCount: nonnegativeSafeInteger,
+    totalInDestinationAccessPassengerCount: nonnegativeSafeInteger,
+    totalCompletedJourneyPassengerCount: nonnegativeSafeInteger,
   }),
 ]);
 const projectionSchema = z.discriminatedUnion('status', [
@@ -291,8 +313,13 @@ const projectionSchema = z.discriminatedUnion('status', [
     totalWaitingForVehiclePassengerCount: nonnegativeSafeInteger,
     totalBoardedPassengerCount: nonnegativeSafeInteger,
     totalOnboardPassengerCount: nonnegativeSafeInteger,
+    totalAlightedPassengerCount: nonnegativeSafeInteger,
+    totalInDestinationAccessPassengerCount: nonnegativeSafeInteger,
+    totalCompletedJourneyPassengerCount: nonnegativeSafeInteger,
     onboardGroupCount: nonnegativeSafeInteger,
     onboardGroups: z.array(passengerOnboardGroupSchema),
+    destinationAccessGroupCount: nonnegativeSafeInteger,
+    destinationAccessGroups: z.array(passengerDestinationAccessGroupSchema),
     waitingCohortCount: nonnegativeSafeInteger,
     waitingCohorts: stateSchema.options[1].shape.waitingCohorts,
     stopArrivals: stateSchema.options[1].shape.stopArrivals,
@@ -316,8 +343,13 @@ export type PassengerDemandProjection = Readonly<
       readonly totalWaitingForVehiclePassengerCount: number;
       readonly totalBoardedPassengerCount: number;
       readonly totalOnboardPassengerCount: number;
+      readonly totalAlightedPassengerCount: number;
+      readonly totalInDestinationAccessPassengerCount: number;
+      readonly totalCompletedJourneyPassengerCount: number;
       readonly onboardGroupCount: number;
       readonly onboardGroups: readonly Readonly<PassengerOnboardGroup>[];
+      readonly destinationAccessGroupCount: number;
+      readonly destinationAccessGroups: readonly Readonly<PassengerDestinationAccessGroup>[];
       readonly waitingCohortCount: number;
       readonly waitingCohorts: readonly Readonly<PassengerWaitingCohort>[];
       readonly stopArrivals: readonly Readonly<StopPlaceArrivalState>[];
@@ -571,6 +603,10 @@ export function parsePassengerDemandState(
       parsed.destinationCursors as PassengerDestinationCursorState[],
     waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
     onboardGroups: parsed.onboardGroups as PassengerOnboardGroup[],
+    waitingGenerationLineageWatermarks:
+      parsed.waitingGenerationLineageWatermarks as WaitingGenerationLineageWatermark[],
+    destinationAccessGroups:
+      parsed.destinationAccessGroups as PassengerDestinationAccessGroup[],
   });
 }
 
@@ -586,6 +622,7 @@ export function createInitialPassengerDemandState(
     nextPassengerGroupSequence: 1,
     nextPassengerWaitingCohortSequence: 1,
     nextPassengerOnboardGroupSequence: 1,
+    nextPassengerDestinationAccessGroupSequence: 1,
     cellCredits: parsedPlan.cells.map((cell) => ({
       cellId: cell.cellId,
       credit: 0,
@@ -600,7 +637,9 @@ export function createInitialPassengerDemandState(
       destinationCursor: 0,
     })),
     waitingCohorts: [],
+    waitingGenerationLineageWatermarks: [],
     onboardGroups: [],
+    destinationAccessGroups: [],
     totalEmittedPassengerCount: 0,
     servedEmittedPassengerCount: 0,
     unservedAtSourcePassengerCount: 0,
@@ -611,6 +650,9 @@ export function createInitialPassengerDemandState(
     totalWaitingForVehiclePassengerCount: 0,
     totalBoardedPassengerCount: 0,
     totalOnboardPassengerCount: 0,
+    totalAlightedPassengerCount: 0,
+    totalInDestinationAccessPassengerCount: 0,
+    totalCompletedJourneyPassengerCount: 0,
   });
 }
 
@@ -629,6 +671,27 @@ const distanceBand = (
   }
   return lower;
 };
+
+export function calculatePassengerAccessTicks(
+  distanceSquaredCells: number,
+  maximumDistanceCells: number,
+  accessTicksPerCell: number,
+): number {
+  if (
+    !Number.isFinite(distanceSquaredCells) ||
+    distanceSquaredCells < 0 ||
+    !Number.isSafeInteger(maximumDistanceCells) ||
+    maximumDistanceCells < 1 ||
+    !Number.isSafeInteger(accessTicksPerCell) ||
+    accessTicksPerCell < 1
+  )
+    throw new Error('Invalid passenger access timing input.');
+  return checkedMultiply(
+    distanceBand(distanceSquaredCells, maximumDistanceCells),
+    accessTicksPerCell,
+    'access duration',
+  );
+}
 
 const compareGroups = (
   left: Readonly<AccessingPassengerGroup>,
@@ -757,14 +820,47 @@ export function validatePassengerDemandState(
       parsed.directItineraryUnavailablePassengerCount,
     activationTick: parsed.processedThroughTick,
     nonMergeableWaitingCohortIds: new Set(
-      parsed.onboardGroups.map((group) =>
-        passengerWaitingCohortIdSchema.parse(group.sourceWaitingCohortId),
-      ),
+      [
+        ...parsed.onboardGroups.map((group) => group.sourceWaitingCohortId),
+        ...parsed.waitingGenerationLineageWatermarks.map(
+          (watermark) => watermark.passengerWaitingCohortId,
+        ),
+      ].map((id) => passengerWaitingCohortIdSchema.parse(id)),
     ),
+  });
+  validatePassengerTransitCollections({
+    tick: parseSimulationTick(parsed.processedThroughTick),
+    demandPlan: parsedPlan,
+    waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
+    waitingGenerationLineageWatermarks:
+      parsed.waitingGenerationLineageWatermarks as WaitingGenerationLineageWatermark[],
+    onboardGroups: parsed.onboardGroups as PassengerOnboardGroup[],
+    destinationAccessGroups:
+      parsed.destinationAccessGroups as PassengerDestinationAccessGroup[],
+    nextPassengerWaitingCohortSequence:
+      parsed.nextPassengerWaitingCohortSequence,
+    nextPassengerOnboardGroupSequence: parsed.nextPassengerOnboardGroupSequence,
+    nextPassengerDestinationAccessGroupSequence:
+      parsed.nextPassengerDestinationAccessGroupSequence,
+    itineraryIsValid: (cohort) => {
+      const itinerary = itineraryIndex.find(
+        cohort.originStopPlaceId,
+        cohort.destinationStopPlaceId,
+      );
+      return (
+        itinerary.status === 'direct' &&
+        passengerWaitingCohortMatchesItinerary(cohort, itinerary)
+      );
+    },
   });
   const awaitingDestination = arrived;
   const onboardPassengerCount = parsed.onboardGroups.reduce(
     (total, group) => checkedAdd(total, group.count, 'onboard passengers'),
+    0,
+  );
+  const destinationAccessPassengerCount = parsed.destinationAccessGroups.reduce(
+    (total, group) =>
+      checkedAdd(total, group.count, 'destination access passengers'),
     0,
   );
   if (
@@ -789,9 +885,17 @@ export function validatePassengerDemandState(
         ),
         checkedAdd(
           checkedAdd(
-            parsed.totalWaitingForVehiclePassengerCount,
-            parsed.totalOnboardPassengerCount,
-            'waiting and onboard passengers',
+            checkedAdd(
+              parsed.totalWaitingForVehiclePassengerCount,
+              parsed.totalOnboardPassengerCount,
+              'waiting and onboard passengers',
+            ),
+            checkedAdd(
+              parsed.totalInDestinationAccessPassengerCount,
+              parsed.totalCompletedJourneyPassengerCount,
+              'destination access and completed passengers',
+            ),
+            'passenger transit ownership',
           ),
           awaitingDestination,
           'waiting passengers',
@@ -803,15 +907,40 @@ export function validatePassengerDemandState(
         parsed.directItineraryUnavailablePassengerCount,
         checkedAdd(
           parsed.totalWaitingForVehiclePassengerCount,
-          parsed.totalOnboardPassengerCount,
-          'assigned waiting and onboard passengers',
+          checkedAdd(
+            parsed.totalOnboardPassengerCount,
+            checkedAdd(
+              parsed.totalInDestinationAccessPassengerCount,
+              parsed.totalCompletedJourneyPassengerCount,
+              'assigned destination ownership',
+            ),
+            'assigned onboard and destination passengers',
+          ),
+          'assigned waiting and transit passengers',
         ),
         'destination-assigned passengers',
       ) ||
     parsed.totalWaitingForVehiclePassengerCount !==
       waitingAuthority.totalWaitingForVehiclePassengerCount ||
     parsed.totalOnboardPassengerCount !== onboardPassengerCount ||
-    parsed.totalBoardedPassengerCount !== onboardPassengerCount ||
+    parsed.totalInDestinationAccessPassengerCount !==
+      destinationAccessPassengerCount ||
+    parsed.totalBoardedPassengerCount !==
+      checkedAdd(
+        parsed.totalOnboardPassengerCount,
+        checkedAdd(
+          parsed.totalInDestinationAccessPassengerCount,
+          parsed.totalCompletedJourneyPassengerCount,
+          'boarded destination ownership',
+        ),
+        'boarded passenger ownership',
+      ) ||
+    parsed.totalAlightedPassengerCount !==
+      checkedAdd(
+        parsed.totalInDestinationAccessPassengerCount,
+        parsed.totalCompletedJourneyPassengerCount,
+        'alighted passenger ownership',
+      ) ||
     parsed.destinationUnavailableAtStopPassengerCount >
       parsed.totalArrivedAtStopPassengerCount
   )
@@ -827,7 +956,11 @@ export function validatePassengerDemandState(
     destinationCursors:
       parsed.destinationCursors as PassengerDestinationCursorState[],
     waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
+    waitingGenerationLineageWatermarks:
+      parsed.waitingGenerationLineageWatermarks as WaitingGenerationLineageWatermark[],
     onboardGroups: parsed.onboardGroups as PassengerOnboardGroup[],
+    destinationAccessGroups:
+      parsed.destinationAccessGroups as PassengerDestinationAccessGroup[],
   });
 }
 
@@ -885,14 +1018,10 @@ export function advancePassengerDemandToTick(
             'served emissions',
           );
           const distance = cell.distanceSquaredCells!;
-          const band = distanceBand(
+          const duration = calculatePassengerAccessTicks(
             distance,
             parsedPlan.catchmentPolicy.maxAccessDistanceCells,
-          );
-          const duration = checkedMultiply(
-            band,
             parsedPlan.accessPolicy.accessTicksPerCell,
-            'access duration',
           );
           groups.push({
             passengerGroupId: passengerGroupIdSchema.parse(
@@ -1004,9 +1133,12 @@ export function advancePassengerDemandToTick(
       directItineraryUnavailablePassengerCount:
         current.directItineraryUnavailablePassengerCount,
       activationTick: tick,
-      nonMergeableWaitingCohortIds: new Set(
-        current.onboardGroups.map((group) => group.sourceWaitingCohortId),
-      ),
+      nonMergeableWaitingCohortIds: new Set([
+        ...current.onboardGroups.map((group) => group.sourceWaitingCohortId),
+        ...current.waitingGenerationLineageWatermarks.map(
+          (watermark) => watermark.passengerWaitingCohortId,
+        ),
+      ]),
     });
     current = validatePassengerDemandState(parsedPlan, itineraryIndex, {
       status: 'active',
@@ -1017,6 +1149,8 @@ export function advancePassengerDemandToTick(
         activation.nextPassengerWaitingCohortSequence,
       nextPassengerOnboardGroupSequence:
         current.nextPassengerOnboardGroupSequence,
+      nextPassengerDestinationAccessGroupSequence:
+        current.nextPassengerDestinationAccessGroupSequence,
       cellCredits,
       accessingGroups: accessingGroups.sort(compareGroups),
       stopArrivals: parsedPlan.stops.map((stop) => ({
@@ -1028,7 +1162,10 @@ export function advancePassengerDemandToTick(
         destinationCursor: destinationCursors.get(stop.stopPlaceId)!,
       })),
       waitingCohorts: activation.waitingCohorts,
+      waitingGenerationLineageWatermarks:
+        current.waitingGenerationLineageWatermarks,
       onboardGroups: current.onboardGroups,
+      destinationAccessGroups: current.destinationAccessGroups,
       totalEmittedPassengerCount: totalEmitted,
       servedEmittedPassengerCount: servedEmitted,
       unservedAtSourcePassengerCount: unserved,
@@ -1041,6 +1178,11 @@ export function advancePassengerDemandToTick(
         activation.totalWaitingForVehiclePassengerCount,
       totalBoardedPassengerCount: current.totalBoardedPassengerCount,
       totalOnboardPassengerCount: current.totalOnboardPassengerCount,
+      totalAlightedPassengerCount: current.totalAlightedPassengerCount,
+      totalInDestinationAccessPassengerCount:
+        current.totalInDestinationAccessPassengerCount,
+      totalCompletedJourneyPassengerCount:
+        current.totalCompletedJourneyPassengerCount,
     });
   }
   return current;
@@ -1063,6 +1205,8 @@ export function parsePassengerDemandProjection(
           stopArrivals: parsed.stopArrivals as StopPlaceArrivalState[],
           waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
           onboardGroups: parsed.onboardGroups as PassengerOnboardGroup[],
+          destinationAccessGroups:
+            parsed.destinationAccessGroups as PassengerDestinationAccessGroup[],
         },
   );
 }
@@ -1107,8 +1251,15 @@ export function projectPassengerDemand(
     waitingCohorts: state.waitingCohorts,
     totalBoardedPassengerCount: state.totalBoardedPassengerCount,
     totalOnboardPassengerCount: state.totalOnboardPassengerCount,
+    totalAlightedPassengerCount: state.totalAlightedPassengerCount,
+    totalInDestinationAccessPassengerCount:
+      state.totalInDestinationAccessPassengerCount,
+    totalCompletedJourneyPassengerCount:
+      state.totalCompletedJourneyPassengerCount,
     onboardGroupCount: state.onboardGroups.length,
     onboardGroups: state.onboardGroups,
+    destinationAccessGroupCount: state.destinationAccessGroups.length,
+    destinationAccessGroups: state.destinationAccessGroups,
     stopArrivals: state.stopArrivals,
   });
 }

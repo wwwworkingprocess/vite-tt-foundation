@@ -23,6 +23,8 @@ import {
   type VehicleStopNodeCall,
   type VehiclePassengerCapacity,
   type CurrentBoardingEvent,
+  type CurrentAlightingEvent,
+  type PassengerJourneyCompletionEvent,
   type VehiclePassengerLoadProjection,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
@@ -101,6 +103,8 @@ export type TransportStateUpdate = Readonly<
     readonly currentStopCalls: readonly VehicleStopNodeCall[];
     readonly vehicleCapacities: readonly VehiclePassengerCapacity[];
     readonly currentBoardingEvents: readonly CurrentBoardingEvent[];
+    readonly currentAlightingEvents: readonly CurrentAlightingEvent[];
+    readonly currentJourneyCompletionEvents: readonly PassengerJourneyCompletionEvent[];
     readonly vehiclePassengerLoads: readonly VehiclePassengerLoadProjection[];
   }
 >;
@@ -112,6 +116,8 @@ export type TransportRenderSnapshot = Readonly<
     readonly currentStopCalls: readonly VehicleStopNodeCall[];
     readonly vehicleCapacities: readonly VehiclePassengerCapacity[];
     readonly currentBoardingEvents: readonly CurrentBoardingEvent[];
+    readonly currentAlightingEvents: readonly CurrentAlightingEvent[];
+    readonly currentJourneyCompletionEvents: readonly PassengerJourneyCompletionEvent[];
     readonly vehiclePassengerLoads: readonly VehiclePassengerLoadProjection[];
   }
 >;
@@ -128,6 +134,8 @@ export type TransportSynchronizationResponse =
       currentStopCalls: readonly VehicleStopNodeCall[];
       vehicleCapacities: readonly VehiclePassengerCapacity[];
       currentBoardingEvents: readonly CurrentBoardingEvent[];
+      currentAlightingEvents: readonly CurrentAlightingEvent[];
+      currentJourneyCompletionEvents: readonly PassengerJourneyCompletionEvent[];
       vehiclePassengerLoads: readonly VehiclePassengerLoadProjection[];
     }>;
 
@@ -277,11 +285,16 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         currentStopCalls: authority!.currentStopCalls,
         vehicleCapacities: authority!.vehicleCapacities,
         currentBoardingEvents: authority!.currentBoardingEvents,
+        currentAlightingEvents: authority!.currentAlightingEvents,
+        currentJourneyCompletionEvents:
+          authority!.currentJourneyCompletionEvents,
         vehiclePassengerLoads: projectVehiclePassengerLoads(
           authority!.vehicleCapacities,
           authority!.passengerDemand.status === 'active'
             ? authority!.passengerDemand.onboardGroups
             : [],
+          authority!.currentAlightingEvents,
+          authority!.currentBoardingEvents,
         ),
       }),
     );
@@ -295,11 +308,16 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         currentStopCalls: authority!.currentStopCalls,
         vehicleCapacities: authority!.vehicleCapacities,
         currentBoardingEvents: authority!.currentBoardingEvents,
+        currentAlightingEvents: authority!.currentAlightingEvents,
+        currentJourneyCompletionEvents:
+          authority!.currentJourneyCompletionEvents,
         vehiclePassengerLoads: projectVehiclePassengerLoads(
           authority!.vehicleCapacities,
           authority!.passengerDemand.status === 'active'
             ? authority!.passengerDemand.onboardGroups
             : [],
+          authority!.currentAlightingEvents,
+          authority!.currentBoardingEvents,
         ),
       }),
     );
@@ -486,11 +504,16 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
           currentStopCalls: current.currentStopCalls,
           vehicleCapacities: current.vehicleCapacities,
           currentBoardingEvents: current.currentBoardingEvents,
+          currentAlightingEvents: current.currentAlightingEvents,
+          currentJourneyCompletionEvents:
+            current.currentJourneyCompletionEvents,
           vehiclePassengerLoads: projectVehiclePassengerLoads(
             current.vehicleCapacities,
             current.passengerDemand.status === 'active'
               ? current.passengerDemand.onboardGroups
               : [],
+            current.currentAlightingEvents,
+            current.currentBoardingEvents,
           ),
         });
       });

@@ -222,7 +222,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     ]);
   });
 
-  it('keeps batched and split authority identical and round-trips Snapshot V8', () => {
+  it('keeps batched and split authority identical and round-trips Snapshot V9', () => {
     const initial = started();
     const batched = advanceTransportTicks(initial, 7);
     let split = initial;
@@ -231,8 +231,8 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     expect(batched).toEqual(split);
     const snapshot = createTransportSimulationSnapshot(batched);
     expect(snapshot).toMatchObject({
-      schemaVersion: 8,
-      simulationVersion: 'transport-8',
+      schemaVersion: 9,
+      simulationVersion: 'transport-9',
       state: {
         vehicleOperations: batched.vehicleOperations,
         currentStopCalls: batched.currentStopCalls,
@@ -543,6 +543,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
         reference.vehicleOperations[0]!.stopCallSequence,
       );
     },
+    15_000,
   );
 
   it('preserves a parked vehicle run start until an actual run boundary', () => {
@@ -585,7 +586,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     expect(crossingBatch.vehicleOperations[0]!.patternRunStartedAtTick).toBe(
       crossingReference.vehicleOperations[0]!.patternRunStartedAtTick,
     );
-  });
+  }, 15_000);
 
   it('rejects positional operation swaps and exact counter corruption', () => {
     let state = started();

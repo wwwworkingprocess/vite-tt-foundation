@@ -42,7 +42,7 @@ const record = () => {
   const canonical = scenario();
   return parseTransportSaveRecord({
     kind: 'transport-save-record',
-    schemaVersion: 6,
+    schemaVersion: 7,
     saveId: 'slot',
     gameId: 'game-fixture',
     sourceTimelineId: 'timeline-source',
@@ -377,7 +377,7 @@ describe('transport application controller', () => {
     await controller.close();
   });
 
-  it('preflights Snapshot V8 operation and capacity corruption before replacing authority', async () => {
+  it('preflights Snapshot V9 operation and capacity corruption before replacing authority', async () => {
     const canonical = scenario();
     let savedState = createTransportSimulationState(canonical, 0);
     for (const vehicleId of ['saved-a', 'saved-b'])
@@ -499,7 +499,7 @@ describe('transport application controller', () => {
     await controller.close();
   });
 
-  it('preflights non-canonical Snapshot V8 boarding without replacing authority', async () => {
+  it('preflights non-canonical Snapshot V9 boarding without replacing authority', async () => {
     const canonical = scenario();
     const plan = boardingDemandPlan();
     let boarded = advanceTransportTicks(
@@ -613,6 +613,18 @@ describe('transport application controller', () => {
         demand.onboardGroups[0]!.sourceWaitingCohortId =
           'passenger-waiting-cohort-999';
         demand.nextPassengerWaitingCohortSequence = 1000;
+      },
+      (value) => {
+        if (value.snapshot.state.passengerDemand.status !== 'active')
+          throw new Error('Expected active fixture.');
+        const watermarks = value.snapshot.state.passengerDemand
+          .waitingGenerationLineageWatermarks as unknown as Array<{
+          passengerWaitingCohortKey: string;
+        }>;
+        watermarks[0] = {
+          ...watermarks[0]!,
+          passengerWaitingCohortKey: 'fabricated-lineage-key',
+        };
       },
     ];
     for (const [index, corrupt] of corruptions.entries()) {

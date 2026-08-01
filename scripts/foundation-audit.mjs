@@ -517,6 +517,7 @@ for (const file of [...simulation, ...protocol, ...web]) {
       'packages/simulation/src/passenger-waiting-cohort.ts',
     ) ||
     normalized.endsWith('packages/simulation/src/passenger-boarding.ts') ||
+    normalized.endsWith('packages/simulation/src/passenger-transit.ts') ||
     normalized.endsWith('packages/simulation/src/vehicle-movement.ts') ||
     normalized.endsWith('packages/simulation/src/vehicle-operation.ts') ||
     normalized.endsWith('packages/simulation/src/index.ts');
@@ -543,6 +544,9 @@ for (const file of [
       !path
         .replaceAll('\\', '/')
         .endsWith('packages/simulation/src/passenger-boarding.ts') &&
+      !path
+        .replaceAll('\\', '/')
+        .endsWith('packages/simulation/src/passenger-transit.ts') &&
       !path
         .replaceAll('\\', '/')
         .endsWith('packages/simulation/src/transport-simulation.ts'),

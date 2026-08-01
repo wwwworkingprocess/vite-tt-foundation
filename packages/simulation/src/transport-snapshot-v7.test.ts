@@ -79,7 +79,7 @@ const demandPlan = () => {
   });
 };
 
-describe('Transport Snapshot V8', () => {
+describe('Transport Snapshot V9', () => {
   it('advances after partial boarding into a later same-key waiting generation', () => {
     const canonical = scenario();
     const plan = structuredClone(demandPlan());
@@ -231,23 +231,13 @@ describe('Transport Snapshot V8', () => {
         )!;
         newer.firstAssignedTick = 0;
       },
-      (value) => {
-        if (value.state.passengerDemand.status !== 'active')
-          throw new Error('Expected active passenger authority.');
-        const demand = value.state.passengerDemand;
-        const newer = demand.waitingCohorts.find(
-          (cohort) => cohort.passengerWaitingCohortId !== historicalId,
-        )!;
-        newer.passengerWaitingCohortId =
-          `passenger-waiting-cohort-${demand.nextPassengerWaitingCohortSequence + 1}` as never;
-        demand.nextPassengerWaitingCohortSequence += 2;
-      },
     ];
-    for (const corrupt of generationCorruptions) {
+    for (const [index, corrupt] of generationCorruptions.entries()) {
       const value = structuredClone(snapshot);
       corrupt(value);
-      expect(() =>
-        restoreTransportSimulationState(value, canonical, plan),
+      expect(
+        () => restoreTransportSimulationState(value, canonical, plan),
+        `generation corruption ${index}`,
       ).toThrow();
     }
 
@@ -360,7 +350,7 @@ describe('Transport Snapshot V8', () => {
       firstHistoricalGroup.boardedAtTick;
     expect(() =>
       restoreTransportSimulationState(impossibleSuccessor, canonical, plan),
-    ).toThrow(/generation chronology/i);
+    ).toThrow(/waiting-generation lineage successor/i);
 
     const secondGenerationId = secondGeneration.passengerWaitingCohortId;
     fullyBoarded = applyTransportVehicleCommand(fullyBoarded, {
@@ -421,7 +411,7 @@ describe('Transport Snapshot V8', () => {
     )!.firstAssignedTick = secondHistoricalGroup.boardedAtTick;
     expect(() =>
       restoreTransportSimulationState(impossibleChain, canonical, plan),
-    ).toThrow(/generation chronology/i);
+    ).toThrow(/waiting-generation lineage successor/i);
   });
 
   it('accumulates boarding events from separate vehicle creations on one tick', () => {
@@ -484,7 +474,7 @@ describe('Transport Snapshot V8', () => {
     missingEarlierEvent.state.currentBoardingEvents.shift();
     expect(() =>
       restoreTransportSimulationState(missingEarlierEvent, canonical, plan),
-    ).toThrow(/boarding authority/i);
+    ).toThrow(/passenger (boarding|transit) authority/i);
 
     let noSecondBoarding = advanceTransportTicks(
       createTransportSimulationState(canonical, 0, plan),
@@ -582,13 +572,13 @@ describe('Transport Snapshot V8', () => {
     fabricatedEvent.state.currentBoardingEvents[0]!.boardedPassengerCount = 2;
     expect(() =>
       restoreTransportSimulationState(fabricatedEvent, canonical, plan),
-    ).toThrow(/boarding authority/i);
+    ).toThrow(/passenger (boarding|transit) authority/i);
 
     const missingEvent = structuredClone(snapshot);
     missingEvent.state.currentBoardingEvents = [];
     expect(() =>
       restoreTransportSimulationState(missingEvent, canonical, plan),
-    ).toThrow(/boarding authority/i);
+    ).toThrow(/passenger (boarding|transit) authority/i);
 
     const inflatedNext = structuredClone(snapshot);
     if (inflatedNext.state.passengerDemand.status !== 'active')
@@ -596,7 +586,7 @@ describe('Transport Snapshot V8', () => {
     inflatedNext.state.passengerDemand.nextPassengerOnboardGroupSequence += 1;
     expect(() =>
       restoreTransportSimulationState(inflatedNext, canonical, plan),
-    ).toThrow(/sequence/i);
+    ).toThrow(/(sequence|transit authority)/i);
 
     const sequenceGap = structuredClone(snapshot);
     if (sequenceGap.state.passengerDemand.status !== 'active')
@@ -619,7 +609,7 @@ describe('Transport Snapshot V8', () => {
     inventedSource.state.passengerDemand.nextPassengerWaitingCohortSequence = 1000;
     expect(() =>
       restoreTransportSimulationState(inventedSource, canonical, plan),
-    ).toThrow(/source sequence/i);
+    ).toThrow(/waiting-cohort sequence/i);
 
     const erasedBoarding = structuredClone(snapshot);
     if (erasedBoarding.state.passengerDemand.status !== 'active')
@@ -640,7 +630,7 @@ describe('Transport Snapshot V8', () => {
     erasedBoarding.state.currentBoardingEvents = [];
     expect(() =>
       restoreTransportSimulationState(erasedBoarding, canonical, plan),
-    ).toThrow(/boarding authority/i);
+    ).toThrow(/passenger (boarding|transit) authority/i);
   });
 
   it('round-trips active waiting authority without embedding static plans', () => {
@@ -652,8 +642,8 @@ describe('Transport Snapshot V8', () => {
     );
     const snapshot = createTransportSimulationSnapshot(state);
     expect(snapshot).toMatchObject({
-      schemaVersion: 8,
-      simulationVersion: 'transport-8',
+      schemaVersion: 9,
+      simulationVersion: 'transport-9',
       state: {
         passengerDemand: {
           status: 'active',
@@ -680,7 +670,7 @@ describe('Transport Snapshot V8', () => {
         2,
       ),
     );
-    for (const schemaVersion of [1, 2, 3, 4, 5, 6, 7])
+    for (const schemaVersion of [1, 2, 3, 4, 5, 6, 7, 8])
       expect(() =>
         parseTransportSimulationSnapshot({ ...snapshot, schemaVersion }),
       ).toThrow('unsupported-transport-snapshot');

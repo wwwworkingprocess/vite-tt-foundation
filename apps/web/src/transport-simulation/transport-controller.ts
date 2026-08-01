@@ -12,6 +12,8 @@ import {
   type VehicleStopNodeCall,
   type VehiclePassengerCapacity,
   type CurrentBoardingEvent,
+  type CurrentAlightingEvent,
+  type PassengerJourneyCompletionEvent,
   type VehiclePassengerLoadProjection,
 } from '@torrevieja-tycoon/simulation';
 import {
@@ -65,6 +67,10 @@ export interface TransportApplicationProjection {
   readonly currentStopCalls?: readonly VehicleStopNodeCall[] | undefined;
   readonly vehicleCapacities?: readonly VehiclePassengerCapacity[] | undefined;
   readonly currentBoardingEvents?: readonly CurrentBoardingEvent[] | undefined;
+  readonly currentAlightingEvents?:
+    readonly CurrentAlightingEvent[] | undefined;
+  readonly currentJourneyCompletionEvents?:
+    readonly PassengerJourneyCompletionEvent[] | undefined;
   readonly vehiclePassengerLoads?:
     readonly VehiclePassengerLoadProjection[] | undefined;
   readonly message?: string | undefined;
@@ -157,6 +163,8 @@ export function createTransportApplicationController(input: {
           currentStopCalls: update.currentStopCalls,
           vehicleCapacities: update.vehicleCapacities,
           currentBoardingEvents: update.currentBoardingEvents,
+          currentAlightingEvents: update.currentAlightingEvents,
+          currentJourneyCompletionEvents: update.currentJourneyCompletionEvents,
           vehiclePassengerLoads: update.vehiclePassengerLoads,
         });
       }),
@@ -244,11 +252,16 @@ export function createTransportApplicationController(input: {
         currentStopCalls: exported.snapshot.state.currentStopCalls,
         vehicleCapacities: exported.snapshot.state.vehicleCapacities,
         currentBoardingEvents: exported.snapshot.state.currentBoardingEvents,
+        currentAlightingEvents: exported.snapshot.state.currentAlightingEvents,
+        currentJourneyCompletionEvents:
+          exported.snapshot.state.currentJourneyCompletionEvents,
         vehiclePassengerLoads: projectVehiclePassengerLoads(
           exported.snapshot.state.vehicleCapacities,
           exported.snapshot.state.passengerDemand.status === 'active'
             ? exported.snapshot.state.passengerDemand.onboardGroups
             : [],
+          exported.snapshot.state.currentAlightingEvents,
+          exported.snapshot.state.currentBoardingEvents,
         ),
       });
     } catch (error) {
@@ -460,7 +473,7 @@ export function createTransportApplicationController(input: {
           await input.repository.put(
             parseTransportSaveRecord({
               kind: 'transport-save-record',
-              schemaVersion: 6,
+              schemaVersion: 7,
               ...metadata,
               gameId: exported.gameId,
               sourceTimelineId: exported.timelineId,
@@ -506,11 +519,17 @@ export function createTransportApplicationController(input: {
                 vehicleCapacities: exported.snapshot.state.vehicleCapacities,
                 currentBoardingEvents:
                   exported.snapshot.state.currentBoardingEvents,
+                currentAlightingEvents:
+                  exported.snapshot.state.currentAlightingEvents,
+                currentJourneyCompletionEvents:
+                  exported.snapshot.state.currentJourneyCompletionEvents,
                 vehiclePassengerLoads: projectVehiclePassengerLoads(
                   exported.snapshot.state.vehicleCapacities,
                   exported.snapshot.state.passengerDemand.status === 'active'
                     ? exported.snapshot.state.passengerDemand.onboardGroups
                     : [],
+                  exported.snapshot.state.currentAlightingEvents,
+                  exported.snapshot.state.currentBoardingEvents,
                 ),
                 message: undefined,
               });
@@ -563,11 +582,17 @@ export function createTransportApplicationController(input: {
               vehicleCapacities: exported.snapshot.state.vehicleCapacities,
               currentBoardingEvents:
                 exported.snapshot.state.currentBoardingEvents,
+              currentAlightingEvents:
+                exported.snapshot.state.currentAlightingEvents,
+              currentJourneyCompletionEvents:
+                exported.snapshot.state.currentJourneyCompletionEvents,
               vehiclePassengerLoads: projectVehiclePassengerLoads(
                 exported.snapshot.state.vehicleCapacities,
                 exported.snapshot.state.passengerDemand.status === 'active'
                   ? exported.snapshot.state.passengerDemand.onboardGroups
                   : [],
+                exported.snapshot.state.currentAlightingEvents,
+                exported.snapshot.state.currentBoardingEvents,
               ),
               message: undefined,
             });

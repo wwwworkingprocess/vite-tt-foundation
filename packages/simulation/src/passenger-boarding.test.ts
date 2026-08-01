@@ -259,7 +259,12 @@ describe('deterministic passenger boarding', () => {
       boardPassengersAtVehicleCalls(input({ capacities: [] })),
     ).toThrow('Invalid passenger boarding authority');
     expect(() =>
-      boardPassengersAtVehicleCalls(input({ totalBoardedPassengerCount: 1 })),
+      boardPassengersAtVehicleCalls(
+        input({
+          onboardGroups: first.onboardGroups,
+          totalBoardedPassengerCount: 0,
+        }),
+      ),
     ).toThrow('Invalid boarded passenger total');
   });
 
@@ -274,9 +279,22 @@ describe('deterministic passenger boarding', () => {
           passengerCapacity: 6,
           onboardPassengerCount: 6,
           remainingPassengerCapacity: 0,
+          currentAlightedPassengerCount: 0,
+          currentBoardedPassengerCount: 0,
         },
       ]),
     ).toEqual(projectVehiclePassengerLoads(capacities, result.onboardGroups));
+    expect(
+      projectVehiclePassengerLoads(
+        capacities,
+        result.onboardGroups,
+        [{ vehicleId: capacities[0]!.vehicleId, alightedPassengerCount: 2 }],
+        [{ vehicleId: capacities[0]!.vehicleId, boardedPassengerCount: 3 }],
+      )[0],
+    ).toMatchObject({
+      currentAlightedPassengerCount: 2,
+      currentBoardedPassengerCount: 3,
+    });
     const authority = {
       tick: input().tick,
       fleet: [

@@ -213,6 +213,7 @@ describe.each(factories)(
           kind: 'transport.vehicle.create',
           vehicleId: parseVehicleId('vehicle-demo-1'),
           label: 'Demo vehicle',
+          passengerCapacity: 3,
           patternId,
           movementPlan: {
             kind: 'vehicle-movement-plan-v1',
@@ -230,7 +231,7 @@ describe.each(factories)(
         envelope(3, { type: 'foundation.advance-ticks', count: 5 }),
       );
       const exported = await client.exportSnapshot();
-      expect(exported.snapshot.schemaVersion).toBe(7);
+      expect(exported.snapshot.schemaVersion).toBe(8);
       expect(exported.snapshot.state.passengerDemand).toEqual({
         status: 'disabled',
       });
@@ -250,10 +251,21 @@ describe.each(factories)(
         }),
       ]);
       expect(exported.snapshot.state.currentStopCalls).toEqual([]);
+      expect(exported.snapshot.state.vehicleCapacities).toEqual([
+        { vehicleId: 'vehicle-demo-1', passengerCapacity: 3 },
+      ]);
       expect(updates).toHaveLength(3);
       expect(updates[0]).toMatchObject({
         vehicleOperations: [{ stopCallSequence: 1 }],
         currentStopCalls: [{ occurrenceIndex: 0, stopCallSequence: 1 }],
+        vehiclePassengerLoads: [
+          {
+            vehicleId: 'vehicle-demo-1',
+            passengerCapacity: 3,
+            onboardPassengerCount: 0,
+            remainingPassengerCapacity: 3,
+          },
+        ],
       });
       expect(updates[2]).toMatchObject({
         vehicleOperations: [{ stopCallSequence: 2 }],

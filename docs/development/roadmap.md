@@ -187,11 +187,14 @@ Phase 4E3B activates destination intent into one bounded directional
 waiting cohort per itinerary/destination-cell key. Unavailable direct journeys
 are counted explicitly.
 
-Light Phase 4D is now the current milestone: existing route-cycle vehicles own
+Light Phase 4D is complete: existing route-cycle vehicles own
 deterministic pattern-run sequences and emit exact directional canonical
-StopNode calls. Snapshot V7 and Save V5 are the sole current pre-release
-contracts. No passenger boards yet. Next are Phase 4E4 boarding and capacity,
-Phase 4E5 alighting and journey completion, then Phase 4F economics.
+StopNode calls. Phase 4E3B directional waiting cohorts are also complete.
+
+Phase 4E4 is current: exact canonical calls board deterministic cohort portions
+into immutable capacity-bounded onboard groups. Snapshot V8 and Save V6 are the
+sole current pre-release contracts. Next are Phase 4E5 alighting and journey
+completion, then Phase 4F economics.
 
 ## Phase 5 — React Three Fiber visualization POC
 

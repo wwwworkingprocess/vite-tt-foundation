@@ -42,7 +42,7 @@ const record = () => {
   const canonical = scenario();
   return parseTransportSaveRecord({
     kind: 'transport-save-record',
-    schemaVersion: 5,
+    schemaVersion: 6,
     saveId: 'slot',
     gameId: 'game-fixture',
     sourceTimelineId: 'timeline-source',
@@ -334,7 +334,7 @@ describe('transport application controller', () => {
     await controller.close();
   });
 
-  it('preflights Snapshot V7 operation corruption before replacing authority', async () => {
+  it('preflights Snapshot V8 operation and capacity corruption before replacing authority', async () => {
     const canonical = scenario();
     let savedState = createTransportSimulationState(canonical, 0);
     for (const vehicleId of ['saved-a', 'saved-b'])
@@ -387,6 +387,13 @@ describe('transport application controller', () => {
       (value) => {
         (
           value.snapshot.state.vehicleOperations as unknown as Array<{
+            vehicleId: string;
+          }>
+        ).reverse();
+      },
+      (value) => {
+        (
+          value.snapshot.state.vehicleCapacities as unknown as Array<{
             vehicleId: string;
           }>
         ).reverse();

@@ -6,6 +6,9 @@ import type {
   VehicleState,
   VehiclePatternRunState,
   VehicleStopNodeCall,
+  VehiclePassengerCapacity,
+  CurrentBoardingEvent,
+  VehiclePassengerLoadProjection,
 } from '@torrevieja-tycoon/simulation';
 import type { FoundationApplicationState } from '../application/foundation-controller.js';
 import type { TransportSaveSummary } from './transport-save-record.js';
@@ -32,6 +35,10 @@ type TransportFoundationApplicationState = FoundationApplicationState &
     passengerDemand?: PassengerDemandProjection | undefined;
     vehicleOperations?: readonly VehiclePatternRunState[] | undefined;
     currentStopCalls?: readonly VehicleStopNodeCall[] | undefined;
+    vehicleCapacities?: readonly VehiclePassengerCapacity[] | undefined;
+    currentBoardingEvents?: readonly CurrentBoardingEvent[] | undefined;
+    vehiclePassengerLoads?:
+      readonly VehiclePassengerLoadProjection[] | undefined;
   }>;
 
 export function createTransportFoundationApplication(input: {
@@ -81,6 +88,9 @@ export function createTransportFoundationApplication(input: {
             passengerDemand: state.passengerDemand!,
             vehicleOperations: state.vehicleOperations!,
             currentStopCalls: state.currentStopCalls!,
+            vehicleCapacities: state.vehicleCapacities!,
+            currentBoardingEvents: state.currentBoardingEvents!,
+            vehiclePassengerLoads: state.vehiclePassengerLoads!,
           }
         : {
             session:

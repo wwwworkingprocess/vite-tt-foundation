@@ -9,6 +9,7 @@ import {
   parseTickAdvancement,
   parsePassengerDemandPlan,
   projectPassengerDemand,
+  projectVehiclePassengerLoads,
   parseTransportVehicleCommand,
   restoreTransportSimulationState,
   type ScenarioCoordinate,
@@ -20,6 +21,9 @@ import {
   type VehicleState,
   type VehiclePatternRunState,
   type VehicleStopNodeCall,
+  type VehiclePassengerCapacity,
+  type CurrentBoardingEvent,
+  type VehiclePassengerLoadProjection,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import type {
@@ -95,6 +99,9 @@ export type TransportStateUpdate = Readonly<
     readonly passengerDemand: PassengerDemandProjection;
     readonly vehicleOperations: readonly VehiclePatternRunState[];
     readonly currentStopCalls: readonly VehicleStopNodeCall[];
+    readonly vehicleCapacities: readonly VehiclePassengerCapacity[];
+    readonly currentBoardingEvents: readonly CurrentBoardingEvent[];
+    readonly vehiclePassengerLoads: readonly VehiclePassengerLoadProjection[];
   }
 >;
 export type TransportRenderSnapshot = Readonly<
@@ -103,6 +110,9 @@ export type TransportRenderSnapshot = Readonly<
     readonly passengerDemand: PassengerDemandProjection;
     readonly vehicleOperations: readonly VehiclePatternRunState[];
     readonly currentStopCalls: readonly VehicleStopNodeCall[];
+    readonly vehicleCapacities: readonly VehiclePassengerCapacity[];
+    readonly currentBoardingEvents: readonly CurrentBoardingEvent[];
+    readonly vehiclePassengerLoads: readonly VehiclePassengerLoadProjection[];
   }
 >;
 
@@ -116,6 +126,9 @@ export type TransportSynchronizationResponse =
       passengerDemand: PassengerDemandProjection;
       vehicleOperations: readonly VehiclePatternRunState[];
       currentStopCalls: readonly VehicleStopNodeCall[];
+      vehicleCapacities: readonly VehiclePassengerCapacity[];
+      currentBoardingEvents: readonly CurrentBoardingEvent[];
+      vehiclePassengerLoads: readonly VehiclePassengerLoadProjection[];
     }>;
 
 export interface TransportSimulationClient {
@@ -262,6 +275,14 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         passengerDemand: projectPassengerDemand(authority!.passengerDemand),
         vehicleOperations: authority!.vehicleOperations,
         currentStopCalls: authority!.currentStopCalls,
+        vehicleCapacities: authority!.vehicleCapacities,
+        currentBoardingEvents: authority!.currentBoardingEvents,
+        vehiclePassengerLoads: projectVehiclePassengerLoads(
+          authority!.vehicleCapacities,
+          authority!.passengerDemand.status === 'active'
+            ? authority!.passengerDemand.onboardGroups
+            : [],
+        ),
       }),
     );
     publish(
@@ -272,6 +293,14 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         passengerDemand: projectPassengerDemand(authority!.passengerDemand),
         vehicleOperations: authority!.vehicleOperations,
         currentStopCalls: authority!.currentStopCalls,
+        vehicleCapacities: authority!.vehicleCapacities,
+        currentBoardingEvents: authority!.currentBoardingEvents,
+        vehiclePassengerLoads: projectVehiclePassengerLoads(
+          authority!.vehicleCapacities,
+          authority!.passengerDemand.status === 'active'
+            ? authority!.passengerDemand.onboardGroups
+            : [],
+        ),
       }),
     );
   };
@@ -455,6 +484,14 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
           passengerDemand: projectPassengerDemand(current.passengerDemand),
           vehicleOperations: current.vehicleOperations,
           currentStopCalls: current.currentStopCalls,
+          vehicleCapacities: current.vehicleCapacities,
+          currentBoardingEvents: current.currentBoardingEvents,
+          vehiclePassengerLoads: projectVehiclePassengerLoads(
+            current.vehicleCapacities,
+            current.passengerDemand.status === 'active'
+              ? current.passengerDemand.onboardGroups
+              : [],
+          ),
         });
       });
     },

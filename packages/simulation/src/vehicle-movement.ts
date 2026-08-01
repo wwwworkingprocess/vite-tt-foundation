@@ -67,6 +67,7 @@ export type TransportVehicleCommand =
       label: string;
       patternId: RoutePatternId;
       movementPlan: VehicleMovementPlanV1;
+      passengerCapacity?: number;
     }>
   | Readonly<{
       kind: 'transport.vehicle.create-route-cycle';
@@ -74,6 +75,7 @@ export type TransportVehicleCommand =
       label: string;
       routeId: RouteId;
       legs: readonly VehicleRouteLeg[];
+      passengerCapacity?: number;
     }>
   | Readonly<{
       kind: 'transport.vehicle.start';
@@ -95,6 +97,7 @@ const createSchema = z.strictObject({
   label: z.string().trim().min(1).max(128),
   patternId: z.string().min(1),
   movementPlan: planSchema,
+  passengerCapacity: z.number().int().positive().safe().optional(),
 });
 const startSchema = z.strictObject({
   kind: z.literal('transport.vehicle.start'),
@@ -113,6 +116,7 @@ const routeCycleCreateSchema = z.strictObject({
       }),
     )
     .min(1),
+  passengerCapacity: z.number().int().positive().safe().optional(),
 });
 const commandSchema = z.discriminatedUnion('kind', [
   createSchema,
@@ -239,6 +243,9 @@ export function parseTransportVehicleCommand(
       label: command.label,
       routeId: route.routeId,
       legs,
+      ...(command.passengerCapacity === undefined
+        ? {}
+        : { passengerCapacity: command.passengerCapacity }),
     });
   }
   const pattern = graph.pattern(command.patternId);
@@ -250,6 +257,9 @@ export function parseTransportVehicleCommand(
     label: command.label,
     patternId: pattern.patternId,
     movementPlan: parseVehicleMovementPlan(command.movementPlan, edges.length),
+    ...(command.passengerCapacity === undefined
+      ? {}
+      : { passengerCapacity: command.passengerCapacity }),
   });
 }
 

@@ -94,7 +94,7 @@ const cohortKey = (
     group.destinationOccurrenceIndex,
   ].join('\u0000');
 
-const matchesItinerary = (
+export const passengerWaitingCohortMatchesItinerary = (
   cohort: Readonly<PassengerWaitingCohort>,
   itinerary: Readonly<PassengerDirectItinerary>,
 ) =>
@@ -169,7 +169,7 @@ export function activatePassengerDirectItineraries(input: {
     const key = cohortKey(cohort);
     if (
       itinerary.status !== 'direct' ||
-      !matchesItinerary(cohort, itinerary) ||
+      !passengerWaitingCohortMatchesItinerary(cohort, itinerary) ||
       destinationCell?.assignedStopPlaceId !== cohort.destinationStopPlaceId ||
       !Number.isSafeInteger(cohort.count) ||
       cohort.count < 1 ||

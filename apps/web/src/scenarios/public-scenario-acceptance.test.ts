@@ -220,6 +220,9 @@ describe('public multi-scenario catalogue', () => {
     ).toBe(false);
 
     const elche = await loadCanonicalScenario('elche-urban-abc-v1');
-    expect(elche.stops.stopPlaces).toEqual([]);
+    expect(elche.stops.stopPlaces).toHaveLength(75);
+    expect(
+      elche.stops.stopNodes.every(({ stopPlaceId }) => stopPlaceId !== null),
+    ).toBe(true);
   });
 });

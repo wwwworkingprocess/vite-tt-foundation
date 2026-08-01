@@ -1,6 +1,7 @@
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import {
   projectPassengerDemand,
+  projectVehiclePassengerLoads,
   restoreTransportSimulationState,
   type ActivePassengerDemandState,
   type PassengerDemandPlanV1,
@@ -9,6 +10,9 @@ import {
   type VehicleState,
   type VehiclePatternRunState,
   type VehicleStopNodeCall,
+  type VehiclePassengerCapacity,
+  type CurrentBoardingEvent,
+  type VehiclePassengerLoadProjection,
 } from '@torrevieja-tycoon/simulation';
 import {
   parseClientId,
@@ -59,6 +63,10 @@ export interface TransportApplicationProjection {
   readonly passengerDemand?: PassengerDemandProjection | undefined;
   readonly vehicleOperations?: readonly VehiclePatternRunState[] | undefined;
   readonly currentStopCalls?: readonly VehicleStopNodeCall[] | undefined;
+  readonly vehicleCapacities?: readonly VehiclePassengerCapacity[] | undefined;
+  readonly currentBoardingEvents?: readonly CurrentBoardingEvent[] | undefined;
+  readonly vehiclePassengerLoads?:
+    readonly VehiclePassengerLoadProjection[] | undefined;
   readonly message?: string | undefined;
 }
 
@@ -147,6 +155,9 @@ export function createTransportApplicationController(input: {
           passengerDemand: update.passengerDemand,
           vehicleOperations: update.vehicleOperations,
           currentStopCalls: update.currentStopCalls,
+          vehicleCapacities: update.vehicleCapacities,
+          currentBoardingEvents: update.currentBoardingEvents,
+          vehiclePassengerLoads: update.vehiclePassengerLoads,
         });
       }),
     );
@@ -231,6 +242,14 @@ export function createTransportApplicationController(input: {
         ),
         vehicleOperations: exported.snapshot.state.vehicleOperations,
         currentStopCalls: exported.snapshot.state.currentStopCalls,
+        vehicleCapacities: exported.snapshot.state.vehicleCapacities,
+        currentBoardingEvents: exported.snapshot.state.currentBoardingEvents,
+        vehiclePassengerLoads: projectVehiclePassengerLoads(
+          exported.snapshot.state.vehicleCapacities,
+          exported.snapshot.state.passengerDemand.status === 'active'
+            ? exported.snapshot.state.passengerDemand.onboardGroups
+            : [],
+        ),
       });
     } catch (error) {
       if (generation === token) generation += 1;
@@ -441,7 +460,7 @@ export function createTransportApplicationController(input: {
           await input.repository.put(
             parseTransportSaveRecord({
               kind: 'transport-save-record',
-              schemaVersion: 5,
+              schemaVersion: 6,
               ...metadata,
               gameId: exported.gameId,
               sourceTimelineId: exported.timelineId,
@@ -484,6 +503,15 @@ export function createTransportApplicationController(input: {
                 ),
                 vehicleOperations: exported.snapshot.state.vehicleOperations,
                 currentStopCalls: exported.snapshot.state.currentStopCalls,
+                vehicleCapacities: exported.snapshot.state.vehicleCapacities,
+                currentBoardingEvents:
+                  exported.snapshot.state.currentBoardingEvents,
+                vehiclePassengerLoads: projectVehiclePassengerLoads(
+                  exported.snapshot.state.vehicleCapacities,
+                  exported.snapshot.state.passengerDemand.status === 'active'
+                    ? exported.snapshot.state.passengerDemand.onboardGroups
+                    : [],
+                ),
                 message: undefined,
               });
           }
@@ -532,6 +560,15 @@ export function createTransportApplicationController(input: {
               ),
               vehicleOperations: exported.snapshot.state.vehicleOperations,
               currentStopCalls: exported.snapshot.state.currentStopCalls,
+              vehicleCapacities: exported.snapshot.state.vehicleCapacities,
+              currentBoardingEvents:
+                exported.snapshot.state.currentBoardingEvents,
+              vehiclePassengerLoads: projectVehiclePassengerLoads(
+                exported.snapshot.state.vehicleCapacities,
+                exported.snapshot.state.passengerDemand.status === 'active'
+                  ? exported.snapshot.state.passengerDemand.onboardGroups
+                  : [],
+              ),
               message: undefined,
             });
         }

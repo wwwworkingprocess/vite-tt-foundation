@@ -9,6 +9,9 @@ import {
   parseVehicleFleetSnapshot,
   parseVehicleOperationAuthority,
   parseVehicleStopNodeCalls,
+  parseVehiclePassengerCapacities,
+  parseCurrentBoardingEvents,
+  parseVehiclePassengerLoadProjections,
 } from '@torrevieja-tycoon/simulation';
 import {
   foundationCommandEnvelopeSchema,
@@ -117,6 +120,7 @@ const vehicleCommand = z.discriminatedUnion('kind', [
     label: z.string().trim().min(1).max(128),
     patternId: z.string().min(1),
     movementPlan,
+    passengerCapacity: z.number().int().positive().safe().optional(),
   }),
   z.strictObject({
     kind: z.literal('transport.vehicle.create-route-cycle'),
@@ -126,6 +130,7 @@ const vehicleCommand = z.discriminatedUnion('kind', [
     legs: z
       .array(z.strictObject({ patternId: z.string().min(1), movementPlan }))
       .min(1),
+    passengerCapacity: z.number().int().positive().safe().optional(),
   }),
   z.strictObject({
     kind: z.literal('transport.vehicle.start'),
@@ -201,6 +206,9 @@ const publication = z.discriminatedUnion('channel', [
       passengerDemand: z.unknown(),
       vehicleOperations: z.unknown(),
       currentStopCalls: z.unknown(),
+      vehicleCapacities: z.unknown(),
+      currentBoardingEvents: z.unknown(),
+      vehiclePassengerLoads: z.unknown(),
     }),
   }),
   z.strictObject({
@@ -212,6 +220,9 @@ const publication = z.discriminatedUnion('channel', [
       passengerDemand: z.unknown(),
       vehicleOperations: z.unknown(),
       currentStopCalls: z.unknown(),
+      vehicleCapacities: z.unknown(),
+      currentBoardingEvents: z.unknown(),
+      vehiclePassengerLoads: z.unknown(),
     }),
   }),
 ]);
@@ -239,6 +250,9 @@ export function parseTransportSynchronizationResult(
       passengerDemand: z.unknown(),
       vehicleOperations: z.unknown(),
       currentStopCalls: z.unknown(),
+      vehicleCapacities: z.unknown(),
+      currentBoardingEvents: z.unknown(),
+      vehiclePassengerLoads: z.unknown(),
     })
     .parse(value);
   return deepFreeze({
@@ -248,6 +262,15 @@ export function parseTransportSynchronizationResult(
     passengerDemand: parsePassengerDemandProjection(parsed.passengerDemand),
     vehicleOperations: parseVehicleOperationAuthority(parsed.vehicleOperations),
     currentStopCalls: parseVehicleStopNodeCalls(parsed.currentStopCalls),
+    vehicleCapacities: parseVehiclePassengerCapacities(
+      parsed.vehicleCapacities,
+    ),
+    currentBoardingEvents: parseCurrentBoardingEvents(
+      parsed.currentBoardingEvents,
+    ),
+    vehiclePassengerLoads: parseVehiclePassengerLoadProjections(
+      parsed.vehiclePassengerLoads,
+    ),
   }) as TransportSynchronizationResponse;
 }
 
@@ -309,6 +332,15 @@ export function parseTransportWorkerResponse(
         ),
         currentStopCalls: parseVehicleStopNodeCalls(
           parsed.payload.currentStopCalls,
+        ),
+        vehicleCapacities: parseVehiclePassengerCapacities(
+          parsed.payload.vehicleCapacities,
+        ),
+        currentBoardingEvents: parseCurrentBoardingEvents(
+          parsed.payload.currentBoardingEvents,
+        ),
+        vehiclePassengerLoads: parseVehiclePassengerLoadProjections(
+          parsed.payload.vehiclePassengerLoads,
         ),
       },
     }) as TransportWorkerResponse;

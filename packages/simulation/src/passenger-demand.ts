@@ -20,6 +20,10 @@ import {
   passengerWaitingCohortSchema,
   type PassengerWaitingCohort,
 } from './passenger-waiting-cohort.js';
+import {
+  passengerOnboardGroupSchema,
+  type PassengerOnboardGroup,
+} from './passenger-boarding.js';
 
 export const passengerDemandPlanSchemaVersion = '1.0.0' as const;
 const distanceTieToleranceSquaredCells = 1e-9;
@@ -188,11 +192,13 @@ export interface ActivePassengerDemandState {
   readonly processedThroughTick: SimulationTick;
   readonly nextPassengerGroupSequence: number;
   readonly nextPassengerWaitingCohortSequence: number;
+  readonly nextPassengerOnboardGroupSequence: number;
   readonly cellCredits: readonly Readonly<PassengerCellCreditState>[];
   readonly accessingGroups: readonly Readonly<AccessingPassengerGroup>[];
   readonly stopArrivals: readonly Readonly<StopPlaceArrivalState>[];
   readonly destinationCursors: readonly Readonly<PassengerDestinationCursorState>[];
   readonly waitingCohorts: readonly Readonly<PassengerWaitingCohort>[];
+  readonly onboardGroups: readonly Readonly<PassengerOnboardGroup>[];
   readonly totalEmittedPassengerCount: number;
   readonly servedEmittedPassengerCount: number;
   readonly unservedAtSourcePassengerCount: number;
@@ -201,6 +207,8 @@ export interface ActivePassengerDemandState {
   readonly destinationUnavailableAtStopPassengerCount: number;
   readonly directItineraryUnavailablePassengerCount: number;
   readonly totalWaitingForVehiclePassengerCount: number;
+  readonly totalBoardedPassengerCount: number;
+  readonly totalOnboardPassengerCount: number;
 }
 
 export type PassengerDemandState =
@@ -222,6 +230,7 @@ const stateSchema = z.discriminatedUnion('status', [
     processedThroughTick: nonnegativeSafeInteger,
     nextPassengerGroupSequence: positiveSafeInteger,
     nextPassengerWaitingCohortSequence: positiveSafeInteger,
+    nextPassengerOnboardGroupSequence: positiveSafeInteger,
     cellCredits: z.array(
       z.strictObject({
         cellId: planCellSchema.shape.cellId,
@@ -251,6 +260,7 @@ const stateSchema = z.discriminatedUnion('status', [
       }),
     ),
     waitingCohorts: z.array(passengerWaitingCohortSchema),
+    onboardGroups: z.array(passengerOnboardGroupSchema),
     totalEmittedPassengerCount: nonnegativeSafeInteger,
     servedEmittedPassengerCount: nonnegativeSafeInteger,
     unservedAtSourcePassengerCount: nonnegativeSafeInteger,
@@ -259,6 +269,8 @@ const stateSchema = z.discriminatedUnion('status', [
     destinationUnavailableAtStopPassengerCount: nonnegativeSafeInteger,
     directItineraryUnavailablePassengerCount: nonnegativeSafeInteger,
     totalWaitingForVehiclePassengerCount: nonnegativeSafeInteger,
+    totalBoardedPassengerCount: nonnegativeSafeInteger,
+    totalOnboardPassengerCount: nonnegativeSafeInteger,
   }),
 ]);
 const projectionSchema = z.discriminatedUnion('status', [
@@ -276,6 +288,10 @@ const projectionSchema = z.discriminatedUnion('status', [
     destinationUnavailableAtStopPassengerCount: nonnegativeSafeInteger,
     directItineraryUnavailablePassengerCount: nonnegativeSafeInteger,
     totalWaitingForVehiclePassengerCount: nonnegativeSafeInteger,
+    totalBoardedPassengerCount: nonnegativeSafeInteger,
+    totalOnboardPassengerCount: nonnegativeSafeInteger,
+    onboardGroupCount: nonnegativeSafeInteger,
+    onboardGroups: z.array(passengerOnboardGroupSchema),
     waitingCohortCount: nonnegativeSafeInteger,
     waitingCohorts: stateSchema.options[1].shape.waitingCohorts,
     stopArrivals: stateSchema.options[1].shape.stopArrivals,
@@ -297,6 +313,10 @@ export type PassengerDemandProjection = Readonly<
       readonly destinationUnavailableAtStopPassengerCount: number;
       readonly directItineraryUnavailablePassengerCount: number;
       readonly totalWaitingForVehiclePassengerCount: number;
+      readonly totalBoardedPassengerCount: number;
+      readonly totalOnboardPassengerCount: number;
+      readonly onboardGroupCount: number;
+      readonly onboardGroups: readonly Readonly<PassengerOnboardGroup>[];
       readonly waitingCohortCount: number;
       readonly waitingCohorts: readonly Readonly<PassengerWaitingCohort>[];
       readonly stopArrivals: readonly Readonly<StopPlaceArrivalState>[];
@@ -549,6 +569,7 @@ export function parsePassengerDemandState(
     destinationCursors:
       parsed.destinationCursors as PassengerDestinationCursorState[],
     waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
+    onboardGroups: parsed.onboardGroups as PassengerOnboardGroup[],
   });
 }
 
@@ -563,6 +584,7 @@ export function createInitialPassengerDemandState(
     processedThroughTick: parseSimulationTick(initialTick),
     nextPassengerGroupSequence: 1,
     nextPassengerWaitingCohortSequence: 1,
+    nextPassengerOnboardGroupSequence: 1,
     cellCredits: parsedPlan.cells.map((cell) => ({
       cellId: cell.cellId,
       credit: 0,
@@ -577,6 +599,7 @@ export function createInitialPassengerDemandState(
       destinationCursor: 0,
     })),
     waitingCohorts: [],
+    onboardGroups: [],
     totalEmittedPassengerCount: 0,
     servedEmittedPassengerCount: 0,
     unservedAtSourcePassengerCount: 0,
@@ -585,6 +608,8 @@ export function createInitialPassengerDemandState(
     destinationUnavailableAtStopPassengerCount: 0,
     directItineraryUnavailablePassengerCount: 0,
     totalWaitingForVehiclePassengerCount: 0,
+    totalBoardedPassengerCount: 0,
+    totalOnboardPassengerCount: 0,
   });
 }
 
@@ -732,6 +757,10 @@ export function validatePassengerDemandState(
     activationTick: parsed.processedThroughTick,
   });
   const awaitingDestination = arrived;
+  const onboardPassengerCount = parsed.onboardGroups.reduce(
+    (total, group) => checkedAdd(total, group.count, 'onboard passengers'),
+    0,
+  );
   if (
     parsed.totalEmittedPassengerCount !==
       checkedAdd(
@@ -753,7 +782,11 @@ export function validatePassengerDemandState(
           'unavailable itinerary passengers',
         ),
         checkedAdd(
-          parsed.totalWaitingForVehiclePassengerCount,
+          checkedAdd(
+            parsed.totalWaitingForVehiclePassengerCount,
+            parsed.totalOnboardPassengerCount,
+            'waiting and onboard passengers',
+          ),
           awaitingDestination,
           'waiting passengers',
         ),
@@ -762,11 +795,17 @@ export function validatePassengerDemandState(
     parsed.totalDestinationAssignedPassengerCount !==
       checkedAdd(
         parsed.directItineraryUnavailablePassengerCount,
-        parsed.totalWaitingForVehiclePassengerCount,
+        checkedAdd(
+          parsed.totalWaitingForVehiclePassengerCount,
+          parsed.totalOnboardPassengerCount,
+          'assigned waiting and onboard passengers',
+        ),
         'destination-assigned passengers',
       ) ||
     parsed.totalWaitingForVehiclePassengerCount !==
       waitingAuthority.totalWaitingForVehiclePassengerCount ||
+    parsed.totalOnboardPassengerCount !== onboardPassengerCount ||
+    parsed.totalBoardedPassengerCount !== onboardPassengerCount ||
     parsed.destinationUnavailableAtStopPassengerCount >
       parsed.totalArrivedAtStopPassengerCount
   )
@@ -782,6 +821,7 @@ export function validatePassengerDemandState(
     destinationCursors:
       parsed.destinationCursors as PassengerDestinationCursorState[],
     waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
+    onboardGroups: parsed.onboardGroups as PassengerOnboardGroup[],
   });
 }
 
@@ -966,6 +1006,8 @@ export function advancePassengerDemandToTick(
       nextPassengerGroupSequence: nextSequence,
       nextPassengerWaitingCohortSequence:
         activation.nextPassengerWaitingCohortSequence,
+      nextPassengerOnboardGroupSequence:
+        current.nextPassengerOnboardGroupSequence,
       cellCredits,
       accessingGroups: accessingGroups.sort(compareGroups),
       stopArrivals: parsedPlan.stops.map((stop) => ({
@@ -977,6 +1019,7 @@ export function advancePassengerDemandToTick(
         destinationCursor: destinationCursors.get(stop.stopPlaceId)!,
       })),
       waitingCohorts: activation.waitingCohorts,
+      onboardGroups: current.onboardGroups,
       totalEmittedPassengerCount: totalEmitted,
       servedEmittedPassengerCount: servedEmitted,
       unservedAtSourcePassengerCount: unserved,
@@ -987,6 +1030,8 @@ export function advancePassengerDemandToTick(
         activation.directItineraryUnavailablePassengerCount,
       totalWaitingForVehiclePassengerCount:
         activation.totalWaitingForVehiclePassengerCount,
+      totalBoardedPassengerCount: current.totalBoardedPassengerCount,
+      totalOnboardPassengerCount: current.totalOnboardPassengerCount,
     });
   }
   return current;
@@ -1008,6 +1053,7 @@ export function parsePassengerDemandProjection(
             parsed.demandPlanCoordinate as ActivePassengerDemandState['demandPlanCoordinate'],
           stopArrivals: parsed.stopArrivals as StopPlaceArrivalState[],
           waitingCohorts: parsed.waitingCohorts as PassengerWaitingCohort[],
+          onboardGroups: parsed.onboardGroups as PassengerOnboardGroup[],
         },
   );
 }
@@ -1050,6 +1096,10 @@ export function projectPassengerDemand(
       state.totalWaitingForVehiclePassengerCount,
     waitingCohortCount: state.waitingCohorts.length,
     waitingCohorts: state.waitingCohorts,
+    totalBoardedPassengerCount: state.totalBoardedPassengerCount,
+    totalOnboardPassengerCount: state.totalOnboardPassengerCount,
+    onboardGroupCount: state.onboardGroups.length,
+    onboardGroups: state.onboardGroups,
     stopArrivals: state.stopArrivals,
   });
 }

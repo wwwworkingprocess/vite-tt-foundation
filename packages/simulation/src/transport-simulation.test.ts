@@ -58,8 +58,8 @@ describe('authoritative transport simulation', () => {
     const snapshot = createTransportSimulationSnapshot(state);
     expect(snapshot).toEqual({
       kind: 'transport-simulation-snapshot',
-      schemaVersion: 7,
-      simulationVersion: 'transport-7',
+      schemaVersion: 8,
+      simulationVersion: 'transport-8',
       scenario: {
         scenarioSchemaVersion: '1.0.0',
         scenarioId: 'torrevieja-mini-v1',
@@ -73,6 +73,8 @@ describe('authoritative transport simulation', () => {
         passengerDemand: { status: 'disabled' },
         vehicleOperations: [],
         currentStopCalls: [],
+        vehicleCapacities: [],
+        currentBoardingEvents: [],
       },
     });
     expect(JSON.stringify(snapshot)).not.toContain('stopNodes');

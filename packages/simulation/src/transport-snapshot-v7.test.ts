@@ -79,7 +79,88 @@ const demandPlan = () => {
   });
 };
 
-describe('Transport Snapshot V7', () => {
+describe('Transport Snapshot V8', () => {
+  it('boards an exact current origin call and round-trips capacity and onboard authority', () => {
+    const canonical = scenario();
+    const plan = structuredClone(demandPlan());
+    plan.cells[0]!.assignedStopPlaceId = 'tv-place-0108';
+    plan.cells[1]!.assignedStopPlaceId = 'tv-place-0093';
+    plan.stops = [
+      { stopPlaceId: 'tv-place-0093' },
+      { stopPlaceId: 'tv-place-0108' },
+    ];
+    let state = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      2,
+    );
+    state = applyTransportVehicleCommand(state, {
+      kind: 'transport.vehicle.create-route-cycle',
+      vehicleId: 'boarding-bus',
+      label: 'Boarding bus',
+      routeId: 'legacy-A2',
+      passengerCapacity: 1,
+      legs: [
+        {
+          patternId: 'legacy-A2-torrevieja-la-mata',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1, 1, 1],
+          },
+        },
+        {
+          patternId: 'legacy-A2-la-mata-torrevieja',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1],
+          },
+        },
+      ],
+    });
+    expect(state.vehicleCapacities).toEqual([
+      { vehicleId: 'boarding-bus', passengerCapacity: 1 },
+    ]);
+    expect(state.passengerDemand).toMatchObject({
+      status: 'active',
+      totalBoardedPassengerCount: 1,
+      totalOnboardPassengerCount: 1,
+    });
+    expect(state.currentBoardingEvents).toEqual([
+      expect.objectContaining({
+        vehicleId: 'boarding-bus',
+        boardedPassengerCount: 1,
+        remainingCapacity: 0,
+      }),
+    ]);
+    const snapshot = createTransportSimulationSnapshot(state);
+    expect(
+      createTransportSimulationSnapshot(
+        restoreTransportSimulationState(snapshot, canonical, plan),
+      ),
+    ).toEqual(snapshot);
+    expect(Object.isFrozen(snapshot.state.vehicleCapacities[0])).toBe(true);
+
+    const missingCapacity = structuredClone(snapshot);
+    missingCapacity.state.vehicleCapacities = [];
+    expect(() =>
+      restoreTransportSimulationState(missingCapacity, canonical, plan),
+    ).toThrow(/capacity authority/i);
+    const inflatedOnboard = structuredClone(snapshot);
+    if (inflatedOnboard.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    inflatedOnboard.state.passengerDemand.onboardGroups[0]!.count = 2;
+    inflatedOnboard.state.passengerDemand.totalBoardedPassengerCount = 2;
+    inflatedOnboard.state.passengerDemand.totalOnboardPassengerCount = 2;
+    inflatedOnboard.state.passengerDemand.totalWaitingForVehiclePassengerCount -= 1;
+    expect(() =>
+      restoreTransportSimulationState(inflatedOnboard, canonical, plan),
+    ).toThrow();
+    const fabricatedEvent = structuredClone(snapshot);
+    fabricatedEvent.state.currentBoardingEvents[0]!.boardedPassengerCount = 2;
+    expect(() =>
+      restoreTransportSimulationState(fabricatedEvent, canonical, plan),
+    ).toThrow(/boarding events/i);
+  });
+
   it('round-trips active waiting authority without embedding static plans', () => {
     const canonical = scenario();
     const plan = demandPlan();
@@ -89,8 +170,8 @@ describe('Transport Snapshot V7', () => {
     );
     const snapshot = createTransportSimulationSnapshot(state);
     expect(snapshot).toMatchObject({
-      schemaVersion: 7,
-      simulationVersion: 'transport-7',
+      schemaVersion: 8,
+      simulationVersion: 'transport-8',
       state: {
         passengerDemand: {
           status: 'active',
@@ -117,7 +198,7 @@ describe('Transport Snapshot V7', () => {
         2,
       ),
     );
-    for (const schemaVersion of [1, 2, 3, 4, 5])
+    for (const schemaVersion of [1, 2, 3, 4, 5, 6, 7])
       expect(() =>
         parseTransportSimulationSnapshot({ ...snapshot, schemaVersion }),
       ).toThrow('unsupported-transport-snapshot');

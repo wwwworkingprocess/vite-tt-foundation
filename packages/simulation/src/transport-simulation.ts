@@ -16,6 +16,7 @@ import {
 import {
   advanceVehicleFleet,
   applyVehicleCommand,
+  parseTransportVehicleCommand,
   parseVehicleFleetSnapshot,
   restoreVehicleFleet,
   type VehicleState,
@@ -46,6 +47,16 @@ import {
   type VehiclePatternRunState,
   type VehicleStopNodeCall,
 } from './vehicle-operation.js';
+import {
+  boardPassengersAtVehicleCalls,
+  createVehiclePassengerCapacity,
+  parseCurrentBoardingEvents,
+  parseVehiclePassengerCapacities,
+  validatePassengerBoardingAuthority,
+  type CurrentBoardingEvent,
+  type VehiclePassengerCapacity,
+} from './passenger-boarding.js';
+import { passengerWaitingCohortMatchesItinerary } from './passenger-waiting-cohort.js';
 
 export type ScenarioCompatibilityErrorCode =
   | 'unsupported-transport-snapshot'
@@ -54,7 +65,7 @@ export type ScenarioCompatibilityErrorCode =
   | 'scenario-version-mismatch'
   | 'scenario-content-hash-mismatch';
 
-export const transportSimulationSnapshotSchemaVersion = 7 as const;
+export const transportSimulationSnapshotSchemaVersion = 8 as const;
 
 export class ScenarioCompatibilityError extends Error {
   constructor(
@@ -85,12 +96,14 @@ export interface TransportSimulationState {
   readonly passengerDemand: PassengerDemandState;
   readonly vehicleOperations: readonly VehiclePatternRunState[];
   readonly currentStopCalls: readonly VehicleStopNodeCall[];
+  readonly vehicleCapacities: readonly VehiclePassengerCapacity[];
+  readonly currentBoardingEvents: readonly CurrentBoardingEvent[];
 }
 
-export interface TransportSimulationSnapshotV7 {
+export interface TransportSimulationSnapshotV8 {
   readonly kind: 'transport-simulation-snapshot';
-  readonly schemaVersion: 7;
-  readonly simulationVersion: 'transport-7';
+  readonly schemaVersion: 8;
+  readonly simulationVersion: 'transport-8';
   readonly scenario: ScenarioCoordinate;
   readonly state: Readonly<{
     readonly tick: SimulationTick;
@@ -98,10 +111,12 @@ export interface TransportSimulationSnapshotV7 {
     readonly passengerDemand: PassengerDemandState;
     readonly vehicleOperations: readonly VehiclePatternRunState[];
     readonly currentStopCalls: readonly VehicleStopNodeCall[];
+    readonly vehicleCapacities: readonly VehiclePassengerCapacity[];
+    readonly currentBoardingEvents: readonly CurrentBoardingEvent[];
   }>;
 }
 
-export type TransportSimulationSnapshot = TransportSimulationSnapshotV7;
+export type TransportSimulationSnapshot = TransportSimulationSnapshotV8;
 
 const hash = z.string().regex(/^[0-9a-f]{64}$/);
 const coordinateSchema = z.strictObject({
@@ -112,10 +127,10 @@ const coordinateSchema = z.strictObject({
     .regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/),
   contentHash: hash,
 });
-const snapshotV7Schema = z.strictObject({
+const snapshotV8Schema = z.strictObject({
   kind: z.literal('transport-simulation-snapshot'),
   schemaVersion: z.literal(transportSimulationSnapshotSchemaVersion),
-  simulationVersion: z.literal('transport-7'),
+  simulationVersion: z.literal('transport-8'),
   scenario: coordinateSchema,
   state: z.strictObject({
     tick: z.number().int().nonnegative().safe(),
@@ -123,6 +138,8 @@ const snapshotV7Schema = z.strictObject({
     passengerDemand: z.unknown(),
     vehicleOperations: z.unknown(),
     currentStopCalls: z.unknown(),
+    vehicleCapacities: z.unknown(),
+    currentBoardingEvents: z.unknown(),
   }),
 });
 
@@ -207,6 +224,8 @@ export function createTransportSimulationState(
         : createInitialPassengerDemandState(parsedPlan, tick),
     vehicleOperations: [],
     currentStopCalls: [],
+    vehicleCapacities: [],
+    currentBoardingEvents: [],
   });
 }
 
@@ -249,6 +268,7 @@ export function advanceTransportTicks(
         }),
       ),
       currentStopCalls: [],
+      currentBoardingEvents: [],
     });
   }
   const remainingTicks = current === state ? tickCount : 1;
@@ -277,6 +297,40 @@ export function advanceTransportTicks(
         left.vehicleId.localeCompare(right.vehicleId) ||
         left.stopCallSequence - right.stopCallSequence,
     );
+    const passengerDemand =
+      current.passengerDemand.status === 'disabled'
+        ? current.passengerDemand
+        : advancePassengerDemandToTick(
+            current.passengerDemandPlan!,
+            current.passengerDirectItineraryIndex!,
+            current.passengerDemand,
+            tick,
+          );
+    const boarding =
+      passengerDemand.status === 'disabled'
+        ? null
+        : boardPassengersAtVehicleCalls({
+            tick,
+            waitingCohorts: passengerDemand.waitingCohorts,
+            onboardGroups: passengerDemand.onboardGroups,
+            nextPassengerOnboardGroupSequence:
+              passengerDemand.nextPassengerOnboardGroupSequence,
+            totalBoardedPassengerCount:
+              passengerDemand.totalBoardedPassengerCount,
+            capacities: current.vehicleCapacities,
+            vehicleOperations: operations,
+            currentStopCalls: calls,
+            itineraryIsValid: (cohort) => {
+              const itinerary = current.passengerDirectItineraryIndex!.find(
+                cohort.originStopPlaceId,
+                cohort.destinationStopPlaceId,
+              );
+              return (
+                itinerary.status === 'direct' &&
+                passengerWaitingCohortMatchesItinerary(cohort, itinerary)
+              );
+            },
+          });
     current = freeze({
       ...current,
       tick,
@@ -284,14 +338,20 @@ export function advanceTransportTicks(
       vehicleOperations: operations,
       currentStopCalls: calls,
       passengerDemand:
-        current.passengerDemand.status === 'disabled'
-          ? current.passengerDemand
-          : advancePassengerDemandToTick(
-              current.passengerDemandPlan!,
-              current.passengerDirectItineraryIndex!,
-              current.passengerDemand,
-              tick,
-            ),
+        boarding === null
+          ? passengerDemand
+          : {
+              ...passengerDemand,
+              waitingCohorts: boarding.waitingCohorts,
+              onboardGroups: boarding.onboardGroups,
+              nextPassengerOnboardGroupSequence:
+                boarding.nextPassengerOnboardGroupSequence,
+              totalWaitingForVehiclePassengerCount:
+                boarding.totalWaitingForVehiclePassengerCount,
+              totalBoardedPassengerCount: boarding.totalBoardedPassengerCount,
+              totalOnboardPassengerCount: boarding.totalOnboardPassengerCount,
+            },
+      currentBoardingEvents: boarding?.currentBoardingEvents ?? [],
     });
   }
   return current;
@@ -301,6 +361,7 @@ export function applyTransportVehicleCommand(
   state: TransportSimulationState,
   command: unknown,
 ): TransportSimulationState {
+  const parsedCommand = parseTransportVehicleCommand(command, state.graph);
   const fleet = applyVehicleCommand(state.graph, state.fleet, command);
   if (fleet.length === state.fleet.length) {
     const vehicleOperations = state.vehicleOperations.map((operation, index) =>
@@ -319,10 +380,60 @@ export function applyTransportVehicleCommand(
     fleet.at(-1)!,
     state.tick,
   );
+  const vehicleCapacities = [
+    ...state.vehicleCapacities,
+    createVehiclePassengerCapacity(
+      fleet.at(-1)!.vehicleId,
+      parsedCommand.kind === 'transport.vehicle.start'
+        ? undefined
+        : parsedCommand.passengerCapacity,
+    ),
+  ];
+  const boarding =
+    state.passengerDemand.status === 'disabled'
+      ? null
+      : boardPassengersAtVehicleCalls({
+          tick: state.tick,
+          waitingCohorts: state.passengerDemand.waitingCohorts,
+          onboardGroups: state.passengerDemand.onboardGroups,
+          nextPassengerOnboardGroupSequence:
+            state.passengerDemand.nextPassengerOnboardGroupSequence,
+          totalBoardedPassengerCount:
+            state.passengerDemand.totalBoardedPassengerCount,
+          capacities: vehicleCapacities,
+          vehicleOperations: [...state.vehicleOperations, created.operation],
+          currentStopCalls: [created.call],
+          itineraryIsValid: (cohort) => {
+            const itinerary = state.passengerDirectItineraryIndex!.find(
+              cohort.originStopPlaceId,
+              cohort.destinationStopPlaceId,
+            );
+            return (
+              itinerary.status === 'direct' &&
+              passengerWaitingCohortMatchesItinerary(cohort, itinerary)
+            );
+          },
+        });
   return freeze({
     ...state,
     fleet,
     vehicleOperations: [...state.vehicleOperations, created.operation],
+    vehicleCapacities,
+    passengerDemand:
+      boarding === null
+        ? state.passengerDemand
+        : {
+            ...state.passengerDemand,
+            waitingCohorts: boarding.waitingCohorts,
+            onboardGroups: boarding.onboardGroups,
+            nextPassengerOnboardGroupSequence:
+              boarding.nextPassengerOnboardGroupSequence,
+            totalWaitingForVehiclePassengerCount:
+              boarding.totalWaitingForVehiclePassengerCount,
+            totalBoardedPassengerCount: boarding.totalBoardedPassengerCount,
+            totalOnboardPassengerCount: boarding.totalOnboardPassengerCount,
+          },
+    currentBoardingEvents: boarding?.currentBoardingEvents ?? [],
     currentStopCalls: [...state.currentStopCalls, created.call].sort(
       (left, right) =>
         left.vehicleId.localeCompare(right.vehicleId) ||
@@ -334,7 +445,7 @@ export function applyTransportVehicleCommand(
 export function parseTransportSimulationSnapshot(
   value: unknown,
 ): TransportSimulationSnapshot {
-  const result = snapshotV7Schema.safeParse(value);
+  const result = snapshotV8Schema.safeParse(value);
   if (!result.success)
     throw new ScenarioCompatibilityError(
       'unsupported-transport-snapshot',
@@ -350,6 +461,12 @@ export function parseTransportSimulationSnapshot(
   );
   const currentStopCalls = parseVehicleStopNodeCalls(
     result.data.state.currentStopCalls,
+  );
+  const vehicleCapacities = parseVehiclePassengerCapacities(
+    result.data.state.vehicleCapacities,
+  );
+  const currentBoardingEvents = parseCurrentBoardingEvents(
+    result.data.state.currentBoardingEvents,
   );
   if (
     passengerDemand.status === 'active' &&
@@ -368,6 +485,8 @@ export function parseTransportSimulationSnapshot(
       passengerDemand,
       vehicleOperations,
       currentStopCalls,
+      vehicleCapacities,
+      currentBoardingEvents,
     },
   });
 }
@@ -377,8 +496,8 @@ export function createTransportSimulationSnapshot(
 ): TransportSimulationSnapshot {
   return parseTransportSimulationSnapshot({
     kind: 'transport-simulation-snapshot',
-    schemaVersion: 7,
-    simulationVersion: 'transport-7',
+    schemaVersion: 8,
+    simulationVersion: 'transport-8',
     scenario: createScenarioCoordinate(state.scenario),
     state: {
       tick: state.tick,
@@ -386,6 +505,8 @@ export function createTransportSimulationSnapshot(
       passengerDemand: state.passengerDemand,
       vehicleOperations: state.vehicleOperations,
       currentStopCalls: state.currentStopCalls,
+      vehicleCapacities: state.vehicleCapacities,
+      currentBoardingEvents: state.currentBoardingEvents,
     },
   });
 }
@@ -452,6 +573,13 @@ export function restoreTransportSimulationState(
     snapshot.state.fleet,
     snapshot.state.tick,
   );
+  if (
+    snapshot.state.vehicleCapacities.length !== fleet.length ||
+    snapshot.state.vehicleCapacities.some(
+      (capacity, index) => capacity.vehicleId !== fleet[index]!.vehicleId,
+    )
+  )
+    throw new Error('Vehicle capacity authority must align with fleet.');
   const operating = validateVehicleOperationAuthority({
     graph,
     fleet,
@@ -459,6 +587,37 @@ export function restoreTransportSimulationState(
     calls: snapshot.state.currentStopCalls,
     tick: snapshot.state.tick,
   });
+  if (passengerDemand.status === 'active')
+    validatePassengerBoardingAuthority({
+      tick: snapshot.state.tick,
+      fleet,
+      capacities: snapshot.state.vehicleCapacities,
+      onboardGroups: passengerDemand.onboardGroups,
+      nextPassengerOnboardGroupSequence:
+        passengerDemand.nextPassengerOnboardGroupSequence,
+      totalBoardedPassengerCount: passengerDemand.totalBoardedPassengerCount,
+      totalOnboardPassengerCount: passengerDemand.totalOnboardPassengerCount,
+      currentStopCalls: operating.calls,
+      currentBoardingEvents: snapshot.state.currentBoardingEvents,
+      itineraryIsValid: (group) => {
+        const itinerary = itineraryIndex!.find(
+          group.originStopPlaceId,
+          group.destinationStopPlaceId,
+        );
+        return (
+          itinerary.status === 'direct' &&
+          group.originStopNodeId === itinerary.originStopNodeId &&
+          group.routeId === itinerary.routeId &&
+          group.patternId === itinerary.patternId &&
+          group.originOccurrenceIndex === itinerary.originOccurrenceIndex &&
+          group.destinationStopNodeId === itinerary.destinationStopNodeId &&
+          group.destinationOccurrenceIndex ===
+            itinerary.destinationOccurrenceIndex &&
+          group.wrapsPatternEnd === itinerary.wrapsPatternEnd &&
+          group.edgeCount === itinerary.edgeCount
+        );
+      },
+    });
   return freeze({
     tick: snapshot.state.tick,
     scenario,
@@ -473,5 +632,7 @@ export function restoreTransportSimulationState(
     fleet,
     vehicleOperations: operating.operations,
     currentStopCalls: operating.calls,
+    vehicleCapacities: snapshot.state.vehicleCapacities,
+    currentBoardingEvents: snapshot.state.currentBoardingEvents,
   });
 }

@@ -7,6 +7,7 @@ export * from './foundation-state.js';
 export * from './foundation-snapshot.js';
 export * from './passenger-demand.js';
 export * from './passenger-waiting-cohort.js';
+export * from './passenger-boarding.js';
 export * from './time.js';
 export * from './transport-simulation.js';
 export * from './vehicle-movement.js';

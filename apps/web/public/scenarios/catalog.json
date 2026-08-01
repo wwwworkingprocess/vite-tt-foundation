@@ -3,6 +3,18 @@
   "catalogId": "torrevieja-tycoon-scenarios",
   "scenarios": [
     {
+      "scenarioId": "torrevieja-mini-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Torrevieja Mini — Test Scenario",
+      "primarySettlementId": "torrevieja",
+      "settlementIds": [
+        "torrevieja"
+      ],
+      "manifestPath": "torrevieja-mini-v1/scenario.json",
+      "status": "test-fixture",
+      "contentHash": "b2bb5b38a696e04e0dde2d40398301bb9f998cbee0e6d26859ca9dd1e4841b7a"
+    },
+    {
       "scenarioId": "torrevieja-legacy-abc-v1",
       "scenarioVersion": "1.0.0",
       "title": "Torrevieja Legacy Network - Lines A, B and C",

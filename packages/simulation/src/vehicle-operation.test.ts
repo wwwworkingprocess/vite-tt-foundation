@@ -222,7 +222,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     ]);
   });
 
-  it('keeps batched and split authority identical and round-trips Snapshot V7', () => {
+  it('keeps batched and split authority identical and round-trips Snapshot V8', () => {
     const initial = started();
     const batched = advanceTransportTicks(initial, 7);
     let split = initial;
@@ -231,8 +231,8 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     expect(batched).toEqual(split);
     const snapshot = createTransportSimulationSnapshot(batched);
     expect(snapshot).toMatchObject({
-      schemaVersion: 7,
-      simulationVersion: 'transport-7',
+      schemaVersion: 8,
+      simulationVersion: 'transport-8',
       state: {
         vehicleOperations: batched.vehicleOperations,
         currentStopCalls: batched.currentStopCalls,

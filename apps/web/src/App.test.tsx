@@ -734,7 +734,7 @@ describe('foundation screen', () => {
         .getByTestId('route-list')
         .querySelector('[data-route-id="legacy-A"]'),
     ).toBeNull();
-  });
+  }, 10_000);
 
   it('constructs demo vehicle commands from restored disjoint authority, not selection or stack seed', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});

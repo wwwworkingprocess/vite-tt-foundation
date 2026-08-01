@@ -84,6 +84,7 @@ const requiredSimulationCriticalFiles = [
   'packages/simulation/src/passenger-demand.ts',
   'packages/simulation/src/passenger-direct-itinerary.ts',
   'packages/simulation/src/passenger-waiting-cohort.ts',
+  'packages/simulation/src/passenger-boarding.ts',
   'packages/simulation/src/vehicle-operation.ts',
 ];
 for (const path of requiredSimulationCriticalFiles)

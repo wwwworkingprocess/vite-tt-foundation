@@ -16,6 +16,7 @@ import {
 import {
   comparePassengerWaitingCohorts,
   passengerWaitingCohortIdSchema,
+  passengerWaitingCohortKey,
   passengerWaitingCohortSequence,
   type PassengerWaitingCohort,
 } from './passenger-waiting-cohort.js';
@@ -330,6 +331,10 @@ export function validatePassengerBoardingAuthority(input: {
     )
   )
     throw new Error('Waiting-cohort source sequence is not contiguous.');
+  validateWaitingGenerationLineage({
+    waitingCohorts: input.waitingCohorts,
+    onboardGroups: input.onboardGroups,
+  });
 
   const reconstructed = input.waitingCohorts.map((cohort) => ({ ...cohort }));
   const reconstructedById = new Map(
@@ -382,6 +387,74 @@ export function validatePassengerBoardingAuthority(input: {
   )
     throw new Error('Passenger boarding authority is not canonical.');
 }
+
+interface WaitingGenerationLineage {
+  readonly cohort: Readonly<PassengerWaitingCohort>;
+  readonly representedOnboard: boolean;
+  readonly earliestBoardedAtTick: number | null;
+}
+
+const validateWaitingGenerationLineage = (input: {
+  readonly waitingCohorts: readonly Readonly<PassengerWaitingCohort>[];
+  readonly onboardGroups: readonly Readonly<PassengerOnboardGroup>[];
+}): void => {
+  const generations = new Map<string, WaitingGenerationLineage>();
+  for (const group of input.onboardGroups) {
+    const cohort = waitingCohortFromOnboardGroup(group, group.count);
+    const existing = generations.get(group.sourceWaitingCohortId);
+    generations.set(group.sourceWaitingCohortId, {
+      cohort: existing?.cohort ?? cohort,
+      representedOnboard: true,
+      earliestBoardedAtTick:
+        existing === undefined
+          ? group.boardedAtTick
+          : Math.min(existing.earliestBoardedAtTick!, group.boardedAtTick),
+    });
+  }
+  for (const cohort of input.waitingCohorts) {
+    const existing = generations.get(cohort.passengerWaitingCohortId);
+    if (existing === undefined)
+      generations.set(cohort.passengerWaitingCohortId, {
+        cohort,
+        representedOnboard: false,
+        earliestBoardedAtTick: null,
+      });
+  }
+
+  const byKey = new Map<string, WaitingGenerationLineage[]>();
+  for (const generation of generations.values()) {
+    const key = passengerWaitingCohortKey(generation.cohort);
+    const group = byKey.get(key) ?? [];
+    group.push(generation);
+    byKey.set(key, group);
+  }
+  for (const group of byKey.values()) {
+    group.sort(
+      (left, right) =>
+        passengerWaitingCohortSequence(left.cohort.passengerWaitingCohortId) -
+        passengerWaitingCohortSequence(right.cohort.passengerWaitingCohortId),
+    );
+    let mergeableCount = 0;
+    for (let index = 0; index < group.length; index += 1) {
+      const generation = group[index]!;
+      const successor = group[index + 1];
+      if (!generation.representedOnboard) {
+        mergeableCount += 1;
+        if (successor !== undefined)
+          throw new Error('Invalid waiting generation chronology.');
+      }
+      if (
+        successor !== undefined &&
+        (generation.earliestBoardedAtTick === null ||
+          successor.cohort.firstAssignedTick <=
+            generation.earliestBoardedAtTick)
+      )
+        throw new Error('Invalid waiting generation chronology.');
+    }
+    if (mergeableCount > 1)
+      throw new Error('Invalid waiting generation chronology.');
+  }
+};
 
 const waitingCohortIdentity = (
   cohort: Pick<

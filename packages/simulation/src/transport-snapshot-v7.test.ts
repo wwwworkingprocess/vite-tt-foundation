@@ -330,6 +330,98 @@ describe('Transport Snapshot V8', () => {
             fullyBoarded.passengerDemand.onboardGroups[0]!.destinationCellId,
       ),
     ).toBe(true);
+
+    const firstHistoricalGroup =
+      fullyBoarded.passengerDemand.onboardGroups.find(
+        (group) => group.sourceWaitingCohortId === consumedId,
+      )!;
+    const secondGeneration = fullyBoarded.passengerDemand.waitingCohorts.find(
+      (cohort) =>
+        cohort.originStopNodeId === firstHistoricalGroup.originStopNodeId &&
+        cohort.destinationCellId === firstHistoricalGroup.destinationCellId,
+    )!;
+    const fullyBoardedSnapshot =
+      createTransportSimulationSnapshot(fullyBoarded);
+    expect(
+      createTransportSimulationSnapshot(
+        restoreTransportSimulationState(fullyBoardedSnapshot, canonical, plan),
+      ),
+    ).toEqual(fullyBoardedSnapshot);
+    const impossibleSuccessor = structuredClone(fullyBoardedSnapshot);
+    if (impossibleSuccessor.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const corruptedSecondGeneration =
+      impossibleSuccessor.state.passengerDemand.waitingCohorts.find(
+        (cohort) =>
+          cohort.passengerWaitingCohortId ===
+          secondGeneration.passengerWaitingCohortId,
+      )!;
+    corruptedSecondGeneration.firstAssignedTick =
+      firstHistoricalGroup.boardedAtTick;
+    expect(() =>
+      restoreTransportSimulationState(impossibleSuccessor, canonical, plan),
+    ).toThrow(/generation chronology/i);
+
+    const secondGenerationId = secondGeneration.passengerWaitingCohortId;
+    fullyBoarded = applyTransportVehicleCommand(fullyBoarded, {
+      kind: 'transport.vehicle.create-route-cycle',
+      vehicleId: 'full-generation-bus-2',
+      label: 'Full generation bus 2',
+      routeId: 'legacy-A2',
+      passengerCapacity: 80,
+      legs: [
+        {
+          patternId: 'legacy-A2-torrevieja-la-mata',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1, 1, 1],
+          },
+        },
+        {
+          patternId: 'legacy-A2-la-mata-torrevieja',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1],
+          },
+        },
+      ],
+    });
+    if (fullyBoarded.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    expect(
+      fullyBoarded.passengerDemand.waitingCohorts.some(
+        (cohort) => cohort.passengerWaitingCohortId === secondGenerationId,
+      ),
+    ).toBe(false);
+    fullyBoarded = advanceTransportTicks(fullyBoarded, 2);
+    if (fullyBoarded.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const thirdGeneration = fullyBoarded.passengerDemand.waitingCohorts.find(
+      (cohort) =>
+        cohort.originStopNodeId === firstHistoricalGroup.originStopNodeId &&
+        cohort.destinationCellId === firstHistoricalGroup.destinationCellId,
+    )!;
+    const chainedSnapshot = createTransportSimulationSnapshot(fullyBoarded);
+    expect(
+      createTransportSimulationSnapshot(
+        restoreTransportSimulationState(chainedSnapshot, canonical, plan),
+      ),
+    ).toEqual(chainedSnapshot);
+    const impossibleChain = structuredClone(chainedSnapshot);
+    if (impossibleChain.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const secondHistoricalGroup =
+      impossibleChain.state.passengerDemand.onboardGroups.find(
+        (group) => group.sourceWaitingCohortId === secondGenerationId,
+      )!;
+    impossibleChain.state.passengerDemand.waitingCohorts.find(
+      (cohort) =>
+        cohort.passengerWaitingCohortId ===
+        thirdGeneration.passengerWaitingCohortId,
+    )!.firstAssignedTick = secondHistoricalGroup.boardedAtTick;
+    expect(() =>
+      restoreTransportSimulationState(impossibleChain, canonical, plan),
+    ).toThrow(/generation chronology/i);
   });
 
   it('accumulates boarding events from separate vehicle creations on one tick', () => {

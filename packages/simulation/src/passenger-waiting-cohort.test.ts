@@ -223,6 +223,44 @@ describe('directional passenger waiting cohorts', () => {
     });
     expect(Object.isFrozen(merged.waitingCohorts)).toBe(true);
     expect(Object.isFrozen(merged.waitingCohorts[0])).toBe(true);
+
+    const separated = activatePassengerDirectItineraries({
+      itineraryIndex,
+      demandPlan,
+      destinationAssignedGroups: [
+        {
+          passengerJourneyGroupId: 'passenger-journey-group-4',
+          originStopPlaceId: 'A',
+          destinationCellId: 'r0c1',
+          destinationStopPlaceId: 'B',
+          count: 1,
+          firstAssignedTick: 8,
+          lastAssignedTick: 8,
+        },
+      ],
+      waitingCohorts: first.waitingCohorts,
+      nextPassengerWaitingCohortSequence:
+        first.nextPassengerWaitingCohortSequence,
+      directItineraryUnavailablePassengerCount:
+        first.directItineraryUnavailablePassengerCount,
+      activationTick: 8,
+      nonMergeableWaitingCohortIds: new Set([
+        first.waitingCohorts[0]!.passengerWaitingCohortId,
+      ]),
+    });
+    expect(separated.waitingCohorts).toEqual([
+      expect.objectContaining({
+        passengerWaitingCohortId: 'passenger-waiting-cohort-1',
+        count: 3,
+        lastAssignedTick: 4,
+      }),
+      expect.objectContaining({
+        passengerWaitingCohortId: 'passenger-waiting-cohort-2',
+        count: 1,
+        firstAssignedTick: 8,
+        lastAssignedTick: 8,
+      }),
+    ]);
   });
 
   it('rejects malformed authority and assignment references without mutation', () => {

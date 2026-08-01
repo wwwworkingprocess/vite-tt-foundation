@@ -39,7 +39,7 @@ describe('browser scenario loader', () => {
         createHash('sha256').update(text).digest('hex'),
     });
     await loader.loadCatalog();
-    await loader.loadScenario('torrevieja-mini-v1');
+    await loader.loadScenario('torrevieja-legacy-abc-v1');
     expect(loader.projection.getState().graph).toBeDefined();
     const loadingB = loader.loadScenario('scenario-b');
     expect(loader.projection.getState()).toMatchObject({
@@ -65,7 +65,7 @@ describe('browser scenario loader', () => {
       status: 'loading-catalogue',
     });
     await reload;
-    await loader.loadScenario('torrevieja-mini-v1');
+    await loader.loadScenario('torrevieja-legacy-abc-v1');
     failCatalog = true;
     await loader.loadCatalog();
     expect(loader.projection.getState()).toMatchObject({ status: 'failed' });
@@ -85,7 +85,15 @@ describe('browser scenario loader', () => {
           'utf8',
         ),
       ) as Record<string, unknown>;
-      const descriptor = sourceCatalog.scenarios[0]!;
+      const descriptor = {
+        ...sourceCatalog.scenarios[0]!,
+        scenarioVersion: sourceManifest.scenarioVersion,
+        status: sourceManifest.status,
+        title: sourceManifest.title,
+        primarySettlementId: sourceManifest.primarySettlementId,
+        settlementIds: sourceManifest.settlementIds,
+        contentHash: sourceManifest.contentHash,
+      };
       const assets = Object.fromEntries(
         Object.entries(sourceManifest.assets as Record<string, object>).map(
           ([name, asset]) => [name, { ...asset, sha256: 'a'.repeat(64) }],

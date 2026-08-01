@@ -433,11 +433,14 @@ export function applyTransportVehicleCommand(
             totalBoardedPassengerCount: boarding.totalBoardedPassengerCount,
             totalOnboardPassengerCount: boarding.totalOnboardPassengerCount,
           },
-    currentBoardingEvents: boarding?.currentBoardingEvents ?? [],
+    currentBoardingEvents: [
+      ...state.currentBoardingEvents.filter(
+        (event) => event.tick === state.tick,
+      ),
+      ...(boarding?.currentBoardingEvents ?? []),
+    ].sort((left, right) => left.vehicleId.localeCompare(right.vehicleId)),
     currentStopCalls: [...state.currentStopCalls, created.call].sort(
-      (left, right) =>
-        left.vehicleId.localeCompare(right.vehicleId) ||
-        left.stopCallSequence - right.stopCallSequence,
+      (left, right) => left.vehicleId.localeCompare(right.vehicleId),
     ),
   });
 }
@@ -593,12 +596,18 @@ export function restoreTransportSimulationState(
       fleet,
       capacities: snapshot.state.vehicleCapacities,
       onboardGroups: passengerDemand.onboardGroups,
+      waitingCohorts: passengerDemand.waitingCohorts,
+      nextPassengerWaitingCohortSequence:
+        passengerDemand.nextPassengerWaitingCohortSequence,
       nextPassengerOnboardGroupSequence:
         passengerDemand.nextPassengerOnboardGroupSequence,
+      totalWaitingForVehiclePassengerCount:
+        passengerDemand.totalWaitingForVehiclePassengerCount,
       totalBoardedPassengerCount: passengerDemand.totalBoardedPassengerCount,
       totalOnboardPassengerCount: passengerDemand.totalOnboardPassengerCount,
       currentStopCalls: operating.calls,
       currentBoardingEvents: snapshot.state.currentBoardingEvents,
+      vehicleOperations: operating.operations,
       itineraryIsValid: (group) => {
         const itinerary = itineraryIndex!.find(
           group.originStopPlaceId,

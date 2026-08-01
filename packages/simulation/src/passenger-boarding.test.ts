@@ -284,12 +284,17 @@ describe('deterministic passenger boarding', () => {
       ],
       capacities,
       onboardGroups: result.onboardGroups,
+      waitingCohorts: result.waitingCohorts,
+      nextPassengerWaitingCohortSequence: 2,
       nextPassengerOnboardGroupSequence:
         result.nextPassengerOnboardGroupSequence,
+      totalWaitingForVehiclePassengerCount:
+        result.totalWaitingForVehiclePassengerCount,
       totalBoardedPassengerCount: result.totalBoardedPassengerCount,
       totalOnboardPassengerCount: result.totalOnboardPassengerCount,
       currentStopCalls: input().currentStopCalls,
       currentBoardingEvents: events,
+      vehicleOperations: input().vehicleOperations,
       itineraryIsValid: () => true,
     };
     expect(() => validatePassengerBoardingAuthority(authority)).not.toThrow();
@@ -372,6 +377,7 @@ describe('deterministic passenger boarding', () => {
         fleet: structuredClone(authority.fleet),
         capacities: structuredClone(authority.capacities),
         onboardGroups: structuredClone(authority.onboardGroups),
+        waitingCohorts: structuredClone(authority.waitingCohorts),
         currentStopCalls: structuredClone(authority.currentStopCalls),
         currentBoardingEvents: structuredClone(authority.currentBoardingEvents),
         itineraryIsValid: () => true,
@@ -379,6 +385,30 @@ describe('deterministic passenger boarding', () => {
       corrupt(value);
       expect(() => validatePassengerBoardingAuthority(value)).toThrow();
     }
+
+    const invalidWaitingSequence = {
+      ...authority,
+      waitingCohorts: structuredClone(authority.waitingCohorts),
+    };
+    (
+      invalidWaitingSequence.waitingCohorts[0] as {
+        passengerWaitingCohortId: string;
+      }
+    ).passengerWaitingCohortId = 'passenger-waiting-cohort-2';
+    expect(() =>
+      validatePassengerBoardingAuthority(invalidWaitingSequence),
+    ).toThrow('Invalid waiting-cohort sequence');
+
+    const residualIdentityMismatch = {
+      ...authority,
+      waitingCohorts: structuredClone(authority.waitingCohorts),
+    };
+    (
+      residualIdentityMismatch.waitingCohorts[0] as { lastAssignedTick: number }
+    ).lastAssignedTick = 4;
+    expect(() =>
+      validatePassengerBoardingAuthority(residualIdentityMismatch),
+    ).toThrow('Residual waiting cohort identity mismatch');
 
     const later = {
       ...authority,
@@ -394,7 +424,7 @@ describe('deterministic passenger boarding', () => {
           call({ tick: 6, stopCallSequence: 5 }),
         ] as typeof authority.currentStopCalls,
       }),
-    ).not.toThrow();
+    ).toThrow('Invalid current boarding call');
 
     const two = boardPassengersAtVehicleCalls(
       input({
@@ -419,12 +449,100 @@ describe('deterministic passenger boarding', () => {
         ...authority,
         capacities: [createVehiclePassengerCapacity('bus-1', 2)],
         onboardGroups: [...two.onboardGroups].reverse(),
+        waitingCohorts: two.waitingCohorts,
+        nextPassengerWaitingCohortSequence: 3,
         nextPassengerOnboardGroupSequence: 3,
+        totalWaitingForVehiclePassengerCount:
+          two.totalWaitingForVehiclePassengerCount,
         totalBoardedPassengerCount: 2,
         totalOnboardPassengerCount: 2,
         currentBoardingEvents: two.currentBoardingEvents,
       }),
     ).toThrow('Invalid onboard passenger group');
+
+    const splitSource = boardPassengersAtVehicleCalls(
+      input({
+        waitingCohorts: [
+          cohort({ count: 2 }),
+        ] as PassengerBoardingInput['waitingCohorts'],
+        capacities: [
+          createVehiclePassengerCapacity('bus-1', 1),
+          createVehiclePassengerCapacity('bus-2', 1),
+        ],
+        vehicleOperations: [
+          input().vehicleOperations[0]!,
+          { ...input().vehicleOperations[0]!, vehicleId: 'bus-2' },
+        ] as PassengerBoardingInput['vehicleOperations'],
+        currentStopCalls: [
+          call(),
+          call({ vehicleId: 'bus-2' }),
+        ] as PassengerBoardingInput['currentStopCalls'],
+      }),
+    );
+    const splitAuthority = {
+      tick: input().tick,
+      fleet: [
+        { vehicleId: 'bus-1' as never, routeId: 'route-a' as never },
+        { vehicleId: 'bus-2' as never, routeId: 'route-a' as never },
+      ],
+      capacities: [
+        createVehiclePassengerCapacity('bus-1', 1),
+        createVehiclePassengerCapacity('bus-2', 1),
+      ],
+      waitingCohorts: splitSource.waitingCohorts,
+      onboardGroups: structuredClone(splitSource.onboardGroups),
+      nextPassengerWaitingCohortSequence: 2,
+      nextPassengerOnboardGroupSequence: 3,
+      totalWaitingForVehiclePassengerCount: 0,
+      totalBoardedPassengerCount: 2,
+      totalOnboardPassengerCount: 2,
+      vehicleOperations: [
+        input().vehicleOperations[0]!,
+        { ...input().vehicleOperations[0]!, vehicleId: 'bus-2' as never },
+      ],
+      currentStopCalls: [
+        call(),
+        call({ vehicleId: 'bus-2' }),
+      ] as PassengerBoardingInput['currentStopCalls'],
+      currentBoardingEvents: splitSource.currentBoardingEvents,
+      itineraryIsValid: () => true,
+    };
+    expect(() =>
+      validatePassengerBoardingAuthority(splitAuthority),
+    ).not.toThrow();
+    (
+      splitAuthority.onboardGroups[1] as { lastAssignedTick: number }
+    ).lastAssignedTick = 4;
+    expect(() => validatePassengerBoardingAuthority(splitAuthority)).toThrow(
+      'Onboard source waiting-cohort identity mismatch',
+    );
+
+    const twoWaiting = {
+      ...authority,
+      waitingCohorts: [
+        cohort({ count: 1 }),
+        cohort({
+          passengerWaitingCohortId: 'passenger-waiting-cohort-2',
+          destinationCellId: 'r2c1',
+          count: 1,
+        }),
+      ] as typeof authority.waitingCohorts,
+      nextPassengerWaitingCohortSequence: 3,
+      onboardGroups: [],
+      nextPassengerOnboardGroupSequence: 1,
+      totalWaitingForVehiclePassengerCount: 2,
+      totalBoardedPassengerCount: 0,
+      totalOnboardPassengerCount: 0,
+      currentStopCalls: [],
+      currentBoardingEvents: [],
+    };
+    expect(() => validatePassengerBoardingAuthority(twoWaiting)).not.toThrow();
+    expect(() =>
+      validatePassengerBoardingAuthority({
+        ...twoWaiting,
+        waitingCohorts: [...twoWaiting.waitingCohorts].reverse(),
+      }),
+    ).toThrow('not canonical');
   });
 
   it('rejects malformed calls, over-capacity input, and non-conserved cohort data', () => {

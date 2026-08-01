@@ -16,7 +16,6 @@ const torreviejaScenarioIds = [
   'torrevieja-legacy-east-v1',
   'torrevieja-legacy-north-v1',
   'torrevieja-legacy-south-v1',
-  'torrevieja-mini-v1',
 ] as const;
 
 async function loadCanonicalScenario(
@@ -59,7 +58,6 @@ describe('public multi-scenario catalogue', () => {
           .getState()
           .catalog?.scenarios.map((item) => item.scenarioId),
       ).toEqual([
-        'torrevieja-mini-v1',
         'torrevieja-legacy-abc-v1',
         'torrevieja-legacy-east-v1',
         'torrevieja-legacy-south-v1',
@@ -98,7 +96,7 @@ describe('public multi-scenario catalogue', () => {
       });
     const optional = create(false);
     await optional.loadCatalog();
-    await optional.loadScenario('torrevieja-mini-v1');
+    await optional.loadScenario('torrevieja-legacy-abc-v1');
     expect(optional.projection.getState()).toMatchObject({ status: 'ready' });
     const failing = create(true);
     await failing.loadCatalog();

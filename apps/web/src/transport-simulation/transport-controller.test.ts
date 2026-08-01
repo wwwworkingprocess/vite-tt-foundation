@@ -92,6 +92,49 @@ const demandPlan = () => {
     stops: [{ stopPlaceId: 'tv-place-0053' }],
   });
 };
+const boardingDemandPlan = () => {
+  const canonical = scenario();
+  return parsePassengerDemandPlan({
+    schemaVersion: '1.0.0',
+    demandModelContentHash: 'b'.repeat(64),
+    scenario: createScenarioCoordinate(canonical),
+    grid: {
+      cityId: 'Q36730',
+      populationGridSchemaVersion: '1.0.0',
+      gridVersion: '1.0.0',
+      rows: 1,
+      columns: 2,
+      resolutionDegrees: 0.001,
+      totalActiveCellCount: 2,
+      totalPopulationWeight: 2,
+    },
+    catchmentPolicy: { maxAccessDistanceCells: 5 },
+    emissionPolicy: {
+      emissionCreditsPerWeightPerTick: 1,
+      creditsPerPassenger: 1,
+    },
+    accessPolicy: { accessTicksPerCell: 1 },
+    cells: [
+      {
+        cellId: 'r0c0',
+        row: 0,
+        column: 0,
+        populationWeight: 1,
+        assignedStopPlaceId: 'tv-place-0108',
+        distanceSquaredCells: 0,
+      },
+      {
+        cellId: 'r0c1',
+        row: 0,
+        column: 1,
+        populationWeight: 1,
+        assignedStopPlaceId: 'tv-place-0093',
+        distanceSquaredCells: 0,
+      },
+    ],
+    stops: [{ stopPlaceId: 'tv-place-0093' }, { stopPlaceId: 'tv-place-0108' }],
+  });
+};
 
 describe('transport application controller', () => {
   it('rejects obsolete pre-release saves before replacing authority', async () => {
@@ -450,6 +493,156 @@ describe('transport application controller', () => {
       fleet: savedState.fleet,
       vehicleOperations: savedState.vehicleOperations,
       currentStopCalls: savedState.currentStopCalls,
+    });
+    expect(currentClose).toHaveBeenCalledTimes(1);
+    expect(clientCreations).toBe(2);
+    await controller.close();
+  });
+
+  it('preflights non-canonical Snapshot V8 boarding without replacing authority', async () => {
+    const canonical = scenario();
+    const plan = boardingDemandPlan();
+    let boarded = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      2,
+    );
+    boarded = applyTransportVehicleCommand(boarded, {
+      kind: 'transport.vehicle.create-route-cycle',
+      vehicleId: 'boarding-preflight',
+      label: 'Boarding preflight',
+      routeId: 'legacy-A2',
+      passengerCapacity: 1,
+      legs: [
+        {
+          patternId: 'legacy-A2-torrevieja-la-mata',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1, 1, 1],
+          },
+        },
+        {
+          patternId: 'legacy-A2-la-mata-torrevieja',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1],
+          },
+        },
+      ],
+    });
+    const validRecord = parseTransportSaveRecord({
+      ...record(),
+      saveId: 'boarding-preflight',
+      sourceSimulationTick: boarded.tick,
+      snapshot: createTransportSimulationSnapshot(boarded),
+    });
+    let stored: unknown = validRecord;
+    const current = createDirectTransportSimulationClient();
+    const currentClose = vi.fn(() => current.close());
+    let clientCreations = 0;
+    const controller = createTransportApplicationController({
+      createClient: () => {
+        clientCreations += 1;
+        return clientCreations === 1
+          ? Object.freeze({ ...current, close: currentClose })
+          : createDirectTransportSimulationClient();
+      },
+      repository: {
+        get: async () => classifyPersistedSaveRecord(stored),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => canonical },
+      passengerDemandPlanResolver: { resolve: async () => plan },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: canonical,
+      passengerDemandPlan: plan,
+    });
+    const expected = controller.projection.getState();
+    const corruptions: Array<(value: typeof validRecord) => void> = [
+      (value) => {
+        (
+          value.snapshot.state as unknown as {
+            currentBoardingEvents: unknown[];
+          }
+        ).currentBoardingEvents = [];
+      },
+      (value) => {
+        if (value.snapshot.state.passengerDemand.status !== 'active')
+          throw new Error('Expected active fixture.');
+        const demand = value.snapshot.state.passengerDemand as unknown as {
+          waitingCohorts: Array<{
+            passengerWaitingCohortId: string;
+            count: number;
+          }>;
+          onboardGroups: Array<{
+            sourceWaitingCohortId: string;
+            count: number;
+          }>;
+          nextPassengerOnboardGroupSequence: number;
+          nextPassengerWaitingCohortSequence: number;
+          totalWaitingForVehiclePassengerCount: number;
+          totalBoardedPassengerCount: number;
+          totalOnboardPassengerCount: number;
+        };
+        const group = demand.onboardGroups[0]!;
+        const residual = demand.waitingCohorts.find(
+          (cohort) =>
+            cohort.passengerWaitingCohortId === group.sourceWaitingCohortId,
+        )!;
+        residual.count += group.count;
+        demand.onboardGroups = [];
+        demand.nextPassengerOnboardGroupSequence = 1;
+        demand.totalWaitingForVehiclePassengerCount += group.count;
+        demand.totalBoardedPassengerCount = 0;
+        demand.totalOnboardPassengerCount = 0;
+        (
+          value.snapshot.state as unknown as {
+            currentBoardingEvents: unknown[];
+          }
+        ).currentBoardingEvents = [];
+      },
+      (value) => {
+        if (value.snapshot.state.passengerDemand.status !== 'active')
+          throw new Error('Expected active fixture.');
+        const demand = value.snapshot.state.passengerDemand as unknown as {
+          onboardGroups: Array<{ sourceWaitingCohortId: string }>;
+          nextPassengerWaitingCohortSequence: number;
+        };
+        demand.onboardGroups[0]!.sourceWaitingCohortId =
+          'passenger-waiting-cohort-999';
+        demand.nextPassengerWaitingCohortSequence = 1000;
+      },
+    ];
+    for (const [index, corrupt] of corruptions.entries()) {
+      const value = structuredClone(validRecord);
+      corrupt(value);
+      stored = value;
+      await expect(
+        controller.restore({
+          saveId: 'boarding-preflight',
+          timelineId: parseTimelineId(`timeline-boarding-corrupt-${index}`),
+        }),
+      ).rejects.toThrow();
+      expect(controller.projection.getState()).toEqual({
+        ...expected,
+        message: expect.any(String),
+      });
+      expect(currentClose).not.toHaveBeenCalled();
+      expect(clientCreations).toBe(1);
+    }
+    stored = validRecord;
+    await controller.restore({
+      saveId: 'boarding-preflight',
+      timelineId: parseTimelineId('timeline-boarding-valid'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-boarding-valid',
+      simulationTick: 2,
+      fleet: boarded.fleet,
+      currentBoardingEvents: boarded.currentBoardingEvents,
     });
     expect(currentClose).toHaveBeenCalledTimes(1);
     expect(clientCreations).toBe(2);

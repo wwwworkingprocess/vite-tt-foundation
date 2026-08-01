@@ -139,6 +139,7 @@ export function activatePassengerDirectItineraries(input: {
   readonly nextPassengerWaitingCohortSequence: number;
   readonly directItineraryUnavailablePassengerCount: number;
   readonly activationTick: number;
+  readonly nonMergeableWaitingCohortIds?: ReadonlySet<PassengerWaitingCohortId>;
 }): Readonly<PassengerItineraryActivationResult> {
   const demandPlan = parsePassengerDemandPlan(input.demandPlan);
   const activationTick = parseSimulationTick(input.activationTick);
@@ -183,7 +184,10 @@ export function activatePassengerDirectItineraries(input: {
     )
       throw new Error('Invalid directional waiting cohort.');
     ids.add(cohort.passengerWaitingCohortId);
-    keys.set(key, index);
+    if (
+      !input.nonMergeableWaitingCohortIds?.has(cohort.passengerWaitingCohortId)
+    )
+      keys.set(key, index);
     waitingTotal = checkedAdd(
       waitingTotal,
       cohort.count,

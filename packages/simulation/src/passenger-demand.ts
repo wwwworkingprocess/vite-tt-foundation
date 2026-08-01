@@ -998,6 +998,9 @@ export function advancePassengerDemandToTick(
       directItineraryUnavailablePassengerCount:
         current.directItineraryUnavailablePassengerCount,
       activationTick: tick,
+      nonMergeableWaitingCohortIds: new Set(
+        current.onboardGroups.map((group) => group.sourceWaitingCohortId),
+      ),
     });
     current = validatePassengerDemandState(parsedPlan, itineraryIndex, {
       status: 'active',

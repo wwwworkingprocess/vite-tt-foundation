@@ -80,6 +80,86 @@ const demandPlan = () => {
 };
 
 describe('Transport Snapshot V8', () => {
+  it('accumulates boarding events from separate vehicle creations on one tick', () => {
+    const canonical = scenario();
+    const plan = structuredClone(demandPlan());
+    plan.cells[0]!.assignedStopPlaceId = 'tv-place-0108';
+    plan.cells[1]!.assignedStopPlaceId = 'tv-place-0093';
+    plan.stops = [
+      { stopPlaceId: 'tv-place-0093' },
+      { stopPlaceId: 'tv-place-0108' },
+    ];
+    let state = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      2,
+    );
+    const create = (vehicleId: string, passengerCapacity: number) => ({
+      kind: 'transport.vehicle.create-route-cycle' as const,
+      vehicleId,
+      label: vehicleId,
+      routeId: 'legacy-A2',
+      passengerCapacity,
+      legs: [
+        {
+          patternId: 'legacy-A2-torrevieja-la-mata',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1' as const,
+            edgeTravelTicks: [1, 1, 1, 1],
+          },
+        },
+        {
+          patternId: 'legacy-A2-la-mata-torrevieja',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1' as const,
+            edgeTravelTicks: [1, 1],
+          },
+        },
+      ],
+    });
+    state = applyTransportVehicleCommand(state, create('boarding-bus-a', 1));
+    state = applyTransportVehicleCommand(state, create('boarding-bus-b', 1));
+    expect(state.currentStopCalls.map((call) => call.vehicleId)).toEqual([
+      'boarding-bus-a',
+      'boarding-bus-b',
+    ]);
+    expect(state.currentBoardingEvents.map((event) => event.vehicleId)).toEqual(
+      ['boarding-bus-a', 'boarding-bus-b'],
+    );
+    expect(state.passengerDemand).toMatchObject({
+      status: 'active',
+      totalBoardedPassengerCount: 2,
+      totalOnboardPassengerCount: 2,
+    });
+    const snapshot = createTransportSimulationSnapshot(state);
+    expect(
+      createTransportSimulationSnapshot(
+        restoreTransportSimulationState(snapshot, canonical, plan),
+      ),
+    ).toEqual(snapshot);
+    const missingEarlierEvent = structuredClone(snapshot);
+    missingEarlierEvent.state.currentBoardingEvents.shift();
+    expect(() =>
+      restoreTransportSimulationState(missingEarlierEvent, canonical, plan),
+    ).toThrow(/boarding authority/i);
+
+    let noSecondBoarding = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      2,
+    );
+    noSecondBoarding = applyTransportVehicleCommand(
+      noSecondBoarding,
+      create('boarding-bus-a', 2),
+    );
+    noSecondBoarding = applyTransportVehicleCommand(
+      noSecondBoarding,
+      create('boarding-bus-b', 1),
+    );
+    expect(noSecondBoarding.currentStopCalls).toHaveLength(2);
+    expect(
+      noSecondBoarding.currentBoardingEvents.map((event) => event.vehicleId),
+    ).toEqual(['boarding-bus-a']);
+  });
+
   it('boards an exact current origin call and round-trips capacity and onboard authority', () => {
     const canonical = scenario();
     const plan = structuredClone(demandPlan());
@@ -158,7 +238,65 @@ describe('Transport Snapshot V8', () => {
     fabricatedEvent.state.currentBoardingEvents[0]!.boardedPassengerCount = 2;
     expect(() =>
       restoreTransportSimulationState(fabricatedEvent, canonical, plan),
-    ).toThrow(/boarding events/i);
+    ).toThrow(/boarding authority/i);
+
+    const missingEvent = structuredClone(snapshot);
+    missingEvent.state.currentBoardingEvents = [];
+    expect(() =>
+      restoreTransportSimulationState(missingEvent, canonical, plan),
+    ).toThrow(/boarding authority/i);
+
+    const inflatedNext = structuredClone(snapshot);
+    if (inflatedNext.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    inflatedNext.state.passengerDemand.nextPassengerOnboardGroupSequence += 1;
+    expect(() =>
+      restoreTransportSimulationState(inflatedNext, canonical, plan),
+    ).toThrow(/sequence/i);
+
+    const sequenceGap = structuredClone(snapshot);
+    if (sequenceGap.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    sequenceGap.state.passengerDemand.onboardGroups[0]!.passengerOnboardGroupId =
+      'passenger-onboard-group-2' as never;
+    sequenceGap.state.passengerDemand.nextPassengerOnboardGroupSequence = 3;
+    sequenceGap.state.currentBoardingEvents[0]!.onboardGroupIds = [
+      'passenger-onboard-group-2' as never,
+    ];
+    expect(() =>
+      restoreTransportSimulationState(sequenceGap, canonical, plan),
+    ).toThrow(/sequence/i);
+
+    const inventedSource = structuredClone(snapshot);
+    if (inventedSource.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    inventedSource.state.passengerDemand.onboardGroups[0]!.sourceWaitingCohortId =
+      'passenger-waiting-cohort-999' as never;
+    inventedSource.state.passengerDemand.nextPassengerWaitingCohortSequence = 1000;
+    expect(() =>
+      restoreTransportSimulationState(inventedSource, canonical, plan),
+    ).toThrow(/source sequence/i);
+
+    const erasedBoarding = structuredClone(snapshot);
+    if (erasedBoarding.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const erasedGroup = erasedBoarding.state.passengerDemand.onboardGroups[0]!;
+    const residual = erasedBoarding.state.passengerDemand.waitingCohorts.find(
+      (cohort) =>
+        cohort.passengerWaitingCohortId === erasedGroup.sourceWaitingCohortId,
+    );
+    if (residual === undefined) throw new Error('Expected a residual cohort.');
+    residual.count += erasedGroup.count;
+    erasedBoarding.state.passengerDemand.onboardGroups = [];
+    erasedBoarding.state.passengerDemand.nextPassengerOnboardGroupSequence = 1;
+    erasedBoarding.state.passengerDemand.totalBoardedPassengerCount = 0;
+    erasedBoarding.state.passengerDemand.totalOnboardPassengerCount = 0;
+    erasedBoarding.state.passengerDemand.totalWaitingForVehiclePassengerCount +=
+      erasedGroup.count;
+    erasedBoarding.state.currentBoardingEvents = [];
+    expect(() =>
+      restoreTransportSimulationState(erasedBoarding, canonical, plan),
+    ).toThrow(/boarding authority/i);
   });
 
   it('round-trips active waiting authority without embedding static plans', () => {

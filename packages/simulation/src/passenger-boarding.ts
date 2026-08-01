@@ -13,7 +13,10 @@ import {
   nonnegativeSafeInteger,
   positiveSafeInteger,
 } from './authority-utils.js';
-import type { PassengerWaitingCohort } from './passenger-waiting-cohort.js';
+import {
+  passengerWaitingCohortIdSchema,
+  type PassengerWaitingCohort,
+} from './passenger-waiting-cohort.js';
 import type { SimulationTick } from './time.js';
 import { parseVehicleId, type VehicleId } from './vehicle-movement.js';
 import type {
@@ -192,13 +195,17 @@ export function validatePassengerBoardingAuthority(input: {
   }>[];
   readonly capacities: readonly Readonly<VehiclePassengerCapacity>[];
   readonly onboardGroups: readonly Readonly<PassengerOnboardGroup>[];
+  readonly waitingCohorts: readonly Readonly<PassengerWaitingCohort>[];
+  readonly nextPassengerWaitingCohortSequence: number;
   readonly nextPassengerOnboardGroupSequence: number;
+  readonly totalWaitingForVehiclePassengerCount: number;
   readonly totalBoardedPassengerCount: number;
   readonly totalOnboardPassengerCount: number;
   readonly currentStopCalls: readonly Readonly<VehicleStopNodeCall>[];
   readonly currentBoardingEvents: readonly Readonly<CurrentBoardingEvent>[];
+  readonly vehicleOperations: readonly Readonly<VehiclePatternRunState>[];
   readonly itineraryIsValid: (
-    group: Readonly<PassengerOnboardGroup>,
+    group: Readonly<PassengerWaitingCohort>,
   ) => boolean;
 }): void {
   if (
@@ -215,6 +222,9 @@ export function validatePassengerBoardingAuthority(input: {
     input.fleet.map((vehicle) => [vehicle.vehicleId, vehicle]),
   );
   const ids = new Set<string>();
+  const onboardSequences: number[] = [];
+  const sourceSequences = new Set<number>();
+  const sourceIdentities = new Map<string, string>();
   const perVehicle = new Map<VehicleId, number>();
   let onboardTotal = 0;
   for (let index = 0; index < input.onboardGroups.length; index += 1) {
@@ -222,10 +232,17 @@ export function validatePassengerBoardingAuthority(input: {
     const sequence = Number(
       group.passengerOnboardGroupId.slice('passenger-onboard-group-'.length),
     );
+    const sourceWaitingCohortId = passengerWaitingCohortIdSchema.parse(
+      group.sourceWaitingCohortId,
+    );
+    const sourceSequence = Number(
+      sourceWaitingCohortId.slice('passenger-waiting-cohort-'.length),
+    );
     const vehicle = fleet.get(group.vehicleId);
     if (
       ids.has(group.passengerOnboardGroupId) ||
       sequence >= input.nextPassengerOnboardGroupSequence ||
+      sourceSequence >= input.nextPassengerWaitingCohortSequence ||
       group.boardedAtTick > input.tick ||
       group.firstAssignedTick > group.lastAssignedTick ||
       group.lastAssignedTick > group.boardedAtTick ||
@@ -239,13 +256,22 @@ export function validatePassengerBoardingAuthority(input: {
           : group.boardedAtPatternRunSequence) ||
       vehicle === undefined ||
       vehicle.routeId !== group.routeId ||
-      !input.itineraryIsValid(group) ||
+      !input.itineraryIsValid(
+        waitingCohortFromOnboardGroup(group, group.count),
+      ) ||
       (index > 0 &&
         comparePassengerOnboardGroups(input.onboardGroups[index - 1]!, group) >=
           0)
     )
       throw new Error('Invalid onboard passenger group.');
     ids.add(group.passengerOnboardGroupId);
+    onboardSequences.push(sequence);
+    sourceSequences.add(sourceSequence);
+    const identity = waitingCohortIdentity(group);
+    const priorIdentity = sourceIdentities.get(sourceWaitingCohortId);
+    if (priorIdentity !== undefined && priorIdentity !== identity)
+      throw new Error('Onboard source waiting-cohort identity mismatch.');
+    sourceIdentities.set(sourceWaitingCohortId, identity);
     onboardTotal = checkedAdd(onboardTotal, group.count, 'onboard passengers');
     perVehicle.set(
       group.vehicleId,
@@ -256,6 +282,12 @@ export function validatePassengerBoardingAuthority(input: {
       ),
     );
   }
+  onboardSequences.sort((left, right) => left - right);
+  if (
+    input.nextPassengerOnboardGroupSequence !== onboardSequences.length + 1 ||
+    onboardSequences.some((sequence, index) => sequence !== index + 1)
+  )
+    throw new Error('Onboard passenger group sequence is not contiguous.');
   for (const [vehicleId, count] of perVehicle)
     if (count > capacities.get(vehicleId)!)
       throw new Error('Vehicle passenger capacity exceeded.');
@@ -268,86 +300,145 @@ export function validatePassengerBoardingAuthority(input: {
   const currentGroups = input.onboardGroups.filter(
     (group) => group.boardedAtTick === input.tick,
   );
-  const expected: CurrentBoardingEvent[] = [];
-  const priorByVehicle = new Map<VehicleId, number>();
-  for (const group of input.onboardGroups)
-    if (group.boardedAtTick < input.tick)
-      priorByVehicle.set(
-        group.vehicleId,
-        checkedAdd(
-          priorByVehicle.get(group.vehicleId) ?? 0,
-          group.count,
-          'prior onboard passengers',
-        ),
-      );
-  for (const call of [...input.currentStopCalls].sort(
-    (left, right) =>
-      lexical(left.vehicleId, right.vehicleId) ||
-      left.stopCallSequence - right.stopCallSequence,
-  )) {
-    const groups = currentGroups
-      .filter(
-        (group) =>
-          group.vehicleId === call.vehicleId &&
-          group.boardedAtStopCallSequence === call.stopCallSequence &&
-          group.routeId === call.routeId &&
-          group.patternId === call.patternId &&
-          group.originStopNodeId === call.stopNodeId &&
-          group.originOccurrenceIndex === call.occurrenceIndex,
-      )
-      .sort(
-        (left, right) =>
-          Number(
-            left.passengerOnboardGroupId.slice(
-              'passenger-onboard-group-'.length,
-            ),
-          ) -
-          Number(
-            right.passengerOnboardGroupId.slice(
-              'passenger-onboard-group-'.length,
-            ),
-          ),
-      );
-    if (groups.length === 0) continue;
-    const boarded = groups.reduce(
-      (total, group) => checkedAdd(total, group.count, 'event boarding count'),
-      0,
+  const priorGroups = input.onboardGroups.filter(
+    (group) => group.boardedAtTick < input.tick,
+  );
+  for (const cohort of input.waitingCohorts) {
+    const sourceId = passengerWaitingCohortIdSchema.parse(
+      cohort.passengerWaitingCohortId,
     );
-    const after = checkedAdd(
-      priorByVehicle.get(call.vehicleId) ?? 0,
-      boarded,
-      'event onboard count',
-    );
-    priorByVehicle.set(call.vehicleId, after);
-    expected.push({
-      vehicleId: call.vehicleId,
-      routeId: call.routeId!,
-      patternId: call.patternId,
-      stopNodeId: call.stopNodeId,
-      occurrenceIndex: call.occurrenceIndex,
-      stopCallSequence: call.stopCallSequence,
-      patternRunSequence: call.patternRunSequence,
-      tick: call.tick,
-      boardedPassengerCount: boarded,
-      onboardPassengerCountAfterBoarding: after,
-      remainingCapacity: capacities.get(call.vehicleId)! - after,
-      onboardGroupIds: groups.map((group) => group.passengerOnboardGroupId),
-    });
+    const sequence = Number(sourceId.slice('passenger-waiting-cohort-'.length));
+    if (sequence >= input.nextPassengerWaitingCohortSequence)
+      throw new Error('Invalid waiting-cohort sequence.');
+    sourceSequences.add(sequence);
+    const onboardIdentity = sourceIdentities.get(sourceId);
+    if (
+      onboardIdentity !== undefined &&
+      onboardIdentity !== waitingCohortIdentity(cohort)
+    )
+      throw new Error('Residual waiting cohort identity mismatch.');
   }
+  const issuedWaitingCount = input.nextPassengerWaitingCohortSequence - 1;
   if (
-    expected.reduce(
-      (total, event) =>
-        checkedAdd(
-          total,
-          event.onboardGroupIds.length,
-          'boarding event groups',
-        ),
-      0,
-    ) !== currentGroups.length ||
-    JSON.stringify(expected) !== JSON.stringify(input.currentBoardingEvents)
+    !Number.isSafeInteger(issuedWaitingCount) ||
+    issuedWaitingCount < 0 ||
+    sourceSequences.size !== issuedWaitingCount ||
+    [...sourceSequences].some(
+      (sequence) => sequence < 1 || sequence > issuedWaitingCount,
+    )
   )
-    throw new Error('Current boarding events are inconsistent.');
+    throw new Error('Waiting-cohort source sequence is not contiguous.');
+
+  const reconstructed = input.waitingCohorts.map((cohort) => ({ ...cohort }));
+  const reconstructedById = new Map(
+    reconstructed.map((cohort) => [cohort.passengerWaitingCohortId, cohort]),
+  );
+  for (const group of currentGroups) {
+    const existing = reconstructedById.get(group.sourceWaitingCohortId);
+    if (existing === undefined) {
+      const cohort = waitingCohortFromOnboardGroup(group, group.count);
+      reconstructed.push(cohort);
+      reconstructedById.set(cohort.passengerWaitingCohortId, cohort);
+    } else {
+      existing.count = checkedAdd(
+        existing.count,
+        group.count,
+        'reconstructed waiting passengers',
+      );
+    }
+  }
+  reconstructed.sort(compareWaitingCohortsForReplay);
+  const priorBoarded = priorGroups.reduce(
+    (total, group) =>
+      checkedAdd(total, group.count, 'prior boarded passengers'),
+    0,
+  );
+  const replay = boardPassengersAtVehicleCalls({
+    tick: input.tick,
+    waitingCohorts: reconstructed,
+    onboardGroups: priorGroups,
+    nextPassengerOnboardGroupSequence: priorGroups.length + 1,
+    totalBoardedPassengerCount: priorBoarded,
+    capacities: input.capacities,
+    vehicleOperations: input.vehicleOperations,
+    currentStopCalls: input.currentStopCalls,
+    itineraryIsValid: input.itineraryIsValid,
+  });
+  if (
+    replay.totalWaitingForVehiclePassengerCount !==
+      input.totalWaitingForVehiclePassengerCount ||
+    replay.totalBoardedPassengerCount !== input.totalBoardedPassengerCount ||
+    replay.totalOnboardPassengerCount !== input.totalOnboardPassengerCount ||
+    replay.nextPassengerOnboardGroupSequence !==
+      input.nextPassengerOnboardGroupSequence ||
+    JSON.stringify(replay.waitingCohorts) !==
+      JSON.stringify(input.waitingCohorts) ||
+    JSON.stringify(replay.onboardGroups) !==
+      JSON.stringify(input.onboardGroups) ||
+    JSON.stringify(replay.currentBoardingEvents) !==
+      JSON.stringify(input.currentBoardingEvents)
+  )
+    throw new Error('Passenger boarding authority is not canonical.');
 }
+
+const waitingCohortIdentity = (
+  cohort: Pick<
+    PassengerWaitingCohort,
+    Exclude<keyof PassengerWaitingCohort, 'count' | 'passengerWaitingCohortId'>
+  >,
+): string =>
+  JSON.stringify({
+    originStopPlaceId: cohort.originStopPlaceId,
+    originStopNodeId: cohort.originStopNodeId,
+    routeId: cohort.routeId,
+    patternId: cohort.patternId,
+    originOccurrenceIndex: cohort.originOccurrenceIndex,
+    destinationCellId: cohort.destinationCellId,
+    destinationStopPlaceId: cohort.destinationStopPlaceId,
+    destinationStopNodeId: cohort.destinationStopNodeId,
+    destinationOccurrenceIndex: cohort.destinationOccurrenceIndex,
+    wrapsPatternEnd: cohort.wrapsPatternEnd,
+    edgeCount: cohort.edgeCount,
+    firstAssignedTick: cohort.firstAssignedTick,
+    lastAssignedTick: cohort.lastAssignedTick,
+  });
+
+const waitingCohortFromOnboardGroup = (
+  group: Readonly<PassengerOnboardGroup>,
+  count: number,
+): PassengerWaitingCohort => ({
+  passengerWaitingCohortId: group.sourceWaitingCohortId,
+  originStopPlaceId: group.originStopPlaceId,
+  originStopNodeId: group.originStopNodeId,
+  routeId: group.routeId,
+  patternId: group.patternId,
+  originOccurrenceIndex: group.originOccurrenceIndex,
+  destinationCellId: group.destinationCellId,
+  destinationStopPlaceId: group.destinationStopPlaceId,
+  destinationStopNodeId: group.destinationStopNodeId,
+  destinationOccurrenceIndex: group.destinationOccurrenceIndex,
+  wrapsPatternEnd: group.wrapsPatternEnd,
+  edgeCount: group.edgeCount,
+  count,
+  firstAssignedTick: group.firstAssignedTick,
+  lastAssignedTick: group.lastAssignedTick,
+});
+
+const compareWaitingCohortsForReplay = (
+  left: Readonly<PassengerWaitingCohort>,
+  right: Readonly<PassengerWaitingCohort>,
+): number => {
+  const [leftRow, leftColumn] = cellPosition(left.destinationCellId);
+  const [rightRow, rightColumn] = cellPosition(right.destinationCellId);
+  return (
+    lexical(left.originStopNodeId, right.originStopNodeId) ||
+    lexical(left.routeId, right.routeId) ||
+    lexical(left.patternId, right.patternId) ||
+    lexical(left.destinationStopNodeId, right.destinationStopNodeId) ||
+    leftRow - rightRow ||
+    leftColumn - rightColumn
+  );
+};
 
 export function createVehiclePassengerCapacity(
   vehicleId: VehicleId | string,

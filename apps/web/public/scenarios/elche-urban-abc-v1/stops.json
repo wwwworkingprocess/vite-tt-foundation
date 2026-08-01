@@ -1,11 +1,687 @@
 {
   "schemaVersion": "1.0.0",
   "scenarioId": "elche-urban-abc-v1",
-  "stopPlaces": [],
+  "stopPlaces": [
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-001",
+      "name": "Centre - Doctor Caro",
+      "position": {
+        "latitude": 38.26613,
+        "longitude": -0.70112
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-002",
+      "name": "Vicente Blasco Ibáñez, 22",
+      "position": {
+        "latitude": 38.2677994,
+        "longitude": -0.7018978
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-003",
+      "name": "Vicente Blasco Ibáñez, 80",
+      "position": {
+        "latitude": 38.2664863,
+        "longitude": -0.7030161
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-004",
+      "name": "Inem Carrús",
+      "position": {
+        "latitude": 38.2695001,
+        "longitude": -0.7049462
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-005",
+      "name": "P. Moreno Sastre, 62",
+      "position": {
+        "latitude": 38.2726323,
+        "longitude": -0.7077888
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-006",
+      "name": "P. Moreno Sastre, 80",
+      "position": {
+        "latitude": 38.2743093,
+        "longitude": -0.7116069
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-007",
+      "name": "P. Moreno Sastre, 102",
+      "position": {
+        "latitude": 38.2752259,
+        "longitude": -0.713514
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-008",
+      "name": "Sant Crispí",
+      "position": {
+        "latitude": 38.27617,
+        "longitude": -0.71547
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-009",
+      "name": "Almansa",
+      "position": {
+        "latitude": 38.275606,
+        "longitude": -0.7162012
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-010",
+      "name": "Polígon Ind. Carrús 1",
+      "position": {
+        "latitude": 38.2785204,
+        "longitude": -0.722636
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-011",
+      "name": "Polígon Ind. Carrús 2",
+      "position": {
+        "latitude": 38.2774785,
+        "longitude": -0.7204598
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-012",
+      "name": "Polígon Ind. Carrús 3",
+      "position": {
+        "latitude": 38.27706,
+        "longitude": -0.71953
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-013",
+      "name": "Polígon Ind. Carrús 4",
+      "position": {
+        "latitude": 38.2764121,
+        "longitude": -0.7183337
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-014",
+      "name": "Polígon Ind. Carrús 5",
+      "position": {
+        "latitude": 38.2758988,
+        "longitude": -0.7172825
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-015",
+      "name": "Tanatori Carrús",
+      "position": {
+        "latitude": 38.275606,
+        "longitude": -0.7162012
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-016",
+      "name": "Jardí D'Asp",
+      "position": {
+        "latitude": 38.27617,
+        "longitude": -0.71547
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-017",
+      "name": "Manuel Campello Ruiz",
+      "position": {
+        "latitude": 38.2767912,
+        "longitude": -0.7157764
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-018",
+      "name": "El Toscar",
+      "position": {
+        "latitude": 38.2773691,
+        "longitude": -0.713338
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-019",
+      "name": "José Díez Mora",
+      "position": {
+        "latitude": 38.2797188,
+        "longitude": -0.7117963
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-020",
+      "name": "Plaça Madrid",
+      "position": {
+        "latitude": 38.2773402,
+        "longitude": -0.7084653
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-021",
+      "name": "León Sánchez Sáez",
+      "position": {
+        "latitude": 38.2753158,
+        "longitude": -0.7060905
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-022",
+      "name": "Reina Victoria, 141",
+      "position": {
+        "latitude": 38.2719839,
+        "longitude": -0.7039702
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-023",
+      "name": "Reina Victoria, 95",
+      "position": {
+        "latitude": 38.269065,
+        "longitude": -0.7021615
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-024",
+      "name": "Reina Victoria - Jorge Juan",
+      "position": {
+        "latitude": 38.2663509,
+        "longitude": -0.7006693
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-025",
+      "name": "Ies L'Assumpció - Teulada",
+      "position": {
+        "latitude": 38.2618168,
+        "longitude": -0.6959725
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-026",
+      "name": "Hospital General",
+      "position": {
+        "latitude": 38.25987,
+        "longitude": -0.68542
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-027",
+      "name": "Ies Pere Ibarra - L'Avet",
+      "position": {
+        "latitude": 38.2611458,
+        "longitude": -0.6894226
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-028",
+      "name": "Prolongació Mariano Soler Olmos",
+      "position": {
+        "latitude": 38.2624747,
+        "longitude": -0.6996028
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-029",
+      "name": "La Torreta - Curtidores",
+      "position": {
+        "latitude": 38.2629143,
+        "longitude": -0.7007507
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-030",
+      "name": "Mariano Soler Olmos",
+      "position": {
+        "latitude": 38.2631435,
+        "longitude": -0.7017181
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-031",
+      "name": "Pere Joan Perpinyà, 26",
+      "position": {
+        "latitude": 38.2635267,
+        "longitude": -0.7032557
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-032",
+      "name": "Pere Joan Perpinyà, 42",
+      "position": {
+        "latitude": 38.2638577,
+        "longitude": -0.7049587
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-033",
+      "name": "Pere Joan Perpinyà, 80",
+      "position": {
+        "latitude": 38.2652381,
+        "longitude": -0.7086306
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-034",
+      "name": "C.P. L'Alcúdia",
+      "position": {
+        "latitude": 38.2666104,
+        "longitude": -0.712751
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-035",
+      "name": "Antonio P. Quiles, 87",
+      "position": {
+        "latitude": 38.2679077,
+        "longitude": -0.7164742
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-036",
+      "name": "Jardí 9 D'Octubre",
+      "position": {
+        "latitude": 38.2692801,
+        "longitude": -0.7205946
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-037",
+      "name": "Antonio P. Quiles, 9",
+      "position": {
+        "latitude": 38.2698713,
+        "longitude": -0.7206286
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-038",
+      "name": "Juan D. Martínez, 14",
+      "position": {
+        "latitude": 38.2702977,
+        "longitude": -0.7188569
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-039",
+      "name": "Juan D. Martínez, 56",
+      "position": {
+        "latitude": 38.2709857,
+        "longitude": -0.7162583
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-040",
+      "name": "Jardí Andalusia",
+      "position": {
+        "latitude": 38.271849,
+        "longitude": -0.7167008
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-041",
+      "name": "Victoria Kent, 37",
+      "position": {
+        "latitude": 38.2790667,
+        "longitude": -0.7121918
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-042",
+      "name": "Avinguda Novelda, 79",
+      "position": {
+        "latitude": 38.274005,
+        "longitude": -0.7119975
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-043",
+      "name": "Avinguda de Novelda, 59",
+      "position": {
+        "latitude": 38.2731458,
+        "longitude": -0.7113306
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-044",
+      "name": "Jardí Francesc Cantó",
+      "position": {
+        "latitude": 38.2723563,
+        "longitude": -0.7104432
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-045",
+      "name": "Avinguda Novelda, 17",
+      "position": {
+        "latitude": 38.2716941,
+        "longitude": -0.7097877
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-046",
+      "name": "Sant Fermí - Concepció Arenal",
+      "position": {
+        "latitude": 38.2698412,
+        "longitude": -0.7122632
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-047",
+      "name": "C.P. M. de L'Assumpció",
+      "position": {
+        "latitude": 38.2692927,
+        "longitude": -0.7144208
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-048",
+      "name": "Plaça Crevillent",
+      "position": {
+        "latitude": 38.268334,
+        "longitude": -0.7174529
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-049",
+      "name": "Concepció Arenal",
+      "position": {
+        "latitude": 38.267164,
+        "longitude": -0.7139616
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-050",
+      "name": "Pere Joan Perpinyà, 45",
+      "position": {
+        "latitude": 38.2656335,
+        "longitude": -0.7094953
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-051",
+      "name": "Pere Joan Perpinyà - Federico García Lorca",
+      "position": {
+        "latitude": 38.2638577,
+        "longitude": -0.7049587
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-052",
+      "name": "Eduardo Fdez. García",
+      "position": {
+        "latitude": 38.2627375,
+        "longitude": -0.6996179
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-053",
+      "name": "Ies La Torreta",
+      "position": {
+        "latitude": 38.2613532,
+        "longitude": -0.6934199
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-054",
+      "name": "Portalada",
+      "position": {
+        "latitude": 38.2612613,
+        "longitude": -0.6875769
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-055",
+      "name": "Hospital General - Teulada",
+      "position": {
+        "latitude": 38.2608727,
+        "longitude": -0.6854215
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-056",
+      "name": "Cristóbal Sanz",
+      "position": {
+        "latitude": 38.2698805,
+        "longitude": -0.7029828
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-057",
+      "name": "Diagonal 2",
+      "position": {
+        "latitude": 38.2706537,
+        "longitude": -0.7034952
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-060",
+      "name": "Plaça Barcelona - Diagonal",
+      "position": {
+        "latitude": 38.2720581,
+        "longitude": -0.7038334
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-061",
+      "name": "Plaça 1er de Maig",
+      "position": {
+        "latitude": 38.2733032,
+        "longitude": -0.7036818
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-062",
+      "name": "Germans Navarro Caracena",
+      "position": {
+        "latitude": 38.2751511,
+        "longitude": -0.7040606
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-063",
+      "name": "Melchor Botella, 7",
+      "position": {
+        "latitude": 38.2765382,
+        "longitude": -0.7045955
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-064",
+      "name": "Centre Salut Carrús",
+      "position": {
+        "latitude": 38.2775836,
+        "longitude": -0.7064239
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-065",
+      "name": "Poliesportiu Carrús",
+      "position": {
+        "latitude": 38.27867,
+        "longitude": -0.70817
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-066",
+      "name": "José Romero López, 115",
+      "position": {
+        "latitude": 38.2768654,
+        "longitude": -0.7112268
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-067",
+      "name": "José Romero López, 67",
+      "position": {
+        "latitude": 38.2751396,
+        "longitude": -0.7100359
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-068",
+      "name": "Mario Pastor Sempere",
+      "position": {
+        "latitude": 38.2732225,
+        "longitude": -0.7086216
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-069",
+      "name": "Plaça Barcelona - Mario Pastor Sempere",
+      "position": {
+        "latitude": 38.27228,
+        "longitude": -0.70687
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-070",
+      "name": "Sant Fermí - Jorge Juan",
+      "position": {
+        "latitude": 38.2696086,
+        "longitude": -0.7076994
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-071",
+      "name": "Jorge Juan - Reina Victoria",
+      "position": {
+        "latitude": 38.26632,
+        "longitude": -0.7044231
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-126",
+      "name": "Avinguda Corts Valencianes, 5",
+      "position": {
+        "latitude": 38.27575,
+        "longitude": -0.71642
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-159",
+      "name": "Plaça L'Algeps",
+      "position": {
+        "latitude": 38.2706058,
+        "longitude": -0.7087337
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-160",
+      "name": "Avinguda Corts Valencianes, 31",
+      "position": {
+        "latitude": 38.2757556,
+        "longitude": -0.7142873
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-207",
+      "name": "Avinguda Novelda, 115",
+      "position": {
+        "latitude": 38.2752637,
+        "longitude": -0.7133048
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-209",
+      "name": "Emilio Hernández Selva, 64",
+      "position": {
+        "latitude": 38.2776209,
+        "longitude": -0.7126144
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-224",
+      "name": "Centre Salut Toscar",
+      "position": {
+        "latitude": 38.2762532,
+        "longitude": -0.7117325
+      }
+    }
+  ],
   "stopNodes": [
     {
       "stopNodeId": "elche-stop-001",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-001",
       "settlementId": "es-elche",
       "name": "Centre - Doctor Caro",
       "position": {
@@ -19,7 +695,7 @@
     },
     {
       "stopNodeId": "elche-stop-002",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-002",
       "settlementId": "es-elche",
       "name": "Vicente Blasco Ibáñez, 22",
       "position": {
@@ -33,7 +709,7 @@
     },
     {
       "stopNodeId": "elche-stop-003",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-003",
       "settlementId": "es-elche",
       "name": "Vicente Blasco Ibáñez, 80",
       "position": {
@@ -47,7 +723,7 @@
     },
     {
       "stopNodeId": "elche-stop-004",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-004",
       "settlementId": "es-elche",
       "name": "Inem Carrús",
       "position": {
@@ -61,7 +737,7 @@
     },
     {
       "stopNodeId": "elche-stop-005",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-005",
       "settlementId": "es-elche",
       "name": "P. Moreno Sastre, 62",
       "position": {
@@ -75,7 +751,7 @@
     },
     {
       "stopNodeId": "elche-stop-006",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-006",
       "settlementId": "es-elche",
       "name": "P. Moreno Sastre, 80",
       "position": {
@@ -89,7 +765,7 @@
     },
     {
       "stopNodeId": "elche-stop-007",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-007",
       "settlementId": "es-elche",
       "name": "P. Moreno Sastre, 102",
       "position": {
@@ -103,7 +779,7 @@
     },
     {
       "stopNodeId": "elche-stop-008",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-008",
       "settlementId": "es-elche",
       "name": "Sant Crispí",
       "position": {
@@ -117,7 +793,7 @@
     },
     {
       "stopNodeId": "elche-stop-009",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-009",
       "settlementId": "es-elche",
       "name": "Almansa",
       "position": {
@@ -131,7 +807,7 @@
     },
     {
       "stopNodeId": "elche-stop-010",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-010",
       "settlementId": "es-elche",
       "name": "Polígon Ind. Carrús 1",
       "position": {
@@ -145,7 +821,7 @@
     },
     {
       "stopNodeId": "elche-stop-011",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-011",
       "settlementId": "es-elche",
       "name": "Polígon Ind. Carrús 2",
       "position": {
@@ -159,7 +835,7 @@
     },
     {
       "stopNodeId": "elche-stop-012",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-012",
       "settlementId": "es-elche",
       "name": "Polígon Ind. Carrús 3",
       "position": {
@@ -173,7 +849,7 @@
     },
     {
       "stopNodeId": "elche-stop-013",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-013",
       "settlementId": "es-elche",
       "name": "Polígon Ind. Carrús 4",
       "position": {
@@ -187,7 +863,7 @@
     },
     {
       "stopNodeId": "elche-stop-014",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-014",
       "settlementId": "es-elche",
       "name": "Polígon Ind. Carrús 5",
       "position": {
@@ -201,7 +877,7 @@
     },
     {
       "stopNodeId": "elche-stop-015",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-015",
       "settlementId": "es-elche",
       "name": "Tanatori Carrús",
       "position": {
@@ -215,7 +891,7 @@
     },
     {
       "stopNodeId": "elche-stop-016",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-016",
       "settlementId": "es-elche",
       "name": "Jardí D'Asp",
       "position": {
@@ -229,7 +905,7 @@
     },
     {
       "stopNodeId": "elche-stop-017",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-017",
       "settlementId": "es-elche",
       "name": "Manuel Campello Ruiz",
       "position": {
@@ -243,7 +919,7 @@
     },
     {
       "stopNodeId": "elche-stop-018",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-018",
       "settlementId": "es-elche",
       "name": "El Toscar",
       "position": {
@@ -257,7 +933,7 @@
     },
     {
       "stopNodeId": "elche-stop-019",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-019",
       "settlementId": "es-elche",
       "name": "José Díez Mora",
       "position": {
@@ -271,7 +947,7 @@
     },
     {
       "stopNodeId": "elche-stop-020",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-020",
       "settlementId": "es-elche",
       "name": "Plaça Madrid",
       "position": {
@@ -285,7 +961,7 @@
     },
     {
       "stopNodeId": "elche-stop-021",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-021",
       "settlementId": "es-elche",
       "name": "León Sánchez Sáez",
       "position": {
@@ -299,7 +975,7 @@
     },
     {
       "stopNodeId": "elche-stop-022",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-022",
       "settlementId": "es-elche",
       "name": "Reina Victoria, 141",
       "position": {
@@ -313,7 +989,7 @@
     },
     {
       "stopNodeId": "elche-stop-023",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-023",
       "settlementId": "es-elche",
       "name": "Reina Victoria, 95",
       "position": {
@@ -327,7 +1003,7 @@
     },
     {
       "stopNodeId": "elche-stop-024",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-024",
       "settlementId": "es-elche",
       "name": "Reina Victoria - Jorge Juan",
       "position": {
@@ -341,7 +1017,7 @@
     },
     {
       "stopNodeId": "elche-stop-025",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-025",
       "settlementId": "es-elche",
       "name": "Ies L'Assumpció - Teulada",
       "position": {
@@ -355,7 +1031,7 @@
     },
     {
       "stopNodeId": "elche-stop-026",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-026",
       "settlementId": "es-elche",
       "name": "Hospital General",
       "position": {
@@ -369,7 +1045,7 @@
     },
     {
       "stopNodeId": "elche-stop-027",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-027",
       "settlementId": "es-elche",
       "name": "Ies Pere Ibarra - L'Avet",
       "position": {
@@ -383,7 +1059,7 @@
     },
     {
       "stopNodeId": "elche-stop-028",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-028",
       "settlementId": "es-elche",
       "name": "Prolongació Mariano Soler Olmos",
       "position": {
@@ -397,7 +1073,7 @@
     },
     {
       "stopNodeId": "elche-stop-029",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-029",
       "settlementId": "es-elche",
       "name": "La Torreta - Curtidores",
       "position": {
@@ -411,7 +1087,7 @@
     },
     {
       "stopNodeId": "elche-stop-030",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-030",
       "settlementId": "es-elche",
       "name": "Mariano Soler Olmos",
       "position": {
@@ -425,7 +1101,7 @@
     },
     {
       "stopNodeId": "elche-stop-031",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-031",
       "settlementId": "es-elche",
       "name": "Pere Joan Perpinyà, 26",
       "position": {
@@ -439,7 +1115,7 @@
     },
     {
       "stopNodeId": "elche-stop-032",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-032",
       "settlementId": "es-elche",
       "name": "Pere Joan Perpinyà, 42",
       "position": {
@@ -453,7 +1129,7 @@
     },
     {
       "stopNodeId": "elche-stop-033",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-033",
       "settlementId": "es-elche",
       "name": "Pere Joan Perpinyà, 80",
       "position": {
@@ -467,7 +1143,7 @@
     },
     {
       "stopNodeId": "elche-stop-034",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-034",
       "settlementId": "es-elche",
       "name": "C.P. L'Alcúdia",
       "position": {
@@ -481,7 +1157,7 @@
     },
     {
       "stopNodeId": "elche-stop-035",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-035",
       "settlementId": "es-elche",
       "name": "Antonio P. Quiles, 87",
       "position": {
@@ -495,7 +1171,7 @@
     },
     {
       "stopNodeId": "elche-stop-036",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-036",
       "settlementId": "es-elche",
       "name": "Jardí 9 D'Octubre",
       "position": {
@@ -509,7 +1185,7 @@
     },
     {
       "stopNodeId": "elche-stop-037",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-037",
       "settlementId": "es-elche",
       "name": "Antonio P. Quiles, 9",
       "position": {
@@ -523,7 +1199,7 @@
     },
     {
       "stopNodeId": "elche-stop-038",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-038",
       "settlementId": "es-elche",
       "name": "Juan D. Martínez, 14",
       "position": {
@@ -537,7 +1213,7 @@
     },
     {
       "stopNodeId": "elche-stop-039",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-039",
       "settlementId": "es-elche",
       "name": "Juan D. Martínez, 56",
       "position": {
@@ -551,7 +1227,7 @@
     },
     {
       "stopNodeId": "elche-stop-040",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-040",
       "settlementId": "es-elche",
       "name": "Jardí Andalusia",
       "position": {
@@ -565,7 +1241,7 @@
     },
     {
       "stopNodeId": "elche-stop-041",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-041",
       "settlementId": "es-elche",
       "name": "Victoria Kent, 37",
       "position": {
@@ -579,7 +1255,7 @@
     },
     {
       "stopNodeId": "elche-stop-042",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-042",
       "settlementId": "es-elche",
       "name": "Avinguda Novelda, 79",
       "position": {
@@ -593,7 +1269,7 @@
     },
     {
       "stopNodeId": "elche-stop-043",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-043",
       "settlementId": "es-elche",
       "name": "Avinguda de Novelda, 59",
       "position": {
@@ -607,7 +1283,7 @@
     },
     {
       "stopNodeId": "elche-stop-044",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-044",
       "settlementId": "es-elche",
       "name": "Jardí Francesc Cantó",
       "position": {
@@ -621,7 +1297,7 @@
     },
     {
       "stopNodeId": "elche-stop-045",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-045",
       "settlementId": "es-elche",
       "name": "Avinguda Novelda, 17",
       "position": {
@@ -635,7 +1311,7 @@
     },
     {
       "stopNodeId": "elche-stop-046",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-046",
       "settlementId": "es-elche",
       "name": "Sant Fermí - Concepció Arenal",
       "position": {
@@ -649,7 +1325,7 @@
     },
     {
       "stopNodeId": "elche-stop-047",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-047",
       "settlementId": "es-elche",
       "name": "C.P. M. de L'Assumpció",
       "position": {
@@ -663,7 +1339,7 @@
     },
     {
       "stopNodeId": "elche-stop-048",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-048",
       "settlementId": "es-elche",
       "name": "Plaça Crevillent",
       "position": {
@@ -677,7 +1353,7 @@
     },
     {
       "stopNodeId": "elche-stop-049",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-049",
       "settlementId": "es-elche",
       "name": "Concepció Arenal",
       "position": {
@@ -691,7 +1367,7 @@
     },
     {
       "stopNodeId": "elche-stop-050",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-050",
       "settlementId": "es-elche",
       "name": "Pere Joan Perpinyà, 45",
       "position": {
@@ -705,7 +1381,7 @@
     },
     {
       "stopNodeId": "elche-stop-051",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-051",
       "settlementId": "es-elche",
       "name": "Pere Joan Perpinyà - Federico García Lorca",
       "position": {
@@ -719,7 +1395,7 @@
     },
     {
       "stopNodeId": "elche-stop-052",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-052",
       "settlementId": "es-elche",
       "name": "Eduardo Fdez. García",
       "position": {
@@ -733,7 +1409,7 @@
     },
     {
       "stopNodeId": "elche-stop-053",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-053",
       "settlementId": "es-elche",
       "name": "Ies La Torreta",
       "position": {
@@ -747,7 +1423,7 @@
     },
     {
       "stopNodeId": "elche-stop-054",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-054",
       "settlementId": "es-elche",
       "name": "Portalada",
       "position": {
@@ -761,7 +1437,7 @@
     },
     {
       "stopNodeId": "elche-stop-055",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-055",
       "settlementId": "es-elche",
       "name": "Hospital General - Teulada",
       "position": {
@@ -775,7 +1451,7 @@
     },
     {
       "stopNodeId": "elche-stop-056",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-056",
       "settlementId": "es-elche",
       "name": "Cristóbal Sanz",
       "position": {
@@ -789,7 +1465,7 @@
     },
     {
       "stopNodeId": "elche-stop-057",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-057",
       "settlementId": "es-elche",
       "name": "Diagonal 2",
       "position": {
@@ -803,7 +1479,7 @@
     },
     {
       "stopNodeId": "elche-stop-060",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-060",
       "settlementId": "es-elche",
       "name": "Plaça Barcelona - Diagonal",
       "position": {
@@ -817,7 +1493,7 @@
     },
     {
       "stopNodeId": "elche-stop-061",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-061",
       "settlementId": "es-elche",
       "name": "Plaça 1er de Maig",
       "position": {
@@ -831,7 +1507,7 @@
     },
     {
       "stopNodeId": "elche-stop-062",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-062",
       "settlementId": "es-elche",
       "name": "Germans Navarro Caracena",
       "position": {
@@ -845,7 +1521,7 @@
     },
     {
       "stopNodeId": "elche-stop-063",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-063",
       "settlementId": "es-elche",
       "name": "Melchor Botella, 7",
       "position": {
@@ -859,7 +1535,7 @@
     },
     {
       "stopNodeId": "elche-stop-064",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-064",
       "settlementId": "es-elche",
       "name": "Centre Salut Carrús",
       "position": {
@@ -873,7 +1549,7 @@
     },
     {
       "stopNodeId": "elche-stop-065",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-065",
       "settlementId": "es-elche",
       "name": "Poliesportiu Carrús",
       "position": {
@@ -887,7 +1563,7 @@
     },
     {
       "stopNodeId": "elche-stop-066",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-066",
       "settlementId": "es-elche",
       "name": "José Romero López, 115",
       "position": {
@@ -901,7 +1577,7 @@
     },
     {
       "stopNodeId": "elche-stop-067",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-067",
       "settlementId": "es-elche",
       "name": "José Romero López, 67",
       "position": {
@@ -915,7 +1591,7 @@
     },
     {
       "stopNodeId": "elche-stop-068",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-068",
       "settlementId": "es-elche",
       "name": "Mario Pastor Sempere",
       "position": {
@@ -929,7 +1605,7 @@
     },
     {
       "stopNodeId": "elche-stop-069",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-069",
       "settlementId": "es-elche",
       "name": "Plaça Barcelona - Mario Pastor Sempere",
       "position": {
@@ -943,7 +1619,7 @@
     },
     {
       "stopNodeId": "elche-stop-070",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-070",
       "settlementId": "es-elche",
       "name": "Sant Fermí - Jorge Juan",
       "position": {
@@ -957,7 +1633,7 @@
     },
     {
       "stopNodeId": "elche-stop-071",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-071",
       "settlementId": "es-elche",
       "name": "Jorge Juan - Reina Victoria",
       "position": {
@@ -971,7 +1647,7 @@
     },
     {
       "stopNodeId": "elche-stop-126",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-126",
       "settlementId": "es-elche",
       "name": "Avinguda Corts Valencianes, 5",
       "position": {
@@ -985,7 +1661,7 @@
     },
     {
       "stopNodeId": "elche-stop-159",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-159",
       "settlementId": "es-elche",
       "name": "Plaça L'Algeps",
       "position": {
@@ -999,7 +1675,7 @@
     },
     {
       "stopNodeId": "elche-stop-160",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-160",
       "settlementId": "es-elche",
       "name": "Avinguda Corts Valencianes, 31",
       "position": {
@@ -1013,7 +1689,7 @@
     },
     {
       "stopNodeId": "elche-stop-207",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-207",
       "settlementId": "es-elche",
       "name": "Avinguda Novelda, 115",
       "position": {
@@ -1027,7 +1703,7 @@
     },
     {
       "stopNodeId": "elche-stop-209",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-209",
       "settlementId": "es-elche",
       "name": "Emilio Hernández Selva, 64",
       "position": {
@@ -1041,7 +1717,7 @@
     },
     {
       "stopNodeId": "elche-stop-224",
-      "stopPlaceId": null,
+      "stopPlaceId": "elche-place-224",
       "settlementId": "es-elche",
       "name": "Centre Salut Toscar",
       "position": {

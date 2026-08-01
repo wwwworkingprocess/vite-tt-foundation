@@ -22,6 +22,12 @@ provide minimum and maximum completion-duration bounds rather than individual
 passenger histories. One bounded waiting-generation watermark per canonical
 cohort key preserves retired source identity after onboard groups disappear.
 
+Snapshot restoration rejects onboard ownership once the exact destination
+occurrence has passed in its target pattern run. Active onboard authority keeps
+the production comparator order even when historical alighting leaves numeric
+ID gaps, and one source onboard ID may occupy only one current lifecycle
+location: onboard, destination access, or current completion output.
+
 Snapshot V9 and Transport Save V7 are the sole current pre-release contracts.
 Earlier developer snapshots and saves are obsolete without migration. The
 snapshot stores active ownership, sequences, counters, and current events, but

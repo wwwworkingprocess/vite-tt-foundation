@@ -711,6 +711,190 @@ describe('transport application controller', () => {
     await controller.close();
   });
 
+  it('preflights overdue and duplicate passenger lifecycle authority without teardown', async () => {
+    const canonical = scenario();
+    const plan = boardingDemandPlan();
+    const createVehicle = (vehicleId: string) => ({
+      kind: 'transport.vehicle.create-route-cycle' as const,
+      vehicleId,
+      label: vehicleId,
+      routeId: 'legacy-A2',
+      passengerCapacity: 1,
+      legs: [
+        {
+          patternId: 'legacy-A2-torrevieja-la-mata',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1' as const,
+            edgeTravelTicks: [1, 1, 1, 1],
+          },
+        },
+        {
+          patternId: 'legacy-A2-la-mata-torrevieja',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1' as const,
+            edgeTravelTicks: [1, 1],
+          },
+        },
+      ],
+    });
+    let boarded = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      2,
+    );
+    boarded = applyTransportVehicleCommand(boarded, createVehicle('z-bus'));
+    const sourceGroup =
+      boarded.passengerDemand.status === 'active'
+        ? structuredClone(boarded.passengerDemand.onboardGroups[0]!)
+        : undefined;
+    if (sourceGroup === undefined) throw new Error('Expected onboard group.');
+    boarded = applyTransportVehicleCommand(boarded, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'z-bus',
+    });
+    let alighted = boarded;
+    while (alighted.currentAlightingEvents.length === 0)
+      alighted = advanceTransportTicks(alighted, 1);
+    const later = advanceTransportTicks(alighted, 1);
+    const overdue = structuredClone(createTransportSimulationSnapshot(later));
+    if (overdue.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const overdueDemand = overdue.state.passengerDemand as unknown as {
+      onboardGroups: Array<typeof sourceGroup>;
+      totalOnboardPassengerCount: number;
+      totalAlightedPassengerCount: number;
+      totalCompletedJourneyPassengerCount: number;
+    };
+    overdueDemand.onboardGroups = [sourceGroup];
+    overdueDemand.totalOnboardPassengerCount += sourceGroup.count;
+    overdueDemand.totalAlightedPassengerCount -= sourceGroup.count;
+    overdueDemand.totalCompletedJourneyPassengerCount -= sourceGroup.count;
+
+    let ordered = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      2,
+    );
+    ordered = applyTransportVehicleCommand(ordered, createVehicle('z-bus'));
+    ordered = applyTransportVehicleCommand(ordered, createVehicle('a-bus'));
+    ordered = advanceTransportTicks(ordered, 1);
+    const wrongOrder = structuredClone(
+      createTransportSimulationSnapshot(ordered),
+    );
+    if (wrongOrder.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    (
+      wrongOrder.state.passengerDemand as unknown as {
+        onboardGroups: unknown[];
+      }
+    ).onboardGroups.reverse();
+    const duplicateId = structuredClone(
+      createTransportSimulationSnapshot(ordered),
+    );
+    if (duplicateId.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const duplicateGroups = (
+      duplicateId.state.passengerDemand as unknown as {
+        onboardGroups: Array<{ passengerOnboardGroupId: string }>;
+      }
+    ).onboardGroups;
+    duplicateGroups[1]!.passengerOnboardGroupId =
+      duplicateGroups[0]!.passengerOnboardGroupId;
+
+    const disabledEvent = structuredClone(
+      createTransportSimulationSnapshot(
+        createTransportSimulationState(canonical, later.tick),
+      ),
+    );
+    (
+      disabledEvent.state as unknown as { currentAlightingEvents: unknown[] }
+    ).currentAlightingEvents = structuredClone(
+      alighted.currentAlightingEvents,
+    ) as unknown as unknown[];
+    const validRecord = parseTransportSaveRecord({
+      ...record(),
+      saveId: 'journey-preflight',
+      sourceSimulationTick: ordered.tick,
+      snapshot: createTransportSimulationSnapshot(ordered),
+    });
+    let stored: unknown = validRecord;
+    const current = createDirectTransportSimulationClient();
+    const currentClose = vi.fn(() => current.close());
+    let clientCreations = 0;
+    const controller = createTransportApplicationController({
+      createClient: () => {
+        clientCreations += 1;
+        return clientCreations === 1
+          ? Object.freeze({ ...current, close: currentClose })
+          : createDirectTransportSimulationClient();
+      },
+      repository: {
+        get: async () => classifyPersistedSaveRecord(stored),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => canonical },
+      passengerDemandPlanResolver: { resolve: async () => plan },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('timeline-current'),
+      scenario: canonical,
+      passengerDemandPlan: plan,
+    });
+    const expected = controller.projection.getState();
+    for (const [index, snapshot] of [
+      overdue,
+      wrongOrder,
+      duplicateId,
+      disabledEvent,
+    ].entries()) {
+      stored = {
+        ...validRecord,
+        sourceSimulationTick: snapshot.state.tick,
+        snapshot,
+      };
+      await expect(
+        controller.restore({
+          saveId: 'journey-preflight',
+          timelineId: parseTimelineId(`timeline-journey-corrupt-${index}`),
+        }),
+      ).rejects.toThrow();
+      expect(controller.projection.getState()).toEqual({
+        ...expected,
+        message: expect.any(String),
+      });
+      expect(currentClose).not.toHaveBeenCalled();
+      expect(clientCreations).toBe(1);
+    }
+
+    stored = validRecord;
+    await controller.restore({
+      saveId: 'journey-preflight',
+      timelineId: parseTimelineId('timeline-journey-valid'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'timeline-journey-valid',
+      simulationTick: ordered.tick,
+      fleet: ordered.fleet,
+      passengerDemand: {
+        status: 'active',
+        processedThroughTick: ordered.tick,
+        onboardGroups:
+          ordered.passengerDemand.status === 'active'
+            ? ordered.passengerDemand.onboardGroups
+            : [],
+        destinationAccessGroups:
+          ordered.passengerDemand.status === 'active'
+            ? ordered.passengerDemand.destinationAccessGroups
+            : [],
+      },
+      currentAlightingEvents: ordered.currentAlightingEvents,
+      currentJourneyCompletionEvents: ordered.currentJourneyCompletionEvents,
+    });
+    expect(currentClose).toHaveBeenCalledTimes(1);
+    expect(clientCreations).toBe(2);
+    await controller.close();
+  });
+
   it('preflights missing and fabricated terminal calls before teardown', async () => {
     const canonical = scenario();
     let terminal = createTransportSimulationState(canonical, 0);

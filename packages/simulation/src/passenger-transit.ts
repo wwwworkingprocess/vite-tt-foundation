@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type {
   CityPopulationCellId,
+  DirectedScenarioGraph,
   RouteId,
   RoutePatternId,
   StopNodeId,
@@ -15,6 +16,7 @@ import {
 } from './authority-utils.js';
 import {
   boardPassengersAtVehicleCalls,
+  comparePassengerOnboardGroups,
   passengerOnboardGroupIdSchema,
   type CurrentBoardingEvent,
   type PassengerOnboardGroup,
@@ -35,7 +37,11 @@ import type {
   VehiclePatternRunState,
   VehicleStopNodeCall,
 } from './vehicle-operation.js';
-import { parseVehicleId, type VehicleId } from './vehicle-movement.js';
+import {
+  parseVehicleId,
+  type VehicleId,
+  type VehicleState,
+} from './vehicle-movement.js';
 
 export const passengerDestinationAccessGroupIdSchema = z
   .string()
@@ -273,6 +279,9 @@ export function validatePassengerTransitCollections(input: {
     input.demandPlan.cells.map((cell) => [cell.cellId, cell]),
   );
   const accessIds = new Set<string>();
+  const activeSourceOnboardIds = new Set(
+    input.onboardGroups.map((group) => group.passengerOnboardGroupId),
+  );
   for (
     let index = 0;
     index < input.destinationAccessGroups.length;
@@ -299,6 +308,9 @@ export function validatePassengerTransitCollections(input: {
           );
     if (
       accessIds.has(group.passengerDestinationAccessGroupId) ||
+      activeSourceOnboardIds.has(group.sourceOnboardGroupId) ||
+      idSequence(group.sourceOnboardGroupId) >=
+        input.nextPassengerOnboardGroupSequence ||
       sequence >= input.nextPassengerDestinationAccessGroupSequence ||
       group.completionTick <= input.tick ||
       group.boardedAtTick > group.alightedAtTick ||
@@ -319,6 +331,7 @@ export function validatePassengerTransitCollections(input: {
     )
       throw new Error('Invalid passenger destination-access authority.');
     accessIds.add(group.passengerDestinationAccessGroupId);
+    activeSourceOnboardIds.add(group.sourceOnboardGroupId);
   }
 
   const watermarkKeys = new Set<string>();
@@ -404,6 +417,64 @@ export function validatePassengerTransitCollections(input: {
         passengerWaitingCohortSequence(watermark.passengerWaitingCohortId)
     )
       throw new Error('Missing waiting-generation lineage watermark.');
+  }
+}
+
+const reachedOccurrenceIndex = (vehicle: Readonly<VehicleState>): number => {
+  const movement = vehicle.movement;
+  if (movement.kind === 'parked-at-stop') return 0;
+  if (movement.kind === 'running-on-edge') return movement.edgeSequence;
+  if (movement.kind === 'running-at-stop') return movement.nextEdgeSequence;
+  return vehicle.movementPlan.edgeTravelTicks.length;
+};
+
+/** Rejects onboard ownership after its exact canonical destination event. */
+export function validateOnboardPassengerProgress(input: {
+  readonly graph: DirectedScenarioGraph;
+  readonly fleet: readonly Readonly<VehicleState>[];
+  readonly vehicleOperations: readonly Readonly<VehiclePatternRunState>[];
+  readonly currentStopCalls: readonly Readonly<VehicleStopNodeCall>[];
+  readonly onboardGroups: readonly Readonly<PassengerOnboardGroup>[];
+}): void {
+  const vehicles = new Map(
+    input.fleet.map((vehicle) => [vehicle.vehicleId, vehicle]),
+  );
+  const operations = new Map(
+    input.vehicleOperations.map((operation) => [
+      operation.vehicleId,
+      operation,
+    ]),
+  );
+  for (const group of input.onboardGroups) {
+    const vehicle = vehicles.get(group.vehicleId);
+    const operation = operations.get(group.vehicleId);
+    const route = input.graph.route(group.routeId);
+    const targetRun = group.alightAtPatternRunSequence;
+    if (
+      vehicle === undefined ||
+      operation === undefined ||
+      vehicle.routeId !== group.routeId ||
+      route === undefined ||
+      !route.patterns.some(
+        (pattern) => pattern.patternId === group.patternId,
+      ) ||
+      targetRun < operation.patternRunSequence ||
+      (targetRun === operation.patternRunSequence &&
+        (vehicle.patternId !== group.patternId ||
+          group.destinationOccurrenceIndex <=
+            reachedOccurrenceIndex(vehicle))) ||
+      input.currentStopCalls.some(
+        (call) =>
+          call.vehicleId === group.vehicleId &&
+          call.routeId === group.routeId &&
+          call.patternId === group.patternId &&
+          call.stopNodeId === group.destinationStopNodeId &&
+          call.occurrenceIndex === group.destinationOccurrenceIndex &&
+          call.patternRunSequence === targetRun &&
+          call.stopCallSequence > group.boardedAtStopCallSequence,
+      )
+    )
+      throw new Error('Overdue onboard passenger destination call.');
   }
 }
 
@@ -881,6 +952,34 @@ export function validatePassengerTransitReplay(
   },
 ): void {
   const tick = parseSimulationTick(input.tick);
+  const activeOnboardIds = new Set<string>();
+  for (let index = 0; index < input.onboardGroups.length; index += 1) {
+    const group = input.onboardGroups[index]!;
+    const sequence = idSequence(group.passengerOnboardGroupId);
+    if (
+      activeOnboardIds.has(group.passengerOnboardGroupId) ||
+      !Number.isSafeInteger(sequence) ||
+      sequence < 1 ||
+      sequence >= input.nextPassengerOnboardGroupSequence ||
+      group.boardedAtTick > tick ||
+      group.firstAssignedTick > group.lastAssignedTick ||
+      group.lastAssignedTick > group.boardedAtTick ||
+      group.alightAtPatternRunSequence !==
+        (group.wrapsPatternEnd
+          ? checkedAdd(
+              group.boardedAtPatternRunSequence,
+              1,
+              'onboard alight pattern-run sequence',
+            )
+          : group.boardedAtPatternRunSequence) ||
+      !input.itineraryIsValid(waitingFromOnboard(group)) ||
+      (index > 0 &&
+        comparePassengerOnboardGroups(input.onboardGroups[index - 1]!, group) >=
+          0)
+    )
+      throw new Error('Invalid active onboard passenger authority.');
+    activeOnboardIds.add(group.passengerOnboardGroupId);
+  }
   if (input.totalAlightedPassengerCount === 0) {
     const activeSequences = input.onboardGroups
       .map((group) => idSequence(group.passengerOnboardGroupId))
@@ -894,6 +993,21 @@ export function validatePassengerTransitReplay(
   const completedGroups = parsePassengerJourneyCompletionEvents(
     input.currentJourneyCompletionEvents,
   );
+  const lifecycleOnboardIds = new Set(
+    input.onboardGroups.map((group) => group.passengerOnboardGroupId),
+  );
+  const lifecycleAccessIds = new Set<string>();
+  for (const group of [...input.destinationAccessGroups, ...completedGroups]) {
+    if (
+      idSequence(group.sourceOnboardGroupId) >=
+        input.nextPassengerOnboardGroupSequence ||
+      lifecycleOnboardIds.has(group.sourceOnboardGroupId) ||
+      lifecycleAccessIds.has(group.passengerDestinationAccessGroupId)
+    )
+      throw new Error('Duplicate passenger lifecycle ownership identity.');
+    lifecycleOnboardIds.add(group.sourceOnboardGroupId);
+    lifecycleAccessIds.add(group.passengerDestinationAccessGroupId);
+  }
   const currentCreatedAccess = [
     ...input.destinationAccessGroups.filter(
       (group) => group.alightedAtTick === tick,
@@ -909,11 +1023,7 @@ export function validatePassengerTransitReplay(
   const priorOnboard = [
     ...input.onboardGroups.filter((group) => group.boardedAtTick < tick),
     ...currentAlighted.filter((group) => group.boardedAtTick < tick),
-  ].sort(
-    (left, right) =>
-      idSequence(left.passengerOnboardGroupId) -
-      idSequence(right.passengerOnboardGroupId),
-  );
+  ].sort(comparePassengerOnboardGroups);
   const waiting = input.waitingCohorts.map((cohort) => ({ ...cohort }));
   const waitingById = new Map(
     waiting.map((cohort) => [cohort.passengerWaitingCohortId, cohort]),

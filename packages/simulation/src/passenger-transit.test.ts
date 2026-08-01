@@ -313,6 +313,66 @@ describe('deterministic passenger alighting and destination access', () => {
     ).toEqual([]);
   });
 
+  it('replays same-vehicle onboard authority in destination order, not issuance order', () => {
+    const laterDestination = onboard({
+      passengerOnboardGroupId: 'passenger-onboard-group-1',
+      destinationOccurrenceIndex: 2,
+      count: 2,
+    });
+    const earlierDestination = onboard({
+      passengerOnboardGroupId: 'passenger-onboard-group-2',
+      sourceWaitingCohortId: 'passenger-waiting-cohort-2',
+      destinationOccurrenceIndex: 1,
+      edgeCount: 1,
+      count: 3,
+    });
+    expect(() =>
+      validatePassengerTransitReplay({
+        ...input(),
+        tick: 8 as never,
+        onboardGroups: [earlierDestination, laterDestination] as never,
+        nextPassengerOnboardGroupSequence: 3,
+        totalBoardedPassengerCount: 5,
+        totalOnboardPassengerCount: 5,
+        currentStopCalls: [],
+        currentAlightingEvents: [],
+        currentBoardingEvents: [],
+        currentJourneyCompletionEvents: [],
+      }),
+    ).not.toThrow();
+  });
+
+  it('accepts historical onboard ID gaps and rejects duplicate lifecycle ownership', () => {
+    const activeWithGap = onboard({
+      passengerOnboardGroupId: 'passenger-onboard-group-2',
+    });
+    expect(() =>
+      validatePassengerTransitReplay({
+        ...input(),
+        tick: 8 as never,
+        onboardGroups: [activeWithGap] as never,
+        nextPassengerOnboardGroupSequence: 3,
+        totalBoardedPassengerCount: 7,
+        totalAlightedPassengerCount: 1,
+        totalCompletedJourneyPassengerCount: 1,
+        currentStopCalls: [],
+        currentAlightingEvents: [],
+        currentBoardingEvents: [],
+        currentJourneyCompletionEvents: [],
+      }),
+    ).not.toThrow();
+
+    const result = processPassengerTransitAtVehicleCalls(input());
+    expect(() =>
+      validatePassengerTransitReplay({
+        ...input(),
+        ...result,
+        onboardGroups: [onboard()] as never,
+        totalOnboardPassengerCount: 6,
+      }),
+    ).toThrow(/lifecycle ownership/i);
+  });
+
   it('orders destination access through every canonical tie-breaker', () => {
     const result = processPassengerTransitAtVehicleCalls(input());
     const base = result.destinationAccessGroups[0]!;
@@ -400,6 +460,16 @@ describe('deterministic passenger alighting and destination access', () => {
       },
       (value) => {
         value.waitingGenerationLineageWatermarks = [];
+      },
+      (value) => {
+        value.onboardGroups = [onboard()] as never;
+      },
+      (value) => {
+        value.destinationAccessGroups[0] = {
+          ...value.destinationAccessGroups[0]!,
+          sourceOnboardGroupId: 'passenger-onboard-group-2' as never,
+        };
+        value.nextPassengerOnboardGroupSequence = 2;
       },
     ];
     for (const corrupt of corruptions) {

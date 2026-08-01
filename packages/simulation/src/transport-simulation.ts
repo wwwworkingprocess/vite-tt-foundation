@@ -59,6 +59,7 @@ import {
   parsePassengerJourneyCompletionEvents,
   processPassengerTransitAtVehicleCalls,
   validatePassengerTransitReplay,
+  validateOnboardPassengerProgress,
   type CurrentAlightingEvent,
   type PassengerJourneyCompletionEvent,
 } from './passenger-transit.js';
@@ -659,6 +660,12 @@ export function restoreTransportSimulationState(
         });
   let passengerDemand: PassengerDemandState;
   if (snapshot.state.passengerDemand.status === 'disabled') {
+    if (
+      snapshot.state.currentBoardingEvents.length > 0 ||
+      snapshot.state.currentAlightingEvents.length > 0 ||
+      snapshot.state.currentJourneyCompletionEvents.length > 0
+    )
+      throw new Error('Disabled passenger authority cannot publish events.');
     passengerDemand = createDisabledPassengerDemandState();
   } else {
     if (parsedPlan === undefined)
@@ -703,6 +710,13 @@ export function restoreTransportSimulationState(
         passengerWaitingCohortMatchesItinerary(group, itinerary)
       );
     };
+    validateOnboardPassengerProgress({
+      graph,
+      fleet,
+      vehicleOperations: operating.operations,
+      currentStopCalls: operating.calls,
+      onboardGroups: passengerDemand.onboardGroups,
+    });
     validatePassengerTransitReplay({
       tick: snapshot.state.tick,
       demandPlan: parsedPlan!,

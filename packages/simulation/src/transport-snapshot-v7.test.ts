@@ -11,6 +11,7 @@ import {
   parsePassengerDemandPlan,
   parseTransportSimulationSnapshot,
   restoreTransportSimulationState,
+  validateOnboardPassengerProgress,
 } from './index.js';
 
 const root = join(
@@ -79,7 +80,265 @@ const demandPlan = () => {
   });
 };
 
+const boardingPlan = () => {
+  const plan = structuredClone(demandPlan());
+  plan.cells[0]!.assignedStopPlaceId = 'tv-place-0108';
+  plan.cells[1]!.assignedStopPlaceId = 'tv-place-0093';
+  plan.stops = [
+    { stopPlaceId: 'tv-place-0093' },
+    { stopPlaceId: 'tv-place-0108' },
+  ];
+  return plan;
+};
+
+const routeCycleVehicle = (vehicleId: string, passengerCapacity = 1) => ({
+  kind: 'transport.vehicle.create-route-cycle' as const,
+  vehicleId,
+  label: vehicleId,
+  routeId: 'legacy-A2',
+  passengerCapacity,
+  legs: [
+    {
+      patternId: 'legacy-A2-torrevieja-la-mata',
+      movementPlan: {
+        kind: 'vehicle-movement-plan-v1' as const,
+        edgeTravelTicks: [1, 1, 1, 1],
+      },
+    },
+    {
+      patternId: 'legacy-A2-la-mata-torrevieja',
+      movementPlan: {
+        kind: 'vehicle-movement-plan-v1' as const,
+        edgeTravelTicks: [1, 1],
+      },
+    },
+  ],
+});
+
+const boardedState = (vehicleId = 'boarding-bus') => {
+  const canonical = scenario();
+  const plan = boardingPlan();
+  let state = advanceTransportTicks(
+    createTransportSimulationState(canonical, 0, plan),
+    2,
+  );
+  state = applyTransportVehicleCommand(state, routeCycleVehicle(vehicleId));
+  state = applyTransportVehicleCommand(state, {
+    kind: 'transport.vehicle.start',
+    vehicleId,
+  });
+  return { canonical, plan, state };
+};
+
 describe('Transport Snapshot V9', () => {
+  it('rejects onboard passengers whose destination call is already past', () => {
+    const { canonical, plan, state: boarded } = boardedState();
+    if (boarded.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const group = structuredClone(boarded.passengerDemand.onboardGroups[0]!);
+    expect(
+      createTransportSimulationSnapshot(
+        restoreTransportSimulationState(
+          createTransportSimulationSnapshot(boarded),
+          canonical,
+          plan,
+        ),
+      ),
+    ).toEqual(createTransportSimulationSnapshot(boarded));
+
+    let atDestination = boarded;
+    while (
+      atDestination.passengerDemand.status === 'active' &&
+      atDestination.passengerDemand.onboardGroups.length > 0
+    )
+      atDestination = advanceTransportTicks(atDestination, 1);
+    expect(atDestination.currentAlightingEvents).toHaveLength(1);
+
+    const corrupt = (later: typeof atDestination) => {
+      const snapshot = structuredClone(
+        createTransportSimulationSnapshot(later),
+      );
+      if (snapshot.state.passengerDemand.status !== 'active')
+        throw new Error('Expected active passenger authority.');
+      const demand = snapshot.state.passengerDemand;
+      demand.onboardGroups = [group];
+      demand.totalOnboardPassengerCount += group.count;
+      demand.totalAlightedPassengerCount -= group.count;
+      if (demand.destinationAccessGroups.length > 0) {
+        demand.destinationAccessGroups = [];
+        demand.totalInDestinationAccessPassengerCount -= group.count;
+      } else demand.totalCompletedJourneyPassengerCount -= group.count;
+      snapshot.state.currentAlightingEvents = [];
+      snapshot.state.currentJourneyCompletionEvents = [];
+      return snapshot;
+    };
+
+    const exactCurrentCall = corrupt(atDestination);
+    expect(() =>
+      restoreTransportSimulationState(exactCurrentCall, canonical, plan),
+    ).toThrow();
+
+    const passedOccurrenceState = advanceTransportTicks(atDestination, 1);
+    const passedOccurrence = corrupt(passedOccurrenceState);
+    expect(() =>
+      restoreTransportSimulationState(passedOccurrence, canonical, plan),
+    ).toThrow(/overdue onboard passenger/i);
+
+    let laterRun = passedOccurrenceState;
+    while (
+      laterRun.vehicleOperations[0]!.patternRunSequence <=
+      group.alightAtPatternRunSequence
+    )
+      laterRun = advanceTransportTicks(laterRun, 1);
+    const pastRun = corrupt(laterRun);
+    expect(() =>
+      restoreTransportSimulationState(pastRun, canonical, plan),
+    ).toThrow(/overdue onboard passenger/i);
+  });
+
+  it('does not confuse near-match calls or an in-progress edge with the destination event', () => {
+    const { state: boarded } = boardedState();
+    if (boarded.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const group = boarded.passengerDemand.onboardGroups[0]!;
+    const operation = boarded.vehicleOperations[0]!;
+    const destinationCall = {
+      vehicleId: group.vehicleId,
+      routeId: group.routeId,
+      patternId: group.patternId,
+      stopNodeId: group.destinationStopNodeId,
+      occurrenceIndex: group.destinationOccurrenceIndex,
+      patternRunSequence: group.alightAtPatternRunSequence,
+      stopCallSequence: group.boardedAtStopCallSequence + 1,
+      tick: boarded.tick,
+    } as (typeof boarded.currentStopCalls)[number];
+    const nearMatches = [
+      { ...destinationCall, routeId: 'unrelated-route' },
+      { ...destinationCall, patternId: 'unrelated-pattern' },
+      { ...destinationCall, stopNodeId: 'unrelated-node' },
+      {
+        ...destinationCall,
+        occurrenceIndex: destinationCall.occurrenceIndex + 1,
+      },
+      {
+        ...destinationCall,
+        patternRunSequence: destinationCall.patternRunSequence + 1,
+      },
+      {
+        ...destinationCall,
+        stopCallSequence: group.boardedAtStopCallSequence,
+      },
+    ] as unknown as Array<(typeof boarded.currentStopCalls)[number]>;
+
+    for (const nearMatch of nearMatches)
+      expect(() =>
+        validateOnboardPassengerProgress({
+          graph: boarded.graph,
+          fleet: boarded.fleet,
+          vehicleOperations: [operation],
+          currentStopCalls: [nearMatch],
+          onboardGroups: [group],
+        }),
+      ).not.toThrow();
+
+    const vehicle = boarded.fleet[0]!;
+    const edge = boarded.graph.patternEdges(vehicle.patternId)[0]!;
+    const onEdgeVehicle = {
+      ...vehicle,
+      movement: {
+        kind: 'running-on-edge' as const,
+        edgeId: edge.edgeId,
+        edgeSequence: edge.sequence,
+        fromStopNodeId: edge.fromStopNodeId,
+        toStopNodeId: edge.toStopNodeId,
+        progressTicks: 1,
+        travelTicks: 2,
+      },
+    };
+    expect(() =>
+      validateOnboardPassengerProgress({
+        graph: boarded.graph,
+        fleet: [onEdgeVehicle],
+        vehicleOperations: boarded.vehicleOperations,
+        currentStopCalls: [],
+        onboardGroups: [group],
+      }),
+    ).not.toThrow();
+  });
+
+  it('round-trips canonical onboard authority rather than numeric issuance order', () => {
+    const canonical = scenario();
+    const plan = boardingPlan();
+    let state = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      2,
+    );
+    state = applyTransportVehicleCommand(state, routeCycleVehicle('z-bus'));
+    state = applyTransportVehicleCommand(state, routeCycleVehicle('a-bus'));
+    state = advanceTransportTicks(state, 1);
+    if (state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    expect(
+      state.passengerDemand.onboardGroups.map((group) => [
+        group.vehicleId,
+        group.passengerOnboardGroupId,
+      ]),
+    ).toEqual([
+      ['a-bus', 'passenger-onboard-group-2'],
+      ['z-bus', 'passenger-onboard-group-1'],
+    ]);
+    expect(state.currentBoardingEvents).toEqual([]);
+    const snapshot = createTransportSimulationSnapshot(state);
+    expect(
+      createTransportSimulationSnapshot(
+        restoreTransportSimulationState(snapshot, canonical, plan),
+      ),
+    ).toEqual(snapshot);
+  });
+
+  it('rejects passenger events while passenger authority is disabled', () => {
+    const canonical = scenario();
+    const disabled = createTransportSimulationSnapshot(
+      createTransportSimulationState(canonical, 0),
+    );
+    const { plan, state } = boardedState();
+    let alighted = state;
+    while (alighted.currentAlightingEvents.length === 0)
+      alighted = advanceTransportTicks(alighted, 1);
+    const passengerSnapshot = createTransportSimulationSnapshot(alighted);
+    const corruptions = [
+      (value: typeof disabled) => {
+        value.state.currentBoardingEvents = structuredClone(
+          createTransportSimulationSnapshot(
+            applyTransportVehicleCommand(
+              advanceTransportTicks(
+                createTransportSimulationState(canonical, 0, plan),
+                2,
+              ),
+              routeCycleVehicle('event-bus'),
+            ),
+          ).state.currentBoardingEvents,
+        );
+      },
+      (value: typeof disabled) => {
+        value.state.currentAlightingEvents = structuredClone(
+          passengerSnapshot.state.currentAlightingEvents,
+        );
+      },
+      (value: typeof disabled) => {
+        value.state.currentJourneyCompletionEvents = structuredClone(
+          passengerSnapshot.state.currentJourneyCompletionEvents,
+        );
+      },
+    ];
+    for (const mutate of corruptions) {
+      const corrupted = structuredClone(disabled);
+      mutate(corrupted);
+      expect(() =>
+        restoreTransportSimulationState(corrupted, canonical),
+      ).toThrow(/disabled passenger authority/i);
+    }
+  });
   it('advances after partial boarding into a later same-key waiting generation', () => {
     const canonical = scenario();
     const plan = structuredClone(demandPlan());

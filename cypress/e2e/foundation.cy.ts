@@ -204,19 +204,19 @@ describe('foundation screen', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: '**/torrevieja-mini-v1/scenario.json',
+        url: '**/torrevieja-legacy-east-v1/scenario.json',
         times: 1,
       },
       (request) => {
         request.continue((response) => response.setDelay(5_000));
       },
-    ).as('loadMiniSelection');
+    ).as('loadSecondarySelection');
     cy.contains('label', 'Scenario')
       .find('select')
-      .select('torrevieja-mini-v1', { force: true });
+      .select('torrevieja-legacy-east-v1', { force: true });
     cy.get('[data-testid="requested-scenario"]').should(
       'contain.text',
-      'torrevieja-mini-v1 (loading)',
+      'torrevieja-legacy-east-v1 (loading)',
     );
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
@@ -237,11 +237,11 @@ describe('foundation screen', () => {
     openSessionControls();
     cy.contains('button', 'Close transport Worker').click();
     cy.contains('button', 'Start new transport session').should('be.disabled');
-    cy.wait('@loadMiniSelection');
+    cy.wait('@loadSecondarySelection');
     openSimulationControls();
     cy.get('[data-testid="selected-scenario"]').should(
       'contain.text',
-      'torrevieja-mini-v1',
+      'torrevieja-legacy-east-v1',
     );
     openSessionControls();
     cy.contains('button', 'Start new transport session')
@@ -251,7 +251,7 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
-      'torrevieja-mini-v1',
+      'torrevieja-legacy-east-v1',
     );
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
@@ -264,13 +264,13 @@ describe('foundation screen', () => {
     );
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
-    let miniTick = 0;
-    let miniSvg: VehicleSvgState;
+    let secondaryTick = 0;
+    let secondarySvg: VehicleSvgState;
     cy.get('[data-testid="worker-tick"]').then(($tick) => {
-      miniTick = Number($tick.text().split(': ')[1]);
+      secondaryTick = Number($tick.text().split(': ')[1]);
     });
     vehicleSvgState().then((snapshot) => {
-      miniSvg = snapshot;
+      secondarySvg = snapshot;
       cy.wait(350);
       expectVehicleSvg(snapshot);
     });
@@ -303,29 +303,31 @@ describe('foundation screen', () => {
       'have.text',
       'Persistence status: idle',
     );
-    restoreScenario('torrevieja-mini-v1');
+    restoreScenario('torrevieja-legacy-east-v1');
     openSimulationControls();
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
-      'torrevieja-mini-v1@1.0.0#',
+      'torrevieja-legacy-east-v1@1.0.0#',
     );
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
-      expect(Number($tick.text().split(': ')[1])).to.equal(miniTick),
+      expect(Number($tick.text().split(': ')[1])).to.equal(secondaryTick),
     );
     cy.get('[data-testid="vehicle-movement-svg"]').should(
       'have.attr',
       'data-scenario-id',
-      'torrevieja-mini-v1',
+      'torrevieja-legacy-east-v1',
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
-    cy.then(() => expectVehicleSvg(miniSvg));
+    cy.then(() => expectVehicleSvg(secondarySvg));
     cy.contains('button', /^Normal /).click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
-      expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(miniTick),
+      expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(
+        secondaryTick,
+      ),
     );
     cy.then(() =>
       vehicleSvgState().should((current) =>
-        expect(current).not.to.deep.equal(miniSvg),
+        expect(current).not.to.deep.equal(secondarySvg),
       ),
     );
     cy.get('[role="dialog"]').contains('button', 'Pause').click();

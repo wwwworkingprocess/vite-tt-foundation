@@ -120,7 +120,9 @@ describe('built foundation PWA offline lifecycle', () => {
     );
     cy.reload();
     openSessionControls();
-    cy.get('[data-testid="legacy-save-count"]').should('contain.text', '1');
+    cy.get('[data-testid="save-count"]').should('contain.text', '0');
+    cy.get('[data-testid="legacy-save-count"]').should('contain.text', '0');
+    cy.get('[data-save-id="legacy-slot"]').should('not.exist');
     openControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.contains('label', 'Vehicle route').find('select').select('legacy-A');
@@ -157,7 +159,7 @@ describe('built foundation PWA offline lifecycle', () => {
     });
     openSessionControls();
     cy.contains('button', 'Save transport session').click();
-    cy.get('[data-testid="save-count"]').should('contain.text', '2');
+    cy.get('[data-testid="save-count"]').should('contain.text', '1');
     cy.contains('[data-save-id]', 'torrevieja-legacy-abc-v1').then(($row) => {
       fullSaveId = $row.attr('data-save-id')!;
     });
@@ -168,15 +170,15 @@ describe('built foundation PWA offline lifecycle', () => {
     openControls();
     cy.contains('label', 'Scenario')
       .find('select')
-      .select('torrevieja-mini-v1', { force: true });
+      .select('torrevieja-legacy-east-v1', { force: true });
     cy.get('[data-testid="requested-scenario"]').should(
       'contain.text',
-      'torrevieja-mini-v1 (loading)',
+      'torrevieja-legacy-east-v1 (loading)',
     );
     cy.contains('label', 'Scenario').find('select').should('be.disabled');
     cy.get('[data-testid="selected-scenario"]').should(
       'contain.text',
-      'torrevieja-mini-v1',
+      'torrevieja-legacy-east-v1',
     );
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
@@ -194,12 +196,12 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
-      'torrevieja-mini-v1@1.0.0#',
+      'torrevieja-legacy-east-v1@1.0.0#',
     );
     cy.get('[data-testid="vehicle-movement-svg"]').should(
       'have.attr',
       'data-scenario-id',
-      'torrevieja-mini-v1',
+      'torrevieja-legacy-east-v1',
     );
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
@@ -211,17 +213,17 @@ describe('built foundation PWA offline lifecycle', () => {
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0),
     );
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
-    let miniSavedTick = 0;
-    let miniSavedCoordinate = '';
-    let miniSavedSvg: VehicleSvgState = [];
+    let secondarySavedTick = 0;
+    let secondarySavedCoordinate = '';
+    let secondarySavedSvg: VehicleSvgState = [];
     cy.get('[data-testid="worker-tick"]').then(($tick) => {
-      miniSavedTick = Number($tick.text().split(': ')[1]);
+      secondarySavedTick = Number($tick.text().split(': ')[1]);
     });
     cy.get('[data-testid="scenario-coordinate"]').then(($coordinate) => {
-      miniSavedCoordinate = $coordinate.text();
+      secondarySavedCoordinate = $coordinate.text();
     });
     vehicleSvgState().then((snapshot) => {
-      miniSavedSvg = snapshot;
+      secondarySavedSvg = snapshot;
       cy.wait(350);
       expectVehicleSvg(snapshot);
     });
@@ -244,7 +246,7 @@ describe('built foundation PWA offline lifecycle', () => {
       '1.0.0:torrevieja-legacy-abc-v1@1.0.0#',
     );
     openSessionControls();
-    cy.get('[data-testid="save-count"]').should('contain.text', '3');
+    cy.get('[data-testid="save-count"]').should('contain.text', '2');
     openControls();
     let currentTimeline = '';
     let currentTick = '';
@@ -313,14 +315,18 @@ describe('built foundation PWA offline lifecycle', () => {
       await writeSave(win, transportV1 as unknown as Record<string, unknown>);
     });
     restoreScenario('torrevieja-legacy-abc-v1');
-    cy.get('[data-testid="worker-tick"]').should(($tick) =>
-      expect(Number($tick.text().split(': ')[1])).to.equal(savedTick),
+    openSessionControls();
+    cy.get('[role="alert"]').should(
+      'contain.text',
+      'pre-release save is obsolete',
     );
-    cy.get('[data-testid="vehicle-count"]').should('contain.text', '0');
-    cy.get('[data-testid="vehicle-position"]').should('not.exist');
-    cy.get('[data-testid="command-revision"]').should(
-      'have.text',
-      'Command revision: 0',
+    openControls();
+    cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
+    cy.get('[data-testid="worker-timeline"]').should(($value) =>
+      expect($value.text()).to.equal(currentTimeline),
+    );
+    cy.get('[data-testid="worker-tick"]').should(($value) =>
+      expect($value.text()).to.equal(currentTick),
     );
     cy.window().then((win) => writeSave(win, exactSave));
     cy.window().then(async (win) => {
@@ -363,12 +369,12 @@ describe('built foundation PWA offline lifecycle', () => {
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '3');
     cy.then(() => expectVehicleSvg(savedSvg));
-    restoreScenario('torrevieja-mini-v1');
+    restoreScenario('torrevieja-legacy-east-v1');
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
-      expect(Number($tick.text().split(': ')[1])).to.equal(miniSavedTick),
+      expect(Number($tick.text().split(': ')[1])).to.equal(secondarySavedTick),
     );
     cy.get('[data-testid="scenario-coordinate"]').should(($coordinate) =>
-      expect($coordinate.text()).to.equal(miniSavedCoordinate),
+      expect($coordinate.text()).to.equal(secondarySavedCoordinate),
     );
     cy.get('[data-testid="command-revision"]').should(
       'have.text',
@@ -384,16 +390,16 @@ describe('built foundation PWA offline lifecycle', () => {
       'Pacing credit: 0',
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
-    cy.then(() => expectVehicleSvg(miniSavedSvg));
+    cy.then(() => expectVehicleSvg(secondarySavedSvg));
     cy.contains('button', 'Normal 20×').click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(
-        miniSavedTick,
+        secondarySavedTick,
       ),
     );
     cy.then(() =>
       vehicleSvgState().should((current) =>
-        expect(current).not.to.deep.equal(miniSavedSvg),
+        expect(current).not.to.deep.equal(secondarySavedSvg),
       ),
     );
     cy.get('[role="dialog"]').contains('button', 'Pause').click();

@@ -80,6 +80,258 @@ const demandPlan = () => {
 };
 
 describe('Transport Snapshot V8', () => {
+  it('advances after partial boarding into a later same-key waiting generation', () => {
+    const canonical = scenario();
+    const plan = structuredClone(demandPlan());
+    plan.cells[0]!.assignedStopPlaceId = 'tv-place-0108';
+    plan.cells[1]!.assignedStopPlaceId = 'tv-place-0093';
+    plan.stops = [
+      { stopPlaceId: 'tv-place-0093' },
+      { stopPlaceId: 'tv-place-0108' },
+    ];
+    let state = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      2,
+    );
+    state = applyTransportVehicleCommand(state, {
+      kind: 'transport.vehicle.create-route-cycle',
+      vehicleId: 'generation-bus',
+      label: 'Generation bus',
+      routeId: 'legacy-A2',
+      passengerCapacity: 1,
+      legs: [
+        {
+          patternId: 'legacy-A2-torrevieja-la-mata',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1, 1, 1],
+          },
+        },
+        {
+          patternId: 'legacy-A2-la-mata-torrevieja',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1],
+          },
+        },
+      ],
+    });
+    if (state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const historicalId =
+      state.passengerDemand.onboardGroups[0]!.sourceWaitingCohortId;
+    expect(
+      state.passengerDemand.waitingCohorts.some(
+        (cohort) => cohort.passengerWaitingCohortId === historicalId,
+      ),
+    ).toBe(true);
+    const advanced = advanceTransportTicks(state, 2);
+    expect(advanceTransportTicks(advanceTransportTicks(state, 1), 1)).toEqual(
+      advanced,
+    );
+    if (advanced.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const sameKeyGenerations = advanced.passengerDemand.waitingCohorts.filter(
+      (cohort) =>
+        cohort.originStopNodeId ===
+          state.passengerDemand.waitingCohorts.find(
+            (item) => item.passengerWaitingCohortId === historicalId,
+          )!.originStopNodeId &&
+        cohort.destinationCellId ===
+          state.passengerDemand.waitingCohorts.find(
+            (item) => item.passengerWaitingCohortId === historicalId,
+          )!.destinationCellId,
+    );
+    expect(sameKeyGenerations).toHaveLength(2);
+    expect(sameKeyGenerations[0]!.passengerWaitingCohortId).toBe(historicalId);
+    expect(sameKeyGenerations[1]!.passengerWaitingCohortId).not.toBe(
+      historicalId,
+    );
+    const historicalBounds = sameKeyGenerations[0]!;
+    const later = advanceTransportTicks(state, 4);
+    if (later.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const laterSameKey = later.passengerDemand.waitingCohorts.filter(
+      (cohort) =>
+        cohort.originStopNodeId === historicalBounds.originStopNodeId &&
+        cohort.destinationCellId === historicalBounds.destinationCellId,
+    );
+    expect(laterSameKey).toHaveLength(2);
+    expect(laterSameKey[0]).toMatchObject({
+      passengerWaitingCohortId: historicalId,
+      firstAssignedTick: historicalBounds.firstAssignedTick,
+      lastAssignedTick: historicalBounds.lastAssignedTick,
+    });
+    expect(laterSameKey[1]!.lastAssignedTick).toBeGreaterThan(
+      laterSameKey[1]!.firstAssignedTick,
+    );
+    const snapshot = createTransportSimulationSnapshot(advanced);
+    expect(
+      createTransportSimulationSnapshot(
+        restoreTransportSimulationState(snapshot, canonical, plan),
+      ),
+    ).toEqual(snapshot);
+    const generationCorruptions: Array<(value: typeof snapshot) => void> = [
+      (value) => {
+        if (value.state.passengerDemand.status !== 'active')
+          throw new Error('Expected active passenger authority.');
+        value.state.passengerDemand.waitingCohorts.reverse();
+      },
+      (value) => {
+        if (value.state.passengerDemand.status !== 'active')
+          throw new Error('Expected active passenger authority.');
+        const demand = value.state.passengerDemand;
+        const historical = demand.waitingCohorts.find(
+          (cohort) => cohort.passengerWaitingCohortId === historicalId,
+        )!;
+        const newer = demand.waitingCohorts.find(
+          (cohort) =>
+            cohort.originStopNodeId === historical.originStopNodeId &&
+            cohort.destinationCellId === historical.destinationCellId &&
+            cohort.passengerWaitingCohortId !== historicalId,
+        )!;
+        historical.count += newer.count;
+        historical.lastAssignedTick = newer.lastAssignedTick;
+        demand.waitingCohorts = demand.waitingCohorts.filter(
+          (cohort) => cohort !== newer,
+        );
+      },
+      (value) => {
+        if (value.state.passengerDemand.status !== 'active')
+          throw new Error('Expected active passenger authority.');
+        const demand = value.state.passengerDemand;
+        const historical = demand.waitingCohorts.find(
+          (cohort) => cohort.passengerWaitingCohortId === historicalId,
+        )!;
+        const newerIndex = demand.waitingCohorts.findIndex(
+          (cohort) =>
+            cohort.originStopNodeId === historical.originStopNodeId &&
+            cohort.destinationCellId === historical.destinationCellId &&
+            cohort.passengerWaitingCohortId !== historicalId,
+        );
+        const newer = demand.waitingCohorts[newerIndex]!;
+        if (newer.count < 2)
+          throw new Error('Expected a mergeable generation.');
+        newer.count -= 1;
+        const sequence = demand.nextPassengerWaitingCohortSequence;
+        demand.waitingCohorts.splice(newerIndex + 1, 0, {
+          ...newer,
+          passengerWaitingCohortId:
+            `passenger-waiting-cohort-${sequence}` as never,
+          count: 1,
+        });
+        demand.nextPassengerWaitingCohortSequence += 1;
+      },
+      (value) => {
+        if (value.state.passengerDemand.status !== 'active')
+          throw new Error('Expected active passenger authority.');
+        const demand = value.state.passengerDemand;
+        const newer = demand.waitingCohorts.find(
+          (cohort) => cohort.passengerWaitingCohortId !== historicalId,
+        )!;
+        newer.firstAssignedTick = 0;
+      },
+      (value) => {
+        if (value.state.passengerDemand.status !== 'active')
+          throw new Error('Expected active passenger authority.');
+        const demand = value.state.passengerDemand;
+        const newer = demand.waitingCohorts.find(
+          (cohort) => cohort.passengerWaitingCohortId !== historicalId,
+        )!;
+        newer.passengerWaitingCohortId =
+          `passenger-waiting-cohort-${demand.nextPassengerWaitingCohortSequence + 1}` as never;
+        demand.nextPassengerWaitingCohortSequence += 2;
+      },
+    ];
+    for (const corrupt of generationCorruptions) {
+      const value = structuredClone(snapshot);
+      corrupt(value);
+      expect(() =>
+        restoreTransportSimulationState(value, canonical, plan),
+      ).toThrow();
+    }
+
+    const secondBoarding = applyTransportVehicleCommand(later, {
+      kind: 'transport.vehicle.create-route-cycle',
+      vehicleId: 'generation-bus-2',
+      label: 'Generation bus 2',
+      routeId: 'legacy-A2',
+      passengerCapacity: 80,
+      legs: [
+        {
+          patternId: 'legacy-A2-torrevieja-la-mata',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1, 1, 1],
+          },
+        },
+        {
+          patternId: 'legacy-A2-la-mata-torrevieja',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1],
+          },
+        },
+      ],
+    });
+    if (secondBoarding.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    expect(
+      secondBoarding.passengerDemand.onboardGroups
+        .filter((group) => group.vehicleId === 'generation-bus-2')
+        .map((group) => group.sourceWaitingCohortId),
+    ).toEqual(laterSameKey.map((cohort) => cohort.passengerWaitingCohortId));
+
+    let fullyBoarded = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      2,
+    );
+    fullyBoarded = applyTransportVehicleCommand(fullyBoarded, {
+      kind: 'transport.vehicle.create-route-cycle',
+      vehicleId: 'full-generation-bus',
+      label: 'Full generation bus',
+      routeId: 'legacy-A2',
+      passengerCapacity: 80,
+      legs: [
+        {
+          patternId: 'legacy-A2-torrevieja-la-mata',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1, 1, 1],
+          },
+        },
+        {
+          patternId: 'legacy-A2-la-mata-torrevieja',
+          movementPlan: {
+            kind: 'vehicle-movement-plan-v1',
+            edgeTravelTicks: [1, 1],
+          },
+        },
+      ],
+    });
+    if (fullyBoarded.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const consumedId =
+      fullyBoarded.passengerDemand.onboardGroups[0]!.sourceWaitingCohortId;
+    fullyBoarded = advanceTransportTicks(fullyBoarded, 2);
+    if (fullyBoarded.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    expect(
+      fullyBoarded.passengerDemand.waitingCohorts.some(
+        (cohort) => cohort.passengerWaitingCohortId === consumedId,
+      ),
+    ).toBe(false);
+    expect(
+      fullyBoarded.passengerDemand.waitingCohorts.some(
+        (cohort) =>
+          cohort.originStopNodeId ===
+            fullyBoarded.passengerDemand.onboardGroups[0]!.originStopNodeId &&
+          cohort.destinationCellId ===
+            fullyBoarded.passengerDemand.onboardGroups[0]!.destinationCellId,
+      ),
+    ).toBe(true);
+  });
+
   it('accumulates boarding events from separate vehicle creations on one tick', () => {
     const canonical = scenario();
     const plan = structuredClone(demandPlan());

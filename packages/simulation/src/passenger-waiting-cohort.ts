@@ -68,7 +68,7 @@ export interface PassengerWaitingCohort {
   readonly lastAssignedTick: SimulationTick;
 }
 
-const cohortKey = (
+export const passengerWaitingCohortKey = (
   group: Pick<
     PassengerWaitingCohort,
     | 'originStopPlaceId'
@@ -107,20 +107,34 @@ export const passengerWaitingCohortMatchesItinerary = (
   cohort.wrapsPatternEnd === itinerary.wrapsPatternEnd &&
   cohort.edgeCount === itinerary.edgeCount;
 
-function compareCohorts(
+export const passengerWaitingCohortSequence = (
+  passengerWaitingCohortId: PassengerWaitingCohortId,
+): number =>
+  Number(passengerWaitingCohortId.slice('passenger-waiting-cohort-'.length));
+
+const cellPosition = (
+  cellId: CityPopulationCellId,
+): readonly [number, number] => {
+  const match = /^r(\d+)c(\d+)$/.exec(cellId)!;
+  return [Number(match[1]), Number(match[2])];
+};
+
+export function comparePassengerWaitingCohorts(
   left: Readonly<PassengerWaitingCohort>,
   right: Readonly<PassengerWaitingCohort>,
-  cells: ReadonlyMap<string, Readonly<{ row: number; column: number }>>,
 ) {
+  const [leftRow, leftColumn] = cellPosition(left.destinationCellId);
+  const [rightRow, rightColumn] = cellPosition(right.destinationCellId);
   return (
     lexical(left.originStopNodeId, right.originStopNodeId) ||
     lexical(left.routeId, right.routeId) ||
     lexical(left.patternId, right.patternId) ||
     lexical(left.destinationStopNodeId, right.destinationStopNodeId) ||
-    cells.get(left.destinationCellId)!.row -
-      cells.get(right.destinationCellId)!.row ||
-    cells.get(left.destinationCellId)!.column -
-      cells.get(right.destinationCellId)!.column
+    leftRow - rightRow ||
+    leftColumn - rightColumn ||
+    left.firstAssignedTick - right.firstAssignedTick ||
+    passengerWaitingCohortSequence(left.passengerWaitingCohortId) -
+      passengerWaitingCohortSequence(right.passengerWaitingCohortId)
   );
 }
 
@@ -155,6 +169,10 @@ export function activatePassengerDirectItineraries(input: {
   );
   const cohorts = input.waitingCohorts.map((cohort) => ({ ...cohort }));
   const keys = new Map<string, number>();
+  const generations = new Map<
+    string,
+    Readonly<{ sequence: number; firstAssignedTick: number }>
+  >();
   const ids = new Set<string>();
   let waitingTotal = 0;
   for (let index = 0; index < cohorts.length; index += 1) {
@@ -164,10 +182,11 @@ export function activatePassengerDirectItineraries(input: {
       cohort.originStopPlaceId,
       cohort.destinationStopPlaceId,
     );
-    const sequence = Number(
-      cohort.passengerWaitingCohortId.slice('passenger-waiting-cohort-'.length),
+    const sequence = passengerWaitingCohortSequence(
+      cohort.passengerWaitingCohortId,
     );
-    const key = cohortKey(cohort);
+    const key = passengerWaitingCohortKey(cohort);
+    const priorGeneration = generations.get(key);
     if (
       itinerary.status !== 'direct' ||
       !passengerWaitingCohortMatchesItinerary(cohort, itinerary) ||
@@ -180,10 +199,22 @@ export function activatePassengerDirectItineraries(input: {
       sequence >= input.nextPassengerWaitingCohortSequence ||
       ids.has(cohort.passengerWaitingCohortId) ||
       keys.has(key) ||
-      (index > 0 && compareCohorts(cohorts[index - 1]!, cohort, cells) >= 0)
+      (index > 0 &&
+        comparePassengerWaitingCohorts(cohorts[index - 1]!, cohort) >= 0) ||
+      (priorGeneration !== undefined &&
+        (sequence <= priorGeneration.sequence ||
+          cohort.firstAssignedTick < priorGeneration.firstAssignedTick)) ||
+      (!input.nonMergeableWaitingCohortIds?.has(
+        cohort.passengerWaitingCohortId,
+      ) &&
+        keys.has(key))
     )
       throw new Error('Invalid directional waiting cohort.');
     ids.add(cohort.passengerWaitingCohortId);
+    generations.set(key, {
+      sequence,
+      firstAssignedTick: cohort.firstAssignedTick,
+    });
     if (
       !input.nonMergeableWaitingCohortIds?.has(cohort.passengerWaitingCohortId)
     )
@@ -240,7 +271,7 @@ export function activatePassengerDirectItineraries(input: {
       firstAssignedTick: activationTick,
       lastAssignedTick: activationTick,
     };
-    const key = cohortKey(candidate);
+    const key = passengerWaitingCohortKey(candidate);
     const existingIndex = keys.get(key);
     if (existingIndex === undefined) {
       keys.set(key, cohorts.length);
@@ -264,7 +295,7 @@ export function activatePassengerDirectItineraries(input: {
       'waiting passenger count',
     );
   }
-  cohorts.sort((left, right) => compareCohorts(left, right, cells));
+  cohorts.sort(comparePassengerWaitingCohorts);
   return deepFreeze({
     nextPassengerWaitingCohortSequence: nextSequence,
     waitingCohorts: cohorts,

@@ -5,7 +5,10 @@ import {
   buildPassengerDirectItineraryPlan,
   createPassengerDirectItineraryRuntimeIndex,
 } from './passenger-direct-itinerary.js';
-import { activatePassengerDirectItineraries } from './passenger-waiting-cohort.js';
+import {
+  activatePassengerDirectItineraries,
+  comparePassengerWaitingCohorts,
+} from './passenger-waiting-cohort.js';
 
 const scenario = parseScenarioPackage({
   manifest: {
@@ -261,6 +264,80 @@ describe('directional passenger waiting cohorts', () => {
         lastAssignedTick: 8,
       }),
     ]);
+    const mergedCurrentGeneration = activatePassengerDirectItineraries({
+      itineraryIndex,
+      demandPlan,
+      destinationAssignedGroups: [
+        {
+          passengerJourneyGroupId: 'passenger-journey-group-5',
+          originStopPlaceId: 'A',
+          destinationCellId: 'r0c1',
+          destinationStopPlaceId: 'B',
+          count: 2,
+          firstAssignedTick: 9,
+          lastAssignedTick: 9,
+        },
+      ],
+      waitingCohorts: separated.waitingCohorts,
+      nextPassengerWaitingCohortSequence:
+        separated.nextPassengerWaitingCohortSequence,
+      directItineraryUnavailablePassengerCount:
+        separated.directItineraryUnavailablePassengerCount,
+      activationTick: 9,
+      nonMergeableWaitingCohortIds: new Set([
+        first.waitingCohorts[0]!.passengerWaitingCohortId,
+      ]),
+    });
+    expect(mergedCurrentGeneration.waitingCohorts).toEqual([
+      separated.waitingCohorts[0],
+      expect.objectContaining({
+        passengerWaitingCohortId: 'passenger-waiting-cohort-2',
+        count: 3,
+        firstAssignedTick: 8,
+        lastAssignedTick: 9,
+      }),
+    ]);
+    expect(() =>
+      activatePassengerDirectItineraries({
+        itineraryIndex,
+        demandPlan,
+        destinationAssignedGroups: [],
+        waitingCohorts: separated.waitingCohorts,
+        nextPassengerWaitingCohortSequence:
+          separated.nextPassengerWaitingCohortSequence,
+        directItineraryUnavailablePassengerCount:
+          separated.directItineraryUnavailablePassengerCount,
+        activationTick: 9,
+      }),
+    ).toThrow('Invalid directional waiting cohort');
+    expect(() =>
+      activatePassengerDirectItineraries({
+        itineraryIndex,
+        demandPlan,
+        destinationAssignedGroups: [],
+        waitingCohorts: [...separated.waitingCohorts].reverse(),
+        nextPassengerWaitingCohortSequence:
+          separated.nextPassengerWaitingCohortSequence,
+        directItineraryUnavailablePassengerCount:
+          separated.directItineraryUnavailablePassengerCount,
+        activationTick: 9,
+        nonMergeableWaitingCohortIds: new Set([
+          first.waitingCohorts[0]!.passengerWaitingCohortId,
+        ]),
+      }),
+    ).toThrow('Invalid directional waiting cohort');
+    expect(
+      comparePassengerWaitingCohorts(
+        {
+          ...separated.waitingCohorts[1]!,
+          passengerWaitingCohortId: 'passenger-waiting-cohort-2' as never,
+        },
+        {
+          ...separated.waitingCohorts[1]!,
+          passengerWaitingCohortId: 'passenger-waiting-cohort-10' as never,
+        },
+      ),
+    ).toBeLessThan(0);
   });
 
   it('rejects malformed authority and assignment references without mutation', () => {

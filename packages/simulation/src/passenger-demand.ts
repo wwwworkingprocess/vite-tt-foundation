@@ -17,6 +17,7 @@ import {
 } from './authority-utils.js';
 import {
   activatePassengerDirectItineraries,
+  passengerWaitingCohortIdSchema,
   passengerWaitingCohortSchema,
   type PassengerWaitingCohort,
 } from './passenger-waiting-cohort.js';
@@ -755,6 +756,11 @@ export function validatePassengerDemandState(
     directItineraryUnavailablePassengerCount:
       parsed.directItineraryUnavailablePassengerCount,
     activationTick: parsed.processedThroughTick,
+    nonMergeableWaitingCohortIds: new Set(
+      parsed.onboardGroups.map((group) =>
+        passengerWaitingCohortIdSchema.parse(group.sourceWaitingCohortId),
+      ),
+    ),
   });
   const awaitingDestination = arrived;
   const onboardPassengerCount = parsed.onboardGroups.reduce(

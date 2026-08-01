@@ -14,7 +14,9 @@ import {
   positiveSafeInteger,
 } from './authority-utils.js';
 import {
+  comparePassengerWaitingCohorts,
   passengerWaitingCohortIdSchema,
+  passengerWaitingCohortSequence,
   type PassengerWaitingCohort,
 } from './passenger-waiting-cohort.js';
 import type { SimulationTick } from './time.js';
@@ -347,7 +349,7 @@ export function validatePassengerBoardingAuthority(input: {
       );
     }
   }
-  reconstructed.sort(compareWaitingCohortsForReplay);
+  reconstructed.sort(comparePassengerWaitingCohorts);
   const priorBoarded = priorGroups.reduce(
     (total, group) =>
       checkedAdd(total, group.count, 'prior boarded passengers'),
@@ -424,22 +426,6 @@ const waitingCohortFromOnboardGroup = (
   lastAssignedTick: group.lastAssignedTick,
 });
 
-const compareWaitingCohortsForReplay = (
-  left: Readonly<PassengerWaitingCohort>,
-  right: Readonly<PassengerWaitingCohort>,
-): number => {
-  const [leftRow, leftColumn] = cellPosition(left.destinationCellId);
-  const [rightRow, rightColumn] = cellPosition(right.destinationCellId);
-  return (
-    lexical(left.originStopNodeId, right.originStopNodeId) ||
-    lexical(left.routeId, right.routeId) ||
-    lexical(left.patternId, right.patternId) ||
-    lexical(left.destinationStopNodeId, right.destinationStopNodeId) ||
-    leftRow - rightRow ||
-    leftColumn - rightColumn
-  );
-};
-
 export function createVehiclePassengerCapacity(
   vehicleId: VehicleId | string,
   passengerCapacity: number = DEFAULT_VEHICLE_PASSENGER_CAPACITY,
@@ -508,7 +494,8 @@ const cohortOrder = (
   right: Readonly<PassengerWaitingCohort>,
 ): number =>
   left.firstAssignedTick - right.firstAssignedTick ||
-  lexical(left.passengerWaitingCohortId, right.passengerWaitingCohortId);
+  passengerWaitingCohortSequence(left.passengerWaitingCohortId) -
+    passengerWaitingCohortSequence(right.passengerWaitingCohortId);
 
 const cellPosition = (cellId: string): readonly [number, number] => {
   const match = /^r(\d+)c(\d+)$/.exec(cellId)!;

@@ -13,6 +13,21 @@ Eligible cohorts board oldest assignment tick first, then by waiting-cohort ID.
 Partial boarding preserves the waiting identity and approximate assignment-time
 bounds. Boarding is group-based rather than one object per passenger.
 
+Once an onboard group references a waiting-cohort ID, that cohort generation
+becomes historical and its itinerary and assignment-time bounds are immutable.
+Later passengers with the same itinerary and destination-cell key use one newer
+mergeable generation; repeated arrivals merge into that generation until it too
+boards. Waiting cohorts retain itinerary-key order, followed by
+`firstAssignedTick` and numeric waiting-cohort sequence. When historical and
+current generations coexist, the older generation therefore boards first.
+
+Without alighting, historical waiting generations are bounded by source IDs
+represented in onboard authority, and every such source represents at least one
+onboard passenger. They are consequently bounded by total fleet capacity, with
+at most one additional mergeable generation per itinerary/cell key. Phase 4E5
+may deliberately revise this retention rule when completed onboard groups are
+removed.
+
 Onboard groups retain their source cohort and exact future destination identity.
 A wrapped closed-loop itinerary targets the next pattern-run sequence. Current
 boarding events are bounded, current-tick, already-processed output and never a

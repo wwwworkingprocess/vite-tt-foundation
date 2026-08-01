@@ -632,7 +632,57 @@ describe('transport application controller', () => {
       expect(currentClose).not.toHaveBeenCalled();
       expect(clientCreations).toBe(1);
     }
-    stored = validRecord;
+    const generationState = advanceTransportTicks(boarded, 2);
+    const generationRecord = parseTransportSaveRecord({
+      ...validRecord,
+      sourceSimulationTick: generationState.tick,
+      snapshot: createTransportSimulationSnapshot(generationState),
+    });
+    const wrongGenerationOrder = structuredClone(generationRecord);
+    if (wrongGenerationOrder.snapshot.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active fixture.');
+    const generationDemand = wrongGenerationOrder.snapshot.state
+      .passengerDemand as unknown as {
+      waitingCohorts: Array<{
+        originStopNodeId: string;
+        destinationCellId: string;
+        passengerWaitingCohortId: string;
+      }>;
+      onboardGroups: Array<{ sourceWaitingCohortId: string }>;
+    };
+    const sourceId = generationDemand.onboardGroups[0]!.sourceWaitingCohortId;
+    const source = generationDemand.waitingCohorts.find(
+      (cohort) => cohort.passengerWaitingCohortId === sourceId,
+    )!;
+    const sourceIndex = generationDemand.waitingCohorts.indexOf(source);
+    const newerIndex = generationDemand.waitingCohorts.findIndex(
+      (cohort) =>
+        cohort.originStopNodeId === source.originStopNodeId &&
+        cohort.destinationCellId === source.destinationCellId &&
+        cohort.passengerWaitingCohortId !== sourceId,
+    );
+    [
+      generationDemand.waitingCohorts[sourceIndex],
+      generationDemand.waitingCohorts[newerIndex],
+    ] = [
+      generationDemand.waitingCohorts[newerIndex]!,
+      generationDemand.waitingCohorts[sourceIndex]!,
+    ];
+    stored = wrongGenerationOrder;
+    await expect(
+      controller.restore({
+        saveId: 'boarding-preflight',
+        timelineId: parseTimelineId('timeline-generation-corrupt'),
+      }),
+    ).rejects.toThrow();
+    expect(controller.projection.getState()).toEqual({
+      ...expected,
+      message: expect.any(String),
+    });
+    expect(currentClose).not.toHaveBeenCalled();
+    expect(clientCreations).toBe(1);
+
+    stored = generationRecord;
     await controller.restore({
       saveId: 'boarding-preflight',
       timelineId: parseTimelineId('timeline-boarding-valid'),
@@ -640,9 +690,9 @@ describe('transport application controller', () => {
     expect(controller.projection.getState()).toMatchObject({
       status: 'ready',
       timelineId: 'timeline-boarding-valid',
-      simulationTick: 2,
-      fleet: boarded.fleet,
-      currentBoardingEvents: boarded.currentBoardingEvents,
+      simulationTick: 4,
+      fleet: generationState.fleet,
+      currentBoardingEvents: generationState.currentBoardingEvents,
     });
     expect(currentClose).toHaveBeenCalledTimes(1);
     expect(clientCreations).toBe(2);

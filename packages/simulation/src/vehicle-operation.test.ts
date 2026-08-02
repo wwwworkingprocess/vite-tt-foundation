@@ -5,6 +5,7 @@ import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
   advanceTransportTicks,
   applyTransportVehicleCommand,
+  canonicalVehicleCallCoordinate,
   completedLoopEventsAtElapsedTick,
   createTransportSimulationSnapshot,
   createTransportSimulationState,
@@ -148,6 +149,56 @@ const repeatTicks = (
 };
 
 describe('light vehicle pattern runs and StopNode calls', () => {
+  it('derives exact canonical pattern-run and StopNode-call coordinates', () => {
+    const routeState = started();
+    const routeVehicle = routeState.fleet[0]!;
+    expect(
+      canonicalVehicleCallCoordinate(routeState.graph, routeVehicle, 4, 2),
+    ).toEqual(['return', 12]);
+
+    const loopState = closedLoopStarted();
+    expect(
+      canonicalVehicleCallCoordinate(
+        loopState.graph,
+        loopState.fleet[0]!,
+        10,
+        2,
+      ),
+    ).toEqual(['closed-loop', 30]);
+    expect(() =>
+      canonicalVehicleCallCoordinate(routeState.graph, routeVehicle, 1, 3),
+    ).toThrow(/run\/call/i);
+
+    let standalone = createTransportSimulationState(scenario(), 0);
+    standalone = applyTransportVehicleCommand(standalone, {
+      kind: 'transport.vehicle.create',
+      vehicleId: 'standalone-coordinate',
+      label: 'Standalone coordinate',
+      patternId: 'outbound',
+      movementPlan: {
+        kind: 'vehicle-movement-plan-v1',
+        edgeTravelTicks: [1, 1],
+      },
+    });
+    expect(
+      canonicalVehicleCallCoordinate(
+        standalone.graph,
+        standalone.fleet[0]!,
+        1,
+        1,
+      ),
+    ).toEqual(['outbound', 2]);
+    for (const run of [0, 2])
+      expect(() =>
+        canonicalVehicleCallCoordinate(
+          standalone.graph,
+          standalone.fleet[0]!,
+          run,
+          0,
+        ),
+      ).toThrow(/run\/call/i);
+  });
+
   it('creates one immutable origin call and emits destinations only on arrival', () => {
     const initial = started();
     expect(initial.vehicleOperations).toEqual([

@@ -6,7 +6,6 @@ import {
 } from '@torrevieja-tycoon/protocol';
 import {
   createScenarioCoordinate,
-  parseVehicleId,
   scenarioCoordinatesEqual,
   type ScenarioCoordinate,
   type TransportVehicleCommand,
@@ -29,7 +28,6 @@ import {
 } from './foundation-session-composition.js';
 import { createDefaultBrowserPacingDriver } from './pacing/browser-pacing-driver.js';
 import { createFoundationPacingController } from './pacing/foundation-pacing-controller.js';
-import { createDemoVehicleCommandForAuthority } from './transport-representation/demo-vehicle-command.js';
 import { createBrowserTransportWorker } from './transport-simulation/browser-transport-worker.js';
 import { createTransportFoundationApplication } from './transport-simulation/transport-foundation-application.js';
 import { createDexieTransportSaveRepository } from './transport-simulation/transport-save-repository.js';
@@ -54,8 +52,7 @@ type Actions = Readonly<{
   saveMode: (mode: 'manual' | 'autosave') => Promise<void>;
   close: () => Promise<void>;
   start: () => Promise<void>;
-  createVehicle: () => Promise<void>;
-  startVehicle: (vehicleId: string) => Promise<void>;
+  sendVehicleCommand: (command: TransportVehicleCommand) => Promise<void>;
 }>;
 
 type AuthoritativeScenarioPackageState = Readonly<{
@@ -82,9 +79,6 @@ export function App() {
     useState<AuthoritativeScenarioPackageState>({ status: 'idle' });
   const selectedRouteIdRef = useRef<string | undefined>(undefined);
   const authoritativePackageGeneration = useRef(0);
-  const authoritativeScenarioPackageRef = useRef<CanonicalScenario | undefined>(
-    undefined,
-  );
   const [scenarioCacheRevision, setScenarioCacheRevision] = useState(0);
   const scenarioCache = useRef(new Map<string, CanonicalScenario>());
   const scenarioResolver = useRef<
@@ -215,39 +209,7 @@ export function App() {
       saveMode: composition.setSaveMode,
       close: composition.closeSession,
       start: composition.startNewSession,
-      createVehicle: async () => {
-        const coordinate = currentApplication?.projection.getState().scenario;
-        if (!coordinate) return;
-        try {
-          const authoritativePackage = authoritativeScenarioPackageRef.current;
-          const command = createDemoVehicleCommandForAuthority(
-            coordinate,
-            (current) =>
-              authoritativePackage &&
-              scenarioCoordinatesEqual(
-                current,
-                createScenarioCoordinate(authoritativePackage),
-              )
-                ? authoritativePackage
-                : undefined,
-            currentApplication?.projection.getState().fleet ?? [],
-            selectedRouteIdRef.current,
-          );
-          setBrowserActionMessage(undefined);
-          await sendVehicleCommand(command);
-        } catch (error) {
-          setBrowserActionMessage(
-            error instanceof Error
-              ? error.message
-              : 'The demo vehicle could not be created.',
-          );
-        }
-      },
-      startVehicle: (vehicleId) =>
-        sendVehicleCommand({
-          kind: 'transport.vehicle.start',
-          vehicleId: parseVehicleId(vehicleId),
-        }),
+      sendVehicleCommand,
     });
     void composition.startNewSession();
     return () => {
@@ -264,10 +226,6 @@ export function App() {
       ? 'unavailable in this environment'
       : (session?.status ?? 'starting');
   const ready = session?.status === 'ready' && state?.operation === 'idle';
-  const selectedSaveAvailable =
-    state?.saveMode === 'autosave'
-      ? state.autosaveSaveAvailable
-      : state?.manualSaveAvailable;
   const persistenceMessage =
     application?.persistence.status === 'failed'
       ? application.persistence.message
@@ -294,7 +252,6 @@ export function App() {
     authoritativePackageState.coordinateKey === authoritativeCoordinateKey
       ? authoritativePackageState
       : undefined;
-  authoritativeScenarioPackageRef.current = authoritativeScenarioPackage;
   useEffect(() => {
     const generation = ++authoritativePackageGeneration.current;
     if (!authoritativeCoordinate || !authoritativeCoordinateKey) {
@@ -395,8 +352,8 @@ export function App() {
           selectedRouteIdRef.current = routeId;
           setSelectedRouteId(routeId);
         }}
-        onCreateVehicle={actions?.createVehicle}
-        onStartVehicle={actions?.startVehicle}
+        onSendVehicleCommand={actions?.sendVehicleCommand}
+        onVehicleActionMessage={setBrowserActionMessage}
         onMode={actions?.mode}
         onBonus={actions?.bonus}
       />
@@ -421,7 +378,6 @@ export function App() {
       <SessionControls
         state={state}
         ready={ready}
-        selectedSaveAvailable={Boolean(selectedSaveAvailable)}
         persistenceMessage={persistenceMessage}
         browserActionMessage={browserActionMessage}
         scenarioTitle={(scenarioId) =>

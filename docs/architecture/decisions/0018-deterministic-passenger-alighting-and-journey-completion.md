@@ -36,6 +36,13 @@ the latter equals the boarding call plus the itinerary edge count. These
 historical values must not lie ahead of the vehicle's current canonical
 pattern-run and call authority.
 
+Historical coordinates are also proven absolutely. The vehicle assignment
+determines the canonical pattern for every issued run, and the initial origin,
+edge arrivals, closed-loop restarts, and route-leg handoff origins determine
+the exact StopNode-call sequence for every run occurrence. Coordinated backward
+shifts of boarding and alighting runs or calls are therefore invalid even when
+their relative edge-count relationship remains conserved.
+
 Snapshot V9 and Transport Save V7 are the sole current pre-release contracts.
 Earlier developer snapshots and saves are obsolete without migration. The
 snapshot stores active ownership, sequences, counters, and current events, but

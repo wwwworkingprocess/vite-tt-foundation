@@ -821,10 +821,12 @@ describe('transport application controller', () => {
     const mutableAccessPlan = accessPlan as unknown as {
       demandModelContentHash: string;
       accessPolicy: { accessTicksPerCell: number };
+      emissionPolicy: { creditsPerPassenger: number };
       cells: Array<{ distanceSquaredCells: number | null }>;
     };
     mutableAccessPlan.demandModelContentHash = 'a'.repeat(64);
     mutableAccessPlan.accessPolicy.accessTicksPerCell = 2;
+    mutableAccessPlan.emissionPolicy.creditsPerPassenger = 8;
     for (const cell of mutableAccessPlan.cells) cell.distanceSquaredCells = 4;
     let accessState = advanceTransportTicks(
       createTransportSimulationState(canonical, 0, accessPlan),
@@ -841,6 +843,32 @@ describe('transport application controller', () => {
     while (accessState.currentAlightingEvents.length === 0)
       accessState = advanceTransportTicks(accessState, 1);
     accessState = advanceTransportTicks(accessState, 1);
+    const backwardRun = structuredClone(
+      createTransportSimulationSnapshot(accessState),
+    );
+    const backwardRunGroup = (
+      backwardRun.state.passengerDemand as unknown as {
+        destinationAccessGroups: Array<{
+          boardedAtPatternRunSequence: number;
+          alightedAtPatternRunSequence: number;
+        }>;
+      }
+    ).destinationAccessGroups[0]!;
+    backwardRunGroup.boardedAtPatternRunSequence -= 1;
+    backwardRunGroup.alightedAtPatternRunSequence -= 1;
+    const backwardCall = structuredClone(
+      createTransportSimulationSnapshot(accessState),
+    );
+    const backwardCallGroup = (
+      backwardCall.state.passengerDemand as unknown as {
+        destinationAccessGroups: Array<{
+          boardedAtStopCallSequence: number;
+          alightedAtStopCallSequence: number;
+        }>;
+      }
+    ).destinationAccessGroups[0]!;
+    backwardCallGroup.boardedAtStopCallSequence -= 1;
+    backwardCallGroup.alightedAtStopCallSequence -= 1;
     const falseAccessCall = structuredClone(
       createTransportSimulationSnapshot(accessState),
     );
@@ -921,6 +949,8 @@ describe('transport application controller', () => {
       ['duplicate-id', duplicateId],
       ['disabled-event', disabledEvent],
       ['false-access-call', falseAccessCall],
+      ['backward-run', backwardRun],
+      ['backward-call', backwardCall],
       ['false-completion-run', falseCompletionRun],
     ];
     for (const [index, [name, snapshot]] of corruptions.entries()) {

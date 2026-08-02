@@ -7,7 +7,6 @@ import type {
 export interface SessionControlsProps {
   readonly state?: FoundationSessionCompositionState | undefined;
   readonly ready: boolean;
-  readonly selectedSaveAvailable: boolean;
   readonly persistenceMessage?: string | undefined;
   readonly browserActionMessage?: string | undefined;
   readonly scenarioTitle: (scenarioId: string) => string | undefined;
@@ -28,7 +27,6 @@ const run = (operation: (() => Promise<unknown>) | undefined) => () => {
 export default function SessionControls({
   state,
   ready,
-  selectedSaveAvailable,
   persistenceMessage,
   browserActionMessage,
   scenarioTitle,
@@ -41,6 +39,11 @@ export default function SessionControls({
   startDisabled,
 }: SessionControlsProps) {
   const application = state?.application;
+  const selectedSaveAvailable = Boolean(
+    state?.saveMode === 'autosave'
+      ? state.autosaveSaveAvailable
+      : state?.manualSaveAvailable,
+  );
   return (
     <div
       className="session-control-groups"

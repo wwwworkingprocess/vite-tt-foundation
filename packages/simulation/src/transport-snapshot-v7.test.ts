@@ -11,7 +11,6 @@ import {
   parsePassengerDemandPlan,
   parseTransportSimulationSnapshot,
   restoreTransportSimulationState,
-  validateOnboardPassengerProgress,
   validatePassengerJourneyRunAndCallIdentity,
 } from './index.js';
 
@@ -161,7 +160,123 @@ const completedJourneyState = () => {
   return { canonical, plan, completed: state };
 };
 
+const laterRunJourneyStates = () => {
+  const canonical = scenario();
+  const build = (accessDistance: number) => {
+    const plan = structuredClone(boardingPlan());
+    for (const cell of plan.cells) cell.distanceSquaredCells = accessDistance;
+    plan.accessPolicy.accessTicksPerCell = 3;
+    plan.emissionPolicy.creditsPerPassenger = 8;
+    let state = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      2,
+    );
+    state = applyTransportVehicleCommand(
+      state,
+      routeCycleVehicle('later-run-bus'),
+    );
+    return {
+      plan,
+      state: applyTransportVehicleCommand(state, {
+        kind: 'transport.vehicle.start',
+        vehicleId: 'later-run-bus',
+      }),
+    };
+  };
+  const accessAuthority = build(4);
+  let access: typeof accessAuthority.state | undefined;
+  let state = accessAuthority.state;
+  for (let index = 0; index < 200 && !access; index += 1) {
+    state = advanceTransportTicks(state, 1);
+    if (
+      state.passengerDemand.status === 'active' &&
+      state.passengerDemand.destinationAccessGroups.some(
+        (group) => group.boardedAtPatternRunSequence >= 2,
+      )
+    )
+      access = advanceTransportTicks(state, 1);
+  }
+  const completionAuthority = build(0);
+  let completion: typeof completionAuthority.state | undefined;
+  state = completionAuthority.state;
+  for (let index = 0; index < 200 && !completion; index += 1) {
+    state = advanceTransportTicks(state, 1);
+    if (
+      state.currentJourneyCompletionEvents.some(
+        (event) => event.boardedAtPatternRunSequence >= 2,
+      )
+    )
+      completion = state;
+  }
+  if (!access || !completion)
+    throw new Error('Expected generated later-run passenger journey states.');
+  return {
+    canonical,
+    accessPlan: accessAuthority.plan,
+    completionPlan: completionAuthority.plan,
+    access,
+    completion,
+  };
+};
+
 describe('Transport Snapshot V9', () => {
+  it('rejects internally consistent backward shifts of exact historical run and call coordinates', () => {
+    const { canonical, accessPlan, completionPlan, access, completion } =
+      laterRunJourneyStates();
+    for (const source of [access, completion]) {
+      const plan = source === access ? accessPlan : completionPlan;
+      const snapshot = createTransportSimulationSnapshot(source);
+      const passenger =
+        source === access
+          ? snapshot.state.passengerDemand.status === 'active'
+            ? snapshot.state.passengerDemand.destinationAccessGroups.find(
+                (group) => group.boardedAtPatternRunSequence >= 2,
+              )
+            : undefined
+          : snapshot.state.currentJourneyCompletionEvents.find(
+              (event) => event.boardedAtPatternRunSequence >= 2,
+            );
+      expect(passenger?.boardedAtStopCallSequence).toBeGreaterThan(1);
+      expect(passenger?.alightedAtStopCallSequence).toBeGreaterThan(
+        (passenger?.edgeCount ?? 0) + 1,
+      );
+
+      const shiftedRun = structuredClone(snapshot);
+      const runGroup =
+        source === access
+          ? shiftedRun.state.passengerDemand.status === 'active'
+            ? shiftedRun.state.passengerDemand.destinationAccessGroups.find(
+                (group) => group.boardedAtPatternRunSequence >= 2,
+              )!
+            : undefined
+          : shiftedRun.state.currentJourneyCompletionEvents.find(
+              (event) => event.boardedAtPatternRunSequence >= 2,
+            )!;
+      runGroup!.boardedAtPatternRunSequence -= 1;
+      runGroup!.alightedAtPatternRunSequence -= 1;
+      expect(() =>
+        restoreTransportSimulationState(shiftedRun, canonical, plan),
+      ).toThrow();
+
+      const shiftedCall = structuredClone(snapshot);
+      const callGroup =
+        source === access
+          ? shiftedCall.state.passengerDemand.status === 'active'
+            ? shiftedCall.state.passengerDemand.destinationAccessGroups.find(
+                (group) => group.boardedAtPatternRunSequence >= 2,
+              )!
+            : undefined
+          : shiftedCall.state.currentJourneyCompletionEvents.find(
+              (event) => event.boardedAtPatternRunSequence >= 2,
+            )!;
+      callGroup!.boardedAtStopCallSequence -= 1;
+      callGroup!.alightedAtStopCallSequence -= 1;
+      expect(() =>
+        restoreTransportSimulationState(shiftedCall, canonical, plan),
+      ).toThrow();
+    }
+  });
+
   it('rejects active onboard groups that claim a future boarding run', () => {
     const { canonical, plan, state: boarded } = boardedState();
     const state = advanceTransportTicks(boarded, 1);
@@ -179,7 +294,7 @@ describe('Transport Snapshot V9', () => {
       group.alightAtPatternRunSequence = currentRun + offset;
       expect(() =>
         restoreTransportSimulationState(snapshot, canonical, plan),
-      ).toThrow(/pattern-run|onboard passenger/i);
+      ).toThrow(/pattern-run|onboard passenger|run\/call/i);
     }
 
     const futureCall = structuredClone(
@@ -191,10 +306,10 @@ describe('Transport Snapshot V9', () => {
       state.vehicleOperations[0]!.stopCallSequence + 1;
     expect(() =>
       restoreTransportSimulationState(futureCall, canonical, plan),
-    ).toThrow(/pattern-run|onboard passenger/i);
+    ).toThrow(/pattern-run|onboard passenger|run\/call/i);
   });
 
-  it('accepts only the current or next run interval for wrapped onboard authority', () => {
+  it('rejects a fabricated wrapped interval on a non-loop route leg', () => {
     const { state } = boardedState('wrapped-lineage-bus');
     if (state.passengerDemand.status !== 'active')
       throw new Error('Expected active passenger authority.');
@@ -217,7 +332,7 @@ describe('Transport Snapshot V9', () => {
         ...base,
         onboardGroups: [group],
       }),
-    ).not.toThrow();
+    ).toThrow(/run|call/i);
 
     expect(() =>
       validatePassengerJourneyRunAndCallIdentity({
@@ -245,7 +360,7 @@ describe('Transport Snapshot V9', () => {
         ],
         onboardGroups: [group],
       }),
-    ).not.toThrow();
+    ).toThrow(/run|call/i);
   });
 
   it('rejects false historical destination-access run and call identity', () => {
@@ -267,7 +382,7 @@ describe('Transport Snapshot V9', () => {
       snapshot.state.passengerDemand.destinationAccessGroups[0]![field] += 1;
       expect(() =>
         restoreTransportSimulationState(snapshot, canonical, plan),
-      ).toThrow(/journey|alight|passenger/i);
+      ).toThrow(/journey|alight|passenger|run\/call/i);
     }
 
     const futureRun = structuredClone(
@@ -283,7 +398,7 @@ describe('Transport Snapshot V9', () => {
       futureRunGroup.boardedAtPatternRunSequence;
     expect(() =>
       restoreTransportSimulationState(futureRun, canonical, plan),
-    ).toThrow(/journey|alight|passenger/i);
+    ).toThrow(/journey|alight|passenger|run\/call/i);
 
     const futureCall = structuredClone(
       createTransportSimulationSnapshot(activeAccess),
@@ -298,7 +413,7 @@ describe('Transport Snapshot V9', () => {
       futureCallGroup.boardedAtStopCallSequence + futureCallGroup.edgeCount;
     expect(() =>
       restoreTransportSimulationState(futureCall, canonical, plan),
-    ).toThrow(/journey|alight|passenger/i);
+    ).toThrow(/journey|alight|passenger|run\/call/i);
   });
 
   it('validates historical access against exact vehicle ownership and progress', () => {
@@ -392,7 +507,7 @@ describe('Transport Snapshot V9', () => {
       corrupt(snapshot.state.currentJourneyCompletionEvents[0]!);
       expect(() =>
         restoreTransportSimulationState(snapshot, canonical, plan),
-      ).toThrow(/journey|alight|passenger/i);
+      ).toThrow(/journey|alight|passenger|run\/call/i);
     }
   });
 
@@ -497,12 +612,14 @@ describe('Transport Snapshot V9', () => {
 
     for (const nearMatch of nearMatches)
       expect(() =>
-        validateOnboardPassengerProgress({
+        validatePassengerJourneyRunAndCallIdentity({
           graph: boarded.graph,
           fleet: boarded.fleet,
           vehicleOperations: [operation],
           currentStopCalls: [nearMatch],
           onboardGroups: [group],
+          destinationAccessGroups: [],
+          currentJourneyCompletionEvents: [],
         }),
       ).not.toThrow();
 
@@ -521,12 +638,14 @@ describe('Transport Snapshot V9', () => {
       },
     };
     expect(() =>
-      validateOnboardPassengerProgress({
+      validatePassengerJourneyRunAndCallIdentity({
         graph: boarded.graph,
         fleet: [onEdgeVehicle],
         vehicleOperations: boarded.vehicleOperations,
         currentStopCalls: [],
         onboardGroups: [group],
+        destinationAccessGroups: [],
+        currentJourneyCompletionEvents: [],
       }),
     ).not.toThrow();
   });

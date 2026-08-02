@@ -33,15 +33,18 @@ import {
   type PassengerWaitingCohort,
 } from './passenger-waiting-cohort.js';
 import { parseSimulationTick, type SimulationTick } from './time.js';
-import type {
-  VehiclePatternRunState,
-  VehicleStopNodeCall,
+import {
+  canonicalVehicleCallCoordinate,
+  type VehiclePatternRunState,
+  type VehicleStopNodeCall,
 } from './vehicle-operation.js';
 import {
   parseVehicleId,
   type VehicleId,
   type VehicleState,
 } from './vehicle-movement.js';
+
+const transitContext = 'Passenger transit';
 
 export const passengerDestinationAccessGroupIdSchema = z
   .string()
@@ -301,11 +304,7 @@ export function validatePassengerTransitCollections(input: {
     const expectedCompletion =
       expectedDuration < 0
         ? -1
-        : checkedAdd(
-            group.alightedAtTick,
-            expectedDuration,
-            'destination completion tick',
-          );
+        : checkedAdd(group.alightedAtTick, expectedDuration, transitContext);
     if (
       accessIds.has(group.passengerDestinationAccessGroupId) ||
       activeSourceOnboardIds.has(group.sourceOnboardGroupId) ||
@@ -443,11 +442,7 @@ const expectedAlightRun = (group: {
   readonly boardedAtPatternRunSequence: number;
 }): number =>
   group.wrapsPatternEnd
-    ? checkedAdd(
-        group.boardedAtPatternRunSequence,
-        1,
-        'passenger alight pattern-run sequence',
-      )
+    ? checkedAdd(group.boardedAtPatternRunSequence, 1, transitContext)
     : group.boardedAtPatternRunSequence;
 
 /** Proves boarding-to-alighting lineage against canonical vehicle operation. */
@@ -466,7 +461,6 @@ export function validatePassengerJourneyRunAndCallIdentity(
   for (const group of input.onboardGroups) {
     const vehicle = vehicles.get(group.vehicleId);
     const operation = operations.get(group.vehicleId);
-    const route = input.graph.route(group.routeId);
     const targetRun = group.alightAtPatternRunSequence;
     const boardedRun = group.boardedAtPatternRunSequence;
     if (vehicle === undefined || operation === undefined)
@@ -474,13 +468,24 @@ export function validatePassengerJourneyRunAndCallIdentity(
         'Invalid or overdue onboard passenger pattern-run authority.',
       );
     const currentRun = operation.patternRunSequence;
+    const boardedCoordinate = canonicalVehicleCallCoordinate(
+      input.graph,
+      vehicle,
+      boardedRun,
+      group.originOccurrenceIndex,
+    );
+    const targetCoordinate = canonicalVehicleCallCoordinate(
+      input.graph,
+      vehicle,
+      targetRun,
+      group.destinationOccurrenceIndex,
+    );
     if (
       vehicle.routeId !== group.routeId ||
-      route === undefined ||
-      !route.patterns.some(
-        (pattern) => pattern.patternId === group.patternId,
-      ) ||
       targetRun !== expectedAlightRun(group) ||
+      boardedCoordinate[0] !== group.patternId ||
+      boardedCoordinate[1] !== group.boardedAtStopCallSequence ||
+      targetCoordinate[0] !== group.patternId ||
       boardedRun > currentRun ||
       currentRun > targetRun ||
       (currentRun === boardedRun &&
@@ -513,22 +518,33 @@ export function validatePassengerJourneyRunAndCallIdentity(
   ]) {
     const vehicle = vehicles.get(group.vehicleId);
     const operation = operations.get(group.vehicleId);
-    const route = input.graph.route(group.routeId);
     const expectedCall = checkedAdd(
       group.boardedAtStopCallSequence,
       group.edgeCount,
-      'passenger alight StopNode-call sequence',
+      transitContext,
+    );
+    if (vehicle === undefined || operation === undefined)
+      throw new Error('Invalid passenger alighting run/call authority.');
+    const boardedCoordinate = canonicalVehicleCallCoordinate(
+      input.graph,
+      vehicle,
+      group.boardedAtPatternRunSequence,
+      group.originOccurrenceIndex,
+    );
+    const alightedCoordinate = canonicalVehicleCallCoordinate(
+      input.graph,
+      vehicle,
+      group.alightedAtPatternRunSequence,
+      group.destinationOccurrenceIndex,
     );
     if (
-      vehicle === undefined ||
-      operation === undefined ||
       vehicle.routeId !== group.routeId ||
-      route === undefined ||
-      !route.patterns.some(
-        (pattern) => pattern.patternId === group.patternId,
-      ) ||
       group.alightedAtPatternRunSequence !== expectedAlightRun(group) ||
       group.alightedAtStopCallSequence !== expectedCall ||
+      boardedCoordinate[0] !== group.patternId ||
+      boardedCoordinate[1] !== group.boardedAtStopCallSequence ||
+      alightedCoordinate[0] !== group.patternId ||
+      alightedCoordinate[1] !== group.alightedAtStopCallSequence ||
       group.alightedAtStopCallSequence <= group.boardedAtStopCallSequence ||
       group.boardedAtTick > group.alightedAtTick ||
       group.alightedAtPatternRunSequence > operation.patternRunSequence ||
@@ -539,20 +555,6 @@ export function validatePassengerJourneyRunAndCallIdentity(
     )
       throw new Error('Invalid passenger alighting run/call authority.');
   }
-}
-
-/** Compatibility wrapper for focused active-onboard validation. */
-export function validateOnboardPassengerProgress(
-  input: Omit<
-    PassengerJourneyOperationInput,
-    'destinationAccessGroups' | 'currentJourneyCompletionEvents'
-  >,
-): void {
-  validatePassengerJourneyRunAndCallIdentity({
-    ...input,
-    destinationAccessGroups: [],
-    currentJourneyCompletionEvents: [],
-  });
 }
 
 const completionEvent = (
@@ -587,7 +589,7 @@ export function advancePassengerDestinationAccessToTick(input: {
     if (group.completionTick < tick)
       throw new Error('Overdue passenger destination access group.');
     if (group.completionTick === tick) {
-      completed = checkedAdd(completed, group.count, 'completed journeys');
+      completed = checkedAdd(completed, group.count, transitContext);
       events.push(completionEvent(group));
     } else active.push(group);
   }
@@ -595,8 +597,7 @@ export function advancePassengerDestinationAccessToTick(input: {
   return deepFreeze({
     destinationAccessGroups: active,
     totalInDestinationAccessPassengerCount: active.reduce(
-      (total, group) =>
-        checkedAdd(total, group.count, 'destination access passengers'),
+      (total, group) => checkedAdd(total, group.count, transitContext),
       0,
     ),
     totalCompletedJourneyPassengerCount: completed,
@@ -801,11 +802,7 @@ export function processPassengerTransitAtVehicleCalls(
           `passenger-destination-access-group-${nextAccess}`,
         );
         const completionTick = parseSimulationTick(
-          checkedAdd(
-            tick,
-            destinationAccessTicks,
-            'destination completion tick',
-          ),
+          checkedAdd(tick, destinationAccessTicks, transitContext),
         );
         access.push({
           passengerDestinationAccessGroupId: id,
@@ -835,28 +832,16 @@ export function processPassengerTransitAtVehicleCalls(
           firstAssignedTick: group.firstAssignedTick,
           lastAssignedTick: group.lastAssignedTick,
         });
-        nextAccess = checkedAdd(
-          nextAccess,
-          1,
-          'destination access group sequence',
-        );
+        nextAccess = checkedAdd(nextAccess, 1, transitContext);
         alightedByCall = checkedAdd(
           alightedByCall,
           group.count,
-          'alighted passengers',
+          transitContext,
         );
         accessIds.push(id);
       }
-      alightedTotal = checkedAdd(
-        alightedTotal,
-        alightedByCall,
-        'total alighted passengers',
-      );
-      accessTotal = checkedAdd(
-        accessTotal,
-        alightedByCall,
-        'destination access passengers',
-      );
+      alightedTotal = checkedAdd(alightedTotal, alightedByCall, transitContext);
+      accessTotal = checkedAdd(accessTotal, alightedByCall, transitContext);
       const capacity = capacities.get(call.vehicleId)!;
       let vehicleOnboard = 0;
       for (const group of onboard)
@@ -864,7 +849,7 @@ export function processPassengerTransitAtVehicleCalls(
           vehicleOnboard = checkedAdd(
             vehicleOnboard,
             group.count,
-            'vehicle onboard passengers',
+            transitContext,
           );
       alightingEvents.push({
         vehicleId: call.vehicleId,
@@ -1112,11 +1097,7 @@ export function validatePassengerTransitReplay(
       waiting.push(cohort);
       waitingById.set(cohort.passengerWaitingCohortId, cohort);
     } else
-      existing.count = checkedAdd(
-        existing.count,
-        group.count,
-        'reconstructed waiting passengers',
-      );
+      existing.count = checkedAdd(existing.count, group.count, transitContext);
   }
   waiting.sort(
     (left, right) =>
@@ -1137,18 +1118,15 @@ export function validatePassengerTransitReplay(
       .map(accessFromCompletion),
   ].sort(comparePassengerDestinationAccessGroups);
   const boardedThisTick = currentBoarded.reduce(
-    (total, group) =>
-      checkedAdd(total, group.count, 'current boarded passengers'),
+    (total, group) => checkedAdd(total, group.count, transitContext),
     0,
   );
   const alightedThisTick = currentAlighted.reduce(
-    (total, group) =>
-      checkedAdd(total, group.count, 'current alighted passengers'),
+    (total, group) => checkedAdd(total, group.count, transitContext),
     0,
   );
   const completedThisTick = completedGroups.reduce(
-    (total, group) =>
-      checkedAdd(total, group.count, 'current completed passengers'),
+    (total, group) => checkedAdd(total, group.count, transitContext),
     0,
   );
   const replay = processPassengerTransitAtVehicleCalls({
@@ -1159,40 +1137,39 @@ export function validatePassengerTransitReplay(
     nextPassengerOnboardGroupSequence: checkedSubtract(
       input.nextPassengerOnboardGroupSequence,
       currentBoarded.length,
-      'onboard group sequence',
+      transitContext,
     ),
     nextPassengerDestinationAccessGroupSequence: checkedSubtract(
       input.nextPassengerDestinationAccessGroupSequence,
       currentCreatedAccess.length,
-      'destination access group sequence',
+      transitContext,
     ),
     totalWaitingForVehiclePassengerCount: waiting.reduce(
-      (total, cohort) => checkedAdd(total, cohort.count, 'waiting passengers'),
+      (total, cohort) => checkedAdd(total, cohort.count, transitContext),
       0,
     ),
     totalBoardedPassengerCount: checkedSubtract(
       input.totalBoardedPassengerCount,
       boardedThisTick,
-      'boarded passengers',
+      transitContext,
     ),
     totalOnboardPassengerCount: priorOnboard.reduce(
-      (total, group) => checkedAdd(total, group.count, 'onboard passengers'),
+      (total, group) => checkedAdd(total, group.count, transitContext),
       0,
     ),
     totalAlightedPassengerCount: checkedSubtract(
       input.totalAlightedPassengerCount,
       alightedThisTick,
-      'alighted passengers',
+      transitContext,
     ),
     totalInDestinationAccessPassengerCount: priorAccess.reduce(
-      (total, group) =>
-        checkedAdd(total, group.count, 'destination access passengers'),
+      (total, group) => checkedAdd(total, group.count, transitContext),
       0,
     ),
     totalCompletedJourneyPassengerCount: checkedSubtract(
       input.totalCompletedJourneyPassengerCount,
       completedThisTick,
-      'completed passengers',
+      transitContext,
     ),
   });
   const expected = {

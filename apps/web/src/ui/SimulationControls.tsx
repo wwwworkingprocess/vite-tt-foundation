@@ -1,7 +1,14 @@
-import type { VehicleState } from '@torrevieja-tycoon/simulation';
+import {
+  createScenarioCoordinate,
+  parseVehicleId,
+  scenarioCoordinatesEqual,
+  type TransportVehicleCommand,
+  type VehicleState,
+} from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import type { FoundationSessionCompositionState } from '../foundation-session-composition.js';
 import type { ScenarioSelectionState } from '../scenarios/ScenarioPanel.js';
+import { createDemoVehicleCommandForAuthority } from '../transport-representation/demo-vehicle-command.js';
 
 export interface SimulationControlsProps {
   readonly status: string;
@@ -16,8 +23,9 @@ export interface SimulationControlsProps {
   readonly fleet?: readonly VehicleState[] | undefined;
   readonly ready: boolean;
   readonly onRouteChange: (routeId: string) => void;
-  readonly onCreateVehicle?: (() => Promise<void>) | undefined;
-  readonly onStartVehicle?: ((vehicleId: string) => Promise<void>) | undefined;
+  readonly onSendVehicleCommand?:
+    ((command: TransportVehicleCommand) => Promise<void>) | undefined;
+  readonly onVehicleActionMessage: (message: string | undefined) => void;
   readonly onMode?:
     | ((mode: 'paused' | 'normal' | 'fast' | 'maximum') => Promise<void>)
     | undefined;
@@ -40,8 +48,8 @@ export default function SimulationControls({
   fleet,
   ready,
   onRouteChange,
-  onCreateVehicle,
-  onStartVehicle,
+  onSendVehicleCommand,
+  onVehicleActionMessage,
   onMode,
   onBonus,
 }: SimulationControlsProps) {
@@ -49,6 +57,31 @@ export default function SimulationControls({
   const pacing = state?.pacing;
   const session = application?.session;
   const firstVehicle = fleet?.[0];
+  const createVehicle = async () => {
+    if (!application?.scenario || !authoritativeScenarioPackage) return;
+    try {
+      const command = createDemoVehicleCommandForAuthority(
+        application.scenario,
+        (coordinate) =>
+          scenarioCoordinatesEqual(
+            coordinate,
+            createScenarioCoordinate(authoritativeScenarioPackage),
+          )
+            ? authoritativeScenarioPackage
+            : undefined,
+        fleet ?? [],
+        selectedRouteId,
+      );
+      onVehicleActionMessage(undefined);
+      await onSendVehicleCommand?.(command);
+    } catch (error) {
+      onVehicleActionMessage(
+        error instanceof Error
+          ? error.message
+          : 'The demo vehicle could not be created.',
+      );
+    }
+  };
   return (
     <div
       className="simulation-control-groups"
@@ -216,8 +249,10 @@ export default function SimulationControls({
                     disabled={!ready}
                     onClick={run(
                       () =>
-                        onStartVehicle?.(vehicle.vehicleId) ??
-                        Promise.resolve(),
+                        onSendVehicleCommand?.({
+                          kind: 'transport.vehicle.start',
+                          vehicleId: parseVehicleId(vehicle.vehicleId),
+                        }) ?? Promise.resolve(),
                     )}
                   >
                     Start {vehicle.vehicleId}
@@ -232,7 +267,7 @@ export default function SimulationControls({
         <h3 id="vehicle-commands-heading">Vehicle commands</h3>
         <button
           disabled={!ready || !authoritativeScenarioPackage}
-          onClick={run(onCreateVehicle)}
+          onClick={run(createVehicle)}
         >
           Create demo vehicle
         </button>

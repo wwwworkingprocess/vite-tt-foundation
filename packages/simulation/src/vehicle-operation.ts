@@ -41,7 +41,7 @@ export interface WaitingCohortCallIdentity {
 }
 
 const invalidOperation =
-  'Invalid vehicle operation authority: must match the fleet; future canonical counter, sequence, same order, run start, movement-start, origin, terminal, or current call.';
+  'Invalid canonical vehicle operation: must match the fleet; future counter/sequence, same order, movement-start, run start tick, terminal/current call.';
 const operationContext = 'Vehicle operation';
 const sequenceOverflow = 'Vehicle operating sequence overflow.';
 const operationSchema = z.strictObject({
@@ -248,28 +248,38 @@ const completedEdges = (vehicle: VehicleState): number => {
   return activeEdgeSequence(vehicle.movement);
 };
 
-const routeEventPosition = (vehicle: VehicleState): number => {
-  const legs = vehicle.routeLegs!;
-  let eventsPerCycle = 0;
+const routeEventPositionAt = (
+  legs: ReadonlyArray<NonNullable<VehicleState['routeLegs']>[number]>,
+  runIndex: number,
+  occurrence: number,
+): number => {
+  let cycleEvents = 0;
   for (const leg of legs)
-    eventsPerCycle = checkedAdd(
-      eventsPerCycle,
+    cycleEvents = checkedAdd(
+      cycleEvents,
       leg.movementPlan.edgeTravelTicks.length + 1,
       operationContext,
     );
   let position = checkedMultiply(
-    vehicle.completedRouteCycles!,
-    eventsPerCycle,
+    Math.floor(runIndex / legs.length),
+    cycleEvents,
     operationContext,
   );
-  for (let index = 0; index < vehicle.routeLegIndex!; index += 1)
+  for (let index = 0; index < runIndex % legs.length; index += 1)
     position = checkedAdd(
       position,
       legs[index]!.movementPlan.edgeTravelTicks.length + 1,
       operationContext,
     );
-  return checkedAdd(position, completedEdges(vehicle), operationContext);
+  return checkedAdd(position, occurrence, operationContext);
 };
+
+const routeEventPosition = (vehicle: VehicleState): number =>
+  routeEventPositionAt(
+    vehicle.routeLegs!,
+    routeRunIndex(vehicle),
+    completedEdges(vehicle),
+  );
 
 const elapsedWithinPatternRun = (vehicle: VehicleState): number => {
   const completed = completedEdges(vehicle);
@@ -440,6 +450,50 @@ const routeRunIndex = (vehicle: VehicleState): number =>
     vehicle.routeLegIndex!,
     operationContext,
   );
+
+/** Resolves an issued pattern run and occurrence to its exact canonical call. */
+export function canonicalVehicleCallCoordinate(
+  graph: DirectedScenarioGraph,
+  vehicle: VehicleState,
+  run: number,
+  occurrence: number,
+): readonly [RoutePatternId, number] {
+  const invalidCoordinate = 'Invalid vehicle run/call.';
+  if (!Number.isSafeInteger(run) || run < 1) throw new Error(invalidCoordinate);
+  let patternId = vehicle.patternId;
+  let callsBeforeRun: number;
+  if (vehicle.routeLegs) {
+    const legs = vehicle.routeLegs;
+    const runIndex = run - 1;
+    const legIndex = runIndex % legs.length;
+    callsBeforeRun = routeEventPositionAt(legs, runIndex, 0);
+    patternId = legs[legIndex]!.patternId;
+  } else {
+    const pattern = graph.pattern(patternId)!;
+    if (!pattern.closesLoop && run !== 1) throw new Error(invalidCoordinate);
+    callsBeforeRun = checkedMultiply(
+      run - 1,
+      vehicle.movementPlan.edgeTravelTicks.length,
+      operationContext,
+    );
+  }
+  const pattern = graph.pattern(patternId);
+  if (
+    pattern === undefined ||
+    !Number.isSafeInteger(occurrence) ||
+    occurrence < 0 ||
+    occurrence >= pattern.stopNodeIds.length
+  )
+    throw new Error(invalidCoordinate);
+  return freeze([
+    patternId,
+    checkedAdd(
+      checkedIncrement(callsBeforeRun, operationContext),
+      occurrence,
+      operationContext,
+    ),
+  ]);
+}
 
 const routeElapsedBeforeRun = (vehicle: VehicleState): number => {
   const runIndex = routeRunIndex(vehicle);

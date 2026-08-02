@@ -73,6 +73,18 @@
       "manifestPath": "elche-urban-abc-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "1513c8715ccfc38031fc9fd2fc5e2c1c0970fac85f4a29019f9b12f1dd0be011"
+    },
+    {
+      "scenarioId": "elche-radial-south-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Radial South Network - Lines R7 and R8",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-radial-south-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "99ef775b22cb930b11e9ca7a73eb3d9e14b7005d9d367ce01831b2354ac80734"
     }
   ]
 }

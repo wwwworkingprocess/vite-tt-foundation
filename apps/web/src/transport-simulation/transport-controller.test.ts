@@ -799,6 +799,72 @@ describe('transport application controller', () => {
     duplicateGroups[1]!.passengerOnboardGroupId =
       duplicateGroups[0]!.passengerOnboardGroupId;
 
+    const futureBoardingRun = structuredClone(
+      createTransportSimulationSnapshot(ordered),
+    );
+    if (futureBoardingRun.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    const futureOnboard = (
+      futureBoardingRun.state.passengerDemand as unknown as {
+        onboardGroups: Array<{
+          boardedAtPatternRunSequence: number;
+          alightAtPatternRunSequence: number;
+        }>;
+      }
+    ).onboardGroups[0]!;
+    futureOnboard.boardedAtPatternRunSequence =
+      ordered.vehicleOperations[0]!.patternRunSequence + 1;
+    futureOnboard.alightAtPatternRunSequence =
+      futureOnboard.boardedAtPatternRunSequence;
+
+    const accessPlan = structuredClone(plan);
+    const mutableAccessPlan = accessPlan as unknown as {
+      demandModelContentHash: string;
+      accessPolicy: { accessTicksPerCell: number };
+      cells: Array<{ distanceSquaredCells: number | null }>;
+    };
+    mutableAccessPlan.demandModelContentHash = 'a'.repeat(64);
+    mutableAccessPlan.accessPolicy.accessTicksPerCell = 2;
+    for (const cell of mutableAccessPlan.cells) cell.distanceSquaredCells = 4;
+    let accessState = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, accessPlan),
+      2,
+    );
+    accessState = applyTransportVehicleCommand(
+      accessState,
+      createVehicle('access-preflight-bus'),
+    );
+    accessState = applyTransportVehicleCommand(accessState, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'access-preflight-bus',
+    });
+    while (accessState.currentAlightingEvents.length === 0)
+      accessState = advanceTransportTicks(accessState, 1);
+    accessState = advanceTransportTicks(accessState, 1);
+    const falseAccessCall = structuredClone(
+      createTransportSimulationSnapshot(accessState),
+    );
+    if (falseAccessCall.state.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    (
+      falseAccessCall.state.passengerDemand as unknown as {
+        destinationAccessGroups: Array<{
+          alightedAtStopCallSequence: number;
+        }>;
+      }
+    ).destinationAccessGroups[0]!.alightedAtStopCallSequence += 1;
+
+    const falseCompletionRun = structuredClone(
+      createTransportSimulationSnapshot(alighted),
+    );
+    (
+      falseCompletionRun.state as unknown as {
+        currentJourneyCompletionEvents: Array<{
+          alightedAtPatternRunSequence: number;
+        }>;
+      }
+    ).currentJourneyCompletionEvents[0]!.alightedAtPatternRunSequence += 1;
+
     const disabledEvent = structuredClone(
       createTransportSimulationSnapshot(
         createTransportSimulationState(canonical, later.tick),
@@ -831,7 +897,13 @@ describe('transport application controller', () => {
         put: async () => undefined,
       },
       scenarioResolver: { resolve: async () => canonical },
-      passengerDemandPlanResolver: { resolve: async () => plan },
+      passengerDemandPlanResolver: {
+        resolve: async (coordinate) =>
+          coordinate.demandModelContentHash ===
+          accessPlan.demandModelContentHash
+            ? accessPlan
+            : plan,
+      },
     });
     await controller.startNew({
       gameId: parseGameId('game-fixture'),
@@ -840,23 +912,33 @@ describe('transport application controller', () => {
       passengerDemandPlan: plan,
     });
     const expected = controller.projection.getState();
-    for (const [index, snapshot] of [
-      overdue,
-      wrongOrder,
-      duplicateId,
-      disabledEvent,
-    ].entries()) {
+    const corruptions: ReadonlyArray<
+      readonly [string, ReturnType<typeof createTransportSimulationSnapshot>]
+    > = [
+      ['future-boarding-run', futureBoardingRun],
+      ['overdue', overdue],
+      ['wrong-order', wrongOrder],
+      ['duplicate-id', duplicateId],
+      ['disabled-event', disabledEvent],
+      ['false-access-call', falseAccessCall],
+      ['false-completion-run', falseCompletionRun],
+    ];
+    for (const [index, [name, snapshot]] of corruptions.entries()) {
       stored = {
         ...validRecord,
         sourceSimulationTick: snapshot.state.tick,
         snapshot,
       };
-      await expect(
-        controller.restore({
+      let rejected = false;
+      try {
+        await controller.restore({
           saveId: 'journey-preflight',
           timelineId: parseTimelineId(`timeline-journey-corrupt-${index}`),
-        }),
-      ).rejects.toThrow();
+        });
+      } catch {
+        rejected = true;
+      }
+      expect(rejected, name).toBe(true);
       expect(controller.projection.getState()).toEqual({
         ...expected,
         message: expect.any(String),

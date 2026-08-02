@@ -28,6 +28,14 @@ the production comparator order even when historical alighting leaves numeric
 ID gaps, and one source onboard ID may occupy only one current lifecycle
 location: onboard, destination access, or current completion output.
 
+Snapshot V9 also proves the complete boarding-to-alighting run lineage. An
+active onboard group can span only its canonical boarding run and, for a
+wrapped loop, the immediately following target run. Destination-access and
+completion authority retain the exact alighting run and StopNode-call sequence:
+the latter equals the boarding call plus the itinerary edge count. These
+historical values must not lie ahead of the vehicle's current canonical
+pattern-run and call authority.
+
 Snapshot V9 and Transport Save V7 are the sole current pre-release contracts.
 Earlier developer snapshots and saves are obsolete without migration. The
 snapshot stores active ownership, sequences, counters, and current events, but

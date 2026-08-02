@@ -59,7 +59,7 @@ import {
   parsePassengerJourneyCompletionEvents,
   processPassengerTransitAtVehicleCalls,
   validatePassengerTransitReplay,
-  validateOnboardPassengerProgress,
+  validatePassengerJourneyRunAndCallIdentity,
   type CurrentAlightingEvent,
   type PassengerJourneyCompletionEvent,
 } from './passenger-transit.js';
@@ -710,12 +710,15 @@ export function restoreTransportSimulationState(
         passengerWaitingCohortMatchesItinerary(group, itinerary)
       );
     };
-    validateOnboardPassengerProgress({
+    validatePassengerJourneyRunAndCallIdentity({
       graph,
       fleet,
       vehicleOperations: operating.operations,
       currentStopCalls: operating.calls,
       onboardGroups: passengerDemand.onboardGroups,
+      destinationAccessGroups: passengerDemand.destinationAccessGroups,
+      currentJourneyCompletionEvents:
+        snapshot.state.currentJourneyCompletionEvents,
     });
     validatePassengerTransitReplay({
       tick: snapshot.state.tick,

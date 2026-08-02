@@ -428,14 +428,32 @@ const reachedOccurrenceIndex = (vehicle: Readonly<VehicleState>): number => {
   return vehicle.movementPlan.edgeTravelTicks.length;
 };
 
-/** Rejects onboard ownership after its exact canonical destination event. */
-export function validateOnboardPassengerProgress(input: {
+interface PassengerJourneyOperationInput {
   readonly graph: DirectedScenarioGraph;
   readonly fleet: readonly Readonly<VehicleState>[];
   readonly vehicleOperations: readonly Readonly<VehiclePatternRunState>[];
   readonly currentStopCalls: readonly Readonly<VehicleStopNodeCall>[];
   readonly onboardGroups: readonly Readonly<PassengerOnboardGroup>[];
-}): void {
+  readonly destinationAccessGroups: readonly Readonly<PassengerDestinationAccessGroup>[];
+  readonly currentJourneyCompletionEvents: readonly Readonly<PassengerJourneyCompletionEvent>[];
+}
+
+const expectedAlightRun = (group: {
+  readonly wrapsPatternEnd: boolean;
+  readonly boardedAtPatternRunSequence: number;
+}): number =>
+  group.wrapsPatternEnd
+    ? checkedAdd(
+        group.boardedAtPatternRunSequence,
+        1,
+        'passenger alight pattern-run sequence',
+      )
+    : group.boardedAtPatternRunSequence;
+
+/** Proves boarding-to-alighting lineage against canonical vehicle operation. */
+export function validatePassengerJourneyRunAndCallIdentity(
+  input: PassengerJourneyOperationInput,
+): void {
   const vehicles = new Map(
     input.fleet.map((vehicle) => [vehicle.vehicleId, vehicle]),
   );
@@ -450,16 +468,26 @@ export function validateOnboardPassengerProgress(input: {
     const operation = operations.get(group.vehicleId);
     const route = input.graph.route(group.routeId);
     const targetRun = group.alightAtPatternRunSequence;
+    const boardedRun = group.boardedAtPatternRunSequence;
+    if (vehicle === undefined || operation === undefined)
+      throw new Error(
+        'Invalid or overdue onboard passenger pattern-run authority.',
+      );
+    const currentRun = operation.patternRunSequence;
     if (
-      vehicle === undefined ||
-      operation === undefined ||
       vehicle.routeId !== group.routeId ||
       route === undefined ||
       !route.patterns.some(
         (pattern) => pattern.patternId === group.patternId,
       ) ||
-      targetRun < operation.patternRunSequence ||
-      (targetRun === operation.patternRunSequence &&
+      targetRun !== expectedAlightRun(group) ||
+      boardedRun > currentRun ||
+      currentRun > targetRun ||
+      (currentRun === boardedRun &&
+        (vehicle.patternId !== group.patternId ||
+          group.boardedAtTick < operation.patternRunStartedAtTick ||
+          group.boardedAtStopCallSequence > operation.stopCallSequence)) ||
+      (currentRun === targetRun &&
         (vehicle.patternId !== group.patternId ||
           group.destinationOccurrenceIndex <=
             reachedOccurrenceIndex(vehicle))) ||
@@ -474,8 +502,57 @@ export function validateOnboardPassengerProgress(input: {
           call.stopCallSequence > group.boardedAtStopCallSequence,
       )
     )
-      throw new Error('Overdue onboard passenger destination call.');
+      throw new Error(
+        'Invalid or overdue onboard passenger pattern-run authority.',
+      );
   }
+
+  for (const group of [
+    ...input.destinationAccessGroups,
+    ...input.currentJourneyCompletionEvents,
+  ]) {
+    const vehicle = vehicles.get(group.vehicleId);
+    const operation = operations.get(group.vehicleId);
+    const route = input.graph.route(group.routeId);
+    const expectedCall = checkedAdd(
+      group.boardedAtStopCallSequence,
+      group.edgeCount,
+      'passenger alight StopNode-call sequence',
+    );
+    if (
+      vehicle === undefined ||
+      operation === undefined ||
+      vehicle.routeId !== group.routeId ||
+      route === undefined ||
+      !route.patterns.some(
+        (pattern) => pattern.patternId === group.patternId,
+      ) ||
+      group.alightedAtPatternRunSequence !== expectedAlightRun(group) ||
+      group.alightedAtStopCallSequence !== expectedCall ||
+      group.alightedAtStopCallSequence <= group.boardedAtStopCallSequence ||
+      group.boardedAtTick > group.alightedAtTick ||
+      group.alightedAtPatternRunSequence > operation.patternRunSequence ||
+      group.alightedAtStopCallSequence > operation.stopCallSequence ||
+      (group.alightedAtPatternRunSequence === operation.patternRunSequence &&
+        (vehicle.patternId !== group.patternId ||
+          reachedOccurrenceIndex(vehicle) < group.destinationOccurrenceIndex))
+    )
+      throw new Error('Invalid passenger alighting run/call authority.');
+  }
+}
+
+/** Compatibility wrapper for focused active-onboard validation. */
+export function validateOnboardPassengerProgress(
+  input: Omit<
+    PassengerJourneyOperationInput,
+    'destinationAccessGroups' | 'currentJourneyCompletionEvents'
+  >,
+): void {
+  validatePassengerJourneyRunAndCallIdentity({
+    ...input,
+    destinationAccessGroups: [],
+    currentJourneyCompletionEvents: [],
+  });
 }
 
 const completionEvent = (

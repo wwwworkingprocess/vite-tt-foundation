@@ -166,7 +166,11 @@ export function deriveVehicleOperationTransition(input: {
     throw new Error('Vehicle operation transition vehicle identity mismatch.');
   let operation = input.operation;
   const calls: VehicleStopNodeCall[] = [];
-  const handedOff = input.before.patternId !== input.after.patternId;
+  const handedOff =
+    input.before.routeLegs !== undefined &&
+    input.after.routeLegs !== undefined &&
+    (input.before.routeLegIndex !== input.after.routeLegIndex ||
+      input.before.completedRouteCycles !== input.after.completedRouteCycles);
   const beforeMovement = input.before.movement;
   const afterMovement = input.after.movement;
   const arrivedFromEdge =

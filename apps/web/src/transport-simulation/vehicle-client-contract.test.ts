@@ -51,6 +51,33 @@ const scenario = () =>
     presentation: json('presentation.json'),
     provenance: json('provenance.json'),
   });
+const onePatternClosedLoopScenario = () => {
+  const routes = structuredClone(json('routes.json')) as {
+    routes: Array<{
+      routeId: string;
+      patterns: Array<{
+        patternId: string;
+        closesLoop: boolean;
+        stopNodeIds: string[];
+      }>;
+    }>;
+  };
+  const route = routes.routes[0]!;
+  const pattern = route.patterns[0]!;
+  route.routeId = 'closed-loop-route';
+  pattern.patternId = 'closed-loop-route-pattern';
+  pattern.closesLoop = true;
+  pattern.stopNodeIds = ['tv-stop-0108', 'tv-stop-0053', 'tv-stop-0078'];
+  route.patterns = [pattern];
+  return parseScenarioPackage({
+    manifest: json('scenario.json'),
+    settlements: json('settlements.json'),
+    stops: json('stops.json'),
+    routes,
+    presentation: json('presentation.json'),
+    provenance: json('provenance.json'),
+  });
+};
 const demandPlan = (canonical: ReturnType<typeof scenario>) =>
   parsePassengerDemandPlan({
     schemaVersion: '1.0.0',
@@ -580,6 +607,96 @@ describe.each(factories)(
     });
   },
 );
+
+type ExportedTransportState = Awaited<
+  ReturnType<TransportSimulationClient['exportSnapshot']>
+>['snapshot']['state'];
+
+it('keeps one-leg route-cycle handoffs identical across direct, clone, and Worker execution', async () => {
+  const states: ExportedTransportState[] = [];
+  for (const [, createClient] of factories) {
+    const client = createClient();
+    try {
+      const canonical = onePatternClosedLoopScenario();
+      const graph = buildDirectedScenarioGraph(canonical);
+      const route = canonical.routes.routes[0]!;
+      const pattern = route.patterns[0]!;
+      await client.connect({
+        kind: 'transport-client-connect',
+        contractVersion: 3,
+        mode: 'new',
+        gameId: parseGameId('game'),
+        timelineId: parseTimelineId('timeline'),
+        initialSimulationTick: 0,
+        scenario: canonical,
+      });
+      await client.sendCommand(
+        envelope(201, {
+          kind: 'transport.vehicle.create-route-cycle',
+          vehicleId: parseVehicleId('route-loop-bus'),
+          label: 'Route loop bus',
+          routeId: route.routeId,
+          legs: [
+            {
+              patternId: pattern.patternId,
+              movementPlan: {
+                kind: 'vehicle-movement-plan-v1',
+                edgeTravelTicks: graph
+                  .patternEdges(pattern.patternId)
+                  .map(() => 2),
+              },
+            },
+          ],
+        }),
+      );
+      await client.sendCommand(
+        envelope(202, {
+          kind: 'transport.vehicle.start',
+          vehicleId: parseVehicleId('route-loop-bus'),
+        }),
+      );
+      await client.sendCommand(
+        envelope(203, { type: 'foundation.advance-ticks', count: 7 }),
+      );
+      states.push((await client.exportSnapshot()).snapshot.state);
+    } finally {
+      await client.close();
+    }
+  }
+
+  expect(states[1]).toEqual(states[0]);
+  expect(states[2]).toEqual(states[0]);
+  expect(states[0]).toMatchObject({
+    tick: 7,
+    fleet: [
+      {
+        routeId: 'closed-loop-route',
+        routeLegIndex: 0,
+        completedRouteCycles: 1,
+        patternId: 'closed-loop-route-pattern',
+      },
+    ],
+    vehicleOperations: [
+      {
+        patternRunSequence: 2,
+        patternRunStartedAtTick: 7,
+        stopCallSequence: 5,
+      },
+    ],
+    currentStopCalls: [
+      {
+        vehicleId: 'route-loop-bus',
+        stopCallSequence: 5,
+        patternRunSequence: 2,
+        routeId: 'closed-loop-route',
+        patternId: 'closed-loop-route-pattern',
+        stopNodeId: 'tv-stop-0108',
+        occurrenceIndex: 0,
+        tick: 7,
+      },
+    ],
+  });
+});
 
 describe('direct vehicle client failure and idempotency behavior', () => {
   it('isolates listeners, subscriptions, invalid commands, duplicates, and conflicts', async () => {

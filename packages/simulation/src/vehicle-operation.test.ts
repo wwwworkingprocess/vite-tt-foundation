@@ -138,6 +138,54 @@ function closedLoopStarted() {
   });
 }
 
+function routeOwnedClosedLoopStarted() {
+  const routes = structuredClone(json('routes.json')) as {
+    routes: Array<{
+      routeId: string;
+      patterns: Array<{
+        patternId: string;
+        closesLoop: boolean;
+        stopNodeIds: string[];
+      }>;
+    }>;
+  };
+  const route = routes.routes[0]!;
+  const pattern = route.patterns[0]!;
+  route.routeId = 'closed-loop-route';
+  pattern.patternId = 'closed-loop-route-pattern';
+  pattern.closesLoop = true;
+  pattern.stopNodeIds = ['tv-stop-0108', 'tv-stop-0053', 'tv-stop-0078'];
+  route.patterns = [pattern];
+  const canonical = parseScenarioPackage({
+    manifest: json('scenario.json'),
+    settlements: json('settlements.json'),
+    stops: json('stops.json'),
+    routes,
+    presentation: json('presentation.json'),
+    provenance: json('provenance.json'),
+  });
+  let state = createTransportSimulationState(canonical, 0);
+  state = applyTransportVehicleCommand(state, {
+    kind: 'transport.vehicle.create-route-cycle',
+    vehicleId: 'route-loop-bus',
+    label: 'Route loop bus',
+    routeId: 'closed-loop-route',
+    legs: [
+      {
+        patternId: 'closed-loop-route-pattern',
+        movementPlan: {
+          kind: 'vehicle-movement-plan-v1',
+          edgeTravelTicks: [2, 2, 2],
+        },
+      },
+    ],
+  });
+  return applyTransportVehicleCommand(state, {
+    kind: 'transport.vehicle.start',
+    vehicleId: 'route-loop-bus',
+  });
+}
+
 const repeatTicks = (
   state: ReturnType<typeof createTransportSimulationState>,
   count: number,
@@ -271,6 +319,271 @@ describe('light vehicle pattern runs and StopNode calls', () => {
         stopCallSequence: 5,
       }),
     ]);
+  });
+
+  it('starts a new canonical run when a one-leg route cycle wraps to the same pattern', () => {
+    const firstCircuitComplete = advanceTransportTicks(
+      routeOwnedClosedLoopStarted(),
+      6,
+    );
+    expect(firstCircuitComplete.fleet[0]).toMatchObject({
+      routeId: 'closed-loop-route',
+      routeLegIndex: 0,
+      completedRouteCycles: 0,
+      patternId: 'closed-loop-route-pattern',
+      movement: {
+        kind: 'running-at-stop',
+        stopNodeId: 'tv-stop-0108',
+        nextEdgeSequence: 3,
+      },
+    });
+    expect(firstCircuitComplete.vehicleOperations[0]).toMatchObject({
+      patternRunSequence: 1,
+      patternRunStartedAtTick: 0,
+      stopCallSequence: 4,
+    });
+
+    const secondRun = advanceTransportTicks(firstCircuitComplete, 1);
+    expect(secondRun.fleet[0]).toMatchObject({
+      routeId: 'closed-loop-route',
+      routeLegIndex: 0,
+      completedRouteCycles: 1,
+      patternId: 'closed-loop-route-pattern',
+      movement: {
+        kind: 'running-on-edge',
+        edgeSequence: 0,
+        progressTicks: 1,
+        travelTicks: 2,
+      },
+    });
+    expect(secondRun.vehicleOperations[0]).toMatchObject({
+      patternRunSequence: 2,
+      patternRunStartedAtTick: 7,
+      stopCallSequence: 5,
+    });
+    expect(secondRun.currentStopCalls).toEqual([
+      {
+        vehicleId: 'route-loop-bus',
+        stopCallSequence: 5,
+        patternRunSequence: 2,
+        routeId: 'closed-loop-route',
+        patternId: 'closed-loop-route-pattern',
+        stopNodeId: 'tv-stop-0108',
+        occurrenceIndex: 0,
+        tick: 7,
+      },
+    ]);
+
+    const firstArrivalOfSecondRun = advanceTransportTicks(secondRun, 1);
+    expect(firstArrivalOfSecondRun.vehicleOperations[0]).toMatchObject({
+      patternRunSequence: 2,
+      patternRunStartedAtTick: 7,
+      stopCallSequence: 6,
+    });
+    expect(firstArrivalOfSecondRun.currentStopCalls).toEqual([
+      expect.objectContaining({
+        stopCallSequence: 6,
+        patternRunSequence: 2,
+        occurrenceIndex: 1,
+        tick: 8,
+      }),
+    ]);
+  });
+
+  it('issues exactly one new run and origin call at each repeated one-leg cycle boundary', () => {
+    let state = routeOwnedClosedLoopStarted();
+    for (const [index, boundaryTick] of [7, 13, 19].entries()) {
+      state = advanceTransportTicks(state, boundaryTick - state.tick);
+      const completedCycles = index + 1;
+      expect(state.fleet[0]).toMatchObject({
+        routeLegIndex: 0,
+        completedRouteCycles: completedCycles,
+        patternId: 'closed-loop-route-pattern',
+      });
+      expect(state.vehicleOperations[0]).toMatchObject({
+        patternRunSequence: completedCycles + 1,
+        patternRunStartedAtTick: boundaryTick,
+        stopCallSequence: completedCycles * 4 + 1,
+      });
+      expect(state.currentStopCalls).toEqual([
+        expect.objectContaining({
+          stopCallSequence: completedCycles * 4 + 1,
+          patternRunSequence: completedCycles + 1,
+          patternId: 'closed-loop-route-pattern',
+          stopNodeId: 'tv-stop-0108',
+          occurrenceIndex: 0,
+          tick: boundaryTick,
+        }),
+      ]);
+    }
+  });
+
+  it('keeps split and batched advancement exact across repeated one-leg handoffs', () => {
+    const initial = routeOwnedClosedLoopStarted();
+    const batched = advanceTransportTicks(initial, 13);
+    let split = initial;
+    for (const partition of [5, 2, 5, 1])
+      split = advanceTransportTicks(split, partition);
+
+    expect(createTransportSimulationSnapshot(split)).toEqual(
+      createTransportSimulationSnapshot(batched),
+    );
+    expect(batched.fleet[0]).toMatchObject({
+      routeLegIndex: 0,
+      completedRouteCycles: 2,
+    });
+    expect(batched.vehicleOperations[0]).toMatchObject({
+      patternRunSequence: 3,
+      patternRunStartedAtTick: 13,
+      stopCallSequence: 9,
+    });
+    expect(batched.currentStopCalls).toEqual([
+      expect.objectContaining({
+        patternRunSequence: 3,
+        stopCallSequence: 9,
+        occurrenceIndex: 0,
+        tick: 13,
+      }),
+    ]);
+  });
+
+  it('fast-forwards one-leg route cycles identically to repeated one-tick advancement', () => {
+    const initial = routeOwnedClosedLoopStarted();
+    const repeated = repeatTicks(initial, 121);
+    const fastForwarded = advanceTransportTicks(initial, 121);
+
+    expect(createTransportSimulationSnapshot(fastForwarded)).toEqual(
+      createTransportSimulationSnapshot(repeated),
+    );
+    expect(fastForwarded.fleet[0]).toMatchObject({
+      routeLegIndex: 0,
+      completedRouteCycles: 20,
+    });
+    expect(fastForwarded.vehicleOperations[0]).toMatchObject({
+      patternRunSequence: 21,
+      patternRunStartedAtTick: 121,
+      stopCallSequence: 81,
+    });
+    expect(fastForwarded.currentStopCalls).toEqual([
+      expect.objectContaining({
+        patternRunSequence: 21,
+        stopCallSequence: 81,
+        occurrenceIndex: 0,
+        tick: 121,
+      }),
+    ]);
+  });
+
+  it('round-trips and continues exact one-leg route-cycle authority after a handoff', () => {
+    const original = advanceTransportTicks(routeOwnedClosedLoopStarted(), 7);
+    const restored = restoreTransportSimulationState(
+      structuredClone(createTransportSimulationSnapshot(original)),
+      original.scenario,
+    );
+    expect(createTransportSimulationSnapshot(restored)).toEqual(
+      createTransportSimulationSnapshot(original),
+    );
+
+    const originalContinued = advanceTransportTicks(original, 12);
+    const restoredContinued = advanceTransportTicks(restored, 12);
+    expect(createTransportSimulationSnapshot(restoredContinued)).toEqual(
+      createTransportSimulationSnapshot(originalContinued),
+    );
+    expect(restoredContinued.vehicleOperations[0]).toMatchObject({
+      patternRunSequence: 4,
+      patternRunStartedAtTick: 19,
+      stopCallSequence: 13,
+    });
+  });
+
+  it('increments ordinary multi-leg route cycles once per canonical leg handoff', () => {
+    const returnHandoff = advanceTransportTicks(started(), 3);
+    expect(returnHandoff.fleet[0]).toMatchObject({
+      routeLegIndex: 1,
+      completedRouteCycles: 0,
+      patternId: 'return',
+    });
+    expect(returnHandoff.vehicleOperations[0]).toMatchObject({
+      patternRunSequence: 2,
+      patternRunStartedAtTick: 3,
+      stopCallSequence: 5,
+    });
+    expect(returnHandoff.currentStopCalls).toEqual([
+      expect.objectContaining({
+        patternRunSequence: 2,
+        patternId: 'return',
+        stopCallSequence: 4,
+        occurrenceIndex: 0,
+      }),
+      expect.objectContaining({
+        patternRunSequence: 2,
+        patternId: 'return',
+        stopCallSequence: 5,
+        occurrenceIndex: 1,
+      }),
+    ]);
+
+    const wrapped = advanceTransportTicks(returnHandoff, 2);
+    expect(wrapped.fleet[0]).toMatchObject({
+      routeLegIndex: 0,
+      completedRouteCycles: 1,
+      patternId: 'outbound',
+    });
+    expect(wrapped.vehicleOperations[0]).toMatchObject({
+      patternRunSequence: 3,
+      patternRunStartedAtTick: 5,
+      stopCallSequence: 8,
+    });
+  });
+
+  it('preserves standalone closed-loop restarts and non-loop termination', () => {
+    const loopRestart = advanceTransportTicks(closedLoopStarted(), 6);
+    expect(loopRestart.fleet[0]?.routeLegs).toBeUndefined();
+    expect(loopRestart.vehicleOperations[0]).toMatchObject({
+      patternRunSequence: 2,
+      patternRunStartedAtTick: 6,
+      stopCallSequence: 4,
+    });
+    expect(loopRestart.currentStopCalls).toEqual([
+      expect.objectContaining({
+        routeId: null,
+        patternRunSequence: 2,
+        stopCallSequence: 4,
+        occurrenceIndex: 0,
+        tick: 6,
+      }),
+    ]);
+
+    let nonLoop = createTransportSimulationState(scenario(), 0);
+    nonLoop = applyTransportVehicleCommand(nonLoop, {
+      kind: 'transport.vehicle.create',
+      vehicleId: 'standalone-terminal',
+      label: 'Standalone terminal',
+      patternId: 'outbound',
+      movementPlan: {
+        kind: 'vehicle-movement-plan-v1',
+        edgeTravelTicks: [1, 1],
+      },
+    });
+    nonLoop = applyTransportVehicleCommand(nonLoop, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'standalone-terminal',
+    });
+    const completed = advanceTransportTicks(nonLoop, 2);
+    expect(completed.fleet[0]?.movement).toEqual({
+      kind: 'completed-at-stop',
+      stopNodeId: 'tv-stop-0078',
+    });
+    expect(completed.vehicleOperations[0]).toMatchObject({
+      patternRunSequence: 1,
+      stopCallSequence: 3,
+    });
+    const afterCompletion = advanceTransportTicks(completed, 1);
+    expect(afterCompletion.fleet[0]).toEqual(completed.fleet[0]);
+    expect(afterCompletion.vehicleOperations[0]).toEqual(
+      completed.vehicleOperations[0],
+    );
+    expect(afterCompletion.currentStopCalls).toEqual([]);
   });
 
   it('keeps batched and split authority identical and round-trips Snapshot V9', () => {

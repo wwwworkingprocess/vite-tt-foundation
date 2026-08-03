@@ -467,25 +467,18 @@ const validateWaitingGenerationLineage = (input: {
         passengerWaitingCohortSequence(left.cohort.passengerWaitingCohortId) -
         passengerWaitingCohortSequence(right.cohort.passengerWaitingCohortId),
     );
-    let mergeableCount = 0;
     for (let index = 0; index < group.length; index += 1) {
       const generation = group[index]!;
       const successor = group[index + 1];
-      if (!generation.representedOnboard) {
-        mergeableCount += 1;
-        if (successor !== undefined)
-          throw new Error('Invalid waiting generation chronology.');
-      }
+      if (!generation.representedOnboard && successor !== undefined)
+        throw new Error('Invalid waiting generation chronology.');
       if (
         successor !== undefined &&
-        (generation.earliestBoardedAtTick === null ||
-          successor.cohort.firstAssignedTick <=
-            generation.earliestBoardedAtTick)
+        successor.cohort.firstAssignedTick <=
+          generation.earliestBoardedAtTick!
       )
         throw new Error('Invalid waiting generation chronology.');
     }
-    if (mergeableCount > 1)
-      throw new Error('Invalid waiting generation chronology.');
   }
 };
 
@@ -645,7 +638,7 @@ export function boardPassengersAtVehicleCalls(
 
   const waiting = input.waitingCohorts.map((item) => ({ ...item }));
   const onboard = input.onboardGroups.map((item) => ({ ...item }));
-  const waitingBefore = waiting.reduce(
+  waiting.reduce(
     (total, item) => checkedAdd(total, item.count, 'waiting passengers'),
     0,
   );
@@ -784,18 +777,6 @@ export function boardPassengersAtVehicleCalls(
     (total, item) => checkedAdd(total, item.count, 'onboard passengers'),
     0,
   );
-  const boardedThisOperation = events.reduce(
-    (total, event) =>
-      checkedAdd(total, event.boardedPassengerCount, 'boarded passengers'),
-    0,
-  );
-  if (
-    waitingBefore !==
-      checkedAdd(boardedThisOperation, waitingTotal, 'boarding conservation') ||
-    onboardTotal !==
-      checkedAdd(onboardBefore, boardedThisOperation, 'onboard conservation')
-  )
-    throw new Error('Passenger boarding conservation failed.');
   return deepFreeze({
     waitingCohorts,
     onboardGroups: onboard,

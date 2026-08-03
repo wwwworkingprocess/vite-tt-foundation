@@ -1112,6 +1112,106 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     }
   });
 
+  it('validates the exact origin arrival of a route-owned closed loop', () => {
+    const state = advanceTransportTicks(routeOwnedClosedLoopStarted(), 6);
+
+    expect(state).toMatchObject({
+      tick: 6,
+      fleet: [
+        {
+          routeLegIndex: 0,
+          completedRouteCycles: 0,
+          movement: {
+            kind: 'running-at-stop',
+            nextEdgeSequence: 3,
+          },
+        },
+      ],
+      vehicleOperations: [
+        {
+          patternRunSequence: 1,
+          stopCallSequence: 4,
+        },
+      ],
+      currentStopCalls: [
+        {
+          patternRunSequence: 1,
+          stopCallSequence: 4,
+          occurrenceIndex: 0,
+          tick: 6,
+        },
+      ],
+    });
+    expect(() =>
+      restoreTransportSimulationState(
+        createTransportSimulationSnapshot(state),
+        state.scenario,
+      ),
+    ).not.toThrow();
+  });
+
+  it('validates parked, early-run, and later-run standalone loop authority', () => {
+    const canonical = closedLoopStarted().scenario;
+    let parked = createTransportSimulationState(canonical, 0);
+    parked = applyTransportVehicleCommand(parked, {
+      kind: 'transport.vehicle.create',
+      vehicleId: 'parked-loop',
+      label: 'Parked loop',
+      patternId: 'closed-loop',
+      movementPlan: {
+        kind: 'vehicle-movement-plan-v1',
+        edgeTravelTicks: [2, 2, 2],
+      },
+    });
+    expect(() =>
+      restoreTransportSimulationState(
+        createTransportSimulationSnapshot(parked),
+        canonical,
+      ),
+    ).not.toThrow();
+
+    const early = advanceTransportTicks(closedLoopStarted(), 1);
+    expect(() =>
+      restoreTransportSimulationState(
+        createTransportSimulationSnapshot(early),
+        canonical,
+      ),
+    ).not.toThrow();
+    const invalidEarlyRunStart = structuredClone(
+      createTransportSimulationSnapshot(early),
+    );
+    invalidEarlyRunStart.state.vehicleOperations[0]!.patternRunStartedAtTick =
+      1;
+    expect(() =>
+      restoreTransportSimulationState(invalidEarlyRunStart, canonical),
+    ).toThrow(/run start/i);
+
+    const laterRunArrival = advanceTransportTicks(closedLoopStarted(), 8);
+    expect(laterRunArrival).toMatchObject({
+      tick: 8,
+      vehicleOperations: [
+        {
+          patternRunSequence: 2,
+          patternRunStartedAtTick: 6,
+          stopCallSequence: 5,
+        },
+      ],
+      currentStopCalls: [
+        {
+          patternRunSequence: 2,
+          occurrenceIndex: 1,
+          tick: 8,
+        },
+      ],
+    });
+    expect(() =>
+      restoreTransportSimulationState(
+        createTransportSimulationSnapshot(laterRunArrival),
+        canonical,
+      ),
+    ).not.toThrow();
+  });
+
   it('round-trips each canonical current-call shape', () => {
     const initial = started();
     const ordinaryArrival = advanceTransportTicks(initial, 1);

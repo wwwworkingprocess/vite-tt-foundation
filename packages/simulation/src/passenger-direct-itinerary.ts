@@ -11,7 +11,7 @@ import {
   type PassengerDemandModelHash,
   type PassengerDemandPlanV1,
 } from './passenger-demand.js';
-import { deepFreeze, lexical } from './authority-utils.js';
+import { checkedMultiply, deepFreeze, lexical } from './authority-utils.js';
 
 export const passengerDirectItineraryPlanSchemaVersion = '1.0.0' as const;
 export const passengerDirectItineraryRoutingPolicy = Object.freeze({
@@ -147,12 +147,11 @@ const pairKey = (origin: string, destination: string) =>
 
 function checkedOrderedPairCount(stopPlaceCount: number): number {
   const otherStopPlaceCount = stopPlaceCount === 0 ? 0 : stopPlaceCount - 1;
-  if (
-    otherStopPlaceCount > 0 &&
-    stopPlaceCount > Math.floor(Number.MAX_SAFE_INTEGER / otherStopPlaceCount)
-  )
-    throw new Error('Itinerary StopPlace pair count exceeds safe arithmetic.');
-  return stopPlaceCount * otherStopPlaceCount;
+  return checkedMultiply(
+    stopPlaceCount,
+    otherStopPlaceCount,
+    'Itinerary StopPlace pair count',
+  );
 }
 
 const scenarioIdentity = (
@@ -196,7 +195,7 @@ const compareCandidate = (
     lexical(left.originStopNodeId, right.originStopNodeId),
     lexical(left.destinationStopNodeId, right.destinationStopNodeId),
   ];
-  return comparisons.find((comparison) => comparison !== 0) ?? 0;
+  return comparisons.find((comparison) => comparison !== 0)!;
 };
 
 function canonicalPlan(

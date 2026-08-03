@@ -563,6 +563,97 @@ describe('deterministic passenger boarding', () => {
     ).toThrow('not canonical');
   });
 
+  it('validates contiguous waiting generations and exact boarding chronology', () => {
+    const first = boardPassengersAtVehicleCalls(
+      input({
+        waitingCohorts: [
+          cohort({ count: 1, firstAssignedTick: 1, lastAssignedTick: 2 }),
+        ] as PassengerBoardingInput['waitingCohorts'],
+        capacities: [createVehiclePassengerCapacity('bus-1', 6)],
+      }),
+    );
+    const second = boardPassengersAtVehicleCalls(
+      input({
+        tick: 7 as PassengerBoardingInput['tick'],
+        waitingCohorts: [
+          cohort({
+            passengerWaitingCohortId: 'passenger-waiting-cohort-2',
+            count: 1,
+            firstAssignedTick: 6,
+            lastAssignedTick: 6,
+          }),
+        ] as PassengerBoardingInput['waitingCohorts'],
+        onboardGroups: first.onboardGroups,
+        nextPassengerOnboardGroupSequence: 2,
+        totalBoardedPassengerCount: 1,
+        capacities: [createVehiclePassengerCapacity('bus-1', 6)],
+        vehicleOperations: [
+          {
+            ...input().vehicleOperations[0]!,
+            stopCallSequence: 5,
+          },
+        ] as PassengerBoardingInput['vehicleOperations'],
+        currentStopCalls: [
+          call({ tick: 7, stopCallSequence: 5 }),
+        ] as PassengerBoardingInput['currentStopCalls'],
+      }),
+    );
+    const authority = {
+      tick: 8 as PassengerBoardingInput['tick'],
+      fleet: [{ vehicleId: 'bus-1' as never, routeId: 'route-a' as never }],
+      capacities: [createVehiclePassengerCapacity('bus-1', 6)],
+      onboardGroups: second.onboardGroups,
+      waitingCohorts: second.waitingCohorts,
+      nextPassengerWaitingCohortSequence: 3,
+      nextPassengerOnboardGroupSequence: 3,
+      totalWaitingForVehiclePassengerCount: 0,
+      totalBoardedPassengerCount: 2,
+      totalOnboardPassengerCount: 2,
+      currentStopCalls: [] as PassengerBoardingInput['currentStopCalls'],
+      currentBoardingEvents: [],
+      vehicleOperations: [
+        {
+          ...input().vehicleOperations[0]!,
+          stopCallSequence: 5,
+        },
+      ] as PassengerBoardingInput['vehicleOperations'],
+      itineraryIsValid: () => true,
+    };
+
+    expect(() => validatePassengerBoardingAuthority(authority)).not.toThrow();
+
+    expect(() =>
+      validatePassengerBoardingAuthority({
+        ...authority,
+        onboardGroups: [authority.onboardGroups[0]!],
+        nextPassengerOnboardGroupSequence: 2,
+        totalBoardedPassengerCount: 1,
+        totalOnboardPassengerCount: 1,
+      }),
+    ).toThrow('Waiting-cohort source sequence is not contiguous');
+
+    expect(() =>
+      validatePassengerBoardingAuthority({
+        ...authority,
+        waitingCohorts: [
+          cohort({ count: 1, firstAssignedTick: 1, lastAssignedTick: 2 }),
+        ] as typeof authority.waitingCohorts,
+        onboardGroups: [authority.onboardGroups[1]!],
+        totalWaitingForVehiclePassengerCount: 1,
+        totalOnboardPassengerCount: 1,
+      }),
+    ).toThrow('Invalid waiting generation chronology');
+
+    const overlapping = structuredClone(authority.onboardGroups);
+    (overlapping[1] as { firstAssignedTick: number }).firstAssignedTick = 5;
+    expect(() =>
+      validatePassengerBoardingAuthority({
+        ...authority,
+        onboardGroups: overlapping,
+      }),
+    ).toThrow('Invalid waiting generation chronology');
+  });
+
   it('rejects malformed calls, over-capacity input, and non-conserved cohort data', () => {
     for (const currentStopCalls of [
       [call({ tick: 4 })],

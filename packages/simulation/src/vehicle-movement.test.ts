@@ -4,10 +4,14 @@ import { describe, expect, it } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
   advanceTransportTicks,
+  advanceVehicleFleet,
   applyTransportVehicleCommand,
+  createTransportSimulationSnapshot,
   createTransportSimulationState,
+  parseTickAdvancement,
   parseVehicleId,
   parseVehicleMovementPlan,
+  restoreTransportSimulationState,
   type TransportSimulationState,
 } from './index.js';
 
@@ -103,6 +107,17 @@ describe('vehicle identity and movement plans', () => {
           4,
         ),
       ).toThrow();
+  });
+
+  it('preserves an explicit passenger capacity on a created vehicle', () => {
+    const state = applyTransportVehicleCommand(
+      createTransportSimulationState(scenario(), 0),
+      { ...createCommand('capacity-bus'), passengerCapacity: 17 },
+    );
+
+    expect(state.vehicleCapacities).toEqual([
+      { vehicleId: 'capacity-bus', passengerCapacity: 17 },
+    ]);
   });
 
   it('creates ordered parked vehicles and starts without consuming a tick', () => {
@@ -353,6 +368,32 @@ describe('deterministic directed-edge movement', () => {
     ).toThrow('not parked');
   });
 
+  it('falls back to exact edge advancement when a loop duration overflows', () => {
+    let state = createTransportSimulationState(loopScenario(), 0);
+    state = applyTransportVehicleCommand(
+      state,
+      createCommand('overflow-loop', [Number.MAX_SAFE_INTEGER, 1]),
+    );
+    state = applyTransportVehicleCommand(state, {
+      kind: 'transport.vehicle.start',
+      vehicleId: 'overflow-loop',
+    });
+
+    expect(advanceTransportTicks(state, 1).fleet[0]?.movement).toMatchObject({
+      kind: 'running-on-edge',
+      edgeSequence: 0,
+      progressTicks: 1,
+      travelTicks: Number.MAX_SAFE_INTEGER,
+    });
+  });
+
+  it('returns the identical fleet for zero direct movement advancement', () => {
+    const state = started();
+    expect(
+      advanceVehicleFleet(state.graph, state.fleet, parseTickAdvancement(0)),
+    ).toBe(state.fleet);
+  });
+
   it('skips complete loop revolutions algebraically for very large batches', () => {
     const canonical = loopScenario();
     let state = createTransportSimulationState(canonical, 0);
@@ -417,6 +458,33 @@ describe('deterministic directed-edge movement', () => {
     expect(advanceTransportTicks(state, 41)).toEqual(
       advanceTransportTicks(advanceTransportTicks(state, 18), 23),
     );
+  });
+
+  it('rejects incomplete route authority and impossible active-edge identity on restore', () => {
+    const parked = applyTransportVehicleCommand(
+      createTransportSimulationState(scenario(), 0),
+      createCommand('restore-parked'),
+    );
+    const incomplete = structuredClone(
+      createTransportSimulationSnapshot(parked),
+    );
+    incomplete.state.fleet[0]!.routeId = 'legacy-A2';
+    expect(() =>
+      restoreTransportSimulationState(incomplete, scenario()),
+    ).toThrow(
+      /Route-cycle assignment must provide routeId, routeLegs, routeLegIndex, and completedRouteCycles together\./,
+    );
+
+    const onEdge = advanceTransportTicks(started('restore-edge'), 1);
+    const invalidEdge = structuredClone(
+      createTransportSimulationSnapshot(onEdge),
+    );
+    if (invalidEdge.state.fleet[0]!.movement.kind !== 'running-on-edge')
+      throw new Error('Expected running-on-edge fixture.');
+    invalidEdge.state.fleet[0]!.movement.edgeId = 'wrong-edge';
+    expect(() =>
+      restoreTransportSimulationState(invalidEdge, scenario()),
+    ).toThrow(/edge movement is invalid/i);
   });
 
   it('preserves parked and completed vehicles during positive global advancement', () => {

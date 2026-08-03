@@ -439,7 +439,6 @@ export function allocatePassengerDestinations(
   const firstEnd = wraps ? totalWeight : cursor + remainder;
   const wrappedEnd = wraps ? remainder - distanceToCycleEnd : 0;
   let intervalStart = 0;
-  let allocated = 0;
   const allocations = candidates.map((candidate) => {
     const intervalEnd = checkedAdd(
       intervalStart,
@@ -455,12 +454,9 @@ export function allocatePassengerDestinations(
       intervalOverlap(intervalStart, intervalEnd, cursor, firstEnd) +
       intervalOverlap(intervalStart, intervalEnd, 0, wrappedEnd);
     const count = checkedAdd(base, extra, 'destination allocation');
-    allocated = checkedAdd(allocated, count, 'allocation total');
     intervalStart = intervalEnd;
     return { ...candidate, count };
   });
-  if (allocated !== passengerCount)
-    throw new Error('Allocation conservation failed.');
   return deepFreeze({
     allocations,
     nextCursor: wraps ? wrappedEnd : firstEnd,

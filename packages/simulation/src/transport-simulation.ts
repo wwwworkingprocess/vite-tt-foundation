@@ -423,7 +423,7 @@ export function applyTransportVehicleCommand(
 ): TransportSimulationState {
   const parsedCommand = parseTransportVehicleCommand(command, state.graph);
   const fleet = applyVehicleCommand(state.graph, state.fleet, command);
-  if (fleet.length === state.fleet.length) {
+  if (parsedCommand.kind === 'transport.vehicle.start') {
     const vehicleOperations = state.vehicleOperations.map((operation, index) =>
       state.fleet[index]!.movement.kind === 'parked-at-stop' &&
       fleet[index]!.movement.kind === 'running-at-stop'
@@ -444,9 +444,7 @@ export function applyTransportVehicleCommand(
     ...state.vehicleCapacities,
     createVehiclePassengerCapacity(
       fleet.at(-1)!.vehicleId,
-      parsedCommand.kind === 'transport.vehicle.start'
-        ? undefined
-        : parsedCommand.passengerCapacity,
+      parsedCommand.passengerCapacity,
     ),
   ];
   const transit =
@@ -643,6 +641,11 @@ export function restoreTransportSimulationState(
     passengerDemandPlan === undefined
       ? undefined
       : parsePassengerDemandPlan(passengerDemandPlan);
+  if (
+    parsedPlan !== undefined &&
+    !scenarioCoordinatesEqual(parsedPlan.scenario, snapshot.scenario)
+  )
+    throw new Error('Passenger demand plan scenario mismatch.');
   const itineraryPlan =
     parsedPlan === undefined
       ? undefined
@@ -670,8 +673,6 @@ export function restoreTransportSimulationState(
   } else {
     if (parsedPlan === undefined)
       throw new Error('Exact passenger demand plan is required.');
-    if (!scenarioCoordinatesEqual(parsedPlan.scenario, snapshot.scenario))
-      throw new Error('Passenger demand plan scenario mismatch.');
     passengerDemand = validatePassengerDemandState(
       parsedPlan,
       itineraryIndex!,

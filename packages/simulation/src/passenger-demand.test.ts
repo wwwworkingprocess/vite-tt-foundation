@@ -5,6 +5,7 @@ import {
 } from '@torrevieja-tycoon/transport-domain';
 import {
   advancePassengerDemandToTick,
+  calculatePassengerAccessTicks,
   createInitialPassengerDemandState,
   createPassengerDemandPlan,
   createDisabledPassengerDemandState,
@@ -443,6 +444,24 @@ describe('deterministic passenger emission and access', () => {
     ).toContainEqual({ cellId: 'r1c0', spawnTick: 1, arrivalTick: 7 });
   });
 
+  it.each([
+    [Number.NaN, 5, 1],
+    [-1, 5, 1],
+    [0, 0, 1],
+    [0, 5, 0],
+  ])(
+    'rejects invalid passenger access timing input (%s, %s, %s)',
+    (distanceSquaredCells, maximumDistanceCells, accessTicksPerCell) => {
+      expect(() =>
+        calculatePassengerAccessTicks(
+          distanceSquaredCells,
+          maximumDistanceCells,
+          accessTicksPerCell,
+        ),
+      ).toThrow('Invalid passenger access timing input.');
+    },
+  );
+
   it('preserves remainders, emits groups by count, and conserves all totals', () => {
     const plan = createPlan();
     const state = advancePassengerDemandToTick(
@@ -578,6 +597,41 @@ describe('deterministic passenger emission and access', () => {
     expect(
       projectPassengerDemand(createDisabledPassengerDemandState()),
     ).toEqual({ status: 'disabled' });
+  });
+
+  it('rejects incomplete destination cursors and non-canonical access-group order', () => {
+    const plan = createPlan();
+    const active = advancePassengerDemandToTick(
+      plan,
+      createItineraryIndex(),
+      createInitialPassengerDemandState(plan, 0),
+      2,
+    );
+
+    const missingCursor = structuredClone(active) as unknown as {
+      destinationCursors: unknown[];
+    };
+    missingCursor.destinationCursors.pop();
+    expect(() =>
+      validatePassengerDemandState(
+        plan,
+        createItineraryIndex(),
+        missingCursor,
+      ),
+    ).toThrow('Invalid destination cursors.');
+
+    expect(active.accessingGroups.length).toBeGreaterThan(1);
+    const nonCanonicalGroups = structuredClone(active) as unknown as {
+      accessingGroups: unknown[];
+    };
+    nonCanonicalGroups.accessingGroups.reverse();
+    expect(() =>
+      validatePassengerDemandState(
+        plan,
+        createItineraryIndex(),
+        nonCanonicalGroups,
+      ),
+    ).toThrow('Accessing passenger group order is non-canonical.');
   });
 
   it('merges bounded directional cohorts and rejects corrupted waiting authority', () => {

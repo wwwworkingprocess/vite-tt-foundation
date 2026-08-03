@@ -178,6 +178,20 @@ describe('deterministic passenger destination allocation', () => {
     ).toThrow();
   });
 
+  it.each([
+    [-1, 0],
+    [0.5, 0],
+    [0, -1],
+    [0, Number.POSITIVE_INFINITY],
+  ])(
+    'rejects invalid allocation coordinates (%s, %s)',
+    (cursor, passengerCount) => {
+      expect(() =>
+        allocatePassengerDestinations([], cursor, passengerCount),
+      ).toThrow('Invalid allocation.');
+    },
+  );
+
   it('wraps a maximum-safe weighted cycle without unsafe cursor addition', () => {
     const maximum = Number.MAX_SAFE_INTEGER;
     const passengerCount = maximum - 2;

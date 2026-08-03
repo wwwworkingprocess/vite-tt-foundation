@@ -9,6 +9,7 @@ import {
   createTransportSimulationSnapshot,
   createTransportSimulationState,
   parsePassengerDemandPlan,
+  parseSimulationTick,
   parseTransportSimulationSnapshot,
   restoreTransportSimulationState,
   validatePassengerJourneyRunAndCallIdentity,
@@ -680,6 +681,33 @@ describe('Transport Snapshot V9', () => {
     ).toEqual(snapshot);
   });
 
+  it('preserves only current-tick alighting events across vehicle creation', () => {
+    const { alighted } = destinationAccessStates();
+    const current = alighted.currentAlightingEvents;
+    const withStaleEvent = {
+      ...alighted,
+      currentAlightingEvents: [
+        ...current,
+        {
+          ...current[0]!,
+          tick: parseSimulationTick(alighted.tick - 1),
+        },
+      ],
+    };
+    const next = applyTransportVehicleCommand(withStaleEvent, {
+      kind: 'transport.vehicle.create',
+      vehicleId: 'event-preservation-bus',
+      label: 'Event preservation bus',
+      patternId: 'legacy-A2-torrevieja-la-mata',
+      movementPlan: {
+        kind: 'vehicle-movement-plan-v1',
+        edgeTravelTicks: [1, 1, 1, 1],
+      },
+    });
+
+    expect(next.currentAlightingEvents).toEqual(current);
+  });
+
   it('rejects passenger events while passenger authority is disabled', () => {
     const canonical = scenario();
     const disabled = createTransportSimulationSnapshot(
@@ -1329,7 +1357,7 @@ describe('Transport Snapshot V9', () => {
     wrongPlan.scenario.scenarioId = 'wrong-scenario';
     expect(() =>
       restoreTransportSimulationState(snapshot, canonical, wrongPlan),
-    ).toThrow();
+    ).toThrow('Passenger demand plan scenario mismatch.');
     expect(() =>
       createTransportSimulationState(canonical, 0, wrongPlan),
     ).toThrow('scenario-id-mismatch');

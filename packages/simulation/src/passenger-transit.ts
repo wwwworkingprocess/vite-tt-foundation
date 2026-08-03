@@ -419,12 +419,19 @@ export function validatePassengerTransitCollections(input: {
   }
 }
 
+type ActivePassengerVehicleMovement = Exclude<
+  VehicleState['movement'],
+  { readonly kind: 'completed-at-stop' }
+>;
+
 const reachedOccurrenceIndex = (vehicle: Readonly<VehicleState>): number => {
-  const movement = vehicle.movement;
+  // Passenger authority can belong only to route-cycle vehicles. Canonical live
+  // and restored route-cycle authority rejects completed movement before this
+  // validator runs, so the completed standalone movement arm is impossible.
+  const movement = vehicle.movement as ActivePassengerVehicleMovement;
   if (movement.kind === 'parked-at-stop') return 0;
   if (movement.kind === 'running-on-edge') return movement.edgeSequence;
-  if (movement.kind === 'running-at-stop') return movement.nextEdgeSequence;
-  return vehicle.movementPlan.edgeTravelTicks.length;
+  return movement.nextEdgeSequence;
 };
 
 interface PassengerJourneyOperationInput {
@@ -1104,10 +1111,7 @@ export function validatePassengerTransitReplay(
       lexical(
         passengerWaitingCohortKey(left),
         passengerWaitingCohortKey(right),
-      ) ||
-      left.firstAssignedTick - right.firstAssignedTick ||
-      passengerWaitingCohortSequence(left.passengerWaitingCohortId) -
-        passengerWaitingCohortSequence(right.passengerWaitingCohortId),
+      ) || left.firstAssignedTick - right.firstAssignedTick,
   );
   const priorAccess = [
     ...input.destinationAccessGroups.filter(

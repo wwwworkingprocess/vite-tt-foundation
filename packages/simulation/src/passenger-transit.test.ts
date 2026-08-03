@@ -6,6 +6,7 @@ import {
   createVehiclePassengerCapacity,
   processPassengerTransitAtVehicleCalls,
   parseWaitingGenerationLineageWatermarks,
+  validatePassengerJourneyRunAndCallIdentity,
   validatePassengerTransitCollections,
   validatePassengerTransitReplay,
   type PassengerTransitInput,
@@ -478,6 +479,14 @@ describe('deterministic passenger alighting and destination access', () => {
       corrupt(value);
       expect(() => validatePassengerTransitCollections(value)).toThrow();
     }
+
+    expect(() =>
+      validatePassengerTransitCollections({
+        ...input(),
+        waitingGenerationLineageWatermarks: [],
+        nextPassengerWaitingCohortSequence: 1,
+      }),
+    ).toThrow('Missing waiting-generation lineage watermark');
   });
 
   it('rejects non-current calls, invalid itineraries, and invalid cells', () => {
@@ -646,6 +655,7 @@ describe('deterministic passenger alighting and destination access', () => {
         onboardGroups: [],
         destinationAccessGroups: [second, first],
         nextPassengerWaitingCohortSequence: 2,
+        nextPassengerOnboardGroupSequence: 3,
         nextPassengerDestinationAccessGroupSequence: 3,
       }),
     ).toThrow('destination-access authority');
@@ -697,27 +707,165 @@ describe('deterministic passenger alighting and destination access', () => {
     ).toThrow('underflow');
   });
 
+  it('rejects missing vehicle ownership, overdue progress, and malformed active onboard authority', () => {
+    const movementPlan = {
+      kind: 'vehicle-movement-plan-v1',
+      edgeTravelTicks: [1, 1],
+    } as const;
+    const graph = {
+      pattern: (patternId: string) =>
+        patternId === 'pattern-a'
+          ? {
+              patternId: 'pattern-a',
+              stopNodeIds: [
+                'node-origin',
+                'node-middle',
+                'node-destination',
+              ],
+              closesLoop: false,
+            }
+          : undefined,
+    } as never;
+    const vehicle = {
+      vehicleId: 'bus-1',
+      label: 'Bus 1',
+      patternId: 'pattern-a',
+      movementPlan,
+      movement: {
+        kind: 'running-at-stop',
+        stopNodeId: 'node-origin',
+        nextEdgeSequence: 0,
+      },
+      routeId: 'route-a',
+      routeLegs: [{ patternId: 'pattern-a', movementPlan }],
+      routeLegIndex: 0,
+      completedRouteCycles: 0,
+    };
+    const operation = {
+      vehicleId: 'bus-1',
+      patternRunSequence: 1,
+      patternRunStartedAtTick: 0,
+      movementStartedAtTick: 0,
+      stopCallSequence: 1,
+    };
+    const group = onboard({ boardedAtStopCallSequence: 1 });
+    const authority = {
+      graph,
+      fleet: [vehicle],
+      vehicleOperations: [operation],
+      currentStopCalls: [],
+      onboardGroups: [group],
+      destinationAccessGroups: [],
+      currentJourneyCompletionEvents: [],
+    };
+
+    expect(() =>
+      validatePassengerJourneyRunAndCallIdentity(authority as never),
+    ).not.toThrow();
+    expect(() =>
+      validatePassengerJourneyRunAndCallIdentity({
+        ...authority,
+        fleet: [],
+      } as never),
+    ).toThrow('Invalid or overdue onboard passenger pattern-run authority');
+    expect(() =>
+      validatePassengerJourneyRunAndCallIdentity({
+        ...authority,
+        vehicleOperations: [],
+      } as never),
+    ).toThrow('Invalid or overdue onboard passenger pattern-run authority');
+    expect(() =>
+      validatePassengerJourneyRunAndCallIdentity({
+        ...authority,
+        fleet: [
+          {
+            ...vehicle,
+            movement: {
+              kind: 'running-at-stop',
+              stopNodeId: 'node-destination',
+              nextEdgeSequence: 2,
+            },
+          },
+        ],
+        vehicleOperations: [{ ...operation, stopCallSequence: 3 }],
+      } as never),
+    ).toThrow('Invalid or overdue onboard passenger pattern-run authority');
+
+    const alighted =
+      processPassengerTransitAtVehicleCalls(input()).destinationAccessGroups[0]!;
+    const atDestination = {
+      ...vehicle,
+      movement: {
+        kind: 'running-at-stop',
+        stopNodeId: 'node-destination',
+        nextEdgeSequence: 2,
+      },
+    };
+    expect(() =>
+      validatePassengerJourneyRunAndCallIdentity({
+        ...authority,
+        fleet: [atDestination],
+        vehicleOperations: [{ ...operation, stopCallSequence: 3 }],
+        onboardGroups: [],
+        destinationAccessGroups: [alighted],
+      } as never),
+    ).not.toThrow();
+    expect(() =>
+      validatePassengerJourneyRunAndCallIdentity({
+        ...authority,
+        onboardGroups: [],
+        destinationAccessGroups: [alighted],
+      } as never),
+    ).toThrow('Invalid passenger alighting run/call authority');
+
+    expect(() =>
+      validatePassengerTransitReplay({
+        ...input(),
+        onboardGroups: [onboard({ boardedAtTick: 8 })] as never,
+        currentAlightingEvents: [],
+        currentBoardingEvents: [],
+        currentJourneyCompletionEvents: [],
+      }),
+    ).toThrow('Invalid active onboard passenger authority');
+  });
+
   it('retains unrelated onboard groups while alighting and sorts same-vehicle calls', () => {
-    const future = onboard({
+    const sameVehicle = onboard({
       passengerOnboardGroupId: 'passenger-onboard-group-2',
+      alightAtPatternRunSequence: 2,
+      count: 1,
+    });
+    const otherVehicle = onboard({
+      passengerOnboardGroupId: 'passenger-onboard-group-3',
+      vehicleId: 'bus-2',
       alightAtPatternRunSequence: 2,
       count: 1,
     });
     const result = processPassengerTransitAtVehicleCalls(
       input({
-        onboardGroups: [onboard({ count: 5 }), future] as never,
-        nextPassengerOnboardGroupSequence: 3,
+        onboardGroups: [
+          onboard({ count: 4 }),
+          sameVehicle,
+          otherVehicle,
+        ] as never,
+        nextPassengerOnboardGroupSequence: 4,
+        capacities: [
+          createVehiclePassengerCapacity('bus-1', 6),
+          createVehiclePassengerCapacity('bus-2', 6),
+        ],
+        vehicleOperations: [
+          input().vehicleOperations[0]!,
+          { ...input().vehicleOperations[0]!, vehicleId: 'bus-2' as never },
+        ] as never,
         currentStopCalls: [
           call({ routeId: null, stopCallSequence: 4 }),
           call({ stopCallSequence: 3 }),
         ] as never,
       }),
     );
-    expect(result.onboardGroups).toEqual([
-      expect.objectContaining({
-        passengerOnboardGroupId: 'passenger-onboard-group-2',
-      }),
-    ]);
+    expect(
+      result.onboardGroups.map((group) => group.passengerOnboardGroupId),
+    ).toEqual(['passenger-onboard-group-2', 'passenger-onboard-group-3']);
     expect(
       result.currentAlightingEvents[0]?.onboardPassengerCountAfterAlighting,
     ).toBe(1);

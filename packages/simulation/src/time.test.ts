@@ -39,6 +39,12 @@ describe('simulation time', () => {
     expect(deriveGameTime(parseSimulationTick(value))).toEqual(expected);
   });
 
+  it('rejects an unparsed tick that cannot map to a canonical game second', () => {
+    expect(() => deriveGameTime(0.5 as never)).toThrow(
+      /five-second tick boundary/i,
+    );
+  });
+
   it('maps ticks and aligned UTC instants exactly in both directions', () => {
     const genesis = parseGenesisUtcMs(1_767_225_600_000);
     for (const value of [0, 1, 720, 17_280, 51_847]) {

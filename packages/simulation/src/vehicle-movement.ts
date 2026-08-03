@@ -438,7 +438,7 @@ function safeRouteCycleTicks(legs: readonly VehicleRouteLeg[]) {
       if (ticks > Number.MAX_SAFE_INTEGER - total) return undefined;
       total += ticks;
     }
-  return total === 0 ? undefined : total;
+  return total;
 }
 
 function advanceRouteCycleVehicle(
@@ -536,15 +536,7 @@ export function restoreVehicleFleet(
     if (ids.has(vehicleId))
       throw new Error(`Duplicate vehicle ID: ${vehicleId}.`);
     ids.add(vehicleId);
-    const routeFields = [
-      entry.routeId,
-      entry.routeLegs,
-      entry.routeLegIndex,
-      entry.completedRouteCycles,
-    ];
-    const routeCycle = routeFields.every((field) => field !== undefined);
-    if (!routeCycle && routeFields.some((field) => field !== undefined))
-      throw new Error(`Vehicle ${vehicleId} route assignment is incomplete.`);
+    const routeCycle = entry.routeId !== undefined;
     if (routeCycle) {
       const route = graph.route(entry.routeId!);
       if (

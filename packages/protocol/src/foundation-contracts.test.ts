@@ -9,6 +9,7 @@ import {
   parseFoundationRejectedCommandResult,
   parseFoundationRenderSnapshot,
   parseFoundationStateUpdate,
+  parseFoundationSnapshotExport,
   parseFoundationSynchronizationRequest,
   parseFoundationSynchronizationResponse,
   parseGameId,
@@ -111,6 +112,33 @@ describe('foundation protocol contracts', () => {
         message: 'conflict',
       }),
     ).toMatchObject({ code: 'command-id-conflict' });
+  });
+
+  it('validates a structured-clone-safe snapshot export coordinate', () => {
+    const snapshotExport = {
+      kind: 'foundation-snapshot-export',
+      gameId: 'game-1',
+      timelineId: 'timeline-1',
+      commandRevision: 3,
+      simulationTick: 7,
+      streamOffset: 4,
+      snapshot: {
+        kind: 'foundation-simulation-snapshot',
+        schemaVersion: 1,
+        simulationVersion: 'foundation-1',
+        state: { tick: 7 },
+      },
+    };
+
+    expect(
+      parseFoundationSnapshotExport(structuredClone(snapshotExport)),
+    ).toEqual(snapshotExport);
+    expect(() =>
+      parseFoundationSnapshotExport({
+        ...snapshotExport,
+        streamOffset: -1,
+      }),
+    ).toThrow();
   });
 
   it('validates synchronization requests', () => {

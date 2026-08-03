@@ -8,6 +8,7 @@ import {
   parseScenarioCatalog,
   parseScenarioManifest,
   parseScenarioPackage,
+  type CanonicalScenario,
 } from './index.js';
 
 const fixture = (name: string) =>
@@ -40,6 +41,46 @@ describe('scenario parsing and directed graph', () => {
       expect(parseScenarioManifest(manifest).status).toBe(status);
     },
   );
+
+  it('classifies a non-object catalogue as malformed', () => {
+    try {
+      parseScenarioCatalog(null);
+      throw new Error('expected failure');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ScenarioDomainError);
+      expect((error as ScenarioDomainError).code).toBe('malformed-catalogue');
+    }
+  });
+
+  it('accepts exact catalogue primary-settlement and manifest parity', () => {
+    const manifest = parseScenarioManifest(fixture('scenario.json'));
+    const catalogue = parseScenarioCatalog({
+      schemaVersion: '1.0.0',
+      catalogId: 'fixtures',
+      scenarios: [
+        {
+          scenarioId: manifest.scenarioId,
+          scenarioVersion: manifest.scenarioVersion,
+          title: manifest.title,
+          primarySettlementId: manifest.primarySettlementId,
+          settlementIds: [...manifest.settlementIds],
+          manifestPath: 'torrevieja-mini-v1/scenario.json',
+          status: manifest.status,
+          contentHash: manifest.contentHash,
+        },
+      ],
+    });
+
+    expect(catalogue.scenarios[0]!.primarySettlementId).toBe(
+      manifest.primarySettlementId,
+    );
+    expect(() =>
+      assertScenarioDescriptorMatchesManifest(
+        catalogue.scenarios[0]!,
+        manifest,
+      ),
+    ).not.toThrow();
+  });
 
   it('rejects unsupported status in catalogue, manifest, and direct package parsing', () => {
     const manifest = fixture('scenario.json') as { status: string };
@@ -242,6 +283,21 @@ describe('scenario parsing and directed graph', () => {
     }
   });
 
+  it('classifies a non-string manifest asset path as malformed', () => {
+    const manifest = fixture('scenario.json') as {
+      assets: { presentation: { path: unknown } };
+    };
+    manifest.assets.presentation.path = 42;
+
+    try {
+      parseScenarioManifest(manifest);
+      throw new Error('expected failure');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ScenarioDomainError);
+      expect((error as ScenarioDomainError).code).toBe('malformed-manifest');
+    }
+  });
+
   it('reports a typed unsafe catalogue manifest path', () => {
     const catalog = {
       schemaVersion: '1.0.0',
@@ -327,6 +383,35 @@ describe('scenario parsing and directed graph', () => {
     const file = input.settlements as { settlements: MutableSettlement[] };
     mutate(file.settlements[0]!);
     expect(() => parseScenarioPackage(input)).toThrow(/invalid-coordinate/);
+  });
+
+  it('accepts exact settlement order and rejects the same identities reordered', () => {
+    const withTwoSettlements = () => {
+      const input = mini();
+      const manifest = input.manifest as { settlementIds: string[] };
+      const file = input.settlements as { settlements: MutableSettlement[] };
+      const second = structuredClone(file.settlements[0]!);
+      second.settlementId = 'es-la-mata';
+      manifest.settlementIds.push(second.settlementId);
+      file.settlements.push(second);
+      return input;
+    };
+
+    const exact = withTwoSettlements();
+    expect(
+      parseScenarioPackage(exact).settlements.settlements.map(
+        ({ settlementId }) => settlementId,
+      ),
+    ).toEqual(['es-torrevieja', 'es-la-mata']);
+
+    const reordered = withTwoSettlements();
+    const file = reordered.settlements as {
+      settlements: MutableSettlement[];
+    };
+    file.settlements.reverse();
+    expect(() => parseScenarioPackage(reordered)).toThrow(
+      /settlement file does not exactly match manifest settlementIds/,
+    );
   });
 
   it('requires exact ordered manifest settlement identity without hidden extras', () => {
@@ -420,6 +505,63 @@ describe('scenario parsing and directed graph', () => {
         presentation: { schemaVersion: '1.0.0', scenarioId: 3 },
       }),
     ).toThrow(/malformed-asset/);
+  });
+
+  it('rejects a manifest whose primary settlement is not declared', () => {
+    const manifest = fixture('scenario.json') as {
+      primarySettlementId: string;
+    };
+    manifest.primarySettlementId = 'missing';
+
+    expect(() => parseScenarioManifest(manifest)).toThrow(
+      /unresolved-reference: manifest primary settlement missing/,
+    );
+  });
+
+  it('rejects stop places owned by an undeclared settlement', () => {
+    const input = mini();
+    const stops = input.stops as {
+      stopPlaces: unknown[];
+    };
+    stops.stopPlaces.push({
+      stopPlaceId: 'foreign-place',
+      settlementId: 'missing',
+      name: 'Foreign place',
+      position: { latitude: 37.98, longitude: -0.68 },
+    });
+
+    expect(() => parseScenarioPackage(input)).toThrow(
+      /unresolved-reference: stop place settlement missing/,
+    );
+  });
+
+  it('rejects optional metadata owned by another scenario', () => {
+    const input = mini();
+    input.presentation = {
+      ...(input.presentation as object),
+      scenarioId: 'other-scenario',
+    };
+
+    expect(() => parseScenarioPackage(input)).toThrow(
+      /unresolved-reference: presentation scenarioId other-scenario/,
+    );
+  });
+
+  it('rejects duplicate graph edges from a forged canonical scenario', () => {
+    const scenario = structuredClone(
+      parseScenarioPackage(mini()),
+    ) as unknown as {
+      routes: {
+        routes: Array<{ patterns: unknown[] }>;
+      };
+    };
+    scenario.routes.routes[0]!.patterns.push(
+      scenario.routes.routes[0]!.patterns[0],
+    );
+
+    expect(() =>
+      buildDirectedScenarioGraph(scenario as unknown as CanonicalScenario),
+    ).toThrow(/graph-construction-invariant: duplicate edge/);
   });
 
   it('rejects a missing required manifest asset declaration', () => {

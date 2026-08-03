@@ -243,7 +243,7 @@ const parse = <T>(
   if (!result.success)
     throw new ScenarioDomainError(
       code,
-      `${context}: ${result.error.issues[0]?.message ?? 'invalid value'}`,
+      `${context}: ${result.error.issues[0]!.message}`,
     );
   return result.data;
 };
@@ -355,14 +355,6 @@ export function parseScenarioManifest(value: unknown): ScenarioManifest {
         'malformed-manifest',
         `missing required asset ${required}`,
       );
-  for (const [name, entry] of Object.entries(parsed.assets)) {
-    const checked = safePath.safeParse(entry.path);
-    if (!checked.success)
-      throw new ScenarioDomainError(
-        'unsafe-asset-path',
-        `${name}: ${entry.path}`,
-      );
-  }
   return deepFreeze(parsed);
 }
 
@@ -474,12 +466,6 @@ export function parseScenarioPackage(value: {
         `settlement ${settlement.settlementId} bounds`,
       );
   }
-  for (const expected of manifest.settlementIds)
-    if (!settlementIds.has(expected))
-      throw new ScenarioDomainError(
-        'unresolved-reference',
-        `settlement ${expected}`,
-      );
   assertUnique(
     stops.stopPlaces.map((item) => item.stopPlaceId),
     'stop place',

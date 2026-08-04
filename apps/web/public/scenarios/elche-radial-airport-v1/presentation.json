@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-airport-v1",
+  "title": "Elche Radial Airport Network - Lines R10 and R11",
+  "initialView": {
+    "center": {
+      "latitude": 38.26959235196395,
+      "longitude": -0.6164590184253075
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "elche-R10": {
+      "label": "R10",
+      "color": "#d65f21"
+    },
+    "elche-R11": {
+      "label": "R11",
+      "color": "#7b4d92"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "This component contains the airport, Torrellano and Parque Empresarial radial services R10 and R11."
+  ]
+}

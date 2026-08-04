@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-crosscity-v1",
+  "settlements": [
+    {
+      "settlementId": "es-elche",
+      "name": "Elche",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.266674079057,
+        "longitude": -0.6942421936780565
+      },
+      "bounds": {
+        "south": 38.253518596083,
+        "west": -0.720272774839553,
+        "north": 38.279829562031004,
+        "east": -0.66821161251656
+      }
+    }
+  ]
+}

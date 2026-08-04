@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-east-v1",
+  "settlements": [
+    {
+      "settlementId": "es-elche",
+      "name": "Elche",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.2696498915925,
+        "longitude": -0.6879970178184764
+      },
+      "bounds": {
+        "south": 38.25787,
+        "west": -0.7133306,
+        "north": 38.281429783185004,
+        "east": -0.662663435636953
+      }
+    }
+  ]
+}

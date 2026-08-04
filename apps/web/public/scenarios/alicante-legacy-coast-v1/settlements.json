@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-coast-v1",
+  "settlements": [
+    {
+      "settlementId": "es-alicante",
+      "name": "Alicante",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.3644541675,
+        "longitude": -0.4532455277777778
+      },
+      "bounds": {
+        "south": 38.342115635,
+        "west": -0.4946805555555556,
+        "north": 38.3867927,
+        "east": -0.4118105
+      }
+    }
+  ]
+}

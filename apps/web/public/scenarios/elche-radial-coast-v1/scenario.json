@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-coast-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Radial Coast Network - Lines R9 and R12",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "8a40a2490bb81ff4c65c043dffac76db633ea0834696e822edf79552ef623c52",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "395e0d63737559e66062c0ffb430ed4b72e9b9093b715305b23dace5acf4b8bc"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "ce526c77e358f859f328305663eeffe45e4d54dd8cc559b509b290daa44b9688"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "c88ac4903de0a3c3b789216293237817052941a8e9a93cb911b3b92bfe0dd338"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "6db507daec09c992795975e2668a2bb1f10cc1e1033162664997ad71bd3dedad"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "30e5ab4571d8a9fae343d81219055b7769c4bda98d4d01b1491b7e38da400d26"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

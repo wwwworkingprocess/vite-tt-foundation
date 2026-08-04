@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-vinalopo-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Legacy Vinalopó Network - Lines G and I",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "9c73c7474aeb1fd7e72a6b8632f90ad27a11532ad1aff3b07644802a47b8b2d8",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "c2677db784ffcf15bd46a2f88bf0dbedae350385d60d10026df0698db2df348e"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "6ffa4ed61f8d1eaf34e6cb5d569d91a5002a39d0ec2e5007a584bfa8ab17ebd6"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "3d672155cfec08bdda843fb1727ef99a5a2745c82bd979a8cc6f65567d5abf6d"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "13c3fe7236bee0beb805cf82107775bfb8c3bf16e4f009985abe33d7fe376767"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "2b037206dacef5261f525fd444b6977e09d0f4dab5c173550a5c3d1e4a3a0562"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

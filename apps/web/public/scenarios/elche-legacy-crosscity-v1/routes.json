@@ -1,0 +1,200 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-crosscity-v1",
+  "routes": [
+    {
+      "routeId": "elche-K1",
+      "publicCode": "K1",
+      "name": "Circular interior - Sant Antoni - Hospitals",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-K1-cycle",
+          "directionLabel": "Hospital Vinalopó / Sant Antoni / Hospital General",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 40
+          },
+          "stopNodeIds": [
+            "elche-stop-293",
+            "elche-stop-294",
+            "elche-stop-164",
+            "elche-stop-130",
+            "elche-stop-305",
+            "elche-stop-312",
+            "elche-stop-306",
+            "elche-stop-088",
+            "elche-stop-313",
+            "elche-stop-089",
+            "elche-stop-090",
+            "elche-stop-091",
+            "elche-stop-092",
+            "elche-stop-314",
+            "elche-stop-315",
+            "elche-stop-316",
+            "elche-stop-317",
+            "elche-stop-318",
+            "elche-stop-319",
+            "elche-stop-058",
+            "elche-stop-059",
+            "elche-stop-237",
+            "elche-stop-108",
+            "elche-stop-196",
+            "elche-stop-099",
+            "elche-stop-267",
+            "elche-stop-109",
+            "elche-stop-026",
+            "elche-stop-027",
+            "elche-stop-025",
+            "elche-stop-028",
+            "elche-stop-029",
+            "elche-stop-030",
+            "elche-stop-031",
+            "elche-stop-032",
+            "elche-stop-033",
+            "elche-stop-034",
+            "elche-stop-128",
+            "elche-stop-309",
+            "elche-stop-303"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "K1",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-k1"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "K1",
+          "sourceFile": "https://alibus.es/lines/elche/linea-k1.html"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-K2",
+      "publicCode": "K2",
+      "name": "Circular exterior - Hospitals - Sant Antoni",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-K2-cycle",
+          "directionLabel": "Hospital Vinalopó / Hospital General / Sant Antoni",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 38
+          },
+          "stopNodeIds": [
+            "elche-stop-293",
+            "elche-stop-294",
+            "elche-stop-309",
+            "elche-stop-252",
+            "elche-stop-253",
+            "elche-stop-050",
+            "elche-stop-051",
+            "elche-stop-052",
+            "elche-stop-053",
+            "elche-stop-054",
+            "elche-stop-055",
+            "elche-stop-026",
+            "elche-stop-027",
+            "elche-stop-072",
+            "elche-stop-165",
+            "elche-stop-106",
+            "elche-stop-162",
+            "elche-stop-107",
+            "elche-stop-227",
+            "elche-stop-229",
+            "elche-stop-242",
+            "elche-stop-142",
+            "elche-stop-266",
+            "elche-stop-143",
+            "elche-stop-320",
+            "elche-stop-296",
+            "elche-stop-321",
+            "elche-stop-236",
+            "elche-stop-080",
+            "elche-stop-081",
+            "elche-stop-322",
+            "elche-stop-323",
+            "elche-stop-324",
+            "elche-stop-177",
+            "elche-stop-212",
+            "elche-stop-163",
+            "elche-stop-164",
+            "elche-stop-292"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "K2",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-k2"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "K2",
+          "sourceFile": "https://alibus.es/lines/elche/linea-k2.html"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-L",
+      "publicCode": "L",
+      "name": "Carrús - Toscar - Hospital Vinalopó",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-L-cycle",
+          "directionLabel": "Hospital Vinalopó / Carrús / Toscar",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "elche-stop-293",
+            "elche-stop-294",
+            "elche-stop-130",
+            "elche-stop-305",
+            "elche-stop-312",
+            "elche-stop-306",
+            "elche-stop-088",
+            "elche-stop-313",
+            "elche-stop-150",
+            "elche-stop-151",
+            "elche-stop-086",
+            "elche-stop-062",
+            "elche-stop-307",
+            "elche-stop-207",
+            "elche-stop-042",
+            "elche-stop-206",
+            "elche-stop-209",
+            "elche-stop-224",
+            "elche-stop-021",
+            "elche-stop-212",
+            "elche-stop-163",
+            "elche-stop-164",
+            "elche-stop-292"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "L",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-l"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "L",
+          "sourceFile": "https://alibus.es/lines/elche/linea-l.html"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-periphery-v1",
+  "generatedAt": "2026-08-02T17:25:00+02:00",
+  "sources": [
+    {
+      "sourceId": "alicante-legacy-network-map",
+      "name": "Supplied Alicante legacy urban network map",
+      "sourceFile": "bus-alicante-lines-1024x910-949355444.webp",
+      "role": "Defines the target legacy urban route family, public route codes and broad corridors."
+    },
+    {
+      "sourceId": "alibus-line-07-current",
+      "name": "AliBus Alicante line 07 ordered stop lists",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/alicante/07/",
+      "role": "Ordered Ida and Vuelta occurrences, operator stop codes and stop-detail map coordinates."
+    },
+    {
+      "sourceId": "alibus-line-27-current",
+      "name": "AliBus Alicante line 27 ordered stop lists",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/alicante/27/",
+      "role": "Current direct 27A sequence, operator stop codes and stop-detail map coordinates."
+    },
+    {
+      "sourceId": "vectalia-line-27-variant-diagrams",
+      "name": "Vectalia line 27 Ida/Vuelta variant diagrams supplied by the user",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "user-supplied-line-27-variant-diagram",
+      "role": "Authoritative visible evidence for separate 27A direct, 27B Polígono Agua Amarga and 27C EUIPO/Ciudad de la Luz/Polígono Agua Amarga patterns in both directions."
+    },
+    {
+      "sourceId": "mitrams-nap-alicante-gtfs",
+      "name": "Spanish National Access Point - Autobuses urbanos de Alicante",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://nap.transportes.gob.es/Files/Detail/1392",
+      "role": "Official current-network cross-check. Powered by MITRAMS."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "alicante-accepted-identity-reuse-v1",
+      "description": "Copies complete accepted Alicante StopNode and StopPlace objects exactly when numeric operator stop codes already exist."
+    },
+    {
+      "transformationId": "alicante-operator-stop-code-identity-v1",
+      "description": "Uses each published numeric operator code as the stable suffix and creates one singleton StopPlace for every new code."
+    },
+    {
+      "transformationId": "alicante-line-27-variant-projection-v1",
+      "description": "Projects the six visible 27A, 27B and 27C directional diagrams as six independent open patterns under route 27. No branch is concatenated and no reverse sequence is inferred."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Appends exactly one catalog descriptor and recomputes all hashes from serialized bytes."
+    }
+  ],
+  "warnings": [
+    "The supplied legacy map defines route-family scope, while ordered stops and coordinates are current 2026 captures. This package does not claim a frozen historical timetable snapshot.",
+    "The supplied line 27 diagram materially changes topology modelling: 27A, 27B and 27C are separate patterns, not one ida/vuelta pair and not one concatenated itinerary.",
+    "Variant-only line 27 stops retained from the diagrams may no longer be associated with the current public line page, but their operator-code stop records and coordinates remain available.",
+    "Different numeric codes remain separate StopNodes and singleton StopPlaces even when names match or stops lie close together.",
+    "Accepted Alicante objects are retained complete-object exact even when current source labels differ.",
+    "StopNode.sourceReferences is empty because no genuine OpenStreetMap platform or stop_position evidence was used.",
+    "Powered by MITRAMS. Official NAP data attribution: https://www.transportes.gob.es/"
+  ]
+}

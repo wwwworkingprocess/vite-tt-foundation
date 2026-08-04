@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-legacy-all-v1",
+  "title": "Elche Radial Legacy Network - All Lines R1-R12",
+  "initialView": {
+    "center": {
+      "latitude": 38.219086971826,
+      "longitude": -0.6417538808730454
+    },
+    "zoom": 9
+  },
+  "routeStyles": {
+    "elche-R1": {
+      "label": "R1",
+      "color": "#f0b400"
+    },
+    "elche-R2": {
+      "label": "R2",
+      "color": "#d49400"
+    },
+    "elche-R3": {
+      "label": "R3",
+      "color": "#b87800"
+    },
+    "elche-R4": {
+      "label": "R4",
+      "color": "#d32f2f"
+    },
+    "elche-R5": {
+      "label": "R5",
+      "color": "#d6b400"
+    },
+    "elche-R6": {
+      "label": "R6",
+      "color": "#5b7f29"
+    },
+    "elche-R7": {
+      "label": "R7",
+      "color": "#3f7f44"
+    },
+    "elche-R8": {
+      "label": "R8",
+      "color": "#2878a5"
+    },
+    "elche-R9": {
+      "label": "R9",
+      "color": "#c62828"
+    },
+    "elche-R10": {
+      "label": "R10",
+      "color": "#d65f21"
+    },
+    "elche-R11": {
+      "label": "R11",
+      "color": "#7b4d92"
+    },
+    "elche-R12": {
+      "label": "R12",
+      "color": "#7b4d92"
+    }
+  },
+  "notes": [
+    "Merged accepted Elche radial components in numerical route order R1 through R12.",
+    "This scenario intentionally excludes urban/non-radial lines A-L and NT, seasonal beach services P1-P3, and special nocturnal N/NP services.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-north-v1",
+  "generatedAt": "2026-08-02T16:55:00+02:00",
+  "sources": [
+    {
+      "sourceId": "alicante-legacy-network-map",
+      "name": "Supplied Alicante legacy urban network map",
+      "sourceFile": "bus-alicante-lines-1024x910-949355444.webp",
+      "role": "Defines the target legacy urban route family, public route codes and broad corridors."
+    },
+    {
+      "sourceId": "alibus-line-08-current",
+      "name": "AliBus Alicante line 08 ordered stop lists",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/alicante/08/",
+      "role": "Ordered Ida and Vuelta stop occurrences, operator stop codes and stop-detail map coordinates."
+    },
+    {
+      "sourceId": "alibus-line-11-current",
+      "name": "AliBus Alicante line 11 ordered stop lists",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/alicante/11/",
+      "role": "Ordered Ida and Vuelta stop occurrences, operator stop codes and stop-detail map coordinates."
+    },
+    {
+      "sourceId": "alibus-line-11h-current",
+      "name": "AliBus Alicante line 11H ordered stop lists",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/alicante/11h/",
+      "role": "Ordered Ida and Vuelta stop occurrences, operator stop codes and stop-detail map coordinates."
+    },
+    {
+      "sourceId": "alibus-line-13-current",
+      "name": "AliBus Alicante line 13 ordered stop lists",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/alicante/13/",
+      "role": "Ordered Ida and Vuelta stop occurrences, operator stop codes and stop-detail map coordinates."
+    },
+    {
+      "sourceId": "hospital-sant-joan-official-address",
+      "name": "Hospital Universitario Sant Joan d'Alacant official contact page",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://sanjuan.san.gva.es/",
+      "role": "Confirms that the route terminal is located in Sant Joan d'Alacant, supporting a separate settlement assignment for stop 4912."
+    },
+    {
+      "sourceId": "mitrams-nap-alicante-gtfs",
+      "name": "Spanish National Access Point - Autobuses urbanos de Alicante",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://nap.transportes.gob.es/Files/Detail/1392",
+      "role": "Official current-network cross-check for operator, route and stop inventory. Powered by MITRAMS."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "alicante-accepted-identity-reuse-v1",
+      "description": "Copies complete accepted Alicante StopNode and StopPlace objects exactly when numeric operator stop codes already exist in the accepted registry."
+    },
+    {
+      "transformationId": "alicante-operator-stop-code-identity-v1",
+      "description": "Uses the published numeric operator stop code as the stable suffix and creates one singleton StopPlace for every new code."
+    },
+    {
+      "transformationId": "alicante-independent-direction-patterns-v1",
+      "description": "Stores all eight published Ida/Vuelta lists as independent directed patterns. No reverse pattern is inferred and closesLoop is false."
+    },
+    {
+      "transformationId": "alicante-cross-municipality-settlement-v1",
+      "description": "Assigns Hospital Sant Joan stop 4912 to es-sant-joan-dalacant based on the hospital's official address; other routed stops remain es-alicante."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Appends exactly one catalog descriptor and recomputes all hashes from serialized bytes."
+    }
+  ],
+  "warnings": [
+    "The supplied map defines a legacy route-family scope, while the available ordered stop lists and coordinates are current 2026 captures. This package does not claim a frozen historical timetable snapshot.",
+    "Legacy line 08 is labelled Explanada - Virgen del Remedio, while the current ordered source starts and ends at Rambla-Portal de Elche.",
+    "Legacy line 11H is labelled Divina Pastora - Virgen del Remedio - Hospital Sant Joan, while the current ordered source uses the Colonia Requena/Juan XXIII approach.",
+    "Legacy line 13 is labelled Explanada - Virgen del Remedio - Villafranqueza, while the current ordered source is Rambla - Villafranqueza and does not silently inherit the old label as topology.",
+    "Hospital Sant Joan stop 4912 is assigned to Sant Joan d'Alacant from official address evidence; no other municipality boundary classification is inferred.",
+    "Different numeric stop codes remain separate StopNodes and singleton StopPlaces even when names match or positions are close.",
+    "Accepted Alicante objects are retained complete-object exact even when current source labels differ.",
+    "StopNode.sourceReferences is empty because no genuine OpenStreetMap platform or stop_position evidence was used.",
+    "Powered by MITRAMS. Official NAP data attribution: https://www.transportes.gob.es/"
+  ]
+}

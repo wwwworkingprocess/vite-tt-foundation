@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-west-v1",
+  "title": "Alicante Legacy West Network - Lines 04, 05, 06 and 12",
+  "initialView": {
+    "center": {
+      "latitude": 38.3570321575,
+      "longitude": -0.5035749475
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "alicante-04": {
+      "label": "04",
+      "color": "#00897b"
+    },
+    "alicante-05": {
+      "label": "05",
+      "color": "#43a047"
+    },
+    "alicante-06": {
+      "label": "06",
+      "color": "#f4511e"
+    },
+    "alicante-12": {
+      "label": "12",
+      "color": "#6d4c41"
+    }
+  },
+  "notes": [
+    "Western, San Blas, Tómbola and Juan XXIII discovery component for the map-defined Alicante urban legacy network.",
+    "Ida and Vuelta patterns are stored independently; no reverse patterns or loop-closing edges are inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

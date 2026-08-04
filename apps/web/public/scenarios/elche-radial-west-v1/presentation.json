@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-west-v1",
+  "title": "Elche Radial West Network - Lines R4, R5 and R6",
+  "initialView": {
+    "center": {
+      "latitude": 38.21694703763645,
+      "longitude": -0.7187057871437634
+    },
+    "zoom": 11
+  },
+  "routeStyles": {
+    "elche-R4": {
+      "label": "R4",
+      "color": "#d32f2f"
+    },
+    "elche-R5": {
+      "label": "R5",
+      "color": "#d6b400"
+    },
+    "elche-R6": {
+      "label": "R6",
+      "color": "#5b7f29"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "This component contains the western and southwestern radial services R4, R5 and R6."
+  ]
+}

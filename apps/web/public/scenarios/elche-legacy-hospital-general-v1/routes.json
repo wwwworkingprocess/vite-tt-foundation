@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-hospital-general-v1",
+  "routes": [
+    {
+      "routeId": "elche-E",
+      "publicCode": "E",
+      "name": "Centre - Sant Antoni - Zona Estadi - Hospital General",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-E-circular",
+          "directionLabel": "Centre / Hospital General / Sant Antoni",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 36
+          },
+          "stopNodeIds": [
+            "elche-stop-101",
+            "elche-stop-071",
+            "elche-stop-123",
+            "elche-stop-210",
+            "elche-stop-211",
+            "elche-stop-195",
+            "elche-stop-199",
+            "elche-stop-127",
+            "elche-stop-161",
+            "elche-stop-072",
+            "elche-stop-165",
+            "elche-stop-106",
+            "elche-stop-162",
+            "elche-stop-107",
+            "elche-stop-227",
+            "elche-stop-229",
+            "elche-stop-329",
+            "elche-stop-261",
+            "elche-stop-259",
+            "elche-stop-331",
+            "elche-stop-332",
+            "elche-stop-333",
+            "elche-stop-108",
+            "elche-stop-196",
+            "elche-stop-099",
+            "elche-stop-267",
+            "elche-stop-109",
+            "elche-stop-026",
+            "elche-stop-027",
+            "elche-stop-110",
+            "elche-stop-153",
+            "elche-stop-111",
+            "elche-stop-112",
+            "elche-stop-113",
+            "elche-stop-002",
+            "elche-stop-003"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "E",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "E",
+          "sourceFile": "https://alibus.es/lines/elche/linea-e.html"
+        },
+        {
+          "source": "moovit-current-route-order",
+          "sourceRouteId": "5736047",
+          "sourceFile": "external-web-reference"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-J",
+      "publicCode": "J",
+      "name": "Centre - Av. Llibertat - Raval - Hospital General",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-J-circular",
+          "directionLabel": "Centre / Raval / Hospital General",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "elche-stop-115",
+            "elche-stop-002",
+            "elche-stop-056",
+            "elche-stop-089",
+            "elche-stop-090",
+            "elche-stop-117",
+            "elche-stop-205",
+            "elche-stop-102",
+            "elche-stop-103",
+            "elche-stop-104",
+            "elche-stop-105",
+            "elche-stop-285",
+            "elche-stop-286",
+            "elche-stop-287",
+            "elche-stop-288",
+            "elche-stop-054",
+            "elche-stop-055",
+            "elche-stop-026",
+            "elche-stop-027",
+            "elche-stop-110",
+            "elche-stop-153",
+            "elche-stop-111",
+            "elche-stop-112",
+            "elche-stop-113"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "J",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "J",
+          "sourceFile": "https://alibus.es/lines/elche/linea-j.html"
+        },
+        {
+          "source": "moovit-current-route-order",
+          "sourceRouteId": "5736052",
+          "sourceFile": "external-web-reference"
+        }
+      ]
+    }
+  ]
+}

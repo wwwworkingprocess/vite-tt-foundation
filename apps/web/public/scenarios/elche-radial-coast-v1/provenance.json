@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-coast-v1",
+  "generatedAt": "2026-08-02T15:12:00+02:00",
+  "sources": [
+    {
+      "sourceId": "ayuntamiento-elche-pedanias-r9-r12-2026-08-02",
+      "name": "Ayuntamiento de Elche radial service directory for R9 and R12 route identity and scope",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://www.elche.es/movilidad/autobus-a-pedanias/"
+    },
+    {
+      "sourceId": "alibus-elche-r9-r12-2026-08-02",
+      "name": "Current AliBus ordered R9 and R12 stop pages with municipal stop codes and map-link coordinates",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/elche/linea-r9.html; https://alibus.es/lines/elche/linea-r12.html"
+    },
+    {
+      "sourceId": "uploaded-radial-diagram-r9",
+      "name": "Uploaded municipal-style route diagram for R9",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "r9.png"
+    },
+    {
+      "sourceId": "uploaded-radial-diagram-r12",
+      "name": "Uploaded municipal-style route diagram for R12",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "r12.png"
+    },
+    {
+      "sourceId": "elche-accepted-identity-registry-coast-v1",
+      "name": "All accepted Elche scenario packages in the airport baseline, used for complete-object-exact StopNode and StopPlace reuse",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "../elche-*/stops.json in scenarios-elche-radial-airport-v1.zip"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "elche-r9-current-cycle-v1",
+      "description": "Combines the current R9 Ida and Vuelta lists into one complete cycle after removing duplicated handoff 1311 and repeated cycle-boundary 091. The stored cycle closes from 344 to 091 exactly once."
+    },
+    {
+      "transformationId": "elche-r12-current-cycle-v1",
+      "description": "Combines the current R12 Ida and Vuelta lists into one complete cycle after removing duplicated handoff 1311 and repeated cycle-boundary 091. The stored cycle closes from 236 to 091 exactly once."
+    },
+    {
+      "transformationId": "elche-r12-current-over-diagram-reconciliation-v1",
+      "description": "Uses the current ordered textual R12 source for the active coastal circulation, including Gran Via and Bahia codes 1257, 1258, 1280-1283, 1320 and 1321. The supplied diagram is retained as historical/visual evidence and does not override the current order silently."
+    },
+    {
+      "transformationId": "elche-radial-municipal-code-identity-v6",
+      "description": "Uses municipal stop code as stable identity. Accepted airport/coastal objects are copied complete-object exact. New codes receive deterministic elche-stop-/elche-place- identities and singleton StopPlaces."
+    },
+    {
+      "transformationId": "elche-radial-canonical-serialization-v3",
+      "description": "Serializes StopPlaces and StopNodes in ascending numeric municipal-code order and creates deterministic lexicographically ordered ZIP entries with fixed metadata."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Writes final scenario assets, computes asset SHA-256 values and aggregate contentHash, and appends exactly one catalog descriptor."
+    }
+  ],
+  "warnings": [
+    "Runtime StopNode sourceReferences remain empty for new nodes because that field accepts only genuine OpenStreetMap platform or stop_position evidence. Municipal codes, route pages, diagrams and map coordinates remain provenance evidence.",
+    "R12 current ordered source differs from the supplied older diagram in Arenales del Sol. The current source includes the Gran Via/Bahia circulation; the diagram is not used to remove these current stops.",
+    "Shared L'Altet and Arenales identities established in elche-radial-airport-v1 are copied exactly wherever municipal codes match; they are not recreated from newer coordinates or labels.",
+    "Different municipal codes remain distinct StopNodes and singleton StopPlaces even when names, sides of road or coordinates are close. No name-, proximity- or exact-coordinate merge was performed.",
+    "closesLoop creates exactly one final-to-first edge per pattern. Internal loops remain possible only when produced by explicit consecutive entries or non-consecutive revisits.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, cross-pattern itinerary edges or vehicle lifecycle edges.",
+    "All earlier scenario files, including the grandfathered Torrevieja sourceReferences issue, are preserved byte-for-byte and are not corrected in this build."
+  ]
+}

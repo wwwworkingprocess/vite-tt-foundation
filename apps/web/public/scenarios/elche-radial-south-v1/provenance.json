@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-south-v1",
+  "generatedAt": "2026-08-02T14:22:00+02:00",
+  "sources": [
+    {
+      "sourceId": "buselche-official-r7-r8-2026-08-02",
+      "name": "BusElche / Avanza official route pages for radial Lines R7 and R8",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r7; https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r8"
+    },
+    {
+      "sourceId": "alibus-elche-r7-r8-2026-08-02",
+      "name": "Current AliBus ordered R7 and R8 stop pages with municipal stop codes and map coordinates",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/elche/linea-r7.html; https://alibus.es/lines/elche/linea-r8.html"
+    },
+    {
+      "sourceId": "uploaded-radial-diagram-r7",
+      "name": "Uploaded municipal-style route diagram for R7",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "r7.png"
+    },
+    {
+      "sourceId": "architect-review-radial-south-2026-08-02",
+      "name": "Architect review of directional graph semantics and the Hospital General stop identity conflict",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "conversation review: closesLoop semantics; 355 and 026 retained as distinct physical directional stops"
+    },
+    {
+      "sourceId": "elche-accepted-identity-registry-radial-south-v2",
+      "name": "Accepted Elche non-radial and radial component scenarios used for exact StopNode and StopPlace identity reuse",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "../elche-legacy-all-v1/stops.json; ../elche-radial-inner-v1/stops.json; ../elche-radial-west-v1/stops.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "elche-r7-r8-cycle-capture-v2",
+      "description": "Combines each current Ida and Vuelta list into one complete vehicle cycle. The duplicated directional handoff and repeated initial cycle-boundary occurrences are removed once. closesLoop=true adds only the final stored-node to first stored-node edge."
+    },
+    {
+      "transformationId": "elche-radial-municipal-code-identity-v4",
+      "description": "Uses municipal stop code as the stable identity suffix. The R7/R8 radial Hospital General occurrence remains code 355 and is not merged with accepted urban code 026 despite the shared destination name and proximity."
+    },
+    {
+      "transformationId": "elche-radial-south-stop-label-normalization-v1",
+      "description": "Stores code 355 as Hospital General Pedanías, matching the visible R7 diagram label and distinguishing it from the separate accepted urban Hospital General stop 026. Route display names follow the established sibling-radial convention without a redundant Elche prefix."
+    },
+    {
+      "transformationId": "elche-radial-singleton-stopplace-v4",
+      "description": "Creates one strict singleton StopPlace per new municipal StopNode. Opposite-side or nearby same-destination stops remain separate unless an approved physical-place mapping explicitly groups them."
+    },
+    {
+      "transformationId": "elche-radial-canonical-serialization-v1",
+      "description": "Serializes StopPlaces and StopNodes in ascending numeric municipal-code order and produces deterministic sorted ZIP entries with fixed metadata."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Writes final scenario assets, computes asset SHA-256 values and aggregate contentHash, and appends exactly one catalog descriptor."
+    }
+  ],
+  "warnings": [
+    "Runtime StopNode sourceReferences remain empty for new radial nodes because that field accepts only genuine OpenStreetMap platform or stop_position evidence. Municipal codes, textual sources, diagram labels and coordinates remain provenance evidence.",
+    "Accepted StopNode and StopPlace objects reused from earlier Elche scenarios remain complete-object exact. The new code 355 object is intentionally separate from accepted code 026.",
+    "The ordered route source and supplied R7 diagram support municipal code 355 for the radial/pedanías Hospital General occurrence. Code 026 is an accepted urban-network stop and is not imported into this south component.",
+    "The stored name Hospital General Pedanías is a project label supported by the R7 diagram. The ordered textual source uses the shorter destination name Hospital General.",
+    "R7 duplicates elche-stop-1084 at the Ida/Vuelta handoff and repeats elche-stop-091 at the vehicle-cycle boundary. R8 similarly duplicates elche-stop-1124 and repeats elche-stop-091. Each duplicate is removed once before closesLoop=true.",
+    "closesLoop=true creates exactly one edge from elche-stop-345 to elche-stop-091. It does not prohibit internal directed cycles; any such cycles must arise from explicit consecutive sequence entries or non-consecutive revisits. No synthetic inner-loop edge was added here.",
+    "Opposite-side and nearby rural stops may serve the same named destination while retaining distinct municipal codes, StopNodes and singleton StopPlaces.",
+    "R8 has no supplied route diagram. Its order is based on the current ordered textual source and official route identity.",
+    "The supplied general urban-network map is contextual only and was not used to infer R7 or R8 topology.",
+    "The accepted radial-west R6 package remains byte-for-byte unchanged even though current external evidence may warrant a separate later review of its Hospital General identity.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, cross-pattern itinerary edges or vehicle lifecycle edges."
+  ]
+}

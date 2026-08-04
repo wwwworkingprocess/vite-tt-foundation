@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-all-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Alicante Legacy Network - All Urban Lines",
+  "primarySettlementId": "es-alicante",
+  "settlementIds": [
+    "es-alicante",
+    "es-sant-joan-dalacant"
+  ],
+  "contentHash": "6726a2211a7787072333c59917eb25ae85c3eb205b92d027dd9d714b17f092b3",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "c316bd2fcec78b4c3fafd0c71caf29df725cde534d0b633edd0e7f4837b02b4d"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "efff5fd4bef16a8ef2a43dc1d265bd3164915911c9321fa924746123b7d79287"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "a1730aec98a4b03f0d6f21102dfc541585ff3cd30fc8b98dc80a4305fff52c16"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "a96999cee08a8284192f1f6180c099c5d044cfd8efdcf4a1cf409873cb63dacb"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "abe232993cd5f65b499e29724f3d4fa05150ce9448b8d9826c0893a2285d262e"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

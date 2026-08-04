@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-west-v1",
+  "generatedAt": "2026-08-01T23:08:00+02:00",
+  "sources": [
+    {
+      "sourceId": "buselche-official-r4-r5-r6-2026-08-01",
+      "name": "BusElche / Avanza official route pages for radial Lines R4, R5 and R6",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r4; https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r5; https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r6"
+    },
+    {
+      "sourceId": "alibus-elche-r4-r5-r6-2026-08-01",
+      "name": "Current AliBus ordered R4, R5 and R6 stop pages with municipal stop codes and map coordinates",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "https://alibus.es/lines/elche/linea-r4.html; https://alibus.es/lines/elche/linea-r5.html; https://alibus.es/lines/elche/linea-r6.html"
+    },
+    {
+      "sourceId": "uploaded-radial-diagrams-r4-r5",
+      "name": "Uploaded municipal-style route diagrams for R4 and R5",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "r4.png; r5.png"
+    },
+    {
+      "sourceId": "elche-accepted-identity-registry-radial-v1",
+      "name": "Accepted elche-legacy-all-v1 and elche-radial-inner-v1 used for exact StopNode and StopPlace identity reuse",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-legacy-all-v1/stops.json; ../elche-radial-inner-v1/stops.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "elche-r4-r5-r6-cycle-capture-v1",
+      "description": "Combines each current Ida and Vuelta stop list into one complete vehicle cycle. Repeated directional handoff and initial cycle-boundary occurrences are removed; closesLoop=true adds the final edge once."
+    },
+    {
+      "transformationId": "elche-radial-municipal-code-identity-v2",
+      "description": "Uses municipal stop code as the stable elche-stop and elche-place suffix. Existing codes are copied exactly from the accepted Elche identity registry."
+    },
+    {
+      "transformationId": "elche-radial-singleton-stopplace-v2",
+      "description": "Creates one strict parser-compatible StopPlace for each new radial StopNode. No proximity-only physical merges are made."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Writes scenario assets, computes asset SHA-256 values and aggregate contentHash, and registers the scenario."
+    }
+  ],
+  "warnings": [
+    "Runtime StopNode sourceReferences remain empty for new radial nodes because that field accepts only genuine OpenStreetMap platform or stop_position components. Municipal codes and map-link coordinates remain build provenance.",
+    "Accepted StopNode and StopPlace objects reused from earlier Elche scenarios retain their exact previous bytes and coordinates.",
+    "R4 revisits elche-stop-088 and R5 revisits elche-stop-024 at non-consecutive positions in their complete vehicle cycles.",
+    "R4 and R5 contain many physically close opposite-side road stops with distinct municipal codes. They remain separate StopNodes and singleton StopPlaces.",
+    "R6 has no uploaded diagram in the supplied radial archive. Its route order is based on the current textual route source and official route identity.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern itinerary edges."
+  ]
+}

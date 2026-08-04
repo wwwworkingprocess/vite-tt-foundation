@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-all-v1",
+  "settlements": [
+    {
+      "settlementId": "es-alicante",
+      "name": "Alicante",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.3346040695,
+        "longitude": -0.5148533875
+      },
+      "bounds": {
+        "south": 38.279952628,
+        "west": -0.617896275,
+        "north": 38.389255511,
+        "east": -0.4118105
+      }
+    },
+    {
+      "settlementId": "es-sant-joan-dalacant",
+      "name": "Sant Joan d'Alacant",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.389887915,
+        "longitude": -0.43493438
+      },
+      "bounds": {
+        "south": 38.389887915,
+        "west": -0.43493438,
+        "north": 38.389887915,
+        "east": -0.43493438
+      }
+    }
+  ]
+}

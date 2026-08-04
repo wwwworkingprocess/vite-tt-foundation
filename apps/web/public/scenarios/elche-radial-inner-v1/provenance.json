@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-inner-v1",
+  "generatedAt": "2026-08-01T22:59:00+02:00",
+  "sources": [
+    {
+      "sourceId": "buselche-official-r1-r2-r3-2026-08-01",
+      "name": "BusElche / Avanza official route pages for radial Lines R1, R2 and R3",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r1; https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r2; https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r3"
+    },
+    {
+      "sourceId": "alibus-elche-r1-r2-r3-2026-08-01",
+      "name": "Current AliBus ordered R1, R2 and R3 stop pages with municipal stop codes and map coordinates",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "https://alibus.es/lines/elche/linea-r1.html; https://alibus.es/lines/elche/linea-r2.html; https://alibus.es/lines/elche/linea-r3.html"
+    },
+    {
+      "sourceId": "elche-legacy-all-v1-identity-registry",
+      "name": "Accepted non-radial Elche merged scenario used for exact urban StopNode and StopPlace reuse",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-legacy-all-v1/stops.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "elche-r1-r2-r3-cycle-capture-v1",
+      "description": "Combines each current Ida and Vuelta stop list into one complete vehicle cycle. Repeated handoff and initial cycle boundary occurrences are removed, and closesLoop=true adds the final edge once."
+    },
+    {
+      "transformationId": "elche-radial-municipal-code-identity-v1",
+      "description": "Uses municipal stop code as the stable elche-stop and elche-place suffix. Existing codes are copied exactly from elche-legacy-all-v1."
+    },
+    {
+      "transformationId": "elche-radial-singleton-stopplace-v1",
+      "description": "Creates one strict parser-compatible StopPlace for every new radial StopNode. No proximity-only physical merges are made."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Writes established scenario assets, computes asset SHA-256 values and aggregate contentHash, and registers the scenario."
+    }
+  ],
+  "warnings": [
+    "Runtime StopNode sourceReferences remain empty for new radial nodes because that field accepts only genuine OpenStreetMap platform or stop_position components. Municipal codes and AliBus coordinate links remain build provenance.",
+    "Accepted urban StopNode and StopPlace objects reused from elche-legacy-all-v1 retain their exact previous bytes and coordinates.",
+    "R1 revisits elche-stop-080 (Renfe-Conservatorio) twice during one complete cycle. Both non-consecutive occurrences are retained.",
+    "R3 uses one municipal ITV stop, elche-stop-281, as the directional handoff. The source repeats it at the Ida/Vuelta boundary; the canonical cycle stores it once.",
+    "Camino De Los Magros 1 / 3 and Camino De Los Magros 2 / Camino Servicio Autovia 2 are extremely close but have different municipal codes. They remain distinct StopNodes and StopPlaces.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern itinerary edges."
+  ]
+}

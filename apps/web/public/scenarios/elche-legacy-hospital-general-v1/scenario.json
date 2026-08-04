@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-hospital-general-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Legacy Hospital General Network - Lines E and J",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "ef1b2f59da5865379d96c364c55200579aefb65cb93408336347126e16f518f1",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "9dbddc0939109eaef3a752684f5f4773e72fa19a9b089ddb61d9e6fc81d3e1cb"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "4f19ee196c576b5afe639c299410ebeba40464f0085fcddc4657e0c4be42ecc3"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "15470a68996ece603a68e7f7af16ec3e8c0b2cab43c69454a5c512adc901883f"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "1af8fdb8d0b4d404cd41f2914d0ca3754dd0c38fe5463547e3fee2bd89b9702c"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "bb2368c1d911cb2a58a80cc3004049b437fcbcf2e5bfb10bb7cd0f996ab7118a"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

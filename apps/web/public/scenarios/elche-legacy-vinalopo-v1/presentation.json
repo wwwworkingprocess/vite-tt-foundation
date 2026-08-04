@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-vinalopo-v1",
+  "title": "Elche Legacy Vinalopó Network - Lines G and I",
+  "initialView": {
+    "center": {
+      "latitude": 38.2610418422707,
+      "longitude": -0.7090611
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "elche-G": {
+      "label": "G",
+      "color": "#8a5a2b"
+    },
+    "elche-I": {
+      "label": "I",
+      "color": "#8b7255"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

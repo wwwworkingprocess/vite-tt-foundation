@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-east-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Legacy East Network - Lines D, F and H",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "5d99e42f89190c525895a232ee3cb3017232784853f788d143899939bae5761f",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "792fba491da53766e02a2091e59b8f79e67e8cce4b2568749220b60acc09caba"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "07b0cdff8b068bffb513ed5b76e0d296be2fa3edb2d136926919b603f08eeb41"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "446bbe8bc4593bd89bb417f6dea0510e2f648cdf8675ae9d23e4586a0eeef403"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "66d95983a53182d37dffc9e393d4a68f7a9f43cde70178db8acf56ea60a400af"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "230d63de8c9ba00385ca8e4e567249b53cef0fcabaf6c99397f9ed321c1f8e9b"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

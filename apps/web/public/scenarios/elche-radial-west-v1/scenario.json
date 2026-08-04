@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-west-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Radial West Network - Lines R4, R5 and R6",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "1a5635697763909696928d2c56f054a4f357b8061d5fb1eae5d865a3d64f40de",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "e3329655cf881cc0e0788a176f490df058e187b4f37236936287ccf7b6e7d683"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "ea42eb5b3633b18b96ed31e1a6a36a6e2b5e31cc179f454955a0fef506504492"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "09363b9aa8516d02b031ad0efb8d1f1b829ca26d9476caf744eb883cf4885efa"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "b862168f6f98f14ad7680f2cc02ee24d3e0d0f69ac9cbb8f0d1d285464d6ac69"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "36c121efa676d0cb04a99b14a23e16e751dbbd21589d94aaf796b32b5a95b905"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

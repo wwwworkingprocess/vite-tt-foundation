@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-coast-v1",
+  "title": "Alicante Legacy Coast Network - Lines 09, 10 and 22",
+  "initialView": {
+    "center": {
+      "latitude": 38.3644541675,
+      "longitude": -0.4532455277777778
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "alicante-09": {
+      "label": "09",
+      "color": "#1976d2"
+    },
+    "alicante-10": {
+      "label": "10",
+      "color": "#ef6c00"
+    },
+    "alicante-22": {
+      "label": "22",
+      "color": "#00838f"
+    }
+  },
+  "notes": [
+    "Eastern and coastal discovery component for the map-defined Alicante urban legacy network.",
+    "Ida and Vuelta patterns are stored independently; no reverse patterns or loop-closing edges are inferred.",
+    "Operator stop codes remain distinct directional identities even where coastal stops are near or share names.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

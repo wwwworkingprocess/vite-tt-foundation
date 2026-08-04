@@ -1,0 +1,1850 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-all-v1",
+  "routes": [
+    {
+      "routeId": "alicante-01",
+      "publicCode": "01",
+      "name": "San Gabriel - Ciudad Elegida",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-01-ida",
+          "directionLabel": "San Gabriel → Ciudad Elegida",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 43
+          },
+          "stopNodeIds": [
+            "alicante-stop-3900",
+            "alicante-stop-3901",
+            "alicante-stop-3902",
+            "alicante-stop-3903",
+            "alicante-stop-3904",
+            "alicante-stop-3905",
+            "alicante-stop-3906",
+            "alicante-stop-3500",
+            "alicante-stop-3907",
+            "alicante-stop-3908",
+            "alicante-stop-3909",
+            "alicante-stop-3910",
+            "alicante-stop-3961",
+            "alicante-stop-3122",
+            "alicante-stop-3123",
+            "alicante-stop-3911",
+            "alicante-stop-3124",
+            "alicante-stop-3912",
+            "alicante-stop-3126",
+            "alicante-stop-4446",
+            "alicante-stop-3127",
+            "alicante-stop-4445",
+            "alicante-stop-4046",
+            "alicante-stop-3129",
+            "alicante-stop-2902",
+            "alicante-stop-4111",
+            "alicante-stop-3916",
+            "alicante-stop-3001",
+            "alicante-stop-3917",
+            "alicante-stop-3003",
+            "alicante-stop-3004",
+            "alicante-stop-3005",
+            "alicante-stop-3006",
+            "alicante-stop-3918",
+            "alicante-stop-3919",
+            "alicante-stop-3960",
+            "alicante-stop-4410",
+            "alicante-stop-3921",
+            "alicante-stop-3975",
+            "alicante-stop-3976",
+            "alicante-stop-3923",
+            "alicante-stop-3924",
+            "alicante-stop-3926"
+          ]
+        },
+        {
+          "patternId": "alicante-01-vuelta",
+          "directionLabel": "Ciudad Elegida → San Gabriel",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 40
+          },
+          "stopNodeIds": [
+            "alicante-stop-3927",
+            "alicante-stop-3928",
+            "alicante-stop-3929",
+            "alicante-stop-3930",
+            "alicante-stop-3931",
+            "alicante-stop-3932",
+            "alicante-stop-3933",
+            "alicante-stop-3934",
+            "alicante-stop-3957",
+            "alicante-stop-4428",
+            "alicante-stop-4429",
+            "alicante-stop-3038",
+            "alicante-stop-3039",
+            "alicante-stop-3040",
+            "alicante-stop-6210",
+            "alicante-stop-2946",
+            "alicante-stop-3937",
+            "alicante-stop-3938",
+            "alicante-stop-3939",
+            "alicante-stop-3940",
+            "alicante-stop-3941",
+            "alicante-stop-3103",
+            "alicante-stop-3942",
+            "alicante-stop-3943",
+            "alicante-stop-3104",
+            "alicante-stop-3944",
+            "alicante-stop-3105",
+            "alicante-stop-3945",
+            "alicante-stop-3502",
+            "alicante-stop-3528",
+            "alicante-stop-3949",
+            "alicante-stop-3950",
+            "alicante-stop-3525",
+            "alicante-stop-3951",
+            "alicante-stop-3952",
+            "alicante-stop-3953",
+            "alicante-stop-3954",
+            "alicante-stop-3955",
+            "alicante-stop-3956",
+            "alicante-stop-3900"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "01",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "01",
+          "sourceFile": "https://alibus.es/lines/alicante/01/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-02",
+      "publicCode": "02",
+      "name": "La Florida - Sagrada Familia",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-02-ida",
+          "directionLabel": "La Florida → Sagrada Familia",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "alicante-stop-4000",
+            "alicante-stop-4001",
+            "alicante-stop-4002",
+            "alicante-stop-4003",
+            "alicante-stop-4004",
+            "alicante-stop-4005",
+            "alicante-stop-3123",
+            "alicante-stop-3911",
+            "alicante-stop-3124",
+            "alicante-stop-3912",
+            "alicante-stop-3126",
+            "alicante-stop-4446",
+            "alicante-stop-3127",
+            "alicante-stop-2603",
+            "alicante-stop-3915",
+            "alicante-stop-2606",
+            "alicante-stop-4009",
+            "alicante-stop-2608",
+            "alicante-stop-4065",
+            "alicante-stop-4010",
+            "alicante-stop-4036",
+            "alicante-stop-4012",
+            "alicante-stop-4013",
+            "alicante-stop-3566",
+            "alicante-stop-4014",
+            "alicante-stop-4015",
+            "alicante-stop-4016",
+            "alicante-stop-4017",
+            "alicante-stop-4018"
+          ]
+        },
+        {
+          "patternId": "alicante-02-vuelta",
+          "directionLabel": "Sagrada Familia → La Florida",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "alicante-stop-4018",
+            "alicante-stop-4019",
+            "alicante-stop-4020",
+            "alicante-stop-4021",
+            "alicante-stop-4022",
+            "alicante-stop-4023",
+            "alicante-stop-4024",
+            "alicante-stop-2507",
+            "alicante-stop-4025",
+            "alicante-stop-4027",
+            "alicante-stop-2685",
+            "alicante-stop-4359",
+            "alicante-stop-4082",
+            "alicante-stop-2682",
+            "alicante-stop-3937",
+            "alicante-stop-3938",
+            "alicante-stop-3939",
+            "alicante-stop-3940",
+            "alicante-stop-3941",
+            "alicante-stop-3103",
+            "alicante-stop-3942",
+            "alicante-stop-3943",
+            "alicante-stop-3104",
+            "alicante-stop-3944",
+            "alicante-stop-3105",
+            "alicante-stop-4028",
+            "alicante-stop-4029",
+            "alicante-stop-4030",
+            "alicante-stop-4031",
+            "alicante-stop-4032",
+            "alicante-stop-4033",
+            "alicante-stop-4000"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "02",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "02",
+          "sourceFile": "https://alibus.es/lines/alicante/02/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-03",
+      "publicCode": "03",
+      "name": "Ciudad de Asís - Colonia Requena",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-03-ida",
+          "directionLabel": "Ciudad de Asís → Colonia Requena",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 25
+          },
+          "stopNodeIds": [
+            "alicante-stop-4100",
+            "alicante-stop-4101",
+            "alicante-stop-4102",
+            "alicante-stop-4103",
+            "alicante-stop-4104",
+            "alicante-stop-4105",
+            "alicante-stop-3504",
+            "alicante-stop-4106",
+            "alicante-stop-4107",
+            "alicante-stop-4108",
+            "alicante-stop-4109",
+            "alicante-stop-2603",
+            "alicante-stop-3915",
+            "alicante-stop-2902",
+            "alicante-stop-4111",
+            "alicante-stop-3916",
+            "alicante-stop-3001",
+            "alicante-stop-3917",
+            "alicante-stop-3003",
+            "alicante-stop-3004",
+            "alicante-stop-3005",
+            "alicante-stop-3045",
+            "alicante-stop-4145",
+            "alicante-stop-4112",
+            "alicante-stop-4113"
+          ]
+        },
+        {
+          "patternId": "alicante-03-vuelta",
+          "directionLabel": "Colonia Requena → Ciudad de Asís",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 27
+          },
+          "stopNodeIds": [
+            "alicante-stop-4113",
+            "alicante-stop-3034",
+            "alicante-stop-3035",
+            "alicante-stop-3036",
+            "alicante-stop-3046",
+            "alicante-stop-3038",
+            "alicante-stop-3039",
+            "alicante-stop-3040",
+            "alicante-stop-6210",
+            "alicante-stop-4115",
+            "alicante-stop-4116",
+            "alicante-stop-4264",
+            "alicante-stop-4117",
+            "alicante-stop-4118",
+            "alicante-stop-4119",
+            "alicante-stop-4120",
+            "alicante-stop-3521",
+            "alicante-stop-4121",
+            "alicante-stop-4122",
+            "alicante-stop-4123",
+            "alicante-stop-4124",
+            "alicante-stop-4125",
+            "alicante-stop-4133",
+            "alicante-stop-4128",
+            "alicante-stop-4129",
+            "alicante-stop-4130",
+            "alicante-stop-4100"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "03",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "03",
+          "sourceFile": "https://alibus.es/lines/alicante/03/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-04",
+      "publicCode": "04",
+      "name": "Cementerio - Tómbola",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-04-ida",
+          "directionLabel": "Cementerio → Tómbola-V. del Puig",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 47
+          },
+          "stopNodeIds": [
+            "alicante-stop-4200",
+            "alicante-stop-4201",
+            "alicante-stop-4202",
+            "alicante-stop-4197",
+            "alicante-stop-4205",
+            "alicante-stop-6121",
+            "alicante-stop-6122",
+            "alicante-stop-6123",
+            "alicante-stop-4002",
+            "alicante-stop-4208",
+            "alicante-stop-4209",
+            "alicante-stop-3136",
+            "alicante-stop-3504",
+            "alicante-stop-4106",
+            "alicante-stop-4107",
+            "alicante-stop-6100",
+            "alicante-stop-4301",
+            "alicante-stop-6098",
+            "alicante-stop-6101",
+            "alicante-stop-6102",
+            "alicante-stop-6099",
+            "alicante-stop-3920",
+            "alicante-stop-3916",
+            "alicante-stop-3001",
+            "alicante-stop-4215",
+            "alicante-stop-4216",
+            "alicante-stop-5012",
+            "alicante-stop-4280",
+            "alicante-stop-4218",
+            "alicante-stop-4294",
+            "alicante-stop-4220",
+            "alicante-stop-4281",
+            "alicante-stop-4360",
+            "alicante-stop-6144",
+            "alicante-stop-6143",
+            "alicante-stop-6142",
+            "alicante-stop-4223",
+            "alicante-stop-4224",
+            "alicante-stop-4225",
+            "alicante-stop-4226",
+            "alicante-stop-4655",
+            "alicante-stop-2937",
+            "alicante-stop-2938",
+            "alicante-stop-4287",
+            "alicante-stop-4229",
+            "alicante-stop-4228",
+            "alicante-stop-4232"
+          ]
+        },
+        {
+          "patternId": "alicante-04-vuelta",
+          "directionLabel": "Tómbola-V. del Puig → Cementerio",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 42
+          },
+          "stopNodeIds": [
+            "alicante-stop-4232",
+            "alicante-stop-4233",
+            "alicante-stop-4234",
+            "alicante-stop-4235",
+            "alicante-stop-4236",
+            "alicante-stop-4237",
+            "alicante-stop-4239",
+            "alicante-stop-4240",
+            "alicante-stop-4241",
+            "alicante-stop-4282",
+            "alicante-stop-4283",
+            "alicante-stop-3514",
+            "alicante-stop-3515",
+            "alicante-stop-4265",
+            "alicante-stop-4284",
+            "alicante-stop-4285",
+            "alicante-stop-4248",
+            "alicante-stop-4249",
+            "alicante-stop-4250",
+            "alicante-stop-3040",
+            "alicante-stop-6200",
+            "alicante-stop-6201",
+            "alicante-stop-6202",
+            "alicante-stop-6203",
+            "alicante-stop-4325",
+            "alicante-stop-4526",
+            "alicante-stop-4120",
+            "alicante-stop-3521",
+            "alicante-stop-3135",
+            "alicante-stop-4268",
+            "alicante-stop-4269",
+            "alicante-stop-4031",
+            "alicante-stop-6118",
+            "alicante-stop-6127",
+            "alicante-stop-6126",
+            "alicante-stop-4260",
+            "alicante-stop-4198",
+            "alicante-stop-4203",
+            "alicante-stop-4277",
+            "alicante-stop-4299",
+            "alicante-stop-4298",
+            "alicante-stop-4200"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "04",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "04",
+          "sourceFile": "https://alibus.es/lines/alicante/04/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-05",
+      "publicCode": "05",
+      "name": "Puerta del Mar - San Agustín",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-05-ida",
+          "directionLabel": "Puerta del Mar → San Agustín",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "alicante-stop-4359",
+            "alicante-stop-4082",
+            "alicante-stop-4600",
+            "alicante-stop-3937",
+            "alicante-stop-4264",
+            "alicante-stop-4117",
+            "alicante-stop-4118",
+            "alicante-stop-4301",
+            "alicante-stop-4302",
+            "alicante-stop-4303",
+            "alicante-stop-4358",
+            "alicante-stop-4308",
+            "alicante-stop-4309",
+            "alicante-stop-4310",
+            "alicante-stop-4311",
+            "alicante-stop-4312",
+            "alicante-stop-4340",
+            "alicante-stop-3517",
+            "alicante-stop-4329",
+            "alicante-stop-4330",
+            "alicante-stop-4331",
+            "alicante-stop-4355",
+            "alicante-stop-4242",
+            "alicante-stop-4346"
+          ]
+        },
+        {
+          "patternId": "alicante-05-vuelta",
+          "directionLabel": "San Agustín → Puerta del Mar",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "alicante-stop-4346",
+            "alicante-stop-4281",
+            "alicante-stop-4348",
+            "alicante-stop-4333",
+            "alicante-stop-4334",
+            "alicante-stop-4339",
+            "alicante-stop-4337",
+            "alicante-stop-3508",
+            "alicante-stop-4354",
+            "alicante-stop-4313",
+            "alicante-stop-4314",
+            "alicante-stop-4315",
+            "alicante-stop-4316",
+            "alicante-stop-4317",
+            "alicante-stop-4318",
+            "alicante-stop-4319",
+            "alicante-stop-4320",
+            "alicante-stop-4321",
+            "alicante-stop-4322",
+            "alicante-stop-4323",
+            "alicante-stop-4325",
+            "alicante-stop-4108",
+            "alicante-stop-4109",
+            "alicante-stop-4445",
+            "alicante-stop-4046",
+            "alicante-stop-2604",
+            "alicante-stop-4499",
+            "alicante-stop-2606",
+            "alicante-stop-4359"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "05",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "05",
+          "sourceFile": "https://alibus.es/lines/alicante/05/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-06",
+      "publicCode": "06",
+      "name": "Estación de Autobuses - Juan XXIII (2.º Sector)",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-06-ida",
+          "directionLabel": "Estación de Autobuses → Juan XXIII-Bas Mingot",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "alicante-stop-4450",
+            "alicante-stop-3126",
+            "alicante-stop-4214",
+            "alicante-stop-4273",
+            "alicante-stop-3128",
+            "alicante-stop-3129",
+            "alicante-stop-4400",
+            "alicante-stop-4401",
+            "alicante-stop-4402",
+            "alicante-stop-4403",
+            "alicante-stop-3585",
+            "alicante-stop-3552",
+            "alicante-stop-4404",
+            "alicante-stop-4405",
+            "alicante-stop-4406",
+            "alicante-stop-4407",
+            "alicante-stop-4408",
+            "alicante-stop-4409",
+            "alicante-stop-4410",
+            "alicante-stop-4411",
+            "alicante-stop-4412",
+            "alicante-stop-4413",
+            "alicante-stop-4414",
+            "alicante-stop-4415"
+          ]
+        },
+        {
+          "patternId": "alicante-06-vuelta",
+          "directionLabel": "Juan XXIII-Bas Mingot → Estación de Autobuses",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 27
+          },
+          "stopNodeIds": [
+            "alicante-stop-4415",
+            "alicante-stop-4416",
+            "alicante-stop-4417",
+            "alicante-stop-4422",
+            "alicante-stop-4423",
+            "alicante-stop-4424",
+            "alicante-stop-4425",
+            "alicante-stop-4426",
+            "alicante-stop-3932",
+            "alicante-stop-4427",
+            "alicante-stop-4428",
+            "alicante-stop-4429",
+            "alicante-stop-4430",
+            "alicante-stop-4431",
+            "alicante-stop-4432",
+            "alicante-stop-4433",
+            "alicante-stop-4434",
+            "alicante-stop-4435",
+            "alicante-stop-4436",
+            "alicante-stop-4437",
+            "alicante-stop-4438",
+            "alicante-stop-2946",
+            "alicante-stop-4116",
+            "alicante-stop-2947",
+            "alicante-stop-2601",
+            "alicante-stop-3676",
+            "alicante-stop-4450"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "06",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "06",
+          "sourceFile": "https://alibus.es/lines/alicante/06/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-07",
+      "publicCode": "07",
+      "name": "Av. Óscar Esplá - El Rebolledo",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-07-ida",
+          "directionLabel": "Estación-Ó. Esplá → Paseo Mayor 75",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "alicante-stop-4760",
+            "alicante-stop-4119",
+            "alicante-stop-4120",
+            "alicante-stop-3523",
+            "alicante-stop-4121",
+            "alicante-stop-4122",
+            "alicante-stop-4123",
+            "alicante-stop-4124",
+            "alicante-stop-4259",
+            "alicante-stop-4260",
+            "alicante-stop-4502",
+            "alicante-stop-4503",
+            "alicante-stop-4504",
+            "alicante-stop-4520",
+            "alicante-stop-4508",
+            "alicante-stop-4513",
+            "alicante-stop-3222",
+            "alicante-stop-3223",
+            "alicante-stop-3224",
+            "alicante-stop-3225",
+            "alicante-stop-3226"
+          ]
+        },
+        {
+          "patternId": "alicante-07-vuelta",
+          "directionLabel": "Paseo Mayor 75 → Estación-Ó. Esplá",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "alicante-stop-3226",
+            "alicante-stop-3227",
+            "alicante-stop-3228",
+            "alicante-stop-3229",
+            "alicante-stop-3230",
+            "alicante-stop-6165",
+            "alicante-stop-4521",
+            "alicante-stop-4522",
+            "alicante-stop-4523",
+            "alicante-stop-4524",
+            "alicante-stop-4205",
+            "alicante-stop-4206",
+            "alicante-stop-4103",
+            "alicante-stop-4104",
+            "alicante-stop-4105",
+            "alicante-stop-4213",
+            "alicante-stop-4106",
+            "alicante-stop-4107",
+            "alicante-stop-4760"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "07",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "07",
+          "sourceFile": "https://alibus.es/lines/alicante/07/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-08",
+      "publicCode": "08",
+      "name": "Rambla - Virgen del Remedio",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-08-ida",
+          "directionLabel": "Rambla-Portal de Elche → Virgen del Remedio-Pérez Mirete",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "alicante-stop-2688",
+            "alicante-stop-3400",
+            "alicante-stop-3047",
+            "alicante-stop-2904",
+            "alicante-stop-2905",
+            "alicante-stop-2906",
+            "alicante-stop-2907",
+            "alicante-stop-2909",
+            "alicante-stop-2910",
+            "alicante-stop-2911",
+            "alicante-stop-2912",
+            "alicante-stop-2979",
+            "alicante-stop-3581",
+            "alicante-stop-2980"
+          ]
+        },
+        {
+          "patternId": "alicante-08-vuelta",
+          "directionLabel": "Virgen del Remedio-Pérez Mirete → Rambla-Portal de Elche",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "alicante-stop-2980",
+            "alicante-stop-3555",
+            "alicante-stop-3557",
+            "alicante-stop-4652",
+            "alicante-stop-2936",
+            "alicante-stop-2937",
+            "alicante-stop-2938",
+            "alicante-stop-2939",
+            "alicante-stop-2940",
+            "alicante-stop-2941",
+            "alicante-stop-2942",
+            "alicante-stop-2943",
+            "alicante-stop-2944",
+            "alicante-stop-4438",
+            "alicante-stop-2946",
+            "alicante-stop-4499",
+            "alicante-stop-2688"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "08",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "08",
+          "sourceFile": "https://alibus.es/lines/alicante/08/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-09",
+      "publicCode": "09",
+      "name": "Óscar Esplá - Playa San Juan",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-09-ida",
+          "directionLabel": "Estación-Ó. Esplá → Naciones-Holanda (TRAM)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "alicante-stop-4760",
+            "alicante-stop-4214",
+            "alicante-stop-4273",
+            "alicante-stop-3128",
+            "alicante-stop-3129",
+            "alicante-stop-4400",
+            "alicante-stop-3920",
+            "alicante-stop-3916",
+            "alicante-stop-3001",
+            "alicante-stop-3564",
+            "alicante-stop-6166",
+            "alicante-stop-3585",
+            "alicante-stop-3566",
+            "alicante-stop-4700",
+            "alicante-stop-3567",
+            "alicante-stop-4810",
+            "alicante-stop-4903",
+            "alicante-stop-2510",
+            "alicante-stop-2598",
+            "alicante-stop-4703",
+            "alicante-stop-4704",
+            "alicante-stop-4705",
+            "alicante-stop-2612",
+            "alicante-stop-4755",
+            "alicante-stop-4743",
+            "alicante-stop-4751",
+            "alicante-stop-4711",
+            "alicante-stop-4752",
+            "alicante-stop-4762"
+          ]
+        },
+        {
+          "patternId": "alicante-09-vuelta",
+          "directionLabel": "Naciones-Holanda (TRAM) → Estación-Ó. Esplá",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 31
+          },
+          "stopNodeIds": [
+            "alicante-stop-4762",
+            "alicante-stop-4758",
+            "alicante-stop-4727",
+            "alicante-stop-4728",
+            "alicante-stop-4729",
+            "alicante-stop-4730",
+            "alicante-stop-4731",
+            "alicante-stop-4749",
+            "alicante-stop-4734",
+            "alicante-stop-2725",
+            "alicante-stop-2723",
+            "alicante-stop-2674",
+            "alicante-stop-2675",
+            "alicante-stop-4735",
+            "alicante-stop-4736",
+            "alicante-stop-2571",
+            "alicante-stop-4761",
+            "alicante-stop-4811",
+            "alicante-stop-3550",
+            "alicante-stop-4738",
+            "alicante-stop-3551",
+            "alicante-stop-3552",
+            "alicante-stop-4404",
+            "alicante-stop-3553",
+            "alicante-stop-3040",
+            "alicante-stop-6210",
+            "alicante-stop-2946",
+            "alicante-stop-4116",
+            "alicante-stop-2947",
+            "alicante-stop-2900",
+            "alicante-stop-4760"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "09",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "09",
+          "sourceFile": "https://alibus.es/lines/alicante/09/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-10",
+      "publicCode": "10",
+      "name": "Rambla - Vía Parque - C.C. Vistahermosa",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-10-ida",
+          "directionLabel": "Rambla-San José → Vistahermosa-Eucalipto",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "alicante-stop-4045",
+            "alicante-stop-4400",
+            "alicante-stop-4401",
+            "alicante-stop-4402",
+            "alicante-stop-4403",
+            "alicante-stop-3585",
+            "alicante-stop-3566",
+            "alicante-stop-4700",
+            "alicante-stop-3567",
+            "alicante-stop-4810",
+            "alicante-stop-4800",
+            "alicante-stop-4801",
+            "alicante-stop-4802",
+            "alicante-stop-4812",
+            "alicante-stop-3923",
+            "alicante-stop-6154",
+            "alicante-stop-6159"
+          ]
+        },
+        {
+          "patternId": "alicante-10-vuelta",
+          "directionLabel": "Vistahermosa-Eucalipto → Rambla-San José",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "alicante-stop-6159",
+            "alicante-stop-6153",
+            "alicante-stop-5010",
+            "alicante-stop-4814",
+            "alicante-stop-4806",
+            "alicante-stop-4808",
+            "alicante-stop-4809",
+            "alicante-stop-4811",
+            "alicante-stop-3550",
+            "alicante-stop-4738",
+            "alicante-stop-3551",
+            "alicante-stop-3552",
+            "alicante-stop-4434",
+            "alicante-stop-4435",
+            "alicante-stop-4436",
+            "alicante-stop-4437",
+            "alicante-stop-4438",
+            "alicante-stop-2946",
+            "alicante-stop-4499",
+            "alicante-stop-4045"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "10",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "10",
+          "sourceFile": "https://alibus.es/lines/alicante/10/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-11",
+      "publicCode": "11",
+      "name": "Virgen del Remedio - Avda. Dénia",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-11-ida",
+          "directionLabel": "Pl. Argel-Valle-Inclán → Dénia-Jesuitas",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "alicante-stop-3562",
+            "alicante-stop-3563",
+            "alicante-stop-4142",
+            "alicante-stop-4609",
+            "alicante-stop-4145",
+            "alicante-stop-4112",
+            "alicante-stop-4901",
+            "alicante-stop-4421",
+            "alicante-stop-4422",
+            "alicante-stop-4423",
+            "alicante-stop-4424",
+            "alicante-stop-4425",
+            "alicante-stop-4426",
+            "alicante-stop-3921",
+            "alicante-stop-3975",
+            "alicante-stop-3976",
+            "alicante-stop-4814",
+            "alicante-stop-4902",
+            "alicante-stop-4903",
+            "alicante-stop-2510"
+          ]
+        },
+        {
+          "patternId": "alicante-11-vuelta",
+          "directionLabel": "Dénia-Jesuitas → Pl. Argel-Valle-Inclán",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "alicante-stop-2510",
+            "alicante-stop-4904",
+            "alicante-stop-4803",
+            "alicante-stop-4812",
+            "alicante-stop-5010",
+            "alicante-stop-3930",
+            "alicante-stop-3931",
+            "alicante-stop-4411",
+            "alicante-stop-4412",
+            "alicante-stop-4905",
+            "alicante-stop-4417",
+            "alicante-stop-4418",
+            "alicante-stop-4419",
+            "alicante-stop-4420",
+            "alicante-stop-4113",
+            "alicante-stop-3554",
+            "alicante-stop-3556",
+            "alicante-stop-3581",
+            "alicante-stop-3562"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "11",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "11",
+          "sourceFile": "https://alibus.es/lines/alicante/11/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-11h",
+      "publicCode": "11H",
+      "name": "Juan XXIII - Av. Dénia - Hospital Sant Joan",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-11h-ida",
+          "directionLabel": "Colonia Requena-Rubí → Hospital Sant Joan",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "alicante-stop-4420",
+            "alicante-stop-4421",
+            "alicante-stop-4422",
+            "alicante-stop-4423",
+            "alicante-stop-4424",
+            "alicante-stop-4425",
+            "alicante-stop-4426",
+            "alicante-stop-3921",
+            "alicante-stop-3975",
+            "alicante-stop-3976",
+            "alicante-stop-4814",
+            "alicante-stop-4806",
+            "alicante-stop-4808",
+            "alicante-stop-4809",
+            "alicante-stop-4903",
+            "alicante-stop-2510",
+            "alicante-stop-2598",
+            "alicante-stop-2511",
+            "alicante-stop-2512",
+            "alicante-stop-2513",
+            "alicante-stop-2514",
+            "alicante-stop-2515",
+            "alicante-stop-4912"
+          ]
+        },
+        {
+          "patternId": "alicante-11h-vuelta",
+          "directionLabel": "Hospital Sant Joan → Colonia Requena-Rubí",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "alicante-stop-4912",
+            "alicante-stop-2565",
+            "alicante-stop-2566",
+            "alicante-stop-2567",
+            "alicante-stop-2568",
+            "alicante-stop-2569",
+            "alicante-stop-2570",
+            "alicante-stop-2571",
+            "alicante-stop-4761",
+            "alicante-stop-4800",
+            "alicante-stop-4801",
+            "alicante-stop-4802",
+            "alicante-stop-4812",
+            "alicante-stop-5010",
+            "alicante-stop-3930",
+            "alicante-stop-3931",
+            "alicante-stop-4411",
+            "alicante-stop-4412",
+            "alicante-stop-4905",
+            "alicante-stop-4417",
+            "alicante-stop-4418",
+            "alicante-stop-4419",
+            "alicante-stop-4420"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "11H",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "11H",
+          "sourceFile": "https://alibus.es/lines/alicante/11h/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-12",
+      "publicCode": "12",
+      "name": "Puerta del Mar - San Blas - Juan Pablo II",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-12-ida",
+          "directionLabel": "Puerta del Mar → Plaza Juan Pablo II",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 22
+          },
+          "stopNodeIds": [
+            "alicante-stop-4359",
+            "alicante-stop-4082",
+            "alicante-stop-2682",
+            "alicante-stop-3937",
+            "alicante-stop-2947",
+            "alicante-stop-4264",
+            "alicante-stop-4117",
+            "alicante-stop-4118",
+            "alicante-stop-4301",
+            "alicante-stop-4302",
+            "alicante-stop-4303",
+            "alicante-stop-4304",
+            "alicante-stop-4305",
+            "alicante-stop-4306",
+            "alicante-stop-5101",
+            "alicante-stop-5125",
+            "alicante-stop-5102",
+            "alicante-stop-5103",
+            "alicante-stop-5104",
+            "alicante-stop-5105",
+            "alicante-stop-5109",
+            "alicante-stop-4332"
+          ]
+        },
+        {
+          "patternId": "alicante-12-vuelta",
+          "directionLabel": "Plaza Juan Pablo II → Puerta del Mar",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "alicante-stop-4332",
+            "alicante-stop-5118",
+            "alicante-stop-5110",
+            "alicante-stop-5111",
+            "alicante-stop-5112",
+            "alicante-stop-5119",
+            "alicante-stop-5124",
+            "alicante-stop-5114",
+            "alicante-stop-4318",
+            "alicante-stop-4363",
+            "alicante-stop-4322",
+            "alicante-stop-4323",
+            "alicante-stop-4325",
+            "alicante-stop-4108",
+            "alicante-stop-4109",
+            "alicante-stop-4445",
+            "alicante-stop-3915",
+            "alicante-stop-2606",
+            "alicante-stop-4359"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "12",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "12",
+          "sourceFile": "https://alibus.es/lines/alicante/12/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-13",
+      "publicCode": "13",
+      "name": "Rambla - Villafranqueza",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-13-ida",
+          "directionLabel": "Rambla-Portal de Elche → Villafranqueza-Iglesia",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "alicante-stop-2688",
+            "alicante-stop-3400",
+            "alicante-stop-3920",
+            "alicante-stop-3916",
+            "alicante-stop-3001",
+            "alicante-stop-4215",
+            "alicante-stop-4216",
+            "alicante-stop-4630",
+            "alicante-stop-4908",
+            "alicante-stop-4603",
+            "alicante-stop-4604",
+            "alicante-stop-4606",
+            "alicante-stop-4607",
+            "alicante-stop-4621",
+            "alicante-stop-3562",
+            "alicante-stop-3563",
+            "alicante-stop-3561",
+            "alicante-stop-3008",
+            "alicante-stop-3009",
+            "alicante-stop-3010",
+            "alicante-stop-3011",
+            "alicante-stop-3012",
+            "alicante-stop-3048",
+            "alicante-stop-3013"
+          ]
+        },
+        {
+          "patternId": "alicante-13-vuelta",
+          "directionLabel": "Villafranqueza-Iglesia → Rambla-Portal de Elche",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "alicante-stop-3013",
+            "alicante-stop-3030",
+            "alicante-stop-3031",
+            "alicante-stop-3032",
+            "alicante-stop-3033",
+            "alicante-stop-3554",
+            "alicante-stop-3556",
+            "alicante-stop-3581",
+            "alicante-stop-3582",
+            "alicante-stop-4906",
+            "alicante-stop-4602",
+            "alicante-stop-4909",
+            "alicante-stop-4910",
+            "alicante-stop-4248",
+            "alicante-stop-4249",
+            "alicante-stop-4250",
+            "alicante-stop-3040",
+            "alicante-stop-4438",
+            "alicante-stop-2946",
+            "alicante-stop-4499",
+            "alicante-stop-2688"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "13",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "13",
+          "sourceFile": "https://alibus.es/lines/alicante/13/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-14a",
+      "publicCode": "14A",
+      "name": "Circular Gran Vía 14A",
+      "dataStatus": "legacy-map-scope-official-historical-circular-itinerary-current-stop-code-reconciliation",
+      "patterns": [
+        {
+          "patternId": "alicante-14a-circular",
+          "directionLabel": "Plaza del Mar → Gran Vía → Av. Dénia → Plaza del Mar",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 25
+          },
+          "stopNodeIds": [
+            "alicante-stop-4359",
+            "alicante-stop-4450",
+            "alicante-stop-3102",
+            "alicante-stop-3103",
+            "alicante-stop-3104",
+            "alicante-stop-3105",
+            "alicante-stop-3945",
+            "alicante-stop-3168",
+            "alicante-stop-3506",
+            "alicante-stop-3507",
+            "alicante-stop-3508",
+            "alicante-stop-3526",
+            "alicante-stop-4265",
+            "alicante-stop-4284",
+            "alicante-stop-5013",
+            "alicante-stop-5014",
+            "alicante-stop-4816",
+            "alicante-stop-4805",
+            "alicante-stop-4902",
+            "alicante-stop-4903",
+            "alicante-stop-2510",
+            "alicante-stop-2571",
+            "alicante-stop-4025",
+            "alicante-stop-4027",
+            "alicante-stop-2685"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "A",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "legacy-urban-line-list",
+          "sourceRouteId": "A",
+          "sourceFile": "5a950c14-76ec-4c94-9cb0-6870dd0f49ad.png"
+        },
+        {
+          "source": "alicante-ayuntamiento-historical-itinerary",
+          "sourceRouteId": "14A",
+          "sourceFile": "https://www.alicante.es/es/noticias/apliacion-servicio-del-autobus-urbano"
+        },
+        {
+          "source": "vectalia-historical-service-notice",
+          "sourceRouteId": "14A-14B",
+          "sourceFile": "https://alicante.vectalia.es/notificacion/nueva-linea-14a-14b-circular-gran-via/"
+        },
+        {
+          "source": "vectalia-current-line-14",
+          "sourceRouteId": "14",
+          "sourceFile": "https://alicante.vectalia.es/linea/linea14-plaza-la-vina-denida-jesuitas/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-14b",
+      "publicCode": "14B",
+      "name": "Circular Gran Vía 14B",
+      "dataStatus": "legacy-map-scope-official-historical-circular-itinerary-current-stop-code-reconciliation",
+      "patterns": [
+        {
+          "patternId": "alicante-14b-circular",
+          "directionLabel": "Plaza del Mar → Av. Dénia → Gran Vía → Plaza del Mar",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "alicante-stop-4009",
+            "alicante-stop-2608",
+            "alicante-stop-4065",
+            "alicante-stop-2510",
+            "alicante-stop-4904",
+            "alicante-stop-4803",
+            "alicante-stop-4804",
+            "alicante-stop-4815",
+            "alicante-stop-5012",
+            "alicante-stop-4280",
+            "alicante-stop-4218",
+            "alicante-stop-3516",
+            "alicante-stop-3517",
+            "alicante-stop-3518",
+            "alicante-stop-3147",
+            "alicante-stop-4256",
+            "alicante-stop-3122",
+            "alicante-stop-3123",
+            "alicante-stop-3124",
+            "alicante-stop-3132",
+            "alicante-stop-4450"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "B",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "legacy-urban-line-list",
+          "sourceRouteId": "B",
+          "sourceFile": "5a950c14-76ec-4c94-9cb0-6870dd0f49ad.png"
+        },
+        {
+          "source": "alicante-ayuntamiento-historical-itinerary",
+          "sourceRouteId": "14B",
+          "sourceFile": "https://www.alicante.es/es/noticias/apliacion-servicio-del-autobus-urbano"
+        },
+        {
+          "source": "vectalia-historical-service-notice",
+          "sourceRouteId": "14A-14B",
+          "sourceFile": "https://alicante.vectalia.es/notificacion/nueva-linea-14a-14b-circular-gran-via/"
+        },
+        {
+          "source": "vectalia-current-line-14",
+          "sourceRouteId": "14",
+          "sourceFile": "https://alicante.vectalia.es/linea/linea14-plaza-la-vina-denida-jesuitas/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-22",
+      "publicCode": "22",
+      "name": "Av. Óscar Esplá - Playa San Juan",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-22-ida",
+          "directionLabel": "Estación-Ó. Esplá → PAU 5-Constitución",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 35
+          },
+          "stopNodeIds": [
+            "alicante-stop-2964",
+            "alicante-stop-2602",
+            "alicante-stop-2501",
+            "alicante-stop-2603",
+            "alicante-stop-3915",
+            "alicante-stop-2606",
+            "alicante-stop-4009",
+            "alicante-stop-2608",
+            "alicante-stop-2609",
+            "alicante-stop-2610",
+            "alicante-stop-2611",
+            "alicante-stop-2612",
+            "alicante-stop-2700",
+            "alicante-stop-2727",
+            "alicante-stop-2701",
+            "alicante-stop-2702",
+            "alicante-stop-2703",
+            "alicante-stop-2704",
+            "alicante-stop-2705",
+            "alicante-stop-2706",
+            "alicante-stop-2707",
+            "alicante-stop-2708",
+            "alicante-stop-2724",
+            "alicante-stop-2755",
+            "alicante-stop-2711",
+            "alicante-stop-3602",
+            "alicante-stop-2621",
+            "alicante-stop-2622",
+            "alicante-stop-2624",
+            "alicante-stop-2625",
+            "alicante-stop-2712",
+            "alicante-stop-2733",
+            "alicante-stop-2734",
+            "alicante-stop-6161",
+            "alicante-stop-6160"
+          ]
+        },
+        {
+          "patternId": "alicante-22-vuelta",
+          "directionLabel": "PAU 5-Constitución → Estación-Ó. Esplá",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 31
+          },
+          "stopNodeIds": [
+            "alicante-stop-6160",
+            "alicante-stop-4716",
+            "alicante-stop-2729",
+            "alicante-stop-2663",
+            "alicante-stop-2664",
+            "alicante-stop-2666",
+            "alicante-stop-2731",
+            "alicante-stop-2713",
+            "alicante-stop-2714",
+            "alicante-stop-2715",
+            "alicante-stop-2716",
+            "alicante-stop-2717",
+            "alicante-stop-2718",
+            "alicante-stop-2719",
+            "alicante-stop-2720",
+            "alicante-stop-2721",
+            "alicante-stop-2722",
+            "alicante-stop-2726",
+            "alicante-stop-2723",
+            "alicante-stop-2674",
+            "alicante-stop-2675",
+            "alicante-stop-2676",
+            "alicante-stop-2677",
+            "alicante-stop-2678",
+            "alicante-stop-4359",
+            "alicante-stop-4082",
+            "alicante-stop-2682",
+            "alicante-stop-3100",
+            "alicante-stop-2947",
+            "alicante-stop-4501",
+            "alicante-stop-2964"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "22",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "22",
+          "sourceFile": "https://alibus.es/lines/alicante/22/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-27",
+      "publicCode": "27",
+      "name": "Alicante (Luceros) - Urbanova",
+      "dataStatus": "legacy-map-scope-current-textual-order-official-variant-diagram-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-27a-ida",
+          "directionLabel": "27A Directo · Luceros → Urbanova-Casasempere",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "alicante-stop-3101",
+            "alicante-stop-4117",
+            "alicante-stop-4118",
+            "alicante-stop-3102",
+            "alicante-stop-3103",
+            "alicante-stop-3104",
+            "alicante-stop-3105",
+            "alicante-stop-3945",
+            "alicante-stop-3131",
+            "alicante-stop-3108",
+            "alicante-stop-3109",
+            "alicante-stop-3110",
+            "alicante-stop-3112",
+            "alicante-stop-3154",
+            "alicante-stop-3113",
+            "alicante-stop-3137",
+            "alicante-stop-3138",
+            "alicante-stop-3115"
+          ]
+        },
+        {
+          "patternId": "alicante-27a-vuelta",
+          "directionLabel": "27A Directo · Urbanova-Casasempere → Luceros",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "alicante-stop-3115",
+            "alicante-stop-3116",
+            "alicante-stop-3117",
+            "alicante-stop-3118",
+            "alicante-stop-3156",
+            "alicante-stop-3119",
+            "alicante-stop-3120",
+            "alicante-stop-3121",
+            "alicante-stop-3122",
+            "alicante-stop-3123",
+            "alicante-stop-3124",
+            "alicante-stop-3132",
+            "alicante-stop-2602",
+            "alicante-stop-4445",
+            "alicante-stop-3101"
+          ]
+        },
+        {
+          "patternId": "alicante-27b-ida",
+          "directionLabel": "27B Polígono Agua Amarga · Luceros → Urbanova-Casasempere",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "alicante-stop-3101",
+            "alicante-stop-4117",
+            "alicante-stop-4118",
+            "alicante-stop-3102",
+            "alicante-stop-3103",
+            "alicante-stop-3104",
+            "alicante-stop-3105",
+            "alicante-stop-3945",
+            "alicante-stop-3131",
+            "alicante-stop-3108",
+            "alicante-stop-3109",
+            "alicante-stop-3110",
+            "alicante-stop-3112",
+            "alicante-stop-3146",
+            "alicante-stop-3651",
+            "alicante-stop-3652",
+            "alicante-stop-3665",
+            "alicante-stop-3141",
+            "alicante-stop-3154",
+            "alicante-stop-3113",
+            "alicante-stop-3137",
+            "alicante-stop-3138",
+            "alicante-stop-3115"
+          ]
+        },
+        {
+          "patternId": "alicante-27b-vuelta",
+          "directionLabel": "27B Polígono Agua Amarga · Urbanova-Casasempere → Luceros",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "alicante-stop-3115",
+            "alicante-stop-3116",
+            "alicante-stop-3117",
+            "alicante-stop-3118",
+            "alicante-stop-3156",
+            "alicante-stop-3146",
+            "alicante-stop-3651",
+            "alicante-stop-3652",
+            "alicante-stop-3665",
+            "alicante-stop-3141",
+            "alicante-stop-3119",
+            "alicante-stop-3120",
+            "alicante-stop-3121",
+            "alicante-stop-3122",
+            "alicante-stop-3123",
+            "alicante-stop-3124",
+            "alicante-stop-3132",
+            "alicante-stop-2602",
+            "alicante-stop-4445",
+            "alicante-stop-3101"
+          ]
+        },
+        {
+          "patternId": "alicante-27c-ida",
+          "directionLabel": "27C EUIPO / Ciudad de la Luz / Polígono Agua Amarga · Luceros → Urbanova-Casasempere",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 25
+          },
+          "stopNodeIds": [
+            "alicante-stop-3101",
+            "alicante-stop-4117",
+            "alicante-stop-4118",
+            "alicante-stop-3102",
+            "alicante-stop-3103",
+            "alicante-stop-3104",
+            "alicante-stop-3105",
+            "alicante-stop-3945",
+            "alicante-stop-3131",
+            "alicante-stop-3108",
+            "alicante-stop-3109",
+            "alicante-stop-3110",
+            "alicante-stop-3111",
+            "alicante-stop-3139",
+            "alicante-stop-3145",
+            "alicante-stop-3146",
+            "alicante-stop-3651",
+            "alicante-stop-3652",
+            "alicante-stop-3665",
+            "alicante-stop-3141",
+            "alicante-stop-3154",
+            "alicante-stop-3113",
+            "alicante-stop-3137",
+            "alicante-stop-3138",
+            "alicante-stop-3115"
+          ]
+        },
+        {
+          "patternId": "alicante-27c-vuelta",
+          "directionLabel": "27C Polígono Agua Amarga / Ciudad de la Luz / EUIPO · Urbanova-Casasempere → Luceros",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "alicante-stop-3115",
+            "alicante-stop-3116",
+            "alicante-stop-3117",
+            "alicante-stop-3118",
+            "alicante-stop-3156",
+            "alicante-stop-3146",
+            "alicante-stop-3651",
+            "alicante-stop-3652",
+            "alicante-stop-3665",
+            "alicante-stop-3144",
+            "alicante-stop-3130",
+            "alicante-stop-3120",
+            "alicante-stop-3121",
+            "alicante-stop-3122",
+            "alicante-stop-3123",
+            "alicante-stop-3124",
+            "alicante-stop-3132",
+            "alicante-stop-2602",
+            "alicante-stop-4445",
+            "alicante-stop-3101"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "27",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "27",
+          "sourceFile": "https://alibus.es/lines/alicante/27/"
+        },
+        {
+          "source": "official-vectalia-variant-diagram",
+          "sourceRouteId": "27A/27B/27C",
+          "sourceFile": "Vectalia line 27 Ida/Vuelta route diagrams supplied by the user"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-39",
+      "publicCode": "39",
+      "name": "Rambla - Centro De Tecnificación",
+      "dataStatus": "legacy-map-scope-current-official-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-39-ida",
+          "directionLabel": "Rambla-San Fernando → Centro De Tecnificación",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "alicante-stop-2999",
+            "alicante-stop-2682",
+            "alicante-stop-3100",
+            "alicante-stop-3700",
+            "alicante-stop-3701",
+            "alicante-stop-3702",
+            "alicante-stop-3709",
+            "alicante-stop-3703",
+            "alicante-stop-3704"
+          ]
+        },
+        {
+          "patternId": "alicante-39-vuelta",
+          "directionLabel": "Centro De Tecnificación → Rambla-San Fernando",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "alicante-stop-3704",
+            "alicante-stop-3705",
+            "alicante-stop-3706",
+            "alicante-stop-3710",
+            "alicante-stop-3707",
+            "alicante-stop-3708",
+            "alicante-stop-2604",
+            "alicante-stop-4499",
+            "alicante-stop-2999"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "39",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "legacy-urban-line-list",
+          "sourceRouteId": "39",
+          "sourceFile": "5a950c14-76ec-4c94-9cb0-6870dd0f49ad.png"
+        },
+        {
+          "source": "vectalia-current-route-page",
+          "sourceRouteId": "39",
+          "sourceFile": "https://alicante.vectalia.es/linea/39-explanada-centro-de-tecnificacion/"
+        },
+        {
+          "source": "alibus-current-route-page",
+          "sourceRouteId": "39",
+          "sourceFile": "https://alibus.es/lines/alicante/39/"
+        }
+      ]
+    }
+  ]
+}

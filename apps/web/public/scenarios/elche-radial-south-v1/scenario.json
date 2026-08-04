@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-south-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Radial South Network - Lines R7 and R8",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "99ef775b22cb930b11e9ca7a73eb3d9e14b7005d9d367ce01831b2354ac80734",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "64113832c7b608449541aea3c9463066963552db9f17c16e6f15f99fe2bd80b5"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "a28570a3bfee1848cc71985bec4a8e2cb97f434d51fd74c965d6705db3e2e5cc"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "f8607e1808146f8a67b30ccb00f77e150f05dcea8d0648f784017d91711d9968"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "be660fb57f3833fc4aec4a94a65fc4f85da984fc6041e0708fbf10793c64b677"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "d6f87f95f1430392e55ef636a2bd719b6e4559c3654392600cd68b7447b3d719"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

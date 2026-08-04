@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-core-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Alicante Legacy Core Network - Lines 01, 02 and 03",
+  "primarySettlementId": "es-alicante",
+  "settlementIds": [
+    "es-alicante"
+  ],
+  "contentHash": "adb4b67cb1065eac0d886324a29b7561ad4e0046ec4717e3f6f162733ed04f33",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "6e8d8c70c64f9c7e895cb461f17eebd5ddeb39eaaba6cd0308a672dda961d4a5"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "ca4e3babff0d797463f9027ce347445d50146fbe8a16f1c650cacbab7622fb03"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "dfdfa24d6cd56b2f7009b3cfc16d5e80fccd45a6548bbcf78d7ccbcc33e79585"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "04a3c295b7775c36184226b60c6936b2d810902600ac769f91218e9d47b27100"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "0055435bbcb0b35362b7af6086affe1396d0b4883689929d5a1347bcac2e7222"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

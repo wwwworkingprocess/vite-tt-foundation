@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-night-v1",
+  "generatedAt": "2026-08-01T22:37:00+02:00",
+  "sources": [
+    {
+      "sourceId": "buselche-official-nt-2026-08-01",
+      "name": "BusElche / Avanza official nocturnal service page",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-nocturna"
+    },
+    {
+      "sourceId": "alibus-elche-nt-2026-08-01",
+      "name": "Current AliBus ordered NT stop page with municipal codes and stop map coordinates",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "https://alibus.es/lines/elche/linea-nt.html"
+    },
+    {
+      "sourceId": "moovit-elche-nt-2026-08-01",
+      "name": "Current Moovit NT direction sequences used as an independent route-order cross-check",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "external-web-reference"
+    },
+    {
+      "sourceId": "elche-accepted-identity-registry-v5",
+      "name": "Accepted A/B/C, D/F/H, E/J, G/I and K1/K2/L scenarios used for exact shared identity reuse",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-urban-abc-v1/stops.json; ../elche-legacy-east-v1/stops.json; ../elche-legacy-hospital-general-v1/stops.json; ../elche-legacy-vinalopo-v1/stops.json; ../elche-legacy-crosscity-v1/stops.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "elche-nt-route-cycle-capture-v1",
+      "description": "Combines the current 25-stop outbound and 14-stop return lists into one complete 37-node vehicle cycle. The repeated Maexca handoff and Av. Novelda 59 cycle boundary are removed, and closesLoop=true adds the final edge once."
+    },
+    {
+      "transformationId": "elche-municipal-code-identity-v5",
+      "description": "Uses municipal stop code as the stable elche-stop and elche-place suffix. Accepted identities from earlier Elche scenarios are copied exactly."
+    },
+    {
+      "transformationId": "elche-singleton-stopplace-projection-v5",
+      "description": "Creates one strict parser-compatible StopPlace for each new directional StopNode. No proximity-only physical merges are made."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Writes established scenario assets, computes asset SHA-256 values and aggregate contentHash, and registers the scenario."
+    }
+  ],
+  "warnings": [
+    "Runtime StopNode sourceReferences remain empty for new nodes because that field accepts only genuine OpenStreetMap platform or stop_position components. Municipal codes and AliBus map-link coordinates remain build provenance.",
+    "Accepted StopNode and StopPlace objects reused from earlier Elche scenarios retain their exact previous bytes and coordinates.",
+    "NT is stored as one explicit complete vehicle cycle. The first StopNode is not repeated at the end; closesLoop=true adds the closing edge exactly once.",
+    "The two consecutive Plaza Chimeneas occurrences are different municipal stops: elche-stop-159 and elche-stop-324. They remain distinct graph vertices and singleton StopPlaces.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern itinerary edges.",
+    "The official service page also lists special nocturnal services N1, N2, N3, NP1, NP2 and NP3. They are not part of the map's NT legacy line and are excluded from this component scenario."
+  ]
+}

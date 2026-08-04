@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-north-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Alicante Legacy North Network - Lines 08, 11, 11H and 13",
+  "primarySettlementId": "es-alicante",
+  "settlementIds": [
+    "es-alicante",
+    "es-sant-joan-dalacant"
+  ],
+  "contentHash": "9f61315ad59bf07229076b5f623b3f778fd2ae4c73b098202674d060f55822f5",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "7688787b96f593b1b2cd5ff3441dacf66cacf2eacaa7908b566712eb7b33afd8"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "a6de863cd7200e1c4e0f23fecf104e3e64859fd79859e55d35fc97615fc106f9"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "47d03721ef8466dd5d292a87b10c141e45a9ad09b7faa96910521e05987a421f"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "e2bc258b4a6d95ed38e0979bb6f68ddb88c1f4dff4be21468ddf12a3ae667cbf"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "3d8fb126527faaacbfd81808e1dd0e7587f20ce165e5bf7771727d67e7356923"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

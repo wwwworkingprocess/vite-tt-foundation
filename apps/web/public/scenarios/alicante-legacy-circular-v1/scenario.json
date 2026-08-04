@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-circular-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Alicante Legacy Circular Network - Lines 14A, 14B and 39",
+  "primarySettlementId": "es-alicante",
+  "settlementIds": [
+    "es-alicante"
+  ],
+  "contentHash": "8afcea075f0923274654e7a9bb3b541dc52dea42c6d577056e75a8400f7dc6f9",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "07d535205ab4931cf9d98bcf6c28aa59828997287ae975f7b6918fd75e6c8535"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "aa638a43c416fd06e4a2d767e70ef42837e7d364d90e88b14a61ed363b8ac4bc"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "b58881dfbcd6326b4d407073dc41ed37a8c36c288e4be1d1a711e2e1dac31942"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "d0b9f0962e45a5ce22c7ab0b7f6f9e583e180cbb2e6d8cfe2bec4aa88918b918"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "c5c248efd419faa3ebb2e87eca8ed8b8e8231772eaba85f5127fab235f874c81"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

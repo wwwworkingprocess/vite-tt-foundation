@@ -1,0 +1,300 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-periphery-v1",
+  "routes": [
+    {
+      "routeId": "alicante-07",
+      "publicCode": "07",
+      "name": "Av. Óscar Esplá - El Rebolledo",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-07-ida",
+          "directionLabel": "Estación-Ó. Esplá → Paseo Mayor 75",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "alicante-stop-4760",
+            "alicante-stop-4119",
+            "alicante-stop-4120",
+            "alicante-stop-3523",
+            "alicante-stop-4121",
+            "alicante-stop-4122",
+            "alicante-stop-4123",
+            "alicante-stop-4124",
+            "alicante-stop-4259",
+            "alicante-stop-4260",
+            "alicante-stop-4502",
+            "alicante-stop-4503",
+            "alicante-stop-4504",
+            "alicante-stop-4520",
+            "alicante-stop-4508",
+            "alicante-stop-4513",
+            "alicante-stop-3222",
+            "alicante-stop-3223",
+            "alicante-stop-3224",
+            "alicante-stop-3225",
+            "alicante-stop-3226"
+          ]
+        },
+        {
+          "patternId": "alicante-07-vuelta",
+          "directionLabel": "Paseo Mayor 75 → Estación-Ó. Esplá",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "alicante-stop-3226",
+            "alicante-stop-3227",
+            "alicante-stop-3228",
+            "alicante-stop-3229",
+            "alicante-stop-3230",
+            "alicante-stop-6165",
+            "alicante-stop-4521",
+            "alicante-stop-4522",
+            "alicante-stop-4523",
+            "alicante-stop-4524",
+            "alicante-stop-4205",
+            "alicante-stop-4206",
+            "alicante-stop-4103",
+            "alicante-stop-4104",
+            "alicante-stop-4105",
+            "alicante-stop-4213",
+            "alicante-stop-4106",
+            "alicante-stop-4107",
+            "alicante-stop-4760"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "07",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "07",
+          "sourceFile": "https://alibus.es/lines/alicante/07/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-27",
+      "publicCode": "27",
+      "name": "Alicante (Luceros) - Urbanova",
+      "dataStatus": "legacy-map-scope-current-textual-order-official-variant-diagram-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-27a-ida",
+          "directionLabel": "27A Directo · Luceros → Urbanova-Casasempere",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "alicante-stop-3101",
+            "alicante-stop-4117",
+            "alicante-stop-4118",
+            "alicante-stop-3102",
+            "alicante-stop-3103",
+            "alicante-stop-3104",
+            "alicante-stop-3105",
+            "alicante-stop-3945",
+            "alicante-stop-3131",
+            "alicante-stop-3108",
+            "alicante-stop-3109",
+            "alicante-stop-3110",
+            "alicante-stop-3112",
+            "alicante-stop-3154",
+            "alicante-stop-3113",
+            "alicante-stop-3137",
+            "alicante-stop-3138",
+            "alicante-stop-3115"
+          ]
+        },
+        {
+          "patternId": "alicante-27a-vuelta",
+          "directionLabel": "27A Directo · Urbanova-Casasempere → Luceros",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "alicante-stop-3115",
+            "alicante-stop-3116",
+            "alicante-stop-3117",
+            "alicante-stop-3118",
+            "alicante-stop-3156",
+            "alicante-stop-3119",
+            "alicante-stop-3120",
+            "alicante-stop-3121",
+            "alicante-stop-3122",
+            "alicante-stop-3123",
+            "alicante-stop-3124",
+            "alicante-stop-3132",
+            "alicante-stop-2602",
+            "alicante-stop-4445",
+            "alicante-stop-3101"
+          ]
+        },
+        {
+          "patternId": "alicante-27b-ida",
+          "directionLabel": "27B Polígono Agua Amarga · Luceros → Urbanova-Casasempere",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "alicante-stop-3101",
+            "alicante-stop-4117",
+            "alicante-stop-4118",
+            "alicante-stop-3102",
+            "alicante-stop-3103",
+            "alicante-stop-3104",
+            "alicante-stop-3105",
+            "alicante-stop-3945",
+            "alicante-stop-3131",
+            "alicante-stop-3108",
+            "alicante-stop-3109",
+            "alicante-stop-3110",
+            "alicante-stop-3112",
+            "alicante-stop-3146",
+            "alicante-stop-3651",
+            "alicante-stop-3652",
+            "alicante-stop-3665",
+            "alicante-stop-3141",
+            "alicante-stop-3154",
+            "alicante-stop-3113",
+            "alicante-stop-3137",
+            "alicante-stop-3138",
+            "alicante-stop-3115"
+          ]
+        },
+        {
+          "patternId": "alicante-27b-vuelta",
+          "directionLabel": "27B Polígono Agua Amarga · Urbanova-Casasempere → Luceros",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "alicante-stop-3115",
+            "alicante-stop-3116",
+            "alicante-stop-3117",
+            "alicante-stop-3118",
+            "alicante-stop-3156",
+            "alicante-stop-3146",
+            "alicante-stop-3651",
+            "alicante-stop-3652",
+            "alicante-stop-3665",
+            "alicante-stop-3141",
+            "alicante-stop-3119",
+            "alicante-stop-3120",
+            "alicante-stop-3121",
+            "alicante-stop-3122",
+            "alicante-stop-3123",
+            "alicante-stop-3124",
+            "alicante-stop-3132",
+            "alicante-stop-2602",
+            "alicante-stop-4445",
+            "alicante-stop-3101"
+          ]
+        },
+        {
+          "patternId": "alicante-27c-ida",
+          "directionLabel": "27C EUIPO / Ciudad de la Luz / Polígono Agua Amarga · Luceros → Urbanova-Casasempere",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 25
+          },
+          "stopNodeIds": [
+            "alicante-stop-3101",
+            "alicante-stop-4117",
+            "alicante-stop-4118",
+            "alicante-stop-3102",
+            "alicante-stop-3103",
+            "alicante-stop-3104",
+            "alicante-stop-3105",
+            "alicante-stop-3945",
+            "alicante-stop-3131",
+            "alicante-stop-3108",
+            "alicante-stop-3109",
+            "alicante-stop-3110",
+            "alicante-stop-3111",
+            "alicante-stop-3139",
+            "alicante-stop-3145",
+            "alicante-stop-3146",
+            "alicante-stop-3651",
+            "alicante-stop-3652",
+            "alicante-stop-3665",
+            "alicante-stop-3141",
+            "alicante-stop-3154",
+            "alicante-stop-3113",
+            "alicante-stop-3137",
+            "alicante-stop-3138",
+            "alicante-stop-3115"
+          ]
+        },
+        {
+          "patternId": "alicante-27c-vuelta",
+          "directionLabel": "27C Polígono Agua Amarga / Ciudad de la Luz / EUIPO · Urbanova-Casasempere → Luceros",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "alicante-stop-3115",
+            "alicante-stop-3116",
+            "alicante-stop-3117",
+            "alicante-stop-3118",
+            "alicante-stop-3156",
+            "alicante-stop-3146",
+            "alicante-stop-3651",
+            "alicante-stop-3652",
+            "alicante-stop-3665",
+            "alicante-stop-3144",
+            "alicante-stop-3130",
+            "alicante-stop-3120",
+            "alicante-stop-3121",
+            "alicante-stop-3122",
+            "alicante-stop-3123",
+            "alicante-stop-3124",
+            "alicante-stop-3132",
+            "alicante-stop-2602",
+            "alicante-stop-4445",
+            "alicante-stop-3101"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "27",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "27",
+          "sourceFile": "https://alibus.es/lines/alicante/27/"
+        },
+        {
+          "source": "official-vectalia-variant-diagram",
+          "sourceRouteId": "27A/27B/27C",
+          "sourceFile": "Vectalia line 27 Ida/Vuelta route diagrams supplied by the user"
+        }
+      ]
+    }
+  ]
+}

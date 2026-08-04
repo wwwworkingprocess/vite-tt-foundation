@@ -1,0 +1,335 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-north-v1",
+  "routes": [
+    {
+      "routeId": "alicante-08",
+      "publicCode": "08",
+      "name": "Rambla - Virgen del Remedio",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-08-ida",
+          "directionLabel": "Rambla-Portal de Elche → Virgen del Remedio-Pérez Mirete",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "alicante-stop-2688",
+            "alicante-stop-3400",
+            "alicante-stop-3047",
+            "alicante-stop-2904",
+            "alicante-stop-2905",
+            "alicante-stop-2906",
+            "alicante-stop-2907",
+            "alicante-stop-2909",
+            "alicante-stop-2910",
+            "alicante-stop-2911",
+            "alicante-stop-2912",
+            "alicante-stop-2979",
+            "alicante-stop-3581",
+            "alicante-stop-2980"
+          ]
+        },
+        {
+          "patternId": "alicante-08-vuelta",
+          "directionLabel": "Virgen del Remedio-Pérez Mirete → Rambla-Portal de Elche",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "alicante-stop-2980",
+            "alicante-stop-3555",
+            "alicante-stop-3557",
+            "alicante-stop-4652",
+            "alicante-stop-2936",
+            "alicante-stop-2937",
+            "alicante-stop-2938",
+            "alicante-stop-2939",
+            "alicante-stop-2940",
+            "alicante-stop-2941",
+            "alicante-stop-2942",
+            "alicante-stop-2943",
+            "alicante-stop-2944",
+            "alicante-stop-4438",
+            "alicante-stop-2946",
+            "alicante-stop-4499",
+            "alicante-stop-2688"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "08",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "08",
+          "sourceFile": "https://alibus.es/lines/alicante/08/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-11",
+      "publicCode": "11",
+      "name": "Virgen del Remedio - Avda. Dénia",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-11-ida",
+          "directionLabel": "Pl. Argel-Valle-Inclán → Dénia-Jesuitas",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "alicante-stop-3562",
+            "alicante-stop-3563",
+            "alicante-stop-4142",
+            "alicante-stop-4609",
+            "alicante-stop-4145",
+            "alicante-stop-4112",
+            "alicante-stop-4901",
+            "alicante-stop-4421",
+            "alicante-stop-4422",
+            "alicante-stop-4423",
+            "alicante-stop-4424",
+            "alicante-stop-4425",
+            "alicante-stop-4426",
+            "alicante-stop-3921",
+            "alicante-stop-3975",
+            "alicante-stop-3976",
+            "alicante-stop-4814",
+            "alicante-stop-4902",
+            "alicante-stop-4903",
+            "alicante-stop-2510"
+          ]
+        },
+        {
+          "patternId": "alicante-11-vuelta",
+          "directionLabel": "Dénia-Jesuitas → Pl. Argel-Valle-Inclán",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "alicante-stop-2510",
+            "alicante-stop-4904",
+            "alicante-stop-4803",
+            "alicante-stop-4812",
+            "alicante-stop-5010",
+            "alicante-stop-3930",
+            "alicante-stop-3931",
+            "alicante-stop-4411",
+            "alicante-stop-4412",
+            "alicante-stop-4905",
+            "alicante-stop-4417",
+            "alicante-stop-4418",
+            "alicante-stop-4419",
+            "alicante-stop-4420",
+            "alicante-stop-4113",
+            "alicante-stop-3554",
+            "alicante-stop-3556",
+            "alicante-stop-3581",
+            "alicante-stop-3562"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "11",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "11",
+          "sourceFile": "https://alibus.es/lines/alicante/11/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-11h",
+      "publicCode": "11H",
+      "name": "Juan XXIII - Av. Dénia - Hospital Sant Joan",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-11h-ida",
+          "directionLabel": "Colonia Requena-Rubí → Hospital Sant Joan",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "alicante-stop-4420",
+            "alicante-stop-4421",
+            "alicante-stop-4422",
+            "alicante-stop-4423",
+            "alicante-stop-4424",
+            "alicante-stop-4425",
+            "alicante-stop-4426",
+            "alicante-stop-3921",
+            "alicante-stop-3975",
+            "alicante-stop-3976",
+            "alicante-stop-4814",
+            "alicante-stop-4806",
+            "alicante-stop-4808",
+            "alicante-stop-4809",
+            "alicante-stop-4903",
+            "alicante-stop-2510",
+            "alicante-stop-2598",
+            "alicante-stop-2511",
+            "alicante-stop-2512",
+            "alicante-stop-2513",
+            "alicante-stop-2514",
+            "alicante-stop-2515",
+            "alicante-stop-4912"
+          ]
+        },
+        {
+          "patternId": "alicante-11h-vuelta",
+          "directionLabel": "Hospital Sant Joan → Colonia Requena-Rubí",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "alicante-stop-4912",
+            "alicante-stop-2565",
+            "alicante-stop-2566",
+            "alicante-stop-2567",
+            "alicante-stop-2568",
+            "alicante-stop-2569",
+            "alicante-stop-2570",
+            "alicante-stop-2571",
+            "alicante-stop-4761",
+            "alicante-stop-4800",
+            "alicante-stop-4801",
+            "alicante-stop-4802",
+            "alicante-stop-4812",
+            "alicante-stop-5010",
+            "alicante-stop-3930",
+            "alicante-stop-3931",
+            "alicante-stop-4411",
+            "alicante-stop-4412",
+            "alicante-stop-4905",
+            "alicante-stop-4417",
+            "alicante-stop-4418",
+            "alicante-stop-4419",
+            "alicante-stop-4420"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "11H",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "11H",
+          "sourceFile": "https://alibus.es/lines/alicante/11h/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-13",
+      "publicCode": "13",
+      "name": "Rambla - Villafranqueza",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-13-ida",
+          "directionLabel": "Rambla-Portal de Elche → Villafranqueza-Iglesia",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "alicante-stop-2688",
+            "alicante-stop-3400",
+            "alicante-stop-3920",
+            "alicante-stop-3916",
+            "alicante-stop-3001",
+            "alicante-stop-4215",
+            "alicante-stop-4216",
+            "alicante-stop-4630",
+            "alicante-stop-4908",
+            "alicante-stop-4603",
+            "alicante-stop-4604",
+            "alicante-stop-4606",
+            "alicante-stop-4607",
+            "alicante-stop-4621",
+            "alicante-stop-3562",
+            "alicante-stop-3563",
+            "alicante-stop-3561",
+            "alicante-stop-3008",
+            "alicante-stop-3009",
+            "alicante-stop-3010",
+            "alicante-stop-3011",
+            "alicante-stop-3012",
+            "alicante-stop-3048",
+            "alicante-stop-3013"
+          ]
+        },
+        {
+          "patternId": "alicante-13-vuelta",
+          "directionLabel": "Villafranqueza-Iglesia → Rambla-Portal de Elche",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "alicante-stop-3013",
+            "alicante-stop-3030",
+            "alicante-stop-3031",
+            "alicante-stop-3032",
+            "alicante-stop-3033",
+            "alicante-stop-3554",
+            "alicante-stop-3556",
+            "alicante-stop-3581",
+            "alicante-stop-3582",
+            "alicante-stop-4906",
+            "alicante-stop-4602",
+            "alicante-stop-4909",
+            "alicante-stop-4910",
+            "alicante-stop-4248",
+            "alicante-stop-4249",
+            "alicante-stop-4250",
+            "alicante-stop-3040",
+            "alicante-stop-4438",
+            "alicante-stop-2946",
+            "alicante-stop-4499",
+            "alicante-stop-2688"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "13",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "13",
+          "sourceFile": "https://alibus.es/lines/alicante/13/"
+        }
+      ]
+    }
+  ]
+}

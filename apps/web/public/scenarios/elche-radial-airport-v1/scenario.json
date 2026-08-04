@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-airport-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Radial Airport Network - Lines R10 and R11",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "a38b14bae4115794529cc3b95d1e3794ebf2fd873a43a4a6b14e97d682a096a0",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "eda4fc5da5c6fcf3195b00a413550e0594ee3c28cf16f1612718f760738fcfae"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "152e29b00e385d16633392764725511cbb5579d89ef99dc1ff3972bc6187e47c"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "2ad4ea78f4839fca52f28042729c12fa6f9a4aae41ac43db108a192854c8db8b"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "a4bb88be0155f5798c942fbdcebed076d55dc4b164ef585503db2a22b22b0dfb"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "7c7251482595f67a6ec2281ff11c568fc0ff647404fb507e068cf78b93e94afa"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

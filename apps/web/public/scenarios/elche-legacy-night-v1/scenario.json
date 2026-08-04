@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-night-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Legacy Night Network - Line NT",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "001147ad26fd25c7566fa345e9d2f965ed4ae388b61bffa480ac0d8022f177cd",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "d6785e144a2cd59f1c7bd2570ccff6f9c27a00862d2924f3aced81dc6bd5f06a"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "0b3d5dee6957d29831809717e9a0c88f11d948e5d3ca8ab12f8ec787e7c523f9"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "2a424f48b2322dcafa2794a3df2ec38216923bbbbf5dac2aea620f64fe3b6343"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "bb96e54c90a1d5167b9481e20bbc91a8be1bacb9441cb63ee08f2c6a3d4f159c"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "5f8206378b40cc19e133c9265a1cd89abd55abedd7331f7e1321f72df346ab5b"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

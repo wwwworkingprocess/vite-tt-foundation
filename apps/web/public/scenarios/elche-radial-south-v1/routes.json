@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-south-v1",
+  "routes": [
+    {
+      "routeId": "elche-R7",
+      "publicCode": "R7",
+      "name": "Alzabares - La Hoya - Santa Fe - La Marina",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-R7-cycle",
+          "directionLabel": "Estación Autobuses / La Hoya / Santa Fe / La Marina",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 58
+          },
+          "stopNodeIds": [
+            "elche-stop-091",
+            "elche-stop-117",
+            "elche-stop-205",
+            "elche-stop-102",
+            "elche-stop-135",
+            "elche-stop-136",
+            "elche-stop-100",
+            "elche-stop-355",
+            "elche-stop-1066",
+            "elche-stop-1067",
+            "elche-stop-1068",
+            "elche-stop-1069",
+            "elche-stop-1070",
+            "elche-stop-1071",
+            "elche-stop-1072",
+            "elche-stop-1073",
+            "elche-stop-1074",
+            "elche-stop-1075",
+            "elche-stop-1076",
+            "elche-stop-1077",
+            "elche-stop-1078",
+            "elche-stop-1079",
+            "elche-stop-1080",
+            "elche-stop-1081",
+            "elche-stop-1082",
+            "elche-stop-1083",
+            "elche-stop-1084",
+            "elche-stop-1085",
+            "elche-stop-1086",
+            "elche-stop-1087",
+            "elche-stop-1088",
+            "elche-stop-1089",
+            "elche-stop-1090",
+            "elche-stop-1091",
+            "elche-stop-1092",
+            "elche-stop-1093",
+            "elche-stop-1094",
+            "elche-stop-1095",
+            "elche-stop-1096",
+            "elche-stop-1097",
+            "elche-stop-1098",
+            "elche-stop-1099",
+            "elche-stop-1100",
+            "elche-stop-1101",
+            "elche-stop-1102",
+            "elche-stop-1103",
+            "elche-stop-1104",
+            "elche-stop-1105",
+            "elche-stop-1106",
+            "elche-stop-287",
+            "elche-stop-288",
+            "elche-stop-054",
+            "elche-stop-055",
+            "elche-stop-072",
+            "elche-stop-073",
+            "elche-stop-074",
+            "elche-stop-344",
+            "elche-stop-345"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "R7",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r7"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "R7",
+          "sourceFile": "https://alibus.es/lines/elche/linea-r7.html"
+        },
+        {
+          "source": "uploaded-radial-diagram",
+          "sourceRouteId": "R7",
+          "sourceFile": "r7.png"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-R8",
+      "publicCode": "R8",
+      "name": "Alzabares - Asprillas - Las Bayas",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-R8-cycle",
+          "directionLabel": "Estación Autobuses / Asprillas / Las Bayas",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 49
+          },
+          "stopNodeIds": [
+            "elche-stop-091",
+            "elche-stop-117",
+            "elche-stop-205",
+            "elche-stop-102",
+            "elche-stop-135",
+            "elche-stop-136",
+            "elche-stop-100",
+            "elche-stop-355",
+            "elche-stop-1107",
+            "elche-stop-1273",
+            "elche-stop-1108",
+            "elche-stop-1109",
+            "elche-stop-1110",
+            "elche-stop-1111",
+            "elche-stop-1112",
+            "elche-stop-1113",
+            "elche-stop-1114",
+            "elche-stop-1115",
+            "elche-stop-1116",
+            "elche-stop-1117",
+            "elche-stop-1118",
+            "elche-stop-1119",
+            "elche-stop-1120",
+            "elche-stop-1121",
+            "elche-stop-1275",
+            "elche-stop-1122",
+            "elche-stop-1276",
+            "elche-stop-1123",
+            "elche-stop-1124",
+            "elche-stop-1125",
+            "elche-stop-1126",
+            "elche-stop-1127",
+            "elche-stop-1128",
+            "elche-stop-1129",
+            "elche-stop-1130",
+            "elche-stop-1131",
+            "elche-stop-1132",
+            "elche-stop-1133",
+            "elche-stop-1134",
+            "elche-stop-1135",
+            "elche-stop-1136",
+            "elche-stop-1274",
+            "elche-stop-1137",
+            "elche-stop-027",
+            "elche-stop-072",
+            "elche-stop-073",
+            "elche-stop-074",
+            "elche-stop-344",
+            "elche-stop-345"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "R8",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r8"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "R8",
+          "sourceFile": "https://alibus.es/lines/elche/linea-r8.html"
+        },
+        {
+          "source": "uploaded-radial-diagram",
+          "sourceRouteId": "R8",
+          "sourceFile": "not-provided"
+        }
+      ]
+    }
+  ]
+}

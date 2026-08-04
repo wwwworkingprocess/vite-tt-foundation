@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-all-v1",
+  "generatedAt": "2026-08-01T22:43:00+02:00",
+  "sources": [
+    {
+      "sourceId": "component-elche-urban-abc-v1",
+      "name": "Accepted component scenario elche-urban-abc-v1 at content hash 1513c8715ccfc38031fc9fd2fc5e2c1c0970fac85f4a29019f9b12f1dd0be011",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-urban-abc-v1/scenario.json"
+    },
+    {
+      "sourceId": "component-elche-legacy-east-v1",
+      "name": "Accepted component scenario elche-legacy-east-v1 at content hash 5d99e42f89190c525895a232ee3cb3017232784853f788d143899939bae5761f",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-legacy-east-v1/scenario.json"
+    },
+    {
+      "sourceId": "component-elche-legacy-hospital-general-v1",
+      "name": "Accepted component scenario elche-legacy-hospital-general-v1 at content hash ef1b2f59da5865379d96c364c55200579aefb65cb93408336347126e16f518f1",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-legacy-hospital-general-v1/scenario.json"
+    },
+    {
+      "sourceId": "component-elche-legacy-vinalopo-v1",
+      "name": "Accepted component scenario elche-legacy-vinalopo-v1 at content hash 9c73c7474aeb1fd7e72a6b8632f90ad27a11532ad1aff3b07644802a47b8b2d8",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-legacy-vinalopo-v1/scenario.json"
+    },
+    {
+      "sourceId": "component-elche-legacy-crosscity-v1",
+      "name": "Accepted component scenario elche-legacy-crosscity-v1 at content hash 204dada443f4d768e6fce364719ab564dfe97292ed3c447545250a99451fee2e",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-legacy-crosscity-v1/scenario.json"
+    },
+    {
+      "sourceId": "component-elche-legacy-night-v1",
+      "name": "Accepted component scenario elche-legacy-night-v1 at content hash 001147ad26fd25c7566fa345e9d2f965ed4ae388b61bffa480ac0d8022f177cd",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-legacy-night-v1/scenario.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "elche-accepted-component-merge-v1",
+      "description": "Merges the accepted A/B/C, D/F/H, E/J, G/I, K1/K2/L and NT component scenarios. Route objects, pattern objects, StopNode objects and StopPlace objects are copied without semantic modification."
+    },
+    {
+      "transformationId": "elche-global-identity-union-v1",
+      "description": "Unions identical stable municipal-code StopNode and StopPlace objects across components. A conflicting object for the same identifier is a hard build failure."
+    },
+    {
+      "transformationId": "elche-non-radial-scope-v1",
+      "description": "Defines elche-legacy-all-v1 as the complete discovered non-radial network: A, B, C, D, E, F, G, H, I, J, K1, K2, L and NT. R1, R2 and R3 are deferred."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Writes scenario assets, computes asset SHA-256 values and aggregate contentHash, and registers the merged scenario."
+    }
+  ],
+  "warnings": [
+    "The scenario ID uses 'all' to mean all currently approved non-radial Elche services. R1, R2 and R3 are deliberately absent.",
+    "No route, pattern, StopNode or StopPlace object was rewritten during the merge; accepted component identities remain authoritative.",
+    "Physical StopPlace identity does not create route edges, reverse patterns, or cross-pattern itinerary edges.",
+    "Runtime StopNode sourceReferences remain exactly as accepted in the source components."
+  ]
+}

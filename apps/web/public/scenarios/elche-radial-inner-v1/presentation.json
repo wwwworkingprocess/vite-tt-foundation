@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-inner-v1",
+  "title": "Elche Radial Inner Network - Lines R1, R2 and R3",
+  "initialView": {
+    "center": {
+      "latitude": 38.28302376229725,
+      "longitude": -0.705982222554477
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "elche-R1": {
+      "label": "R1",
+      "color": "#f0b400"
+    },
+    "elche-R2": {
+      "label": "R2",
+      "color": "#d49400"
+    },
+    "elche-R3": {
+      "label": "R3",
+      "color": "#b87800"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "This component contains only the original inner radial services R1, R2 and R3."
+  ]
+}

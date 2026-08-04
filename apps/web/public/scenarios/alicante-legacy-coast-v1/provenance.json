@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-coast-v1",
+  "generatedAt": "2026-08-02T17:12:00+02:00",
+  "sources": [
+    {
+      "sourceId": "alicante-legacy-network-map",
+      "name": "Supplied Alicante legacy urban network map",
+      "sourceFile": "bus-alicante-lines-1024x910-949355444.webp",
+      "role": "Defines the target legacy urban route family, public route codes and broad corridors."
+    },
+    {
+      "sourceId": "alibus-line-09-current",
+      "name": "AliBus Alicante line 09 ordered stop lists",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/alicante/09/",
+      "role": "Ordered Ida and Vuelta stop occurrences, operator stop codes and stop-detail map coordinates."
+    },
+    {
+      "sourceId": "alibus-line-10-current",
+      "name": "AliBus Alicante line 10 ordered stop lists",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/alicante/10/",
+      "role": "Ordered Ida and Vuelta stop occurrences, operator stop codes and stop-detail map coordinates."
+    },
+    {
+      "sourceId": "alibus-line-22-current",
+      "name": "AliBus Alicante line 22 ordered stop lists",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/alicante/22/",
+      "role": "Ordered Ida and Vuelta stop occurrences, operator stop codes and stop-detail map coordinates."
+    },
+    {
+      "sourceId": "mitrams-nap-alicante-gtfs",
+      "name": "Spanish National Access Point - Autobuses urbanos de Alicante",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://nap.transportes.gob.es/Files/Detail/1392",
+      "role": "Official current-network cross-check for operator, route and stop inventory. Powered by MITRAMS."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "alicante-accepted-identity-reuse-v1",
+      "description": "Copies complete accepted Alicante StopNode and StopPlace objects exactly when numeric operator stop codes already exist in the accepted registry."
+    },
+    {
+      "transformationId": "alicante-operator-stop-code-identity-v1",
+      "description": "Uses the published numeric operator stop code as the stable suffix and creates one singleton StopPlace for every new code."
+    },
+    {
+      "transformationId": "alicante-independent-direction-patterns-v1",
+      "description": "Stores all six published Ida/Vuelta lists as independent directed patterns. No reverse pattern is inferred and closesLoop is false."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Appends exactly one catalog descriptor and recomputes all hashes from serialized bytes."
+    }
+  ],
+  "warnings": [
+    "The supplied map defines a legacy route-family scope, while the available ordered stop lists and coordinates are current 2026 captures. This package does not claim a frozen historical timetable snapshot.",
+    "Legacy line 09 is labelled Óscar Esplá - Albufereta - Playa de San Juan, while the current ordered source extends to Naciones-Holanda.",
+    "Legacy line 10 is labelled Explanada - Vía Parque - C.C. Vistahermosa, while the current ordered source uses a Rambla boundary.",
+    "Legacy line 22 is labelled Alicante - Cabo de la Huerta - Playa de San Juan, while the current ordered source extends to PAU 5-Constitución.",
+    "Different numeric stop codes remain separate StopNodes and singleton StopPlaces even when names match, coordinates coincide, or stops lie close together.",
+    "Accepted Alicante objects are retained complete-object exact even when current source labels differ.",
+    "StopNode.sourceReferences is empty because no genuine OpenStreetMap platform or stop_position evidence was used.",
+    "Powered by MITRAMS. Official NAP data attribution: https://www.transportes.gob.es/"
+  ]
+}

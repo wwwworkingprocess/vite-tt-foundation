@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-crosscity-v1",
+  "title": "Elche Legacy Cross-City Network - Lines K1, K2 and L",
+  "initialView": {
+    "center": {
+      "latitude": 38.266674079057,
+      "longitude": -0.6942421936780565
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "elche-K1": {
+      "label": "K1",
+      "color": "#5d3a9b"
+    },
+    "elche-K2": {
+      "label": "K2",
+      "color": "#3949ab"
+    },
+    "elche-L": {
+      "label": "L",
+      "color": "#00838f"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

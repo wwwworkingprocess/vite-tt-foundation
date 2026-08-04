@@ -1,0 +1,328 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-core-v1",
+  "routes": [
+    {
+      "routeId": "alicante-01",
+      "publicCode": "01",
+      "name": "San Gabriel - Ciudad Elegida",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-01-ida",
+          "directionLabel": "San Gabriel → Ciudad Elegida",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 43
+          },
+          "stopNodeIds": [
+            "alicante-stop-3900",
+            "alicante-stop-3901",
+            "alicante-stop-3902",
+            "alicante-stop-3903",
+            "alicante-stop-3904",
+            "alicante-stop-3905",
+            "alicante-stop-3906",
+            "alicante-stop-3500",
+            "alicante-stop-3907",
+            "alicante-stop-3908",
+            "alicante-stop-3909",
+            "alicante-stop-3910",
+            "alicante-stop-3961",
+            "alicante-stop-3122",
+            "alicante-stop-3123",
+            "alicante-stop-3911",
+            "alicante-stop-3124",
+            "alicante-stop-3912",
+            "alicante-stop-3126",
+            "alicante-stop-4446",
+            "alicante-stop-3127",
+            "alicante-stop-4445",
+            "alicante-stop-4046",
+            "alicante-stop-3129",
+            "alicante-stop-2902",
+            "alicante-stop-4111",
+            "alicante-stop-3916",
+            "alicante-stop-3001",
+            "alicante-stop-3917",
+            "alicante-stop-3003",
+            "alicante-stop-3004",
+            "alicante-stop-3005",
+            "alicante-stop-3006",
+            "alicante-stop-3918",
+            "alicante-stop-3919",
+            "alicante-stop-3960",
+            "alicante-stop-4410",
+            "alicante-stop-3921",
+            "alicante-stop-3975",
+            "alicante-stop-3976",
+            "alicante-stop-3923",
+            "alicante-stop-3924",
+            "alicante-stop-3926"
+          ]
+        },
+        {
+          "patternId": "alicante-01-vuelta",
+          "directionLabel": "Ciudad Elegida → San Gabriel",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 40
+          },
+          "stopNodeIds": [
+            "alicante-stop-3927",
+            "alicante-stop-3928",
+            "alicante-stop-3929",
+            "alicante-stop-3930",
+            "alicante-stop-3931",
+            "alicante-stop-3932",
+            "alicante-stop-3933",
+            "alicante-stop-3934",
+            "alicante-stop-3957",
+            "alicante-stop-4428",
+            "alicante-stop-4429",
+            "alicante-stop-3038",
+            "alicante-stop-3039",
+            "alicante-stop-3040",
+            "alicante-stop-6210",
+            "alicante-stop-2946",
+            "alicante-stop-3937",
+            "alicante-stop-3938",
+            "alicante-stop-3939",
+            "alicante-stop-3940",
+            "alicante-stop-3941",
+            "alicante-stop-3103",
+            "alicante-stop-3942",
+            "alicante-stop-3943",
+            "alicante-stop-3104",
+            "alicante-stop-3944",
+            "alicante-stop-3105",
+            "alicante-stop-3945",
+            "alicante-stop-3502",
+            "alicante-stop-3528",
+            "alicante-stop-3949",
+            "alicante-stop-3950",
+            "alicante-stop-3525",
+            "alicante-stop-3951",
+            "alicante-stop-3952",
+            "alicante-stop-3953",
+            "alicante-stop-3954",
+            "alicante-stop-3955",
+            "alicante-stop-3956",
+            "alicante-stop-3900"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "01",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "01",
+          "sourceFile": "https://alibus.es/lines/alicante/01/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-02",
+      "publicCode": "02",
+      "name": "La Florida - Sagrada Familia",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-02-ida",
+          "directionLabel": "La Florida → Sagrada Familia",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "alicante-stop-4000",
+            "alicante-stop-4001",
+            "alicante-stop-4002",
+            "alicante-stop-4003",
+            "alicante-stop-4004",
+            "alicante-stop-4005",
+            "alicante-stop-3123",
+            "alicante-stop-3911",
+            "alicante-stop-3124",
+            "alicante-stop-3912",
+            "alicante-stop-3126",
+            "alicante-stop-4446",
+            "alicante-stop-3127",
+            "alicante-stop-2603",
+            "alicante-stop-3915",
+            "alicante-stop-2606",
+            "alicante-stop-4009",
+            "alicante-stop-2608",
+            "alicante-stop-4065",
+            "alicante-stop-4010",
+            "alicante-stop-4036",
+            "alicante-stop-4012",
+            "alicante-stop-4013",
+            "alicante-stop-3566",
+            "alicante-stop-4014",
+            "alicante-stop-4015",
+            "alicante-stop-4016",
+            "alicante-stop-4017",
+            "alicante-stop-4018"
+          ]
+        },
+        {
+          "patternId": "alicante-02-vuelta",
+          "directionLabel": "Sagrada Familia → La Florida",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "alicante-stop-4018",
+            "alicante-stop-4019",
+            "alicante-stop-4020",
+            "alicante-stop-4021",
+            "alicante-stop-4022",
+            "alicante-stop-4023",
+            "alicante-stop-4024",
+            "alicante-stop-2507",
+            "alicante-stop-4025",
+            "alicante-stop-4027",
+            "alicante-stop-2685",
+            "alicante-stop-4359",
+            "alicante-stop-4082",
+            "alicante-stop-2682",
+            "alicante-stop-3937",
+            "alicante-stop-3938",
+            "alicante-stop-3939",
+            "alicante-stop-3940",
+            "alicante-stop-3941",
+            "alicante-stop-3103",
+            "alicante-stop-3942",
+            "alicante-stop-3943",
+            "alicante-stop-3104",
+            "alicante-stop-3944",
+            "alicante-stop-3105",
+            "alicante-stop-4028",
+            "alicante-stop-4029",
+            "alicante-stop-4030",
+            "alicante-stop-4031",
+            "alicante-stop-4032",
+            "alicante-stop-4033",
+            "alicante-stop-4000"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "02",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "02",
+          "sourceFile": "https://alibus.es/lines/alicante/02/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-03",
+      "publicCode": "03",
+      "name": "Ciudad de Asís - Colonia Requena",
+      "dataStatus": "legacy-map-scope-current-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-03-ida",
+          "directionLabel": "Ciudad de Asís → Colonia Requena",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 25
+          },
+          "stopNodeIds": [
+            "alicante-stop-4100",
+            "alicante-stop-4101",
+            "alicante-stop-4102",
+            "alicante-stop-4103",
+            "alicante-stop-4104",
+            "alicante-stop-4105",
+            "alicante-stop-3504",
+            "alicante-stop-4106",
+            "alicante-stop-4107",
+            "alicante-stop-4108",
+            "alicante-stop-4109",
+            "alicante-stop-2603",
+            "alicante-stop-3915",
+            "alicante-stop-2902",
+            "alicante-stop-4111",
+            "alicante-stop-3916",
+            "alicante-stop-3001",
+            "alicante-stop-3917",
+            "alicante-stop-3003",
+            "alicante-stop-3004",
+            "alicante-stop-3005",
+            "alicante-stop-3045",
+            "alicante-stop-4145",
+            "alicante-stop-4112",
+            "alicante-stop-4113"
+          ]
+        },
+        {
+          "patternId": "alicante-03-vuelta",
+          "directionLabel": "Colonia Requena → Ciudad de Asís",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 27
+          },
+          "stopNodeIds": [
+            "alicante-stop-4113",
+            "alicante-stop-3034",
+            "alicante-stop-3035",
+            "alicante-stop-3036",
+            "alicante-stop-3046",
+            "alicante-stop-3038",
+            "alicante-stop-3039",
+            "alicante-stop-3040",
+            "alicante-stop-6210",
+            "alicante-stop-4115",
+            "alicante-stop-4116",
+            "alicante-stop-4264",
+            "alicante-stop-4117",
+            "alicante-stop-4118",
+            "alicante-stop-4119",
+            "alicante-stop-4120",
+            "alicante-stop-3521",
+            "alicante-stop-4121",
+            "alicante-stop-4122",
+            "alicante-stop-4123",
+            "alicante-stop-4124",
+            "alicante-stop-4125",
+            "alicante-stop-4133",
+            "alicante-stop-4128",
+            "alicante-stop-4129",
+            "alicante-stop-4130",
+            "alicante-stop-4100"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "03",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "03",
+          "sourceFile": "https://alibus.es/lines/alicante/03/"
+        }
+      ]
+    }
+  ]
+}

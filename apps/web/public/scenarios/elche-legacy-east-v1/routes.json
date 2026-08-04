@@ -1,0 +1,227 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-east-v1",
+  "routes": [
+    {
+      "routeId": "elche-D",
+      "publicCode": "D",
+      "name": "Carrús - Altabix - Hospital General",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-D-circular",
+          "directionLabel": "Carrús / Hospital General",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 39
+          },
+          "stopNodeIds": [
+            "elche-stop-026",
+            "elche-stop-027",
+            "elche-stop-072",
+            "elche-stop-073",
+            "elche-stop-074",
+            "elche-stop-075",
+            "elche-stop-076",
+            "elche-stop-077",
+            "elche-stop-078",
+            "elche-stop-208",
+            "elche-stop-079",
+            "elche-stop-236",
+            "elche-stop-080",
+            "elche-stop-081",
+            "elche-stop-082",
+            "elche-stop-083",
+            "elche-stop-084",
+            "elche-stop-085",
+            "elche-stop-086",
+            "elche-stop-087",
+            "elche-stop-043",
+            "elche-stop-044",
+            "elche-stop-045",
+            "elche-stop-159",
+            "elche-stop-088",
+            "elche-stop-313",
+            "elche-stop-089",
+            "elche-stop-090",
+            "elche-stop-091",
+            "elche-stop-092",
+            "elche-stop-093",
+            "elche-stop-094",
+            "elche-stop-095",
+            "elche-stop-096",
+            "elche-stop-097",
+            "elche-stop-098",
+            "elche-stop-099",
+            "elche-stop-267",
+            "elche-stop-100"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "D",
+          "sourceFile": "external-web-reference"
+        },
+        {
+          "source": "moovit-current-route-order",
+          "sourceRouteId": "5736046",
+          "sourceFile": "external-web-reference"
+        },
+        {
+          "source": "alibus-stop-code-position-capture",
+          "sourceRouteId": "D",
+          "sourceFile": "external-web-reference"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-F",
+      "publicCode": "F",
+      "name": "Centre - Altabix - Sant Antoni",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-F-circular",
+          "directionLabel": "Centre / Zona Estadi",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 38
+          },
+          "stopNodeIds": [
+            "elche-stop-115",
+            "elche-stop-002",
+            "elche-stop-056",
+            "elche-stop-089",
+            "elche-stop-090",
+            "elche-stop-091",
+            "elche-stop-092",
+            "elche-stop-093",
+            "elche-stop-094",
+            "elche-stop-095",
+            "elche-stop-118",
+            "elche-stop-237",
+            "elche-stop-228",
+            "elche-stop-197",
+            "elche-stop-180",
+            "elche-stop-181",
+            "elche-stop-182",
+            "elche-stop-258",
+            "elche-stop-260",
+            "elche-stop-234",
+            "elche-stop-262",
+            "elche-stop-230",
+            "elche-stop-231",
+            "elche-stop-200",
+            "elche-stop-108",
+            "elche-stop-119",
+            "elche-stop-120",
+            "elche-stop-121",
+            "elche-stop-077",
+            "elche-stop-078",
+            "elche-stop-208",
+            "elche-stop-079",
+            "elche-stop-236",
+            "elche-stop-080",
+            "elche-stop-117",
+            "elche-stop-205",
+            "elche-stop-116",
+            "elche-stop-113"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "F",
+          "sourceFile": "external-web-reference"
+        },
+        {
+          "source": "moovit-current-route-order",
+          "sourceRouteId": "5736048",
+          "sourceFile": "external-web-reference"
+        },
+        {
+          "source": "alibus-stop-code-position-capture",
+          "sourceRouteId": "F",
+          "sourceFile": "external-web-reference"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-H",
+      "publicCode": "H",
+      "name": "Centre - Universitat - C. Esportiva - Nou Altabix",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-H-circular",
+          "directionLabel": "Centre / Nou Altabix",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 36
+          },
+          "stopNodeIds": [
+            "elche-stop-115",
+            "elche-stop-210",
+            "elche-stop-211",
+            "elche-stop-195",
+            "elche-stop-199",
+            "elche-stop-135",
+            "elche-stop-136",
+            "elche-stop-344",
+            "elche-stop-345",
+            "elche-stop-092",
+            "elche-stop-314",
+            "elche-stop-315",
+            "elche-stop-316",
+            "elche-stop-317",
+            "elche-stop-318",
+            "elche-stop-263",
+            "elche-stop-264",
+            "elche-stop-265",
+            "elche-stop-266",
+            "elche-stop-143",
+            "elche-stop-232",
+            "elche-stop-295",
+            "elche-stop-238",
+            "elche-stop-239",
+            "elche-stop-240",
+            "elche-stop-233",
+            "elche-stop-241",
+            "elche-stop-351",
+            "elche-stop-304",
+            "elche-stop-144",
+            "elche-stop-145",
+            "elche-stop-146",
+            "elche-stop-147",
+            "elche-stop-148",
+            "elche-stop-149",
+            "elche-stop-113"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "H",
+          "sourceFile": "external-web-reference"
+        },
+        {
+          "source": "moovit-current-route-order",
+          "sourceRouteId": "5736050",
+          "sourceFile": "external-web-reference"
+        },
+        {
+          "source": "alibus-stop-code-position-capture",
+          "sourceRouteId": "H",
+          "sourceFile": "external-web-reference"
+        }
+      ]
+    }
+  ]
+}

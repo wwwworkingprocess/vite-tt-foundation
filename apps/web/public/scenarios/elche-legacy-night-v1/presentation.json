@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-night-v1",
+  "title": "Elche Legacy Night Network - Line NT",
+  "initialView": {
+    "center": {
+      "latitude": 38.26789290574525,
+      "longitude": -0.6949194514556589
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "elche-NT": {
+      "label": "NT",
+      "color": "#1f2937"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

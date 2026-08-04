@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-inner-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Radial Inner Network - Lines R1, R2 and R3",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "55157158881d928dafbc2e5daae3e0ca0287e4282720ede0a8a33453f0b05e66",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "f174458e6caeff54d4a0a4778fc277e4f3018bcd25159d90c76db8a03f1530ad"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "d13e741cadc1dcb396bddea8ba659a8aaca01b5c3c6968e59f4a7fe7aa27e7d6"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "a6adeb43866143d6b7bf169219954b5f91b5acb9115a1d4629c613a83cc288a0"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "1e67029844fac5ba70ea1e5d4af6d4274a85099a2c08ffe96dcbea934064950d"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "95f5de6aab6bdc087f52f6cbd5b111ce40974fff2740271c0adad845fe975aa6"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

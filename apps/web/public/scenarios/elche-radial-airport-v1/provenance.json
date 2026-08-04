@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-airport-v1",
+  "generatedAt": "2026-08-02T14:38:00+02:00",
+  "sources": [
+    {
+      "sourceId": "buselche-official-r10-r11-2026-08-02",
+      "name": "BusElche / Avanza official route pages for radial Lines R10 and R11",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r10; https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r11"
+    },
+    {
+      "sourceId": "ayuntamiento-elche-pedanias-r10-r11-2026-08-02",
+      "name": "Ayuntamiento de Elche radial service directory",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://www.elche.es/movilidad/autobus-a-pedanias/"
+    },
+    {
+      "sourceId": "alibus-elche-r10-r11-2026-08-02",
+      "name": "Current AliBus ordered R10 and R11 stop pages with municipal stop codes and map coordinates",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "https://alibus.es/lines/elche/linea-r10.html; https://alibus.es/lines/elche/linea-r11.html"
+    },
+    {
+      "sourceId": "uploaded-radial-diagram-r10",
+      "name": "Uploaded municipal-style route diagram for R10",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "r10.png"
+    },
+    {
+      "sourceId": "uploaded-radial-diagram-r11",
+      "name": "Uploaded municipal-style route diagram for R11",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "r11.png"
+    },
+    {
+      "sourceId": "elche-accepted-identity-registry-airport-v1",
+      "name": "All accepted Elche scenario packages in the south baseline, used for exact StopNode and StopPlace identity reuse",
+      "accessedAt": "2026-08-02",
+      "sourceFile": "../elche-*/stops.json in scenarios-elche-radial-south-v1.zip"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "elche-r10-cycle-and-event-variants-v1",
+      "description": "Combines current R10 Ida and Vuelta lists into one complete event cycle after removing the duplicated handoff 1311 and repeated cycle-boundary 091. The base pattern removes diagram-marked event-only stops 1216 and 1221; the event pattern retains them. Both close from 236 to 091 exactly once."
+    },
+    {
+      "transformationId": "elche-r11-carrus-current-cycle-v1",
+      "description": "Combines the current ordered R11 Carrús Ida and Vuelta lists after removing duplicated handoff 1220 and repeated cycle-boundary 015. The pattern closes from 008 to 015 exactly once."
+    },
+    {
+      "transformationId": "elche-r11-sector-v-diagram-cycle-v1",
+      "description": "Builds the distinct schedule-dependent Sector V cycle from the uploaded diagram: common directed corridor 088 through airport and back to 323, followed by the explicitly listed Sector V branch 033, 034, 128, 130, 305, 312, 306, then closes to 088. It is not concatenated with the Carrús branch."
+    },
+    {
+      "transformationId": "elche-radial-municipal-code-identity-v5",
+      "description": "Uses municipal stop code as stable identity. Accepted objects are copied complete-object exact. New codes receive deterministic elche-stop-/elche-place- identities and singleton StopPlaces."
+    },
+    {
+      "transformationId": "elche-radial-canonical-serialization-v2",
+      "description": "Serializes StopPlaces and StopNodes in ascending numeric municipal-code order and creates deterministic lexicographically ordered ZIP entries with fixed metadata."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Writes final scenario assets, computes asset SHA-256 values and aggregate contentHash, and appends exactly one catalog descriptor."
+    }
+  ],
+  "warnings": [
+    "Runtime StopNode sourceReferences remain empty for new nodes because that field accepts only genuine OpenStreetMap platform or stop_position evidence. Municipal codes, route pages, diagrams and map coordinates remain provenance evidence.",
+    "R10 stop codes 1216 and 1221 are marked by the supplied R10 diagram as event-dependent. The current ordered page lists them in its normal direction lists, so both base and event patterns are retained rather than silently choosing one.",
+    "R11 source material disagrees at the urban branch. The current ordered page exposes the Carrús cycle. The supplied diagram explicitly lists separate Carrús and Sector V branches and shows code 323 in the common upper boundary. No current ordered textual Sector V list was found.",
+    "The R11 Sector V pattern is therefore diagram-derived and lower-confidence than the current Carrús pattern. It preserves only labels and order visibly supported by the diagram and does not invent a synthetic connector between the two branches.",
+    "The current R11 Carrús page includes IFA stops 1216 and 1221; the supplied R11 diagram does not. The current ordered source is retained for the Carrús pattern, while the diagram-derived Sector V pattern follows the diagram and omits them.",
+    "Different municipal codes remain distinct StopNodes and singleton StopPlaces even when names or coordinates are close. No name-, proximity- or exact-coordinate merge was performed.",
+    "closesLoop creates exactly one final-to-first edge per pattern. Internal loops remain possible only when produced by explicit consecutive entries or non-consecutive revisits.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, cross-pattern itinerary edges or vehicle lifecycle edges.",
+    "All earlier scenario files, including the grandfathered Torrevieja sourceReferences issue, are preserved byte-for-byte and are not corrected in this build."
+  ]
+}

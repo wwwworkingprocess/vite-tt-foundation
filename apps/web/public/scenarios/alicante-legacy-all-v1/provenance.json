@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-all-v1",
+  "generatedAt": "2026-08-03T18:26:00+02:00",
+  "sources": [
+    {
+      "sourceId": "alicante-legacy-core-v1",
+      "name": "Accepted component scenario alicante-legacy-core-v1",
+      "scenarioId": "alicante-legacy-core-v1",
+      "contentHash": "adb4b67cb1065eac0d886324a29b7561ad4e0046ec4717e3f6f162733ed04f33",
+      "sourceFile": "scenarios/alicante-legacy-core-v1/scenario.json"
+    },
+    {
+      "sourceId": "alicante-legacy-west-v1",
+      "name": "Accepted component scenario alicante-legacy-west-v1",
+      "scenarioId": "alicante-legacy-west-v1",
+      "contentHash": "2b75e1fb28e656096930475d849dd3bb1e6538d70307c9541a2a2976278c5133",
+      "sourceFile": "scenarios/alicante-legacy-west-v1/scenario.json"
+    },
+    {
+      "sourceId": "alicante-legacy-north-v1",
+      "name": "Accepted component scenario alicante-legacy-north-v1",
+      "scenarioId": "alicante-legacy-north-v1",
+      "contentHash": "9f61315ad59bf07229076b5f623b3f778fd2ae4c73b098202674d060f55822f5",
+      "sourceFile": "scenarios/alicante-legacy-north-v1/scenario.json"
+    },
+    {
+      "sourceId": "alicante-legacy-coast-v1",
+      "name": "Accepted component scenario alicante-legacy-coast-v1",
+      "scenarioId": "alicante-legacy-coast-v1",
+      "contentHash": "e4eb7d746bb0fe4b7d18ad606728b24863b2b5e056dab3abbfc4d3b8ef2391c2",
+      "sourceFile": "scenarios/alicante-legacy-coast-v1/scenario.json"
+    },
+    {
+      "sourceId": "alicante-legacy-periphery-v1",
+      "name": "Accepted component scenario alicante-legacy-periphery-v1",
+      "scenarioId": "alicante-legacy-periphery-v1",
+      "contentHash": "6a6b909171c0cc2f7ffd5199bcde3c4adfabe93ac66ce7de668125dbf9c0f79f",
+      "sourceFile": "scenarios/alicante-legacy-periphery-v1/scenario.json"
+    },
+    {
+      "sourceId": "alicante-legacy-circular-v1",
+      "name": "Accepted component scenario alicante-legacy-circular-v1",
+      "scenarioId": "alicante-legacy-circular-v1",
+      "contentHash": "8afcea075f0923274654e7a9bb3b541dc52dea42c6d577056e75a8400f7dc6f9",
+      "sourceFile": "scenarios/alicante-legacy-circular-v1/scenario.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "alicante-legacy-component-union-v1",
+      "description": "Copies all route and pattern objects exactly from the six accepted Alicante component scenarios, orders routes as 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 11H, 12, 13, 14A, 14B, 22, 27 and 39, and unions StopNodes and StopPlaces by stable operator-code-derived ID. Any complete-object conflict is a hard failure."
+    },
+    {
+      "transformationId": "alicante-legacy-routed-identity-projection-v1",
+      "description": "Includes only StopNodes referenced by copied Alicante legacy route patterns and only their referenced StopPlaces. Stop arrays are serialized in ascending numeric operator-code order; no name, proximity or coordinate merge is performed."
+    },
+    {
+      "transformationId": "alicante-legacy-settlement-union-v1",
+      "description": "Preserves the accepted settlement identities es-alicante and es-sant-joan-dalacant and derives whole-network center and bounds from the merged routed StopPlaces assigned to each settlement."
+    },
+    {
+      "transformationId": "alicante-legacy-merge-presentation-v1",
+      "description": "Copies each component route style exactly, combines them in canonical route order, and provides one whole-network initial view. Presentation metadata creates no graph semantics."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Adds exactly one catalog descriptor and recomputes all asset and aggregate SHA-256 values from serialized bytes."
+    }
+  ],
+  "warnings": [
+    "This is a pure merge of accepted Alicante components; no route sequence, pattern, operator identity, coordinate or StopPlace mapping was rediscovered or normalized during the merge.",
+    "The included scope is exactly 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 11H, 12, 13, 14A, 14B, 22, 27 and 39. Services outside the supplied legacy urban-lines category remain excluded.",
+    "The component scenarios combine legacy route-family scope with current ordered stop evidence and geography. Every previously documented component-level source discrepancy remains inherited.",
+    "Line 01 Vuelta retains the accepted removal of one consecutive duplicate source occurrence of stop 3930, preventing a self-edge.",
+    "Line 07 retains only the accepted regular legacy pattern pair; the separately exposed Polígonos/7P working remains excluded.",
+    "Line 27 retains six explicit open patterns: 27A, 27B and 27C Ida/Vuelta. No branch is concatenated into a fictitious itinerary.",
+    "Lines 14A and 14B remain separate passenger-facing circular routes with independently ordered patterns and closesLoop true. Neither route is generated by reversing the other.",
+    "The later/current Line 14 Gran Vía Sur extension remains excluded from the accepted legacy 14A/14B scope.",
+    "Line 39 remains two independent open Ida/Vuelta patterns.",
+    "Hospital Sant Joan stop 4912 remains assigned to es-sant-joan-dalacant exactly as accepted in alicante-legacy-north-v1.",
+    "New-coordinate reconciliation boundaries documented in the accepted circular component remain inherited; the merge does not alter those positions.",
+    "Different operator codes remain distinct identities even when names or coordinates are similar or equal."
+  ]
+}

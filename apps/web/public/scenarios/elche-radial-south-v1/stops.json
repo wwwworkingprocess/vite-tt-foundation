@@ -1,0 +1,2170 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-south-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-027",
+      "name": "Ies Pere Ibarra - L'Avet",
+      "position": {
+        "latitude": 38.2611458,
+        "longitude": -0.6894226
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-054",
+      "name": "Portalada",
+      "position": {
+        "latitude": 38.2612613,
+        "longitude": -0.6875769
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-055",
+      "name": "Hospital General - Teulada",
+      "position": {
+        "latitude": 38.2608727,
+        "longitude": -0.6854215
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-072",
+      "name": "Hospital General-IES P.Ibarra",
+      "position": {
+        "latitude": 38.2624087818751,
+        "longitude": -0.685372799002814
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-073",
+      "name": "Magraner",
+      "position": {
+        "latitude": 38.2648001333104,
+        "longitude": -0.683850645383908
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-074",
+      "name": "Politecnico",
+      "position": {
+        "latitude": 38.2667691746898,
+        "longitude": -0.68529099162762
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-091",
+      "name": "Estacion Autobuses",
+      "position": {
+        "latitude": 38.2724969915679,
+        "longitude": -0.691599547242461
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-100",
+      "name": "IES C.Sempere",
+      "position": {
+        "latitude": 38.2622834733106,
+        "longitude": -0.685565918052257
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-102",
+      "name": "Puerta De Alicante",
+      "position": {
+        "latitude": 38.2673240767109,
+        "longitude": -0.695184319597658
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-117",
+      "name": "V.Cabeza-H.Pensionista",
+      "position": {
+        "latitude": 38.2707176202431,
+        "longitude": -0.694706855508726
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-135",
+      "name": "Jesuitinas",
+      "position": {
+        "latitude": 38.2668428810851,
+        "longitude": -0.693208872654522
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-136",
+      "name": "Av.Juan Carlos I",
+      "position": {
+        "latitude": 38.2680274378854,
+        "longitude": -0.688506960242556
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-205",
+      "name": "Virgen de la Cabeza",
+      "position": {
+        "latitude": 38.269562594757,
+        "longitude": -0.69482356248444
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-287",
+      "name": "Antonio De Ulloa",
+      "position": {
+        "latitude": 38.2542748600428,
+        "longitude": -0.693332254269679
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-288",
+      "name": "Escorxador",
+      "position": {
+        "latitude": 38.2568760449049,
+        "longitude": -0.69235861239541
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-344",
+      "name": "Tractat D'Elx",
+      "position": {
+        "latitude": 38.2700732536018,
+        "longitude": -0.687442123261588
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-345",
+      "name": "Est.Autobuses-Balsa Moros",
+      "position": {
+        "latitude": 38.2725138374218,
+        "longitude": -0.690226256224255
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-355",
+      "name": "Hospital General Pedanías",
+      "position": {
+        "latitude": 38.2602427022272,
+        "longitude": -0.6840520295829
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1066",
+      "name": "Crta. De Dolores - Poligono Vizcarra",
+      "position": {
+        "latitude": 38.2426940209739,
+        "longitude": -0.700022668979032
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1067",
+      "name": "Crta. De Dolores - Estacion Agricola",
+      "position": {
+        "latitude": 38.2473428944461,
+        "longitude": -0.698086001971043
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1068",
+      "name": "Crta. De La Marina - Cooperativa 1",
+      "position": {
+        "latitude": 38.2507151355049,
+        "longitude": -0.691715485907921
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1069",
+      "name": "Crta. De La Marina - P. Agroaliment. 1",
+      "position": {
+        "latitude": 38.2438274973747,
+        "longitude": -0.686595621156357
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1070",
+      "name": "Crta. De La Marina - Cno. Carmaet 1",
+      "position": {
+        "latitude": 38.2350455271646,
+        "longitude": -0.68504772179212
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1071",
+      "name": "Crta. De La Marina - Cno. Quatre Pilars 1",
+      "position": {
+        "latitude": 38.2290516399133,
+        "longitude": -0.686154095080356
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1072",
+      "name": "Crta. De La Marina - Restaurante 1",
+      "position": {
+        "latitude": 38.2245777349867,
+        "longitude": -0.686663598764816
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1073",
+      "name": "La Hoya - Jardin Del Donante 1",
+      "position": {
+        "latitude": 38.217161177637,
+        "longitude": -0.684675890643813
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1074",
+      "name": "La Hoya - Torre Del Gallo 1",
+      "position": {
+        "latitude": 38.2115757371558,
+        "longitude": -0.683584186090629
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1075",
+      "name": "Crta. De La Marina - Tienda 1",
+      "position": {
+        "latitude": 38.2016671804966,
+        "longitude": -0.679951021787808
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1076",
+      "name": "Crta. De La Marina - Gasolinera 1",
+      "position": {
+        "latitude": 38.1962995089912,
+        "longitude": -0.678937092399058
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1077",
+      "name": "Crta. De La Marina - Viveros 1",
+      "position": {
+        "latitude": 38.1922192851896,
+        "longitude": -0.677324656968266
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1078",
+      "name": "Crta. De La Marina - Santa Fe 1",
+      "position": {
+        "latitude": 38.1855050178172,
+        "longitude": -0.673285725564293
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1079",
+      "name": "Crta. De La Marina - Pistas Deportivas 1",
+      "position": {
+        "latitude": 38.1778453058221,
+        "longitude": -0.671048013528894
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1080",
+      "name": "Crta. De La Marina - Cno.S.Fulgencio 1",
+      "position": {
+        "latitude": 38.1689216090656,
+        "longitude": -0.66864687738333
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1081",
+      "name": "Crta. De La Marina 1",
+      "position": {
+        "latitude": 38.1626063183758,
+        "longitude": -0.658528201215427
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1082",
+      "name": "Crta. De La Marina - Cno.El Molar 1",
+      "position": {
+        "latitude": 38.1561607946855,
+        "longitude": -0.646989989443871
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1083",
+      "name": "La Marina - Avenida De Las Salinas",
+      "position": {
+        "latitude": 38.1511688490649,
+        "longitude": -0.644050953150065
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1084",
+      "name": "La Marina - Avenida De La Alegria 1",
+      "position": {
+        "latitude": 38.1445070051885,
+        "longitude": -0.645980097499216
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1085",
+      "name": "La Marina - Cno. Los Ruices 1",
+      "position": {
+        "latitude": 38.1427811115191,
+        "longitude": -0.646530526681656
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1086",
+      "name": "La Marina - Hotel 1",
+      "position": {
+        "latitude": 38.1394932763622,
+        "longitude": -0.647569044356676
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1087",
+      "name": "La Marina - Camping",
+      "position": {
+        "latitude": 38.1302103509428,
+        "longitude": -0.649827390100911
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1088",
+      "name": "La Marina - Hotel 2",
+      "position": {
+        "latitude": 38.1397712103419,
+        "longitude": -0.647372128507441
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1089",
+      "name": "La Marina - Cno. Los Ruices 2",
+      "position": {
+        "latitude": 38.142568612889,
+        "longitude": -0.646499642136076
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1090",
+      "name": "La Marina - Avenida De La Alegria 2",
+      "position": {
+        "latitude": 38.1452175657762,
+        "longitude": -0.6456779866501
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1091",
+      "name": "Crta. De La Marina - Avenida Las Salinas",
+      "position": {
+        "latitude": 38.1516381575838,
+        "longitude": -0.644135846975154
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1092",
+      "name": "Crta. De La Marina - Cno.El Molar 2",
+      "position": {
+        "latitude": 38.1564988919808,
+        "longitude": -0.64705143753909
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1093",
+      "name": "Crta. De La Marina 2",
+      "position": {
+        "latitude": 38.1643988736976,
+        "longitude": -0.660421823654991
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1094",
+      "name": "Crta. De La Marina - Cno.S.Fulgencio 2",
+      "position": {
+        "latitude": 38.1694399456252,
+        "longitude": -0.668664677058468
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1095",
+      "name": "Crta. De La Marina - Pistas Deportivas 2",
+      "position": {
+        "latitude": 38.1778528174456,
+        "longitude": -0.670910635215984
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1096",
+      "name": "Crta. De La Marina - Santa Fe 2",
+      "position": {
+        "latitude": 38.1854527643209,
+        "longitude": -0.673110114261975
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1097",
+      "name": "Crta. De La Marina - Viveros 2",
+      "position": {
+        "latitude": 38.1921842551775,
+        "longitude": -0.677159929162445
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1098",
+      "name": "Crta. De La Marina - Gasolinera 2",
+      "position": {
+        "latitude": 38.1964258001143,
+        "longitude": -0.678772569283153
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1099",
+      "name": "Crta. De La Marina - Tienda 2",
+      "position": {
+        "latitude": 38.2020030769423,
+        "longitude": -0.679989766953744
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1100",
+      "name": "La Hoya - Torre Del Gallo 2",
+      "position": {
+        "latitude": 38.2116181503749,
+        "longitude": -0.683489670442075
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1101",
+      "name": "La Hoya - Jardin Del Donante 2",
+      "position": {
+        "latitude": 38.217154282912,
+        "longitude": -0.684517962510513
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1102",
+      "name": "Crta. De La Marina - Restaurante 2",
+      "position": {
+        "latitude": 38.2245483468728,
+        "longitude": -0.686537257026112
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1103",
+      "name": "Crta. De La Marina - Cno. Q.Pilars 2",
+      "position": {
+        "latitude": 38.2289835382391,
+        "longitude": -0.686015321654985
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1104",
+      "name": "Crta. De La Marina - Cno.Carmaet 2",
+      "position": {
+        "latitude": 38.2348687748952,
+        "longitude": -0.684926315902186
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1105",
+      "name": "Crta. De La Marina - P.Agroaliment. 2",
+      "position": {
+        "latitude": 38.2434949649727,
+        "longitude": -0.686249879337202
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1106",
+      "name": "Crta. De La Marina - Cooperativa 2",
+      "position": {
+        "latitude": 38.2512306612146,
+        "longitude": -0.69178915131754
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1107",
+      "name": "Cno. Viejo De Santa Pola 1",
+      "position": {
+        "latitude": 38.2568618935516,
+        "longitude": -0.6761890019092
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1108",
+      "name": "Cno. La Nave 1",
+      "position": {
+        "latitude": 38.254687604525,
+        "longitude": -0.669284220149089
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1109",
+      "name": "Cno. La Nave 2",
+      "position": {
+        "latitude": 38.2535068931711,
+        "longitude": -0.667276001881756
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1110",
+      "name": "La Nave 1",
+      "position": {
+        "latitude": 38.2482258930699,
+        "longitude": -0.665056001874202
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1111",
+      "name": "Vereda De Boluda 1",
+      "position": {
+        "latitude": 38.2466128933804,
+        "longitude": -0.67242800189652
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1112",
+      "name": "Crta. De Asprillas - Vereda De Boluda",
+      "position": {
+        "latitude": 38.2468252000066,
+        "longitude": -0.680432520440803
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1113",
+      "name": "Crta. De Asprillas - Club De Tenis",
+      "position": {
+        "latitude": 38.2360610402039,
+        "longitude": -0.677143416964942
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1114",
+      "name": "Crta. De Asprillas - Cno. Don Felix",
+      "position": {
+        "latitude": 38.2298638934445,
+        "longitude": -0.674454001900365
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1115",
+      "name": "Crta.Asprillas - Vereda Q.Pilars",
+      "position": {
+        "latitude": 38.2263038349854,
+        "longitude": -0.667014669289562
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1116",
+      "name": "Crta. De Asprillas - Almacenes",
+      "position": {
+        "latitude": 38.2211018928379,
+        "longitude": -0.660447001856208
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1117",
+      "name": "Crta. De Asprillas - Asprillas 1",
+      "position": {
+        "latitude": 38.2142843370136,
+        "longitude": -0.654741531705884
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1118",
+      "name": "Crta. De Asprillas - Asprillas 2",
+      "position": {
+        "latitude": 38.2113788924485,
+        "longitude": -0.651718001827172
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1119",
+      "name": "Crta. De Asprillas - Asprillas 3",
+      "position": {
+        "latitude": 38.2067648923009,
+        "longitude": -0.648464001816016
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1120",
+      "name": "Crta. De Asprillas - Vereda Sendres",
+      "position": {
+        "latitude": 38.2036448922526,
+        "longitude": -0.647451001812306
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1121",
+      "name": "Vereda Sendres 1",
+      "position": {
+        "latitude": 38.2033898920071,
+        "longitude": -0.64185600179386
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1122",
+      "name": "Crta. De Las Bayas - Almacenes",
+      "position": {
+        "latitude": 38.2063798915526,
+        "longitude": -0.631497001759356
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1123",
+      "name": "Crta.De Las Bayas - Cruce La Olivera",
+      "position": {
+        "latitude": 38.2152858920018,
+        "longitude": -0.641375001793853
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1124",
+      "name": "Las Bayas",
+      "position": {
+        "latitude": 38.2189378920828,
+        "longitude": -0.643108001800097
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1125",
+      "name": "Crta. De Las Bayas - Riegos De Levante",
+      "position": {
+        "latitude": 38.2237208923038,
+        "longitude": -0.648017001816839
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1126",
+      "name": "Crta. De Las Bayas - Km.4",
+      "position": {
+        "latitude": 38.227379892483,
+        "longitude": -0.65203000183032
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1127",
+      "name": "Crta. De Las Bayas - Km.3",
+      "position": {
+        "latitude": 38.2306538927155,
+        "longitude": -0.657311001847611
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1128",
+      "name": "Crta. De Las Bayas - Km.2",
+      "position": {
+        "latitude": 38.2362108929757,
+        "longitude": -0.663210001866872
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1129",
+      "name": "Crta. De Las Bayas - Cno. Vizcarra",
+      "position": {
+        "latitude": 38.238953893125,
+        "longitude": -0.666630001877815
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1130",
+      "name": "Crta. De Las Bayas - Cno. San Pedro",
+      "position": {
+        "latitude": 38.2428748934355,
+        "longitude": -0.673848001900294
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1131",
+      "name": "Crta. De Las Bayas - Vereda Boluda",
+      "position": {
+        "latitude": 38.2468398936348,
+        "longitude": -0.678475001914644
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1132",
+      "name": "Crta. De Las Bayas - Crta. Asprillas",
+      "position": {
+        "latitude": 38.2487676576361,
+        "longitude": -0.680640569591879
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1133",
+      "name": "Vereda Boluda 2",
+      "position": {
+        "latitude": 38.2465568933826,
+        "longitude": -0.672483001896683
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1134",
+      "name": "La Nave 2",
+      "position": {
+        "latitude": 38.2482658930662,
+        "longitude": -0.664968001873942
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1135",
+      "name": "Cno. La Nave 3",
+      "position": {
+        "latitude": 38.2532943152275,
+        "longitude": -0.666885935713322
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1136",
+      "name": "Cno. La Nave 4",
+      "position": {
+        "latitude": 38.2547981679063,
+        "longitude": -0.66941388902704
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1137",
+      "name": "Cno. Viejo De Santa Pola 2",
+      "position": {
+        "latitude": 38.2569028935477,
+        "longitude": -0.676095001908919
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1273",
+      "name": "Cno. Viejo De Santa Pola 3",
+      "position": {
+        "latitude": 38.256428717835,
+        "longitude": -0.672950346572418
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1274",
+      "name": "Cno. Viejo De Santa Pola 4",
+      "position": {
+        "latitude": 38.2564903426069,
+        "longitude": -0.673055195098366
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1275",
+      "name": "Vereda Sendres 2",
+      "position": {
+        "latitude": 38.203789474162,
+        "longitude": -0.634855072306602
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1276",
+      "name": "Crta.De Las Bayas - Camino Los Pinos",
+      "position": {
+        "latitude": 38.211313392032,
+        "longitude": -0.637351942797024
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "elche-stop-027",
+      "stopPlaceId": "elche-place-027",
+      "settlementId": "es-elche",
+      "name": "Ies Pere Ibarra - L'Avet",
+      "position": {
+        "latitude": 38.2611458,
+        "longitude": -0.6894226
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-054",
+      "stopPlaceId": "elche-place-054",
+      "settlementId": "es-elche",
+      "name": "Portalada",
+      "position": {
+        "latitude": 38.2612613,
+        "longitude": -0.6875769
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-055",
+      "stopPlaceId": "elche-place-055",
+      "settlementId": "es-elche",
+      "name": "Hospital General - Teulada",
+      "position": {
+        "latitude": 38.2608727,
+        "longitude": -0.6854215
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-072",
+      "stopPlaceId": "elche-place-072",
+      "settlementId": "es-elche",
+      "name": "Hospital General-IES P.Ibarra",
+      "position": {
+        "latitude": 38.2624087818751,
+        "longitude": -0.685372799002814
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-073",
+      "stopPlaceId": "elche-place-073",
+      "settlementId": "es-elche",
+      "name": "Magraner",
+      "position": {
+        "latitude": 38.2648001333104,
+        "longitude": -0.683850645383908
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-074",
+      "stopPlaceId": "elche-place-074",
+      "settlementId": "es-elche",
+      "name": "Politecnico",
+      "position": {
+        "latitude": 38.2667691746898,
+        "longitude": -0.68529099162762
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-091",
+      "stopPlaceId": "elche-place-091",
+      "settlementId": "es-elche",
+      "name": "Estacion Autobuses",
+      "position": {
+        "latitude": 38.2724969915679,
+        "longitude": -0.691599547242461
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-100",
+      "stopPlaceId": "elche-place-100",
+      "settlementId": "es-elche",
+      "name": "IES C.Sempere",
+      "position": {
+        "latitude": 38.2622834733106,
+        "longitude": -0.685565918052257
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-102",
+      "stopPlaceId": "elche-place-102",
+      "settlementId": "es-elche",
+      "name": "Puerta De Alicante",
+      "position": {
+        "latitude": 38.2673240767109,
+        "longitude": -0.695184319597658
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-117",
+      "stopPlaceId": "elche-place-117",
+      "settlementId": "es-elche",
+      "name": "V.Cabeza-H.Pensionista",
+      "position": {
+        "latitude": 38.2707176202431,
+        "longitude": -0.694706855508726
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-135",
+      "stopPlaceId": "elche-place-135",
+      "settlementId": "es-elche",
+      "name": "Jesuitinas",
+      "position": {
+        "latitude": 38.2668428810851,
+        "longitude": -0.693208872654522
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-136",
+      "stopPlaceId": "elche-place-136",
+      "settlementId": "es-elche",
+      "name": "Av.Juan Carlos I",
+      "position": {
+        "latitude": 38.2680274378854,
+        "longitude": -0.688506960242556
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-205",
+      "stopPlaceId": "elche-place-205",
+      "settlementId": "es-elche",
+      "name": "Virgen de la Cabeza",
+      "position": {
+        "latitude": 38.269562594757,
+        "longitude": -0.69482356248444
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-287",
+      "stopPlaceId": "elche-place-287",
+      "settlementId": "es-elche",
+      "name": "Antonio De Ulloa",
+      "position": {
+        "latitude": 38.2542748600428,
+        "longitude": -0.693332254269679
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-288",
+      "stopPlaceId": "elche-place-288",
+      "settlementId": "es-elche",
+      "name": "Escorxador",
+      "position": {
+        "latitude": 38.2568760449049,
+        "longitude": -0.69235861239541
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-344",
+      "stopPlaceId": "elche-place-344",
+      "settlementId": "es-elche",
+      "name": "Tractat D'Elx",
+      "position": {
+        "latitude": 38.2700732536018,
+        "longitude": -0.687442123261588
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-345",
+      "stopPlaceId": "elche-place-345",
+      "settlementId": "es-elche",
+      "name": "Est.Autobuses-Balsa Moros",
+      "position": {
+        "latitude": 38.2725138374218,
+        "longitude": -0.690226256224255
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-355",
+      "stopPlaceId": "elche-place-355",
+      "settlementId": "es-elche",
+      "name": "Hospital General Pedanías",
+      "position": {
+        "latitude": 38.2602427022272,
+        "longitude": -0.6840520295829
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1066",
+      "stopPlaceId": "elche-place-1066",
+      "settlementId": "es-elche",
+      "name": "Crta. De Dolores - Poligono Vizcarra",
+      "position": {
+        "latitude": 38.2426940209739,
+        "longitude": -0.700022668979032
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1067",
+      "stopPlaceId": "elche-place-1067",
+      "settlementId": "es-elche",
+      "name": "Crta. De Dolores - Estacion Agricola",
+      "position": {
+        "latitude": 38.2473428944461,
+        "longitude": -0.698086001971043
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1068",
+      "stopPlaceId": "elche-place-1068",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Cooperativa 1",
+      "position": {
+        "latitude": 38.2507151355049,
+        "longitude": -0.691715485907921
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1069",
+      "stopPlaceId": "elche-place-1069",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - P. Agroaliment. 1",
+      "position": {
+        "latitude": 38.2438274973747,
+        "longitude": -0.686595621156357
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1070",
+      "stopPlaceId": "elche-place-1070",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Cno. Carmaet 1",
+      "position": {
+        "latitude": 38.2350455271646,
+        "longitude": -0.68504772179212
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1071",
+      "stopPlaceId": "elche-place-1071",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Cno. Quatre Pilars 1",
+      "position": {
+        "latitude": 38.2290516399133,
+        "longitude": -0.686154095080356
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1072",
+      "stopPlaceId": "elche-place-1072",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Restaurante 1",
+      "position": {
+        "latitude": 38.2245777349867,
+        "longitude": -0.686663598764816
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1073",
+      "stopPlaceId": "elche-place-1073",
+      "settlementId": "es-elche",
+      "name": "La Hoya - Jardin Del Donante 1",
+      "position": {
+        "latitude": 38.217161177637,
+        "longitude": -0.684675890643813
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1074",
+      "stopPlaceId": "elche-place-1074",
+      "settlementId": "es-elche",
+      "name": "La Hoya - Torre Del Gallo 1",
+      "position": {
+        "latitude": 38.2115757371558,
+        "longitude": -0.683584186090629
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1075",
+      "stopPlaceId": "elche-place-1075",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Tienda 1",
+      "position": {
+        "latitude": 38.2016671804966,
+        "longitude": -0.679951021787808
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1076",
+      "stopPlaceId": "elche-place-1076",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Gasolinera 1",
+      "position": {
+        "latitude": 38.1962995089912,
+        "longitude": -0.678937092399058
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1077",
+      "stopPlaceId": "elche-place-1077",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Viveros 1",
+      "position": {
+        "latitude": 38.1922192851896,
+        "longitude": -0.677324656968266
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1078",
+      "stopPlaceId": "elche-place-1078",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Santa Fe 1",
+      "position": {
+        "latitude": 38.1855050178172,
+        "longitude": -0.673285725564293
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1079",
+      "stopPlaceId": "elche-place-1079",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Pistas Deportivas 1",
+      "position": {
+        "latitude": 38.1778453058221,
+        "longitude": -0.671048013528894
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1080",
+      "stopPlaceId": "elche-place-1080",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Cno.S.Fulgencio 1",
+      "position": {
+        "latitude": 38.1689216090656,
+        "longitude": -0.66864687738333
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1081",
+      "stopPlaceId": "elche-place-1081",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina 1",
+      "position": {
+        "latitude": 38.1626063183758,
+        "longitude": -0.658528201215427
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1082",
+      "stopPlaceId": "elche-place-1082",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Cno.El Molar 1",
+      "position": {
+        "latitude": 38.1561607946855,
+        "longitude": -0.646989989443871
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1083",
+      "stopPlaceId": "elche-place-1083",
+      "settlementId": "es-elche",
+      "name": "La Marina - Avenida De Las Salinas",
+      "position": {
+        "latitude": 38.1511688490649,
+        "longitude": -0.644050953150065
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1084",
+      "stopPlaceId": "elche-place-1084",
+      "settlementId": "es-elche",
+      "name": "La Marina - Avenida De La Alegria 1",
+      "position": {
+        "latitude": 38.1445070051885,
+        "longitude": -0.645980097499216
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1085",
+      "stopPlaceId": "elche-place-1085",
+      "settlementId": "es-elche",
+      "name": "La Marina - Cno. Los Ruices 1",
+      "position": {
+        "latitude": 38.1427811115191,
+        "longitude": -0.646530526681656
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1086",
+      "stopPlaceId": "elche-place-1086",
+      "settlementId": "es-elche",
+      "name": "La Marina - Hotel 1",
+      "position": {
+        "latitude": 38.1394932763622,
+        "longitude": -0.647569044356676
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1087",
+      "stopPlaceId": "elche-place-1087",
+      "settlementId": "es-elche",
+      "name": "La Marina - Camping",
+      "position": {
+        "latitude": 38.1302103509428,
+        "longitude": -0.649827390100911
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1088",
+      "stopPlaceId": "elche-place-1088",
+      "settlementId": "es-elche",
+      "name": "La Marina - Hotel 2",
+      "position": {
+        "latitude": 38.1397712103419,
+        "longitude": -0.647372128507441
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1089",
+      "stopPlaceId": "elche-place-1089",
+      "settlementId": "es-elche",
+      "name": "La Marina - Cno. Los Ruices 2",
+      "position": {
+        "latitude": 38.142568612889,
+        "longitude": -0.646499642136076
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1090",
+      "stopPlaceId": "elche-place-1090",
+      "settlementId": "es-elche",
+      "name": "La Marina - Avenida De La Alegria 2",
+      "position": {
+        "latitude": 38.1452175657762,
+        "longitude": -0.6456779866501
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1091",
+      "stopPlaceId": "elche-place-1091",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Avenida Las Salinas",
+      "position": {
+        "latitude": 38.1516381575838,
+        "longitude": -0.644135846975154
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1092",
+      "stopPlaceId": "elche-place-1092",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Cno.El Molar 2",
+      "position": {
+        "latitude": 38.1564988919808,
+        "longitude": -0.64705143753909
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1093",
+      "stopPlaceId": "elche-place-1093",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina 2",
+      "position": {
+        "latitude": 38.1643988736976,
+        "longitude": -0.660421823654991
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1094",
+      "stopPlaceId": "elche-place-1094",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Cno.S.Fulgencio 2",
+      "position": {
+        "latitude": 38.1694399456252,
+        "longitude": -0.668664677058468
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1095",
+      "stopPlaceId": "elche-place-1095",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Pistas Deportivas 2",
+      "position": {
+        "latitude": 38.1778528174456,
+        "longitude": -0.670910635215984
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1096",
+      "stopPlaceId": "elche-place-1096",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Santa Fe 2",
+      "position": {
+        "latitude": 38.1854527643209,
+        "longitude": -0.673110114261975
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1097",
+      "stopPlaceId": "elche-place-1097",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Viveros 2",
+      "position": {
+        "latitude": 38.1921842551775,
+        "longitude": -0.677159929162445
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1098",
+      "stopPlaceId": "elche-place-1098",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Gasolinera 2",
+      "position": {
+        "latitude": 38.1964258001143,
+        "longitude": -0.678772569283153
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1099",
+      "stopPlaceId": "elche-place-1099",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Tienda 2",
+      "position": {
+        "latitude": 38.2020030769423,
+        "longitude": -0.679989766953744
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1100",
+      "stopPlaceId": "elche-place-1100",
+      "settlementId": "es-elche",
+      "name": "La Hoya - Torre Del Gallo 2",
+      "position": {
+        "latitude": 38.2116181503749,
+        "longitude": -0.683489670442075
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1101",
+      "stopPlaceId": "elche-place-1101",
+      "settlementId": "es-elche",
+      "name": "La Hoya - Jardin Del Donante 2",
+      "position": {
+        "latitude": 38.217154282912,
+        "longitude": -0.684517962510513
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1102",
+      "stopPlaceId": "elche-place-1102",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Restaurante 2",
+      "position": {
+        "latitude": 38.2245483468728,
+        "longitude": -0.686537257026112
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1103",
+      "stopPlaceId": "elche-place-1103",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Cno. Q.Pilars 2",
+      "position": {
+        "latitude": 38.2289835382391,
+        "longitude": -0.686015321654985
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1104",
+      "stopPlaceId": "elche-place-1104",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Cno.Carmaet 2",
+      "position": {
+        "latitude": 38.2348687748952,
+        "longitude": -0.684926315902186
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1105",
+      "stopPlaceId": "elche-place-1105",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - P.Agroaliment. 2",
+      "position": {
+        "latitude": 38.2434949649727,
+        "longitude": -0.686249879337202
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1106",
+      "stopPlaceId": "elche-place-1106",
+      "settlementId": "es-elche",
+      "name": "Crta. De La Marina - Cooperativa 2",
+      "position": {
+        "latitude": 38.2512306612146,
+        "longitude": -0.69178915131754
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1107",
+      "stopPlaceId": "elche-place-1107",
+      "settlementId": "es-elche",
+      "name": "Cno. Viejo De Santa Pola 1",
+      "position": {
+        "latitude": 38.2568618935516,
+        "longitude": -0.6761890019092
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1108",
+      "stopPlaceId": "elche-place-1108",
+      "settlementId": "es-elche",
+      "name": "Cno. La Nave 1",
+      "position": {
+        "latitude": 38.254687604525,
+        "longitude": -0.669284220149089
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1109",
+      "stopPlaceId": "elche-place-1109",
+      "settlementId": "es-elche",
+      "name": "Cno. La Nave 2",
+      "position": {
+        "latitude": 38.2535068931711,
+        "longitude": -0.667276001881756
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1110",
+      "stopPlaceId": "elche-place-1110",
+      "settlementId": "es-elche",
+      "name": "La Nave 1",
+      "position": {
+        "latitude": 38.2482258930699,
+        "longitude": -0.665056001874202
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1111",
+      "stopPlaceId": "elche-place-1111",
+      "settlementId": "es-elche",
+      "name": "Vereda De Boluda 1",
+      "position": {
+        "latitude": 38.2466128933804,
+        "longitude": -0.67242800189652
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1112",
+      "stopPlaceId": "elche-place-1112",
+      "settlementId": "es-elche",
+      "name": "Crta. De Asprillas - Vereda De Boluda",
+      "position": {
+        "latitude": 38.2468252000066,
+        "longitude": -0.680432520440803
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1113",
+      "stopPlaceId": "elche-place-1113",
+      "settlementId": "es-elche",
+      "name": "Crta. De Asprillas - Club De Tenis",
+      "position": {
+        "latitude": 38.2360610402039,
+        "longitude": -0.677143416964942
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1114",
+      "stopPlaceId": "elche-place-1114",
+      "settlementId": "es-elche",
+      "name": "Crta. De Asprillas - Cno. Don Felix",
+      "position": {
+        "latitude": 38.2298638934445,
+        "longitude": -0.674454001900365
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1115",
+      "stopPlaceId": "elche-place-1115",
+      "settlementId": "es-elche",
+      "name": "Crta.Asprillas - Vereda Q.Pilars",
+      "position": {
+        "latitude": 38.2263038349854,
+        "longitude": -0.667014669289562
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1116",
+      "stopPlaceId": "elche-place-1116",
+      "settlementId": "es-elche",
+      "name": "Crta. De Asprillas - Almacenes",
+      "position": {
+        "latitude": 38.2211018928379,
+        "longitude": -0.660447001856208
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1117",
+      "stopPlaceId": "elche-place-1117",
+      "settlementId": "es-elche",
+      "name": "Crta. De Asprillas - Asprillas 1",
+      "position": {
+        "latitude": 38.2142843370136,
+        "longitude": -0.654741531705884
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1118",
+      "stopPlaceId": "elche-place-1118",
+      "settlementId": "es-elche",
+      "name": "Crta. De Asprillas - Asprillas 2",
+      "position": {
+        "latitude": 38.2113788924485,
+        "longitude": -0.651718001827172
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1119",
+      "stopPlaceId": "elche-place-1119",
+      "settlementId": "es-elche",
+      "name": "Crta. De Asprillas - Asprillas 3",
+      "position": {
+        "latitude": 38.2067648923009,
+        "longitude": -0.648464001816016
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1120",
+      "stopPlaceId": "elche-place-1120",
+      "settlementId": "es-elche",
+      "name": "Crta. De Asprillas - Vereda Sendres",
+      "position": {
+        "latitude": 38.2036448922526,
+        "longitude": -0.647451001812306
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1121",
+      "stopPlaceId": "elche-place-1121",
+      "settlementId": "es-elche",
+      "name": "Vereda Sendres 1",
+      "position": {
+        "latitude": 38.2033898920071,
+        "longitude": -0.64185600179386
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1122",
+      "stopPlaceId": "elche-place-1122",
+      "settlementId": "es-elche",
+      "name": "Crta. De Las Bayas - Almacenes",
+      "position": {
+        "latitude": 38.2063798915526,
+        "longitude": -0.631497001759356
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1123",
+      "stopPlaceId": "elche-place-1123",
+      "settlementId": "es-elche",
+      "name": "Crta.De Las Bayas - Cruce La Olivera",
+      "position": {
+        "latitude": 38.2152858920018,
+        "longitude": -0.641375001793853
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1124",
+      "stopPlaceId": "elche-place-1124",
+      "settlementId": "es-elche",
+      "name": "Las Bayas",
+      "position": {
+        "latitude": 38.2189378920828,
+        "longitude": -0.643108001800097
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1125",
+      "stopPlaceId": "elche-place-1125",
+      "settlementId": "es-elche",
+      "name": "Crta. De Las Bayas - Riegos De Levante",
+      "position": {
+        "latitude": 38.2237208923038,
+        "longitude": -0.648017001816839
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1126",
+      "stopPlaceId": "elche-place-1126",
+      "settlementId": "es-elche",
+      "name": "Crta. De Las Bayas - Km.4",
+      "position": {
+        "latitude": 38.227379892483,
+        "longitude": -0.65203000183032
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1127",
+      "stopPlaceId": "elche-place-1127",
+      "settlementId": "es-elche",
+      "name": "Crta. De Las Bayas - Km.3",
+      "position": {
+        "latitude": 38.2306538927155,
+        "longitude": -0.657311001847611
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1128",
+      "stopPlaceId": "elche-place-1128",
+      "settlementId": "es-elche",
+      "name": "Crta. De Las Bayas - Km.2",
+      "position": {
+        "latitude": 38.2362108929757,
+        "longitude": -0.663210001866872
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1129",
+      "stopPlaceId": "elche-place-1129",
+      "settlementId": "es-elche",
+      "name": "Crta. De Las Bayas - Cno. Vizcarra",
+      "position": {
+        "latitude": 38.238953893125,
+        "longitude": -0.666630001877815
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1130",
+      "stopPlaceId": "elche-place-1130",
+      "settlementId": "es-elche",
+      "name": "Crta. De Las Bayas - Cno. San Pedro",
+      "position": {
+        "latitude": 38.2428748934355,
+        "longitude": -0.673848001900294
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1131",
+      "stopPlaceId": "elche-place-1131",
+      "settlementId": "es-elche",
+      "name": "Crta. De Las Bayas - Vereda Boluda",
+      "position": {
+        "latitude": 38.2468398936348,
+        "longitude": -0.678475001914644
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1132",
+      "stopPlaceId": "elche-place-1132",
+      "settlementId": "es-elche",
+      "name": "Crta. De Las Bayas - Crta. Asprillas",
+      "position": {
+        "latitude": 38.2487676576361,
+        "longitude": -0.680640569591879
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1133",
+      "stopPlaceId": "elche-place-1133",
+      "settlementId": "es-elche",
+      "name": "Vereda Boluda 2",
+      "position": {
+        "latitude": 38.2465568933826,
+        "longitude": -0.672483001896683
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1134",
+      "stopPlaceId": "elche-place-1134",
+      "settlementId": "es-elche",
+      "name": "La Nave 2",
+      "position": {
+        "latitude": 38.2482658930662,
+        "longitude": -0.664968001873942
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1135",
+      "stopPlaceId": "elche-place-1135",
+      "settlementId": "es-elche",
+      "name": "Cno. La Nave 3",
+      "position": {
+        "latitude": 38.2532943152275,
+        "longitude": -0.666885935713322
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1136",
+      "stopPlaceId": "elche-place-1136",
+      "settlementId": "es-elche",
+      "name": "Cno. La Nave 4",
+      "position": {
+        "latitude": 38.2547981679063,
+        "longitude": -0.66941388902704
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1137",
+      "stopPlaceId": "elche-place-1137",
+      "settlementId": "es-elche",
+      "name": "Cno. Viejo De Santa Pola 2",
+      "position": {
+        "latitude": 38.2569028935477,
+        "longitude": -0.676095001908919
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1273",
+      "stopPlaceId": "elche-place-1273",
+      "settlementId": "es-elche",
+      "name": "Cno. Viejo De Santa Pola 3",
+      "position": {
+        "latitude": 38.256428717835,
+        "longitude": -0.672950346572418
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1274",
+      "stopPlaceId": "elche-place-1274",
+      "settlementId": "es-elche",
+      "name": "Cno. Viejo De Santa Pola 4",
+      "position": {
+        "latitude": 38.2564903426069,
+        "longitude": -0.673055195098366
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1275",
+      "stopPlaceId": "elche-place-1275",
+      "settlementId": "es-elche",
+      "name": "Vereda Sendres 2",
+      "position": {
+        "latitude": 38.203789474162,
+        "longitude": -0.634855072306602
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1276",
+      "stopPlaceId": "elche-place-1276",
+      "settlementId": "es-elche",
+      "name": "Crta.De Las Bayas - Camino Los Pinos",
+      "position": {
+        "latitude": 38.211313392032,
+        "longitude": -0.637351942797024
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

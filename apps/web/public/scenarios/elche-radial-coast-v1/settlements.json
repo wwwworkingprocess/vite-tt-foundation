@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-coast-v1",
+  "settlements": [
+    {
+      "settlementId": "es-elche",
+      "name": "Elche",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.2013620941823,
+        "longitude": -0.665759835369194
+      },
+      "bounds": {
+        "south": 38.127210350942796,
+        "west": -0.703022668979032,
+        "north": 38.2755138374218,
+        "east": -0.628497001759356
+      }
+    }
+  ]
+}

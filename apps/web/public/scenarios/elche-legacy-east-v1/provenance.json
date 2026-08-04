@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-east-v1",
+  "generatedAt": "2026-08-01T22:00:00+02:00",
+  "sources": [
+    {
+      "sourceId": "buselche-official-dfh-2026-08-01",
+      "name": "BusElche / Avanza official pages for Lines D, F and H",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "external-web-reference"
+    },
+    {
+      "sourceId": "moovit-elche-dfh-2026-08-01",
+      "name": "Current Elche D, F and H ordered route-cycle PDFs",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "external-web-reference"
+    },
+    {
+      "sourceId": "alibus-elche-dfh-2026-08-01",
+      "name": "Ordered D, F and H stop pages with municipal codes and map coordinates",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "external-web-reference"
+    },
+    {
+      "sourceId": "elche-urban-abc-v1-identity-registry",
+      "name": "Accepted Elche A/B/C scenario used for shared StopNode and StopPlace identity reuse",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-urban-abc-v1/stops.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "elche-dfh-route-capture-v1",
+      "description": "Captures the complete public D, F and H route cycles. Published repeated terminal occurrences are removed where present, and each cycle is represented once with closesLoop=true."
+    },
+    {
+      "transformationId": "elche-municipal-code-identity-v1",
+      "description": "Uses municipal stop code as the stable elche-stop and elche-place suffix. Shared identifiers from the accepted A/B/C package are copied without modification."
+    },
+    {
+      "transformationId": "elche-singleton-stopplace-projection-v1",
+      "description": "Creates one strict parser-compatible physical StopPlace for every new directional StopNode. No proximity-only physical merges are made."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Writes the established scenario assets, computes asset SHA-256 values and aggregate contentHash, and registers the scenario."
+    }
+  ],
+  "warnings": [
+    "Runtime StopNode sourceReferences are empty because the transport-domain field accepts only genuine OpenStreetMap platform or stop_position components; municipal codes and AliBus coordinates remain build provenance.",
+    "Eight StopNodes shared with the accepted A/B/C package retain the exact previous StopNode and StopPlace bytes, including their existing coordinates.",
+    "New D/F/H StopNodes use coordinates exposed by current stop map links. They should still be reconciled to canonical OpenStreetMap platform and stop_position evidence in the later automated workflow.",
+    "D, F and H are represented as explicit circular patterns. The first StopNode is not repeated at the end; closesLoop=true adds the closing edge.",
+    "Physical StopPlace creation does not create route edges or infer reverse patterns."
+  ]
+}

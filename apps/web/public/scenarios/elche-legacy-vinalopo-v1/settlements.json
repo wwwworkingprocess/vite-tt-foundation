@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-vinalopo-v1",
+  "settlements": [
+    {
+      "settlementId": "es-elche",
+      "name": "Elche",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.2610418422707,
+        "longitude": -0.7090611
+      },
+      "bounds": {
+        "south": 38.250790984541396,
+        "west": -0.7194529,
+        "north": 38.271292700000004,
+        "east": -0.6986693
+      }
+    }
+  ]
+}

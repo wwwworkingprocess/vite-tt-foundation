@@ -1,0 +1,264 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-west-v1",
+  "routes": [
+    {
+      "routeId": "elche-R4",
+      "publicCode": "R4",
+      "name": "Estación A.V.E. - Algoda - Matola",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-R4-cycle",
+          "directionLabel": "Barchell / Estación A.V.E. / Matola / Algoda",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 59
+          },
+          "stopNodeIds": [
+            "elche-stop-242",
+            "elche-stop-340",
+            "elche-stop-341",
+            "elche-stop-145",
+            "elche-stop-146",
+            "elche-stop-147",
+            "elche-stop-148",
+            "elche-stop-149",
+            "elche-stop-113",
+            "elche-stop-002",
+            "elche-stop-003",
+            "elche-stop-088",
+            "elche-stop-323",
+            "elche-stop-324",
+            "elche-stop-177",
+            "elche-stop-212",
+            "elche-stop-163",
+            "elche-stop-1001",
+            "elche-stop-1002",
+            "elche-stop-1003",
+            "elche-stop-1004",
+            "elche-stop-1277",
+            "elche-stop-1284",
+            "elche-stop-330",
+            "elche-stop-1270",
+            "elche-stop-1278",
+            "elche-stop-1005",
+            "elche-stop-1006",
+            "elche-stop-1007",
+            "elche-stop-1008",
+            "elche-stop-1009",
+            "elche-stop-1010",
+            "elche-stop-1011",
+            "elche-stop-1012",
+            "elche-stop-1013",
+            "elche-stop-1014",
+            "elche-stop-1015",
+            "elche-stop-1016",
+            "elche-stop-1017",
+            "elche-stop-1018",
+            "elche-stop-348",
+            "elche-stop-293",
+            "elche-stop-294",
+            "elche-stop-130",
+            "elche-stop-305",
+            "elche-stop-312",
+            "elche-stop-306",
+            "elche-stop-088",
+            "elche-stop-313",
+            "elche-stop-089",
+            "elche-stop-090",
+            "elche-stop-091",
+            "elche-stop-092",
+            "elche-stop-314",
+            "elche-stop-315",
+            "elche-stop-316",
+            "elche-stop-317",
+            "elche-stop-318",
+            "elche-stop-319"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "R4",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r4"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "R4",
+          "sourceFile": "https://alibus.es/lines/elche/linea-r4.html"
+        },
+        {
+          "source": "uploaded-radial-diagram",
+          "sourceRouteId": "R4",
+          "sourceFile": "r4.png"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-R5",
+      "publicCode": "R5",
+      "name": "Matola - Algoda - Museo Pusol - Algorós",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-R5-cycle",
+          "directionLabel": "Centro / Matola / Algoda / Museo Pusol",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 40
+          },
+          "stopNodeIds": [
+            "elche-stop-001",
+            "elche-stop-002",
+            "elche-stop-003",
+            "elche-stop-024",
+            "elche-stop-335",
+            "elche-stop-346",
+            "elche-stop-347",
+            "elche-stop-243",
+            "elche-stop-244",
+            "elche-stop-257",
+            "elche-stop-310",
+            "elche-stop-1019",
+            "elche-stop-1020",
+            "elche-stop-1021",
+            "elche-stop-1022",
+            "elche-stop-1023",
+            "elche-stop-1024",
+            "elche-stop-1025",
+            "elche-stop-1026",
+            "elche-stop-1027",
+            "elche-stop-1028",
+            "elche-stop-1271",
+            "elche-stop-1029",
+            "elche-stop-1030",
+            "elche-stop-1031",
+            "elche-stop-1032",
+            "elche-stop-1033",
+            "elche-stop-1034",
+            "elche-stop-1035",
+            "elche-stop-1036",
+            "elche-stop-1037",
+            "elche-stop-1038",
+            "elche-stop-1039",
+            "elche-stop-1040",
+            "elche-stop-354",
+            "elche-stop-031",
+            "elche-stop-255",
+            "elche-stop-256",
+            "elche-stop-134",
+            "elche-stop-024"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "R5",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r5"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "R5",
+          "sourceFile": "https://alibus.es/lines/elche/linea-r5.html"
+        },
+        {
+          "source": "uploaded-radial-diagram",
+          "sourceRouteId": "R5",
+          "sourceFile": "r5.png"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-R6",
+      "publicCode": "R6",
+      "name": "Algorós - Derramador - Daimés - La Alcudia",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-R6-cycle",
+          "directionLabel": "Estación Autobuses / Derramador / La Alcudia",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 51
+          },
+          "stopNodeIds": [
+            "elche-stop-091",
+            "elche-stop-117",
+            "elche-stop-205",
+            "elche-stop-102",
+            "elche-stop-135",
+            "elche-stop-136",
+            "elche-stop-100",
+            "elche-stop-026",
+            "elche-stop-027",
+            "elche-stop-025",
+            "elche-stop-028",
+            "elche-stop-029",
+            "elche-stop-285",
+            "elche-stop-257",
+            "elche-stop-1041",
+            "elche-stop-1042",
+            "elche-stop-1043",
+            "elche-stop-1044",
+            "elche-stop-1045",
+            "elche-stop-1046",
+            "elche-stop-1047",
+            "elche-stop-1272",
+            "elche-stop-1048",
+            "elche-stop-1049",
+            "elche-stop-1050",
+            "elche-stop-1051",
+            "elche-stop-1279",
+            "elche-stop-1052",
+            "elche-stop-1053",
+            "elche-stop-1054",
+            "elche-stop-1055",
+            "elche-stop-1056",
+            "elche-stop-1057",
+            "elche-stop-1058",
+            "elche-stop-1059",
+            "elche-stop-1060",
+            "elche-stop-1061",
+            "elche-stop-1062",
+            "elche-stop-1064",
+            "elche-stop-1065",
+            "elche-stop-1066",
+            "elche-stop-1067",
+            "elche-stop-353",
+            "elche-stop-052",
+            "elche-stop-053",
+            "elche-stop-054",
+            "elche-stop-055",
+            "elche-stop-072",
+            "elche-stop-073",
+            "elche-stop-074",
+            "elche-stop-344"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "R6",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r6"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "R6",
+          "sourceFile": "https://alibus.es/lines/elche/linea-r6.html"
+        },
+        {
+          "source": "uploaded-radial-diagram",
+          "sourceRouteId": "R6",
+          "sourceFile": "not-provided"
+        }
+      ]
+    }
+  ]
+}

@@ -73,6 +73,236 @@
       "manifestPath": "elche-urban-abc-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "1513c8715ccfc38031fc9fd2fc5e2c1c0970fac85f4a29019f9b12f1dd0be011"
+    },
+    {
+      "scenarioId": "elche-legacy-east-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Legacy East Network - Lines D, F and H",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-legacy-east-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "5d99e42f89190c525895a232ee3cb3017232784853f788d143899939bae5761f"
+    },
+    {
+      "scenarioId": "elche-legacy-hospital-general-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Legacy Hospital General Network - Lines E and J",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-legacy-hospital-general-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "ef1b2f59da5865379d96c364c55200579aefb65cb93408336347126e16f518f1"
+    },
+    {
+      "scenarioId": "elche-legacy-vinalopo-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Legacy Vinalopó Network - Lines G and I",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-legacy-vinalopo-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "9c73c7474aeb1fd7e72a6b8632f90ad27a11532ad1aff3b07644802a47b8b2d8"
+    },
+    {
+      "scenarioId": "elche-legacy-crosscity-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Legacy Cross-City Network - Lines K1, K2 and L",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-legacy-crosscity-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "204dada443f4d768e6fce364719ab564dfe97292ed3c447545250a99451fee2e"
+    },
+    {
+      "scenarioId": "elche-legacy-night-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Legacy Night Network - Line NT",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-legacy-night-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "001147ad26fd25c7566fa345e9d2f965ed4ae388b61bffa480ac0d8022f177cd"
+    },
+    {
+      "scenarioId": "elche-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Legacy Network - All Non-Radial Lines",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "8c0b0dabf9fd5a286467f79082262a1ea7b0257aaf87b4200ec063ea25147e8e"
+    },
+    {
+      "scenarioId": "elche-radial-inner-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Radial Inner Network - Lines R1, R2 and R3",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-radial-inner-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "55157158881d928dafbc2e5daae3e0ca0287e4282720ede0a8a33453f0b05e66"
+    },
+    {
+      "scenarioId": "elche-radial-west-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Radial West Network - Lines R4, R5 and R6",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-radial-west-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "1a5635697763909696928d2c56f054a4f357b8061d5fb1eae5d865a3d64f40de"
+    },
+    {
+      "scenarioId": "elche-radial-south-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Radial South Network - Lines R7 and R8",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-radial-south-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "99ef775b22cb930b11e9ca7a73eb3d9e14b7005d9d367ce01831b2354ac80734"
+    },
+    {
+      "scenarioId": "elche-radial-airport-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Radial Airport Network - Lines R10 and R11",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-radial-airport-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "a38b14bae4115794529cc3b95d1e3794ebf2fd873a43a4a6b14e97d682a096a0"
+    },
+    {
+      "scenarioId": "elche-radial-coast-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Radial Coast Network - Lines R9 and R12",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-radial-coast-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "8a40a2490bb81ff4c65c043dffac76db633ea0834696e822edf79552ef623c52"
+    },
+    {
+      "scenarioId": "elche-radial-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Elche Radial Legacy Network - All Lines R1-R12",
+      "primarySettlementId": "es-elche",
+      "settlementIds": [
+        "es-elche"
+      ],
+      "manifestPath": "elche-radial-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "175f908ba34b9e40193986067a8de1163e9f9e17745911667c5acd0d37d1263a"
+    },
+    {
+      "scenarioId": "alicante-legacy-core-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Alicante Legacy Core Network - Lines 01, 02 and 03",
+      "primarySettlementId": "es-alicante",
+      "settlementIds": [
+        "es-alicante"
+      ],
+      "manifestPath": "alicante-legacy-core-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "adb4b67cb1065eac0d886324a29b7561ad4e0046ec4717e3f6f162733ed04f33"
+    },
+    {
+      "scenarioId": "alicante-legacy-west-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Alicante Legacy West Network - Lines 04, 05, 06 and 12",
+      "primarySettlementId": "es-alicante",
+      "settlementIds": [
+        "es-alicante"
+      ],
+      "manifestPath": "alicante-legacy-west-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "2b75e1fb28e656096930475d849dd3bb1e6538d70307c9541a2a2976278c5133"
+    },
+    {
+      "scenarioId": "alicante-legacy-north-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Alicante Legacy North Network - Lines 08, 11, 11H and 13",
+      "primarySettlementId": "es-alicante",
+      "settlementIds": [
+        "es-alicante",
+        "es-sant-joan-dalacant"
+      ],
+      "manifestPath": "alicante-legacy-north-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "9f61315ad59bf07229076b5f623b3f778fd2ae4c73b098202674d060f55822f5"
+    },
+    {
+      "scenarioId": "alicante-legacy-coast-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Alicante Legacy Coast Network - Lines 09, 10 and 22",
+      "primarySettlementId": "es-alicante",
+      "settlementIds": [
+        "es-alicante"
+      ],
+      "manifestPath": "alicante-legacy-coast-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "e4eb7d746bb0fe4b7d18ad606728b24863b2b5e056dab3abbfc4d3b8ef2391c2"
+    },
+    {
+      "scenarioId": "alicante-legacy-periphery-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Alicante Legacy Periphery Network - Lines 07 and 27",
+      "primarySettlementId": "es-alicante",
+      "settlementIds": [
+        "es-alicante"
+      ],
+      "manifestPath": "alicante-legacy-periphery-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "6a6b909171c0cc2f7ffd5199bcde3c4adfabe93ac66ce7de668125dbf9c0f79f"
+    },
+    {
+      "scenarioId": "alicante-legacy-circular-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Alicante Legacy Circular Network - Lines 14A, 14B and 39",
+      "primarySettlementId": "es-alicante",
+      "settlementIds": [
+        "es-alicante"
+      ],
+      "manifestPath": "alicante-legacy-circular-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "8afcea075f0923274654e7a9bb3b541dc52dea42c6d577056e75a8400f7dc6f9"
+    },
+    {
+      "scenarioId": "alicante-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Alicante Legacy Network - All Urban Lines",
+      "primarySettlementId": "es-alicante",
+      "settlementIds": [
+        "es-alicante",
+        "es-sant-joan-dalacant"
+      ],
+      "manifestPath": "alicante-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "6726a2211a7787072333c59917eb25ae85c3eb205b92d027dd9d714b17f092b3"
     }
   ]
 }

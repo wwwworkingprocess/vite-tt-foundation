@@ -1,0 +1,1388 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-circular-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-2510",
+      "name": "Dénia-Jesuitas",
+      "position": {
+        "latitude": 38.361528879,
+        "longitude": -0.464969467
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-2571",
+      "name": "Dénia-Clínica Vistahermosa",
+      "position": {
+        "latitude": 38.362244297,
+        "longitude": -0.464303627
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-2604",
+      "name": "Mercado-El Sabio",
+      "position": {
+        "latitude": 38.34740801,
+        "longitude": -0.486629218
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-2608",
+      "name": "Postiguet-Pasarela",
+      "position": {
+        "latitude": 38.346527362,
+        "longitude": -0.4766828
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-2682",
+      "name": "Rambla-San Cristóbal",
+      "position": {
+        "latitude": 38.34638308,
+        "longitude": -0.484216229
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-2685",
+      "name": "Postiguet-Pasarela",
+      "position": {
+        "latitude": 38.347026637,
+        "longitude": -0.476436626
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-2999",
+      "name": "Rambla-San Fernando",
+      "position": {
+        "latitude": 38.34426,
+        "longitude": -0.48362
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3100",
+      "name": "Mercado-El Sabio",
+      "position": {
+        "latitude": 38.347451631,
+        "longitude": -0.486982397
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3102",
+      "name": "Ó. Esplá-Foglietti",
+      "position": {
+        "latitude": 38.341064596,
+        "longitude": -0.494193511
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3103",
+      "name": "Soler-Policía",
+      "position": {
+        "latitude": 38.339892239,
+        "longitude": -0.494989008
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3104",
+      "name": "Soler-Juzgados",
+      "position": {
+        "latitude": 38.339555667,
+        "longitude": -0.501166942
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3105",
+      "name": "IES Cavanilles",
+      "position": {
+        "latitude": 38.339226311,
+        "longitude": -0.506852645
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3122",
+      "name": "México-Caja Ahorros",
+      "position": {
+        "latitude": 38.338438346,
+        "longitude": -0.507932175
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3123",
+      "name": "IES Cavanilles",
+      "position": {
+        "latitude": 38.339010705,
+        "longitude": -0.506882923
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3124",
+      "name": "Soler-Juzgados",
+      "position": {
+        "latitude": 38.339392623,
+        "longitude": -0.501126788
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3132",
+      "name": "Ó. Esplá-Sempere",
+      "position": {
+        "latitude": 38.340022757,
+        "longitude": -0.493508699
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3147",
+      "name": "La Viña-Orión",
+      "position": {
+        "latitude": 38.34391,
+        "longitude": -0.50812
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3168",
+      "name": "C. Salud Babel",
+      "position": {
+        "latitude": 38.34018,
+        "longitude": -0.50902
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3506",
+      "name": "La Viña-Orión",
+      "position": {
+        "latitude": 38.34381,
+        "longitude": -0.50783
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3507",
+      "name": "Isla De Corfú",
+      "position": {
+        "latitude": 38.35309,
+        "longitude": -0.50209
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3508",
+      "name": "Colegio Altozano",
+      "position": {
+        "latitude": 38.35593965,
+        "longitude": -0.500465927
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3516",
+      "name": "Mercadillo-Gran Vía",
+      "position": {
+        "latitude": 38.359813,
+        "longitude": -0.49759
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3517",
+      "name": "Colegio Altozano",
+      "position": {
+        "latitude": 38.356432932,
+        "longitude": -0.500780794
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3518",
+      "name": "Isla De Corfú",
+      "position": {
+        "latitude": 38.3533,
+        "longitude": -0.50233
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3526",
+      "name": "Mercadillo-Gran Vía",
+      "position": {
+        "latitude": 38.359542821,
+        "longitude": -0.497606794
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3700",
+      "name": "Belando 6",
+      "position": {
+        "latitude": 38.34717,
+        "longitude": -0.48962
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3701",
+      "name": "Belando 30",
+      "position": {
+        "latitude": 38.34823,
+        "longitude": -0.49012
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3702",
+      "name": "M. Barbieri",
+      "position": {
+        "latitude": 38.34925,
+        "longitude": -0.49202
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3703",
+      "name": "Ciudad Deportiva",
+      "position": {
+        "latitude": 38.35086,
+        "longitude": -0.49828
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3704",
+      "name": "Centro De Tecnificación",
+      "position": {
+        "latitude": 38.34976,
+        "longitude": -0.4998
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3705",
+      "name": "Camino De Ronda",
+      "position": {
+        "latitude": 38.35005,
+        "longitude": -0.49872
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3706",
+      "name": "Conservatorio",
+      "position": {
+        "latitude": 38.35055,
+        "longitude": -0.49592
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3707",
+      "name": "M. Gaztambide",
+      "position": {
+        "latitude": 38.34918,
+        "longitude": -0.4917
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3708",
+      "name": "P. Iglesias",
+      "position": {
+        "latitude": 38.34821,
+        "longitude": -0.48998
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3709",
+      "name": "Conservatorio",
+      "position": {
+        "latitude": 38.35065,
+        "longitude": -0.49614
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3710",
+      "name": "Marqués De Molins",
+      "position": {
+        "latitude": 38.34998,
+        "longitude": -0.49358
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-3945",
+      "name": "México-Caja Ahorros",
+      "position": {
+        "latitude": 38.338407438,
+        "longitude": -0.508173479
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4009",
+      "name": "Puerta Del Mar",
+      "position": {
+        "latitude": 38.345028472,
+        "longitude": -0.47904598
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4025",
+      "name": "Canónigo Penalva",
+      "position": {
+        "latitude": 38.3522051,
+        "longitude": -0.4742313989999999
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4027",
+      "name": "Raval Roig",
+      "position": {
+        "latitude": 38.349804968,
+        "longitude": -0.473239335
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4065",
+      "name": "Canónigo Penalva",
+      "position": {
+        "latitude": 38.352514,
+        "longitude": -0.474346
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4218",
+      "name": "Gran Vía-Teulada",
+      "position": {
+        "latitude": 38.36105687264329,
+        "longitude": -0.4957255175649311
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4256",
+      "name": "Orión-Vicente Chavarri",
+      "position": {
+        "latitude": 38.34187,
+        "longitude": -0.50872
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4265",
+      "name": "Gran Vía-Teulada",
+      "position": {
+        "latitude": 38.360916132,
+        "longitude": -0.495534025
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4280",
+      "name": "Gran Vía-Novelda",
+      "position": {
+        "latitude": 38.362114358,
+        "longitude": -0.493421345
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4284",
+      "name": "Gran Vía-Novelda",
+      "position": {
+        "latitude": 38.361955909,
+        "longitude": -0.493175051
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4359",
+      "name": "Puerta Del Mar",
+      "position": {
+        "latitude": 38.344774356,
+        "longitude": -0.479798471
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4450",
+      "name": "Estación De Autobuses",
+      "position": {
+        "latitude": 38.337176879,
+        "longitude": -0.491890881
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4499",
+      "name": "López Torregrosa",
+      "position": {
+        "latitude": 38.347255,
+        "longitude": -0.485098
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4803",
+      "name": "C.C. Gran Vía",
+      "position": {
+        "latitude": 38.366625332,
+        "longitude": -0.471063085
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4804",
+      "name": "Cocheras",
+      "position": {
+        "latitude": 38.36635,
+        "longitude": -0.47542
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4805",
+      "name": "Cocheras",
+      "position": {
+        "latitude": 38.36613,
+        "longitude": -0.47562
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4815",
+      "name": "Sidi-Ifni",
+      "position": {
+        "latitude": 38.36573,
+        "longitude": -0.48015
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4816",
+      "name": "Sidi-Ifni",
+      "position": {
+        "latitude": 38.36557,
+        "longitude": -0.47993
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4902",
+      "name": "C.C. Gran Vía",
+      "position": {
+        "latitude": 38.365630384,
+        "longitude": -0.471303751
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4903",
+      "name": "Xavier Soler",
+      "position": {
+        "latitude": 38.362439837,
+        "longitude": -0.466677125
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-4904",
+      "name": "Xavier Soler",
+      "position": {
+        "latitude": 38.36279305,
+        "longitude": -0.466344368
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-5012",
+      "name": "Gran Vía-Benisaudet",
+      "position": {
+        "latitude": 38.364376298,
+        "longitude": -0.488811322
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-5013",
+      "name": "Gran Vía-Benisaudet",
+      "position": {
+        "latitude": 38.36452,
+        "longitude": -0.488
+      }
+    },
+    {
+      "settlementId": "es-alicante",
+      "stopPlaceId": "alicante-place-5014",
+      "name": "Hospital-Gran Vía",
+      "position": {
+        "latitude": 38.364800554,
+        "longitude": -0.485687088
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "alicante-stop-2510",
+      "stopPlaceId": "alicante-place-2510",
+      "settlementId": "es-alicante",
+      "name": "Dénia-Jesuitas",
+      "position": {
+        "latitude": 38.361528879,
+        "longitude": -0.464969467
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-2571",
+      "stopPlaceId": "alicante-place-2571",
+      "settlementId": "es-alicante",
+      "name": "Dénia-Clínica Vistahermosa",
+      "position": {
+        "latitude": 38.362244297,
+        "longitude": -0.464303627
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-2604",
+      "stopPlaceId": "alicante-place-2604",
+      "settlementId": "es-alicante",
+      "name": "Mercado-El Sabio",
+      "position": {
+        "latitude": 38.34740801,
+        "longitude": -0.486629218
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-2608",
+      "stopPlaceId": "alicante-place-2608",
+      "settlementId": "es-alicante",
+      "name": "Postiguet-Pasarela",
+      "position": {
+        "latitude": 38.346527362,
+        "longitude": -0.4766828
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-2682",
+      "stopPlaceId": "alicante-place-2682",
+      "settlementId": "es-alicante",
+      "name": "Rambla-San Cristóbal",
+      "position": {
+        "latitude": 38.34638308,
+        "longitude": -0.484216229
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-2685",
+      "stopPlaceId": "alicante-place-2685",
+      "settlementId": "es-alicante",
+      "name": "Postiguet-Pasarela",
+      "position": {
+        "latitude": 38.347026637,
+        "longitude": -0.476436626
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-2999",
+      "stopPlaceId": "alicante-place-2999",
+      "settlementId": "es-alicante",
+      "name": "Rambla-San Fernando",
+      "position": {
+        "latitude": 38.34426,
+        "longitude": -0.48362
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3100",
+      "stopPlaceId": "alicante-place-3100",
+      "settlementId": "es-alicante",
+      "name": "Mercado-El Sabio",
+      "position": {
+        "latitude": 38.347451631,
+        "longitude": -0.486982397
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3102",
+      "stopPlaceId": "alicante-place-3102",
+      "settlementId": "es-alicante",
+      "name": "Ó. Esplá-Foglietti",
+      "position": {
+        "latitude": 38.341064596,
+        "longitude": -0.494193511
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3103",
+      "stopPlaceId": "alicante-place-3103",
+      "settlementId": "es-alicante",
+      "name": "Soler-Policía",
+      "position": {
+        "latitude": 38.339892239,
+        "longitude": -0.494989008
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3104",
+      "stopPlaceId": "alicante-place-3104",
+      "settlementId": "es-alicante",
+      "name": "Soler-Juzgados",
+      "position": {
+        "latitude": 38.339555667,
+        "longitude": -0.501166942
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3105",
+      "stopPlaceId": "alicante-place-3105",
+      "settlementId": "es-alicante",
+      "name": "IES Cavanilles",
+      "position": {
+        "latitude": 38.339226311,
+        "longitude": -0.506852645
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3122",
+      "stopPlaceId": "alicante-place-3122",
+      "settlementId": "es-alicante",
+      "name": "México-Caja Ahorros",
+      "position": {
+        "latitude": 38.338438346,
+        "longitude": -0.507932175
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3123",
+      "stopPlaceId": "alicante-place-3123",
+      "settlementId": "es-alicante",
+      "name": "IES Cavanilles",
+      "position": {
+        "latitude": 38.339010705,
+        "longitude": -0.506882923
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3124",
+      "stopPlaceId": "alicante-place-3124",
+      "settlementId": "es-alicante",
+      "name": "Soler-Juzgados",
+      "position": {
+        "latitude": 38.339392623,
+        "longitude": -0.501126788
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3132",
+      "stopPlaceId": "alicante-place-3132",
+      "settlementId": "es-alicante",
+      "name": "Ó. Esplá-Sempere",
+      "position": {
+        "latitude": 38.340022757,
+        "longitude": -0.493508699
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3147",
+      "stopPlaceId": "alicante-place-3147",
+      "settlementId": "es-alicante",
+      "name": "La Viña-Orión",
+      "position": {
+        "latitude": 38.34391,
+        "longitude": -0.50812
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3168",
+      "stopPlaceId": "alicante-place-3168",
+      "settlementId": "es-alicante",
+      "name": "C. Salud Babel",
+      "position": {
+        "latitude": 38.34018,
+        "longitude": -0.50902
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3506",
+      "stopPlaceId": "alicante-place-3506",
+      "settlementId": "es-alicante",
+      "name": "La Viña-Orión",
+      "position": {
+        "latitude": 38.34381,
+        "longitude": -0.50783
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3507",
+      "stopPlaceId": "alicante-place-3507",
+      "settlementId": "es-alicante",
+      "name": "Isla De Corfú",
+      "position": {
+        "latitude": 38.35309,
+        "longitude": -0.50209
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3508",
+      "stopPlaceId": "alicante-place-3508",
+      "settlementId": "es-alicante",
+      "name": "Colegio Altozano",
+      "position": {
+        "latitude": 38.35593965,
+        "longitude": -0.500465927
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3516",
+      "stopPlaceId": "alicante-place-3516",
+      "settlementId": "es-alicante",
+      "name": "Mercadillo-Gran Vía",
+      "position": {
+        "latitude": 38.359813,
+        "longitude": -0.49759
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3517",
+      "stopPlaceId": "alicante-place-3517",
+      "settlementId": "es-alicante",
+      "name": "Colegio Altozano",
+      "position": {
+        "latitude": 38.356432932,
+        "longitude": -0.500780794
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3518",
+      "stopPlaceId": "alicante-place-3518",
+      "settlementId": "es-alicante",
+      "name": "Isla De Corfú",
+      "position": {
+        "latitude": 38.3533,
+        "longitude": -0.50233
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3526",
+      "stopPlaceId": "alicante-place-3526",
+      "settlementId": "es-alicante",
+      "name": "Mercadillo-Gran Vía",
+      "position": {
+        "latitude": 38.359542821,
+        "longitude": -0.497606794
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3700",
+      "stopPlaceId": "alicante-place-3700",
+      "settlementId": "es-alicante",
+      "name": "Belando 6",
+      "position": {
+        "latitude": 38.34717,
+        "longitude": -0.48962
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3701",
+      "stopPlaceId": "alicante-place-3701",
+      "settlementId": "es-alicante",
+      "name": "Belando 30",
+      "position": {
+        "latitude": 38.34823,
+        "longitude": -0.49012
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3702",
+      "stopPlaceId": "alicante-place-3702",
+      "settlementId": "es-alicante",
+      "name": "M. Barbieri",
+      "position": {
+        "latitude": 38.34925,
+        "longitude": -0.49202
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3703",
+      "stopPlaceId": "alicante-place-3703",
+      "settlementId": "es-alicante",
+      "name": "Ciudad Deportiva",
+      "position": {
+        "latitude": 38.35086,
+        "longitude": -0.49828
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3704",
+      "stopPlaceId": "alicante-place-3704",
+      "settlementId": "es-alicante",
+      "name": "Centro De Tecnificación",
+      "position": {
+        "latitude": 38.34976,
+        "longitude": -0.4998
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3705",
+      "stopPlaceId": "alicante-place-3705",
+      "settlementId": "es-alicante",
+      "name": "Camino De Ronda",
+      "position": {
+        "latitude": 38.35005,
+        "longitude": -0.49872
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3706",
+      "stopPlaceId": "alicante-place-3706",
+      "settlementId": "es-alicante",
+      "name": "Conservatorio",
+      "position": {
+        "latitude": 38.35055,
+        "longitude": -0.49592
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3707",
+      "stopPlaceId": "alicante-place-3707",
+      "settlementId": "es-alicante",
+      "name": "M. Gaztambide",
+      "position": {
+        "latitude": 38.34918,
+        "longitude": -0.4917
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3708",
+      "stopPlaceId": "alicante-place-3708",
+      "settlementId": "es-alicante",
+      "name": "P. Iglesias",
+      "position": {
+        "latitude": 38.34821,
+        "longitude": -0.48998
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3709",
+      "stopPlaceId": "alicante-place-3709",
+      "settlementId": "es-alicante",
+      "name": "Conservatorio",
+      "position": {
+        "latitude": 38.35065,
+        "longitude": -0.49614
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3710",
+      "stopPlaceId": "alicante-place-3710",
+      "settlementId": "es-alicante",
+      "name": "Marqués De Molins",
+      "position": {
+        "latitude": 38.34998,
+        "longitude": -0.49358
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-3945",
+      "stopPlaceId": "alicante-place-3945",
+      "settlementId": "es-alicante",
+      "name": "México-Caja Ahorros",
+      "position": {
+        "latitude": 38.338407438,
+        "longitude": -0.508173479
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4009",
+      "stopPlaceId": "alicante-place-4009",
+      "settlementId": "es-alicante",
+      "name": "Puerta Del Mar",
+      "position": {
+        "latitude": 38.345028472,
+        "longitude": -0.47904598
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4025",
+      "stopPlaceId": "alicante-place-4025",
+      "settlementId": "es-alicante",
+      "name": "Canónigo Penalva",
+      "position": {
+        "latitude": 38.3522051,
+        "longitude": -0.4742313989999999
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4027",
+      "stopPlaceId": "alicante-place-4027",
+      "settlementId": "es-alicante",
+      "name": "Raval Roig",
+      "position": {
+        "latitude": 38.349804968,
+        "longitude": -0.473239335
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4065",
+      "stopPlaceId": "alicante-place-4065",
+      "settlementId": "es-alicante",
+      "name": "Canónigo Penalva",
+      "position": {
+        "latitude": 38.352514,
+        "longitude": -0.474346
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4218",
+      "stopPlaceId": "alicante-place-4218",
+      "settlementId": "es-alicante",
+      "name": "Gran Vía-Teulada",
+      "position": {
+        "latitude": 38.36105687264329,
+        "longitude": -0.4957255175649311
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4256",
+      "stopPlaceId": "alicante-place-4256",
+      "settlementId": "es-alicante",
+      "name": "Orión-Vicente Chavarri",
+      "position": {
+        "latitude": 38.34187,
+        "longitude": -0.50872
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4265",
+      "stopPlaceId": "alicante-place-4265",
+      "settlementId": "es-alicante",
+      "name": "Gran Vía-Teulada",
+      "position": {
+        "latitude": 38.360916132,
+        "longitude": -0.495534025
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4280",
+      "stopPlaceId": "alicante-place-4280",
+      "settlementId": "es-alicante",
+      "name": "Gran Vía-Novelda",
+      "position": {
+        "latitude": 38.362114358,
+        "longitude": -0.493421345
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4284",
+      "stopPlaceId": "alicante-place-4284",
+      "settlementId": "es-alicante",
+      "name": "Gran Vía-Novelda",
+      "position": {
+        "latitude": 38.361955909,
+        "longitude": -0.493175051
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4359",
+      "stopPlaceId": "alicante-place-4359",
+      "settlementId": "es-alicante",
+      "name": "Puerta Del Mar",
+      "position": {
+        "latitude": 38.344774356,
+        "longitude": -0.479798471
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4450",
+      "stopPlaceId": "alicante-place-4450",
+      "settlementId": "es-alicante",
+      "name": "Estación De Autobuses",
+      "position": {
+        "latitude": 38.337176879,
+        "longitude": -0.491890881
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4499",
+      "stopPlaceId": "alicante-place-4499",
+      "settlementId": "es-alicante",
+      "name": "López Torregrosa",
+      "position": {
+        "latitude": 38.347255,
+        "longitude": -0.485098
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4803",
+      "stopPlaceId": "alicante-place-4803",
+      "settlementId": "es-alicante",
+      "name": "C.C. Gran Vía",
+      "position": {
+        "latitude": 38.366625332,
+        "longitude": -0.471063085
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4804",
+      "stopPlaceId": "alicante-place-4804",
+      "settlementId": "es-alicante",
+      "name": "Cocheras",
+      "position": {
+        "latitude": 38.36635,
+        "longitude": -0.47542
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4805",
+      "stopPlaceId": "alicante-place-4805",
+      "settlementId": "es-alicante",
+      "name": "Cocheras",
+      "position": {
+        "latitude": 38.36613,
+        "longitude": -0.47562
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4815",
+      "stopPlaceId": "alicante-place-4815",
+      "settlementId": "es-alicante",
+      "name": "Sidi-Ifni",
+      "position": {
+        "latitude": 38.36573,
+        "longitude": -0.48015
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4816",
+      "stopPlaceId": "alicante-place-4816",
+      "settlementId": "es-alicante",
+      "name": "Sidi-Ifni",
+      "position": {
+        "latitude": 38.36557,
+        "longitude": -0.47993
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4902",
+      "stopPlaceId": "alicante-place-4902",
+      "settlementId": "es-alicante",
+      "name": "C.C. Gran Vía",
+      "position": {
+        "latitude": 38.365630384,
+        "longitude": -0.471303751
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4903",
+      "stopPlaceId": "alicante-place-4903",
+      "settlementId": "es-alicante",
+      "name": "Xavier Soler",
+      "position": {
+        "latitude": 38.362439837,
+        "longitude": -0.466677125
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-4904",
+      "stopPlaceId": "alicante-place-4904",
+      "settlementId": "es-alicante",
+      "name": "Xavier Soler",
+      "position": {
+        "latitude": 38.36279305,
+        "longitude": -0.466344368
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-5012",
+      "stopPlaceId": "alicante-place-5012",
+      "settlementId": "es-alicante",
+      "name": "Gran Vía-Benisaudet",
+      "position": {
+        "latitude": 38.364376298,
+        "longitude": -0.488811322
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-5013",
+      "stopPlaceId": "alicante-place-5013",
+      "settlementId": "es-alicante",
+      "name": "Gran Vía-Benisaudet",
+      "position": {
+        "latitude": 38.36452,
+        "longitude": -0.488
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "alicante-stop-5014",
+      "stopPlaceId": "alicante-place-5014",
+      "settlementId": "es-alicante",
+      "name": "Hospital-Gran Vía",
+      "position": {
+        "latitude": 38.364800554,
+        "longitude": -0.485687088
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-vinalopo-v1",
+  "generatedAt": "2026-08-01T22:40:00+02:00",
+  "sources": [
+    {
+      "sourceId": "buselche-official-gi-2026-08-01",
+      "name": "BusElche / Avanza official route pages for Lines G and I",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-g; https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-i"
+    },
+    {
+      "sourceId": "alibus-elche-gi-2026-08-01",
+      "name": "Current AliBus ordered G and I stop pages with municipal stop codes and map coordinates",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "https://alibus.es/lines/elche/linea-g.html; https://alibus.es/lines/elche/linea-i.html"
+    },
+    {
+      "sourceId": "elche-accepted-identity-registry-v3",
+      "name": "Accepted A/B/C, D/F/H and E/J scenarios used for exact shared StopNode and StopPlace reuse",
+      "accessedAt": "2026-08-01",
+      "sourceFile": "../elche-urban-abc-v1/stops.json; ../elche-legacy-east-v1/stops.json; ../elche-legacy-hospital-general-v1/stops.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "elche-gi-route-cycle-capture-v1",
+      "description": "Combines each line's ordered outbound and return lists into one complete cycle. Repeated Hospital Vinalopó handoff and Centro cycle-boundary occurrences are removed, and closesLoop=true adds the final edge once."
+    },
+    {
+      "transformationId": "elche-municipal-code-identity-v3",
+      "description": "Uses the municipal stop code as the stable elche-stop and elche-place suffix. Accepted identities from earlier Elche scenarios are copied exactly."
+    },
+    {
+      "transformationId": "elche-singleton-stopplace-projection-v3",
+      "description": "Creates one strict parser-compatible StopPlace for every new directional StopNode. No proximity-only physical merges are made."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Writes established scenario assets, computes asset SHA-256 values and aggregate contentHash, and registers the scenario."
+    }
+  ],
+  "warnings": [
+    "Runtime StopNode sourceReferences remain empty for new nodes because that field accepts only genuine OpenStreetMap platform or stop_position components. Municipal codes and AliBus coordinate links remain build provenance.",
+    "Accepted StopNode and StopPlace objects reused from earlier Elche scenarios retain their exact previous bytes and coordinates.",
+    "G and I are explicit circular patterns. The first StopNode is not repeated at the end; closesLoop=true adds the closing edge exactly once.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern itinerary edges.",
+    "Hospital Vinalopó is represented by the same stable directional StopNode and singleton StopPlace in G and I. Later K/L discovery must reuse this identity rather than create a route-specific copy."
+  ]
+}

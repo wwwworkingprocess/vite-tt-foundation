@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-all-v1",
+  "title": "Elche Legacy Network - All Non-Radial Lines",
+  "initialView": {
+    "center": {
+      "latitude": 38.266254892270695,
+      "longitude": -0.692703064464288
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "elche-A": {
+      "label": "A",
+      "color": "#e11d48"
+    },
+    "elche-B": {
+      "label": "B",
+      "color": "#db2777"
+    },
+    "elche-C": {
+      "label": "C",
+      "color": "#0b72b9"
+    },
+    "elche-D": {
+      "label": "D",
+      "color": "#1597c5"
+    },
+    "elche-E": {
+      "label": "E",
+      "color": "#6f2b78"
+    },
+    "elche-F": {
+      "label": "F",
+      "color": "#2f9e44"
+    },
+    "elche-G": {
+      "label": "G",
+      "color": "#8a5a2b"
+    },
+    "elche-H": {
+      "label": "H",
+      "color": "#e86f0c"
+    },
+    "elche-I": {
+      "label": "I",
+      "color": "#8b7255"
+    },
+    "elche-J": {
+      "label": "J",
+      "color": "#00783d"
+    },
+    "elche-K1": {
+      "label": "K1",
+      "color": "#5d3a9b"
+    },
+    "elche-K2": {
+      "label": "K2",
+      "color": "#3949ab"
+    },
+    "elche-L": {
+      "label": "L",
+      "color": "#00838f"
+    },
+    "elche-NT": {
+      "label": "NT",
+      "color": "#1f2937"
+    }
+  },
+  "notes": [
+    "Merged accepted Elche urban, cross-city and nocturnal routes. Radial services R1, R2 and R3 are intentionally excluded.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

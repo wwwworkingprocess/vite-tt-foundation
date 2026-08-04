@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-vinalopo-v1",
+  "routes": [
+    {
+      "routeId": "elche-G",
+      "publicCode": "G",
+      "name": "Centre - Sector V - H. Vinalopó",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-G-circular",
+          "directionLabel": "Centre / Sector V / Hospital Vinalopó",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "elche-stop-001",
+            "elche-stop-002",
+            "elche-stop-003",
+            "elche-stop-047",
+            "elche-stop-048",
+            "elche-stop-049",
+            "elche-stop-034",
+            "elche-stop-128",
+            "elche-stop-309",
+            "elche-stop-303",
+            "elche-stop-293",
+            "elche-stop-342",
+            "elche-stop-343",
+            "elche-stop-124",
+            "elche-stop-125",
+            "elche-stop-254",
+            "elche-stop-255",
+            "elche-stop-256",
+            "elche-stop-134",
+            "elche-stop-024"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "G",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-g"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "G",
+          "sourceFile": "https://alibus.es/lines/elche/linea-g.html"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-I",
+      "publicCode": "I",
+      "name": "Centre - El Pla - H. Vinalopó",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-I-circular",
+          "directionLabel": "Centre / El Pla / Hospital Vinalopó",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "elche-stop-001",
+            "elche-stop-002",
+            "elche-stop-003",
+            "elche-stop-071",
+            "elche-stop-335",
+            "elche-stop-346",
+            "elche-stop-347",
+            "elche-stop-243",
+            "elche-stop-244",
+            "elche-stop-257",
+            "elche-stop-310",
+            "elche-stop-348",
+            "elche-stop-293",
+            "elche-stop-294",
+            "elche-stop-309",
+            "elche-stop-349",
+            "elche-stop-245",
+            "elche-stop-246",
+            "elche-stop-033",
+            "elche-stop-350",
+            "elche-stop-132",
+            "elche-stop-311",
+            "elche-stop-133",
+            "elche-stop-024"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "I",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-i"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "I",
+          "sourceFile": "https://alibus.es/lines/elche/linea-i.html"
+        }
+      ]
+    }
+  ]
+}

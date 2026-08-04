@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-north-v1",
+  "title": "Alicante Legacy North Network - Lines 08, 11, 11H and 13",
+  "initialView": {
+    "center": {
+      "latitude": 38.367306338000006,
+      "longitude": -0.466704291
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "alicante-08": {
+      "label": "08",
+      "color": "#1565c0"
+    },
+    "alicante-11": {
+      "label": "11",
+      "color": "#8e24aa"
+    },
+    "alicante-11h": {
+      "label": "11H",
+      "color": "#5e35b1"
+    },
+    "alicante-13": {
+      "label": "13",
+      "color": "#00897b"
+    }
+  },
+  "notes": [
+    "Northern districts, Virgen del Remedio, Villafranqueza and Hospital Sant Joan discovery component for the map-defined Alicante urban legacy network.",
+    "Ida and Vuelta patterns are stored independently; no reverse patterns or loop-closing edges are inferred.",
+    "Hospital Sant Joan is represented under Sant Joan d'Alacant rather than silently assigned to Alicante.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

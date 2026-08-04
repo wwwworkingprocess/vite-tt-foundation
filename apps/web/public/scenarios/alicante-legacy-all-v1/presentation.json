@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-all-v1",
+  "title": "Alicante Legacy Network - All Urban Lines",
+  "initialView": {
+    "center": {
+      "latitude": 38.334920271499996,
+      "longitude": -0.5148533875
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "alicante-01": {
+      "label": "01",
+      "color": "#d81b60"
+    },
+    "alicante-02": {
+      "label": "02",
+      "color": "#8e24aa"
+    },
+    "alicante-03": {
+      "label": "03",
+      "color": "#3949ab"
+    },
+    "alicante-04": {
+      "label": "04",
+      "color": "#00897b"
+    },
+    "alicante-05": {
+      "label": "05",
+      "color": "#43a047"
+    },
+    "alicante-06": {
+      "label": "06",
+      "color": "#f4511e"
+    },
+    "alicante-07": {
+      "label": "07",
+      "color": "#5d4037"
+    },
+    "alicante-08": {
+      "label": "08",
+      "color": "#1565c0"
+    },
+    "alicante-09": {
+      "label": "09",
+      "color": "#1976d2"
+    },
+    "alicante-10": {
+      "label": "10",
+      "color": "#ef6c00"
+    },
+    "alicante-11": {
+      "label": "11",
+      "color": "#8e24aa"
+    },
+    "alicante-11h": {
+      "label": "11H",
+      "color": "#5e35b1"
+    },
+    "alicante-12": {
+      "label": "12",
+      "color": "#6d4c41"
+    },
+    "alicante-13": {
+      "label": "13",
+      "color": "#00897b"
+    },
+    "alicante-14a": {
+      "label": "14A",
+      "color": "#f9a825"
+    },
+    "alicante-14b": {
+      "label": "14B",
+      "color": "#ef6c00"
+    },
+    "alicante-22": {
+      "label": "22",
+      "color": "#00838f"
+    },
+    "alicante-27": {
+      "label": "27",
+      "color": "#00897b"
+    },
+    "alicante-39": {
+      "label": "39",
+      "color": "#7cb342"
+    }
+  },
+  "notes": [
+    "Merged accepted Alicante legacy components in canonical route order: 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 11H, 12, 13, 14A, 14B, 22, 27 and 39.",
+    "This scenario intentionally contains only the 19 passenger-facing services in the supplied legacy urban-lines scope; interurban, airport, university, nocturnal, seasonal, football, market, TRAM and later MIA-only services are excluded.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

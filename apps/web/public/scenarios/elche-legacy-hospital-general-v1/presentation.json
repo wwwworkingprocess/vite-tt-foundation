@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-hospital-general-v1",
+  "title": "Elche Legacy Hospital General Network - Lines E and J",
+  "initialView": {
+    "center": {
+      "latitude": 38.262532444200545,
+      "longitude": -0.6841062784612505
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "elche-E": {
+      "label": "E",
+      "color": "#6f2b78"
+    },
+    "elche-J": {
+      "label": "J",
+      "color": "#00783d"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

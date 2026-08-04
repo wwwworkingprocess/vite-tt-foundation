@@ -1,0 +1,205 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-inner-v1",
+  "routes": [
+    {
+      "routeId": "elche-R1",
+      "publicCode": "R1",
+      "name": "La Galia - Bonavista",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-R1-cycle",
+          "directionLabel": "Centro / La Galia / Bonavista",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 42
+          },
+          "stopNodeIds": [
+            "elche-stop-001",
+            "elche-stop-002",
+            "elche-stop-056",
+            "elche-stop-089",
+            "elche-stop-090",
+            "elche-stop-091",
+            "elche-stop-080",
+            "elche-stop-178",
+            "elche-stop-179",
+            "elche-stop-187",
+            "elche-stop-188",
+            "elche-stop-189",
+            "elche-stop-190",
+            "elche-stop-191",
+            "elche-stop-192",
+            "elche-stop-193",
+            "elche-stop-194",
+            "elche-stop-216",
+            "elche-stop-217",
+            "elche-stop-218",
+            "elche-stop-297",
+            "elche-stop-298",
+            "elche-stop-299",
+            "elche-stop-219",
+            "elche-stop-220",
+            "elche-stop-221",
+            "elche-stop-222",
+            "elche-stop-183",
+            "elche-stop-184",
+            "elche-stop-185",
+            "elche-stop-186",
+            "elche-stop-223",
+            "elche-stop-300",
+            "elche-stop-301",
+            "elche-stop-302",
+            "elche-stop-304",
+            "elche-stop-296",
+            "elche-stop-321",
+            "elche-stop-236",
+            "elche-stop-080",
+            "elche-stop-122",
+            "elche-stop-113"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "R1",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r1"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "R1",
+          "sourceFile": "https://alibus.es/lines/elche/linea-r1.html"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-R2",
+      "publicCode": "R2",
+      "name": "Peña Las Águilas - C.C. Carrefour",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-R2-cycle",
+          "directionLabel": "Centro / Peña Las Águilas / Carrefour",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "elche-stop-001",
+            "elche-stop-002",
+            "elche-stop-056",
+            "elche-stop-057",
+            "elche-stop-060",
+            "elche-stop-152",
+            "elche-stop-206",
+            "elche-stop-209",
+            "elche-stop-166",
+            "elche-stop-167",
+            "elche-stop-359",
+            "elche-stop-168",
+            "elche-stop-169",
+            "elche-stop-170",
+            "elche-stop-171",
+            "elche-stop-201",
+            "elche-stop-203",
+            "elche-stop-204",
+            "elche-stop-325",
+            "elche-stop-326",
+            "elche-stop-327",
+            "elche-stop-328",
+            "elche-stop-198",
+            "elche-stop-172",
+            "elche-stop-360",
+            "elche-stop-173",
+            "elche-stop-174",
+            "elche-stop-175",
+            "elche-stop-176",
+            "elche-stop-022",
+            "elche-stop-023",
+            "elche-stop-024"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "R2",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r2"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "R2",
+          "sourceFile": "https://alibus.es/lines/elche/linea-r2.html"
+        }
+      ]
+    },
+    {
+      "routeId": "elche-R3",
+      "publicCode": "R3",
+      "name": "Partida Carrús - Montesol",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "elche-R3-cycle",
+          "directionLabel": "Centro / Partida Carrús / Montesol",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "elche-stop-001",
+            "elche-stop-002",
+            "elche-stop-056",
+            "elche-stop-089",
+            "elche-stop-082",
+            "elche-stop-083",
+            "elche-stop-084",
+            "elche-stop-213",
+            "elche-stop-214",
+            "elche-stop-272",
+            "elche-stop-273",
+            "elche-stop-274",
+            "elche-stop-275",
+            "elche-stop-276",
+            "elche-stop-277",
+            "elche-stop-278",
+            "elche-stop-361",
+            "elche-stop-352",
+            "elche-stop-362",
+            "elche-stop-363",
+            "elche-stop-279",
+            "elche-stop-280",
+            "elche-stop-281",
+            "elche-stop-282",
+            "elche-stop-283",
+            "elche-stop-284",
+            "elche-stop-215",
+            "elche-stop-041",
+            "elche-stop-268",
+            "elche-stop-269",
+            "elche-stop-270",
+            "elche-stop-271"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "buselche-official",
+          "sourceRouteId": "R3",
+          "sourceFile": "https://elche.avanzagrupo.com/lineas-y-horarios/todas-las-lineas/linea-r3"
+        },
+        {
+          "source": "alibus-current-route-order",
+          "sourceRouteId": "R3",
+          "sourceFile": "https://alibus.es/lines/elche/linea-r3.html"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-east-v1",
+  "title": "Elche Legacy East Network - Lines D, F and H",
+  "initialView": {
+    "center": {
+      "latitude": 38.2696498915925,
+      "longitude": -0.6879970178184764
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "elche-D": {
+      "label": "D",
+      "color": "#1597c5"
+    },
+    "elche-F": {
+      "label": "F",
+      "color": "#2f9e44"
+    },
+    "elche-H": {
+      "label": "H",
+      "color": "#e86f0c"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

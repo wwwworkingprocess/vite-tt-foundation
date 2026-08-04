@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-legacy-all-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Radial Legacy Network - All Lines R1-R12",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "175f908ba34b9e40193986067a8de1163e9f9e17745911667c5acd0d37d1263a",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "f8d591c2e93101cb44db9be5dee06fbb8d0c9b8f07db5e41c3556a5ae0fd0ffd"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "e0aa820f35283b1c12085f1988c842e828b7370e3ceeebdde0e0bae33e6647fd"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "41de52843321e34285c50b4a37f99ef7171bb6f2ba1007a3e86a4fb99d092480"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "8d8e7b23414db6ac1d26e5c0af63afcfd4b7902ab0c83313ae0b4add6d508124"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "119805db867d0237f7ccdbcdad23c525f4b6ee051970019a2e551057ab90da7b"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

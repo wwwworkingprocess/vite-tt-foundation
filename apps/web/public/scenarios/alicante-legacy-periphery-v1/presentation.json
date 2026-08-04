@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-periphery-v1",
+  "title": "Alicante Legacy Periphery Network - Lines 07 and 27",
+  "initialView": {
+    "center": {
+      "latitude": 38.314409841,
+      "longitude": -0.5536811624441428
+    },
+    "zoom": 11
+  },
+  "routeStyles": {
+    "alicante-07": {
+      "label": "07",
+      "color": "#5d4037"
+    },
+    "alicante-27": {
+      "label": "27",
+      "color": "#00897b"
+    }
+  },
+  "notes": [
+    "Outer-district discovery component for the map-defined Alicante urban legacy network.",
+    "Line 07 keeps separate Ida and Vuelta patterns.",
+    "Line 27 keeps six explicit 27A/27B/27C Ida/Vuelta variants from the supplied official-style diagrams; variants are not concatenated.",
+    "All patterns are open and use closesLoop=false.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

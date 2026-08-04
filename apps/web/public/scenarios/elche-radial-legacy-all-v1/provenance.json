@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-legacy-all-v1",
+  "generatedAt": "2026-08-02T15:15:00+02:00",
+  "sources": [
+    {
+      "sourceId": "elche-radial-inner-v1",
+      "name": "Accepted component scenario elche-radial-inner-v1",
+      "scenarioId": "elche-radial-inner-v1",
+      "contentHash": "55157158881d928dafbc2e5daae3e0ca0287e4282720ede0a8a33453f0b05e66",
+      "sourceFile": "scenarios/elche-radial-inner-v1/scenario.json"
+    },
+    {
+      "sourceId": "elche-radial-west-v1",
+      "name": "Accepted component scenario elche-radial-west-v1",
+      "scenarioId": "elche-radial-west-v1",
+      "contentHash": "1a5635697763909696928d2c56f054a4f357b8061d5fb1eae5d865a3d64f40de",
+      "sourceFile": "scenarios/elche-radial-west-v1/scenario.json"
+    },
+    {
+      "sourceId": "elche-radial-south-v1",
+      "name": "Accepted component scenario elche-radial-south-v1",
+      "scenarioId": "elche-radial-south-v1",
+      "contentHash": "99ef775b22cb930b11e9ca7a73eb3d9e14b7005d9d367ce01831b2354ac80734",
+      "sourceFile": "scenarios/elche-radial-south-v1/scenario.json"
+    },
+    {
+      "sourceId": "elche-radial-airport-v1",
+      "name": "Accepted component scenario elche-radial-airport-v1",
+      "scenarioId": "elche-radial-airport-v1",
+      "contentHash": "a38b14bae4115794529cc3b95d1e3794ebf2fd873a43a4a6b14e97d682a096a0",
+      "sourceFile": "scenarios/elche-radial-airport-v1/scenario.json"
+    },
+    {
+      "sourceId": "elche-radial-coast-v1",
+      "name": "Accepted component scenario elche-radial-coast-v1",
+      "scenarioId": "elche-radial-coast-v1",
+      "contentHash": "8a40a2490bb81ff4c65c043dffac76db633ea0834696e822edf79552ef623c52",
+      "sourceFile": "scenarios/elche-radial-coast-v1/scenario.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "elche-radial-component-union-v1",
+      "description": "Copies route and pattern objects exactly from the five accepted radial component scenarios, orders routes numerically R1-R12, and unions StopNodes and StopPlaces by stable municipal-code-derived ID. Any complete-object conflict is a hard failure."
+    },
+    {
+      "transformationId": "elche-radial-routed-identity-projection-v1",
+      "description": "Includes only StopNodes referenced by the copied radial route patterns and only their referenced StopPlaces. Stop arrays are serialized in ascending numeric municipal-code order; no proximity, name or coordinate merge is performed."
+    },
+    {
+      "transformationId": "elche-radial-merge-presentation-v1",
+      "description": "Copies each component route style exactly, combines them in numerical route order, and provides one whole-network initial view. Presentation metadata creates no graph semantics."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Adds exactly one catalog descriptor and recomputes all asset and aggregate SHA-256 values from serialized bytes."
+    }
+  ],
+  "warnings": [
+    "This is a pure merge of accepted radial components; no route sequence, pattern, municipal identity, coordinate or StopPlace mapping was rediscovered or normalized during the merge.",
+    "Component settlement center/bounds differ because they describe component extents. The final es-elche settlement retains the stable accepted identity fields and derives whole-network center/bounds from all merged routed StopPlaces.",
+    "The included route scope is exactly R1-R12. Urban/non-radial routes A-L and NT, seasonal P1-P3 services, and special nocturnal N/NP services are excluded.",
+    "R10 base and event/IFA patterns are preserved exactly from elche-radial-airport-v1.",
+    "R11 Carrús and Sector V patterns are preserved exactly from elche-radial-airport-v1; the lower-confidence diagram-derived Sector V review boundary remains inherited.",
+    "R12 uses the current ordered Gran Via/Bahia circulation preserved from elche-radial-coast-v1; its disagreement with the supplied older diagram remains inherited.",
+    "Municipal stops 355 and 026 remain distinct identities. The radial all scenario routes 355 where its accepted radial component patterns do so and does not import non-routed 026 merely because of the shared Hospital General destination name.",
+    "Internal directed cycles and non-consecutive repeated StopNodes remain exactly as represented by the accepted component patterns. closesLoop adds only each pattern final-to-first edge.",
+    "Previously identified grandfathered Torrevieja sourceReferences fields remain untouched by explicit user instruction."
+  ]
+}

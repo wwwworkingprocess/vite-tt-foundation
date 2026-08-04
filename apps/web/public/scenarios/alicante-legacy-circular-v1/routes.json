@@ -1,0 +1,214 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-circular-v1",
+  "routes": [
+    {
+      "routeId": "alicante-14a",
+      "publicCode": "14A",
+      "name": "Circular Gran Vía 14A",
+      "dataStatus": "legacy-map-scope-official-historical-circular-itinerary-current-stop-code-reconciliation",
+      "patterns": [
+        {
+          "patternId": "alicante-14a-circular",
+          "directionLabel": "Plaza del Mar → Gran Vía → Av. Dénia → Plaza del Mar",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 25
+          },
+          "stopNodeIds": [
+            "alicante-stop-4359",
+            "alicante-stop-4450",
+            "alicante-stop-3102",
+            "alicante-stop-3103",
+            "alicante-stop-3104",
+            "alicante-stop-3105",
+            "alicante-stop-3945",
+            "alicante-stop-3168",
+            "alicante-stop-3506",
+            "alicante-stop-3507",
+            "alicante-stop-3508",
+            "alicante-stop-3526",
+            "alicante-stop-4265",
+            "alicante-stop-4284",
+            "alicante-stop-5013",
+            "alicante-stop-5014",
+            "alicante-stop-4816",
+            "alicante-stop-4805",
+            "alicante-stop-4902",
+            "alicante-stop-4903",
+            "alicante-stop-2510",
+            "alicante-stop-2571",
+            "alicante-stop-4025",
+            "alicante-stop-4027",
+            "alicante-stop-2685"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "A",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "legacy-urban-line-list",
+          "sourceRouteId": "A",
+          "sourceFile": "5a950c14-76ec-4c94-9cb0-6870dd0f49ad.png"
+        },
+        {
+          "source": "alicante-ayuntamiento-historical-itinerary",
+          "sourceRouteId": "14A",
+          "sourceFile": "https://www.alicante.es/es/noticias/apliacion-servicio-del-autobus-urbano"
+        },
+        {
+          "source": "vectalia-historical-service-notice",
+          "sourceRouteId": "14A-14B",
+          "sourceFile": "https://alicante.vectalia.es/notificacion/nueva-linea-14a-14b-circular-gran-via/"
+        },
+        {
+          "source": "vectalia-current-line-14",
+          "sourceRouteId": "14",
+          "sourceFile": "https://alicante.vectalia.es/linea/linea14-plaza-la-vina-denida-jesuitas/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-14b",
+      "publicCode": "14B",
+      "name": "Circular Gran Vía 14B",
+      "dataStatus": "legacy-map-scope-official-historical-circular-itinerary-current-stop-code-reconciliation",
+      "patterns": [
+        {
+          "patternId": "alicante-14b-circular",
+          "directionLabel": "Plaza del Mar → Av. Dénia → Gran Vía → Plaza del Mar",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "alicante-stop-4009",
+            "alicante-stop-2608",
+            "alicante-stop-4065",
+            "alicante-stop-2510",
+            "alicante-stop-4904",
+            "alicante-stop-4803",
+            "alicante-stop-4804",
+            "alicante-stop-4815",
+            "alicante-stop-5012",
+            "alicante-stop-4280",
+            "alicante-stop-4218",
+            "alicante-stop-3516",
+            "alicante-stop-3517",
+            "alicante-stop-3518",
+            "alicante-stop-3147",
+            "alicante-stop-4256",
+            "alicante-stop-3122",
+            "alicante-stop-3123",
+            "alicante-stop-3124",
+            "alicante-stop-3132",
+            "alicante-stop-4450"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "B",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "legacy-urban-line-list",
+          "sourceRouteId": "B",
+          "sourceFile": "5a950c14-76ec-4c94-9cb0-6870dd0f49ad.png"
+        },
+        {
+          "source": "alicante-ayuntamiento-historical-itinerary",
+          "sourceRouteId": "14B",
+          "sourceFile": "https://www.alicante.es/es/noticias/apliacion-servicio-del-autobus-urbano"
+        },
+        {
+          "source": "vectalia-historical-service-notice",
+          "sourceRouteId": "14A-14B",
+          "sourceFile": "https://alicante.vectalia.es/notificacion/nueva-linea-14a-14b-circular-gran-via/"
+        },
+        {
+          "source": "vectalia-current-line-14",
+          "sourceRouteId": "14",
+          "sourceFile": "https://alicante.vectalia.es/linea/linea14-plaza-la-vina-denida-jesuitas/"
+        }
+      ]
+    },
+    {
+      "routeId": "alicante-39",
+      "publicCode": "39",
+      "name": "Rambla - Centro De Tecnificación",
+      "dataStatus": "legacy-map-scope-current-official-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "alicante-39-ida",
+          "directionLabel": "Rambla-San Fernando → Centro De Tecnificación",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "alicante-stop-2999",
+            "alicante-stop-2682",
+            "alicante-stop-3100",
+            "alicante-stop-3700",
+            "alicante-stop-3701",
+            "alicante-stop-3702",
+            "alicante-stop-3709",
+            "alicante-stop-3703",
+            "alicante-stop-3704"
+          ]
+        },
+        {
+          "patternId": "alicante-39-vuelta",
+          "directionLabel": "Centro De Tecnificación → Rambla-San Fernando",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "alicante-stop-3704",
+            "alicante-stop-3705",
+            "alicante-stop-3706",
+            "alicante-stop-3710",
+            "alicante-stop-3707",
+            "alicante-stop-3708",
+            "alicante-stop-2604",
+            "alicante-stop-4499",
+            "alicante-stop-2999"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "legacy-network-map",
+          "sourceRouteId": "39",
+          "sourceFile": "bus-alicante-lines-1024x910-949355444.webp"
+        },
+        {
+          "source": "legacy-urban-line-list",
+          "sourceRouteId": "39",
+          "sourceFile": "5a950c14-76ec-4c94-9cb0-6870dd0f49ad.png"
+        },
+        {
+          "source": "vectalia-current-route-page",
+          "sourceRouteId": "39",
+          "sourceFile": "https://alicante.vectalia.es/linea/39-explanada-centro-de-tecnificacion/"
+        },
+        {
+          "source": "alibus-current-route-page",
+          "sourceRouteId": "39",
+          "sourceFile": "https://alibus.es/lines/alicante/39/"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-core-v1",
+  "title": "Alicante Legacy Core Network - Lines 01, 02 and 03",
+  "initialView": {
+    "center": {
+      "latitude": 38.3503083925,
+      "longitude": -0.4944540155
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "alicante-01": {
+      "label": "01",
+      "color": "#d81b60"
+    },
+    "alicante-02": {
+      "label": "02",
+      "color": "#8e24aa"
+    },
+    "alicante-03": {
+      "label": "03",
+      "color": "#3949ab"
+    }
+  },
+  "notes": [
+    "Core discovery component for the map-defined Alicante urban legacy network.",
+    "Route direction patterns are stored independently; no reverse patterns or loop-closing edges are inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-south-v1",
+  "title": "Elche Radial South Network - Lines R7 and R8",
+  "initialView": {
+    "center": {
+      "latitude": 38.2013620941823,
+      "longitude": -0.665759835369194
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "elche-R7": {
+      "label": "R7",
+      "color": "#3f7f44"
+    },
+    "elche-R8": {
+      "label": "R8",
+      "color": "#2878a5"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "This component contains the southern pedanía services R7 and R8."
+  ]
+}

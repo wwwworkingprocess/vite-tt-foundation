@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-legacy-crosscity-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Elche Legacy Cross-City Network - Lines K1, K2 and L",
+  "primarySettlementId": "es-elche",
+  "settlementIds": [
+    "es-elche"
+  ],
+  "contentHash": "204dada443f4d768e6fce364719ab564dfe97292ed3c447545250a99451fee2e",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "1090f5e24240405ec7e4c39df838de216b1a9bb7d4b13c4218ae50533de2ed3e"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "c850a5bb66b274259a3e28a0d9eb7c61465cb0760556cbaaee6cd462384a6f3b"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "b1d88a7f7fdbb41f303c269fbf98cf34ba16c3ea2a8cb4f55d834edd1f8c8c4b"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "ae4e0d2a9a2035c638616456a359ff5bf28641e94adb8e95d124efdf069ca59b"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "0eddc70f107de7a38cdd0ff090724c27939c3ab34398941ae10d979724293e54"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

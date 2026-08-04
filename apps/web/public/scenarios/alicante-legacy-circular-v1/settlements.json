@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "alicante-legacy-circular-v1",
+  "settlements": [
+    {
+      "settlementId": "es-alicante",
+      "name": "Alicante",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.3519011055,
+        "longitude": -0.48666181350000004
+      },
+      "bounds": {
+        "south": 38.337176879,
+        "west": -0.50902,
+        "north": 38.366625332,
+        "east": -0.464303627
+      }
+    }
+  ]
+}

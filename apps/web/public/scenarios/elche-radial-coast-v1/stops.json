@@ -1,0 +1,3389 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "elche-radial-coast-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-027",
+      "name": "Ies Pere Ibarra - L'Avet",
+      "position": {
+        "latitude": 38.2611458,
+        "longitude": -0.6894226
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-073",
+      "name": "Magraner",
+      "position": {
+        "latitude": 38.2648001333104,
+        "longitude": -0.683850645383908
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-074",
+      "name": "Politecnico",
+      "position": {
+        "latitude": 38.2667691746898,
+        "longitude": -0.68529099162762
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-091",
+      "name": "Estacion Autobuses",
+      "position": {
+        "latitude": 38.2724969915679,
+        "longitude": -0.691599547242461
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-092",
+      "name": "Av.Universidad-IES Misteri D'Elx",
+      "position": {
+        "latitude": 38.2732479737425,
+        "longitude": -0.687295608358869
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-100",
+      "name": "IES C.Sempere",
+      "position": {
+        "latitude": 38.2622834733106,
+        "longitude": -0.685565918052257
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-102",
+      "name": "Puerta De Alicante",
+      "position": {
+        "latitude": 38.2673240767109,
+        "longitude": -0.695184319597658
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-108",
+      "name": "San Anton",
+      "position": {
+        "latitude": 38.2655890478988,
+        "longitude": -0.677275651131147
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-117",
+      "name": "V.Cabeza-H.Pensionista",
+      "position": {
+        "latitude": 38.2707176202431,
+        "longitude": -0.694706855508726
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-135",
+      "name": "Jesuitinas",
+      "position": {
+        "latitude": 38.2668428810851,
+        "longitude": -0.693208872654522
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-136",
+      "name": "Av.Juan Carlos I",
+      "position": {
+        "latitude": 38.2680274378854,
+        "longitude": -0.688506960242556
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-180",
+      "name": "V.Clavel Florentino",
+      "position": {
+        "latitude": 38.2631343036845,
+        "longitude": -0.674299299063402
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-196",
+      "name": "Fco.Perez Campillo 11",
+      "position": {
+        "latitude": 38.2649780863026,
+        "longitude": -0.67909911210487
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-197",
+      "name": "Avenida del Elche C.F.",
+      "position": {
+        "latitude": 38.2643778880748,
+        "longitude": -0.674552767815783
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-205",
+      "name": "Virgen de la Cabeza",
+      "position": {
+        "latitude": 38.269562594757,
+        "longitude": -0.69482356248444
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-236",
+      "name": "Universidad-Est.Autobuses",
+      "position": {
+        "latitude": 38.2728833923601,
+        "longitude": -0.691347419594588
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-258",
+      "name": "Avenida Altet 1",
+      "position": {
+        "latitude": 38.2634028186271,
+        "longitude": -0.665826200768552
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-261",
+      "name": "Profesor Pepe Belso",
+      "position": {
+        "latitude": 38.2648591000297,
+        "longitude": -0.664813666863363
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-314",
+      "name": "Av.Universidad-O.Winibal",
+      "position": {
+        "latitude": 38.2737046188228,
+        "longitude": -0.684538631997365
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-315",
+      "name": "Av.Universidad-V.A.Estellés",
+      "position": {
+        "latitude": 38.2741247041538,
+        "longitude": -0.682065635280886
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-316",
+      "name": "Av.Universidad-Sucre",
+      "position": {
+        "latitude": 38.2745869004945,
+        "longitude": -0.679285525631579
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-317",
+      "name": "C.Deportiva-Confrides",
+      "position": {
+        "latitude": 38.274951180731,
+        "longitude": -0.676023959463112
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-318",
+      "name": "C.Deportiva-Pabellon E.Lag",
+      "position": {
+        "latitude": 38.274497409405,
+        "longitude": -0.673955976308595
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-319",
+      "name": "Barchell-Centro Comercial",
+      "position": {
+        "latitude": 38.2715451944699,
+        "longitude": -0.670843272740736
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-333",
+      "name": "Avenida Travalon 3",
+      "position": {
+        "latitude": 38.2624698565589,
+        "longitude": -0.676072239225727
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-344",
+      "name": "Tractat D'Elx",
+      "position": {
+        "latitude": 38.2700732536018,
+        "longitude": -0.687442123261588
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-355",
+      "name": "Hospital General Pedanías",
+      "position": {
+        "latitude": 38.2602427022272,
+        "longitude": -0.6840520295829
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-356",
+      "name": "Av.Altet 2",
+      "position": {
+        "latitude": 38.2635380038277,
+        "longitude": -0.665722723330539
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-358",
+      "name": "J.Esquitino Sempere",
+      "position": {
+        "latitude": 38.2690887139768,
+        "longitude": -0.667988447773339
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1138",
+      "name": "Cno. Perleta - Crta. Altet 1",
+      "position": {
+        "latitude": 38.2607703540233,
+        "longitude": -0.657713206796807
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1139",
+      "name": "Cno. Perleta - El Molino 1",
+      "position": {
+        "latitude": 38.2546414211228,
+        "longitude": -0.646278588433077
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1140",
+      "name": "Cno. Perleta - Viveros 1",
+      "position": {
+        "latitude": 38.2531800423082,
+        "longitude": -0.6419939033802
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1141",
+      "name": "Perleta - Centro Social 1",
+      "position": {
+        "latitude": 38.2508673839789,
+        "longitude": -0.633709980007486
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1142",
+      "name": "Cno. Perleta 1",
+      "position": {
+        "latitude": 38.2501473385785,
+        "longitude": -0.6266072374225
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1143",
+      "name": "Cno. Perleta - Cno. Monforte 1",
+      "position": {
+        "latitude": 38.2495446507924,
+        "longitude": -0.622314951060967
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1144",
+      "name": "Cno. Las Torres De Gaitan 1",
+      "position": {
+        "latitude": 38.2494941651184,
+        "longitude": -0.620399256487311
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1145",
+      "name": "Cno. Las Torres De Gaitan 2",
+      "position": {
+        "latitude": 38.2521677044677,
+        "longitude": -0.618169229557594
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1146",
+      "name": "Cno. Las Torres De Gaitan 3",
+      "position": {
+        "latitude": 38.2556643635477,
+        "longitude": -0.615299974992014
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1147",
+      "name": "Cno. Las Torres De Gaitan 4",
+      "position": {
+        "latitude": 38.2571336144226,
+        "longitude": -0.611106666461356
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1148",
+      "name": "Cno. Las Torres De Gaitan 5",
+      "position": {
+        "latitude": 38.258131932229,
+        "longitude": -0.602988582771296
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1149",
+      "name": "Cno. Las Torres De Gaitan 6",
+      "position": {
+        "latitude": 38.2549247237702,
+        "longitude": -0.601129991275522
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1150",
+      "name": "Granja La Loma 1",
+      "position": {
+        "latitude": 38.2475334116548,
+        "longitude": -0.598409947784345
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1151",
+      "name": "Granja La Loma 2",
+      "position": {
+        "latitude": 38.2426887945734,
+        "longitude": -0.599271768034185
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1152",
+      "name": "Valverde 1",
+      "position": {
+        "latitude": 38.2367296903911,
+        "longitude": -0.5953437033082
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1153",
+      "name": "Avenida Valverde - Cno. Pallus 1",
+      "position": {
+        "latitude": 38.2329329769244,
+        "longitude": -0.599979209961996
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1154",
+      "name": "Camino Del Cine 1",
+      "position": {
+        "latitude": 38.2289667507146,
+        "longitude": -0.602029921599568
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1155",
+      "name": "Bar Del Cine 1",
+      "position": {
+        "latitude": 38.2277704168824,
+        "longitude": -0.596829202857519
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1156",
+      "name": "Torres De Gaitan - Cno. Pallus 1",
+      "position": {
+        "latitude": 38.2319406871804,
+        "longitude": -0.591958513470121
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1157",
+      "name": "Valverde 3",
+      "position": {
+        "latitude": 38.2346675489501,
+        "longitude": -0.592657488894521
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1158",
+      "name": "Cno. Balsares 1",
+      "position": {
+        "latitude": 38.2386456243649,
+        "longitude": -0.593256689689869
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1159",
+      "name": "Cno. Balsares 2",
+      "position": {
+        "latitude": 38.2395128072157,
+        "longitude": -0.588921143273213
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1160",
+      "name": "Cno. Balsares - Nuevo Valverde 1",
+      "position": {
+        "latitude": 38.2397473219172,
+        "longitude": -0.585259837354617
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1161",
+      "name": "Balsares 1",
+      "position": {
+        "latitude": 38.2436188885686,
+        "longitude": -0.566042001517678
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1162",
+      "name": "Balsares 2",
+      "position": {
+        "latitude": 38.245708985682,
+        "longitude": -0.563039619341204
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1163",
+      "name": "Balsares 3",
+      "position": {
+        "latitude": 38.2495498883059,
+        "longitude": -0.560433001495135
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1164",
+      "name": "Urbanizacion Los Limoneros 1",
+      "position": {
+        "latitude": 38.2555798878397,
+        "longitude": -0.550710001454643
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1165",
+      "name": "Cementerio De L'Altet 1",
+      "position": {
+        "latitude": 38.2623299872729,
+        "longitude": -0.546624179839358
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1166",
+      "name": "Plaza San Francisco",
+      "position": {
+        "latitude": 38.2725884426292,
+        "longitude": -0.548304112585253
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1167",
+      "name": "L'Altet - Av. San Francisco De Asis 1",
+      "position": {
+        "latitude": 38.2725468875759,
+        "longitude": -0.544833001431379
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1168",
+      "name": "L'Altet - Plaza Mayor 1",
+      "position": {
+        "latitude": 38.2723008873768,
+        "longitude": -0.540827001413747
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1169",
+      "name": "L'Altet - Av. Dama De Elche - C.Salud",
+      "position": {
+        "latitude": 38.272188887197,
+        "longitude": -0.537223001397732
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1170",
+      "name": "L'Altet - Av. Sinus Ilicitanus 1",
+      "position": {
+        "latitude": 38.2707618869591,
+        "longitude": -0.532519001376421
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1171",
+      "name": "Crta. Del Saladar-Playa L'Altet 1",
+      "position": {
+        "latitude": 38.2677193087859,
+        "longitude": -0.52481431697679
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1172",
+      "name": "Crta. Del Saladar-Playa L'Altet 2",
+      "position": {
+        "latitude": 38.2677181357442,
+        "longitude": -0.524709537403206
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1173",
+      "name": "L'Altet - Av. Sinus Ilicitanus 2",
+      "position": {
+        "latitude": 38.2709018869626,
+        "longitude": -0.532585001376744
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1174",
+      "name": "L'Altet - Av. Dama De Elche",
+      "position": {
+        "latitude": 38.2722898872123,
+        "longitude": -0.5375270013991
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1175",
+      "name": "L'Altet - Plaza Mayor 2",
+      "position": {
+        "latitude": 38.272380887377,
+        "longitude": -0.540830001413772
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1176",
+      "name": "L'Altet - Av. San Francisco De Asis 12",
+      "position": {
+        "latitude": 38.2726308876023,
+        "longitude": -0.545365001433724
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1177",
+      "name": "L'Altet - Av.S.Francisco Parroquia",
+      "position": {
+        "latitude": 38.272887015197,
+        "longitude": -0.547999660069872
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1178",
+      "name": "Cementerio De L'Altet 2",
+      "position": {
+        "latitude": 38.2622111705596,
+        "longitude": -0.546698964734889
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1179",
+      "name": "Urbanizacion Los Limoneros 2",
+      "position": {
+        "latitude": 38.2551458879026,
+        "longitude": -0.552003001460136
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1180",
+      "name": "Balsares - Camino Del Canal",
+      "position": {
+        "latitude": 38.2528448881037,
+        "longitude": -0.556182001477653
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1181",
+      "name": "Balsares 4",
+      "position": {
+        "latitude": 38.2503500485753,
+        "longitude": -0.559952655220638
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1182",
+      "name": "Balsares 5",
+      "position": {
+        "latitude": 38.2455629916006,
+        "longitude": -0.563109362709991
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1183",
+      "name": "Balsares 6",
+      "position": {
+        "latitude": 38.2436170956173,
+        "longitude": -0.566379487286075
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1184",
+      "name": "Cno. Balsares - Nuevo Valverde 2",
+      "position": {
+        "latitude": 38.2398004598375,
+        "longitude": -0.585131088419303
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1185",
+      "name": "Cno. Balsares 3",
+      "position": {
+        "latitude": 38.239580647257,
+        "longitude": -0.589062988021778
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1186",
+      "name": "Cno. Balsares 4",
+      "position": {
+        "latitude": 38.2382771060335,
+        "longitude": -0.595369934211348
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1187",
+      "name": "Valverde 4",
+      "position": {
+        "latitude": 38.2345586036993,
+        "longitude": -0.592763162524656
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1188",
+      "name": "Torres De Gaitan - Cno. Pallus 2",
+      "position": {
+        "latitude": 38.2319098432194,
+        "longitude": -0.592023939881089
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1189",
+      "name": "Bar Del Cine 2",
+      "position": {
+        "latitude": 38.2278384513689,
+        "longitude": -0.596807411090728
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1190",
+      "name": "Camino Del Cine",
+      "position": {
+        "latitude": 38.2289349459779,
+        "longitude": -0.601856843458205
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1191",
+      "name": "Avenida Valverde - Pallus 2",
+      "position": {
+        "latitude": 38.2328608228947,
+        "longitude": -0.59991596866183
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1192",
+      "name": "Valverde 2",
+      "position": {
+        "latitude": 38.2366904819357,
+        "longitude": -0.59525615883087
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1193",
+      "name": "Granja La Loma 3",
+      "position": {
+        "latitude": 38.2425841415294,
+        "longitude": -0.599183556968438
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1194",
+      "name": "Granja La Loma 4",
+      "position": {
+        "latitude": 38.2473006257953,
+        "longitude": -0.59822711138463
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1195",
+      "name": "Cno. Las Torres De Gaitan 7",
+      "position": {
+        "latitude": 38.2548909804312,
+        "longitude": -0.600995593261242
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1196",
+      "name": "Cno. Las Torres De Gaitan 8",
+      "position": {
+        "latitude": 38.2582376043965,
+        "longitude": -0.603157941352431
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1197",
+      "name": "Cno. Las Torres De Gaitan 9",
+      "position": {
+        "latitude": 38.257242765459,
+        "longitude": -0.61112909646949
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1198",
+      "name": "Cno. Las Torres De Gaitan 10",
+      "position": {
+        "latitude": 38.2559399414056,
+        "longitude": -0.615128855724033
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1199",
+      "name": "Cno. Las Torres De Gaitan 11",
+      "position": {
+        "latitude": 38.2522704982394,
+        "longitude": -0.61820487157799
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1200",
+      "name": "Cno. Las Torres De Gaitan 12",
+      "position": {
+        "latitude": 38.2496803875027,
+        "longitude": -0.620332930028213
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1201",
+      "name": "Cno. Perleta - Cno. Monforte 2",
+      "position": {
+        "latitude": 38.2496081364179,
+        "longitude": -0.622295740307048
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1202",
+      "name": "Cno. Perleta 2",
+      "position": {
+        "latitude": 38.250137681539,
+        "longitude": -0.626020746980271
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1203",
+      "name": "Perleta - Centro Social 2",
+      "position": {
+        "latitude": 38.2511534004171,
+        "longitude": -0.634096092150147
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1204",
+      "name": "Cno. Perleta - Viveros 2",
+      "position": {
+        "latitude": 38.2534065751489,
+        "longitude": -0.64218501058854
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1205",
+      "name": "Cno. Perleta - El Molino 2",
+      "position": {
+        "latitude": 38.2547524842161,
+        "longitude": -0.646310560830519
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1206",
+      "name": "Cno. Perleta - Crta. Altet 2",
+      "position": {
+        "latitude": 38.2606159156434,
+        "longitude": -0.657317621967726
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1245",
+      "name": "Crta. Altet - Almazara 1",
+      "position": {
+        "latitude": 38.2627306409267,
+        "longitude": -0.654838775262227
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1246",
+      "name": "Crta. Altet - Cooperativa 1",
+      "position": {
+        "latitude": 38.2653615326763,
+        "longitude": -0.642140594245659
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1247",
+      "name": "Crta. Altet - Supermercado 1",
+      "position": {
+        "latitude": 38.2665614681513,
+        "longitude": -0.635907702250535
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1248",
+      "name": "Crta. Altet - Cno.Viejo Balsares 1",
+      "position": {
+        "latitude": 38.2690880650023,
+        "longitude": -0.625396874281661
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1249",
+      "name": "Crta. Altet - Cno. Los Bonet 1",
+      "position": {
+        "latitude": 38.2711553092515,
+        "longitude": -0.617464663310033
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1250",
+      "name": "Crta. Altet - Torreazul 1",
+      "position": {
+        "latitude": 38.2721123268152,
+        "longitude": -0.610198268171377
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1251",
+      "name": "Crta. Altet - Cno. Los Vinagres 1",
+      "position": {
+        "latitude": 38.273265716874,
+        "longitude": -0.598763981549312
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1252",
+      "name": "Crta. Altet - Torrellano Alto 1",
+      "position": {
+        "latitude": 38.2740107279345,
+        "longitude": -0.580108889447504
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1253",
+      "name": "Crta. Altet - Cno. Torrellano 1",
+      "position": {
+        "latitude": 38.2770741154924,
+        "longitude": -0.570926743293555
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1254",
+      "name": "Crta. Altet - Gasolinera 1",
+      "position": {
+        "latitude": 38.2788027028036,
+        "longitude": -0.564089558892949
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1255",
+      "name": "Crta. Torrellano A L'Altet 1",
+      "position": {
+        "latitude": 38.2749609687127,
+        "longitude": -0.555853337871651
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1256",
+      "name": "L'Altet - Plaza San Francisco Avenida",
+      "position": {
+        "latitude": 38.2728718877536,
+        "longitude": -0.54842100144704
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1257",
+      "name": "Gran Via 1",
+      "position": {
+        "latitude": 38.2601126277108,
+        "longitude": -0.524664102173903
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1258",
+      "name": "Bahia 3",
+      "position": {
+        "latitude": 38.248749378074,
+        "longitude": -0.521763511297635
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1259",
+      "name": "Crta. Torrellano A L'Altet 2",
+      "position": {
+        "latitude": 38.2750543140411,
+        "longitude": -0.555736334290184
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1260",
+      "name": "Crta. Altet - Gasolinera 2",
+      "position": {
+        "latitude": 38.2787805028974,
+        "longitude": -0.564792099354899
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1261",
+      "name": "Crta. Altet - Cno. Torrellano 2",
+      "position": {
+        "latitude": 38.2771378888513,
+        "longitude": -0.570881001541957
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1262",
+      "name": "Crta. Altet - Torrellano Alto 2",
+      "position": {
+        "latitude": 38.2739953968476,
+        "longitude": -0.580215152809199
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1263",
+      "name": "Crta. Altet - Cno. Los Vinagres 2",
+      "position": {
+        "latitude": 38.2733436144808,
+        "longitude": -0.59880719750596
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1264",
+      "name": "Crta. Altet - Torreazul 2",
+      "position": {
+        "latitude": 38.2720956643218,
+        "longitude": -0.61075729803241
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1265",
+      "name": "Crta. Altet - Cno. Los Bonet 2",
+      "position": {
+        "latitude": 38.2717315887333,
+        "longitude": -0.616335055819228
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1266",
+      "name": "Crta. Altet - Cno.Viejo Balsares 2",
+      "position": {
+        "latitude": 38.2685552901165,
+        "longitude": -0.626877589348141
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1267",
+      "name": "Crta. Altet - Supermercado 2",
+      "position": {
+        "latitude": 38.2664503914276,
+        "longitude": -0.636845966216627
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1268",
+      "name": "Crta. Altet - Cooperativa 2",
+      "position": {
+        "latitude": 38.2653163216396,
+        "longitude": -0.642713908091849
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1269",
+      "name": "Crta. Altet - Almazara 2",
+      "position": {
+        "latitude": 38.2627895540529,
+        "longitude": -0.654908447541517
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1280",
+      "name": "Bahia 4",
+      "position": {
+        "latitude": 38.2481256116556,
+        "longitude": -0.521592611116285
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1281",
+      "name": "Bahia 5",
+      "position": {
+        "latitude": 38.2518307425004,
+        "longitude": -0.521814188297506
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1282",
+      "name": "Bahia 6",
+      "position": {
+        "latitude": 38.25585870112,
+        "longitude": -0.523545349186188
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1283",
+      "name": "Gran Via 2",
+      "position": {
+        "latitude": 38.2598949102231,
+        "longitude": -0.524494352267954
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1301",
+      "name": "Av.Costa Blanca 1",
+      "position": {
+        "latitude": 38.2589895706633,
+        "longitude": -0.521308778697012
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1302",
+      "name": "Av.Costa Blanca 2",
+      "position": {
+        "latitude": 38.2559556362796,
+        "longitude": -0.52087828414898
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1303",
+      "name": "Av.Costa Blanca 3",
+      "position": {
+        "latitude": 38.2532585823505,
+        "longitude": -0.520643590859588
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1304",
+      "name": "Av.Costa Blanca 4",
+      "position": {
+        "latitude": 38.2502138767889,
+        "longitude": -0.520458518437122
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1305",
+      "name": "Av.Costa Blanca 5",
+      "position": {
+        "latitude": 38.2480821910338,
+        "longitude": -0.520328431299594
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1306",
+      "name": "Albacete 1",
+      "position": {
+        "latitude": 38.2459704545205,
+        "longitude": -0.522121488031268
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1307",
+      "name": "Albacete 2",
+      "position": {
+        "latitude": 38.2434352364346,
+        "longitude": -0.52204236286518
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1308",
+      "name": "Albacete 3",
+      "position": {
+        "latitude": 38.2421438948563,
+        "longitude": -0.520787089042652
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1309",
+      "name": "San Bartolome Tirajana 1",
+      "position": {
+        "latitude": 38.242170227499,
+        "longitude": -0.516989081066597
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1310",
+      "name": "San Bartolome Tirajana 2",
+      "position": {
+        "latitude": 38.2444569178403,
+        "longitude": -0.51688581601915
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1311",
+      "name": "San Bartolome Tirajana 3",
+      "position": {
+        "latitude": 38.2477483195681,
+        "longitude": -0.516716836850615
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1312",
+      "name": "Centro Municipal",
+      "position": {
+        "latitude": 38.2499126641163,
+        "longitude": -0.516959576767094
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1313",
+      "name": "San Bartolome Tirajana 4",
+      "position": {
+        "latitude": 38.2532459446109,
+        "longitude": -0.517384706897085
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1314",
+      "name": "San Bartolome Tirajana 5",
+      "position": {
+        "latitude": 38.2574711611074,
+        "longitude": -0.517866099282421
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1315",
+      "name": "Isla Menorca 1",
+      "position": {
+        "latitude": 38.2597088083115,
+        "longitude": -0.518648027346546
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1316",
+      "name": "Isla Menorca 2",
+      "position": {
+        "latitude": 38.2595476912728,
+        "longitude": -0.520820616654876
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1317",
+      "name": "Isla Menorca 3",
+      "position": {
+        "latitude": 38.2602363851348,
+        "longitude": -0.523416994988717
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1318",
+      "name": "Mercado Arenales",
+      "position": {
+        "latitude": 38.260340636389,
+        "longitude": -0.523713379085706
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1320",
+      "name": "Bahia 1",
+      "position": {
+        "latitude": 38.2547656170149,
+        "longitude": -0.523150115191148
+      }
+    },
+    {
+      "settlementId": "es-elche",
+      "stopPlaceId": "elche-place-1321",
+      "name": "Bahia 2",
+      "position": {
+        "latitude": 38.252164356606,
+        "longitude": -0.521959214385206
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "elche-stop-027",
+      "stopPlaceId": "elche-place-027",
+      "settlementId": "es-elche",
+      "name": "Ies Pere Ibarra - L'Avet",
+      "position": {
+        "latitude": 38.2611458,
+        "longitude": -0.6894226
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-073",
+      "stopPlaceId": "elche-place-073",
+      "settlementId": "es-elche",
+      "name": "Magraner",
+      "position": {
+        "latitude": 38.2648001333104,
+        "longitude": -0.683850645383908
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-074",
+      "stopPlaceId": "elche-place-074",
+      "settlementId": "es-elche",
+      "name": "Politecnico",
+      "position": {
+        "latitude": 38.2667691746898,
+        "longitude": -0.68529099162762
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-091",
+      "stopPlaceId": "elche-place-091",
+      "settlementId": "es-elche",
+      "name": "Estacion Autobuses",
+      "position": {
+        "latitude": 38.2724969915679,
+        "longitude": -0.691599547242461
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-092",
+      "stopPlaceId": "elche-place-092",
+      "settlementId": "es-elche",
+      "name": "Av.Universidad-IES Misteri D'Elx",
+      "position": {
+        "latitude": 38.2732479737425,
+        "longitude": -0.687295608358869
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-100",
+      "stopPlaceId": "elche-place-100",
+      "settlementId": "es-elche",
+      "name": "IES C.Sempere",
+      "position": {
+        "latitude": 38.2622834733106,
+        "longitude": -0.685565918052257
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-102",
+      "stopPlaceId": "elche-place-102",
+      "settlementId": "es-elche",
+      "name": "Puerta De Alicante",
+      "position": {
+        "latitude": 38.2673240767109,
+        "longitude": -0.695184319597658
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-108",
+      "stopPlaceId": "elche-place-108",
+      "settlementId": "es-elche",
+      "name": "San Anton",
+      "position": {
+        "latitude": 38.2655890478988,
+        "longitude": -0.677275651131147
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-117",
+      "stopPlaceId": "elche-place-117",
+      "settlementId": "es-elche",
+      "name": "V.Cabeza-H.Pensionista",
+      "position": {
+        "latitude": 38.2707176202431,
+        "longitude": -0.694706855508726
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-135",
+      "stopPlaceId": "elche-place-135",
+      "settlementId": "es-elche",
+      "name": "Jesuitinas",
+      "position": {
+        "latitude": 38.2668428810851,
+        "longitude": -0.693208872654522
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-136",
+      "stopPlaceId": "elche-place-136",
+      "settlementId": "es-elche",
+      "name": "Av.Juan Carlos I",
+      "position": {
+        "latitude": 38.2680274378854,
+        "longitude": -0.688506960242556
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-180",
+      "stopPlaceId": "elche-place-180",
+      "settlementId": "es-elche",
+      "name": "V.Clavel Florentino",
+      "position": {
+        "latitude": 38.2631343036845,
+        "longitude": -0.674299299063402
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-196",
+      "stopPlaceId": "elche-place-196",
+      "settlementId": "es-elche",
+      "name": "Fco.Perez Campillo 11",
+      "position": {
+        "latitude": 38.2649780863026,
+        "longitude": -0.67909911210487
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-197",
+      "stopPlaceId": "elche-place-197",
+      "settlementId": "es-elche",
+      "name": "Avenida del Elche C.F.",
+      "position": {
+        "latitude": 38.2643778880748,
+        "longitude": -0.674552767815783
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-205",
+      "stopPlaceId": "elche-place-205",
+      "settlementId": "es-elche",
+      "name": "Virgen de la Cabeza",
+      "position": {
+        "latitude": 38.269562594757,
+        "longitude": -0.69482356248444
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-236",
+      "stopPlaceId": "elche-place-236",
+      "settlementId": "es-elche",
+      "name": "Universidad-Est.Autobuses",
+      "position": {
+        "latitude": 38.2728833923601,
+        "longitude": -0.691347419594588
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-258",
+      "stopPlaceId": "elche-place-258",
+      "settlementId": "es-elche",
+      "name": "Avenida Altet 1",
+      "position": {
+        "latitude": 38.2634028186271,
+        "longitude": -0.665826200768552
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-261",
+      "stopPlaceId": "elche-place-261",
+      "settlementId": "es-elche",
+      "name": "Profesor Pepe Belso",
+      "position": {
+        "latitude": 38.2648591000297,
+        "longitude": -0.664813666863363
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-314",
+      "stopPlaceId": "elche-place-314",
+      "settlementId": "es-elche",
+      "name": "Av.Universidad-O.Winibal",
+      "position": {
+        "latitude": 38.2737046188228,
+        "longitude": -0.684538631997365
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-315",
+      "stopPlaceId": "elche-place-315",
+      "settlementId": "es-elche",
+      "name": "Av.Universidad-V.A.Estellés",
+      "position": {
+        "latitude": 38.2741247041538,
+        "longitude": -0.682065635280886
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-316",
+      "stopPlaceId": "elche-place-316",
+      "settlementId": "es-elche",
+      "name": "Av.Universidad-Sucre",
+      "position": {
+        "latitude": 38.2745869004945,
+        "longitude": -0.679285525631579
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-317",
+      "stopPlaceId": "elche-place-317",
+      "settlementId": "es-elche",
+      "name": "C.Deportiva-Confrides",
+      "position": {
+        "latitude": 38.274951180731,
+        "longitude": -0.676023959463112
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-318",
+      "stopPlaceId": "elche-place-318",
+      "settlementId": "es-elche",
+      "name": "C.Deportiva-Pabellon E.Lag",
+      "position": {
+        "latitude": 38.274497409405,
+        "longitude": -0.673955976308595
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-319",
+      "stopPlaceId": "elche-place-319",
+      "settlementId": "es-elche",
+      "name": "Barchell-Centro Comercial",
+      "position": {
+        "latitude": 38.2715451944699,
+        "longitude": -0.670843272740736
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-333",
+      "stopPlaceId": "elche-place-333",
+      "settlementId": "es-elche",
+      "name": "Avenida Travalon 3",
+      "position": {
+        "latitude": 38.2624698565589,
+        "longitude": -0.676072239225727
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-344",
+      "stopPlaceId": "elche-place-344",
+      "settlementId": "es-elche",
+      "name": "Tractat D'Elx",
+      "position": {
+        "latitude": 38.2700732536018,
+        "longitude": -0.687442123261588
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-355",
+      "stopPlaceId": "elche-place-355",
+      "settlementId": "es-elche",
+      "name": "Hospital General Pedanías",
+      "position": {
+        "latitude": 38.2602427022272,
+        "longitude": -0.6840520295829
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-356",
+      "stopPlaceId": "elche-place-356",
+      "settlementId": "es-elche",
+      "name": "Av.Altet 2",
+      "position": {
+        "latitude": 38.2635380038277,
+        "longitude": -0.665722723330539
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-358",
+      "stopPlaceId": "elche-place-358",
+      "settlementId": "es-elche",
+      "name": "J.Esquitino Sempere",
+      "position": {
+        "latitude": 38.2690887139768,
+        "longitude": -0.667988447773339
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1138",
+      "stopPlaceId": "elche-place-1138",
+      "settlementId": "es-elche",
+      "name": "Cno. Perleta - Crta. Altet 1",
+      "position": {
+        "latitude": 38.2607703540233,
+        "longitude": -0.657713206796807
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1139",
+      "stopPlaceId": "elche-place-1139",
+      "settlementId": "es-elche",
+      "name": "Cno. Perleta - El Molino 1",
+      "position": {
+        "latitude": 38.2546414211228,
+        "longitude": -0.646278588433077
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1140",
+      "stopPlaceId": "elche-place-1140",
+      "settlementId": "es-elche",
+      "name": "Cno. Perleta - Viveros 1",
+      "position": {
+        "latitude": 38.2531800423082,
+        "longitude": -0.6419939033802
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1141",
+      "stopPlaceId": "elche-place-1141",
+      "settlementId": "es-elche",
+      "name": "Perleta - Centro Social 1",
+      "position": {
+        "latitude": 38.2508673839789,
+        "longitude": -0.633709980007486
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1142",
+      "stopPlaceId": "elche-place-1142",
+      "settlementId": "es-elche",
+      "name": "Cno. Perleta 1",
+      "position": {
+        "latitude": 38.2501473385785,
+        "longitude": -0.6266072374225
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1143",
+      "stopPlaceId": "elche-place-1143",
+      "settlementId": "es-elche",
+      "name": "Cno. Perleta - Cno. Monforte 1",
+      "position": {
+        "latitude": 38.2495446507924,
+        "longitude": -0.622314951060967
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1144",
+      "stopPlaceId": "elche-place-1144",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 1",
+      "position": {
+        "latitude": 38.2494941651184,
+        "longitude": -0.620399256487311
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1145",
+      "stopPlaceId": "elche-place-1145",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 2",
+      "position": {
+        "latitude": 38.2521677044677,
+        "longitude": -0.618169229557594
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1146",
+      "stopPlaceId": "elche-place-1146",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 3",
+      "position": {
+        "latitude": 38.2556643635477,
+        "longitude": -0.615299974992014
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1147",
+      "stopPlaceId": "elche-place-1147",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 4",
+      "position": {
+        "latitude": 38.2571336144226,
+        "longitude": -0.611106666461356
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1148",
+      "stopPlaceId": "elche-place-1148",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 5",
+      "position": {
+        "latitude": 38.258131932229,
+        "longitude": -0.602988582771296
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1149",
+      "stopPlaceId": "elche-place-1149",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 6",
+      "position": {
+        "latitude": 38.2549247237702,
+        "longitude": -0.601129991275522
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1150",
+      "stopPlaceId": "elche-place-1150",
+      "settlementId": "es-elche",
+      "name": "Granja La Loma 1",
+      "position": {
+        "latitude": 38.2475334116548,
+        "longitude": -0.598409947784345
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1151",
+      "stopPlaceId": "elche-place-1151",
+      "settlementId": "es-elche",
+      "name": "Granja La Loma 2",
+      "position": {
+        "latitude": 38.2426887945734,
+        "longitude": -0.599271768034185
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1152",
+      "stopPlaceId": "elche-place-1152",
+      "settlementId": "es-elche",
+      "name": "Valverde 1",
+      "position": {
+        "latitude": 38.2367296903911,
+        "longitude": -0.5953437033082
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1153",
+      "stopPlaceId": "elche-place-1153",
+      "settlementId": "es-elche",
+      "name": "Avenida Valverde - Cno. Pallus 1",
+      "position": {
+        "latitude": 38.2329329769244,
+        "longitude": -0.599979209961996
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1154",
+      "stopPlaceId": "elche-place-1154",
+      "settlementId": "es-elche",
+      "name": "Camino Del Cine 1",
+      "position": {
+        "latitude": 38.2289667507146,
+        "longitude": -0.602029921599568
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1155",
+      "stopPlaceId": "elche-place-1155",
+      "settlementId": "es-elche",
+      "name": "Bar Del Cine 1",
+      "position": {
+        "latitude": 38.2277704168824,
+        "longitude": -0.596829202857519
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1156",
+      "stopPlaceId": "elche-place-1156",
+      "settlementId": "es-elche",
+      "name": "Torres De Gaitan - Cno. Pallus 1",
+      "position": {
+        "latitude": 38.2319406871804,
+        "longitude": -0.591958513470121
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1157",
+      "stopPlaceId": "elche-place-1157",
+      "settlementId": "es-elche",
+      "name": "Valverde 3",
+      "position": {
+        "latitude": 38.2346675489501,
+        "longitude": -0.592657488894521
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1158",
+      "stopPlaceId": "elche-place-1158",
+      "settlementId": "es-elche",
+      "name": "Cno. Balsares 1",
+      "position": {
+        "latitude": 38.2386456243649,
+        "longitude": -0.593256689689869
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1159",
+      "stopPlaceId": "elche-place-1159",
+      "settlementId": "es-elche",
+      "name": "Cno. Balsares 2",
+      "position": {
+        "latitude": 38.2395128072157,
+        "longitude": -0.588921143273213
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1160",
+      "stopPlaceId": "elche-place-1160",
+      "settlementId": "es-elche",
+      "name": "Cno. Balsares - Nuevo Valverde 1",
+      "position": {
+        "latitude": 38.2397473219172,
+        "longitude": -0.585259837354617
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1161",
+      "stopPlaceId": "elche-place-1161",
+      "settlementId": "es-elche",
+      "name": "Balsares 1",
+      "position": {
+        "latitude": 38.2436188885686,
+        "longitude": -0.566042001517678
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1162",
+      "stopPlaceId": "elche-place-1162",
+      "settlementId": "es-elche",
+      "name": "Balsares 2",
+      "position": {
+        "latitude": 38.245708985682,
+        "longitude": -0.563039619341204
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1163",
+      "stopPlaceId": "elche-place-1163",
+      "settlementId": "es-elche",
+      "name": "Balsares 3",
+      "position": {
+        "latitude": 38.2495498883059,
+        "longitude": -0.560433001495135
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1164",
+      "stopPlaceId": "elche-place-1164",
+      "settlementId": "es-elche",
+      "name": "Urbanizacion Los Limoneros 1",
+      "position": {
+        "latitude": 38.2555798878397,
+        "longitude": -0.550710001454643
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1165",
+      "stopPlaceId": "elche-place-1165",
+      "settlementId": "es-elche",
+      "name": "Cementerio De L'Altet 1",
+      "position": {
+        "latitude": 38.2623299872729,
+        "longitude": -0.546624179839358
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1166",
+      "stopPlaceId": "elche-place-1166",
+      "settlementId": "es-elche",
+      "name": "Plaza San Francisco",
+      "position": {
+        "latitude": 38.2725884426292,
+        "longitude": -0.548304112585253
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1167",
+      "stopPlaceId": "elche-place-1167",
+      "settlementId": "es-elche",
+      "name": "L'Altet - Av. San Francisco De Asis 1",
+      "position": {
+        "latitude": 38.2725468875759,
+        "longitude": -0.544833001431379
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1168",
+      "stopPlaceId": "elche-place-1168",
+      "settlementId": "es-elche",
+      "name": "L'Altet - Plaza Mayor 1",
+      "position": {
+        "latitude": 38.2723008873768,
+        "longitude": -0.540827001413747
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1169",
+      "stopPlaceId": "elche-place-1169",
+      "settlementId": "es-elche",
+      "name": "L'Altet - Av. Dama De Elche - C.Salud",
+      "position": {
+        "latitude": 38.272188887197,
+        "longitude": -0.537223001397732
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1170",
+      "stopPlaceId": "elche-place-1170",
+      "settlementId": "es-elche",
+      "name": "L'Altet - Av. Sinus Ilicitanus 1",
+      "position": {
+        "latitude": 38.2707618869591,
+        "longitude": -0.532519001376421
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1171",
+      "stopPlaceId": "elche-place-1171",
+      "settlementId": "es-elche",
+      "name": "Crta. Del Saladar-Playa L'Altet 1",
+      "position": {
+        "latitude": 38.2677193087859,
+        "longitude": -0.52481431697679
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1172",
+      "stopPlaceId": "elche-place-1172",
+      "settlementId": "es-elche",
+      "name": "Crta. Del Saladar-Playa L'Altet 2",
+      "position": {
+        "latitude": 38.2677181357442,
+        "longitude": -0.524709537403206
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1173",
+      "stopPlaceId": "elche-place-1173",
+      "settlementId": "es-elche",
+      "name": "L'Altet - Av. Sinus Ilicitanus 2",
+      "position": {
+        "latitude": 38.2709018869626,
+        "longitude": -0.532585001376744
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1174",
+      "stopPlaceId": "elche-place-1174",
+      "settlementId": "es-elche",
+      "name": "L'Altet - Av. Dama De Elche",
+      "position": {
+        "latitude": 38.2722898872123,
+        "longitude": -0.5375270013991
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1175",
+      "stopPlaceId": "elche-place-1175",
+      "settlementId": "es-elche",
+      "name": "L'Altet - Plaza Mayor 2",
+      "position": {
+        "latitude": 38.272380887377,
+        "longitude": -0.540830001413772
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1176",
+      "stopPlaceId": "elche-place-1176",
+      "settlementId": "es-elche",
+      "name": "L'Altet - Av. San Francisco De Asis 12",
+      "position": {
+        "latitude": 38.2726308876023,
+        "longitude": -0.545365001433724
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1177",
+      "stopPlaceId": "elche-place-1177",
+      "settlementId": "es-elche",
+      "name": "L'Altet - Av.S.Francisco Parroquia",
+      "position": {
+        "latitude": 38.272887015197,
+        "longitude": -0.547999660069872
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1178",
+      "stopPlaceId": "elche-place-1178",
+      "settlementId": "es-elche",
+      "name": "Cementerio De L'Altet 2",
+      "position": {
+        "latitude": 38.2622111705596,
+        "longitude": -0.546698964734889
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1179",
+      "stopPlaceId": "elche-place-1179",
+      "settlementId": "es-elche",
+      "name": "Urbanizacion Los Limoneros 2",
+      "position": {
+        "latitude": 38.2551458879026,
+        "longitude": -0.552003001460136
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1180",
+      "stopPlaceId": "elche-place-1180",
+      "settlementId": "es-elche",
+      "name": "Balsares - Camino Del Canal",
+      "position": {
+        "latitude": 38.2528448881037,
+        "longitude": -0.556182001477653
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1181",
+      "stopPlaceId": "elche-place-1181",
+      "settlementId": "es-elche",
+      "name": "Balsares 4",
+      "position": {
+        "latitude": 38.2503500485753,
+        "longitude": -0.559952655220638
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1182",
+      "stopPlaceId": "elche-place-1182",
+      "settlementId": "es-elche",
+      "name": "Balsares 5",
+      "position": {
+        "latitude": 38.2455629916006,
+        "longitude": -0.563109362709991
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1183",
+      "stopPlaceId": "elche-place-1183",
+      "settlementId": "es-elche",
+      "name": "Balsares 6",
+      "position": {
+        "latitude": 38.2436170956173,
+        "longitude": -0.566379487286075
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1184",
+      "stopPlaceId": "elche-place-1184",
+      "settlementId": "es-elche",
+      "name": "Cno. Balsares - Nuevo Valverde 2",
+      "position": {
+        "latitude": 38.2398004598375,
+        "longitude": -0.585131088419303
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1185",
+      "stopPlaceId": "elche-place-1185",
+      "settlementId": "es-elche",
+      "name": "Cno. Balsares 3",
+      "position": {
+        "latitude": 38.239580647257,
+        "longitude": -0.589062988021778
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1186",
+      "stopPlaceId": "elche-place-1186",
+      "settlementId": "es-elche",
+      "name": "Cno. Balsares 4",
+      "position": {
+        "latitude": 38.2382771060335,
+        "longitude": -0.595369934211348
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1187",
+      "stopPlaceId": "elche-place-1187",
+      "settlementId": "es-elche",
+      "name": "Valverde 4",
+      "position": {
+        "latitude": 38.2345586036993,
+        "longitude": -0.592763162524656
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1188",
+      "stopPlaceId": "elche-place-1188",
+      "settlementId": "es-elche",
+      "name": "Torres De Gaitan - Cno. Pallus 2",
+      "position": {
+        "latitude": 38.2319098432194,
+        "longitude": -0.592023939881089
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1189",
+      "stopPlaceId": "elche-place-1189",
+      "settlementId": "es-elche",
+      "name": "Bar Del Cine 2",
+      "position": {
+        "latitude": 38.2278384513689,
+        "longitude": -0.596807411090728
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1190",
+      "stopPlaceId": "elche-place-1190",
+      "settlementId": "es-elche",
+      "name": "Camino Del Cine",
+      "position": {
+        "latitude": 38.2289349459779,
+        "longitude": -0.601856843458205
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1191",
+      "stopPlaceId": "elche-place-1191",
+      "settlementId": "es-elche",
+      "name": "Avenida Valverde - Pallus 2",
+      "position": {
+        "latitude": 38.2328608228947,
+        "longitude": -0.59991596866183
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1192",
+      "stopPlaceId": "elche-place-1192",
+      "settlementId": "es-elche",
+      "name": "Valverde 2",
+      "position": {
+        "latitude": 38.2366904819357,
+        "longitude": -0.59525615883087
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1193",
+      "stopPlaceId": "elche-place-1193",
+      "settlementId": "es-elche",
+      "name": "Granja La Loma 3",
+      "position": {
+        "latitude": 38.2425841415294,
+        "longitude": -0.599183556968438
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1194",
+      "stopPlaceId": "elche-place-1194",
+      "settlementId": "es-elche",
+      "name": "Granja La Loma 4",
+      "position": {
+        "latitude": 38.2473006257953,
+        "longitude": -0.59822711138463
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1195",
+      "stopPlaceId": "elche-place-1195",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 7",
+      "position": {
+        "latitude": 38.2548909804312,
+        "longitude": -0.600995593261242
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1196",
+      "stopPlaceId": "elche-place-1196",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 8",
+      "position": {
+        "latitude": 38.2582376043965,
+        "longitude": -0.603157941352431
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1197",
+      "stopPlaceId": "elche-place-1197",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 9",
+      "position": {
+        "latitude": 38.257242765459,
+        "longitude": -0.61112909646949
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1198",
+      "stopPlaceId": "elche-place-1198",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 10",
+      "position": {
+        "latitude": 38.2559399414056,
+        "longitude": -0.615128855724033
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1199",
+      "stopPlaceId": "elche-place-1199",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 11",
+      "position": {
+        "latitude": 38.2522704982394,
+        "longitude": -0.61820487157799
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1200",
+      "stopPlaceId": "elche-place-1200",
+      "settlementId": "es-elche",
+      "name": "Cno. Las Torres De Gaitan 12",
+      "position": {
+        "latitude": 38.2496803875027,
+        "longitude": -0.620332930028213
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1201",
+      "stopPlaceId": "elche-place-1201",
+      "settlementId": "es-elche",
+      "name": "Cno. Perleta - Cno. Monforte 2",
+      "position": {
+        "latitude": 38.2496081364179,
+        "longitude": -0.622295740307048
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1202",
+      "stopPlaceId": "elche-place-1202",
+      "settlementId": "es-elche",
+      "name": "Cno. Perleta 2",
+      "position": {
+        "latitude": 38.250137681539,
+        "longitude": -0.626020746980271
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1203",
+      "stopPlaceId": "elche-place-1203",
+      "settlementId": "es-elche",
+      "name": "Perleta - Centro Social 2",
+      "position": {
+        "latitude": 38.2511534004171,
+        "longitude": -0.634096092150147
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1204",
+      "stopPlaceId": "elche-place-1204",
+      "settlementId": "es-elche",
+      "name": "Cno. Perleta - Viveros 2",
+      "position": {
+        "latitude": 38.2534065751489,
+        "longitude": -0.64218501058854
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1205",
+      "stopPlaceId": "elche-place-1205",
+      "settlementId": "es-elche",
+      "name": "Cno. Perleta - El Molino 2",
+      "position": {
+        "latitude": 38.2547524842161,
+        "longitude": -0.646310560830519
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1206",
+      "stopPlaceId": "elche-place-1206",
+      "settlementId": "es-elche",
+      "name": "Cno. Perleta - Crta. Altet 2",
+      "position": {
+        "latitude": 38.2606159156434,
+        "longitude": -0.657317621967726
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1245",
+      "stopPlaceId": "elche-place-1245",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Almazara 1",
+      "position": {
+        "latitude": 38.2627306409267,
+        "longitude": -0.654838775262227
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1246",
+      "stopPlaceId": "elche-place-1246",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Cooperativa 1",
+      "position": {
+        "latitude": 38.2653615326763,
+        "longitude": -0.642140594245659
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1247",
+      "stopPlaceId": "elche-place-1247",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Supermercado 1",
+      "position": {
+        "latitude": 38.2665614681513,
+        "longitude": -0.635907702250535
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1248",
+      "stopPlaceId": "elche-place-1248",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Cno.Viejo Balsares 1",
+      "position": {
+        "latitude": 38.2690880650023,
+        "longitude": -0.625396874281661
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1249",
+      "stopPlaceId": "elche-place-1249",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Cno. Los Bonet 1",
+      "position": {
+        "latitude": 38.2711553092515,
+        "longitude": -0.617464663310033
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1250",
+      "stopPlaceId": "elche-place-1250",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Torreazul 1",
+      "position": {
+        "latitude": 38.2721123268152,
+        "longitude": -0.610198268171377
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1251",
+      "stopPlaceId": "elche-place-1251",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Cno. Los Vinagres 1",
+      "position": {
+        "latitude": 38.273265716874,
+        "longitude": -0.598763981549312
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1252",
+      "stopPlaceId": "elche-place-1252",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Torrellano Alto 1",
+      "position": {
+        "latitude": 38.2740107279345,
+        "longitude": -0.580108889447504
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1253",
+      "stopPlaceId": "elche-place-1253",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Cno. Torrellano 1",
+      "position": {
+        "latitude": 38.2770741154924,
+        "longitude": -0.570926743293555
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1254",
+      "stopPlaceId": "elche-place-1254",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Gasolinera 1",
+      "position": {
+        "latitude": 38.2788027028036,
+        "longitude": -0.564089558892949
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1255",
+      "stopPlaceId": "elche-place-1255",
+      "settlementId": "es-elche",
+      "name": "Crta. Torrellano A L'Altet 1",
+      "position": {
+        "latitude": 38.2749609687127,
+        "longitude": -0.555853337871651
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1256",
+      "stopPlaceId": "elche-place-1256",
+      "settlementId": "es-elche",
+      "name": "L'Altet - Plaza San Francisco Avenida",
+      "position": {
+        "latitude": 38.2728718877536,
+        "longitude": -0.54842100144704
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1257",
+      "stopPlaceId": "elche-place-1257",
+      "settlementId": "es-elche",
+      "name": "Gran Via 1",
+      "position": {
+        "latitude": 38.2601126277108,
+        "longitude": -0.524664102173903
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1258",
+      "stopPlaceId": "elche-place-1258",
+      "settlementId": "es-elche",
+      "name": "Bahia 3",
+      "position": {
+        "latitude": 38.248749378074,
+        "longitude": -0.521763511297635
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1259",
+      "stopPlaceId": "elche-place-1259",
+      "settlementId": "es-elche",
+      "name": "Crta. Torrellano A L'Altet 2",
+      "position": {
+        "latitude": 38.2750543140411,
+        "longitude": -0.555736334290184
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1260",
+      "stopPlaceId": "elche-place-1260",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Gasolinera 2",
+      "position": {
+        "latitude": 38.2787805028974,
+        "longitude": -0.564792099354899
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1261",
+      "stopPlaceId": "elche-place-1261",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Cno. Torrellano 2",
+      "position": {
+        "latitude": 38.2771378888513,
+        "longitude": -0.570881001541957
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1262",
+      "stopPlaceId": "elche-place-1262",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Torrellano Alto 2",
+      "position": {
+        "latitude": 38.2739953968476,
+        "longitude": -0.580215152809199
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1263",
+      "stopPlaceId": "elche-place-1263",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Cno. Los Vinagres 2",
+      "position": {
+        "latitude": 38.2733436144808,
+        "longitude": -0.59880719750596
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1264",
+      "stopPlaceId": "elche-place-1264",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Torreazul 2",
+      "position": {
+        "latitude": 38.2720956643218,
+        "longitude": -0.61075729803241
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1265",
+      "stopPlaceId": "elche-place-1265",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Cno. Los Bonet 2",
+      "position": {
+        "latitude": 38.2717315887333,
+        "longitude": -0.616335055819228
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1266",
+      "stopPlaceId": "elche-place-1266",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Cno.Viejo Balsares 2",
+      "position": {
+        "latitude": 38.2685552901165,
+        "longitude": -0.626877589348141
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1267",
+      "stopPlaceId": "elche-place-1267",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Supermercado 2",
+      "position": {
+        "latitude": 38.2664503914276,
+        "longitude": -0.636845966216627
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1268",
+      "stopPlaceId": "elche-place-1268",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Cooperativa 2",
+      "position": {
+        "latitude": 38.2653163216396,
+        "longitude": -0.642713908091849
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1269",
+      "stopPlaceId": "elche-place-1269",
+      "settlementId": "es-elche",
+      "name": "Crta. Altet - Almazara 2",
+      "position": {
+        "latitude": 38.2627895540529,
+        "longitude": -0.654908447541517
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1280",
+      "stopPlaceId": "elche-place-1280",
+      "settlementId": "es-elche",
+      "name": "Bahia 4",
+      "position": {
+        "latitude": 38.2481256116556,
+        "longitude": -0.521592611116285
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1281",
+      "stopPlaceId": "elche-place-1281",
+      "settlementId": "es-elche",
+      "name": "Bahia 5",
+      "position": {
+        "latitude": 38.2518307425004,
+        "longitude": -0.521814188297506
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1282",
+      "stopPlaceId": "elche-place-1282",
+      "settlementId": "es-elche",
+      "name": "Bahia 6",
+      "position": {
+        "latitude": 38.25585870112,
+        "longitude": -0.523545349186188
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1283",
+      "stopPlaceId": "elche-place-1283",
+      "settlementId": "es-elche",
+      "name": "Gran Via 2",
+      "position": {
+        "latitude": 38.2598949102231,
+        "longitude": -0.524494352267954
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1301",
+      "stopPlaceId": "elche-place-1301",
+      "settlementId": "es-elche",
+      "name": "Av.Costa Blanca 1",
+      "position": {
+        "latitude": 38.2589895706633,
+        "longitude": -0.521308778697012
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1302",
+      "stopPlaceId": "elche-place-1302",
+      "settlementId": "es-elche",
+      "name": "Av.Costa Blanca 2",
+      "position": {
+        "latitude": 38.2559556362796,
+        "longitude": -0.52087828414898
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1303",
+      "stopPlaceId": "elche-place-1303",
+      "settlementId": "es-elche",
+      "name": "Av.Costa Blanca 3",
+      "position": {
+        "latitude": 38.2532585823505,
+        "longitude": -0.520643590859588
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1304",
+      "stopPlaceId": "elche-place-1304",
+      "settlementId": "es-elche",
+      "name": "Av.Costa Blanca 4",
+      "position": {
+        "latitude": 38.2502138767889,
+        "longitude": -0.520458518437122
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1305",
+      "stopPlaceId": "elche-place-1305",
+      "settlementId": "es-elche",
+      "name": "Av.Costa Blanca 5",
+      "position": {
+        "latitude": 38.2480821910338,
+        "longitude": -0.520328431299594
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1306",
+      "stopPlaceId": "elche-place-1306",
+      "settlementId": "es-elche",
+      "name": "Albacete 1",
+      "position": {
+        "latitude": 38.2459704545205,
+        "longitude": -0.522121488031268
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1307",
+      "stopPlaceId": "elche-place-1307",
+      "settlementId": "es-elche",
+      "name": "Albacete 2",
+      "position": {
+        "latitude": 38.2434352364346,
+        "longitude": -0.52204236286518
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1308",
+      "stopPlaceId": "elche-place-1308",
+      "settlementId": "es-elche",
+      "name": "Albacete 3",
+      "position": {
+        "latitude": 38.2421438948563,
+        "longitude": -0.520787089042652
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1309",
+      "stopPlaceId": "elche-place-1309",
+      "settlementId": "es-elche",
+      "name": "San Bartolome Tirajana 1",
+      "position": {
+        "latitude": 38.242170227499,
+        "longitude": -0.516989081066597
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1310",
+      "stopPlaceId": "elche-place-1310",
+      "settlementId": "es-elche",
+      "name": "San Bartolome Tirajana 2",
+      "position": {
+        "latitude": 38.2444569178403,
+        "longitude": -0.51688581601915
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1311",
+      "stopPlaceId": "elche-place-1311",
+      "settlementId": "es-elche",
+      "name": "San Bartolome Tirajana 3",
+      "position": {
+        "latitude": 38.2477483195681,
+        "longitude": -0.516716836850615
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1312",
+      "stopPlaceId": "elche-place-1312",
+      "settlementId": "es-elche",
+      "name": "Centro Municipal",
+      "position": {
+        "latitude": 38.2499126641163,
+        "longitude": -0.516959576767094
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1313",
+      "stopPlaceId": "elche-place-1313",
+      "settlementId": "es-elche",
+      "name": "San Bartolome Tirajana 4",
+      "position": {
+        "latitude": 38.2532459446109,
+        "longitude": -0.517384706897085
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1314",
+      "stopPlaceId": "elche-place-1314",
+      "settlementId": "es-elche",
+      "name": "San Bartolome Tirajana 5",
+      "position": {
+        "latitude": 38.2574711611074,
+        "longitude": -0.517866099282421
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1315",
+      "stopPlaceId": "elche-place-1315",
+      "settlementId": "es-elche",
+      "name": "Isla Menorca 1",
+      "position": {
+        "latitude": 38.2597088083115,
+        "longitude": -0.518648027346546
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1316",
+      "stopPlaceId": "elche-place-1316",
+      "settlementId": "es-elche",
+      "name": "Isla Menorca 2",
+      "position": {
+        "latitude": 38.2595476912728,
+        "longitude": -0.520820616654876
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1317",
+      "stopPlaceId": "elche-place-1317",
+      "settlementId": "es-elche",
+      "name": "Isla Menorca 3",
+      "position": {
+        "latitude": 38.2602363851348,
+        "longitude": -0.523416994988717
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1318",
+      "stopPlaceId": "elche-place-1318",
+      "settlementId": "es-elche",
+      "name": "Mercado Arenales",
+      "position": {
+        "latitude": 38.260340636389,
+        "longitude": -0.523713379085706
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1320",
+      "stopPlaceId": "elche-place-1320",
+      "settlementId": "es-elche",
+      "name": "Bahia 1",
+      "position": {
+        "latitude": 38.2547656170149,
+        "longitude": -0.523150115191148
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "elche-stop-1321",
+      "stopPlaceId": "elche-place-1321",
+      "settlementId": "es-elche",
+      "name": "Bahia 2",
+      "position": {
+        "latitude": 38.252164356606,
+        "longitude": -0.521959214385206
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

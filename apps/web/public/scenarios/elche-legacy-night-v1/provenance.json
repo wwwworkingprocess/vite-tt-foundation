@@ -51,7 +51,7 @@
     "Accepted StopNode and StopPlace objects reused from earlier Elche scenarios retain their exact previous bytes and coordinates.",
     "NT is stored as one explicit complete vehicle cycle. The first StopNode is not repeated at the end; closesLoop=true adds the closing edge exactly once.",
     "The two consecutive Plaza Chimeneas occurrences are different municipal stops: elche-stop-159 and elche-stop-324. They remain distinct graph vertices and singleton StopPlaces.",
-    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern itinerary edges.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern graph edges.",
     "The official service page also lists special nocturnal services N1, N2, N3, NP1, NP2 and NP3. They are not part of the map's NT legacy line and are excluded from this component scenario."
   ]
 }

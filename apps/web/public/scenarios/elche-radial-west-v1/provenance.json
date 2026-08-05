@@ -52,6 +52,6 @@
     "R4 revisits elche-stop-088 and R5 revisits elche-stop-024 at non-consecutive positions in their complete vehicle cycles.",
     "R4 and R5 contain many physically close opposite-side road stops with distinct municipal codes. They remain separate StopNodes and singleton StopPlaces.",
     "R6 has no uploaded diagram in the supplied radial archive. Its route order is based on the current textual route source and official route identity.",
-    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern itinerary edges."
+    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern graph edges."
   ]
 }

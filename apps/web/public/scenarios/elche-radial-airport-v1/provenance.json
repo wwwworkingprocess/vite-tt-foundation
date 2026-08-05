@@ -74,7 +74,7 @@
     "The current R11 Carrús page includes IFA stops 1216 and 1221; the supplied R11 diagram does not. The current ordered source is retained for the Carrús pattern, while the diagram-derived Sector V pattern follows the diagram and omits them.",
     "Different municipal codes remain distinct StopNodes and singleton StopPlaces even when names or coordinates are close. No name-, proximity- or exact-coordinate merge was performed.",
     "closesLoop creates exactly one final-to-first edge per pattern. Internal loops remain possible only when produced by explicit consecutive entries or non-consecutive revisits.",
-    "Physical StopPlace creation does not create route edges, reverse patterns, cross-pattern itinerary edges or vehicle lifecycle edges.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, cross-pattern graph edges or vehicle lifecycle edges.",
     "All earlier scenario files, including the grandfathered Torrevieja sourceReferences issue, are preserved byte-for-byte and are not corrected in this build."
   ]
 }

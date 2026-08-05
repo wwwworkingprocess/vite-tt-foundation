@@ -1322,7 +1322,7 @@
       "routeId": "alicante-14a",
       "publicCode": "14A",
       "name": "Circular Gran Vía 14A",
-      "dataStatus": "legacy-map-scope-official-historical-circular-itinerary-current-stop-code-reconciliation",
+      "dataStatus": "legacy-map-scope-official-historical-circular-sequence-current-stop-code-reconciliation",
       "patterns": [
         {
           "patternId": "alicante-14a-circular",
@@ -1373,7 +1373,7 @@
           "sourceFile": "5a950c14-76ec-4c94-9cb0-6870dd0f49ad.png"
         },
         {
-          "source": "alicante-ayuntamiento-historical-itinerary",
+          "source": "alicante-ayuntamiento-historical-sequence",
           "sourceRouteId": "14A",
           "sourceFile": "https://www.alicante.es/es/noticias/apliacion-servicio-del-autobus-urbano"
         },
@@ -1393,7 +1393,7 @@
       "routeId": "alicante-14b",
       "publicCode": "14B",
       "name": "Circular Gran Vía 14B",
-      "dataStatus": "legacy-map-scope-official-historical-circular-itinerary-current-stop-code-reconciliation",
+      "dataStatus": "legacy-map-scope-official-historical-circular-sequence-current-stop-code-reconciliation",
       "patterns": [
         {
           "patternId": "alicante-14b-circular",
@@ -1440,7 +1440,7 @@
           "sourceFile": "5a950c14-76ec-4c94-9cb0-6870dd0f49ad.png"
         },
         {
-          "source": "alicante-ayuntamiento-historical-itinerary",
+          "source": "alicante-ayuntamiento-historical-sequence",
           "sourceRouteId": "14B",
           "sourceFile": "https://www.alicante.es/es/noticias/apliacion-servicio-del-autobus-urbano"
         },

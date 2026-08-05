@@ -50,7 +50,7 @@
     "Runtime StopNode sourceReferences remain empty for new nodes because that field accepts only genuine OpenStreetMap platform or stop_position components. Municipal codes and AliBus coordinates remain build provenance.",
     "Accepted StopNode and StopPlace objects reused from A/B/C and D/F/H retain their exact previous bytes and coordinates.",
     "E and J are explicit circular patterns. The first StopNode is not repeated at the end; closesLoop=true adds the closing edge exactly once.",
-    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern itinerary edges.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern graph edges.",
     "The AliBus current J cycle contains both stops 117 and 205 on the central-to-Raval leg. The cycle is preserved as published rather than compressed to the shorter Moovit list."
   ]
 }

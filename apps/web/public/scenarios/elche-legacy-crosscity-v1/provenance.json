@@ -45,7 +45,7 @@
     "Accepted StopNode and StopPlace objects reused from earlier Elche scenarios retain their exact previous bytes and coordinates.",
     "K1, K2 and L are stored as complete explicit vehicle cycles. The first StopNode is not repeated at the end; closesLoop=true adds the closing edge exactly once.",
     "AliBus labels K1 and K2 as circular and L as normal, while the published L outbound and return lists form one continuous Hospital Vinalopó–Carrús–Toscar vehicle cycle.",
-    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern itinerary edges.",
+    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern graph edges.",
     "Hospital Vinalopó reuses elche-stop-293 and elche-place-293 from the accepted G/I scenario. K1, K2 and L do not create route-specific copies."
   ]
 }

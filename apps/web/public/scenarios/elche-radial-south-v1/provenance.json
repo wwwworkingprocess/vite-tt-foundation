@@ -71,6 +71,6 @@
     "R8 has no supplied route diagram. Its order is based on the current ordered textual source and official route identity.",
     "The supplied general urban-network map is contextual only and was not used to infer R7 or R8 topology.",
     "The accepted radial-west R6 package remains byte-for-byte unchanged even though current external evidence may warrant a separate later review of its Hospital General identity.",
-    "Physical StopPlace creation does not create route edges, reverse patterns, cross-pattern itinerary edges or vehicle lifecycle edges."
+    "Physical StopPlace creation does not create route edges, reverse patterns, cross-pattern graph edges or vehicle lifecycle edges."
   ]
 }

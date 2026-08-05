@@ -8,7 +8,7 @@
   "settlementIds": [
     "es-elche"
   ],
-  "contentHash": "001147ad26fd25c7566fa345e9d2f965ed4ae388b61bffa480ac0d8022f177cd",
+  "contentHash": "cdbd92fed950de54f421f7d6cf0c307580e1ffcdd0fdaae5dde50c6eec30c07f",
   "assets": {
     "settlements": {
       "path": "settlements.json",
@@ -33,7 +33,7 @@
     "provenance": {
       "path": "provenance.json",
       "required": false,
-      "sha256": "5f8206378b40cc19e133c9265a1cd89abd55abedd7331f7e1321f72df346ab5b"
+      "sha256": "f016c22ed41ba1435ab26d62a5a39f1463357015f7dffcd4d3771982c7be02c5"
     }
   },
   "graphContract": {

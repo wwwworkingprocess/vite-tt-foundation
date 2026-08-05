@@ -61,7 +61,7 @@
   "warnings": [
     "The scenario ID uses 'all' to mean all currently approved non-radial Elche services. R1, R2 and R3 are deliberately absent.",
     "No route, pattern, StopNode or StopPlace object was rewritten during the merge; accepted component identities remain authoritative.",
-    "Physical StopPlace identity does not create route edges, reverse patterns, or cross-pattern itinerary edges.",
+    "Physical StopPlace identity does not create route edges, reverse patterns, or cross-pattern graph edges.",
     "Runtime StopNode sourceReferences remain exactly as accepted in the source components."
   ]
 }

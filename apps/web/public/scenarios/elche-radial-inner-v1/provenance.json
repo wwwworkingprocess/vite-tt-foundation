@@ -46,6 +46,6 @@
     "R1 revisits elche-stop-080 (Renfe-Conservatorio) twice during one complete cycle. Both non-consecutive occurrences are retained.",
     "R3 uses one municipal ITV stop, elche-stop-281, as the directional handoff. The source repeats it at the Ida/Vuelta boundary; the canonical cycle stores it once.",
     "Camino De Los Magros 1 / 3 and Camino De Los Magros 2 / Camino Servicio Autovia 2 are extremely close but have different municipal codes. They remain distinct StopNodes and StopPlaces.",
-    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern itinerary edges."
+    "Physical StopPlace creation does not create route edges, reverse patterns, or cross-pattern graph edges."
   ]
 }

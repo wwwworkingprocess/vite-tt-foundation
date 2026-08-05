@@ -84,6 +84,12 @@ export function createInMemorySimulationHost(input: {
   }>();
   let commandQueue: Promise<void> = Promise.resolve();
 
+  const continueQueue = <T>(result: Promise<T>): Promise<void> =>
+    result.then(
+      () => undefined,
+      () => undefined,
+    );
+
   function fingerprint(envelope: FoundationCommandEnvelope): string {
     return JSON.stringify({
       gameId: envelope.gameId,
@@ -244,10 +250,7 @@ export function createInMemorySimulationHost(input: {
 
   function sendCommand(value: unknown): Promise<FoundationCommandResult> {
     const result = commandQueue.then(() => processCommand(value));
-    commandQueue = result.then(
-      () => undefined,
-      () => undefined,
-    );
+    commandQueue = continueQueue(result);
     return result;
   }
 
@@ -267,7 +270,7 @@ export function createInMemorySimulationHost(input: {
       Object.freeze(exported.snapshot);
       return Object.freeze(exported);
     });
-    commandQueue = result.then(() => undefined);
+    commandQueue = continueQueue(result);
     return result;
   }
 

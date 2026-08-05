@@ -307,17 +307,26 @@ describe('in-memory foundation host', () => {
     ]);
   });
 
-  it('continues processing queued commands after an invalid submission rejects', async () => {
+  it('keeps command and snapshot work live after an invalid queued command', async () => {
     const instance = host();
 
     await expect(
       instance.sendCommand({ kind: 'invalid-foundation-command' }),
     ).rejects.toThrow();
 
+    await expect(instance.exportSnapshot()).resolves.toMatchObject({
+      commandRevision: 0,
+      simulationTick: 10,
+      streamOffset: 0,
+      snapshot: { state: { tick: 10 } },
+    });
+
     await expect(
       instance.sendCommand(envelope('after-invalid', 1)),
     ).resolves.toMatchObject({
       status: 'applied',
+      appliedAtTick: 10,
+      resultingSimulationTick: 11,
       appliedCommandRevision: 1,
     });
   });

@@ -58,7 +58,7 @@
   ],
   "warnings": [
     "The supplied legacy map defines route-family scope, while ordered stops and coordinates are current 2026 captures. This package does not claim a frozen historical timetable snapshot.",
-    "The supplied line 27 diagram materially changes topology modelling: 27A, 27B and 27C are separate patterns, not one ida/vuelta pair and not one concatenated itinerary.",
+    "The supplied line 27 diagram materially changes topology modelling: 27A, 27B and 27C are separate patterns, not one ida/vuelta pair and not one concatenated sequence.",
     "Variant-only line 27 stops retained from the diagrams may no longer be associated with the current public line page, but their operator-code stop records and coordinates remain available.",
     "Different numeric codes remain separate StopNodes and singleton StopPlaces even when names match or stops lie close together.",
     "Accepted Alicante objects are retained complete-object exact even when current source labels differ.",

@@ -8,7 +8,7 @@
   "settlementIds": [
     "es-alicante"
   ],
-  "contentHash": "6a6b909171c0cc2f7ffd5199bcde3c4adfabe93ac66ce7de668125dbf9c0f79f",
+  "contentHash": "5271c7ca389a89659ba0d8cebfcd5e5a35335077bea4f400ae0de806db0cf495",
   "assets": {
     "settlements": {
       "path": "settlements.json",
@@ -33,7 +33,7 @@
     "provenance": {
       "path": "provenance.json",
       "required": false,
-      "sha256": "d1a696bad7ede77e5fe2d7ab4ff0dab7f43136ca75b309d43365c7d8f1f99724"
+      "sha256": "55efa5e9802a536277f9d539efcb6a28b161dea21e7da39dcb19857eaa763b99"
     }
   },
   "graphContract": {

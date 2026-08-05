@@ -277,7 +277,7 @@
       ],
       "manifestPath": "alicante-legacy-periphery-v1/scenario.json",
       "status": "development-seed",
-      "contentHash": "6a6b909171c0cc2f7ffd5199bcde3c4adfabe93ac66ce7de668125dbf9c0f79f"
+      "contentHash": "5271c7ca389a89659ba0d8cebfcd5e5a35335077bea4f400ae0de806db0cf495"
     },
     {
       "scenarioId": "alicante-legacy-circular-v1",
@@ -302,7 +302,7 @@
       ],
       "manifestPath": "alicante-legacy-all-v1/scenario.json",
       "status": "development-seed",
-      "contentHash": "6726a2211a7787072333c59917eb25ae85c3eb205b92d027dd9d714b17f092b3"
+      "contentHash": "6658c0d46d2960e7217c97f077aa1254e6bf94a8f16e14453629da8dfe94724e"
     }
   ]
 }

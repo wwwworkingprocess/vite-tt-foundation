@@ -9,7 +9,7 @@
     "es-alicante",
     "es-sant-joan-dalacant"
   ],
-  "contentHash": "6726a2211a7787072333c59917eb25ae85c3eb205b92d027dd9d714b17f092b3",
+  "contentHash": "6658c0d46d2960e7217c97f077aa1254e6bf94a8f16e14453629da8dfe94724e",
   "assets": {
     "settlements": {
       "path": "settlements.json",
@@ -34,7 +34,7 @@
     "provenance": {
       "path": "provenance.json",
       "required": false,
-      "sha256": "abe232993cd5f65b499e29724f3d4fa05150ce9448b8d9826c0893a2285d262e"
+      "sha256": "7abb3866b69ed0d776d1c1643c5e04f837742ca4abc74860b30477d950ab4f64"
     }
   },
   "graphContract": {

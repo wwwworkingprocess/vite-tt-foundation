@@ -330,3 +330,44 @@ it('a pulse completing after close cannot recreate a frame loop', async () => {
   await Promise.resolve();
   expect(frames.size).toBe(0);
 });
+
+it('reschedules an exact-boundary frame without issuing a zero-duration pulse', () => {
+  const frames = new Map<number, FrameRequestCallback>();
+  let frameId = 0;
+  const now = 0;
+  const elapsed: number[] = [];
+  const driver = createBrowserPacingDriver({
+    requestFrame: (callback) => {
+      const id = ++frameId;
+      frames.set(id, callback);
+      return id;
+    },
+    cancelFrame: (id) => {
+      frames.delete(id);
+    },
+    now: () => now,
+    isHidden: () => false,
+    addVisibilityListener: () => undefined,
+    removeVisibilityListener: () => undefined,
+    maxPulseMicroseconds: 1_000_000,
+  });
+  const runFrame = () => {
+    const entry = [...frames.entries()][0];
+    expect(entry).toBeDefined();
+    frames.delete(entry![0]);
+    entry![1](now);
+  };
+
+  driver.start(async (value) => {
+    elapsed.push(value);
+  });
+  runFrame();
+  expect(frames.size).toBe(1);
+
+  runFrame();
+  expect(elapsed).toEqual([]);
+  expect(frames.size).toBe(1);
+
+  driver.close();
+  expect(frames.size).toBe(0);
+});

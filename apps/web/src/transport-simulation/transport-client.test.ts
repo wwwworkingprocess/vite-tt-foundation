@@ -341,4 +341,33 @@ describe('direct transport startup failure', () => {
     expect(() => client.getAuthoritativeState()).toThrow('not ready');
     await client.close();
   });
+
+  it('delegates malformed foundation envelopes to the foundation validator', async () => {
+    const client = createDirectTransportSimulationClient();
+    await client.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 3,
+      mode: 'new',
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('malformed-foundation-envelope'),
+      initialSimulationTick: 0,
+      scenario: scenario(),
+    });
+
+    await expect(
+      client.sendCommand({
+        kind: 'foundation-command',
+        gameId: 'game-fixture',
+        timelineId: 'malformed-foundation-envelope',
+        commandId: 'malformed-command',
+        correlationId: 'malformed-correlation',
+        clientId: '',
+        sessionId: 'session',
+        command: { type: 'foundation.advance-ticks', count: 1 },
+      } as never),
+    ).rejects.toThrow();
+    expect(client.getAuthoritativeState().tick).toBe(0);
+
+    await client.close();
+  });
 });

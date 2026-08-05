@@ -717,11 +717,7 @@ describe('deterministic passenger alighting and destination access', () => {
         patternId === 'pattern-a'
           ? {
               patternId: 'pattern-a',
-              stopNodeIds: [
-                'node-origin',
-                'node-middle',
-                'node-destination',
-              ],
+              stopNodeIds: ['node-origin', 'node-middle', 'node-destination'],
               closesLoop: false,
             }
           : undefined,
@@ -792,7 +788,8 @@ describe('deterministic passenger alighting and destination access', () => {
     ).toThrow('Invalid or overdue onboard passenger pattern-run authority');
 
     const alighted =
-      processPassengerTransitAtVehicleCalls(input()).destinationAccessGroups[0]!;
+      processPassengerTransitAtVehicleCalls(input())
+        .destinationAccessGroups[0]!;
     const atDestination = {
       ...vehicle,
       movement: {

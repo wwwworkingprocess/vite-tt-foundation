@@ -185,10 +185,7 @@ export function createTransportApplicationController(input: {
         return operation();
       })
       .then(resolve, reject)
-      .then(
-        () => undefined,
-        () => undefined,
-      );
+      .then(() => undefined);
     return result;
   };
   const synchronizeReady = async (

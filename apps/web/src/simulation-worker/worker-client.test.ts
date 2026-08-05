@@ -206,7 +206,8 @@ describe('Worker foundation client failures', () => {
       status: 'success',
       result: {
         kind: 'foundation-protocol-error',
-        code: 'invalid-command',
+        gameId,
+        code: 'invalid-message',
         message: 'wrong operation result',
       },
     });
@@ -238,6 +239,70 @@ describe('Worker foundation client failures', () => {
       state: 'failed',
       code: 'invalid-worker-message',
     });
+    expect(worker.terminateCount).toBe(1);
+  });
+
+  it('keeps ready authority for request-scoped failures and ignores unknown request IDs', async () => {
+    const { client, worker } = await connectControllable();
+
+    worker.emitMessage({
+      kind: 'worker-failure',
+      requestId: 999,
+      code: 'operation-failed',
+      message: 'unknown request',
+    });
+    expect(client.getLifecycle()).toMatchObject({ state: 'ready' });
+
+    const pending = client.sendCommand({} as never);
+    worker.emitMessage({
+      kind: 'worker-failure',
+      requestId: 2,
+      code: 'operation-failed',
+      message: 'command rejected by runtime',
+    });
+    await expect(pending).rejects.toThrow('command rejected by runtime');
+    expect(client.getLifecycle()).toMatchObject({ state: 'ready' });
+    expect(worker.terminateCount).toBe(0);
+
+    await client.close();
+  });
+
+  it('treats an uncorrelated Worker failure as an invalid terminal message', async () => {
+    const { client, worker } = await connectControllable();
+
+    worker.emitMessage({
+      kind: 'worker-failure',
+      code: 'invalid-request',
+      message: 'uncorrelated failure',
+    });
+
+    expect(client.getLifecycle()).toEqual({
+      state: 'failed',
+      code: 'invalid-worker-message',
+      message: 'uncorrelated failure',
+    });
+    expect(worker.listenerCount()).toBe(0);
+    expect(worker.terminateCount).toBe(1);
+  });
+
+  it('classifies a non-Error postMessage failure at the Worker boundary', async () => {
+    const worker = createControllableWorker();
+    worker.onPost = () => {
+      throw 'non-Error postMessage failure';
+    };
+    const client = createWorkerFoundationClient({
+      workerFactory: () => worker,
+    });
+
+    await expect(client.connect(connectRequest)).rejects.toThrow(
+      'Worker request could not be posted.',
+    );
+    expect(client.getLifecycle()).toEqual({
+      state: 'failed',
+      code: 'worker-startup-failed',
+      message: 'Worker request could not be posted.',
+    });
+    expect(worker.listenerCount()).toBe(0);
     expect(worker.terminateCount).toBe(1);
   });
 

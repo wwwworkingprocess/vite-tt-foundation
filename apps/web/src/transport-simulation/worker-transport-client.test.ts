@@ -2,11 +2,15 @@ import { describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
-import { createDirectTransportSimulationClient } from './transport-client.js';
+import {
+  createDirectTransportSimulationClient,
+  type TransportStateUpdate,
+} from './transport-client.js';
 import {
   createWorkerTransportSimulationClient,
   startTransportWorkerRuntime,
   type TransportWorkerEndpoint,
+  type TransportWorkerEvent,
   type TransportWorkerLike,
 } from './worker-transport-client.js';
 
@@ -584,4 +588,248 @@ describe('transport Worker boundary failures', () => {
       );
     },
   );
+
+  it('preserves authority for stale publications and suppresses publications after close', async () => {
+    let canonicalUpdate!: TransportStateUpdate;
+    const direct = createDirectTransportSimulationClient();
+    direct.subscribeReliableUpdates((update) => {
+      canonicalUpdate = update;
+    });
+    await direct.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 3,
+      mode: 'new',
+      gameId: 'game',
+      timelineId: 'worker-publications',
+      initialSimulationTick: 0,
+      scenario: scenario(),
+    } as never);
+    await direct.sendCommand({
+      kind: 'foundation-command',
+      gameId: 'game',
+      timelineId: 'worker-publications',
+      commandId: 'advance',
+      correlationId: 'advance',
+      clientId: 'client',
+      sessionId: 'session',
+      command: { type: 'foundation.advance-ticks', count: 1 },
+    } as never);
+    await direct.close();
+
+    const listeners = new Map<
+      'message' | 'error' | 'messageerror',
+      (event: TransportWorkerEvent) => void
+    >();
+    const terminate = vi.fn();
+    const worker: TransportWorkerLike = {
+      postMessage(message) {
+        if (message.operation === 'connect' || message.operation === 'close')
+          queueMicrotask(() =>
+            listeners.get('message')?.({
+              data: {
+                kind: 'transport-worker-result',
+                contractVersion: 3,
+                requestId: message.requestId,
+                operation: message.operation,
+                payload: null,
+              },
+            }),
+          );
+      },
+      addEventListener: (type, listener) => listeners.set(type, listener),
+      removeEventListener: (type, listener) => {
+        if (listeners.get(type) === listener) listeners.delete(type);
+      },
+      terminate,
+    };
+    const client = createWorkerTransportSimulationClient({
+      workerFactory: () => worker,
+    });
+    await client.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 3,
+      mode: 'new',
+      gameId: 'game',
+      timelineId: 'worker-publications',
+      initialSimulationTick: 0,
+      scenario: scenario(),
+    } as never);
+    const staleMessageListener = listeners.get('message')!;
+    const received = vi.fn();
+    client.subscribeReliableUpdates(received);
+
+    staleMessageListener({
+      data: {
+        kind: 'transport-worker-publication',
+        contractVersion: 3,
+        channel: 'reliable',
+        payload: canonicalUpdate,
+      },
+    });
+    staleMessageListener({
+      data: {
+        kind: 'transport-worker-publication',
+        contractVersion: 3,
+        channel: 'reliable',
+        payload: { ...canonicalUpdate, simulationTick: 0 },
+      },
+    });
+    expect(client.getAuthoritativeState().tick).toBe(1);
+    expect(received).toHaveBeenCalledTimes(2);
+
+    await client.close();
+    staleMessageListener({
+      data: {
+        kind: 'transport-worker-publication',
+        contractVersion: 3,
+        channel: 'reliable',
+        payload: canonicalUpdate,
+      },
+    });
+    expect(received).toHaveBeenCalledTimes(2);
+    expect(terminate).toHaveBeenCalledOnce();
+  });
+
+  it('fails terminally when the Worker reports a messageerror event', async () => {
+    const listeners = new Map<
+      'message' | 'error' | 'messageerror',
+      (event: TransportWorkerEvent) => void
+    >();
+    const terminate = vi.fn();
+    const worker: TransportWorkerLike = {
+      postMessage(message) {
+        if (message.operation === 'connect')
+          queueMicrotask(() =>
+            listeners.get('message')?.({
+              data: {
+                kind: 'transport-worker-result',
+                contractVersion: 3,
+                requestId: message.requestId,
+                operation: 'connect',
+                payload: null,
+              },
+            }),
+          );
+      },
+      addEventListener: (type, listener) => listeners.set(type, listener),
+      removeEventListener: (type, listener) => {
+        if (listeners.get(type) === listener) listeners.delete(type);
+      },
+      terminate,
+    };
+    const client = createWorkerTransportSimulationClient({
+      workerFactory: () => worker,
+    });
+    await client.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 3,
+      mode: 'new',
+      gameId: 'game',
+      timelineId: 'messageerror',
+      initialSimulationTick: 0,
+      scenario: scenario(),
+    } as never);
+
+    listeners.get('messageerror')!({ data: null, message: 'clone failed' });
+    expect(client.getLifecycle()).toEqual({
+      state: 'failed',
+      code: 'invalid-worker-message',
+      message: 'clone failed',
+    });
+    expect(terminate).toHaveBeenCalledOnce();
+    await client.close();
+  });
+
+  it('preserves Error postMessage failures and normalizes non-Error factory failures', async () => {
+    const request = {
+      kind: 'transport-client-connect',
+      contractVersion: 3,
+      mode: 'new',
+      gameId: 'game',
+      timelineId: 'startup-failure',
+      initialSimulationTick: 0,
+      scenario: scenario(),
+    } as never;
+    const terminate = vi.fn();
+    const postFailure = createWorkerTransportSimulationClient({
+      workerFactory: () => ({
+        postMessage() {
+          throw new Error('post failed');
+        },
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        terminate,
+      }),
+    });
+    await expect(postFailure.connect(request)).rejects.toThrow('post failed');
+    expect(postFailure.getLifecycle()).toMatchObject({
+      state: 'failed',
+      code: 'worker-startup-failed',
+      message: 'post failed',
+    });
+    expect(terminate).toHaveBeenCalledOnce();
+    await postFailure.close();
+
+    const factoryFailure = createWorkerTransportSimulationClient({
+      workerFactory: () => {
+        throw 'factory failed';
+      },
+    });
+    await expect(factoryFailure.connect(request)).rejects.toBe(
+      'factory failed',
+    );
+    expect(factoryFailure.getLifecycle()).toEqual({
+      state: 'failed',
+      code: 'worker-startup-failed',
+      message: 'Transport Worker operation failed.',
+    });
+    await factoryFailure.close();
+  });
+
+  it('keeps the terminal invalid-message lifecycle emitted during connect', async () => {
+    const listeners = new Map<
+      'message' | 'error' | 'messageerror',
+      (event: TransportWorkerEvent) => void
+    >();
+    const terminate = vi.fn();
+    const worker: TransportWorkerLike = {
+      postMessage() {
+        queueMicrotask(() =>
+          listeners.get('message')?.({ data: { malformed: true } }),
+        );
+      },
+      addEventListener: (type, listener) => listeners.set(type, listener),
+      removeEventListener: (type, listener) => {
+        if (listeners.get(type) === listener) listeners.delete(type);
+      },
+      terminate,
+    };
+    const client = createWorkerTransportSimulationClient({
+      workerFactory: () => worker,
+    });
+    const lifecycle = vi.fn();
+    client.subscribeLifecycle(lifecycle);
+
+    await expect(
+      client.connect({
+        kind: 'transport-client-connect',
+        contractVersion: 3,
+        mode: 'new',
+        gameId: 'game',
+        timelineId: 'malformed-connect',
+        initialSimulationTick: 0,
+        scenario: scenario(),
+      } as never),
+    ).rejects.toThrow('invalid message');
+    expect(lifecycle).toHaveBeenLastCalledWith({
+      state: 'failed',
+      code: 'invalid-worker-message',
+      message: 'Transport Worker returned an invalid message.',
+    });
+    expect(
+      lifecycle.mock.calls.filter(([state]) => state.state === 'failed'),
+    ).toHaveLength(1);
+    expect(terminate).toHaveBeenCalledOnce();
+    await client.close();
+  });
 });

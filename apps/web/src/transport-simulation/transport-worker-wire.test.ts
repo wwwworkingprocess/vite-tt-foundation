@@ -188,4 +188,44 @@ describe('transport Worker wire schemas', () => {
         }),
       ).toThrow();
   });
+
+  it('classifies an invalid passenger demand plan at the connect boundary', () => {
+    expect(() =>
+      parseTransportWorkerRequest({
+        kind: 'transport-worker-request',
+        contractVersion: 3,
+        requestId: 9,
+        operation: 'connect',
+        payload: {
+          kind: 'transport-client-connect',
+          contractVersion: 3,
+          mode: 'new',
+          gameId: 'game',
+          timelineId: 'timeline',
+          initialSimulationTick: 0,
+          scenario,
+          passengerDemandPlan: {},
+        },
+      }),
+    ).toThrow('Invalid passenger demand plan.');
+  });
+
+  it('rejects a valid non-command host message as a command result', () => {
+    expect(() =>
+      parseTransportWorkerResponse({
+        kind: 'transport-worker-result',
+        contractVersion: 3,
+        requestId: 10,
+        operation: 'send-command',
+        payload: {
+          kind: 'foundation-state-update',
+          gameId: 'game',
+          timelineId: 'timeline',
+          streamOffset: 1,
+          commandRevision: 1,
+          simulationTick: 1,
+        },
+      }),
+    ).toThrow('Expected a command result.');
+  });
 });

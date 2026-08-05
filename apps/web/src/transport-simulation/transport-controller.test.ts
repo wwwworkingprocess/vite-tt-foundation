@@ -1863,4 +1863,284 @@ describe('transport application controller', () => {
     });
     await controller.close();
   });
+
+  it('preserves ready authority when an active restore has no demand-plan resolver', async () => {
+    const canonical = scenario();
+    const plan = demandPlan();
+    const activeState = createTransportSimulationState(canonical, 0, plan);
+    const activeRecord = parseTransportSaveRecord({
+      ...record(),
+      saveId: 'active-without-resolver',
+      sourceSimulationTick: activeState.tick,
+      snapshot: createTransportSimulationSnapshot(activeState),
+    });
+    const current = createDirectTransportSimulationClient();
+    const currentClose = vi.fn(() => current.close());
+    const controller = createTransportApplicationController({
+      createClient: () => Object.freeze({ ...current, close: currentClose }),
+      repository: {
+        get: async () => classifyPersistedSaveRecord(activeRecord),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => canonical },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('current-without-plan-resolver'),
+      scenario: canonical,
+    });
+
+    await expect(
+      controller.restore({
+        saveId: 'active-without-resolver',
+        timelineId: parseTimelineId('replacement-without-plan-resolver'),
+      }),
+    ).rejects.toThrow('Passenger demand plan resolver is unavailable.');
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'current-without-plan-resolver',
+      message: 'Passenger demand plan resolver is unavailable.',
+    });
+    expect(currentClose).not.toHaveBeenCalled();
+
+    await controller.close();
+    expect(currentClose).toHaveBeenCalledOnce();
+  });
+
+  it('publishes the current command failure without replacing ready authority', async () => {
+    const base = createDirectTransportSimulationClient();
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        Object.freeze({
+          ...base,
+          sendCommand: async () => {
+            throw new Error('transport command failed');
+          },
+        }),
+      repository: { get: async () => undefined, put: async () => undefined },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('command-failure'),
+      scenario: scenario(),
+    });
+
+    await expect(controller.sendCommand({} as never)).rejects.toThrow(
+      'transport command failed',
+    );
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'command-failure',
+      message: 'transport command failed',
+    });
+
+    await controller.close();
+  });
+
+  it('projects active passenger authority after a successful command', async () => {
+    const canonical = scenario();
+    const controller = createTransportApplicationController({
+      createClient: createDirectTransportSimulationClient,
+      repository: { get: async () => undefined, put: async () => undefined },
+      scenarioResolver: { resolve: async () => canonical },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('active-command-projection'),
+      scenario: canonical,
+      passengerDemandPlan: demandPlan(),
+    });
+
+    await controller.sendCommand({
+      kind: 'foundation-command',
+      gameId: 'game-fixture',
+      timelineId: 'active-command-projection',
+      commandId: 'active-command',
+      correlationId: 'active-command',
+      clientId: 'transport-browser',
+      sessionId: 'transport-session',
+      command: { type: 'foundation.advance-ticks', count: 1 },
+    } as never);
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      simulationTick: 1,
+      passengerDemand: { status: 'active' },
+      vehiclePassengerLoads: [],
+    });
+
+    await controller.close();
+  });
+
+  it.each(['send-command', 'advance-ticks'] as const)(
+    'suppresses a stale %s snapshot after close begins',
+    async (operation) => {
+      const base = createDirectTransportSimulationClient();
+      let delayExport = false;
+      let enterExport!: () => void;
+      let releaseExport!: () => void;
+      const exportEntered = new Promise<void>((resolve) => {
+        enterExport = resolve;
+      });
+      const exportGate = new Promise<void>((resolve) => {
+        releaseExport = resolve;
+      });
+      const controller = createTransportApplicationController({
+        createClient: () =>
+          Object.freeze({
+            ...base,
+            async exportSnapshot() {
+              const exported = await base.exportSnapshot();
+              if (delayExport) {
+                enterExport();
+                await exportGate;
+              }
+              return exported;
+            },
+          }),
+        repository: { get: async () => undefined, put: async () => undefined },
+        scenarioResolver: { resolve: async () => scenario() },
+      });
+      await controller.startNew({
+        gameId: parseGameId('game-fixture'),
+        timelineId: parseTimelineId(`stale-${operation}`),
+        scenario: scenario(),
+      });
+      delayExport = true;
+      const pending =
+        operation === 'send-command'
+          ? controller.sendCommand({
+              kind: 'foundation-command',
+              gameId: 'game-fixture',
+              timelineId: `stale-${operation}`,
+              commandId: `stale-${operation}`,
+              correlationId: `stale-${operation}`,
+              clientId: 'transport-browser',
+              sessionId: 'transport-session',
+              command: { type: 'foundation.advance-ticks', count: 1 },
+            } as never)
+          : controller.advanceTicks(1);
+      await exportEntered;
+      const closing = controller.close();
+      releaseExport();
+      await pending;
+      await closing;
+
+      expect(controller.projection.getState()).toEqual({ status: 'closed' });
+    },
+  );
+
+  it('does not export an advancement result made stale while the command is pending', async () => {
+    const base = createDirectTransportSimulationClient();
+    let delayCommand = false;
+    let enterCommand!: () => void;
+    let releaseCommand!: () => void;
+    const commandEntered = new Promise<void>((resolve) => {
+      enterCommand = resolve;
+    });
+    const commandGate = new Promise<void>((resolve) => {
+      releaseCommand = resolve;
+    });
+    const exported = vi.fn(() => base.exportSnapshot());
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        Object.freeze({
+          ...base,
+          async sendCommand(command: Parameters<typeof base.sendCommand>[0]) {
+            if (delayCommand) {
+              enterCommand();
+              await commandGate;
+            }
+            return base.sendCommand(command);
+          },
+          exportSnapshot: exported,
+        }),
+      repository: { get: async () => undefined, put: async () => undefined },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('stale-advance-command'),
+      scenario: scenario(),
+    });
+    exported.mockClear();
+    delayCommand = true;
+    const advancing = controller.advanceTicks(1);
+    await commandEntered;
+    const closing = controller.close();
+    releaseCommand();
+    await advancing;
+    await closing;
+
+    expect(exported).not.toHaveBeenCalled();
+    expect(controller.projection.getState()).toEqual({ status: 'closed' });
+  });
+
+  it('suppresses a stale command rejection after close begins', async () => {
+    const base = createDirectTransportSimulationClient();
+    let delayCommand = false;
+    let enterCommand!: () => void;
+    let releaseCommand!: () => void;
+    const commandEntered = new Promise<void>((resolve) => {
+      enterCommand = resolve;
+    });
+    const commandGate = new Promise<void>((resolve) => {
+      releaseCommand = resolve;
+    });
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        Object.freeze({
+          ...base,
+          async sendCommand(command: Parameters<typeof base.sendCommand>[0]) {
+            if (delayCommand) {
+              enterCommand();
+              await commandGate;
+              throw new Error('late command failed');
+            }
+            return base.sendCommand(command);
+          },
+        }),
+      repository: { get: async () => undefined, put: async () => undefined },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    const projections: Array<
+      ReturnType<typeof controller.projection.getState>
+    > = [];
+    controller.projection.subscribe((projection) => {
+      projections.push(projection);
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('stale-command-rejection'),
+      scenario: scenario(),
+    });
+
+    delayCommand = true;
+    const pending = controller.sendCommand({
+      kind: 'foundation-command',
+      gameId: 'game-fixture',
+      timelineId: 'stale-command-rejection',
+      commandId: 'stale-command-rejection',
+      correlationId: 'stale-command-rejection',
+      clientId: 'transport-browser',
+      sessionId: 'transport-session',
+      command: { type: 'foundation.advance-ticks', count: 1 },
+    } as never);
+    await commandEntered;
+    const closing = controller.close();
+    const rejected = expect(pending).rejects.toThrow('late command failed');
+    releaseCommand();
+
+    await rejected;
+    await closing;
+
+    expect(
+      projections.some(
+        (projection) =>
+          'message' in projection &&
+          projection.message === 'late command failed',
+      ),
+    ).toBe(false);
+    expect(controller.projection.getState()).toEqual({ status: 'closed' });
+  });
 });

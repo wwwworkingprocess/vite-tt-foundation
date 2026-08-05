@@ -1180,8 +1180,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
     const invalidEarlyRunStart = structuredClone(
       createTransportSimulationSnapshot(early),
     );
-    invalidEarlyRunStart.state.vehicleOperations[0]!.patternRunStartedAtTick =
-      1;
+    invalidEarlyRunStart.state.vehicleOperations[0]!.patternRunStartedAtTick = 1;
     expect(() =>
       restoreTransportSimulationState(invalidEarlyRunStart, canonical),
     ).toThrow(/run start/i);

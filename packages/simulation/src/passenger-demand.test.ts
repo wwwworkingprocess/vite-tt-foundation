@@ -613,11 +613,7 @@ describe('deterministic passenger emission and access', () => {
     };
     missingCursor.destinationCursors.pop();
     expect(() =>
-      validatePassengerDemandState(
-        plan,
-        createItineraryIndex(),
-        missingCursor,
-      ),
+      validatePassengerDemandState(plan, createItineraryIndex(), missingCursor),
     ).toThrow('Invalid destination cursors.');
 
     expect(active.accessingGroups.length).toBeGreaterThan(1);

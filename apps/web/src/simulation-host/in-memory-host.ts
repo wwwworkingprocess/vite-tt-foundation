@@ -267,10 +267,7 @@ export function createInMemorySimulationHost(input: {
       Object.freeze(exported.snapshot);
       return Object.freeze(exported);
     });
-    commandQueue = result.then(
-      () => undefined,
-      () => undefined,
-    );
+    commandQueue = result.then(() => undefined);
     return result;
   }
 

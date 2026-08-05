@@ -348,6 +348,31 @@ describe('browser scenario loader', () => {
     });
   });
 
+  it('classifies malformed scenario-package JSON as a malformed asset', async () => {
+    const publicRoot = join(import.meta.dirname, '..', '..', 'public');
+    const fetchText = vi.fn(async (url: string) => {
+      if (url.endsWith('/scenario.json'))
+        return { ok: true, text: async () => '{' };
+      const relative = url.replace('/scenarios/', 'scenarios/');
+      const text = readFileSync(join(publicRoot, relative), 'utf8');
+      return { ok: true, text: async () => text };
+    });
+    const loader = createScenarioLoader({
+      baseUrl: '/',
+      fetchText,
+      digestSha256: async () => 'a'.repeat(64),
+    });
+
+    await loader.loadCatalog();
+    await loader.loadScenario('torrevieja-legacy-abc-v1');
+
+    expect(loader.projection.getState()).toMatchObject({
+      status: 'failed',
+      selectedScenarioId: 'torrevieja-legacy-abc-v1',
+      message: expect.stringContaining('malformed-asset'),
+    });
+  });
+
   it('reports unknown scenarios and malformed catalogue responses without throwing', async () => {
     const loader = createScenarioLoader({
       baseUrl: '/',

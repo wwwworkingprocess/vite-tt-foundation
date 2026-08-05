@@ -157,4 +157,117 @@ describe('foundation Worker runtime validation', () => {
     expect(closeAcknowledgements).toBe(1);
     stop();
   });
+
+  it.each(['send-command', 'export-snapshot'] as const)(
+    'suppresses a pending %s reply after runtime shutdown',
+    async (operation) => {
+      const responses: unknown[] = [];
+      let active: ((event: { readonly data: unknown }) => void) | undefined;
+      const endpoint: WorkerRuntimeEndpoint = {
+        postMessage: (message) => responses.push(message),
+        addEventListener: (_type, listener) => {
+          active = listener;
+        },
+        removeEventListener: (_type, listener) => {
+          if (active === listener) active = undefined;
+        },
+      };
+      const stop = startFoundationWorkerRuntime(endpoint);
+      active?.({
+        data: {
+          kind: 'worker-request',
+          requestId: 1,
+          operation: 'initialize',
+          payload: {
+            mode: 'new',
+            gameId: 'game',
+            timelineId: 'timeline',
+            initialSimulationTick: 0,
+          },
+        },
+      });
+      await Promise.resolve();
+      responses.length = 0;
+
+      active?.({
+        data:
+          operation === 'send-command'
+            ? {
+                kind: 'worker-request',
+                requestId: 2,
+                operation,
+                payload: {
+                  kind: 'foundation-command',
+                  gameId: 'game',
+                  timelineId: 'timeline',
+                  commandId: 'pending-command',
+                  correlationId: 'pending-correlation',
+                  clientId: 'pending-client',
+                  sessionId: 'pending-session',
+                  expectedCommandRevision: 0,
+                  command: { type: 'foundation.advance-ticks', count: 1 },
+                },
+              }
+            : {
+                kind: 'worker-request',
+                requestId: 2,
+                operation,
+              },
+      });
+      stop();
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(active).toBeUndefined();
+      expect(responses).toEqual([]);
+    },
+  );
+
+  it('classifies a non-Error endpoint posting failure deterministically', async () => {
+    const responses: unknown[] = [];
+    let active: ((event: { readonly data: unknown }) => void) | undefined;
+    let failNextPost = true;
+    const endpoint: WorkerRuntimeEndpoint = {
+      postMessage: (message) => {
+        if (failNextPost) {
+          failNextPost = false;
+          throw 'non-Error endpoint failure';
+        }
+        responses.push(message);
+      },
+      addEventListener: (_type, listener) => {
+        active = listener;
+      },
+      removeEventListener: (_type, listener) => {
+        if (active === listener) active = undefined;
+      },
+    };
+    const stop = startFoundationWorkerRuntime(endpoint);
+
+    active?.({
+      data: {
+        kind: 'worker-request',
+        requestId: 1,
+        operation: 'initialize',
+        payload: {
+          mode: 'new',
+          gameId: 'game',
+          timelineId: 'timeline',
+          initialSimulationTick: 0,
+        },
+      },
+    });
+    await Promise.resolve();
+
+    expect(responses).toEqual([
+      {
+        kind: 'worker-failure',
+        requestId: 1,
+        code: 'operation-failed',
+        message: 'Worker operation failed.',
+      },
+    ]);
+    stop();
+    expect(active).toBeUndefined();
+  });
 });

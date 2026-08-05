@@ -291,22 +291,14 @@ export function createWorkerFoundationClient(input: {
         fail('worker-startup-failed', 'Worker could not be started.');
         throw new Error('Worker could not be started.');
       }
-      try {
-        await request('initialize', {
-          ...validatedRequest,
-          gameId,
-          timelineId,
-        });
-      } catch (error) {
-        if (isConnecting())
-          fail(
-            'worker-startup-failed',
-            error instanceof Error
-              ? error.message
-              : 'Worker initialization failed.',
-          );
+      await request('initialize', {
+        ...validatedRequest,
+        gameId,
+        timelineId,
+      }).catch((error: Error) => {
+        if (isConnecting()) fail('worker-startup-failed', error.message);
         throw error;
-      }
+      });
       publishLifecycle({ state: 'ready', gameId, timelineId });
     },
     async sendCommand(envelope) {

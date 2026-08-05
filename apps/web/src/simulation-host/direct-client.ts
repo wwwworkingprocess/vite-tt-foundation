@@ -77,6 +77,12 @@ export function createDirectFoundationClient(): FoundationSimulationClient {
     };
   }
 
+  function fromSynchronous<T>(operation: () => T | PromiseLike<T>): Promise<T> {
+    return new Promise<T>((resolve) => {
+      resolve(operation());
+    });
+  }
+
   function track<T>(operation: Promise<T>): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const registration = { reject };
@@ -85,11 +91,8 @@ export function createDirectFoundationClient(): FoundationSimulationClient {
         (value) => {
           if (pending.delete(registration)) resolve(value);
         },
-        (error: unknown) => {
-          if (pending.delete(registration))
-            reject(
-              error instanceof Error ? error : new Error('Operation failed.'),
-            );
+        (error: Error) => {
+          if (pending.delete(registration)) reject(error);
         },
       );
     });
@@ -97,17 +100,12 @@ export function createDirectFoundationClient(): FoundationSimulationClient {
 
   const client: FoundationSimulationClient = {
     connect(request) {
-      if (lifecycle.state !== 'idle')
-        return Promise.reject(
-          new Error('Foundation client can connect only from idle.'),
-        );
-      let gameId;
-      let timelineId;
-      let initialState;
-      try {
-        gameId = parseGameId(request.gameId);
-        timelineId = parseTimelineId(request.timelineId);
-        initialState =
+      return fromSynchronous(() => {
+        if (lifecycle.state !== 'idle')
+          throw new Error('Foundation client can connect only from idle.');
+        const gameId = parseGameId(request.gameId);
+        const timelineId = parseTimelineId(request.timelineId);
+        const initialState =
           request.mode === 'new'
             ? createFoundationState(
                 parseSimulationTick(request.initialSimulationTick),
@@ -115,57 +113,31 @@ export function createDirectFoundationClient(): FoundationSimulationClient {
             : restoreFoundationState(
                 parseFoundationSimulationSnapshot(request.snapshot),
               );
-      } catch (error) {
-        return Promise.reject(
-          error instanceof Error
-            ? error
-            : new Error('Invalid foundation connect request.'),
-        );
-      }
-      publishLifecycle({ state: 'connecting' });
-      host = createInMemorySimulationHost({
-        gameId,
-        timelineId,
-        initialState,
+        publishLifecycle({ state: 'connecting' });
+        host = createInMemorySimulationHost({
+          gameId,
+          timelineId,
+          initialState,
+        });
+        publishLifecycle({ state: 'ready', gameId, timelineId });
+        for (const registration of reliableListeners)
+          registration.cleanup = host.subscribeReliableUpdates(
+            registration.listener,
+          );
+        for (const registration of renderListeners)
+          registration.cleanup = host.subscribeRenderSnapshots(
+            registration.listener,
+          );
       });
-      publishLifecycle({ state: 'ready', gameId, timelineId });
-      for (const registration of reliableListeners)
-        registration.cleanup = host.subscribeReliableUpdates(
-          registration.listener,
-        );
-      for (const registration of renderListeners)
-        registration.cleanup = host.subscribeRenderSnapshots(
-          registration.listener,
-        );
-      return Promise.resolve();
     },
-    sendCommand(envelope) {
-      try {
-        return track(requireReady().sendCommand(envelope));
-      } catch (error) {
-        return Promise.reject(
-          error instanceof Error ? error : new Error('Command failed.'),
-        );
-      }
-    },
-    synchronize(request) {
-      try {
-        return track(Promise.resolve(requireReady().synchronize(request)));
-      } catch (error) {
-        return Promise.reject(
-          error instanceof Error ? error : new Error('Synchronization failed.'),
-        );
-      }
-    },
-    exportSnapshot() {
-      try {
-        return track(requireReady().exportSnapshot());
-      } catch (error) {
-        return Promise.reject(
-          error instanceof Error ? error : new Error('Snapshot export failed.'),
-        );
-      }
-    },
+    sendCommand: (envelope) =>
+      fromSynchronous(() => track(requireReady().sendCommand(envelope))),
+    synchronize: (request) =>
+      fromSynchronous(() =>
+        track(Promise.resolve(requireReady().synchronize(request))),
+      ),
+    exportSnapshot: () =>
+      fromSynchronous(() => track(requireReady().exportSnapshot())),
     subscribeReliableUpdates(listener) {
       if (lifecycle.state === 'closed')
         throw new Error('Foundation client is closed.');

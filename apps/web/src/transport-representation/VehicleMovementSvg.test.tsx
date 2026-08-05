@@ -146,3 +146,39 @@ it('renders arrowheads to show edge orientation', () => {
       2,
   );
 });
+
+it('omits direction arrows for collocated canonical stops', () => {
+  const stops = structuredClone(json('stops.json')) as {
+    stopNodes: Array<{
+      position: { latitude: number; longitude: number };
+    }>;
+  };
+  const firstPosition = stops.stopNodes[0]!.position;
+  for (const stop of stops.stopNodes) {
+    stop.position = { ...firstPosition };
+  }
+  const collocatedScenario = parseScenarioPackage({
+    manifest: json('scenario.json'),
+    settlements: json('settlements.json'),
+    stops,
+    routes: json('routes.json'),
+    presentation: json('presentation.json'),
+    provenance: json('provenance.json'),
+  });
+
+  render(<VehicleMovementSvg scenario={collocatedScenario} fleet={[]} />);
+  const svg = screen.getByTestId('vehicle-movement-svg');
+  const renderedEdges = [
+    ...svg.querySelectorAll<SVGLineElement>('line[data-edge-id]'),
+  ];
+
+  expect(renderedEdges.length).toBeGreaterThan(0);
+  for (const edge of renderedEdges) {
+    expect(edge.getAttribute('x1')).toBe(edge.getAttribute('x2'));
+    expect(edge.getAttribute('y1')).toBe(edge.getAttribute('y2'));
+    expect(
+      edge.parentElement?.querySelector('[data-testid="edge-direction"]'),
+    ).toBeNull();
+  }
+  expect(screen.queryByTestId('edge-direction')).not.toBeInTheDocument();
+});

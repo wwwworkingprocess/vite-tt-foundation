@@ -1,5 +1,11 @@
 import { expect, it } from 'vitest';
-import { parseGameId, parseTimelineId } from '@torrevieja-tycoon/protocol';
+import {
+  parseFoundationAppliedCommandResult,
+  parseGameId,
+  parseTimelineId,
+  type FoundationCommandEnvelope,
+  type FoundationCommandResult,
+} from '@torrevieja-tycoon/protocol';
 import { createFoundationApplicationController } from '../application/foundation-controller.js';
 import { createInMemoryFoundationSaveRepository } from '../persistence/save-repository.js';
 import { createDirectFoundationClient } from '../simulation-host/direct-client.js';
@@ -134,6 +140,245 @@ it('does not reuse pacing IDs after a same-timeline reset', async () => {
   await pacing.advanceByElapsedMicroseconds(1_000_000);
   expect(ids).toEqual(['pacing-1', 'pacing-2']);
   expect(app.projection.getState().authoritative?.simulationTick).toBe(8);
+  await pacing.close();
+  await app.close();
+});
+
+const deferredResult = () => {
+  let resolve!: (value: FoundationCommandResult) => void;
+  let reject!: (error: unknown) => void;
+  const promise = new Promise<FoundationCommandResult>((next, fail) => {
+    resolve = next;
+    reject = fail;
+  });
+  return { promise, resolve, reject };
+};
+
+it('derives pre-session rates from tick zero and rejects accumulated bonus overflow', async () => {
+  const app = createFoundationApplicationController({
+    repository: createInMemoryFoundationSaveRepository(),
+    clientFactory: createDirectFoundationClient,
+  });
+  const pacing = createFoundationPacingController({ application: app });
+
+  await pacing.setMode('normal');
+  expect(pacing.projection.getState()).toMatchObject({
+    status: 'running',
+    selectedRate: 20,
+    effectiveRate: 20,
+  });
+
+  await pacing.grantDoubleSpeedBonus(Number.MAX_SAFE_INTEGER);
+  expect(pacing.projection.getState()).toMatchObject({
+    remainingDoubleSpeedBonusTicks: Number.MAX_SAFE_INTEGER,
+    effectiveRate: 40,
+  });
+  await expect(pacing.grantDoubleSpeedBonus(1)).rejects.toThrow(
+    'Bonus overflow.',
+  );
+  expect(pacing.projection.getState().remainingDoubleSpeedBonusTicks).toBe(
+    Number.MAX_SAFE_INTEGER,
+  );
+
+  await pacing.close();
+  await app.close();
+});
+
+it('fails pacing without committing a mismatched applied command result', async () => {
+  const app = createFoundationApplicationController({
+    repository: createInMemoryFoundationSaveRepository(),
+    clientFactory: createDirectFoundationClient,
+  });
+  await app.startNew({
+    gameId: parseGameId('mismatch-game'),
+    timelineId: parseTimelineId('mismatch-timeline'),
+    initialSimulationTick: 0,
+  });
+  const wrapped = Object.freeze({
+    ...app,
+    sendCommand: async (command: FoundationCommandEnvelope) => {
+      const result = await app.sendCommand(command);
+      if (
+        result.kind !== 'foundation-command-result' ||
+        result.status !== 'applied'
+      ) {
+        return result;
+      }
+      return parseFoundationAppliedCommandResult({
+        ...result,
+        resultingSimulationTick: result.resultingSimulationTick + 1,
+      });
+    },
+  });
+  const pacing = createFoundationPacingController({ application: wrapped });
+
+  await pacing.setMode('normal');
+  await pacing.advanceByElapsedMicroseconds(1_000_000);
+
+  expect(app.projection.getState().authoritative?.simulationTick).toBe(4);
+  expect(pacing.projection.getState()).toMatchObject({
+    status: 'failed',
+    mode: 'paused',
+    selectedRate: 0,
+    effectiveRate: 0,
+    advancedTicksTotal: 0,
+    creditGameMicroseconds: 0,
+    message: 'Pacing command did not apply as planned.',
+  });
+
+  await pacing.close();
+  await app.close();
+});
+
+it('ignores a successful pacing result after the application generation changes', async () => {
+  const app = createFoundationApplicationController({
+    repository: createInMemoryFoundationSaveRepository(),
+    clientFactory: createDirectFoundationClient,
+  });
+  await app.startNew({
+    gameId: parseGameId('stale-success-game'),
+    timelineId: parseTimelineId('stale-success-timeline'),
+    initialSimulationTick: 0,
+  });
+  const pending = deferredResult();
+  let sent!: FoundationCommandEnvelope;
+  let markSent!: () => void;
+  const sentPromise = new Promise<void>((resolve) => {
+    markSent = resolve;
+  });
+  const wrapped = Object.freeze({
+    ...app,
+    sendCommand: (command: FoundationCommandEnvelope) => {
+      sent = command;
+      markSent();
+      return pending.promise;
+    },
+  });
+  const pacing = createFoundationPacingController({ application: wrapped });
+
+  await pacing.setMode('normal');
+  const advancing = pacing.advanceByElapsedMicroseconds(1_000_000);
+  await sentPromise;
+  await app.close();
+  pending.resolve(
+    parseFoundationAppliedCommandResult({
+      kind: 'foundation-command-result',
+      gameId: sent.gameId,
+      timelineId: sent.timelineId,
+      commandId: sent.commandId,
+      correlationId: sent.correlationId,
+      status: 'applied',
+      appliedAtTick: 0,
+      resultingSimulationTick: 4,
+      appliedCommandRevision: 1,
+      duplicate: false,
+    }),
+  );
+  await advancing;
+
+  expect(pacing.projection.getState()).toMatchObject({
+    status: 'paused',
+    mode: 'paused',
+    advancedTicksTotal: 0,
+    creditGameMicroseconds: 0,
+    message: undefined,
+  });
+  await pacing.close();
+});
+
+it('ignores a rejected pacing operation after the application generation changes', async () => {
+  const app = createFoundationApplicationController({
+    repository: createInMemoryFoundationSaveRepository(),
+    clientFactory: createDirectFoundationClient,
+  });
+  await app.startNew({
+    gameId: parseGameId('stale-failure-game'),
+    timelineId: parseTimelineId('stale-failure-timeline'),
+    initialSimulationTick: 0,
+  });
+  const pending = deferredResult();
+  let markSent!: () => void;
+  const sentPromise = new Promise<void>((resolve) => {
+    markSent = resolve;
+  });
+  const wrapped = Object.freeze({
+    ...app,
+    sendCommand: () => {
+      markSent();
+      return pending.promise;
+    },
+  });
+  const pacing = createFoundationPacingController({ application: wrapped });
+
+  await pacing.setMode('normal');
+  const advancing = pacing.advanceByElapsedMicroseconds(1_000_000);
+  await sentPromise;
+  await app.close();
+  pending.reject(new Error('late pacing failure'));
+  await advancing;
+
+  expect(pacing.projection.getState()).toMatchObject({
+    status: 'paused',
+    mode: 'paused',
+    advancedTicksTotal: 0,
+    creditGameMicroseconds: 0,
+    message: undefined,
+  });
+  await pacing.close();
+});
+
+it('normalizes a non-Error pacing rejection while the session remains current', async () => {
+  const app = createFoundationApplicationController({
+    repository: createInMemoryFoundationSaveRepository(),
+    clientFactory: createDirectFoundationClient,
+  });
+  await app.startNew({
+    gameId: parseGameId('non-error-pacing-game'),
+    timelineId: parseTimelineId('non-error-pacing-timeline'),
+    initialSimulationTick: 0,
+  });
+  const pacing = createFoundationPacingController({
+    application: Object.freeze({
+      ...app,
+      sendCommand: async () => Promise.reject('non-error pacing failure'),
+    }),
+  });
+
+  await pacing.setMode('normal');
+  await pacing.advanceByElapsedMicroseconds(1_000_000);
+  expect(pacing.projection.getState()).toMatchObject({
+    status: 'failed',
+    mode: 'paused',
+    message: 'Pacing operation failed.',
+    advancedTicksTotal: 0,
+  });
+
+  await pacing.close();
+  await app.close();
+});
+
+it('resets deterministically when there is no ready current session', async () => {
+  const app = createFoundationApplicationController({
+    repository: createInMemoryFoundationSaveRepository(),
+    clientFactory: createDirectFoundationClient,
+  });
+  const pacing = createFoundationPacingController({ application: app });
+
+  await pacing.setMode('fast');
+  expect(pacing.projection.getState()).toMatchObject({
+    status: 'running',
+    mode: 'fast',
+  });
+  await pacing.resetForCurrentSession();
+  expect(pacing.projection.getState()).toMatchObject({
+    status: 'paused',
+    mode: 'paused',
+    selectedRate: 0,
+    effectiveRate: 0,
+    creditGameMicroseconds: 0,
+    remainingDoubleSpeedBonusTicks: 0,
+  });
+
   await pacing.close();
   await app.close();
 });

@@ -108,10 +108,7 @@ export function createFoundationPacingController(input: {
         return fn();
       })
       .then(resolve, reject)
-      .then(
-        () => undefined,
-        () => undefined,
-      );
+      .then(() => undefined);
     return result;
   };
   const selected = (mode: PlaybackMode) =>

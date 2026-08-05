@@ -100,16 +100,9 @@ export function planPacing(input: {
       profile: input.profile,
       remainingDoubleSpeedBonusTicks: bonus,
     });
-    if (effective <= 0) throw new Error('Playback rate must be positive.');
     const needed = Math.ceil((tickCredit - credit) / effective);
     if (needed > elapsed) {
-      const addition = elapsed * effective;
-      if (
-        !Number.isSafeInteger(addition) ||
-        !Number.isSafeInteger(credit + addition)
-      )
-        throw new Error('Pacing overflow.');
-      credit += addition;
+      credit += elapsed * effective;
       break;
     }
     credit += needed * effective - tickCredit;

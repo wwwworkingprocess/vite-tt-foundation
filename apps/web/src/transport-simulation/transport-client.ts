@@ -383,10 +383,7 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
         publishLifecycle({
           state: 'failed',
           code: 'invalid-worker-message',
-          message:
-            error instanceof Error
-              ? error.message
-              : 'Transport startup failed.',
+          message: (error as Error).message,
         });
         throw error;
       }

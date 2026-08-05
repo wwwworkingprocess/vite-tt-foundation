@@ -474,8 +474,7 @@ const validateWaitingGenerationLineage = (input: {
         throw new Error('Invalid waiting generation chronology.');
       if (
         successor !== undefined &&
-        successor.cohort.firstAssignedTick <=
-          generation.earliestBoardedAtTick!
+        successor.cohort.firstAssignedTick <= generation.earliestBoardedAtTick!
       )
         throw new Error('Invalid waiting generation chronology.');
     }

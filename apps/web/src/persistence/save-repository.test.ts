@@ -79,13 +79,14 @@ describe.each(factories)('%s save repository', (_name, create) => {
     await repository.put(record('b'));
     await repository.put(record('a'));
     await repository.put(record('c', 20));
+    await repository.put(record('d', 20));
     await repository.put(record('b', 30));
     const loaded = await repository.get(parseFoundationSaveId('b'));
     expect(loaded?.updatedAtUtcMs).toBe(30);
     expect(Object.isFrozen(loaded)).toBe(true);
     expect(Object.isFrozen(loaded?.snapshot.state)).toBe(true);
     const list = await repository.list();
-    expect(list.map((x) => x.saveId)).toEqual(['b', 'c', 'a']);
+    expect(list.map((x) => x.saveId)).toEqual(['b', 'c', 'd', 'a']);
     expect(Object.isFrozen(list)).toBe(true);
     expect(Object.isFrozen(list[0])).toBe(true);
     await repository.delete(parseFoundationSaveId('b'));

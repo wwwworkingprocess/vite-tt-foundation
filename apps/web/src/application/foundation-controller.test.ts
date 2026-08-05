@@ -190,6 +190,158 @@ describe('foundation application controller and vanilla store', () => {
     await Promise.all([firstClose, secondClose]);
   });
 
+  it('rejects non-full initial synchronization and closes the failed authority', async () => {
+    let closeCount = 0;
+    let cleanupCount = 0;
+    const client: FoundationSimulationClient = {
+      async connect() {
+        // The synchronization response below is the failure under test.
+      },
+      async sendCommand() {
+        throw new Error('unused');
+      },
+      async synchronize() {
+        return {
+          kind: 'foundation-synchronization-response',
+          mode: 'delta',
+          gameId,
+          timelineId,
+          fromExclusiveStreamOffset: parseStreamOffset(0),
+          throughStreamOffset: parseStreamOffset(0),
+          throughCommandRevision: parseCommandRevision(0),
+          simulationTick: 0,
+          updates: [],
+        } as const;
+      },
+      async exportSnapshot() {
+        throw new Error('unused');
+      },
+      subscribeReliableUpdates: () => () => {
+        cleanupCount += 1;
+      },
+      subscribeRenderSnapshots: () => () => {
+        cleanupCount += 1;
+      },
+      getLifecycle: () => ({ state: 'idle' }),
+      subscribeLifecycle: () => () => undefined,
+      async close() {
+        closeCount += 1;
+      },
+    };
+    const controller = createFoundationApplicationController({
+      repository: createInMemoryFoundationSaveRepository(),
+      clientFactory: () => client,
+    });
+
+    await expect(
+      controller.startNew({ gameId, timelineId, initialSimulationTick: 0 }),
+    ).rejects.toThrow('Full synchronization is required.');
+    expect(closeCount).toBe(1);
+    expect(cleanupCount).toBe(2);
+    expect(controller.projection.getState()).toMatchObject({
+      session: {
+        status: 'failed',
+        message: 'Full synchronization is required.',
+      },
+      synchronization: {
+        status: 'failed',
+        message: 'Full synchronization is required.',
+      },
+    });
+    await controller.close();
+  });
+
+  it('closes terminally when close begins during initial synchronization', async () => {
+    let releaseSynchronization: (() => void) | undefined;
+    let closeCount = 0;
+    const base = createDirectFoundationClient();
+    const controller = createFoundationApplicationController({
+      repository: createInMemoryFoundationSaveRepository(),
+      clientFactory: () =>
+        Object.freeze({
+          ...base,
+          async synchronize(
+            request: Parameters<FoundationSimulationClient['synchronize']>[0],
+          ) {
+            await new Promise<void>((resolve) => {
+              releaseSynchronization = resolve;
+            });
+            return base.synchronize(request);
+          },
+          async close() {
+            closeCount += 1;
+            await base.close();
+          },
+        }),
+    });
+
+    const starting = controller.startNew({
+      gameId,
+      timelineId,
+      initialSimulationTick: 0,
+    });
+    await expect.poll(() => releaseSynchronization).toBeTypeOf('function');
+    const closing = controller.close();
+    releaseSynchronization?.();
+
+    await expect(starting).rejects.toThrow(
+      'Foundation application controller is closed.',
+    );
+    await closing;
+    expect(closeCount).toBe(1);
+    expect(controller.projection.getState().session).toEqual({
+      status: 'closed',
+    });
+  });
+
+  it('classifies repository failures and rejects saving without active authority', async () => {
+    const backing = createInMemoryFoundationSaveRepository();
+    let failList = true;
+    let failDelete = false;
+    const repository = {
+      ...backing,
+      list: async () => {
+        if (failList) return Promise.reject('list unavailable');
+        return backing.list();
+      },
+      delete: async (saveId: Parameters<typeof backing.delete>[0]) => {
+        if (failDelete) throw new Error('delete unavailable');
+        return backing.delete(saveId);
+      },
+    };
+    const controller = createFoundationApplicationController({
+      repository,
+      clientFactory: createDirectFoundationClient,
+    });
+
+    await expect(controller.listSaves()).rejects.toBe('list unavailable');
+    expect(controller.projection.getState().persistence).toEqual({
+      status: 'failed',
+      saves: [],
+      message: 'Operation failed.',
+    });
+    failList = false;
+    await expect(
+      controller.save({
+        saveId: 'inactive',
+        createdAtUtcMs: 1,
+        updatedAtUtcMs: 1,
+      }),
+    ).rejects.toThrow('No active foundation client.');
+
+    await controller.startNew({ gameId, timelineId, initialSimulationTick: 0 });
+    failDelete = true;
+    await expect(controller.deleteSave('missing')).rejects.toThrow(
+      'delete unavailable',
+    );
+    expect(controller.projection.getState().persistence).toEqual({
+      status: 'failed',
+      saves: [],
+      message: 'delete unavailable',
+    });
+    await controller.close();
+  });
+
   it('detects reliable gaps and replaces only newer matching render projections', async () => {
     let reliable: ((value: FoundationStateUpdate) => void) | undefined;
     let render: ((value: FoundationRenderSnapshot) => void) | undefined;

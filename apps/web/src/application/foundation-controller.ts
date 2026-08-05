@@ -75,7 +75,6 @@ function freezeState(
 ): FoundationApplicationState {
   Object.freeze(value.session);
   if (value.authoritative) Object.freeze(value.authoritative);
-  if (value.scenario) Object.freeze(value.scenario);
   Object.freeze(value.synchronization);
   Object.freeze(value.persistence.saves);
   Object.freeze(value.persistence);
@@ -173,8 +172,13 @@ export function createFoundationApplicationController(input: {
     try {
       if (!client) throw new Error('No active foundation client.');
       set({ synchronization: { status: 'synchronizing' } });
-      const session = store.getState().session;
-      if (session.status !== 'ready') throw new Error('Session is not ready.');
+      // Client ownership is established only by a queued activation after the
+      // session has entered ready state; public synchronization is queued
+      // behind that same activation.
+      const session = store.getState().session as Extract<
+        Session,
+        { status: 'ready' }
+      >;
       const response = parseFoundationSynchronizationResponse(
         await client.synchronize({
           kind: 'foundation-synchronization-request',
@@ -224,10 +228,7 @@ export function createFoundationApplicationController(input: {
         return operation();
       })
       .then(resolve, reject)
-      .then(
-        () => undefined,
-        () => undefined,
-      );
+      .then(() => undefined);
     return result;
   }
   async function activate(
@@ -262,7 +263,7 @@ export function createFoundationApplicationController(input: {
       } catch (nextCloseError) {
         cleanupError = nextCloseError;
       } finally {
-        if (client === next) client = undefined;
+        client = undefined;
         sessionClaimed = false;
         set({ session: { status: 'failed', message: message(error) } });
       }
@@ -290,9 +291,8 @@ export function createFoundationApplicationController(input: {
         return Promise.reject(
           new Error('A foundation session is already active.'),
         );
-      let validated;
-      try {
-        validated = {
+      return new Promise<void>((resolve) => {
+        const validated = {
           mode: 'new' as const,
           gameId: parseGameId(request.gameId),
           timelineId: parseTimelineId(request.timelineId),
@@ -300,13 +300,9 @@ export function createFoundationApplicationController(input: {
             request.initialSimulationTick,
           ),
         };
-      } catch (error) {
-        return Promise.reject(
-          error instanceof Error ? error : new Error('Invalid start request.'),
-        );
-      }
-      sessionClaimed = true;
-      return enqueue(() => activate(validated, 'starting'));
+        sessionClaimed = true;
+        resolve(enqueue(() => activate(validated, 'starting')));
+      });
     },
     synchronize: () => enqueue(synchronizeCurrent),
     sendCommand(

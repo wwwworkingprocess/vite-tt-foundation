@@ -1,5 +1,9 @@
 # Phase 3E — Browser Pacing, Speeds, and Bonus
 
+> **Document status:** Historical phase contract. This file preserves the named
+> milestone scope and acceptance criteria. It is not a current-state summary;
+> read [`../current-state.md`](../current-state.md) first.
+
 ## Goal
 
 Add deterministic active-page pacing around the accepted Phase 3D

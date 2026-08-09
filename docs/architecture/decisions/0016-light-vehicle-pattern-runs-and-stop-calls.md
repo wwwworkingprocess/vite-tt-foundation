@@ -1,8 +1,9 @@
 # ADR 0016: Light vehicle pattern runs and canonical StopNode calls
 
-## Status
-
-Accepted for light Phase 4D.
+**Decision status:** Accepted
+**Accepted in:** Light Phase 4D
+**Current applicability:** Active run/call decision. Snapshot V7/Save V5 markers are superseded by ADRs 0017–0018.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision
 

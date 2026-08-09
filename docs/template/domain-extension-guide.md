@@ -1,5 +1,9 @@
 # Domain Extension Guide
 
+> **Document scope:** Foundation Template reference. This file applies to the
+> domain-free template snapshot, not current Torrevieja Tycoon product HEAD.
+> Current product facts are in [`../current-state.md`](../current-state.md).
+
 ## Objective
 
 Introduce a game domain without weakening accepted foundation boundaries.

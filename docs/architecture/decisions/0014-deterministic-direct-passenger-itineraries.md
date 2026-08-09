@@ -1,8 +1,9 @@
 # ADR 0014: Deterministic direct passenger itineraries
 
-## Status
-
-Accepted for Phase 4E3A.
+**Decision status:** Accepted
+**Accepted in:** Phase 4E3A
+**Current applicability:** Active.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision
 

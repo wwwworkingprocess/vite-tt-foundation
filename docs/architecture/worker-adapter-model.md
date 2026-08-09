@@ -1,5 +1,9 @@
 # Dedicated Web Worker Adapter Model
 
+> **Scope note:** This is the Phase 3C historical implementation baseline. Its
+> direct/Worker parity and cleanup invariants remain active; phase-specific
+> deferrals are historical. See [`../current-state.md`](../current-state.md).
+
 ## Status
 
 Implemented architecture contract for Phase 3C.

@@ -1,168 +1,137 @@
 # Torrevieja Tycoon — Project Foundation
 
+**Document status:** Current core documentation index
+
 ## Purpose
 
-Torrevieja Tycoon is a browser-based transport-management game inspired by Torrevieja's urban bus network.
+Torrevieja Tycoon is a browser-based transport-management game built around a
+standalone deterministic simulation and replaceable clients/adapters.
 
-The product is intentionally designed as two cooperating projects:
-
-1. a standalone deterministic TypeScript simulation library;
-2. one or more clients that represent and control that simulation.
-
-The first client is a browser-based Progressive Web App built with Vite, React, and React Three Fiber.
+The first client is an offline-capable browser PWA built with Vite, React, SVG,
+and React Three Fiber. The browser displays immutable authority, sends commands,
+and owns platform integration. It is not the source of truth for game outcomes.
 
 ## Workspace
 
 ```text
 torrevieja-tycoon/
 ├── apps/
-│   └── web/                  # Browser/PWA representation and interaction layer
+│   └── web/                  # Browser/PWA adapters and representation
 ├── packages/
-│   ├── simulation/           # Standalone deterministic TypeScript library
-│   ├── protocol/             # Shared adapter-neutral contracts
-│   └── transport-domain/     # Scenario DTOs and directed graph
+│   ├── protocol/             # Adapter-neutral foundation contracts
+│   ├── transport-domain/     # Canonical scenario parsing and graph
+│   └── simulation/           # Deterministic authoritative simulation
 └── docs/
 ```
 
+See [`current-state.md`](current-state.md) for the exact current package graph,
+versions, scenario catalogue, distribution policy, and next product milestone.
+
 ## Core architectural statement
 
-> The web application is a client of the simulation library. It displays simulation output, sends commands, and provides platform adapters. It is not the source of truth for game outcomes.
+> The web application is a client of the simulation library. It displays
+> simulation output, sends commands, and provides platform adapters. It is not
+> the source of truth for game outcomes.
 
-The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker, a future server, or a command-line balancing tool without requiring React, Three.js, the DOM, IndexedDB, or networking.
+The simulation can run in Node.js, Vitest, a browser main thread, a Web Worker,
+a future server, or a command-line balancing tool without React, Three.js, the
+DOM, IndexedDB, or networking.
+
+## Documentation status model
+
+The repository intentionally preserves historical phase records. Read them
+according to their status:
+
+1. **Current contract** — must match HEAD and uses present tense.
+2. **Accepted ADR** — preserves a decision; later versions may supersede only
+   parts of its consequences.
+3. **Historical phase contract/prompt** — preserves the original milestone
+   scope and non-goals; “deferred” statements apply to that phase only.
+4. **Foundation Template reference** — applies to the domain-free reusable
+   snapshot, not current product HEAD.
+
+When a historical document disagrees with [`current-state.md`](current-state.md)
+about current versions or implemented features, the current-state ledger wins.
+
+## Core documentation
+
+### Read for every task
+
+- [`current-state.md`](current-state.md) — current product and architecture facts.
+- [`architecture/principles.md`](architecture/principles.md) — durable design constraints.
+- [`architecture/boundaries.md`](architecture/boundaries.md) — current package dependencies and adapter ownership.
+- [`architecture/state-ownership.md`](architecture/state-ownership.md) — authoritative, application, and presentation state.
+- [`development/roadmap.md`](development/roadmap.md) — implemented sequence and current direction.
+- [`development/testing-strategy.md`](development/testing-strategy.md) — TDD, determinism, coverage, and test layers.
+- [`development/definition-of-done.md`](development/definition-of-done.md) — completion and validation rules.
+
+### Current and foundational architecture
+
+- [`architecture/time-model.md`](architecture/time-model.md) — current whole-tick time model.
+- [`architecture/browser-pacing-model.md`](architecture/browser-pacing-model.md) — implemented browser pacing boundary.
+- [`architecture/foundation-host-model.md`](architecture/foundation-host-model.md) — in-memory host baseline and invariants.
+- [`architecture/worker-adapter-model.md`](architecture/worker-adapter-model.md) — direct/Worker adapter baseline.
+- [`architecture/persistence-and-app-bridge.md`](architecture/persistence-and-app-bridge.md) — persistence/application baseline.
+- [`architecture/transport-contract.md`](architecture/transport-contract.md) — historical Phase 2 transport design that informed current adapters.
+
+### Phase 4 historical authority baselines
+
+These files preserve the named phase decision and contain prominent current
+contract notes:
+
+- [`architecture/scenario-packages-and-directed-graph.md`](architecture/scenario-packages-and-directed-graph.md) — Phase 4A.
+- [`architecture/transport-simulation-authority.md`](architecture/transport-simulation-authority.md) — Phase 4B.
+- [`architecture/vehicle-movement-authority.md`](architecture/vehicle-movement-authority.md) — Phase 4C.
+
+### Architecture decision records
+
+- [`architecture/decisions/README.md`](architecture/decisions/README.md) — ADR index, phase, status, and supersession/applicability notes.
+- ADR 0001–0018 under [`architecture/decisions/`](architecture/decisions/).
+
+The index includes the previously omitted ADR 0012 and the correct ADR 0015
+path/title:
+
+- [`architecture/decisions/0012-deterministic-passenger-emission-and-stop-access.md`](architecture/decisions/0012-deterministic-passenger-emission-and-stop-access.md)
+- [`architecture/decisions/0015-dynamic-direct-itinerary-activation.md`](architecture/decisions/0015-dynamic-direct-itinerary-activation.md)
+
+### Development history and historical prompts
+
+- [`development/milestone-history.md`](development/milestone-history.md) — concise implementation chronology.
+- [`development/phase-3-plan.md`](development/phase-3-plan.md) and other `phase-*` development files — historical Phase 3 contracts.
+- [`prompts/codex-system-prompt.md`](prompts/codex-system-prompt.md) — reusable current assistant orientation.
+- `prompts/phase-*` — historical task/review prompts for their named phases.
+
+### Foundation Template reference
+
+- [`architecture/foundation-template-contract.md`](architecture/foundation-template-contract.md)
+- [`template/foundation-release-evidence.md`](template/foundation-release-evidence.md)
+- [`template/clone-and-rename.md`](template/clone-and-rename.md)
+- [`template/domain-extension-guide.md`](template/domain-extension-guide.md)
+
+These describe the reusable domain-free template snapshot and must not be used as
+the current Torrevieja Tycoon product status.
 
 ## Agreed foundation stack
 
-| Concern                    | Choice                                 |
-| -------------------------- | -------------------------------------- |
-| Package manager            | Yarn                                   |
-| Workspace model            | Yarn workspaces                        |
-| Build tooling              | Vite                                   |
-| Language                   | TypeScript with strict checking        |
-| UI                         | React                                  |
-| 3D representation          | Three.js, React Three Fiber, Drei      |
-| Client state               | Zustand                                |
-| Persistence adapter        | Dexie / IndexedDB                      |
-| Runtime validation         | Zod                                    |
-| PWA integration            | vite-plugin-pwa                        |
-| Unit and integration tests | Vitest                                 |
-| Browser tests              | Cypress                                |
-| Development method         | TDD for simulation behaviour           |
-| Formatting                 | Prettier                               |
-| Linting                    | ESLint                                 |
-| Continuous integration     | GitHub Actions                         |
-| Licence                    | MIT                                    |
-| Runtime                    | A pinned supported Node.js LTS release |
+| Concern                | Choice                                                      |
+| ---------------------- | ----------------------------------------------------------- |
+| Package manager        | Yarn workspaces                                             |
+| Build tooling          | Vite                                                        |
+| Language               | TypeScript with strict checking                             |
+| UI                     | React                                                       |
+| Representation         | SVG diagnostics; Three.js, React Three Fiber, Drei boundary |
+| Client state           | Zustand                                                     |
+| Persistence adapter    | Dexie / IndexedDB                                           |
+| Runtime validation     | Zod                                                         |
+| PWA integration        | vite-plugin-pwa                                             |
+| Unit/integration tests | Vitest                                                      |
+| Browser tests          | Cypress                                                     |
+| Development method     | TDD for simulation behavior                                 |
+| Formatting/linting     | Prettier and ESLint                                         |
+| Continuous integration | GitHub Actions                                              |
+| Licence                | MIT                                                         |
+| Runtime                | Pinned Node.js and Yarn versions from repository files      |
 
-## Documentation map
-
-- [`architecture/principles.md`](architecture/principles.md) — non-negotiable design principles.
-- [`architecture/boundaries.md`](architecture/boundaries.md) — package dependencies and adapter boundaries.
-- [`architecture/state-ownership.md`](architecture/state-ownership.md) — authoritative, application, and presentation state.
-- [`architecture/transport-contract.md`](architecture/transport-contract.md) — proposed adapter-neutral host/client semantics and failure recovery.
-- [`architecture/time-model.md`](architecture/time-model.md) — authoritative five-second tick and host-owned playback model.
-- [`architecture/scenario-packages-and-directed-graph.md`](architecture/scenario-packages-and-directed-graph.md) — Phase 4A scenario and graph boundary.
-- [`architecture/transport-simulation-authority.md`](architecture/transport-simulation-authority.md) — Phase 4B authoritative scenario and snapshot boundary.
-- [`architecture/vehicle-movement-authority.md`](architecture/vehicle-movement-authority.md) — Phase 4C deterministic vehicle authority.
-- [`architecture/decisions/0009-graph-native-vehicle-movement.md`](architecture/decisions/0009-graph-native-vehicle-movement.md) — graph-native movement and V2 compatibility decision.
-- [`architecture/decisions/0010-repeating-route-cycle-assignment.md`](architecture/decisions/0010-repeating-route-cycle-assignment.md) — canonical RouteId assignment and repeating ordered-leg operation.
-- [`architecture/decisions/0011-city-population-grid-and-stop-catchments.md`](architecture/decisions/0011-city-population-grid-and-stop-catchments.md) — WGS84 population-grid and physical StopPlace catchment decision.
-- [`architecture/decisions/0013-deterministic-passenger-destination-assignment.md`](architecture/decisions/0013-deterministic-passenger-destination-assignment.md) — weighted destination-cell assignment and Snapshot V5 decision.
-- [`architecture/decisions/0014-deterministic-direct-passenger-itineraries.md`](architecture/decisions/0014-deterministic-direct-passenger-itineraries.md) — static single-pattern itinerary and directional StopNode decision.
-- [`architecture/decisions/0015-directional-passenger-waiting-cohorts.md`](architecture/decisions/0015-directional-passenger-waiting-cohorts.md) — bounded directional waiting authority.
-- [`architecture/decisions/0016-light-vehicle-pattern-runs-and-stop-calls.md`](architecture/decisions/0016-light-vehicle-pattern-runs-and-stop-calls.md) — canonical current-tick vehicle StopNode calls.
-- [`architecture/decisions/0017-deterministic-passenger-boarding-and-capacity.md`](architecture/decisions/0017-deterministic-passenger-boarding-and-capacity.md) — deterministic boarding and immutable capacity authority.
-- [`architecture/decisions/0018-deterministic-passenger-alighting-and-journey-completion.md`](architecture/decisions/0018-deterministic-passenger-alighting-and-journey-completion.md) — exact alighting, bounded destination access, and completed-journey authority.
-- [`architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md`](architecture/decisions/0008-authoritative-scenario-snapshot-compatibility.md) — exact scenario-coordinate compatibility decision.
-- [`architecture/decisions/0007-scenario-package-and-directed-graph.md`](architecture/decisions/0007-scenario-package-and-directed-graph.md) — scenario package and directed-edge decision.
-- [`architecture/decisions/0002-simulation-host-transport-readiness.md`](architecture/decisions/0002-simulation-host-transport-readiness.md) — Socket.IO-readiness research and transport-boundary decision.
-- [`architecture/decisions/0003-simulation-time-and-playback-pacing.md`](architecture/decisions/0003-simulation-time-and-playback-pacing.md) — simulation-time and playback-pacing decision.
-- [`development/roadmap.md`](development/roadmap.md) — phased master plan.
-- [`development/testing-strategy.md`](development/testing-strategy.md) — TDD workflow, test layers, determinism, and coverage policy.
-- [`development/phase-3-plan.md`](development/phase-3-plan.md) — incremental Phase 3 delivery milestones.
-- [`development/definition-of-done.md`](development/definition-of-done.md) — completion and validation rules.
-- [`prompts/codex-system-prompt.md`](prompts/codex-system-prompt.md) — reusable Codex session prompt.
-- [`prompts/phase-1-project-foundation.md`](prompts/phase-1-project-foundation.md) — completed foundation implementation request.
-- [`prompts/phase-2-socketio-readiness-research.md`](prompts/phase-2-socketio-readiness-research.md) — completed architecture-research request.
-- [`prompts/phase-3a-time-foundation.md`](prompts/phase-3a-time-foundation.md) — completed time and contract foundation milestone.
-
-## Fixed implementation facts
-
-- Node.js 24.18.0 LTS and Yarn 4.17.1 are pinned.
-- Vite 8, React 19, strict TypeScript, Vitest, Cypress, ESLint, and Prettier provide the initial toolchain.
-- The simulation and protocol package compilers are restricted to environment-neutral ECMAScript libraries and no ambient platform types.
-- ESLint enforces the documented package dependency direction and forbidden platform imports.
-- The web production build generates a service worker and web app manifest through `vite-plugin-pwa`.
-- Phase 3A adds deterministic five-second time primitives, distinct protocol position primitives, and pure application-owned playback calculations.
-- Phase 3B adds a browser-neutral in-memory foundation host with concrete validated command, result, reliable-update, render-snapshot, and synchronization contracts; Worker and persistence adapters remain deferred.
-- Phase 3C adds direct and dedicated-Worker adapters behind one foundation client contract, with strict Worker-boundary validation, correlation, lifecycle failure handling, cleanup, and structured-clone re-freezing; scheduling and persistence remain deferred.
-- Phase 3D adds simulation-owned versioned snapshots, queued direct/Worker
-  snapshot export, explicit new-timeline restoration, validated in-memory and
-  Dexie save repositories, and a serialized vanilla Zustand application
-  projection; timers, autosave, React save UI, and gameplay remain deferred.
-- Phase 3E adds deterministic integer browser pacing, configurable playback
-  modes, tick-counted 2× bonus consumption, a generation-safe pacing
-  controller, visibility-aware animation-frame driving, and minimal platform
-  controls; pacing state remains runtime-only.
-- Phase 3F hardens the completed platform as Foundation Template v1.0.0 with
-  executable architecture, manifest, bundle, lifecycle, and built-PWA offline
-  release gates. Final release status requires the pinned CI workflows to pass.
-- Phase 4A adds an environment-neutral transport-domain package, reviewed
-  scenario assets, strict immutable parsing, directed graph queries, and a
-  base-aware browser loader without changing authoritative Phase 3 contracts.
-- Phase 4B binds one immutable canonical scenario and derived graph to a
-  transport timeline. Transport snapshots and current saves retain only the
-  exact scenario coordinate plus dynamic tick; legacy foundation saves remain
-  explicitly incompatible rather than being assigned invented scenario data.
-- Phase 4C adds strict graph-native vehicles, integer per-edge movement plans,
-  atomic tick advancement, and explicit versioned snapshots and saves. Its
-  final refinement assigns new vehicles to canonical RouteIds, repeats each
-  route's ordered direction patterns with zero-tick terminal handoffs, and
-  advances Snapshot, Save, client, and Worker contracts to V3. V1 migrates to
-  an empty fleet; V2 migrates as legacy single-pattern authority. A read-only
-  SVG proves active-authority movement. Scheduling remains deferred.
-- Phase 4E0 adds a transport-domain-owned City Population Grid V1 and pure
-  scenario-derived StopPlace catchments. Native cells remain individual
-  `0.001° × 0.001°` WGS84 angular samples with conserved relative weights.
-  Real city assets remain deferred.
-- Phase 4E1 adds simulation-owned fixed-point passenger emission from an exact
-  immutable demand plan. Served groups use implicit WGS84 grid-cell access
-  timing before aggregating at physical StopPlaces; unserved demand remains
-  explicit at source. Snapshot V4 stores only dynamic demand state and requires
-  the exact plan during active restore. Destination choice, queues, boarding,
-  capacity, services, UI, and rendering remain deferred.
-- Phase 4E2 assigns arrived passengers to served, other-StopPlace population
-  cells through deterministic weighted cyclic allocation. Per-origin cursors,
-  bounded origin/destination-cell groups, explicit unavailable totals, and
-  exact conservation are authoritative in Snapshot V5. Active V4 migration
-  preserves backlog without inventing destinations. Dynamic itinerary
-  activation and waiting authority remain deferred.
-- Phase 4E3A adds a static simulation-owned Passenger Direct Itinerary Plan V1.
-  Every ordered distinct physical StopPlace pair is either one canonical
-  forward-pattern segment with exact directional StopNodes or explicitly
-  unavailable. Dynamic passenger groups remain awaiting itinerary; Snapshot
-  V5, Save V3, clients, Workers, persistence, UI, and rendering are unchanged.
-- Phase 4E3B activates destination intent through that exact derived plan into
-  bounded directional waiting cohorts. Unavailable direct journeys are counted
-  explicitly; transfers and boarding remain deferred. Its Snapshot V6 and
-  Transport Save V4 contracts are now obsolete pre-release data.
-- Light Phase 4D preserves continuous route-cycle movement while adding
-  per-vehicle pattern-run sequences and exact directional canonical StopNode
-  calls. Terminal arrival and the next positive-tick pattern-origin handoff
-  remain distinct. Its Snapshot V7 and Transport Save V5 contracts are now
-  obsolete pre-release data.
-- Phase 4E5 completes the first deterministic passenger journey chain. Exact
-  directional calls alight before boarding, released capacity is immediately
-  reusable, and implicit destination access completes at its exact angular-grid
-  tick. Bounded lineage watermarks, current events, and cumulative completion
-  authority are persisted in Snapshot V9 and Transport Save V7. Transfers,
-  UI, economics, geo-background work, and advanced services remain deferred.
-- The pre-Phase-4D browser refinement presents the accepted authority through a
-  viewport-bound game shell: compact navigation, a full-workspace SVG
-  diagnostic view, a swappable R3F minimap, and accessible project,
-  simulation, and session dialogs. Shell state is presentation-only.
-  Simulation and persistence interfaces are independently lazy-loaded so Load
-  exposes only saved-session operations and the initial application entry keeps
-  reviewed budget headroom.
-  City-filtered catalogues, campaign progression, and promotion of the R3F
-  renderer to the production primary view remain explicit future seams.
-- Simulation behaviour is developed test-first with enforced package coverage thresholds and deterministic tests.
+Do not duplicate current schema numbers, catalogue counts, or validation details
+here. Those belong in [`current-state.md`](current-state.md) and their
+machine-readable sources.

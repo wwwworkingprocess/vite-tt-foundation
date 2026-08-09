@@ -1,11 +1,16 @@
 # Torrevieja Tycoon
 
-Torrevieja Tycoon is a browser-based transport-management game built as two cooperating products:
+Torrevieja Tycoon is a deterministic, offline-capable transport simulation and
+Progressive Web App. The repository contains four explicit workspace surfaces:
 
-- a standalone deterministic TypeScript simulation library;
-- a Vite, React, and React Three Fiber web client that represents and controls the simulation.
+- `packages/protocol` — adapter-neutral foundation contracts and validators;
+- `packages/transport-domain` — canonical scenario packages and directed graphs;
+- `packages/simulation` — authoritative deterministic transport simulation;
+- `apps/web` — scenario acquisition, Worker/application adapters, persistence,
+  pacing, UI, SVG diagnostics, and the React Three Fiber representation boundary.
 
-The repository is a strict Yarn workspace that keeps the standalone simulation, shared protocol foundations, and browser client in explicit packages.
+The web application is a client of the simulation. Rendering, browser timing,
+persistence, and scenario selection never become simulation authority.
 
 ## Requirements
 
@@ -27,34 +32,69 @@ yarn dev
 
 The development server is available at `http://localhost:4173`.
 
-## Validation and builds
+## Validation tiers
+
+Use the narrowest tier that matches the task, then run the broader gate before a
+milestone is accepted.
 
 ```sh
-yarn format:check
-yarn lint
-yarn typecheck
-yarn test
-yarn test:coverage
-yarn build
-yarn test:e2e
-yarn test:pwa
-yarn audit:architecture
-yarn audit:tracked
-yarn audit:manifest
-yarn audit:build
+# Normal development validation
+yarn validate
+
+# Complete portable validation: audits, tests, coverage, build, browser, PWA,
+# and repository-subpath behavior
+yarn validate:portable
+
+# Git/repository-only tracked-output and clean-tree checks
+yarn validate:repository
 ```
 
-Run the complete sequence with `yarn validate`. Build either standalone library independently with:
+`yarn validate` is intentionally narrower than `yarn validate:portable`.
+Individual commands remain available for focused work, including
+`format:check`, `lint`, `typecheck`, `test`, `test:coverage`, `build`,
+`test:e2e`, `test:pwa`, and `test:pwa:subpath`.
+
+Build every standalone library with:
+
+```sh
+yarn build:libraries
+```
+
+Or build one library independently:
 
 ```sh
 yarn workspace @torrevieja-tycoon/protocol build
+yarn workspace @torrevieja-tycoon/transport-domain build
 yarn workspace @torrevieja-tycoon/simulation build
 ```
 
+## Current product status
+
+Phases 1–3 and the implemented Phase 4A–4E5 authority layers are present. The
+current passenger chain covers deterministic demand, StopPlace access,
+destination assignment, direct itinerary activation, directional waiting,
+exact vehicle calls, boarding/capacity, alighting, destination access, lineage,
+and completed journeys.
+
+Current aggregate contracts are Transport Snapshot V9, Transport Save V7,
+transport client V3, and transport Worker V3. The public catalogue contains
+multiple Torrevieja, Elche, Elche-radial, and Alicante development-seed
+packages. The next planned product layer is diagnostic/game UI for live
+passenger authority, followed by Phase 4F economics and objectives. Transfers,
+advanced services, and richer operational realism remain deferred.
+
+See [`docs/current-state.md`](docs/current-state.md) for the current contract and
+[`docs/development/roadmap.md`](docs/development/roadmap.md) for sequencing.
+
+## Foundation Template reference
+
+The repository retains the reusable **Foundation Template v1.0.0** contract and
+release evidence as historical/reference material under `docs/template/` and
+`foundation-template.json`. That domain-free snapshot is not the identity or
+release status of current Torrevieja Tycoon product HEAD.
+
 ## Documentation
 
-Begin with [`docs/project-foundation.md`](docs/project-foundation.md), which links the complete architecture contract, roadmap, definition of done, and prompts.
-
-## Current status
-
-Phases 1–3 are implemented. The repository is a Foundation Template v1.0.0 release candidate with deterministic simulation foundations, direct/Worker host adapters, IndexedDB saves, application orchestration, browser pacing, PWA offline verification, executable architecture audits, and enforced coverage. Final release acceptance still requires the pinned Linux and Windows CI workflows to pass. Phase 4 game mechanics remain deferred.
+Start with [`docs/project-foundation.md`](docs/project-foundation.md). It
+separates current contracts, accepted ADRs, historical phase records, and
+Foundation Template reference material.

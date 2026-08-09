@@ -1,72 +1,75 @@
-# Transport simulation authority
+# Transport simulation authority — Phase 4B baseline
 
-Phase 4B binds exactly one validated canonical scenario to an authoritative
-timeline. `packages/simulation` owns the immutable scenario, derives its
-directed graph, and retains both unchanged while integer simulation ticks
-advance. It performs no fetching, hashing, persistence, Worker, timer, or other
-platform I/O.
+**Document status:** Historical phase architecture contract
+**Applies to:** Phase 4B
+**Current aggregate contract:** Transport Snapshot V9, Transport Save V7,
+client V3, Worker V3. See [`../current-state.md`](../current-state.md).
 
-Exact compatibility uses the scenario schema version, scenario ID, scenario
-data version, and package content hash. A transport snapshot stores that
-coordinate and the dynamic tick only; it never embeds settlements, stops,
-routes, graph, presentation, or provenance. Restore therefore receives the
-matching canonical scenario separately and rejects any coordinate mismatch.
+## Phase 4B decision
+
+Phase 4B bound exactly one validated canonical scenario to an authoritative
+timeline. `packages/simulation` owned the immutable scenario, derived its
+directed graph, and retained both unchanged while integer simulation ticks
+advanced. It performed no fetching, hashing, persistence, Worker, timer, or
+other platform I/O.
+
+Exact compatibility used the scenario schema version, scenario ID, scenario
+data version, and package content hash. The Phase 4B transport snapshot stored
+that coordinate and dynamic tick only; it never embedded settlements, stops,
+routes, graph, presentation, or provenance. Restore received the matching
+canonical scenario separately and rejected any coordinate mismatch.
 
 Domain-specific direct/clone-boundary client, save, resolver, and controller
-contracts live in `apps/web/src/transport-simulation`. The generic protocol
-package remains scenario-neutral. Existing Foundation Snapshot/Save V1 values
-remain valid legacy data but cannot be automatically migrated because they
-contain no historical scenario identity.
+contracts lived in `apps/web/src/transport-simulation`. The generic protocol
+package remained scenario-neutral. Foundation Snapshot/Save V1 data had no
+historical scenario identity and could not be silently interpreted as transport
+authority.
 
-Scenario selection affects only a new timeline. Restore resolves and validates
-the exact saved scenario before the current client is torn down. Static
-scenario data is not repeated in tick publications or synchronization results;
-only its immutable coordinate is exposed.
+Scenario selection affected only a new timeline. Restore resolved and validated
+the exact saved scenario before the current client was torn down. Static
+scenario data was not repeated in tick publications or synchronization results;
+only its immutable coordinate was exposed.
 
-## Browser session composition
+## Phase 4B browser composition
 
-Once a canonical scenario is selected, the browser constructs one
-authoritative transport Worker stack. The existing application lifecycle,
-pacing driver/controller, confirmation boundary, manual/autosave policy, and
-fresh-timeline restore composition all use that same transport client and
-Transport Save V1 repository. The scenario panel is a loader and selector; it
-does not construct a second authority. Foundation Save V1 records in the same
-repository remain visible as legacy-incompatible data and may be explicitly
-overwritten, but never restored as transport state.
+Once a canonical scenario was selected, the browser constructed one
+authoritative transport Worker stack. Application lifecycle, pacing,
+confirmation, persistence, and restore composition used the same transport
+client and the then-current Transport Save V1 repository. The scenario panel was
+a loader/selector and never constructed a second authority.
 
-Transport controller operations are serialized FIFO. Activation is ready only
-after full synchronization and snapshot export, while generation, client,
-timeline, and terminal-close guards prevent stale completions from changing
+Transport controller operations were serialized FIFO. Activation became ready
+only after synchronization and snapshot export, while generation, client,
+timeline, and terminal-close guards prevented stale completions from changing
 the current projection.
 
-Closing normalizes application persistence to `idle` while retaining the last
-immutable save summaries. Transient `saving` and `restoring` states never
-survive in the terminal projection, and late persistence completions cannot
-publish after the single terminal transition.
+Restore and replacement failure were non-destructive. Closing normalized
+application persistence to its terminal projection, and late persistence
+completions could not publish after terminal close.
 
-## Temporary multi-scenario acceptance data
+## Historical scenario-distribution evidence
 
-`torrevieja-mini-v1` is a temporary, real-data-derived development/test
-scenario promoted from the canonical Phase 4A graph fixture. It is not a
-second completed city network and will be replaced when another curated
-settlement is available. During Phase 4B hardening, both public packages are
-pre-cached so exact cross-scenario restores can be exercised offline.
+Phase 4B used two public packages, including `torrevieja-mini-v1`, to prove
+cross-scenario selection, persistence, and offline restore. That two-package
+precache was acceptance evidence for the phase, not a current distribution
+claim.
 
-The intended scaling policy is to pre-cache the catalogue and default scenario
-while runtime-caching additional selected scenarios. That transition is
-deferred; the current two-package precache is deliberate acceptance evidence,
-not the long-term distribution policy.
+Current product behavior includes every `scenarios/**/*.json` asset in the PWA
+build and exposes the ordered catalogue described in
+[`../current-state.md`](../current-state.md). A catalogue/default-plus-runtime-
+cache model remains only a possible future optimization.
 
 ## Template separation
 
 `foundation-template.json` remains the domain-free Phase 3 template contract.
-Transport schema, client/Worker contract, and expanded build-budget markers
-belong to `torrevieja-project.json`. The intended reusable Foundation Template
-snapshot is commit `c26be29`; current Phase 4
-HEAD must not be tagged as Foundation Template v1.0.0.
+Transport schema, client/Worker, scenario, and project budget markers belong to
+`torrevieja-project.json`. Current product HEAD must not be tagged or described
+as the Foundation Template v1.0.0 snapshot.
 
-Final Phase 4C advances both application-owned transport contract markers to
-V3 for canonical RouteId assignments and repeating ordered-leg publications.
-Older connect and Worker envelopes are rejected explicitly. Snapshot V1 uses
-the named empty-fleet migration; V2 remains an explicit legacy single-pattern
-migration and never infers a return leg.
+## Evolution after Phase 4B
+
+Later ADRs added graph-native movement, route cycles, demand, direct itineraries,
+waiting, exact calls, boarding, alighting, destination access, lineage, and
+completion. Their aggregate current persistence markers are centralized in
+[`../current-state.md`](../current-state.md); the Phase 4B V1 markers in this
+historical baseline are not current compatibility promises.

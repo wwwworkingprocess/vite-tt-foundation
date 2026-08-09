@@ -1,5 +1,9 @@
 # Phase 3B — In-Memory Foundation Host
 
+> **Document status:** Historical phase contract. This file preserves the named
+> milestone scope and acceptance criteria. It is not a current-state summary;
+> read [`../current-state.md`](../current-state.md) first.
+
 ## Goal
 
 Create a test-first, browser-neutral in-memory authoritative host around

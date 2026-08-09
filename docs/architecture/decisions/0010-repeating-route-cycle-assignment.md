@@ -1,6 +1,9 @@
 # ADR 0010: Repeating route-cycle vehicle assignment
 
-Status: accepted for final Phase 4C refinement.
+**Decision status:** Accepted
+**Accepted in:** Final Phase 4C refinement
+**Current applicability:** Active route-cycle decision. Current aggregate persistence is listed in the current-state ledger.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision
 

@@ -1,5 +1,9 @@
 # Codex review — Phase 3E browser pacing and speed bonus
 
+> **Document status:** Historical phase task/review prompt. Use only to
+> reproduce or review the named phase. Current work follows `AGENTS.md`,
+> [`../current-state.md`](../current-state.md), and the user's active request.
+
 Read `AGENTS.md`, all project-foundation-linked documents, and the Phase
 3E architecture/task documents.
 

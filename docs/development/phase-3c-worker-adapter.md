@@ -1,5 +1,9 @@
 # Phase 3C — Typed Dedicated Worker Adapter
 
+> **Document status:** Historical phase contract. This file preserves the named
+> milestone scope and acceptance criteria. It is not a current-state summary;
+> read [`../current-state.md`](../current-state.md) first.
+
 ## Goal
 
 Host the accepted Phase 3B in-memory foundation host inside a dedicated

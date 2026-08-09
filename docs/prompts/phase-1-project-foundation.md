@@ -1,5 +1,9 @@
 # Phase 1 Prompt — Strong Project Foundation
 
+> **Document status:** Historical phase task/review prompt. Use only to
+> reproduce or review the named phase. Current work follows `AGENTS.md`,
+> [`../current-state.md`](../current-state.md), and the user's active request.
+
 ## Objective
 
 Create the initial **Torrevieja Tycoon** Yarn workspace and a modern, strictly validated project template. This phase establishes package boundaries, development tooling, and minimal smoke implementations only.

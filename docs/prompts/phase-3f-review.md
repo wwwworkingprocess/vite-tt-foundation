@@ -1,5 +1,9 @@
 # Codex review — Phase 3F foundation template release
 
+> **Document status:** Historical phase task/review prompt. Use only to
+> reproduce or review the named phase. Current work follows `AGENTS.md`,
+> [`../current-state.md`](../current-state.md), and the user's active request.
+
 Read `AGENTS.md`, all project-foundation-linked documentation, all ADRs,
 and the complete Phase 3F/template documentation.
 

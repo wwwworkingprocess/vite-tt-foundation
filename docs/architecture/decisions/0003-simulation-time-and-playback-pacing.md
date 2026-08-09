@@ -1,8 +1,9 @@
 # ADR 0003: Simulation time and playback pacing
 
-## Status
-
-Accepted for Phase 3 foundation work.
+**Decision status:** Accepted
+**Accepted in:** Phase 3 foundation
+**Current applicability:** Active.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Context
 

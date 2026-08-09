@@ -1,8 +1,9 @@
 # ADR 0013: Deterministic passenger destination assignment
 
-## Status
-
-Accepted for Phase 4E2.
+**Decision status:** Accepted
+**Accepted in:** Phase 4E2
+**Current applicability:** Active destination-assignment decision. Historical persistence markers have evolved.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision
 

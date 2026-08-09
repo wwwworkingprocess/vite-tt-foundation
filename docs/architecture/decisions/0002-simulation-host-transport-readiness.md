@@ -1,8 +1,9 @@
 # ADR 0002: Simulation host transport readiness
 
-## Status
-
-Accepted in Phase 2.
+**Decision status:** Accepted
+**Accepted in:** Phase 2
+**Current applicability:** Active adapter-neutral principles. Socket.IO runtime remains deferred.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Context
 

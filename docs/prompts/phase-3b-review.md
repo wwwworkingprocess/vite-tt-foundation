@@ -1,5 +1,9 @@
 # Codex review — Phase 3B in-memory foundation host
 
+> **Document status:** Historical phase task/review prompt. Use only to
+> reproduce or review the named phase. Current work follows `AGENTS.md`,
+> [`../current-state.md`](../current-state.md), and the user's active request.
+
 Read `AGENTS.md`, all documentation linked from
 `docs/project-foundation.md`, and the Phase 3B architecture and task
 documents.

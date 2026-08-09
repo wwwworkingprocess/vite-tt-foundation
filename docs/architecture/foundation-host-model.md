@@ -1,5 +1,10 @@
 # Foundation In-Memory Host Model
 
+> **Scope note:** This is the Phase 3B historical implementation baseline. Its
+> host ordering/idempotency/liveness invariants remain relevant, but its phase
+> deferrals are not claims about current product HEAD. See
+> [`../current-state.md`](../current-state.md).
+
 ## Status
 
 Implemented architecture contract for Phase 3B.

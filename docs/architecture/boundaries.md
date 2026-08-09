@@ -1,138 +1,159 @@
 # Package and Dependency Boundaries
 
-## Intended workspace
+**Document status:** Current architecture contract
+
+## Workspace
 
 ```text
 apps/web
-packages/simulation
 packages/protocol
+packages/transport-domain
+packages/simulation
 ```
 
-Additional packages may be introduced later only when they represent a proven boundary rather than convenience-driven fragmentation.
+New packages are introduced only for a proven ownership or deployment boundary,
+not convenience-driven fragmentation.
 
 ## Dependency direction
 
 ```text
-apps/web
-  ├── may depend on packages/simulation
-  └── may depend on packages/protocol
+apps/web ───────────────► packages/simulation
+   │                              │
+   ├────────► packages/protocol   └────────► packages/transport-domain
+   └────────► packages/transport-domain
 
-packages/simulation
-  ├── may depend on packages/protocol only when the shared contract genuinely belongs there
-  └── may depend on packages/transport-domain for authoritative scenario state
-
-packages/protocol
-  └── must remain independent of apps/web and packages/simulation implementation details
-
-packages/transport-domain
-  └── remains independent of protocol and simulation
+packages/protocol          independent of simulation/web implementation
+packages/transport-domain  independent of protocol/simulation/web adapters
 ```
 
-No package may import from `apps/web`.
+Concrete current rules:
+
+- `apps/web` may depend on all three packages through public package exports.
+- `packages/simulation` may depend on `packages/transport-domain` for canonical
+  scenario and graph authority.
+- `packages/simulation` does not depend on `packages/protocol`.
+- `packages/protocol` and `packages/transport-domain` do not depend on each
+  other or on application/simulation implementation details.
+- No package may import from `apps/web`.
+- Cross-package source-path imports are forbidden; use package exports.
+
+## `packages/transport-domain`
+
+### Owns
+
+- strict environment-neutral scenario DTO schemas;
+- cross-file package validation;
+- canonical immutable settlements, StopNodes, StopPlaces, routes, and patterns;
+- deterministic directed-graph construction and queries;
+- population-grid and StopPlace-catchment domain values.
+
+### Must not own
+
+- browser fetching or URL construction;
+- asset hashing or PWA policy;
+- simulation ticks, vehicles, passengers, saves, or Workers;
+- React, rendering, persistence, DOM, Node filesystem, or network adapters.
 
 ## `packages/simulation`
 
 ### Owns
 
-- authoritative domain model;
-- simulation engine and clock semantics;
-- commands and command validation related to game rules;
-- domain events;
-- deterministic random state;
-- rulesets and scenarios as pure data/contracts;
-- authoritative selectors and metrics;
-- snapshot creation, validation, supported migration, and restoration.
+- authoritative transport state and deterministic tick advancement;
+- simulation commands and rule validation;
+- scenario-bound graph authority after canonical input is supplied;
+- vehicle movement, route cycles, run/call identity, passenger demand and
+  journeys;
+- authoritative selectors, bounded current events, and conservation;
+- snapshot creation, validation, current compatibility, and restoration.
 
 ### Must not own
 
+- scenario fetching, asset hashing, or catalogue UI;
 - React components or hooks;
-- Three.js objects or world coordinates used only for rendering;
+- Three.js objects or display-only world coordinates;
 - Zustand stores;
 - Dexie tables or IndexedDB calls;
 - service workers or PWA lifecycle;
-- socket clients, HTTP clients, or browser messaging APIs;
-- filesystem or database storage policy;
+- Worker globals, socket clients, HTTP clients, or browser messaging APIs;
+- filesystem/database storage policy;
 - UI notifications, camera state, hover state, or open panels.
 
 ## `packages/protocol`
 
 ### Owns
 
-- serializable command and event envelopes shared across process boundaries;
-- stable identifiers and revision/tick metadata needed by transports;
-- transport-neutral client/host interfaces;
-- snapshot transfer contracts where sharing is necessary;
-- runtime validation schemas for wire data when appropriate.
+- adapter-neutral foundation commands, results, envelopes, identifiers, and
+  synchronization coordinates;
+- transport-neutral foundation client/host interfaces;
+- runtime validators for shared foundation wire data.
 
 ### Must not own
 
-- Socket.IO-specific socket objects or event registration;
+- transport-domain scenario data;
+- transport simulation implementations;
+- Socket.IO-specific objects;
 - Web Worker globals or `postMessage` calls;
-- UI behaviour;
-- simulation-system implementations;
-- persistence implementations.
+- UI behavior or persistence implementations.
 
-Socket.IO and Worker code are adapters that implement protocol contracts.
+Domain-specific transport client/save/Worker contracts currently live under
+`apps/web/src/transport-simulation`; the generic protocol package remains
+scenario-neutral.
 
 ## `apps/web`
 
 ### Owns
 
-- Vite application bootstrap;
-- React DOM interface;
-- React Three Fiber scene and interpolation;
-- Zustand application and presentation stores;
-- Dexie persistence adapter;
-- PWA manifest, service worker integration, update UI, and offline shell;
-- worker creation and worker transport adapter;
-- future Socket.IO client adapter;
-- browser-specific configuration and accessibility behaviour.
+- Vite/PWA bootstrap and browser configuration;
+- React DOM, SVG, and React Three Fiber representation;
+- scenario catalogue acquisition, base-aware URLs, and asset integrity hashing;
+- direct/Worker application adapters and transport-specific web contracts;
+- Zustand application and presentation projections;
+- Dexie persistence adapters;
+- browser pacing and visibility/lifecycle integration;
+- PWA manifest, service worker, update UI, and offline shell;
+- accessibility and browser-specific behavior.
 
 ### Must not own
 
-- authoritative transport rules;
-- passenger, vehicle, finance, or objective outcomes;
+- authoritative vehicle, passenger, finance, service, or objective outcomes;
 - simulation advancement in `requestAnimationFrame` or R3F `useFrame`;
-- hidden mutations of simulation snapshots;
-- duplicate domain rules for UI convenience.
+- hidden mutation of simulation snapshots;
+- duplicate domain rules for UI convenience;
+- route-code/city-specific exceptions that compensate for malformed scenario
+  modeling.
 
 ## Adapter model
 
-Host integrations should be expressed through interfaces. Examples:
+Current host/client/repository interfaces are defined in production source and
+covered by direct, structured-clone, Worker, persistence, and lifecycle tests.
+Historical illustrative interfaces in Phase 2/3 documents are not current API
+signatures.
 
-```ts
-interface SaveRepository {
-  save(slotId: string, snapshot: SimulationSnapshot): Promise<void>;
-  load(slotId: string): Promise<SimulationSnapshot | undefined>;
-  delete(slotId: string): Promise<void>;
-}
+The durable adapter rules are:
 
-interface SimulationTransport {
-  connect(): Promise<void>;
-  disconnect(): Promise<void>;
-  send(command: CommandEnvelope): Promise<void>;
-  subscribe(listener: (message: HostMessage) => void): () => void;
-}
-```
-
-The precise interfaces will be designed in their implementation phases. These examples establish ownership, not final APIs. Phase 2 recommendations are documented in [`transport-contract.md`](transport-contract.md) and remain production-code proposals until Phase 3.
+- the simulation owns snapshot semantics, not storage;
+- adapters validate at process/storage boundaries;
+- direct and Worker paths are semantically equivalent;
+- one rejected request does not poison later queued work while ready;
+- close is live, terminal, idempotent, and cleans pending work;
+- restore preflight succeeds before current authority teardown.
 
 ## Rendering boundary
 
-The simulation publishes logical information such as:
-
-```text
-vehicle X is 42% along edge A → B
-```
-
-The scene converts this into representation data such as:
-
-```text
-world position, orientation, animation, mesh, label, and camera framing
-```
+The simulation publishes logical information such as an exact edge identity and
+integer progress/travel values. Representation converts that authority into
+world position, orientation, interpolation, meshes, labels, and camera framing.
 
 Scene interpolation is visual only. It cannot become authoritative movement.
 
 ## Enforcement
 
-Phase 1 should establish import-boundary enforcement where practical through TypeScript project references, package exports, and lint rules. Tests should prove that the simulation package can build independently of the web application.
+TypeScript project references/package exports, ESLint restrictions, and the
+architecture audit enforce the dependency graph. Run:
+
+```sh
+yarn audit:architecture
+yarn build:libraries
+```
+
+The standalone packages must build without `apps/web`.

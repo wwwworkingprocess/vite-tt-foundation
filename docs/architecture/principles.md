@@ -1,5 +1,7 @@
 # Architecture Principles
 
+**Document status:** Current architecture contract
+
 These principles are durable constraints. A phase prompt may add detail, but it should not weaken them without an explicit architecture decision.
 
 ## 1. Simulation first

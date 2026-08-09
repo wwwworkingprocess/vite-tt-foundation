@@ -1,5 +1,10 @@
 # ADR 0015: Dynamic direct-itinerary activation
 
+**Decision status:** Accepted
+**Accepted in:** Phase 4E3B
+**Current applicability:** Active waiting-cohort decision. Snapshot V6/Save V4 markers are superseded by ADRs 0016–0018.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
+
 ## Decision
 
 Canonical Torrevieja StopPlaces are physical scenario data. When passenger

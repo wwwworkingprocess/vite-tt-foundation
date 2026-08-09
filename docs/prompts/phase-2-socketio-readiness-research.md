@@ -1,5 +1,9 @@
 # Phase 2 Prompt — Socket.IO Readiness Research
 
+> **Document status:** Historical phase task/review prompt. Use only to
+> reproduce or review the named phase. Current work follows `AGENTS.md`,
+> [`../current-state.md`](../current-state.md), and the user's active request.
+
 ## Objective
 
 Research and document how Torrevieja Tycoon can support a future Socket.IO-based authoritative host without making Socket.IO part of the simulation core, domain model, or public application semantics.

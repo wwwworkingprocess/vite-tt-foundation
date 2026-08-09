@@ -2,7 +2,7 @@
 
 ## Status
 
-Provisional Phase 3F release contract.
+Reference contract for the domain-free Foundation Template v1.0.0 candidate. It does not describe the current Torrevieja Tycoon product HEAD. Current product state is recorded in [`../current-state.md`](../current-state.md).
 
 ## Identity
 

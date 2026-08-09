@@ -1,5 +1,9 @@
 # Codex task — Phase 3C typed dedicated Worker adapter
 
+> **Document status:** Historical phase task/review prompt. Use only to
+> reproduce or review the named phase. Current work follows `AGENTS.md`,
+> [`../current-state.md`](../current-state.md), and the user's active request.
+
 Read `AGENTS.md` and all documentation linked from
 `docs/project-foundation.md`.
 

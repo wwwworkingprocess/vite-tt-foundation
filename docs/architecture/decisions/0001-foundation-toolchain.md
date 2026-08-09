@@ -1,8 +1,9 @@
 # ADR 0001: Foundation toolchain
 
-## Status
-
-Accepted in Phase 1.
+**Decision status:** Accepted
+**Accepted in:** Phase 1
+**Current applicability:** Active. Exact dependency/runtime versions are controlled by current manifests and the lockfile.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision
 

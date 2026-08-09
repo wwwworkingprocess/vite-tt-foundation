@@ -1,5 +1,9 @@
 # Browser Pacing Model
 
+> **Scope note:** This is the Phase 3E historical implementation baseline. Its
+> browser-time/simulation-authority separation remains active; phase-specific
+> non-goals are historical. See [`../current-state.md`](../current-state.md).
+
 ## Status
 
 Implemented architecture contract for Phase 3E.

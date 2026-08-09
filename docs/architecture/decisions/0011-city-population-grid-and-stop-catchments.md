@@ -1,8 +1,9 @@
 # ADR 0011: City population grid and stop catchments
 
-## Status
-
-Accepted for Phase 4E0.
+**Decision status:** Accepted
+**Accepted in:** Phase 4E0
+**Current applicability:** Active.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision
 

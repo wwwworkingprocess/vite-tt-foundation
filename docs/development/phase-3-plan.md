@@ -1,5 +1,9 @@
 # Phase 3 Delivery Plan
 
+> **Document status:** Historical phase contract. This file preserves the named
+> milestone scope and acceptance criteria. It is not a current-state summary;
+> read [`../current-state.md`](../current-state.md) first.
+
 ## Goal
 
 Prove the end-to-end application boundaries with a deliberately trivial deterministic model before implementing transport-game mechanics.

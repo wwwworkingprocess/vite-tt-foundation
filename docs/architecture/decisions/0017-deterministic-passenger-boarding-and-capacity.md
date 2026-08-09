@@ -1,5 +1,10 @@
 # ADR 0017: Deterministic passenger boarding and capacity
 
+**Decision status:** Accepted
+**Accepted in:** Phase 4E4
+**Current applicability:** Active boarding/capacity decision. Snapshot V8/Save V6 are superseded by ADR 0018.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
+
 ## Decision
 
 Passenger boarding is simulation authority and occurs only at canonical

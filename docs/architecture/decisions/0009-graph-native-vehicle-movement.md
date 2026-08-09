@@ -1,6 +1,9 @@
 # ADR 0009: Graph-native deterministic vehicle movement
 
-Status: accepted for Phase 4C.
+**Decision status:** Accepted
+**Accepted in:** Phase 4C
+**Current applicability:** Active movement decision. Snapshot/Save V2 markers are historical.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision
 

@@ -1,5 +1,9 @@
 # Foundation Template v1.0.0 — Release Evidence
 
+> **Document scope:** Foundation Template reference. This file applies to the
+> domain-free template snapshot, not current Torrevieja Tycoon product HEAD.
+> Current product facts are in [`../current-state.md`](../current-state.md).
+
 ## Status
 
 Foundation Template v1.0.0 remains a release candidate. Pinned Linux and

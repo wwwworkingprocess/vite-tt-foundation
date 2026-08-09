@@ -1,8 +1,9 @@
 # ADR 0005: Browser pacing and tick-counted speed bonus
 
-## Status
-
-Accepted and implemented in Phase 3E.
+**Decision status:** Accepted
+**Accepted in:** Phase 3E
+**Current applicability:** Active.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Context
 

@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-This document proposes the adapter-neutral boundary between the Torrevieja Tycoon web application and an authoritative simulation host. It guides Phase 3 design; it is not production TypeScript and does not finalize game commands or events.
+**Historical Phase 2 design reference.** This document proposed the adapter-neutral boundary that informed the implemented Phase 3 direct/Worker host contracts. It is not current production TypeScript and does not define the current transport-game wire schema. Current contracts and versions are listed in [`../current-state.md`](../current-state.md).
 
 The contract supports two host placements:
 

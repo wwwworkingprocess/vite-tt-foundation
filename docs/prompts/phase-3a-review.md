@@ -1,5 +1,9 @@
 # Codex Review Task — Phase 3A
 
+> **Document status:** Historical phase task/review prompt. Use only to
+> reproduce or review the named phase. Current work follows `AGENTS.md`,
+> [`../current-state.md`](../current-state.md), and the user's active request.
+
 Read `AGENTS.md`, all documentation linked from `docs/project-foundation.md`, and `docs/prompts/phase-3a-time-foundation.md`.
 
 Review the completed Phase 3A implementation independently before making edits.

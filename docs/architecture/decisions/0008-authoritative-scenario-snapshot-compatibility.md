@@ -1,7 +1,9 @@
 # ADR 0008 — Authoritative scenario and snapshot compatibility
 
-- Status: accepted for Phase 4B
-- Date: 2026-07-19
+**Decision status:** Accepted
+**Accepted in:** Phase 4B
+**Current applicability:** Active exact-scenario compatibility decision. Historical V1 markers have evolved.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision
 

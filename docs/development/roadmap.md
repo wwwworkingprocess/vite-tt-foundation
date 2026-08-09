@@ -1,243 +1,211 @@
 # Development Roadmap
 
-## Pre-Phase-4D shell refinement
+**Document status:** Current roadmap and milestone-status summary
 
-The Phase 4C authority is presented through a single-screen,
-visualization-first browser shell. Project metadata and detailed
-simulation/persistence diagnostics are available through accessible dialogs;
-scenario and principal session actions remain in compact navigation. SVG and
-R3F views can exchange primary/minimap roles without changing authority.
-Simulation and saved-session dialog bodies are independently lazy-loaded and
-consume existing immutable projections without introducing application state.
+## Reading the Phase 4 labels
 
-This does not begin Phase 4D. A future city filter may narrow the scenario
-catalogue using stable Wikidata Q-codes, and a later campaign screen may own
-city progression. The current shell introduces neither state. The SVG remains
-the authoritative diagnostic representation while the R3F boundary remains
-available for a later production renderer based on line segments and instanced
-elements.
+The completed labels preserve the order in which the project was developed. The
+sequence is intentionally not lexical: passenger foundation work began as
+4E0–4E3B, then a deliberately light 4D inserted exact vehicle pattern runs and
+StopNode calls required for boarding, followed by 4E4 and 4E5. Completed phases
+must not be renumbered retroactively.
 
-The roadmap separates platform construction, architecture research, simulation development, representation, and game mechanics.
+Detailed historical facts live in
+[`milestone-history.md`](milestone-history.md); current contract values live in
+[`../current-state.md`](../current-state.md).
 
 ## Phase 0 — Architecture contract
 
-### Goal
+**Status:** Complete.
 
-Create the repository root, durable documentation, Codex instructions, and bounded phase prompts.
-
-### Status
-
-Complete.
+Created the repository root, durable documentation, contributor instructions,
+and bounded phase prompts.
 
 ## Phase 1 — Strong project template
 
-### Goal
+**Status:** Complete.
 
-Create a modern, reusable Yarn workspace with the selected stack, strict quality tooling, package boundaries, and minimal smoke implementations.
-
-### Status
-
-Complete after the architecture-enforcement correction. Final milestone verification should include a successful CI run under the pinned Node runtime.
-
-## Cross-cutting rule — Test-driven simulation development
-
-All actual simulation behaviour introduced from Phase 4 onward follows the test strategy in `testing-strategy.md`. Coverage enforcement must be installed and passing before Phase 4 game mechanics begin.
-
-TDD extends the roadmap; it does not change package ownership or phase boundaries.
+Established the strict Yarn workspace, pinned toolchain, package boundaries,
+quality tooling, and smoke implementations.
 
 ## Phase 2 — Socket.IO-readiness research
 
-### Goal
+**Status:** Complete architecture research; networking remains deferred.
 
-Research and document how a future authoritative host could integrate through Socket.IO without coupling the simulation or client to Socket.IO semantics.
-
-### Output
-
-- an architecture decision record based on current official sources;
-- proposed adapter-neutral client/host and transport boundaries;
-- command, acknowledgement, event, snapshot, revision, and resynchronization recommendations;
-- connection loss, duplicate delivery, ordering, refresh, and stale-client failure analysis;
-- guidance for worker and future Socket.IO adapters sharing protocol contracts;
-- an explicit list of deferred implementation work.
-
-### Non-goals
-
-- no Socket.IO package installation;
-- no Socket.IO server or client;
-- no Web Worker runtime;
-- no final game command/event catalogue;
-- no authentication, hosting, database, or multiplayer implementation;
-- no transport simulation mechanics.
-
-### Research result
-
-The adapter-neutral decision and proposed contracts are recorded in `../architecture/decisions/0002-simulation-host-transport-readiness.md` and `../architecture/transport-contract.md`. Runtime implementation remains deferred to Phase 3 or later.
-
-Phase 2 is complete.
+Defined adapter-neutral command, result, observation, synchronization, and
+failure-recovery concepts without introducing Socket.IO runtime dependencies.
 
 ## Phase 3 — Blank end-to-end platform
 
-Phases 3A–3E are complete. Phase 3F release hardening is implemented locally;
-Foundation Template v1.0.0 remains a release candidate until its exact-runtime
-Linux and Windows CI gates pass.
+**Status:** Complete platform foundation; Foundation Template evidence remains
+reference material separate from product HEAD.
 
-### Goal
+Implemented deterministic time, in-memory authority, direct/Worker adapters,
+versioned snapshots and persistence, application projection/lifecycle, browser
+pacing, PWA/offline verification, R3F mounting, architecture audits, and build
+budgets using a deliberately trivial model.
 
-Prove the application boundaries with a deliberately trivial deterministic model.
+## Phase 4A — Canonical scenario domain
 
-### Includes
+**Status:** Complete.
 
-- typed browser-to-worker transport;
-- local worker hosting a trivial simulation counter/model;
-- immutable snapshots/read models delivered to the web client;
-- Zustand bridge for application and presentation state;
-- Dexie save repository implementation;
-- save, restore, pause, and speed smoke behaviours;
-- PWA offline and update lifecycle verification;
-- R3F representation of trivial simulation output;
-- adapter contract tests;
-- package coverage command and CI enforcement required before Phase 4.
+Introduced strict split scenario packages, canonical StopNode/StopPlace/route
+identity, immutable parsing, explicit ordered-pattern directed graphs, and
+browser-owned integrity loading.
 
-### Non-goal
+## Phase 4B — Scenario-bound authority and persistence
 
-No transport-game mechanics yet.
+**Status:** Complete.
 
-## Phase 4A — Canonical scenario domain foundation
+Bound one exact canonical scenario and graph to one authoritative timeline,
+introduced exact scenario-coordinate snapshot/save compatibility, and proved
+direct/clone/Worker lifecycle plus non-destructive cross-scenario restore.
 
-### Status
+## Phase 4C — Graph-native vehicle movement
 
-Implemented: strict split scenario packages, immutable canonical StopNodes,
-explicit ordered-pattern directed graphs, browser-owned integrity loading, and
-the reviewed partial Torrevieja A2 development seed.
+**Status:** Complete.
 
-Torrevieja is the first scenario rather than a simulation assumption. Complete
-network curation and source-data reconciliation remain external tasks.
+Added deterministic per-edge movement, explicit RouteId assignment, ordered
+route-cycle legs, zero-tick handoffs, standalone terminal behavior, split/batch
+equivalence, persistence, and read-only SVG diagnostics.
 
-## Phase 4B — Standalone non-graphical simulation integration
+## Phase 4E0 — Population grid and StopPlace catchments
 
-### Goal and status
+**Status:** Complete.
 
-Freeze-candidate hardening: a selected canonical scenario and derived graph are
-bound to one authoritative timeline, with exact coordinates preserved through
-compact transport snapshots and saves. Direct/clone-boundary/Worker lifecycle,
-cross-scenario restore, and root/subpath offline behavior now have dedicated
-behavioral evidence and critical-file coverage gates.
+Added the transport-domain City Population Grid V1 and deterministic WGS84
+angular StopPlace catchments with explicit unserved coverage.
 
-The temporary Torrevieja Mini test scenario exists only to prove multi-scenario
-selection, authority, persistence, and offline restore behavior. This remains
-Phase 4B hardening rather than Phase 4C mechanics.
+## Phase 4E1 — Passenger emission and origin StopPlace access
 
-## Phase 4C — Deterministic vehicles on directed edges
+**Status:** Complete.
 
-### Status
+Added fixed-point deterministic passenger emission, bounded source groups,
+implicit access timing, explicit unserved totals, and exact demand-plan identity.
 
-Freeze candidate: authoritative vehicles use immutable graph-native location
-states and integer per-edge plans. Create/start commands and the existing tick
-command operate through the single Worker/application/pacing/persistence stack.
-Transport Snapshot/Save V3 preserve RouteId assignments and repeating ordered
-route legs; V1 migration is explicit and empty, while V2 remains explicit
-single-pattern authority. Transport client/Worker contracts are marked V3. A deliberately plain SVG
-diagnostic maps the active canonical graph and integer fleet progress for
-acceptance evidence only; it owns no simulation clock or state.
+## Phase 4E2 — Destination assignment
 
-Services, schedules, dwell, dispatch, passengers, capacity, economics, traffic,
-maps, and render interpolation remain deferred to Phase 4D or later.
+**Status:** Complete.
 
-## Phase 4E0 — City population and stop-catchment foundation
-
-### Status
-
-Implemented as a core-only transport-domain milestone. A strict immutable
-Wikidata-city population grid derives row-major active cells and deterministic
-nearest physical StopPlace catchments using WGS84 angular grid-cell units.
-Coverage totals conserve relative integer weights and keep out-of-range cells
-explicitly unserved.
-
-No real city population asset, city selector, destination assignment,
-walking, queueing, boarding, capacity, fare, economics, UI, or rendering is
-included. The next planned layer is deterministic emission credit over this
-static foundation.
-
-## Phase 4E2 — Deterministic destination assignment
-
-### Status
-
-Implemented as a core-only simulation milestone. Passengers arriving at a
-physical StopPlace are assigned to served population cells at other
-StopPlaces through per-origin weighted cyclic cursors. Assignments aggregate
-into bounded immutable groups awaiting itinerary resolution; origins without a
-candidate record an explicit unavailable count. Snapshot V5 is current and V4
-active authority migrates without consuming its backlog until the next tick.
-
-Directional StopNodes, route and transfer search, services, boarding,
-capacity, UI, geo-background data, and economics remain deferred.
+Added deterministic weighted cyclic destination-cell assignment, per-origin
+cursors, bounded groups, unavailable totals, and exact conservation.
 
 ## Phase 4E3A — Static direct-itinerary plan
 
-### Status
+**Status:** Complete.
 
-Implemented as a core-only simulation milestone. Passenger Direct Itinerary
-Plan V1 resolves every ordered physical StopPlace pair as either one
-deterministic forward canonical-pattern segment or explicitly unavailable.
-Directional StopNodes and repeated occurrences are preserved exactly, while
-non-loop wrapping, transfers, graph-wide search, and vehicle-cycle handoffs are
-forbidden.
+Added one deterministic single-pattern direct/unavailable result for every
+ordered distinct physical StopPlace pair, preserving directional StopNodes and
+repeated occurrences. Non-loop wrapping and transfers remain forbidden.
 
-Phase 4E3B activates destination intent into one bounded directional
-waiting cohort per itinerary/destination-cell key. Unavailable direct journeys
-are counted explicitly.
+## Phase 4E3B — Dynamic itinerary activation and waiting cohorts
 
-Light Phase 4D is complete: existing route-cycle vehicles own
-deterministic pattern-run sequences and emit exact directional canonical
-StopNode calls. Phase 4E3B directional waiting cohorts are also complete.
+**Status:** Complete.
 
-Phase 4E0 population and catchments, Phase 4E1 emission and StopPlace access,
-Phase 4E2 destination assignment, Phase 4E3A static direct itineraries, Phase
-4E3B directional waiting cohorts, light Phase 4D pattern-run calls, and Phase
-4E4 boarding and capacity are complete.
+Activated destination intent into bounded directional waiting cohorts and
+counted unavailable direct journeys explicitly.
 
-Phase 4E5 is current: exact destination calls alight before boarding,
-destination access completes deterministically, and bounded lineage and
-completed-journey authority are current in Snapshot V9 and Save V7. Next is a
-diagnostic/game UI for live passenger authority, followed by Phase 4F economics
-and objectives. Transfers and advanced services remain later work.
+## Light Phase 4D — Pattern runs and exact StopNode calls
 
-## Phase 5 — React Three Fiber visualization POC
+**Status:** Complete.
 
-### Goal
+Preserved continuous route-cycle movement while adding per-vehicle pattern-run
+sequences and exact current-tick directional StopNode calls. Terminal arrival
+and the next positive-tick origin handoff remain distinct.
 
-Render the Phase 4 simulation through an abstract node graph.
+## Phase 4E4 — Boarding and capacity
 
-### Includes
+**Status:** Complete.
 
-- stations and links;
-- smoothly interpolated buses;
-- passenger counts and occupancy;
+Added deterministic call-matched boarding, immutable vehicle capacity, partial
+boarding, historical waiting generations, bounded onboard authority, exact
+ordering, and conservation.
+
+## Phase 4E5 — Alighting, destination access, and journey completion
+
+**Status:** Current implemented authority.
+
+Exact destination calls alight before boarding, released capacity is reusable at
+the same call, destination access completes at its deterministic angular-grid
+tick, and bounded lineage/current events/cumulative completion authority are
+preserved in current persistence.
+
+Current aggregate contract values are listed in
+[`../current-state.md`](../current-state.md).
+
+## Scenario catalogue integration and hardening
+
+**Status:** Integrated as development-seed data; semantic cleanup remains for
+known alternative-route variants.
+
+The public catalogue contains Torrevieja, Elche, Elche-radial, and Alicante
+families plus aggregate packages. Package hashing, parsing, graph construction,
+root/subpath/PWA delivery, route creation, and circular-route operation are
+covered. All entries remain `development-seed`, and known R10/R11/Alicante-27
+variant modeling debt is recorded in the current-state ledger.
+
+## Browser shell and representation foundation
+
+**Status:** Foundation complete; product visualization incomplete.
+
+Completed:
+
+- visualization-first application shell;
+- accessible project, simulation, and session dialogs;
+- full-workspace SVG diagnostic;
+- R3F mounting/lifecycle boundary;
+- primary/minimap role swapping without authority replacement;
+- lazy simulation and persistence control boundaries.
+
+Remaining product visualization work:
+
+- production graph rendering and styling;
+- smooth display interpolation;
+- live passenger/occupancy diagnostics;
 - selection and inspection;
-- play, pause, and speed controls;
-- strict separation between logical progress and visual interpolation.
+- performance acceptance for richer scenes.
+
+## Next — Live passenger diagnostic/game UI
+
+Expose the current waiting, onboard, capacity, alighting, destination-access,
+and completion authority as useful diagnostics and initial gameplay feedback.
+Presentation must remain read-only and must not duplicate simulation rules.
+
+## Phase 4F — Economics and objectives
+
+Add the first deterministic management/economics layer after live passenger
+authority is visible and inspectable. Exact scope and non-goals require a
+separate architecture/task decision.
+
+## Later transport growth
+
+Deferred work includes:
+
+- transfers and multi-pattern routing;
+- services, timetables, dispatch, dwell, and calendars;
+- traffic, incidents, energy, maintenance, and richer costs;
+- route-variant selection as a generic model if data-only separation is not
+  sufficient;
+- campaign/city progression and scenario filtering.
+
+## Phase 5 — Production representation and inspection
+
+**Status:** Partially proven infrastructure; product scope remains.
+
+The SVG/R3F boundary, mounting, lifecycle, and view swapping already exist. The
+remaining phase is production-quality graph rendering, smooth visual
+interpolation, live passenger/occupancy display, selection/inspection, and
+performance acceptance. This phase must consume immutable authority and may be
+sequenced around Phase 4F through an explicit task decision.
 
 ## Phase 6 — Torrevieja Tycoon vertical slice
 
-### Goal
-
-Begin the actual game by combining one coherent scenario, a minimal management loop, and a polished representation.
-
-Detailed mechanics will be designed before this phase begins.
+Combine one coherent scenario, the first deterministic management/economics
+loop, objectives, and a polished representation. Detailed mechanics require a
+separate architecture decision before implementation.
 
 ## Phase 7 and beyond — Ruleset growth
 
-Develop a complete Easy game first, then grow the same engine through Normal and Realistic rulesets.
-
-```text
-Easy
-  abstract node graph and simplified systems
-      ↓
-Normal
-  expanded demand, capacity, transfers, costs, and disruptions
-      ↓
-Realistic
-  greater operational, timetable, traffic, energy, and maintenance fidelity
-```
-
-The modes are configurations of one engine, not separate codebases.
+Build a complete Easy game first, then extend the same engine through Normal and
+Realistic rulesets. The modes remain configurations of one engine, not separate
+codebases.

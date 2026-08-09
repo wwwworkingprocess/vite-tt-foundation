@@ -2,7 +2,7 @@
 
 ## Status
 
-Provisional architecture contract for Phase 3. The constants in this document are implementation decisions for the first platform and simulation foundation. Game-balance values may be changed later through an explicit architecture decision and save-version review.
+Current architecture contract, accepted through ADR 0003. The five-second whole-tick model remains authoritative. Game-balance pacing values may change only through an explicit architecture decision and compatibility review. Current aggregate versions are listed in [`../current-state.md`](../current-state.md).
 
 ## Purpose
 

@@ -1,5 +1,9 @@
 # Persistence and Application Bridge Model
 
+> **Scope note:** This is the Phase 3D historical implementation baseline. Its
+> ownership and restore-lifecycle rules remain active, while Foundation V1
+> version prose is historical. See [`../current-state.md`](../current-state.md).
+
 ## Status
 
 Implemented architecture contract for Phase 3D.

@@ -1,5 +1,9 @@
 # Codex Task — Phase 3A Time and Contract Foundation
 
+> **Document status:** Historical phase task/review prompt. Use only to
+> reproduce or review the named phase. Current work follows `AGENTS.md`,
+> [`../current-state.md`](../current-state.md), and the user's active request.
+
 ## Required reading
 
 Before editing:

@@ -1,8 +1,9 @@
 # ADR 0007: Scenario package and directed graph
 
-## Status
-
-Accepted for Phase 4A.
+**Decision status:** Accepted
+**Accepted in:** Phase 4A
+**Current applicability:** Active package/graph decision. The Phase 4A simulation dependency restriction is superseded by ADR 0008.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision
 

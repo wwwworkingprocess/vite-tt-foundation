@@ -1,8 +1,9 @@
 # ADR 0012: Deterministic passenger emission and implicit stop access
 
-## Status
-
-Accepted for Phase 4E1.
+**Decision status:** Accepted
+**Accepted in:** Phase 4E1
+**Current applicability:** Active demand/access decision. Historical persistence markers have evolved.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision
 

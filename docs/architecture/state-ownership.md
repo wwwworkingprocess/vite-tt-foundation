@@ -1,25 +1,31 @@
 # State Ownership
 
-State is divided into three categories. The categories may be represented by different technical tools, but their ownership must remain explicit.
+**Document status:** Current architecture contract
+
+State is divided into three categories. Technical representations may evolve,
+but ownership must remain explicit and each value must have one authoritative
+owner.
 
 ## 1. Authoritative simulation state
 
-Owned by `packages/simulation`.
+Owned by `packages/simulation` after canonical scenario input is supplied.
 
-Examples:
+Current examples include:
 
-- simulation tick and game time;
-- deterministic random-generator state;
-- network graph and route/service state;
-- vehicles, vehicle progress, capacity, and delay;
-- passenger demand and journeys;
-- incidents and scenario objectives;
-- finances and operating metrics;
-- selected ruleset and immutable campaign configuration.
+- simulation tick;
+- exact scenario coordinate and immutable canonical scenario/graph;
+- ordered fleet, route-cycle movement, capacities, pattern runs, and exact
+  current StopNode calls;
+- passenger demand credit/cursors, access groups, waiting cohorts, onboard
+  groups, destination access, lineage watermarks, and completion counters;
+- bounded current-tick boarding, alighting, and completion events.
 
-This state determines game outcomes. It changes only through simulation commands and time advancement.
+Future examples may include services, objectives, finances, incidents, and
+ruleset configuration when their phases begin.
 
-The web client may receive snapshots or read models, but it must not mutate them as a substitute for commands.
+Authoritative state changes only through validated simulation commands and
+whole-tick advancement. The web may receive frozen snapshots/read models but
+must not mutate them as a substitute for commands.
 
 ## 2. Application integration state
 
@@ -27,15 +33,20 @@ Owned by `apps/web`.
 
 Examples:
 
-- application boot and loading state;
-- active save slot;
-- autosave progress and last-save result;
-- worker connection and synchronization status;
-- future network connection and reconnection status;
+- application boot, loading, ready, failure, and terminal lifecycle;
+- selected/requested scenario versus currently active authority;
+- active save target, save summaries, persistence progress, and last result;
+- Worker/client connection and synchronization state;
+- pacing plan, browser scheduling credit, and visibility integration;
 - PWA installation/update state;
 - current application screen or route.
 
-This state coordinates the application but does not determine simulation outcomes.
+This state coordinates adapters and user workflows but does not determine
+simulation outcomes.
+
+A requested scenario selection is not active authority until the established
+load/start or restore lifecycle succeeds. Replacement and restore failures are
+non-destructive.
 
 ## 3. Presentation state
 
@@ -43,66 +54,66 @@ Owned by React component state or focused Zustand stores in `apps/web`.
 
 Examples:
 
-- selected and hovered entities;
+- dialog visibility;
+- selected/hovered entity;
 - active inspection panel;
+- primary/minimap role;
 - camera target and camera mode;
-- current map overlay;
+- current map overlay and scenario viewport;
 - tooltip visibility;
 - graphics, audio, language, and accessibility preferences.
 
-Presentation state may influence which command the user chooses, but it must not silently alter authoritative state.
+Presentation state may influence which command a user chooses, but it never
+silently alters authority.
 
-The visualization-first browser shell keeps dialog visibility and the
-primary/minimap choice as presentation state. Both the SVG diagnostic renderer
-and the R3F renderer stay mounted behind stable view boundaries; swapping their
-roles does not replace the Worker, controller, scenario, fleet, persistence, or
-camera authority.
+The SVG diagnostic and R3F boundary may exchange primary/minimap roles without
+replacing the Worker, controller, scenario, fleet, persistence, or simulation
+authority. Lazy simulation/session controls receive immutable projections and
+callbacks; they do not own subscriptions, repositories, controllers, or mirrored
+fleet/save authority.
 
-Simulation operations and saved-session operations are separate lazy
-presentation boundaries. They receive the same immutable application
-projections and existing callbacks from the shell composition; neither owns a
-subscription, repository, controller, or mirrored fleet/save model.
-
-Scenario navigation remains an application boundary: a requested selection is
-not active authority until the established close/start or restore lifecycle
-resolves its exact package. The navigation accepts the available scenario
-catalogue as input so a future Wikidata-Q-code city filter can be inserted
-without moving city or campaign state into the shell.
+Scenario package settlement `center` and `bounds` currently belong to the
+package-local viewport/presentation contract. They do not change canonical city
+or transport identity and must not become movement or routing authority.
 
 ## Persistence policy
 
-Persist by explicit allow-list, not by serializing entire stores.
+Persist by explicit allow-list, not by serializing complete stores.
 
-Recommended responsibilities:
+- Simulation snapshots: defined/validated by `packages/simulation`, stored by an
+  application `SaveRepository` adapter.
+- Transport save records: application-owned envelopes containing an exact
+  scenario coordinate and current simulation snapshot.
+- User preferences: stored separately through focused adapters when required.
+- Transient application state: not persisted unless a specific workflow needs
+  it.
+- Presentation state: generally transient; selected preferences are persisted
+  deliberately.
 
-- simulation snapshots: persisted through a `SaveRepository` adapter;
-- user preferences: persisted separately through a small preference adapter or focused store persistence;
-- transient application state: not persisted unless a specific user experience requires it;
-- presentation state: generally transient, with selected preferences persisted deliberately.
+## Current snapshot responsibilities
 
-## Snapshot responsibilities
+The current Transport Snapshot V9 is simulation-owned. It stores the exact
+scenario coordinate plus dynamic authority required for deterministic
+continuation, including tick, fleet, passenger authority, vehicle operations,
+capacities, and bounded current events. Canonical static scenario assets are
+supplied separately and are not duplicated in the snapshot.
 
-The simulation defines the canonical shape and semantics of its snapshot. The host chooses when and where to store it.
+The host chooses when and where to store snapshots. Restore validates syntax and
+semantics against the exact scenario and derived plans before replacing current
+authority.
 
-A snapshot should eventually contain enough information to reproduce continuation, including:
-
-- schema and simulation versions;
-- current tick/time;
-- authoritative state;
-- deterministic random state;
-- ruleset/campaign configuration.
-
-The exact schema belongs to the simulation implementation phase.
+Current version and compatibility policy is centralized in
+[`../current-state.md`](../current-state.md).
 
 ## Zustand restrictions
 
-Zustand is a client-side reactive state mechanism. It is not the simulation engine.
+Zustand is a client-side reactive projection mechanism, not the simulation
+engine.
 
 Do not:
 
-- place authoritative mutable simulation objects directly in broadly writable stores;
+- place authoritative mutable simulation objects in broadly writable stores;
 - implement game rules in Zustand actions;
 - drive simulation ticks from a Zustand timer;
-- persist the complete Zustand state tree by default.
-
-A future simulation bridge may expose immutable read models or snapshots to Zustand for efficient UI subscriptions.
+- persist the complete Zustand state tree by default;
+- let a presentation projection become restore or command authority.

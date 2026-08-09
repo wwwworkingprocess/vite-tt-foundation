@@ -1,8 +1,9 @@
 # ADR 0004: Save, restore, and authoritative timeline semantics
 
-## Status
-
-Accepted and implemented in Phase 3D.
+**Decision status:** Accepted
+**Accepted in:** Phase 3D
+**Current applicability:** Active timeline/restore semantics. Foundation V1 version prose is historical.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Context
 

@@ -1,104 +1,147 @@
 # Testing Strategy
 
+**Document status:** Current testing contract
+
 ## Purpose
 
-Torrevieja Tycoon's simulation core is a standalone rules engine. Its correctness must not depend on React, rendering, browser timing, IndexedDB, workers, or networking. Test-driven development is therefore a primary architectural technique, not only a quality check after implementation.
+Torrevieja Tycoon's simulation core is a standalone rules engine. Correctness
+must not depend on React, rendering, browser timing, IndexedDB, workers, or
+networking. Test-driven development is therefore an architectural technique, not
+only a quality check after implementation.
 
 ## Core workflow
 
-For new simulation behaviour, use a red-green-refactor cycle:
+For new simulation behavior, use red-green-refactor:
 
-1. **Red:** express the required behaviour, rule, invariant, or regression as a failing test;
-2. **Green:** implement the smallest coherent change that makes the test pass;
-3. **Refactor:** improve names and structure without changing behaviour while the test suite remains green.
+1. **Red:** express the required behavior, invariant, corruption rejection, or
+   regression as a failing test.
+2. **Green:** implement the smallest coherent passing change.
+3. **Refactor:** improve structure while the suite remains green.
 
-Documentation-only work, build configuration, and mechanically safe refactors do not require manufacturing a failing test. Any changed observable behaviour does.
-
-A defect fix begins with a regression test that fails for the reported defect.
+Documentation-only work, build configuration, coverage discovery, and
+mechanically safe refactors do not require a manufactured failing test. A defect
+fix begins with a regression test that fails for the defect whenever the public
+boundary can express it.
 
 ## Test layers
 
-### Behavioural unit tests
+### Behavioral unit tests
 
-Test public simulation operations and outcomes through public package APIs. Examples include command acceptance, movement, boarding, capacity, time advancement, metrics, and objective evaluation.
+Exercise public operations and observable outcomes. Avoid tests that merely
+reproduce private implementation steps.
 
-Avoid tests that merely reproduce private implementation steps.
+### Invariant and conservation tests
 
-### Invariant tests
+Protect properties that must never be violated, including:
 
-Continuously protect rules that must never be violated, such as:
+- non-negative safe-integer counts;
+- valid graph locations and exact route/pattern/occurrence identity;
+- vehicle capacity;
+- monotonic ticks, revisions, runs, and calls;
+- passenger ownership conservation across lifecycle states;
+- immutable inputs and previous states;
+- bounded current-tick events;
+- non-destructive restore failure.
 
-- passenger counts cannot become negative;
-- a vehicle cannot exceed capacity when capacity is enabled;
-- a vehicle cannot occupy an invalid graph location;
-- simulation time and revisions are monotonic;
-- entities cannot silently disappear or duplicate;
-- immutable inputs and previous states are not mutated.
+### Determinism and equivalence tests
 
-### Determinism and replay tests
+Given the same initial scenario, derived plans, commands, and tick advancement,
+the simulation must produce identical authority.
 
-Given the same initial state, ruleset, random seed, and ordered commands, the simulation must produce identical events, snapshots, and final state.
+Prove relevant equivalence among:
 
-Tests must control:
+- split and batched advancement;
+- fast-forward and repeated one-tick advancement;
+- direct, structured-clone, and Worker execution;
+- original and restored authority after continued advancement.
 
-- the simulation clock;
-- the random seed and random-generator state;
-- command ordering;
-- serialization versions.
+Do not use wall-clock time or rendering frames as authoritative inputs.
 
-Do not use wall-clock time or rendering frames as authoritative simulation inputs.
+### Serialization, compatibility, and corruption tests
 
-### Serialization and migration tests
+Snapshots and saves require round-trip tests. Every supported migration requires
+source fixtures and exact expected results. Unsupported, obsolete, malformed,
+or semantically impossible data must fail predictably.
 
-Snapshots must support round-trip tests. Every supported migration requires fixtures for the source version and tests for the migrated result. Invalid or unsupported data must fail predictably.
-
-The simulation may serialize, validate, migrate, and restore state. Storage adapters are tested separately through repository contracts.
+Create valid authority first, `structuredClone` it, corrupt only the intended
+coordinate, and restore through the real public boundary. Validators must not use
+submitted events as evidence of their own truth or silently sort/repair corrupt
+authority.
 
 ### Scenario tests
 
-Scenario tests exercise multiple systems over many ticks and verify player-relevant outcomes and invariants. They must remain runnable without React, a browser, a worker, or a database.
+Scenario tests use the real parser/graph builder and verify package hashes,
+identity, topology, route shapes, and representative simulation behavior.
+Scenario data remains immutable unless a task explicitly authorizes data work.
 
 ### Adapter contract tests
 
-Worker, persistence, and future Socket.IO adapters should be tested against shared contracts. The same behavioural contract should be reusable for an in-memory adapter and platform-specific implementations.
+Direct, Worker, persistence, pacing, and future network adapters are tested
+through shared public contracts. Adapter-specific suites cover unique failures,
+correlation, liveness, close terminality, clone boundaries, and storage/browser
+behavior.
 
-### Browser tests
+### Browser/PWA tests
 
-Cypress verifies critical user-visible integration paths. It does not replace simulation tests and should not be used to exhaustively test game rules.
+Cypress verifies critical user-visible integration, Worker execution, root and
+subpath loading, saves/restores, and offline PWA behavior. It does not replace
+simulation tests or exhaustively test game rules.
 
 ## Coverage policy
 
-Coverage is a guardrail against untested paths, not evidence that behaviour is correct.
+Coverage is a guardrail against untested paths, not evidence that behavior is
+correct.
 
-Before Phase 4 introduces actual simulation mechanics, the repository must provide a package-level simulation coverage command and enforce minimum thresholds in local validation and CI.
+Each workspace exposes a package coverage command, and root
+`yarn test:coverage` runs all package reports. Configured threshold floors are
+currently 95% statements/lines/functions and 90% branches; accepted milestones
+may require 100% for targeted production surfaces.
 
-Initial minimum targets for `packages/simulation` are:
+Meaningful coverage rules:
 
-| Metric     | Minimum |
-| ---------- | ------- |
-| Statements | 95%     |
-| Lines      | 95%     |
-| Functions  | 95%     |
-| Branches   | 90%     |
+- assert public behavior, exact errors, invariants, or lifecycle state;
+- do not add unasserted calls solely to execute a line;
+- do not mock language/library internals to manufacture impossible branches;
+- do not add `c8`/Istanbul ignores for reachable logic;
+- do not weaken thresholds or exclusions to accept a milestone;
+- remove code only when a branch is proven mathematically impossible, duplicated
+  by identical prior validation, or completely subsumed by a stronger invariant;
+- retain independent defensive checks even when failure is rare.
 
-These are repository-wide floors for the package, not targets to be reached through meaningless tests. Critical rule modules may require complete branch coverage through phase-specific acceptance criteria.
-
-Coverage exclusions must be narrow, explicit, and documented. Generated files, declaration-only files, and deliberate public export barrels may be excluded when they contain no runtime behaviour. Excluding difficult business logic is prohibited.
-
-Protocol runtime validators, serializers, and other executable behaviour require tests. Type-only declarations do not produce meaningful runtime coverage.
+Generated/declaration-only files and deliberate public export barrels may be
+excluded only when they contain no runtime behavior. Runtime validators,
+serializers, adapters, and controllers require tests.
 
 ## Test design rules
 
 - Prefer table-driven tests for rules with multiple cases.
 - Use descriptive domain language in test names.
-- Assert events and externally observable state rather than private helper calls.
-- Prefer deterministic fakes over mocks of internal implementation.
-- Do not use arbitrary sleeps when an observable condition can be awaited.
-- Keep fixtures small and purpose-specific.
-- Use builders only when they improve clarity and preserve valid defaults.
-- A large scenario test does not excuse missing focused tests for individual rules.
-- Snapshot testing may support structural output checks but must not be the only assertion for game logic.
+- Assert events and externally observable state rather than private calls.
+- Prefer deterministic fakes at real boundaries over internal mocks.
+- Use controlled deferred promises instead of sleeps for races.
+- Keep fixtures small and valid by default.
+- Use builders only when they improve clarity.
+- Assert exact ordering and identity where order is authoritative.
+- A large scenario test does not excuse missing focused tests.
+- Snapshot testing may support structure checks but must not be the only game-rule
+  assertion.
+- Restore all fake timers, globals, Workers, listeners, and repositories after a
+  test.
+
+## Validation tiers
+
+- Focused package/test commands during development.
+- `yarn validate` for the normal development gate.
+- `yarn validate:portable` for complete audits, coverage, build, browser, PWA,
+  and subpath validation.
+- `yarn validate:repository` for tracked-output and clean-tree release checks.
+
+The project owner may retain browser/Git validation responsibility for a task;
+reports must distinguish developer-side preliminary evidence from authoritative
+owner validation.
 
 ## Future extensions
 
-Property-based and mutation testing may be introduced during simulation development when they provide measurable value. They are not required during the project foundation or Socket.IO-readiness research phase.
+Property-based and mutation testing may be introduced when they provide
+measurable value. They do not replace focused deterministic behavioral and
+corruption tests.

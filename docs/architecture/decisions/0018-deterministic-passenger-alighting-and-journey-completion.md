@@ -1,5 +1,10 @@
 # ADR 0018: Deterministic passenger alighting and journey completion
 
+**Decision status:** Accepted
+**Accepted in:** Phase 4E5
+**Current applicability:** Active and current aggregate passenger/persistence decision.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
+
 ## Decision
 
 Passenger alighting is simulation authority. An onboard group alights only at

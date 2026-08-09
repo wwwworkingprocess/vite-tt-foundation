@@ -1,8 +1,9 @@
 # ADR 0006: Reusable browser-game foundation template
 
-## Status
-
-Accepted as a release candidate; final release is gated by pinned CI evidence.
+**Decision status:** Accepted
+**Accepted in:** Phase 3F
+**Current applicability:** Reference-template decision. It does not describe current product HEAD release status.
+**Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Context
 

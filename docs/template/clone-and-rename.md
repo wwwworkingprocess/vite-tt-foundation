@@ -1,5 +1,9 @@
 # Clone and Rename Guide
 
+> **Document scope:** Foundation Template reference. This file applies to the
+> domain-free template snapshot, not current Torrevieja Tycoon product HEAD.
+> Current product facts are in [`../current-state.md`](../current-state.md).
+
 ## Purpose
 
 Use this guide after copying the accepted Phase 3 repository state to

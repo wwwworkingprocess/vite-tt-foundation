@@ -1,0 +1,630 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "scenario-crop-metadata",
+  "city": "Elche",
+  "indexSemantics": "half-open [start, end)",
+  "canonicalGrid": {
+    "cityId": "Q10509",
+    "gridVersion": "1.0.0",
+    "sourceFile": "elche-city-population-grid-v1.round2.json",
+    "sha256": "b125ee476aff0d27fdfc8a422466b47a87f6e9626a5ff1ffc04a1a0fe8ded3fb",
+    "rows": 187,
+    "columns": 259,
+    "resolutionDegrees": 0.001,
+    "rowDirection": "north-to-south",
+    "columnDirection": "west-to-east",
+    "cityTotalWeight": 282101,
+    "cityNonzeroCellCount": 14311
+  },
+  "catalog": {
+    "sourceFile": "catalog(10).json",
+    "sha256": "41d6ac33eb93a60a43ad4e1d736dbaef06a527c128929d0f474a04813935db7b",
+    "primarySettlementId": "es-elche",
+    "scenarioCount": 13
+  },
+  "stopPlaceValidation": {
+    "rule": "route-used StopNode -> referenced positioned StopPlace, matching the transport-domain catchment eligibility semantics",
+    "sourceBasis": "current public package routes/stops inspected on 2026-08-09",
+    "note": "Normal crop metadata is never silently expanded. Where violations exist, the minimum aligned extension is advisory only."
+  },
+  "scenarios": [
+    {
+      "scenarioId": "elche-urban-abc-v1",
+      "title": "Elche Urban Network - Lines A, B and C",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "1513c8715ccfc38031fc9fd2fc5e2c1c0970fac85f4a29019f9b12f1dd0be011",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.25887,
+        "west": -0.723636,
+        "north": 38.2807188,
+        "east": -0.68442
+      },
+      "crop": {
+        "rowStart": 31,
+        "rowEnd": 54,
+        "columnStart": 47,
+        "columnEnd": 88,
+        "dimensions": {
+          "rows": 23,
+          "columns": 41
+        },
+        "alignedGeographicBounds": {
+          "south": 38.2585,
+          "west": -0.7245,
+          "north": 38.2815,
+          "east": -0.6835
+        }
+      },
+      "totalIncludedWeight": 142335,
+      "nonzeroCellCount": 748,
+      "cityWeightPercent": 50.45533337350807,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    },
+    {
+      "scenarioId": "elche-legacy-east-v1",
+      "title": "Elche Legacy East Network - Lines D, F and H",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "5d99e42f89190c525895a232ee3cb3017232784853f788d143899939bae5761f",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.25787,
+        "west": -0.7133306,
+        "north": 38.281429783185004,
+        "east": -0.662663435636953
+      },
+      "crop": {
+        "rowStart": 31,
+        "rowEnd": 55,
+        "columnStart": 58,
+        "columnEnd": 109,
+        "dimensions": {
+          "rows": 24,
+          "columns": 51
+        },
+        "alignedGeographicBounds": {
+          "south": 38.2575,
+          "west": -0.7135,
+          "north": 38.2815,
+          "east": -0.6625
+        }
+      },
+      "totalIncludedWeight": 158742,
+      "nonzeroCellCount": 1036,
+      "cityWeightPercent": 56.271335443688606,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    },
+    {
+      "scenarioId": "elche-legacy-hospital-general-v1",
+      "title": "Elche Legacy Hospital General Network - Lines E and J",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "9bc3b71068d525aa9b8457d7be808809774ab6beebb9cdddbbe9823af252753c",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.2512501572027,
+        "west": -0.707442427993925,
+        "north": 38.2738147311984,
+        "east": -0.660770128928576
+      },
+      "crop": {
+        "rowStart": 38,
+        "rowEnd": 62,
+        "columnStart": 64,
+        "columnEnd": 111,
+        "dimensions": {
+          "rows": 24,
+          "columns": 47
+        },
+        "alignedGeographicBounds": {
+          "south": 38.2505,
+          "west": -0.7075,
+          "north": 38.2745,
+          "east": -0.6605
+        }
+      },
+      "totalIncludedWeight": 106718,
+      "nonzeroCellCount": 977,
+      "cityWeightPercent": 37.82971347141626,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    },
+    {
+      "scenarioId": "elche-legacy-vinalopo-v1",
+      "title": "Elche Legacy Vinalopó Network - Lines G and I",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "c56966b3998612881bf71fa0d6d055b89dee3dbf1b3a2f60095321260e543127",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.250790984541396,
+        "west": -0.7194529,
+        "north": 38.271292700000004,
+        "east": -0.6986693
+      },
+      "crop": {
+        "rowStart": 41,
+        "rowEnd": 62,
+        "columnStart": 52,
+        "columnEnd": 73,
+        "dimensions": {
+          "rows": 21,
+          "columns": 21
+        },
+        "alignedGeographicBounds": {
+          "south": 38.2505,
+          "west": -0.7195,
+          "north": 38.2715,
+          "east": -0.6985
+        }
+      },
+      "totalIncludedWeight": 88737,
+      "nonzeroCellCount": 391,
+      "cityWeightPercent": 31.455755208241023,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    },
+    {
+      "scenarioId": "elche-legacy-crosscity-v1",
+      "title": "Elche Legacy Cross-City Network - Lines K1, K2 and L",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "f80cd56404e036c3911ff5d5ed734cdd092d7d9dc5c6e82668786bc7fe895119",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.253518596083,
+        "west": -0.720272774839553,
+        "north": 38.279829562031004,
+        "east": -0.66821161251656
+      },
+      "crop": {
+        "rowStart": 32,
+        "rowEnd": 59,
+        "columnStart": 51,
+        "columnEnd": 104,
+        "dimensions": {
+          "rows": 27,
+          "columns": 53
+        },
+        "alignedGeographicBounds": {
+          "south": 38.2535,
+          "west": -0.7205,
+          "north": 38.2805,
+          "east": -0.6675
+        }
+      },
+      "totalIncludedWeight": 185046,
+      "nonzeroCellCount": 1218,
+      "cityWeightPercent": 65.59565545673358,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    },
+    {
+      "scenarioId": "elche-legacy-night-v1",
+      "title": "Elche Legacy Night Network - Line NT",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "cdbd92fed950de54f421f7d6cf0c307580e1ffcdd0fdaae5dde50c6eec30c07f",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.2603845625912,
+        "west": -0.71999650731057,
+        "north": 38.2754012488993,
+        "east": -0.669842395600748
+      },
+      "crop": {
+        "rowStart": 37,
+        "rowEnd": 53,
+        "columnStart": 51,
+        "columnEnd": 102,
+        "dimensions": {
+          "rows": 16,
+          "columns": 51
+        },
+        "alignedGeographicBounds": {
+          "south": 38.2595,
+          "west": -0.7205,
+          "north": 38.2755,
+          "east": -0.6695
+        }
+      },
+      "totalIncludedWeight": 145509,
+      "nonzeroCellCount": 719,
+      "cityWeightPercent": 51.58046231668799,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    },
+    {
+      "scenarioId": "elche-legacy-all-v1",
+      "title": "Elche Legacy Network - All Non-Radial Lines",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "088a8464d6f9bb6c3d8097360a016a1f29039e5fd610d30942c8f9f4bb99eda4",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.250790984541396,
+        "west": -0.724636,
+        "north": 38.2817188,
+        "east": -0.660770128928576
+      },
+      "crop": {
+        "rowStart": 30,
+        "rowEnd": 62,
+        "columnStart": 46,
+        "columnEnd": 111,
+        "dimensions": {
+          "rows": 32,
+          "columns": 65
+        },
+        "alignedGeographicBounds": {
+          "south": 38.2505,
+          "west": -0.7255,
+          "north": 38.2825,
+          "east": -0.6605
+        }
+      },
+      "totalIncludedWeight": 192828,
+      "nonzeroCellCount": 1675,
+      "cityWeightPercent": 68.35424192044694,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    },
+    {
+      "scenarioId": "elche-radial-inner-v1",
+      "title": "Elche Radial Inner Network - Lines R1, R2 and R3",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "08a9861ea10b581d893274b14a0c9eab5a4e9fcae5103268dd2be28c4a3f9376",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.2560839318853,
+        "west": -0.749254043293573,
+        "north": 38.3099635927092,
+        "east": -0.662710401815381
+      },
+      "crop": {
+        "rowStart": 2,
+        "rowEnd": 57,
+        "columnStart": 22,
+        "columnEnd": 109,
+        "dimensions": {
+          "rows": 55,
+          "columns": 87
+        },
+        "alignedGeographicBounds": {
+          "south": 38.2555,
+          "west": -0.7495,
+          "north": 38.3105,
+          "east": -0.6625
+        }
+      },
+      "totalIncludedWeight": 191115,
+      "nonzeroCellCount": 2862,
+      "cityWeightPercent": 67.74701259477989,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    },
+    {
+      "scenarioId": "elche-radial-west-v1",
+      "title": "Elche Radial West Network - Lines R4, R5 and R6",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "c3dc2161bdbc6dc3d19f6e745e2efb00fafd50fc791634191976e01c5c4d4a67",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.1559428945419,
+        "west": -0.769790924895476,
+        "north": 38.277951180731,
+        "east": -0.667620649392051
+      },
+      "crop": {
+        "rowStart": 34,
+        "rowEnd": 157,
+        "columnStart": 1,
+        "columnEnd": 104,
+        "dimensions": {
+          "rows": 123,
+          "columns": 103
+        },
+        "alignedGeographicBounds": {
+          "south": 38.1555,
+          "west": -0.7705,
+          "north": 38.2785,
+          "east": -0.6675
+        }
+      },
+      "totalIncludedWeight": 196525,
+      "nonzeroCellCount": 5640,
+      "cityWeightPercent": 69.66476545634364,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    },
+    {
+      "scenarioId": "elche-radial-south-v1",
+      "title": "Elche Radial South Network - Lines R7 and R8",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "6e8c8d115dff28b6d7fc66115410239a5d2dcb2228f1f55b6e3ff63bb56a8f7a",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.127210350942796,
+        "west": -0.703022668979032,
+        "north": 38.2755138374218,
+        "east": -0.628497001759356
+      },
+      "crop": {
+        "rowStart": 36,
+        "rowEnd": 186,
+        "columnStart": 68,
+        "columnEnd": 144,
+        "dimensions": {
+          "rows": 150,
+          "columns": 76
+        },
+        "alignedGeographicBounds": {
+          "south": 38.1265,
+          "west": -0.7035,
+          "north": 38.2765,
+          "east": -0.6275
+        }
+      },
+      "totalIncludedWeight": 99022,
+      "nonzeroCellCount": 4693,
+      "cityWeightPercent": 35.10161254302537,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    },
+    {
+      "scenarioId": "elche-radial-airport-v1",
+      "title": "Elche Radial Airport Network - Lines R10 and R11",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "ce2e5371dbeeca43179cc6b6a6b7323d567d5508131ddabf06d72e39ac397e62",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.127210350942796,
+        "west": -0.703022668979032,
+        "north": 38.2755138374218,
+        "east": -0.628497001759356
+      },
+      "crop": {
+        "rowStart": 36,
+        "rowEnd": 186,
+        "columnStart": 68,
+        "columnEnd": 144,
+        "dimensions": {
+          "rows": 150,
+          "columns": 76
+        },
+        "alignedGeographicBounds": {
+          "south": 38.1265,
+          "west": -0.7035,
+          "north": 38.2765,
+          "east": -0.6275
+        }
+      },
+      "totalIncludedWeight": 99022,
+      "nonzeroCellCount": 4693,
+      "cityWeightPercent": 35.10161254302537,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": false,
+      "everyEligiblePositionedStopPlaceInsideCrop": false,
+      "anomalies": [
+        "Route-used positioned StopPlaces extend west, north and east beyond the declared viewport.",
+        "Route-used positioned StopPlaces extend west, north and east beyond the normal aligned crop."
+      ],
+      "representativeOutsideStopPlaces": [
+        {
+          "stopPlaceId": "elche-place-015",
+          "name": "Tanatori Carrús",
+          "position": {
+            "latitude": 38.275606,
+            "longitude": -0.7162012
+          },
+          "reason": [
+            "west of declared viewport",
+            "west of aligned crop"
+          ]
+        },
+        {
+          "stopPlaceId": "elche-place-1216",
+          "name": "I.F.A. > Aeropuerto",
+          "position": {
+            "latitude": 38.2970408090716,
+            "longitude": -0.57721660171368
+          },
+          "reason": [
+            "north of declared viewport",
+            "north of aligned crop"
+          ]
+        },
+        {
+          "stopPlaceId": "elche-place-1311",
+          "name": "San Bartolome Tirajana 3",
+          "position": {
+            "latitude": 38.2477483195681,
+            "longitude": -0.516716836850615
+          },
+          "reason": [
+            "east of declared viewport",
+            "east of aligned crop"
+          ]
+        }
+      ],
+      "minimumAlignedExtensionRecommended": {
+        "rowStart": 15,
+        "rowEnd": 186,
+        "columnStart": 55,
+        "columnEnd": 255,
+        "dimensions": {
+          "rows": 171,
+          "columns": 200
+        },
+        "alignedGeographicBounds": {
+          "south": 38.1265,
+          "west": -0.7165,
+          "north": 38.2975,
+          "east": -0.5165
+        },
+        "totalIncludedWeight": 261900,
+        "nonzeroCellCount": 10029,
+        "cityWeightPercent": 92.83908954594277
+      }
+    },
+    {
+      "scenarioId": "elche-radial-coast-v1",
+      "title": "Elche Radial Coast Network - Lines R9 and R12",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "5f8580092b7457b0b5f1bbf76f789c2de27a4ad0dc0ec0fda60863bca9ea149e",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.127210350942796,
+        "west": -0.703022668979032,
+        "north": 38.2755138374218,
+        "east": -0.628497001759356
+      },
+      "crop": {
+        "rowStart": 36,
+        "rowEnd": 186,
+        "columnStart": 68,
+        "columnEnd": 144,
+        "dimensions": {
+          "rows": 150,
+          "columns": 76
+        },
+        "alignedGeographicBounds": {
+          "south": 38.1265,
+          "west": -0.7035,
+          "north": 38.2765,
+          "east": -0.6275
+        }
+      },
+      "totalIncludedWeight": 99022,
+      "nonzeroCellCount": 4693,
+      "cityWeightPercent": 35.10161254302537,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": false,
+      "everyEligiblePositionedStopPlaceInsideCrop": false,
+      "anomalies": [
+        "Route-used positioned StopPlaces extend north and east beyond the declared viewport.",
+        "Route-used positioned StopPlaces extend north and east beyond the normal aligned crop."
+      ],
+      "representativeOutsideStopPlaces": [
+        {
+          "stopPlaceId": "elche-place-1260",
+          "name": "Crta. Altet - Gasolinera 2",
+          "position": {
+            "latitude": 38.2787805028974,
+            "longitude": -0.564792099354899
+          },
+          "reason": [
+            "north of declared viewport",
+            "north of aligned crop"
+          ]
+        },
+        {
+          "stopPlaceId": "elche-place-1311",
+          "name": "San Bartolome Tirajana 3",
+          "position": {
+            "latitude": 38.2477483195681,
+            "longitude": -0.516716836850615
+          },
+          "reason": [
+            "east of declared viewport",
+            "east of aligned crop"
+          ]
+        }
+      ],
+      "minimumAlignedExtensionRecommended": {
+        "rowStart": 33,
+        "rowEnd": 186,
+        "columnStart": 68,
+        "columnEnd": 255,
+        "dimensions": {
+          "rows": 153,
+          "columns": 187
+        },
+        "alignedGeographicBounds": {
+          "south": 38.1265,
+          "west": -0.7035,
+          "north": 38.2795,
+          "east": -0.5165
+        },
+        "totalIncludedWeight": 150970,
+        "nonzeroCellCount": 7909,
+        "cityWeightPercent": 53.51629380966392
+      }
+    },
+    {
+      "scenarioId": "elche-radial-legacy-all-v1",
+      "title": "Elche Radial Legacy Network - All Lines R1-R12",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "175f908ba34b9e40193986067a8de1163e9f9e17745911667c5acd0d37d1263a",
+      "primarySettlement": "es-elche",
+      "scenarioViewportBounds": {
+        "south": 38.127210350942796,
+        "west": -0.769790924895476,
+        "north": 38.3109635927092,
+        "east": -0.513716836850615
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 186,
+        "columnStart": 1,
+        "columnEnd": 258,
+        "dimensions": {
+          "rows": 185,
+          "columns": 257
+        },
+        "alignedGeographicBounds": {
+          "south": 38.1265,
+          "west": -0.7705,
+          "north": 38.3115,
+          "east": -0.5135
+        }
+      },
+      "totalIncludedWeight": 280836,
+      "nonzeroCellCount": 14172,
+      "cityWeightPercent": 99.55157904438481,
+      "extensionApplied": false,
+      "everyEligiblePositionedStopPlaceInsideViewport": true,
+      "everyEligiblePositionedStopPlaceInsideCrop": true,
+      "anomalies": [],
+      "representativeOutsideStopPlaces": [],
+      "minimumAlignedExtensionRecommended": null
+    }
+  ]
+}

@@ -1,0 +1,475 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "Torrevieja Round-3 aligned scenario crop metadata",
+  "generatedForReviewOn": "2026-08-09",
+  "indexSemantics": "half-open [start, end)",
+  "canonicalGrid": {
+    "cityId": "Q36730",
+    "gridVersion": "1.0.0",
+    "sourceFile": "torrevieja-city-population-grid-v1.round2.json",
+    "sha256": "c507d7f3a11bde457118ccba329285d49550a0c8959c6865c15b3ec7e12ddd3c",
+    "rows": 91,
+    "columns": 96,
+    "resolutionDegrees": 0.001,
+    "rowDirection": "north-to-south",
+    "columnDirection": "west-to-east",
+    "cityTotalWeight": 92480,
+    "cityNonzeroCellCount": 3008
+  },
+  "currentPublicCatalog": {
+    "primarySettlementId": "es-torrevieja",
+    "scenarioCount": 5,
+    "catalogEntriesPinnedByContentHash": true
+  },
+  "commonCropSummary": {
+    "rowStart": 1,
+    "rowEnd": 90,
+    "columnStart": 1,
+    "columnEnd": 95,
+    "dimensions": {
+      "rows": 89,
+      "columns": 94
+    },
+    "alignedGeographicBounds": {
+      "south": 37.9395,
+      "west": -0.7425,
+      "north": 38.0285,
+      "east": -0.6485
+    },
+    "totalIncludedWeight": 91182,
+    "nonzeroCellCount": 2940,
+    "cityWeightPercent": 98.59645328719722,
+    "excludedCanonicalBorderWeight": 1298,
+    "excludedCanonicalBorderNonzeroCellCount": 68
+  },
+  "scenarios": [
+    {
+      "scenarioId": "torrevieja-legacy-abc-v1",
+      "primarySettlement": "es-torrevieja",
+      "catalogContentHash": "7fc35b5842bb98d23a42508174482f2c7528ed856d32415878b6f6b7dd5d0b73",
+      "routeIds": [
+        "legacy-A",
+        "legacy-B",
+        "legacy-C"
+      ],
+      "scenarioViewportBounds": {
+        "south": 37.9404872,
+        "west": -0.7424089,
+        "north": 38.0279843,
+        "east": -0.6492915
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 90,
+        "columnStart": 1,
+        "columnEnd": 95,
+        "dimensions": {
+          "rows": 89,
+          "columns": 94
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9395,
+          "west": -0.7425,
+          "north": 38.0285,
+          "east": -0.6485
+        }
+      },
+      "totalIncludedWeight": 91182,
+      "nonzeroCellCount": 2940,
+      "cityWeightPercent": 98.59645328719722,
+      "stopPlaceSafety": {
+        "everyRelevantPositionedStopPlaceInsideDeclaredViewport": true,
+        "everyRelevantPositionedStopPlaceInsideAlignedCrop": true,
+        "minimumAlignedExtensionRequired": false,
+        "verificationBasis": "Current public torrevieja-legacy-all-v1 stopPlaces were reviewed as the full old-line StopPlace superset. All recorded StopPlace positions are within the shared declared viewport; therefore the route-used StopPlace subsets for ABC, East, South, North, and All are within both the viewport and the larger aligned crop. derive-pop-grid-crops.ts mirrors the repository route-used StopPlace rule for an exact per-package rerun against a local public-scenarios tree.",
+        "boundaryControls": [
+          {
+            "stopPlaceId": "tv-place-0086",
+            "name": "Cabo Cervera 2",
+            "position": {
+              "latitude": 38.0050911,
+              "longitude": -0.6492915
+            },
+            "note": "longitude equals declared east bound exactly"
+          },
+          {
+            "stopPlaceId": "tv-place-0067",
+            "name": "Avda.del Mar",
+            "position": {
+              "latitude": 38.0278659,
+              "longitude": -0.6552697
+            },
+            "note": "close to declared north bound and still inside"
+          },
+          {
+            "stopPlaceId": "tv-place-0147",
+            "name": "Laguna Azul 1",
+            "position": {
+              "latitude": 37.9622455,
+              "longitude": -0.7384528
+            },
+            "note": "western control and inside"
+          },
+          {
+            "stopPlaceId": "tv-place-0167",
+            "name": "Olas, 22",
+            "position": {
+              "latitude": 37.9478612,
+              "longitude": -0.7127815
+            },
+            "note": "southern control and inside"
+          }
+        ]
+      },
+      "anomalies": [],
+      "notes": [
+        "Current public Torrevieja packages share the same settlement viewport, so this crop is intentionally identical across all five scenarios."
+      ]
+    },
+    {
+      "scenarioId": "torrevieja-legacy-east-v1",
+      "primarySettlement": "es-torrevieja",
+      "catalogContentHash": "c6edb4f60d455814226aba5cddcca013b81e153104104062e552474eec500d85",
+      "routeIds": [
+        "legacy-A",
+        "legacy-A2",
+        "legacy-C"
+      ],
+      "scenarioViewportBounds": {
+        "south": 37.9404872,
+        "west": -0.7424089,
+        "north": 38.0279843,
+        "east": -0.6492915
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 90,
+        "columnStart": 1,
+        "columnEnd": 95,
+        "dimensions": {
+          "rows": 89,
+          "columns": 94
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9395,
+          "west": -0.7425,
+          "north": 38.0285,
+          "east": -0.6485
+        }
+      },
+      "totalIncludedWeight": 91182,
+      "nonzeroCellCount": 2940,
+      "cityWeightPercent": 98.59645328719722,
+      "stopPlaceSafety": {
+        "everyRelevantPositionedStopPlaceInsideDeclaredViewport": true,
+        "everyRelevantPositionedStopPlaceInsideAlignedCrop": true,
+        "minimumAlignedExtensionRequired": false,
+        "verificationBasis": "Current public torrevieja-legacy-all-v1 stopPlaces were reviewed as the full old-line StopPlace superset. All recorded StopPlace positions are within the shared declared viewport; therefore the route-used StopPlace subsets for ABC, East, South, North, and All are within both the viewport and the larger aligned crop. derive-pop-grid-crops.ts mirrors the repository route-used StopPlace rule for an exact per-package rerun against a local public-scenarios tree.",
+        "boundaryControls": [
+          {
+            "stopPlaceId": "tv-place-0086",
+            "name": "Cabo Cervera 2",
+            "position": {
+              "latitude": 38.0050911,
+              "longitude": -0.6492915
+            },
+            "note": "longitude equals declared east bound exactly"
+          },
+          {
+            "stopPlaceId": "tv-place-0067",
+            "name": "Avda.del Mar",
+            "position": {
+              "latitude": 38.0278659,
+              "longitude": -0.6552697
+            },
+            "note": "close to declared north bound and still inside"
+          },
+          {
+            "stopPlaceId": "tv-place-0147",
+            "name": "Laguna Azul 1",
+            "position": {
+              "latitude": 37.9622455,
+              "longitude": -0.7384528
+            },
+            "note": "western control and inside"
+          },
+          {
+            "stopPlaceId": "tv-place-0167",
+            "name": "Olas, 22",
+            "position": {
+              "latitude": 37.9478612,
+              "longitude": -0.7127815
+            },
+            "note": "southern control and inside"
+          }
+        ]
+      },
+      "anomalies": [],
+      "notes": [
+        "Current public Torrevieja packages share the same settlement viewport, so this crop is intentionally identical across all five scenarios."
+      ]
+    },
+    {
+      "scenarioId": "torrevieja-legacy-south-v1",
+      "primarySettlement": "es-torrevieja",
+      "catalogContentHash": "3b96d22230923120792fd4dbda3dfe11447445cae199a8dd7b882bb0f0722de9",
+      "routeIds": [
+        "legacy-DF",
+        "legacy-E"
+      ],
+      "scenarioViewportBounds": {
+        "south": 37.9404872,
+        "west": -0.7424089,
+        "north": 38.0279843,
+        "east": -0.6492915
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 90,
+        "columnStart": 1,
+        "columnEnd": 95,
+        "dimensions": {
+          "rows": 89,
+          "columns": 94
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9395,
+          "west": -0.7425,
+          "north": 38.0285,
+          "east": -0.6485
+        }
+      },
+      "totalIncludedWeight": 91182,
+      "nonzeroCellCount": 2940,
+      "cityWeightPercent": 98.59645328719722,
+      "stopPlaceSafety": {
+        "everyRelevantPositionedStopPlaceInsideDeclaredViewport": true,
+        "everyRelevantPositionedStopPlaceInsideAlignedCrop": true,
+        "minimumAlignedExtensionRequired": false,
+        "verificationBasis": "Current public torrevieja-legacy-all-v1 stopPlaces were reviewed as the full old-line StopPlace superset. All recorded StopPlace positions are within the shared declared viewport; therefore the route-used StopPlace subsets for ABC, East, South, North, and All are within both the viewport and the larger aligned crop. derive-pop-grid-crops.ts mirrors the repository route-used StopPlace rule for an exact per-package rerun against a local public-scenarios tree.",
+        "boundaryControls": [
+          {
+            "stopPlaceId": "tv-place-0086",
+            "name": "Cabo Cervera 2",
+            "position": {
+              "latitude": 38.0050911,
+              "longitude": -0.6492915
+            },
+            "note": "longitude equals declared east bound exactly"
+          },
+          {
+            "stopPlaceId": "tv-place-0067",
+            "name": "Avda.del Mar",
+            "position": {
+              "latitude": 38.0278659,
+              "longitude": -0.6552697
+            },
+            "note": "close to declared north bound and still inside"
+          },
+          {
+            "stopPlaceId": "tv-place-0147",
+            "name": "Laguna Azul 1",
+            "position": {
+              "latitude": 37.9622455,
+              "longitude": -0.7384528
+            },
+            "note": "western control and inside"
+          },
+          {
+            "stopPlaceId": "tv-place-0167",
+            "name": "Olas, 22",
+            "position": {
+              "latitude": 37.9478612,
+              "longitude": -0.7127815
+            },
+            "note": "southern control and inside"
+          }
+        ]
+      },
+      "anomalies": [],
+      "notes": [
+        "Current public Torrevieja packages share the same settlement viewport, so this crop is intentionally identical across all five scenarios."
+      ]
+    },
+    {
+      "scenarioId": "torrevieja-legacy-north-v1",
+      "primarySettlement": "es-torrevieja",
+      "catalogContentHash": "0caf5913afc603a56e6a37270a6caac3c858a9b63aed7d60d92da351a10a1b06",
+      "routeIds": [
+        "legacy-B",
+        "legacy-G",
+        "legacy-H"
+      ],
+      "scenarioViewportBounds": {
+        "south": 37.9404872,
+        "west": -0.7424089,
+        "north": 38.0279843,
+        "east": -0.6492915
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 90,
+        "columnStart": 1,
+        "columnEnd": 95,
+        "dimensions": {
+          "rows": 89,
+          "columns": 94
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9395,
+          "west": -0.7425,
+          "north": 38.0285,
+          "east": -0.6485
+        }
+      },
+      "totalIncludedWeight": 91182,
+      "nonzeroCellCount": 2940,
+      "cityWeightPercent": 98.59645328719722,
+      "stopPlaceSafety": {
+        "everyRelevantPositionedStopPlaceInsideDeclaredViewport": true,
+        "everyRelevantPositionedStopPlaceInsideAlignedCrop": true,
+        "minimumAlignedExtensionRequired": false,
+        "verificationBasis": "Current public torrevieja-legacy-all-v1 stopPlaces were reviewed as the full old-line StopPlace superset. All recorded StopPlace positions are within the shared declared viewport; therefore the route-used StopPlace subsets for ABC, East, South, North, and All are within both the viewport and the larger aligned crop. derive-pop-grid-crops.ts mirrors the repository route-used StopPlace rule for an exact per-package rerun against a local public-scenarios tree.",
+        "boundaryControls": [
+          {
+            "stopPlaceId": "tv-place-0086",
+            "name": "Cabo Cervera 2",
+            "position": {
+              "latitude": 38.0050911,
+              "longitude": -0.6492915
+            },
+            "note": "longitude equals declared east bound exactly"
+          },
+          {
+            "stopPlaceId": "tv-place-0067",
+            "name": "Avda.del Mar",
+            "position": {
+              "latitude": 38.0278659,
+              "longitude": -0.6552697
+            },
+            "note": "close to declared north bound and still inside"
+          },
+          {
+            "stopPlaceId": "tv-place-0147",
+            "name": "Laguna Azul 1",
+            "position": {
+              "latitude": 37.9622455,
+              "longitude": -0.7384528
+            },
+            "note": "western control and inside"
+          },
+          {
+            "stopPlaceId": "tv-place-0167",
+            "name": "Olas, 22",
+            "position": {
+              "latitude": 37.9478612,
+              "longitude": -0.7127815
+            },
+            "note": "southern control and inside"
+          }
+        ]
+      },
+      "anomalies": [],
+      "notes": [
+        "Current public Torrevieja packages share the same settlement viewport, so this crop is intentionally identical across all five scenarios."
+      ]
+    },
+    {
+      "scenarioId": "torrevieja-legacy-all-v1",
+      "primarySettlement": "es-torrevieja",
+      "catalogContentHash": "b6891aeb3bff38dcc037d21314f3d623fba83e86150dbd5a6564e7aaf8310c3f",
+      "routeIds": [
+        "legacy-A",
+        "legacy-A2",
+        "legacy-B",
+        "legacy-C",
+        "legacy-DF",
+        "legacy-E",
+        "legacy-G",
+        "legacy-H"
+      ],
+      "scenarioViewportBounds": {
+        "south": 37.9404872,
+        "west": -0.7424089,
+        "north": 38.0279843,
+        "east": -0.6492915
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 90,
+        "columnStart": 1,
+        "columnEnd": 95,
+        "dimensions": {
+          "rows": 89,
+          "columns": 94
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9395,
+          "west": -0.7425,
+          "north": 38.0285,
+          "east": -0.6485
+        }
+      },
+      "totalIncludedWeight": 91182,
+      "nonzeroCellCount": 2940,
+      "cityWeightPercent": 98.59645328719722,
+      "stopPlaceSafety": {
+        "everyRelevantPositionedStopPlaceInsideDeclaredViewport": true,
+        "everyRelevantPositionedStopPlaceInsideAlignedCrop": true,
+        "minimumAlignedExtensionRequired": false,
+        "verificationBasis": "Current public torrevieja-legacy-all-v1 stopPlaces were reviewed as the full old-line StopPlace superset. All recorded StopPlace positions are within the shared declared viewport; therefore the route-used StopPlace subsets for ABC, East, South, North, and All are within both the viewport and the larger aligned crop. derive-pop-grid-crops.ts mirrors the repository route-used StopPlace rule for an exact per-package rerun against a local public-scenarios tree.",
+        "boundaryControls": [
+          {
+            "stopPlaceId": "tv-place-0086",
+            "name": "Cabo Cervera 2",
+            "position": {
+              "latitude": 38.0050911,
+              "longitude": -0.6492915
+            },
+            "note": "longitude equals declared east bound exactly"
+          },
+          {
+            "stopPlaceId": "tv-place-0067",
+            "name": "Avda.del Mar",
+            "position": {
+              "latitude": 38.0278659,
+              "longitude": -0.6552697
+            },
+            "note": "close to declared north bound and still inside"
+          },
+          {
+            "stopPlaceId": "tv-place-0147",
+            "name": "Laguna Azul 1",
+            "position": {
+              "latitude": 37.9622455,
+              "longitude": -0.7384528
+            },
+            "note": "western control and inside"
+          },
+          {
+            "stopPlaceId": "tv-place-0167",
+            "name": "Olas, 22",
+            "position": {
+              "latitude": 37.9478612,
+              "longitude": -0.7127815
+            },
+            "note": "southern control and inside"
+          }
+        ]
+      },
+      "anomalies": [],
+      "notes": [
+        "Current public Torrevieja packages share the same settlement viewport, so this crop is intentionally identical across all five scenarios."
+      ]
+    }
+  ],
+  "methodology": {
+    "cropRule": "smallest rectangular canonical-cell window containing/intersecting the scenario viewport; full intersecting cells retained",
+    "resampling": "none",
+    "interpolation": "none",
+    "smoothing": "none",
+    "normalization": "none",
+    "weightMutation": "none",
+    "stopPlaceEligibility": "route-used StopNodes -> referenced non-null StopPlaceIds -> positioned StopPlaces"
+  }
+}

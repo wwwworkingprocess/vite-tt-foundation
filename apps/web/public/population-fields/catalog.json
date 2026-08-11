@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "Torrevieja Tycoon canonical city population-field discovery index",
+  "status": "prepared-data-not-yet-wired-to-passenger-demand",
+  "indexSemantics": "scenario crops use half-open [start, end) row/column windows into the canonical city grid",
+  "cities": [
+    {
+      "cityName": "Torrevieja",
+      "primarySettlementId": "es-torrevieja",
+      "externalCityId": "Q36730",
+      "gridVersion": "1.0.0",
+      "gridPath": "torrevieja-v1/torrevieja-city-population-grid-v1.round2.json",
+      "cropPath": "torrevieja-v1/torrevieja-population-grid-round3-crops.json",
+      "gridSha256": "c507d7f3a11bde457118ccba329285d49550a0c8959c6865c15b3ec7e12ddd3c",
+      "cropSha256": "79fdafb190fc29b130f99fd2b9570a8e093f01dbcffb79b70eced190aa8a8a18",
+      "rows": 91,
+      "columns": 96,
+      "resolutionDegrees": 0.001,
+      "scenarioCount": 5,
+      "cropAnomalyScenarioIds": [],
+      "sourceRound4ArchiveSha256": "187af1dec511f14122f3f3413e1767e095c73e51d5b6c36973eab0fcf365a20a"
+    },
+    {
+      "cityName": "Elche",
+      "primarySettlementId": "es-elche",
+      "externalCityId": "Q10509",
+      "gridVersion": "1.0.0",
+      "gridPath": "elche-v1/elche-city-population-grid-v1.round2.json",
+      "cropPath": "elche-v1/elche-population-grid-round3-crops.json",
+      "gridSha256": "b125ee476aff0d27fdfc8a422466b47a87f6e9626a5ff1ffc04a1a0fe8ded3fb",
+      "cropSha256": "356df3269a7e557334f1e8814c0ef72d625052cd1360f0acf45f0ca011e842c5",
+      "rows": 187,
+      "columns": 259,
+      "resolutionDegrees": 0.001,
+      "scenarioCount": 13,
+      "cropAnomalyScenarioIds": [
+        "elche-radial-airport-v1",
+        "elche-radial-coast-v1"
+      ],
+      "sourceRound4ArchiveSha256": "202785920460f47faf835e5eb8cc4f41e7e9ecef5a343fa6f329b7443ac28a80"
+    },
+    {
+      "cityName": "Alicante",
+      "primarySettlementId": "es-alicante",
+      "externalCityId": "Q11959",
+      "gridVersion": "1.0.0",
+      "gridPath": "alicante-v1/alicante-city-population-grid-v1.round2.json",
+      "cropPath": "alicante-v1/alicante-population-grid-round3-crops.json",
+      "gridSha256": "cbe2068d3bf4a97bcf062b995ad5cd4d2c23bbf1957abf96d07db72419cfa3fb",
+      "cropSha256": "2587608609dfb80e1afcab6f28508c7d574e60ddda16ec7e9f5f0e2b0730ef5b",
+      "rows": 113,
+      "columns": 209,
+      "resolutionDegrees": 0.001,
+      "scenarioCount": 7,
+      "cropAnomalyScenarioIds": [
+        "alicante-legacy-north-v1",
+        "alicante-legacy-all-v1"
+      ],
+      "sourceRound4ArchiveSha256": "f6d13f7c62522e900a131f789635142464d1a127e7873f1586454a932b5ee020"
+    }
+  ]
+}

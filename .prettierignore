@@ -6,3 +6,4 @@ cypress/videos
 yarn.lock
 apps/web/public/scenarios
 packages/transport-domain/fixtures
+apps/web/public/population-fields/*-v1/*.json

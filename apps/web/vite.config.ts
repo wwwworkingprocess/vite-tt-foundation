@@ -7,7 +7,21 @@ const base = `/${configuredBase.replace(/^\/+|\/+$/g, '')}/`.replace('//', '/');
 
 export default defineConfig({
   base,
-  build: { chunkSizeWarningLimit: 1300, sourcemap: false },
+  build: {
+    chunkSizeWarningLimit: 1300,
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (
+            id.includes('/node_modules/dexie/') ||
+            id.endsWith('/transport-simulation/transport-save-repository.ts')
+          )
+            return 'persistence-runtime';
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({

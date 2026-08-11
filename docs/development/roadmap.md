@@ -155,27 +155,31 @@ Completed:
 - full-workspace SVG diagnostic;
 - R3F mounting/lifecycle boundary;
 - primary/minimap role swapping without authority replacement;
-- lazy simulation and persistence control boundaries.
+- lazy simulation and persistence control boundaries;
+- explicit Open Screen lifecycle for verified new-game creation and exact save
+  continuation;
+- settlement-metadata-driven city/scenario entry;
+- renderer-independent Route, StopPlace, and Vehicle selection;
+- exact route, stop, vehicle, and passenger authority inspectors.
 
 Remaining product visualization work:
 
 - production graph rendering and styling;
 - smooth display interpolation;
-- live passenger/occupancy diagnostics;
-- selection and inspection;
 - performance acceptance for richer scenes.
 
-## Next — Live passenger diagnostic/game UI
+## Completed — Live passenger diagnostic/game UI
 
-Expose the current waiting, onboard, capacity, alighting, destination-access,
-and completion authority as useful diagnostics and initial gameplay feedback.
-Presentation must remain read-only and must not duplicate simulation rules.
+The current waiting, onboard, capacity, alighting, destination-access, and
+completion authority is exposed through contextual read-only diagnostics without
+duplicating simulation rules or retaining unbounded event history.
 
 ## Phase 4F — Economics and objectives
 
-Add the first deterministic management/economics layer after live passenger
-authority is visible and inspectable. Exact scope and non-goals require a
-separate architecture/task decision.
+The live passenger authority is now visible and inspectable. Exact starting
+money, integer currency units, fare calculation, operating costs, accounting
+frequency, objective definitions, and win/fail conditions still require a
+separate accepted architecture/task decision before implementation.
 
 ## Later transport growth
 

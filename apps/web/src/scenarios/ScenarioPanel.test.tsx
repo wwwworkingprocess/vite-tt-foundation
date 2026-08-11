@@ -1,128 +1,104 @@
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
+import { ScenarioPanel } from './ScenarioPanel.js';
 import type { ScenarioLoaderState } from './scenario-loader.js';
 
 afterEach(cleanup);
 
-const fake = vi.hoisted(() => ({
-  state: {
-    status: 'ready' as const,
-    selectedScenarioId: 'torrevieja-v1',
-    title: 'Torrevieja',
-    settlementCount: 1,
-    routeCount: 1,
-    catalog: {
-      scenarios: [
-        { scenarioId: 'torrevieja-v1', title: 'Torrevieja' },
-        {
-          scenarioId: 'torrevieja-legacy-abc-v1',
-          title: 'Torrevieja Legacy Network',
-        },
-      ],
-    },
-    graph: { summary: { nodes: 231, routes: 1, patterns: 2, edges: 6 } },
-    scenario: { manifest: { scenarioId: 'torrevieja-v1' } },
-  },
-  loadCatalog: vi.fn(async () => undefined),
-  loadScenario: vi.fn(async () => undefined),
-  resolveScenario: vi.fn(async () => fake.state.scenario),
-  listeners: new Set<(state: ScenarioLoaderState) => void>(),
-}));
-
-vi.mock('./scenario-loader.js', () => ({
-  browserSha256: vi.fn(),
-  createScenarioLoader: () => ({
-    projection: {
-      getState: () => fake.state,
-      subscribe: (listener: (state: ScenarioLoaderState) => void) => {
-        fake.listeners.add(listener);
-        listener(fake.state as unknown as ScenarioLoaderState);
-        return () => fake.listeners.delete(listener);
+const state = {
+  status: 'ready',
+  selectedScenarioId: 'torrevieja-v1',
+  title: 'Torrevieja',
+  settlementCount: 1,
+  routeCount: 1,
+  catalog: {
+    scenarios: [
+      {
+        scenarioId: 'torrevieja-v1',
+        title: 'Torrevieja',
+        primarySettlementId: 'es-torrevieja',
       },
-    },
-    loadCatalog: fake.loadCatalog,
-    loadScenario: fake.loadScenario,
-    resolveScenario: fake.resolveScenario,
-  }),
-}));
+      {
+        scenarioId: 'torrevieja-legacy-abc-v1',
+        title: 'Legacy',
+        primarySettlementId: 'es-torrevieja',
+      },
+      {
+        scenarioId: 'elche-urban-abc-v1',
+        title: 'Elche Urban',
+        primarySettlementId: 'es-elche',
+      },
+    ],
+  },
+  graph: { summary: { nodes: 231, routes: 1, patterns: 2, edges: 6 } },
+  scenario: { manifest: { scenarioId: 'torrevieja-v1' } },
+} as unknown as ScenarioLoaderState;
 
-import { ScenarioPanel } from './ScenarioPanel.js';
-
-it('presents the scenario and supplies it to the single session composition', async () => {
-  const ready = vi.fn();
-  const resolver = vi.fn();
-  const selection = vi.fn();
+it('renders controlled canonical city groups and scenario intent', () => {
+  const onScenarioChange = vi.fn();
   render(
     <ScenarioPanel
-      onScenarioReady={ready}
-      onResolverReady={resolver}
-      onSelectionChange={selection}
+      state={state}
+      cityNames={{ 'es-torrevieja': 'Torrevieja', 'es-elche': 'Elche' }}
+      onScenarioChange={onScenarioChange}
     />,
   );
-  expect(await screen.findByText('231')).toBeInTheDocument();
-  expect(screen.getByText('Directed edges').nextSibling).toHaveTextContent('6');
-  expect(ready).toHaveBeenCalledWith(fake.state.scenario);
-  expect(resolver).toHaveBeenCalledWith(fake.resolveScenario);
-  expect(fake.loadScenario).toHaveBeenCalledWith('torrevieja-legacy-abc-v1');
-  expect(selection).toHaveBeenCalledWith(
-    expect.objectContaining({
-      requestedScenarioId: 'torrevieja-v1',
-      status: 'ready',
-      scenario: fake.state.scenario,
-    }),
-  );
+  expect(screen.getByText('231')).toBeInTheDocument();
+  fireEvent.change(screen.getByLabelText('City'), {
+    target: { value: 'es-elche' },
+  });
+  expect(onScenarioChange).toHaveBeenCalledWith('elche-urban-abc-v1');
   fireEvent.change(screen.getByLabelText('Scenario'), {
-    target: { value: 'torrevieja-v1' },
+    target: { value: 'torrevieja-legacy-abc-v1' },
   });
-  expect(fake.loadScenario).toHaveBeenCalledWith('torrevieja-v1');
-  expect(
-    screen.queryByRole('button', { name: 'Start selected scenario' }),
-  ).not.toBeInTheDocument();
+  expect(onScenarioChange).toHaveBeenCalledWith('torrevieja-legacy-abc-v1');
+  fireEvent.change(screen.getByLabelText('City'), {
+    target: { value: 'missing-city' },
+  });
 });
 
-it('allows catalogue presentation without composition callbacks', async () => {
-  render(<ScenarioPanel />);
-  expect(
-    await screen.findByRole('heading', { name: 'Transport scenario' }),
-  ).toBeInTheDocument();
-});
-
-it('reports requested loading and failure states and offers retry', async () => {
-  const selection = vi.fn();
-  render(<ScenarioPanel onSelectionChange={selection} />);
-  const loading = {
-    status: 'loading-scenario' as const,
-    catalog: fake.state.catalog,
-    selectedScenarioId: 'scenario-b',
-  };
-  for (const listener of fake.listeners)
-    listener(loading as unknown as ScenarioLoaderState);
-  await waitFor(() =>
-    expect(selection).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        requestedScenarioId: 'scenario-b',
-        status: 'loading',
-      }),
-    ),
+it('uses stable settlement IDs and disables unresolved catalogues', () => {
+  const view = render(
+    <ScenarioPanel state={state} cityNames={{}} onScenarioChange={vi.fn()} />,
   );
+  expect(screen.getByRole('option', { name: 'es-elche' })).toBeInTheDocument();
+  view.rerender(
+    <ScenarioPanel
+      state={{ status: 'idle' }}
+      cityNames={{}}
+      onScenarioChange={vi.fn()}
+    />,
+  );
+  expect(screen.getByLabelText('City')).toBeDisabled();
+});
 
-  const failed = {
-    status: 'failed' as const,
-    catalog: fake.state.catalog,
-    selectedScenarioId: 'scenario-b',
-    message: 'load failed',
-  };
-  for (const listener of fake.listeners)
-    listener(failed as unknown as ScenarioLoaderState);
-  const retry = await screen.findByRole('button', {
-    name: 'Retry selected scenario',
-  });
-  fireEvent.click(retry);
-  expect(fake.loadScenario).toHaveBeenLastCalledWith('scenario-b');
+it('exposes retry for the controlled failed selection', () => {
+  const onScenarioChange = vi.fn();
+  render(
+    <ScenarioPanel
+      state={{ ...state, status: 'failed', message: 'failed' }}
+      cityNames={{}}
+      onScenarioChange={onScenarioChange}
+    />,
+  );
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Retry selected scenario' }),
+  );
+  expect(onScenarioChange).toHaveBeenCalledWith('torrevieja-v1');
+});
+
+it('disables every scenario intent control while its owner is busy', () => {
+  render(
+    <ScenarioPanel
+      state={{ ...state, status: 'failed', message: 'failed' }}
+      cityNames={{}}
+      disabled
+      onScenarioChange={vi.fn()}
+    />,
+  );
+  expect(screen.getByLabelText('City')).toBeDisabled();
+  expect(screen.getByLabelText('Scenario')).toBeDisabled();
+  expect(
+    screen.getByRole('button', { name: 'Retry selected scenario' }),
+  ).toBeDisabled();
 });

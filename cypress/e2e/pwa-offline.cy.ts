@@ -81,6 +81,17 @@ const expectWorkerReady = () =>
   cy
     .get('[data-testid="worker-status"]', { timeout: workerReadyTimeoutMs })
     .should('contain.text', 'ready');
+const startDefaultGame = () => {
+  cy.get('[data-testid="open-screen"]', { timeout: 15_000 }).should(
+    'be.visible',
+  );
+  cy.contains('button', 'Start new game', { timeout: 15_000 })
+    .should('be.enabled')
+    .click();
+  cy.get('[data-testid="game-shell"]', { timeout: 15_000 }).should(
+    'be.visible',
+  );
+};
 
 describe('built foundation PWA offline lifecycle', () => {
   afterEach(() => network(false));
@@ -88,6 +99,7 @@ describe('built foundation PWA offline lifecycle', () => {
   it('restores a saved Worker session from the installed offline shell', () => {
     cy.then(() => clearOrigin());
     cy.visit('./');
+    startDefaultGame();
     openControls();
     expectWorkerReady();
     cy.get('[data-testid="scenario-coordinate"]').should(
@@ -98,6 +110,7 @@ describe('built foundation PWA offline lifecycle', () => {
       await win.navigator.serviceWorker.ready;
     });
     cy.reload();
+    startDefaultGame();
     openControls();
     cy.window().its('navigator.serviceWorker.controller').should('not.be.null');
     expectWorkerReady();
@@ -124,6 +137,7 @@ describe('built foundation PWA offline lifecycle', () => {
       }),
     );
     cy.reload();
+    startDefaultGame();
     openSessionControls();
     cy.get('[data-testid="save-count"]').should('contain.text', '0');
     cy.get('[data-testid="legacy-save-count"]').should('contain.text', '0');
@@ -244,8 +258,11 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
     cy.then(() => network(true));
     cy.reload();
+    startDefaultGame();
     openControls();
     expectWorkerReady();
+    cy.get('[role="dialog"]').contains('button', 'Pause').click();
+    cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     cy.get('[data-testid="scenario-coordinate"]').should(
       'contain.text',
       '1.0.0:torrevieja-legacy-abc-v1@1.0.0#',

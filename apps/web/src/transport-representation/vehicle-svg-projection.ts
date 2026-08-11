@@ -1,7 +1,10 @@
-import type { VehicleState } from '@torrevieja-tycoon/simulation';
+import type { VehicleId, VehicleState } from '@torrevieja-tycoon/simulation';
 import {
   buildDirectedScenarioGraph,
   type CanonicalScenario,
+  type RouteId,
+  type RoutePatternId,
+  type StopPlaceId,
 } from '@torrevieja-tycoon/transport-domain';
 
 type GeographicPosition = Readonly<{ latitude: number; longitude: number }>;
@@ -10,12 +13,17 @@ type SvgPosition = Readonly<{ cx: number; cy: number }>;
 export interface VehicleSvgProjection {
   readonly viewBox: '0 0 100 100';
   readonly nodes: readonly Readonly<
-    SvgPosition & GeographicPosition & { stopNodeId: string }
+    SvgPosition &
+      GeographicPosition & {
+        stopNodeId: string;
+        stopPlaceId?: StopPlaceId;
+        name: string;
+      }
   >[];
   readonly edges: readonly Readonly<{
     edgeId: string;
-    routeId: string;
-    patternId: string;
+    routeId: RouteId;
+    patternId: RoutePatternId;
     color?: string;
     x1: number;
     y1: number;
@@ -24,11 +32,11 @@ export interface VehicleSvgProjection {
   }>[];
   readonly vehicles: readonly Readonly<
     SvgPosition & {
-      vehicleId: string;
+      vehicleId: VehicleId;
       label: string;
       movementKind: VehicleState['movement']['kind'];
-      routeId?: string;
-      patternId: string;
+      routeId?: RouteId;
+      patternId: RoutePatternId;
       routeLegIndex?: number;
       completedRouteCycles?: number;
       edgeId?: string;
@@ -104,6 +112,8 @@ export function projectVehicleMovementSvg(
   };
   const nodes = graph.nodes.map((node) => ({
     stopNodeId: node.stopNodeId,
+    ...(node.stopPlaceId ? { stopPlaceId: node.stopPlaceId } : {}),
+    name: node.name ?? node.stopNodeId,
     latitude: node.position.latitude,
     longitude: node.position.longitude,
     ...mapPosition(node.position),

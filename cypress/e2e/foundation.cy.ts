@@ -27,12 +27,25 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
 };
 const openSimulationControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
+const startDefaultGame = () => {
+  cy.get('[data-testid="open-screen"]', { timeout: 15_000 }).should(
+    'be.visible',
+  );
+  cy.contains('button', 'Start new game', { timeout: 15_000 })
+    .should('be.enabled')
+    .click();
+  cy.get('[data-testid="game-shell"]', { timeout: 15_000 }).should(
+    'be.visible',
+  );
+};
 
 describe('foundation screen', () => {
   it('renders without a fatal application error', () => {
     cy.visit('/');
     cy.contains('h1', 'Torrevieja Tycoon').should('be.visible');
-    cy.get('[data-testid="game-shell"]').should('be.visible');
+    cy.get('[data-testid="open-screen"]').should('be.visible');
+    cy.get('[data-testid="game-shell"]').should('not.exist');
+    startDefaultGame();
     cy.get('[data-testid="top-navigation"]').should('be.visible');
     cy.get('[data-testid="primary-visualization"]').should(
       'have.attr',
@@ -109,6 +122,7 @@ describe('foundation screen', () => {
 
   it('keeps selection separate from authority and restores both scenarios', () => {
     cy.visit('/');
+    startDefaultGame();
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     openSimulationControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');

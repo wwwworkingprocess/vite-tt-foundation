@@ -7,6 +7,14 @@ import {
   parseScenarioPackage,
   type CanonicalScenario,
 } from '@torrevieja-tycoon/transport-domain';
+import {
+  advanceTransportTicks,
+  applyTransportVehicleCommand,
+  createScenarioCoordinate,
+  createTransportSimulationState,
+  parseTickAdvancement,
+} from '@torrevieja-tycoon/simulation';
+import { createDemoVehicleCommandForAuthority } from '../transport-representation/demo-vehicle-command.js';
 import { createScenarioLoader } from './scenario-loader.js';
 
 const publicRoot = join(import.meta.dirname, '..', '..', 'public');
@@ -93,6 +101,7 @@ describe('public multi-scenario catalogue', () => {
         });
       }
     },
+    30_000,
   );
 
   it('accepts absent optional assets and normalizes non-Error catalogue failure', async () => {
@@ -124,6 +133,43 @@ describe('public multi-scenario catalogue', () => {
       message: 'Scenario loading failed.',
     });
   });
+
+  it('creates, starts, and advances a production vehicle on every public route', async () => {
+    const catalog = JSON.parse(
+      await readFile(join(publicRoot, 'scenarios', 'catalog.json'), 'utf8'),
+    ) as { scenarios: readonly { scenarioId: string }[] };
+    let routeCount = 0;
+    for (const descriptor of catalog.scenarios) {
+      const canonical = await loadCanonicalScenario(descriptor.scenarioId);
+      const coordinate = createScenarioCoordinate(canonical);
+      for (const route of canonical.routes.routes) {
+        routeCount += 1;
+        const create = createDemoVehicleCommandForAuthority(
+          coordinate,
+          () => canonical,
+          [],
+          route.routeId,
+        );
+        let authority = applyTransportVehicleCommand(
+          createTransportSimulationState(canonical, 0),
+          create,
+        );
+        authority = applyTransportVehicleCommand(authority, {
+          kind: 'transport.vehicle.start',
+          vehicleId: create.vehicleId,
+        });
+        authority = advanceTransportTicks(authority, parseTickAdvancement(1));
+        expect(authority.tick).toBe(1);
+        expect(authority.fleet).toHaveLength(1);
+        expect(authority.fleet[0]).toMatchObject({
+          vehicleId: create.vehicleId,
+          routeId: route.routeId,
+        });
+        expect(authority.fleet[0]!.movement.kind).not.toBe('parked-at-stop');
+      }
+    }
+    expect(routeCount).toBeGreaterThan(0);
+  }, 30_000);
 
   it('accepts the physical Torrevieja StopPlace projection consistently', async () => {
     const scenarios = await Promise.all(

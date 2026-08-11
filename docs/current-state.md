@@ -22,8 +22,10 @@ population field
 → completed journey
 ```
 
-The next planned product layer is diagnostic/game UI for live passenger
-authority, followed by Phase 4F economics and objectives. Transfers,
+The browser now provides an explicit Open Screen lifecycle, city/scenario new-game
+entry, resumable-session discovery, renderer-independent Route/StopPlace/Vehicle
+selection, and exact authority inspectors including live passenger diagnostics.
+The next planned product layer is Phase 4F economics and objectives. Transfers,
 multi-pattern passenger routing, advanced services, traffic, schedules, and
 richer operational realism remain later work unless an active task explicitly
 changes the sequence.
@@ -105,15 +107,23 @@ Do not add route-code-specific runtime exceptions. Correct these as scenario
 model/data work by separating selectable variants, selecting one canonical
 variant, or introducing a separately designed generic variant model.
 
-## Representation status
+## Browser lifecycle and representation status
 
-The browser has a stable authority/representation boundary, a full-workspace SVG
-diagnostic, an R3F representation boundary, and swappable primary/minimap shell
-roles. These prove mounting, lifecycle, and authority separation.
+The browser starts at an Open Screen and does not create Worker authority until a
+verified scenario is chosen or an exact compatible save is restored. Successful
+creation and restore enter normal unpaused pacing; last-played wall-clock metadata
+is presentation-only and never advances simulation ticks.
 
-A production passenger-aware visualization is not complete. Smooth vehicle
-interpolation, passenger/occupancy display, selection/inspection, and performance
-acceptance remain product work rather than simulation authority.
+The browser has a stable authority/representation boundary, a selectable
+full-workspace SVG diagnostic, an R3F representation boundary, swappable
+primary/minimap shell roles, and an authority-derived inspector. Route, physical
+StopPlace, and Vehicle selections are browser-owned canonical identities; the SVG
+is only one input adapter and never owns selection or simulation authority.
+
+A production passenger-aware visualization is not complete. The inspector exposes
+exact waiting, onboard, capacity, alighting, destination-access, completion, and
+bounded current-tick events, while smooth vehicle interpolation, final visual
+design, and performance acceptance remain product work.
 
 ## Validation command tiers
 

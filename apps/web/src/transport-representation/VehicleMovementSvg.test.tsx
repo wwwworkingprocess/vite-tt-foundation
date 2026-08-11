@@ -1,5 +1,5 @@
-import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, expect, it } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
@@ -34,6 +34,24 @@ const scenario = parseScenarioPackage({
   presentation: json('presentation.json'),
   provenance: json('provenance.json'),
 });
+const selectionRoot = join(
+  import.meta.dirname,
+  '..',
+  '..',
+  'public',
+  'scenarios',
+  'torrevieja-legacy-abc-v1',
+);
+const selectionJson = (name: string) =>
+  JSON.parse(readFileSync(join(selectionRoot, name), 'utf8')) as unknown;
+const selectionScenario = parseScenarioPackage({
+  manifest: selectionJson('scenario.json'),
+  settlements: selectionJson('settlements.json'),
+  stops: selectionJson('stops.json'),
+  routes: selectionJson('routes.json'),
+  presentation: selectionJson('presentation.json'),
+  provenance: selectionJson('provenance.json'),
+});
 
 it('renders authoritative stop, edge, and changing vehicle projections accessibly', () => {
   const pattern = scenario.routes.routes[0]!.patterns[0]!;
@@ -67,6 +85,10 @@ it('renders authoritative stop, edge, and changing vehicle projections accessibl
   expect(after).toHaveAttribute('data-progress-numerator', '5');
   expect(screen.getByTestId('vehicle-movement-svg')).toHaveAccessibleName(
     'Authoritative vehicle movement',
+  );
+  expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+    'role',
+    'group',
   );
   expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
     'data-scenario-id',
@@ -182,3 +204,92 @@ it('omits direction arrows for collocated canonical stops', () => {
   }
   expect(screen.queryByTestId('edge-direction')).not.toBeInTheDocument();
 });
+
+it('adapts pointer and keyboard input into renderer-independent selections', () => {
+  const onSelectionChange = vi.fn();
+  const state = createTransportSimulationState(selectionScenario, 0);
+  const view = render(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={state.fleet}
+      onSelectionChange={onSelectionChange}
+    />,
+  );
+  const edge = view.container.querySelector<SVGLineElement>('[data-edge-id]')!;
+  const stop = view.container.querySelector<SVGCircleElement>(
+    '[data-stop-place-id]',
+  )!;
+  fireEvent.click(edge);
+  fireEvent.keyDown(edge, { key: 'Enter' });
+  fireEvent.keyDown(edge, { key: ' ' });
+  fireEvent.keyDown(edge, { key: 'Escape' });
+  fireEvent.click(stop);
+  fireEvent.keyDown(stop, { key: 'Enter' });
+  expect(
+    onSelectionChange.mock.calls.map(([selection]) => selection.kind),
+  ).toEqual(['route', 'route', 'route', 'stop', 'stop']);
+
+  const pattern = selectionScenario.routes.routes[0]!.patterns[0]!;
+  const withVehicle = applyTransportVehicleCommand(state, {
+    kind: 'transport.vehicle.create',
+    vehicleId: parseVehicleId('selectable-vehicle'),
+    label: 'Selectable vehicle',
+    patternId: pattern.patternId,
+    movementPlan: {
+      kind: 'vehicle-movement-plan-v1',
+      edgeTravelTicks: Array.from(
+        { length: pattern.stopNodeIds.length - 1 },
+        () => 10,
+      ),
+    },
+  });
+  view.rerender(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={withVehicle.fleet}
+      selection={{
+        kind: 'route',
+        routeId: selectionScenario.routes.routes[0]!.routeId,
+      }}
+      onSelectionChange={onSelectionChange}
+    />,
+  );
+  expect(edge).toHaveAttribute('data-selected', 'true');
+  view.rerender(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={withVehicle.fleet}
+      selection={{ kind: 'stop', stopPlaceId: stopPlaceId(stop) as never }}
+      onSelectionChange={onSelectionChange}
+    />,
+  );
+  expect(
+    view.container.querySelector(`[data-stop-place-id="${stopPlaceId(stop)}"]`),
+  ).toHaveAttribute('data-selected', 'true');
+  const vehicle = screen.getByTestId('vehicle-position');
+  fireEvent.click(vehicle);
+  fireEvent.keyDown(vehicle, { key: 'Enter' });
+  expect(onSelectionChange).toHaveBeenLastCalledWith({
+    kind: 'vehicle',
+    vehicleId: 'selectable-vehicle',
+  });
+  view.rerender(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={withVehicle.fleet}
+      selection={{
+        kind: 'vehicle',
+        vehicleId: parseVehicleId('selectable-vehicle'),
+      }}
+    />,
+  );
+  expect(screen.getByTestId('vehicle-position')).toHaveAttribute(
+    'data-selected',
+    'true',
+  );
+  fireEvent.click(screen.getByTestId('vehicle-position'));
+  fireEvent.keyDown(screen.getByTestId('vehicle-position'), { key: 'Enter' });
+});
+
+const stopPlaceId = (element: Element) =>
+  element.getAttribute('data-stop-place-id')!;

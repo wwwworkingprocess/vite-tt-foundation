@@ -301,6 +301,50 @@ const scenarioSummary = (
   });
 
 describe('foundation session composition', () => {
+  it('restores an initial save before starting exactly one pacing driver', async () => {
+    const scenario = scenarioCoordinate('scenario-a', 'a'.repeat(64));
+    const test = harness({ scenarios: [scenario] });
+    const saveId = 'initial-save';
+    test.seedSave(scenarioSummary(saveId, scenario));
+
+    await test.composition.restoreInitialSession(saveId);
+
+    expect(test.stacks).toHaveLength(1);
+    expect(test.stacks[0]!.listSaves).toHaveBeenCalledOnce();
+    expect(test.stacks[0]!.restore).toHaveBeenCalledWith({
+      saveId,
+      newTimelineId: parseTimelineId('browser-foundation-restored-1'),
+    });
+    expect(test.stacks[0]!.pulse).toBeTypeOf('function');
+    expect(test.composition.projection.getState()).toMatchObject({
+      operation: 'idle',
+      canStartNewSession: false,
+      application: { session: { status: 'ready' } },
+    });
+
+    await test.composition.restoreInitialSession(saveId);
+    expect(test.stacks).toHaveLength(1);
+    expect(test.stacks[0]!.restore).toHaveBeenCalledOnce();
+  });
+
+  it('keeps an initial restore failure recoverable without a running driver', async () => {
+    const scenario = scenarioCoordinate('scenario-a', 'a'.repeat(64));
+    const test = harness({ scenarios: [scenario] });
+    test.delayRestore(Promise.reject(new Error('semantic restore failed')));
+
+    await test.composition.restoreInitialSession('broken-save');
+
+    expect(test.stacks[0]!.pulse).toBeUndefined();
+    expect(test.stacks[0]!.driverClose).toHaveBeenCalledOnce();
+    expect(test.stacks[0]!.pacingClose).toHaveBeenCalledOnce();
+    expect(test.stacks[0]!.close).toHaveBeenCalledOnce();
+    expect(test.composition.projection.getState()).toMatchObject({
+      operation: 'idle',
+      canStartNewSession: true,
+      message: 'semantic restore failed',
+    });
+  });
+
   it.each([
     ['compatibility', { compatibility: 'legacy-incompatible' as const }],
     ['scenario ID', { scenarioId: 'other-scenario' }],

@@ -9,6 +9,12 @@ import {
   scenarioCoordinatesEqual,
   type ScenarioCoordinate,
   type TransportVehicleCommand,
+  type CurrentAlightingEvent,
+  type CurrentBoardingEvent,
+  type PassengerDemandProjection,
+  type PassengerJourneyCompletionEvent,
+  type VehiclePassengerLoadProjection,
+  type VehiclePatternRunState,
   type VehicleState,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
@@ -31,9 +37,22 @@ import { createFoundationPacingController } from './pacing/foundation-pacing-con
 import { createBrowserTransportWorker } from './transport-simulation/browser-transport-worker.js';
 import { createTransportFoundationApplication } from './transport-simulation/transport-foundation-application.js';
 import { createDexieTransportSaveRepository } from './transport-simulation/transport-save-repository.js';
+import type { TransportSaveSummary } from './transport-simulation/transport-save-record.js';
 import { createWorkerTransportSimulationClient } from './transport-simulation/worker-transport-client.js';
 import type { ScenarioSelectionState } from './scenarios/ScenarioPanel.js';
+import {
+  browserSha256,
+  createScenarioLoader,
+  type ScenarioLoaderState,
+} from './scenarios/scenario-loader.js';
+import { defaultScenarioId } from './project-defaults.js';
 import { GameShell } from './ui/GameShell.js';
+import { selectionExists, type GameSelection } from './ui/game-selection.js';
+import {
+  discoverBrowserSave,
+  type CityNameLookup,
+  type SaveDiscovery,
+} from './ui/open-screen-model.js';
 
 const SimulationControls = lazy(() => import('./ui/SimulationControls.js'));
 const SessionControls = lazy(() => import('./ui/SessionControls.js'));
@@ -52,7 +71,19 @@ type Actions = Readonly<{
   saveMode: (mode: 'manual' | 'autosave') => Promise<void>;
   close: () => Promise<void>;
   start: () => Promise<void>;
+  restoreInitial: (saveId: string) => Promise<void>;
   sendVehicleCommand: (command: TransportVehicleCommand) => Promise<void>;
+}>;
+
+type BrowserLifecycle = Readonly<{
+  status:
+    | 'booting'
+    | 'open'
+    | 'creating'
+    | 'restoring'
+    | 'playing'
+    | 'recoverable-failure';
+  message?: string;
 }>;
 
 type AuthoritativeScenarioPackageState = Readonly<{
@@ -62,19 +93,56 @@ type AuthoritativeScenarioPackageState = Readonly<{
   message?: string;
 }>;
 
+type SessionLaunchRequest = Readonly<{
+  sequence: number;
+  scenario: CanonicalScenario;
+  action:
+    | { readonly kind: 'new' }
+    | { readonly kind: 'restore'; readonly saveId: string };
+}>;
+
 const scenarioKey = (coordinate: ScenarioCoordinate) =>
   `${coordinate.scenarioSchemaVersion}:${coordinate.scenarioId}@${coordinate.scenarioVersion}#${coordinate.contentHash}`;
 
+const toScenarioSelectionState = (
+  state: ScenarioLoaderState,
+): ScenarioSelectionState =>
+  Object.freeze({
+    requestedScenarioId: state.selectedScenarioId,
+    status:
+      state.status === 'loading-scenario'
+        ? 'loading'
+        : state.status === 'ready'
+          ? 'ready'
+          : state.status === 'failed'
+            ? 'failed'
+            : 'idle',
+    ...(state.scenario ? { scenario: state.scenario } : {}),
+    ...(state.message ? { message: state.message } : {}),
+  });
+
 export function App() {
   const [state, setState] = useState<FoundationSessionCompositionState>();
+  const [lifecycle, setLifecycle] = useState<BrowserLifecycle>({
+    status: 'booting',
+  });
   const [actions, setActions] = useState<Actions>();
   const [selectedScenario, setSelectedScenario] = useState<CanonicalScenario>();
   const [scenarioSelection, setScenarioSelection] =
     useState<ScenarioSelectionState>({ status: 'idle' });
+  const [scenarioLoaderState, setScenarioLoaderState] =
+    useState<ScenarioLoaderState>({ status: 'idle' });
+  const [cityNames, setCityNames] = useState<CityNameLookup>({});
+  const [saveDiscovery, setSaveDiscovery] = useState<SaveDiscovery>({});
+  const [resolverReady, setResolverReady] = useState(false);
+  const [bootstrapAttempt, setBootstrapAttempt] = useState(0);
+  const [bootstrapRetryAvailable, setBootstrapRetryAvailable] = useState(false);
   const [stackSeedScenario, setStackSeedScenario] =
     useState<CanonicalScenario>();
+  const [sessionLaunch, setSessionLaunch] = useState<SessionLaunchRequest>();
   const [browserActionMessage, setBrowserActionMessage] = useState<string>();
   const [selectedRouteId, setSelectedRouteId] = useState<string>();
+  const [gameSelection, setGameSelection] = useState<GameSelection>(null);
   const [authoritativePackageState, setAuthoritativePackageState] =
     useState<AuthoritativeScenarioPackageState>({ status: 'idle' });
   const selectedRouteIdRef = useRef<string | undefined>(undefined);
@@ -84,7 +152,20 @@ export function App() {
   const scenarioResolver = useRef<
     ((coordinate: ScenarioCoordinate) => Promise<CanonicalScenario>) | undefined
   >(undefined);
+  const explicitScenarioSelection = useRef(false);
+  const defaultScenarioInitialized = useRef(false);
+  const [scenarioLoader] = useState(() =>
+    createScenarioLoader({
+      baseUrl: import.meta.env.BASE_URL,
+      fetchText: async (url) => {
+        const response = await fetch(url);
+        return { ok: response.ok, text: () => response.text() };
+      },
+      digestSha256: browserSha256,
+    }),
+  );
   const saveMode = useRef<FoundationSaveMode>('manual');
+  const sessionLaunchSequence = useRef(0);
   const cacheScenario = useCallback((next: CanonicalScenario) => {
     scenarioCache.current.set(
       scenarioKey(createScenarioCoordinate(next)),
@@ -92,37 +173,114 @@ export function App() {
     );
     setScenarioCacheRevision((revision) => revision + 1);
   }, []);
-  const handleResolverReady = useCallback(
-    (
-      resolve: (coordinate: ScenarioCoordinate) => Promise<CanonicalScenario>,
-    ) => {
-      scenarioResolver.current = async (coordinate) => {
-        const resolved = await resolve(coordinate);
-        cacheScenario(resolved);
-        return resolved;
-      };
-    },
-    [cacheScenario],
-  );
-  const handleScenarioReady = useCallback(
-    (next: CanonicalScenario) => {
-      cacheScenario(next);
-    },
-    [cacheScenario],
-  );
-  const handleSelectionChange = useCallback(
-    (next: ScenarioSelectionState) => {
-      setScenarioSelection(next);
-      if (next.status === 'ready' && next.scenario) {
-        cacheScenario(next.scenario);
-        setSelectedScenario(next.scenario);
-        setStackSeedScenario((current) => current ?? next.scenario);
+  useEffect(() => {
+    let live = true;
+    setBootstrapRetryAvailable(false);
+    setResolverReady(false);
+    const remove = scenarioLoader.projection.subscribe((next) => {
+      if (!live) return;
+      setScenarioLoaderState(next);
+      const selection = toScenarioSelectionState(next);
+      setScenarioSelection(selection);
+      if (selection.status === 'ready' && selection.scenario) {
+        cacheScenario(selection.scenario);
+        setSelectedScenario(selection.scenario);
       }
+    });
+    scenarioResolver.current = async (coordinate) => {
+      const resolved = await scenarioLoader.resolveScenario(coordinate);
+      cacheScenario(resolved);
+      return resolved;
+    };
+    void (async () => {
+      const discovery = discoverBrowserSave().then(
+        (result) => result,
+        (error: unknown) =>
+          Object.freeze({
+            unavailableSaveMessage:
+              error instanceof Error
+                ? error.message
+                : 'Saved sessions could not be inspected.',
+          }),
+      );
+      await scenarioLoader.loadCatalog();
+      if (!live) return;
+      const catalog = scenarioLoader.projection.getState().catalog;
+      if (!catalog) {
+        setBootstrapRetryAvailable(true);
+        setLifecycle({
+          status: 'recoverable-failure',
+          message: 'Scenario catalogue could not be loaded.',
+        });
+        const discovered = await discovery;
+        if (!live) return;
+        setSaveDiscovery(discovered);
+        return;
+      }
+      setResolverReady(true);
+      if (
+        !defaultScenarioInitialized.current &&
+        !explicitScenarioSelection.current
+      ) {
+        defaultScenarioInitialized.current = true;
+        await scenarioLoader.loadScenario(defaultScenarioId);
+      }
+      if (!live) return;
+      const discovered = await discovery;
+      if (!live) return;
+      setSaveDiscovery(discovered);
+      setLifecycle({ status: 'open' });
+      const representatives = [
+        ...new Map(
+          catalog.scenarios.map((descriptor) => [
+            descriptor.primarySettlementId,
+            descriptor,
+          ]),
+        ).values(),
+      ];
+      void Promise.all(
+        representatives.map(async (descriptor) => ({
+          cityId: descriptor.primarySettlementId,
+          scenario: await scenarioLoader.resolveCatalogScenario(
+            descriptor.scenarioId,
+          ),
+        })),
+      ).then(
+        (resolved) => {
+          if (!live) return;
+          setCityNames(
+            Object.freeze(
+              Object.fromEntries(
+                resolved.map(({ cityId, scenario }) => [
+                  cityId,
+                  scenario.settlements.settlements.find(
+                    ({ settlementId }) => settlementId === cityId,
+                  )?.name ?? cityId,
+                ]),
+              ),
+            ),
+          );
+        },
+        () => undefined,
+      );
+    })();
+    return () => {
+      live = false;
+      remove();
+      scenarioResolver.current = undefined;
+    };
+  }, [bootstrapAttempt, cacheScenario, scenarioLoader]);
+  const selectScenario = useCallback(
+    (scenarioId: string) => {
+      explicitScenarioSelection.current = true;
+      void scenarioLoader.loadScenario(scenarioId);
     },
-    [cacheScenario],
+    [scenarioLoader],
   );
   useEffect(() => {
-    if (typeof Worker === 'undefined' || !stackSeedScenario) return;
+    if (typeof Worker === 'undefined' || !sessionLaunch) return;
+    let live = true;
+    const launchScenario = sessionLaunch.scenario;
     let currentApplication:
       ReturnType<typeof createTransportFoundationApplication> | undefined;
     let vehicleCommandSequence = 0;
@@ -153,7 +311,7 @@ export function App() {
           'foundation-template',
         );
         const application = createTransportFoundationApplication({
-          scenario: stackSeedScenario,
+          scenario: launchScenario,
           repository,
           createClient: () =>
             createWorkerTransportSimulationClient({
@@ -209,14 +367,32 @@ export function App() {
       saveMode: composition.setSaveMode,
       close: composition.closeSession,
       start: composition.startNewSession,
+      restoreInitial: composition.restoreInitialSession,
       sendVehicleCommand,
     });
-    void composition.startNewSession();
+    void (async () => {
+      if (sessionLaunch.action.kind === 'new')
+        await composition.startNewSession();
+      else await composition.restoreInitialSession(sessionLaunch.action.saveId);
+      if (!live) return;
+      const next = composition.projection.getState();
+      if (next.application.session.status === 'ready') {
+        await composition.setMode('normal');
+        if (!live) return;
+        setLifecycle({ status: 'playing' });
+      } else {
+        setLifecycle({
+          status: 'recoverable-failure',
+          message: next.message ?? 'The game could not be started.',
+        });
+      }
+    })();
     return () => {
+      live = false;
       remove();
       void composition.dispose();
     };
-  }, [stackSeedScenario]);
+  }, [sessionLaunch]);
 
   const application = state?.application;
   const pacing = state?.pacing;
@@ -230,11 +406,18 @@ export function App() {
     application?.persistence.status === 'failed'
       ? application.persistence.message
       : undefined;
-  const fleet = (
-    application as
-      | (typeof application & { readonly fleet?: readonly VehicleState[] })
-      | undefined
-  )?.fleet;
+  const transportApplication = application as
+    | (typeof application & {
+        readonly fleet?: readonly VehicleState[];
+        readonly passengerDemand?: PassengerDemandProjection;
+        readonly vehicleOperations?: readonly VehiclePatternRunState[];
+        readonly vehiclePassengerLoads?: readonly VehiclePassengerLoadProjection[];
+        readonly currentBoardingEvents?: readonly CurrentBoardingEvent[];
+        readonly currentAlightingEvents?: readonly CurrentAlightingEvent[];
+        readonly currentJourneyCompletionEvents?: readonly PassengerJourneyCompletionEvent[];
+      })
+    | undefined;
+  const fleet = transportApplication?.fleet;
   const authoritativeCoordinate = application?.scenario;
   const authoritativeCoordinateKey = authoritativeCoordinate
     ? scenarioKey(authoritativeCoordinate)
@@ -331,9 +514,123 @@ export function App() {
       setSelectedRouteId(first);
     }
   }, [authoritativeScenarioPackage]);
+  useEffect(() => {
+    if (!authoritativeScenarioPackage || !fleet) {
+      setGameSelection(null);
+      return;
+    }
+    if (
+      !selectionExists(gameSelection, {
+        routeIds: new Set(
+          authoritativeScenarioPackage.routes.routes.map(({ routeId }) =>
+            String(routeId),
+          ),
+        ),
+        stopPlaceIds: new Set(
+          authoritativeScenarioPackage.stops.stopPlaces.map(({ stopPlaceId }) =>
+            String(stopPlaceId),
+          ),
+        ),
+        vehicleIds: new Set(fleet.map(({ vehicleId }) => String(vehicleId))),
+      })
+    )
+      setGameSelection(null);
+  }, [
+    authoritativeCoordinateKey,
+    authoritativeScenarioPackage,
+    fleet,
+    gameSelection,
+  ]);
   const action = (operation: (() => Promise<void>) | undefined) => () => {
     void operation?.();
   };
+
+  const scenarioChooser = (
+    <Suspense fallback={<p>Loading scenario catalogue…</p>}>
+      <ScenarioPanel
+        state={scenarioLoaderState}
+        cityNames={cityNames}
+        disabled={
+          lifecycle.status === 'booting' ||
+          lifecycle.status === 'creating' ||
+          lifecycle.status === 'restoring'
+        }
+        onScenarioChange={selectScenario}
+      />
+    </Suspense>
+  );
+  const requestSessionLaunch = (
+    scenario: CanonicalScenario,
+    launchAction: SessionLaunchRequest['action'],
+  ) => {
+    setStackSeedScenario(scenario);
+    setSessionLaunch({
+      sequence: ++sessionLaunchSequence.current,
+      scenario,
+      action: launchAction,
+    });
+  };
+  const createGame = () => {
+    if (scenarioSelection.status !== 'ready' || !selectedScenario) return;
+    setLifecycle({ status: 'creating' });
+    requestSessionLaunch(selectedScenario, { kind: 'new' });
+  };
+  const continueGame = (save: TransportSaveSummary) => {
+    const resolve = scenarioResolver.current;
+    if (!resolve) return;
+    setLifecycle({ status: 'restoring' });
+    void resolve({
+      scenarioSchemaVersion: save.scenarioSchemaVersion as '1.0.0',
+      scenarioId: save.scenarioId as ScenarioCoordinate['scenarioId'],
+      scenarioVersion: save.scenarioVersion,
+      contentHash: save.contentHash,
+    }).then(
+      (scenario) => {
+        explicitScenarioSelection.current = true;
+        scenarioLoader.adoptResolvedScenario(scenario);
+        requestSessionLaunch(scenario, {
+          kind: 'restore',
+          saveId: save.saveId,
+        });
+      },
+      (error: unknown) => {
+        setLifecycle({
+          status: 'recoverable-failure',
+          message:
+            error instanceof Error
+              ? error.message
+              : 'The saved scenario is unavailable.',
+        });
+      },
+    );
+  };
+  const retryBootstrap = () => {
+    if (!bootstrapRetryAvailable) return;
+    setLifecycle({ status: 'booting' });
+    setBootstrapAttempt((attempt) => attempt + 1);
+  };
+
+  if (lifecycle.status !== 'playing')
+    return (
+      <Suspense fallback={<p>Loading Open Screen…</p>}>
+        <OpenScreen
+          state={lifecycle.status}
+          scenarioChooser={scenarioChooser}
+          selectedScenarioReady={
+            scenarioSelection.status === 'ready' && !!selectedScenario
+          }
+          resolverReady={resolverReady}
+          resumableSave={saveDiscovery.resumableSave}
+          unavailableSaveMessage={saveDiscovery.unavailableSaveMessage}
+          message={lifecycle.message}
+          onRetryBootstrap={
+            bootstrapRetryAvailable ? retryBootstrap : undefined
+          }
+          onCreate={createGame}
+          onContinue={continueGame}
+        />
+      </Suspense>
+    );
 
   const simulationControls = (
     <Suspense fallback={<p>Loading simulation controls…</p>}>
@@ -368,7 +665,8 @@ export function App() {
         createScenarioCoordinate(stackSeedScenario),
       )
     ) {
-      setStackSeedScenario(selectedScenario);
+      setLifecycle({ status: 'creating' });
+      requestSessionLaunch(selectedScenario, { kind: 'new' });
       return;
     }
     await actions?.start();
@@ -408,11 +706,7 @@ export function App() {
       </summary>
       <div className="scenario-menu-panel">
         <Suspense fallback={<p>Loading scenario catalogue…</p>}>
-          <ScenarioPanel
-            onResolverReady={handleResolverReady}
-            onScenarioReady={handleScenarioReady}
-            onSelectionChange={handleSelectionChange}
-          />
+          {scenarioChooser}
         </Suspense>
       </div>
     </details>
@@ -436,7 +730,8 @@ export function App() {
         createScenarioCoordinate(stackSeedScenario),
       )
     ) {
-      setStackSeedScenario(selectedScenario);
+      setLifecycle({ status: 'creating' });
+      requestSessionLaunch(selectedScenario, { kind: 'new' });
       return;
     }
     await actions?.start();
@@ -479,6 +774,8 @@ export function App() {
             <VehicleMovementSvg
               scenario={authoritativeScenarioPackage}
               fleet={fleet}
+              selection={gameSelection}
+              onSelectionChange={setGameSelection}
             />
           ) : (
             <p>Authoritative scenario representation loading.</p>
@@ -489,6 +786,32 @@ export function App() {
         <Suspense fallback={<p>Loading representation…</p>}>
           <FoundationScene />
         </Suspense>
+      }
+      inspector={
+        authoritativeScenarioPackage && fleet ? (
+          <Suspense fallback={<p>Loading inspector…</p>}>
+            <GameInspector
+              selection={gameSelection}
+              scenario={authoritativeScenarioPackage}
+              fleet={fleet}
+              passengerDemand={transportApplication?.passengerDemand}
+              vehicleOperations={transportApplication?.vehicleOperations}
+              vehiclePassengerLoads={
+                transportApplication?.vehiclePassengerLoads
+              }
+              currentBoardingEvents={
+                transportApplication?.currentBoardingEvents
+              }
+              currentAlightingEvents={
+                transportApplication?.currentAlightingEvents
+              }
+              currentJourneyCompletionEvents={
+                transportApplication?.currentJourneyCompletionEvents
+              }
+              onClear={() => setGameSelection(null)}
+            />
+          </Suspense>
+        ) : null
       }
     />
   );
@@ -501,3 +824,5 @@ const ScenarioPanel = lazy(() =>
     default: ScenarioPanel,
   })),
 );
+const OpenScreen = lazy(() => import('./ui/OpenScreen.js'));
+const GameInspector = lazy(() => import('./ui/GameInspector.js'));

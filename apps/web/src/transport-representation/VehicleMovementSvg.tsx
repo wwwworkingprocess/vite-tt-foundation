@@ -1,5 +1,12 @@
 import type { VehicleState } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
+import type { KeyboardEvent } from 'react';
+import {
+  selectRoute,
+  selectStop,
+  selectVehicle,
+  type GameSelection,
+} from '../ui/game-selection.js';
 import { projectVehicleMovementSvg } from './vehicle-svg-projection.js';
 
 type SvgEdgeGeometry = Readonly<{
@@ -52,11 +59,21 @@ const createMidpointArrowPoints = ({
 export function VehicleMovementSvg({
   scenario,
   fleet,
+  selection = null,
+  onSelectionChange,
 }: Readonly<{
   scenario: CanonicalScenario;
   fleet: readonly VehicleState[];
+  selection?: GameSelection;
+  onSelectionChange?: (selection: GameSelection) => void;
 }>) {
   const projection = projectVehicleMovementSvg(scenario, fleet);
+  const activate = (callback: () => void) => (event: KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      callback();
+    }
+  };
   return (
     <svg
       data-testid="vehicle-movement-svg"
@@ -65,7 +82,7 @@ export function VehicleMovementSvg({
       data-node-count={projection.nodes.length}
       data-directed-edge-count={projection.edges.length}
       viewBox={projection.viewBox}
-      role="img"
+      role="group"
       aria-label="Authoritative vehicle movement"
     >
       <g aria-label="Directed route edges">
@@ -90,6 +107,17 @@ export function VehicleMovementSvg({
                 y2={edge.y2}
                 stroke={color}
                 strokeWidth="0.6"
+                role="button"
+                tabIndex={0}
+                aria-label={`Select route ${edge.routeId}`}
+                data-selected={
+                  selection?.kind === 'route' &&
+                  selection.routeId === edge.routeId
+                }
+                onClick={() => onSelectionChange?.(selectRoute(edge.routeId))}
+                onKeyDown={activate(() =>
+                  onSelectionChange?.(selectRoute(edge.routeId)),
+                )}
               />
 
               {arrowPoints ? (
@@ -117,6 +145,27 @@ export function VehicleMovementSvg({
             cy={node.cy}
             r="0.8"
             fill="currentColor"
+            role={node.stopPlaceId ? 'button' : undefined}
+            tabIndex={node.stopPlaceId ? 0 : undefined}
+            aria-label={
+              node.stopPlaceId ? `Select stop ${node.name}` : undefined
+            }
+            data-stop-place-id={node.stopPlaceId}
+            data-selected={
+              selection?.kind === 'stop' &&
+              selection.stopPlaceId === node.stopPlaceId
+            }
+            onClick={() =>
+              node.stopPlaceId &&
+              onSelectionChange?.(selectStop(node.stopPlaceId))
+            }
+            onKeyDown={
+              node.stopPlaceId
+                ? activate(() =>
+                    onSelectionChange?.(selectStop(node.stopPlaceId!)),
+                  )
+                : undefined
+            }
           />
         ))}
       </g>
@@ -139,6 +188,18 @@ export function VehicleMovementSvg({
             cy={vehicle.cy}
             r="1.8"
             fill="crimson"
+            role="button"
+            tabIndex={0}
+            data-selected={
+              selection?.kind === 'vehicle' &&
+              selection.vehicleId === vehicle.vehicleId
+            }
+            onClick={() =>
+              onSelectionChange?.(selectVehicle(vehicle.vehicleId))
+            }
+            onKeyDown={activate(() =>
+              onSelectionChange?.(selectVehicle(vehicle.vehicleId)),
+            )}
           />
         ))}
       </g>

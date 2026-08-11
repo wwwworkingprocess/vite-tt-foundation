@@ -29,6 +29,9 @@ const projectInfo = one(/^ProjectInfo-[\w-]+\.js$/);
 const simulationControls = one(/^SimulationControls-[\w-]+\.js$/);
 const sessionControls = one(/^SessionControls-[\w-]+\.js$/);
 const svgRepresentation = one(/^VehicleMovementSvg-[\w-]+\.js$/);
+const openScreen = one(/^OpenScreen-[\w-]+\.js$/);
+const gameInspector = one(/^GameInspector-[\w-]+\.js$/);
+const persistenceRuntime = one(/^persistence-runtime-[\w-]+\.js$/);
 const representation = one(/^foundation-scene-[\w-]+\.js$/);
 const register = one(/^registerSW\.js$/);
 const serviceWorker = one(/^sw\.js$/);
@@ -40,6 +43,9 @@ for (const [name, matches] of Object.entries({
   simulationControls,
   sessionControls,
   svgRepresentation,
+  openScreen,
+  gameInspector,
+  persistenceRuntime,
   representation,
   transportWorker,
   registerSW: register,
@@ -69,6 +75,9 @@ const sizes = {
   simulationControls: await size(simulationControls[0]),
   sessionControls: await size(sessionControls[0]),
   svgRepresentation: await size(svgRepresentation[0]),
+  openScreen: await size(openScreen[0]),
+  gameInspector: await size(gameInspector[0]),
+  persistenceRuntime: await size(persistenceRuntime[0]),
   representation: await size(representation[0]),
   transportWorker: await size(transportWorker[0]),
   totalEmittedJavaScript: (await Promise.all(javascript.map(size))).reduce(

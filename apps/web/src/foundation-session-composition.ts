@@ -401,6 +401,63 @@ export function createFoundationSessionComposition(input: {
     }
   }
 
+  async function restoreInitialSession(saveId: string) {
+    if (disposed || stack || store.getState().operation !== 'idle') return;
+    closePromise = undefined;
+    set({
+      operation: 'restoring',
+      canStartNewSession: false,
+      message: undefined,
+    });
+    let candidate: FoundationSessionStack;
+    try {
+      candidate = input.createStack();
+    } catch (error) {
+      recordError(error);
+      set({ operation: 'idle', canStartNewSession: true });
+      return;
+    }
+    const token = ++generation;
+    stack = candidate;
+    subscribeStack(candidate, token);
+    try {
+      const sequence = ++sessionSequence;
+      await candidate.application.startNew({
+        gameId: parseGameId('browser-foundation-game'),
+        timelineId: parseTimelineId(
+          sequence === 1
+            ? 'browser-foundation-timeline'
+            : `browser-foundation-timeline-${sequence}`,
+        ),
+        initialSimulationTick: 0,
+      });
+      if (!currentContext(candidate, token)) return;
+      await candidate.application.listSaves();
+      if (!currentContext(candidate, token)) return;
+      await candidate.application.restore({
+        saveId,
+        newTimelineId: freshRestoreTimeline(saveId),
+      });
+      if (!readyContext(candidate, token)) return;
+      candidate.driver.start((elapsed) =>
+        candidate.pacing.advanceByElapsedMicroseconds(elapsed),
+      );
+      set({ operation: 'idle', canStartNewSession: false });
+      armAutosaveInterval();
+    } catch (error) {
+      if (!currentContext(candidate, token)) return;
+      generation += 1;
+      stack = undefined;
+      removeSubscriptions();
+      const cleanupFailure = await cleanup(candidate);
+      set({
+        operation: 'idle',
+        canStartNewSession: true,
+        message: errorMessage(cleanupFailure ?? error),
+      });
+    }
+  }
+
   async function saveManual(): Promise<FoundationSaveOutcome> {
     const candidate = stack;
     const token = generation;
@@ -521,6 +578,7 @@ export function createFoundationSessionComposition(input: {
       subscribe: store.subscribe,
     }),
     startNewSession,
+    restoreInitialSession,
     saveManual,
     restoreManual,
     restoreSave,

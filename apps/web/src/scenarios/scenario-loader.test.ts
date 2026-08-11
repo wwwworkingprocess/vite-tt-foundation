@@ -305,6 +305,14 @@ describe('browser scenario loader', () => {
         createHash('sha256').update(text).digest('hex'),
     });
     await loader.loadCatalog();
+    await expect(
+      loader.resolveCatalogScenario('torrevieja-legacy-abc-v1'),
+    ).resolves.toMatchObject({
+      manifest: { scenarioId: 'torrevieja-legacy-abc-v1' },
+    });
+    await expect(loader.resolveCatalogScenario('missing')).rejects.toThrow(
+      'Unknown scenario missing',
+    );
     await loader.loadScenario('torrevieja-legacy-all-v1');
     expect(loader.projection.getState()).toMatchObject({
       status: 'ready',
@@ -322,6 +330,21 @@ describe('browser scenario loader', () => {
     );
     expect(resolved.manifest.scenarioId).toBe('torrevieja-legacy-all-v1');
     expect(loader.projection.getState()).toBe(selectedState);
+    loader.adoptResolvedScenario(resolved);
+    expect(loader.projection.getState()).toMatchObject({
+      status: 'ready',
+      selectedScenarioId: 'torrevieja-legacy-all-v1',
+      scenario: resolved,
+    });
+    const unready = createScenarioLoader({
+      baseUrl: '/vite-tt-foundation/',
+      fetchText,
+      digestSha256: async (text) =>
+        createHash('sha256').update(text).digest('hex'),
+    });
+    expect(() => unready.adoptResolvedScenario(resolved)).toThrow(
+      'exact saved scenario',
+    );
     await expect(
       loader.resolveScenario({
         ...createScenarioCoordinate(resolved),

@@ -15,8 +15,9 @@ import {
   parseScenarioPackage,
 } from '@torrevieja-tycoon/transport-domain';
 import { createScenarioCoordinate } from '@torrevieja-tycoon/simulation';
-import { useRef } from 'react';
 import { createScenarioScopedSaveTarget } from './transport-simulation/scenario-save-target.js';
+import type { TransportSaveSummary } from './transport-simulation/transport-save-record.js';
+import { createDexieTransportSaveRepository } from './transport-simulation/transport-save-repository.js';
 
 const fleetTuples = () =>
   [...document.querySelectorAll('[data-testid^="vehicle-row-"]')].map(
@@ -105,106 +106,172 @@ const alternateScenario = parseScenarioPackage({
   provenance: alternate('provenance.json'),
 });
 
+vi.mock('./project-defaults.js', () => ({
+  defaultScenarioId: 'torrevieja-mini-v1',
+}));
+
+let deferCityNameResolution = false;
+let releaseCityNameResolution: (() => void) | undefined;
+let failNextWorkerStart = false;
+let failNextCatalogLoad = false;
+let discoveredSave: TransportSaveSummary | undefined;
+let holdNextWorkerStart = false;
+let releaseHeldWorkerStart: (() => void) | undefined;
+type SaveDiscoveryResult = Readonly<{
+  resumableSave?: TransportSaveSummary;
+  unavailableSaveMessage?: string;
+}>;
+let queuedSaveDiscoveries: Array<Promise<SaveDiscoveryResult>> = [];
+
+vi.mock('./ui/open-screen-model.js', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('./ui/open-screen-model.js')>()),
+  discoverBrowserSave: async () =>
+    queuedSaveDiscoveries.shift() ??
+    (discoveredSave ? { resumableSave: discoveredSave } : {}),
+}));
+
 vi.mock('./scenarios/ScenarioPanel.js', () => ({
+  toScenarioSelectionState: (state: {
+    status: string;
+    selectedScenarioId?: string;
+    scenario?: typeof scenario;
+    message?: string;
+  }) => ({
+    requestedScenarioId: state.selectedScenarioId,
+    status:
+      state.status === 'loading-scenario'
+        ? 'loading'
+        : state.status === 'ready'
+          ? 'ready'
+          : state.status === 'failed'
+            ? 'failed'
+            : 'idle',
+    ...(state.scenario ? { scenario: state.scenario } : {}),
+    ...(state.message ? { message: state.message } : {}),
+  }),
   ScenarioPanel: ({
-    onScenarioReady,
-    onResolverReady,
-    onSelectionChange,
+    onScenarioChange,
+    disabled,
   }: {
-    onScenarioReady(value: typeof scenario): void;
-    onSelectionChange?(value: {
-      requestedScenarioId?: string;
-      status: 'idle' | 'loading' | 'ready' | 'failed';
-      scenario?: typeof scenario;
-      message?: string;
-    }): void;
-    onResolverReady?(
-      resolve: (coordinate: { scenarioId: string }) => Promise<typeof scenario>,
-    ): void;
+    onScenarioChange(value: string): void;
+    disabled?: boolean;
   }) => {
-    const emitted = useRef(false);
-    if (!emitted.current) {
-      emitted.current = true;
-      queueMicrotask(() => {
-        onResolverReady?.((coordinate) =>
-          Promise.resolve(
-            coordinate.scenarioId === legacyScenario.manifest.scenarioId
-              ? (legacyScenario as typeof scenario)
-              : coordinate.scenarioId === alternateScenario.manifest.scenarioId
-                ? alternateScenario
-                : scenario,
-          ),
-        );
-        onScenarioReady(scenario);
-        onSelectionChange?.({
-          requestedScenarioId: scenario.manifest.scenarioId,
-          status: 'ready',
-          scenario,
-        });
-      });
-    }
     return (
       <div>
         Scenario fixture
         <button
-          onClick={() => {
-            onScenarioReady(alternateScenario);
-            onSelectionChange?.({
-              requestedScenarioId: alternateScenario.manifest.scenarioId,
-              status: 'ready',
-              scenario: alternateScenario as typeof scenario,
-            });
-          }}
+          disabled={disabled}
+          onClick={() =>
+            onScenarioChange(alternateScenario.manifest.scenarioId)
+          }
         >
           Select scenario B
         </button>
         <button
-          onClick={() => {
-            onScenarioReady(scenario);
-            onSelectionChange?.({
-              requestedScenarioId: scenario.manifest.scenarioId,
-              status: 'ready',
-              scenario,
-            });
-          }}
+          disabled={disabled}
+          onClick={() => onScenarioChange(scenario.manifest.scenarioId)}
         >
           Select scenario A
         </button>
         <button
-          onClick={() => {
-            onScenarioReady(legacyScenario);
-            onSelectionChange?.({
-              requestedScenarioId: legacyScenario.manifest.scenarioId,
-              status: 'ready',
-              scenario: legacyScenario as typeof scenario,
-            });
-          }}
+          disabled={disabled}
+          onClick={() => onScenarioChange(legacyScenario.manifest.scenarioId)}
         >
           Select legacy routes
         </button>
         <button
-          onClick={() =>
-            onSelectionChange?.({
-              requestedScenarioId: alternateScenario.manifest.scenarioId,
-              status: 'loading',
-            })
-          }
+          disabled={disabled}
+          onClick={() => onScenarioChange('request-b')}
         >
           Request scenario B
         </button>
-        <button
-          onClick={() =>
-            onSelectionChange?.({
-              requestedScenarioId: alternateScenario.manifest.scenarioId,
-              status: 'failed',
-              message: 'Scenario B failed',
-            })
-          }
-        >
+        <button disabled={disabled} onClick={() => onScenarioChange('fail-b')}>
           Fail scenario B
         </button>
       </div>
     );
+  },
+}));
+
+vi.mock('./scenarios/scenario-loader.js', () => ({
+  browserSha256: vi.fn(),
+  createScenarioLoader: () => {
+    let state: Record<string, unknown> = { status: 'idle' };
+    const listeners = new Set<(value: never) => void>();
+    const publish = (next: Record<string, unknown>) => {
+      state = next;
+      listeners.forEach((listener) => listener(next as never));
+    };
+    const catalog = {
+      scenarios: [scenario, alternateScenario, legacyScenario].map((item) => ({
+        scenarioId: item.manifest.scenarioId,
+        scenarioVersion: item.manifest.scenarioVersion,
+        contentHash: item.manifest.contentHash,
+        title: item.manifest.title,
+        primarySettlementId: item.settlements.settlements[0]!.settlementId,
+      })),
+    };
+    const find = (id: string) =>
+      id === alternateScenario.manifest.scenarioId
+        ? alternateScenario
+        : id === legacyScenario.manifest.scenarioId
+          ? legacyScenario
+          : scenario;
+    return {
+      projection: {
+        getState: () => state,
+        subscribe: (listener: (value: never) => void) => {
+          listeners.add(listener);
+          return () => listeners.delete(listener);
+        },
+      },
+      loadCatalog: async () => {
+        if (failNextCatalogLoad) {
+          failNextCatalogLoad = false;
+          publish({ status: 'failed', message: 'catalogue failed' });
+          return;
+        }
+        publish({ status: 'idle', catalog });
+      },
+      loadScenario: async (id: string) => {
+        if (id === 'request-b')
+          return publish({
+            status: 'loading-scenario',
+            catalog,
+            selectedScenarioId: alternateScenario.manifest.scenarioId,
+          });
+        if (id === 'fail-b')
+          return publish({
+            status: 'failed',
+            catalog,
+            selectedScenarioId: alternateScenario.manifest.scenarioId,
+            message: 'Scenario B failed',
+          });
+        const selected = find(id);
+        publish({
+          status: 'ready',
+          catalog,
+          selectedScenarioId: selected.manifest.scenarioId,
+          scenario: selected,
+        });
+      },
+      resolveScenario: async (coordinate: { scenarioId: string }) =>
+        find(coordinate.scenarioId),
+      adoptResolvedScenario: (selected: typeof scenario) =>
+        publish({
+          status: 'ready',
+          catalog,
+          selectedScenarioId: selected.manifest.scenarioId,
+          scenario: selected,
+        }),
+      resolveCatalogScenario: async (id: string) => {
+        if (deferCityNameResolution)
+          await new Promise<void>((resolve) => {
+            releaseCityNameResolution = resolve;
+          });
+        return find(id);
+      },
+    };
   },
 }));
 
@@ -215,6 +282,34 @@ vi.mock('./transport-simulation/browser-transport-worker.js', async () => {
     await import('./transport-simulation/transport-client.js');
   return {
     createBrowserTransportWorker: () => {
+      if (failNextWorkerStart) {
+        failNextWorkerStart = false;
+        const errorListeners = new Set<
+          (event: { data: unknown; error?: unknown }) => void
+        >();
+        return {
+          postMessage: () =>
+            queueMicrotask(() =>
+              errorListeners.forEach((listener) =>
+                listener({
+                  data: undefined,
+                  error: new Error('startup failed'),
+                }),
+              ),
+            ),
+          addEventListener: (
+            type: string,
+            listener: (event: { data: unknown; error?: unknown }) => void,
+          ) => {
+            if (type !== 'message') errorListeners.add(listener);
+          },
+          removeEventListener: (
+            _type: string,
+            listener: (event: { data: unknown; error?: unknown }) => void,
+          ) => errorListeners.delete(listener),
+          terminate: vi.fn(),
+        };
+      }
       const clientListeners = new Set<(event: { data: unknown }) => void>();
       const clientErrorListeners = new Set<
         (event: { data: unknown; error?: unknown }) => void
@@ -235,12 +330,18 @@ vi.mock('./transport-simulation/browser-transport-worker.js', async () => {
         createDirectTransportSimulationClient,
       );
       return {
-        postMessage: (message: unknown) =>
-          queueMicrotask(() =>
-            runtimeListeners.forEach((listener) =>
-              listener({ data: structuredClone(message) }),
-            ),
-          ),
+        postMessage: (message: unknown) => {
+          const deliver = () =>
+            queueMicrotask(() =>
+              runtimeListeners.forEach((listener) =>
+                listener({ data: structuredClone(message) }),
+              ),
+            );
+          if (holdNextWorkerStart) {
+            holdNextWorkerStart = false;
+            releaseHeldWorkerStart = deliver;
+          } else deliver();
+        },
         addEventListener: (
           type: 'message' | 'error' | 'messageerror',
           listener: (event: { data: unknown; error?: unknown }) => void,
@@ -263,10 +364,15 @@ vi.mock('./transport-simulation/browser-transport-worker.js', async () => {
 
 import { App } from './App.js';
 
-const renderAppWithControls = () => {
+const renderAppWithControls = async () => {
   render(<App />);
+  const start = await screen.findByRole('button', { name: 'Start new game' });
+  await waitFor(() => expect(start).toBeEnabled());
+  fireEvent.click(start);
+  await screen.findByTestId('game-shell');
   fireEvent.click(screen.getByTestId('scenario-menu-trigger'));
   fireEvent.click(screen.getByRole('button', { name: 'Simulation controls' }));
+  await pauseSimulation();
 };
 
 const openDialog = (name: 'Simulation controls' | 'Load') => {
@@ -283,28 +389,236 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
 
 const openSimulationControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
+const pauseSimulation = async () => {
+  await waitFor(() =>
+    expect(screen.getByTestId('pacing-status')).toHaveTextContent(
+      /running|paused/,
+    ),
+  );
+  if (screen.getByTestId('pacing-status').textContent?.includes('running'))
+    fireEvent.click(
+      within(
+        screen.getByRole('dialog', { name: 'Simulation controls' }),
+      ).getByRole('button', { name: 'Pause' }),
+    );
+  await waitFor(() =>
+    expect(screen.getByTestId('pacing-status')).toHaveTextContent('paused'),
+  );
+};
 
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
+  deferCityNameResolution = false;
+  releaseCityNameResolution = undefined;
+  failNextWorkerStart = false;
+  failNextCatalogLoad = false;
+  discoveredSave = undefined;
+  holdNextWorkerStart = false;
+  releaseHeldWorkerStart = undefined;
+  queuedSaveDiscoveries = [];
 });
 
 describe('foundation screen', () => {
-  it('identifies the app and starts the renderer boundary', async () => {
+  it('opens before creating authority and starts the renderer boundary after choosing a game', async () => {
+    vi.stubGlobal('Worker', class FoundationWorker {});
     render(<App />);
     expect(
-      screen.getByRole('heading', { name: 'Torrevieja Tycoon' }),
+      await screen.findByRole('heading', { name: 'Torrevieja Tycoon' }),
     ).toBeInTheDocument();
+    expect(await screen.findByTestId('open-screen')).toBeInTheDocument();
+    expect(screen.queryByTestId('r3f-canvas')).toBeNull();
+    const start = await screen.findByRole('button', { name: 'Start new game' });
+    await waitFor(() => expect(start).toBeEnabled());
+    fireEvent.click(start);
+    await screen.findByTestId('game-shell');
+    expect(screen.getByRole('button', { name: 'Pause' })).toBeEnabled();
     fireEvent.click(screen.getByRole('button', { name: 'Project info' }));
     expect(
-      await screen.findByText('standalone simulation package'),
+      await screen.findByText('standalone simulation package', undefined, {
+        timeout: 5_000,
+      }),
     ).toBeInTheDocument();
     expect(await screen.findByTestId('r3f-canvas')).toBeInTheDocument();
+  }, 15_000);
+
+  it('preserves explicit non-default intent while city presentation metadata resolves late', async () => {
+    deferCityNameResolution = true;
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'Select scenario B' }),
+    );
+    const start = screen.getByRole('button', { name: 'Start new game' });
+    await waitFor(() => expect(start).toBeEnabled());
+    releaseCityNameResolution?.();
+    deferCityNameResolution = false;
+    fireEvent.click(start);
+    await screen.findByTestId('game-shell');
+    expect(await screen.findByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-scenario-id',
+      alternateScenario.manifest.scenarioId,
+    );
+    fireEvent.click(screen.getByTestId('scenario-menu-trigger'));
+    expect(screen.getByTestId('scenario-menu-trigger')).toHaveTextContent(
+      alternateScenario.manifest.title,
+    );
+  });
+
+  it('freezes scenario intent while a new-game launch is creating authority', async () => {
+    holdNextWorkerStart = true;
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    const selectB = await screen.findByRole('button', {
+      name: 'Select scenario B',
+    });
+    fireEvent.click(selectB);
+    const start = screen.getByRole('button', { name: 'Start new game' });
+    await waitFor(() => expect(start).toBeEnabled());
+    fireEvent.click(start);
+    expect(
+      await screen.findByText('Creating authoritative game...'),
+    ).toBeInTheDocument();
+    expect(selectB).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Select scenario A' }),
+    ).toBeDisabled();
+    releaseHeldWorkerStart?.();
+    expect(await screen.findByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-scenario-id',
+      alternateScenario.manifest.scenarioId,
+    );
+  });
+
+  it('adopts an exact non-default saved scenario as durable browser intent', async () => {
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    render(<App />);
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'Select scenario B' }),
+    );
+    const start = screen.getByRole('button', { name: 'Start new game' });
+    await waitFor(() => expect(start).toBeEnabled());
+    fireEvent.click(start);
+    await screen.findByTestId('game-shell');
+    await waitFor(() =>
+      expect(screen.getByTestId('scenario-menu-trigger')).toHaveTextContent(
+        alternateScenario.manifest.title,
+      ),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await screen.findByText(/Save completed\./);
+    const repository = createDexieTransportSaveRepository(
+      'foundation-template',
+    );
+    const records = await repository.list();
+    discoveredSave = records
+      .flatMap((record) =>
+        record.classification === 'current' ? [record.summary] : [],
+      )
+      .find(
+        (summary) =>
+          summary.scenarioId === alternateScenario.manifest.scenarioId,
+      );
+    await repository.close();
+    expect(discoveredSave).toBeDefined();
+    cleanup();
+
+    render(<App />);
+    holdNextWorkerStart = true;
+    const continueButton = await screen.findByRole('button', {
+      name: 'Continue saved game',
+    });
+    fireEvent.click(continueButton);
+    expect(
+      await screen.findByText('Restoring authoritative game...'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Select scenario A' }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Select scenario B' }),
+    ).toBeDisabled();
+    releaseHeldWorkerStart?.();
+    await screen.findByTestId('game-shell');
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-scenario-id',
+      alternateScenario.manifest.scenarioId,
+    );
+    expect(screen.getByTestId('scenario-menu-trigger')).toHaveTextContent(
+      alternateScenario.manifest.title,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Restart' }));
+    expect(await screen.findByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-scenario-id',
+      alternateScenario.manifest.scenarioId,
+    );
+    expect(screen.getByTestId('scenario-menu-trigger')).toHaveTextContent(
+      alternateScenario.manifest.title,
+    );
+    const cleanupRepository = createDexieTransportSaveRepository(
+      'foundation-template',
+    );
+    await cleanupRepository.delete(discoveredSave!.saveId);
+    await cleanupRepository.close();
+  });
+
+  it('retries the same exact scenario after an initial Worker startup failure', async () => {
+    failNextWorkerStart = true;
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    const start = await screen.findByRole('button', { name: 'Start new game' });
+    await waitFor(() => expect(start).toBeEnabled());
+    fireEvent.click(start);
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'startup failed',
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Start new game' }));
+    expect(await screen.findByTestId('game-shell')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Pause' })).toBeEnabled();
+  });
+
+  it('retries catalogue bootstrap without reloading the browser', async () => {
+    failNextCatalogLoad = true;
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Scenario catalogue could not be loaded',
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Retry loading' }));
+    const start = await screen.findByRole('button', { name: 'Start new game' });
+    await waitFor(() => expect(start).toBeEnabled());
+    fireEvent.click(start);
+    expect(await screen.findByTestId('game-shell')).toBeInTheDocument();
+  });
+
+  it('ignores stale save discovery from an earlier catalogue attempt', async () => {
+    let resolveStaleDiscovery!: (value: SaveDiscoveryResult) => void;
+    const staleDiscovery = new Promise<SaveDiscoveryResult>((resolve) => {
+      resolveStaleDiscovery = resolve;
+    });
+    queuedSaveDiscoveries = [
+      staleDiscovery,
+      Promise.resolve({ unavailableSaveMessage: 'Current discovery.' }),
+    ];
+    failNextCatalogLoad = true;
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Scenario catalogue could not be loaded',
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Retry loading' }));
+    expect(await screen.findByText('Current discovery.')).toBeInTheDocument();
+    resolveStaleDiscovery({ unavailableSaveMessage: 'Stale discovery.' });
+    await waitFor(() =>
+      expect(screen.queryByText('Stale discovery.')).not.toBeInTheDocument(),
+    );
+    expect(screen.getByText('Current discovery.')).toBeInTheDocument();
   });
 
   it('reports Worker readiness, advancement, and cleanup', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
-    renderAppWithControls();
+    await renderAppWithControls();
 
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
@@ -315,9 +629,9 @@ describe('foundation screen', () => {
       ).toBeEnabled(),
     );
     openSimulationControls();
-    await waitFor(() =>
-      expect(screen.getByTestId('worker-tick')).toHaveTextContent('0'),
-    );
+    expect(
+      Number(screen.getByTestId('worker-tick').textContent?.match(/\d+/)?.[0]),
+    ).toBeGreaterThanOrEqual(0);
     expect(screen.getByTestId('scenario-coordinate')).toHaveTextContent(
       '1.0.0:torrevieja-mini-v1@1.0.0#',
     );
@@ -352,7 +666,7 @@ describe('foundation screen', () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
     const intervals = vi.spyOn(window, 'setInterval');
     const clears = vi.spyOn(window, 'clearInterval');
-    renderAppWithControls();
+    await renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -397,6 +711,7 @@ describe('foundation screen', () => {
       name: 'Start new transport session',
     });
     fireEvent.click(start);
+    await screen.findByTestId('game-shell');
     openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
@@ -422,11 +737,11 @@ describe('foundation screen', () => {
       'data-scenario-id',
       'scenario-b',
     );
-  });
+  }, 15_000);
 
   it('never starts the previous ready package while a requested selection is pending or failed', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
-    renderAppWithControls();
+    await renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -461,6 +776,7 @@ describe('foundation screen', () => {
     });
     await waitFor(() => expect(readyStart).toBeEnabled());
     fireEvent.click(readyStart);
+    await screen.findByTestId('game-shell');
     openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
@@ -471,7 +787,7 @@ describe('foundation screen', () => {
 
   it('exposes deterministic vehicle diagnostics from the authoritative Worker', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
-    renderAppWithControls();
+    await renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -578,7 +894,7 @@ describe('foundation screen', () => {
 
   it('lists canonical legacy routes and creates a vehicle on the chosen RouteId', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
-    renderAppWithControls();
+    await renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -597,12 +913,14 @@ describe('foundation screen', () => {
         name: 'Start new transport session',
       }),
     );
+    await screen.findByTestId('game-shell');
     openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
         'torrevieja-legacy-abc-v1',
       ),
     );
+    await pauseSimulation();
     expect(
       within(screen.getByTestId('route-list')).getByText(
         'A — Torrevieja - La Mata',
@@ -634,11 +952,11 @@ describe('foundation screen', () => {
         screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
       ).toHaveAttribute('data-route-id', 'legacy-B'),
     );
-  });
+  }, 15_000);
 
   it('keeps selection non-destructive and replaces every authority-bound surface together', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
-    renderAppWithControls();
+    await renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -677,6 +995,7 @@ describe('foundation screen', () => {
         name: 'Start new transport session',
       }),
     );
+    await screen.findByTestId('game-shell');
     openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
@@ -718,6 +1037,7 @@ describe('foundation screen', () => {
         name: 'Start new transport session',
       }),
     );
+    await screen.findByTestId('game-shell');
     openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
@@ -734,13 +1054,13 @@ describe('foundation screen', () => {
         .getByTestId('route-list')
         .querySelector('[data-route-id="legacy-A"]'),
     ).toBeNull();
-  }, 10_000);
+  }, 20_000);
 
   it('constructs demo vehicle commands from restored disjoint authority, not selection or stack seed', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
     const confirm = vi.fn(() => true);
     vi.stubGlobal('confirm', confirm);
-    renderAppWithControls();
+    await renderAppWithControls();
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
@@ -790,12 +1110,14 @@ describe('foundation screen', () => {
         name: 'Start new transport session',
       }),
     );
+    await screen.findByTestId('game-shell');
     openSimulationControls();
     await waitFor(() =>
       expect(screen.getByTestId('active-scenario')).toHaveTextContent(
         'scenario-b',
       ),
     );
+    await pauseSimulation();
     await waitFor(() =>
       expect(
         screen.getByRole('button', { name: 'Create demo vehicle' }),

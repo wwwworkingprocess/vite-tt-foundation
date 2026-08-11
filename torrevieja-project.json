@@ -24,7 +24,11 @@
       "apps/web/src/scenarios/scenario-loader.ts",
       "apps/web/src/transport-representation/vehicle-svg-projection.ts",
       "apps/web/src/transport-representation/demo-vehicle-command.ts",
-      "apps/web/src/transport-simulation/scenario-save-target.ts"
+      "apps/web/src/transport-simulation/scenario-save-target.ts",
+      "apps/web/src/ui/OpenScreen.tsx",
+      "apps/web/src/ui/open-screen-model.ts",
+      "apps/web/src/ui/game-selection.ts",
+      "apps/web/src/ui/GameInspector.tsx"
     ]
   },
   "simulationCriticalCoverage": {
@@ -60,6 +64,9 @@
     "simulationControls": 8000,
     "sessionControls": 6000,
     "svgRepresentation": 6000,
+    "openScreen": 4000,
+    "gameInspector": 8000,
+    "persistenceRuntime": 260000,
     "representation": 1200000,
     "transportWorker": 190000,
     "totalEmittedJavaScript": 1750000

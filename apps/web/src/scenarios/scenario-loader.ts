@@ -204,6 +204,40 @@ export function createScenarioLoader(input: {
       throw new Error('The exact saved scenario package is unavailable.');
     return scenario;
   }
+  async function resolveCatalogScenario(selectedScenarioId: string) {
+    const descriptor = state.catalog?.scenarios.find(
+      (item) => item.scenarioId === selectedScenarioId,
+    );
+    if (!descriptor) throw new Error(`Unknown scenario ${selectedScenarioId}`);
+    return (await resolveDescriptor(descriptor)).scenario;
+  }
+  function adoptResolvedScenario(scenario: CanonicalScenario) {
+    const catalog = state.catalog;
+    const descriptor = catalog?.scenarios.find(
+      (item) =>
+        item.scenarioId === scenario.manifest.scenarioId &&
+        item.scenarioVersion === scenario.manifest.scenarioVersion &&
+        item.contentHash === scenario.manifest.contentHash,
+    );
+    if (!catalog || !descriptor)
+      throw new Error('The exact saved scenario package is unavailable.');
+    assertScenarioDescriptorMatchesManifest(descriptor, scenario.manifest);
+    const token = ++generation;
+    const graph = buildDirectedScenarioGraph(scenario);
+    replace(
+      {
+        status: 'ready',
+        catalog,
+        selectedScenarioId: descriptor.scenarioId,
+        graph,
+        scenario,
+        title: scenario.manifest.title,
+        settlementCount: scenario.settlements.settlements.length,
+        routeCount: scenario.routes.routes.length,
+      },
+      token,
+    );
+  }
   return Object.freeze({
     projection: Object.freeze({
       getState: () => state,
@@ -222,7 +256,9 @@ export function createScenarioLoader(input: {
     }),
     loadCatalog,
     loadScenario,
+    resolveCatalogScenario,
     resolveScenario,
+    adoptResolvedScenario,
   });
 }
 

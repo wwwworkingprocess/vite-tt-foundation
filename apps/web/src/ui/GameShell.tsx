@@ -21,6 +21,7 @@ export interface GameShellProps {
   readonly scenarioControl: ReactNode;
   readonly primaryVisualization: ReactNode;
   readonly secondaryVisualization: ReactNode;
+  readonly inspector?: ReactNode;
   readonly saveDisabled?: boolean;
   readonly restartDisabled?: boolean;
   readonly onPauseResume: () => void;
@@ -38,6 +39,7 @@ export function GameShell({
   scenarioControl,
   primaryVisualization,
   secondaryVisualization,
+  inspector,
   saveDisabled,
   restartDisabled,
   onPauseResume,
@@ -141,6 +143,9 @@ export function GameShell({
           Swap visualizations
         </button>
       </section>
+      {inspector ? (
+        <section className="game-inspector-panel">{inspector}</section>
+      ) : null}
       {openDialog === 'project' ? (
         <Suspense fallback={null}>
           <AccessibleDialog title="Project information" onClose={close}>

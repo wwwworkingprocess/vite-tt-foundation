@@ -1,16 +1,9 @@
-import { useEffect, useState } from 'react';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
+import type { ScenarioLoaderState } from './scenario-loader.js';
 import {
-  browserSha256,
-  createScenarioLoader,
-  type ScenarioLoaderState,
-} from './scenario-loader.js';
-import { defaultScenarioId } from '../project-defaults.js';
-
-const fetchText = async (url: string) => {
-  const response = await fetch(url);
-  return { ok: response.ok, text: () => response.text() };
-};
+  createCityScenarioGroups,
+  type CityNameLookup,
+} from '../ui/open-screen-model.js';
 
 export type ScenarioSelectionState = Readonly<{
   requestedScenarioId?: string | undefined;
@@ -20,57 +13,22 @@ export type ScenarioSelectionState = Readonly<{
 }>;
 
 export function ScenarioPanel(props: {
-  readonly onScenarioReady?: (scenario: CanonicalScenario) => void;
-  readonly onSelectionChange?: (state: ScenarioSelectionState) => void;
-  readonly onResolverReady?:
-    | ((
-        resolve: ReturnType<typeof createScenarioLoader>['resolveScenario'],
-      ) => void)
-    | undefined;
+  readonly state: ScenarioLoaderState;
+  readonly cityNames: CityNameLookup;
+  readonly disabled?: boolean | undefined;
+  readonly onScenarioChange: (scenarioId: string) => void;
 }) {
-  const [state, setState] = useState<ScenarioLoaderState>({ status: 'idle' });
-  const [loader] = useState(() =>
-    createScenarioLoader({
-      baseUrl: import.meta.env.BASE_URL,
-      fetchText,
-      digestSha256: browserSha256,
-    }),
-  );
-  useEffect(() => {
-    props.onResolverReady?.(loader.resolveScenario);
-  }, [loader, props.onResolverReady]);
-  useEffect(() => {
-    const remove = loader.projection.subscribe(setState);
-    void loader.loadCatalog().then(() => {
-      const catalog = loader.projection.getState().catalog;
-      const preferred = catalog?.scenarios.find(
-        (scenario) => scenario.scenarioId === defaultScenarioId,
-      );
-      if (preferred) void loader.loadScenario(preferred.scenarioId);
-    });
-    return remove;
-  }, [loader]);
-  useEffect(() => {
-    if (state.scenario) props.onScenarioReady?.(state.scenario);
-  }, [props.onScenarioReady, state.scenario]);
-  useEffect(() => {
-    props.onSelectionChange?.(
-      Object.freeze({
-        requestedScenarioId: state.selectedScenarioId,
-        status:
-          state.status === 'loading-scenario'
-            ? 'loading'
-            : state.status === 'ready'
-              ? 'ready'
-              : state.status === 'failed'
-                ? 'failed'
-                : 'idle',
-        ...(state.scenario ? { scenario: state.scenario } : {}),
-        ...(state.message ? { message: state.message } : {}),
-      }),
-    );
-  }, [props.onSelectionChange, state]);
+  const { state } = props;
   const graph = state.graph;
+  const groups = state.catalog
+    ? createCityScenarioGroups(state.catalog, props.cityNames)
+    : [];
+  const selectedDescriptor = state.catalog?.scenarios.find(
+    ({ scenarioId }) => scenarioId === state.selectedScenarioId,
+  );
+  const selectedCityId =
+    selectedDescriptor?.primarySettlementId ?? groups[0]?.cityId;
+  const selectedGroup = groups.find(({ cityId }) => cityId === selectedCityId);
   return (
     <section aria-labelledby="scenario-title">
       <h2 id="scenario-title">Transport scenario</h2>
@@ -79,18 +37,44 @@ export function ScenarioPanel(props: {
         {state.message ? `: ${state.message}` : ''}
       </p>
       <label>
+        City
+        <select
+          aria-label="City"
+          value={selectedCityId ?? ''}
+          disabled={
+            props.disabled ||
+            !state.catalog ||
+            state.status === 'loading-scenario'
+          }
+          onChange={(event) => {
+            const first = groups.find(
+              ({ cityId }) => cityId === event.target.value,
+            )?.scenarios[0];
+            if (first) props.onScenarioChange(first.scenarioId);
+          }}
+        >
+          {groups.map(({ cityId, name }) => (
+            <option key={cityId} value={cityId}>
+              {name}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
         Scenario
         <select
           value={state.selectedScenarioId ?? ''}
-          disabled={!state.catalog || state.status === 'loading-scenario'}
-          onChange={(event) => {
-            void loader.loadScenario(event.target.value);
-          }}
+          disabled={
+            props.disabled ||
+            !state.catalog ||
+            state.status === 'loading-scenario'
+          }
+          onChange={(event) => props.onScenarioChange(event.target.value)}
         >
           <option value="" disabled>
             Select a scenario
           </option>
-          {state.catalog?.scenarios.map((scenario) => (
+          {selectedGroup?.scenarios.map((scenario) => (
             <option key={scenario.scenarioId} value={scenario.scenarioId}>
               {scenario.title}
             </option>
@@ -100,7 +84,8 @@ export function ScenarioPanel(props: {
       {state.status === 'failed' && state.selectedScenarioId ? (
         <button
           type="button"
-          onClick={() => void loader.loadScenario(state.selectedScenarioId!)}
+          disabled={props.disabled}
+          onClick={() => props.onScenarioChange(state.selectedScenarioId!)}
         >
           Retry selected scenario
         </button>

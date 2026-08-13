@@ -33,12 +33,12 @@ const scenario = () =>
 const request = (requestId: number, timelineId: string) => ({
   data: {
     kind: 'transport-worker-request',
-    contractVersion: 3,
+    contractVersion: 4,
     requestId,
     operation: 'connect',
     payload: {
       kind: 'transport-client-connect',
-      contractVersion: 3,
+      contractVersion: 4,
       mode: 'new',
       gameId: 'game',
       timelineId,
@@ -65,7 +65,7 @@ describe('transport Worker runtime transactional subscriptions', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 3,
+        contractVersion: 4,
         requestId: 1,
         operation: 'set-render-subscription',
         payload: true,
@@ -164,7 +164,7 @@ describe('transport Worker runtime transactional subscriptions', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 3,
+        contractVersion: 4,
         requestId: 2,
         operation: 'set-render-subscription',
         payload: true,
@@ -174,7 +174,7 @@ describe('transport Worker runtime transactional subscriptions', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 3,
+        contractVersion: 4,
         requestId: 3,
         operation: 'set-render-subscription',
         payload: false,
@@ -184,7 +184,7 @@ describe('transport Worker runtime transactional subscriptions', () => {
     listener({
       data: {
         kind: 'transport-worker-request',
-        contractVersion: 3,
+        contractVersion: 4,
         requestId: 4,
         operation: 'set-render-subscription',
         payload: true,

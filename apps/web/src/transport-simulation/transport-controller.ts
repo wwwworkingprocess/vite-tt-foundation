@@ -15,6 +15,7 @@ import {
   type CurrentAlightingEvent,
   type PassengerJourneyCompletionEvent,
   type VehiclePassengerLoadProjection,
+  type PassengerOriginStopArrivalEvent,
 } from '@torrevieja-tycoon/simulation';
 import {
   parseClientId,
@@ -73,6 +74,8 @@ export interface TransportApplicationProjection {
     readonly PassengerJourneyCompletionEvent[] | undefined;
   readonly vehiclePassengerLoads?:
     readonly VehiclePassengerLoadProjection[] | undefined;
+  readonly passengerOriginStopArrivalEvents?:
+    readonly PassengerOriginStopArrivalEvent[] | undefined;
   readonly message?: string | undefined;
 }
 
@@ -166,6 +169,8 @@ export function createTransportApplicationController(input: {
           currentAlightingEvents: update.currentAlightingEvents,
           currentJourneyCompletionEvents: update.currentJourneyCompletionEvents,
           vehiclePassengerLoads: update.vehiclePassengerLoads,
+          passengerOriginStopArrivalEvents:
+            update.passengerOriginStopArrivalEvents,
         });
       }),
     );
@@ -259,6 +264,7 @@ export function createTransportApplicationController(input: {
           exported.snapshot.state.currentAlightingEvents,
           exported.snapshot.state.currentBoardingEvents,
         ),
+        passengerOriginStopArrivalEvents: [],
       });
     } catch (error) {
       if (generation === token) generation += 1;
@@ -325,7 +331,7 @@ export function createTransportApplicationController(input: {
           candidate,
           {
             kind: 'transport-client-connect',
-            contractVersion: 3,
+            contractVersion: 4,
             mode: 'new',
             gameId,
             timelineId,
@@ -405,7 +411,7 @@ export function createTransportApplicationController(input: {
           next = input.createClient();
           await next.connect({
             kind: 'transport-client-connect',
-            contractVersion: 3,
+            contractVersion: 4,
             mode: 'restore',
             gameId: restoredRecord.gameId,
             timelineId,
@@ -509,6 +515,7 @@ export function createTransportApplicationController(input: {
             exported.snapshot.state.currentAlightingEvents,
             exported.snapshot.state.currentBoardingEvents,
           ),
+          passengerOriginStopArrivalEvents: [],
         });
       });
     },

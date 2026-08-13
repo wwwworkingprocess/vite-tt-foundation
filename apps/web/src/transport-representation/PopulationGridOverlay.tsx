@@ -19,7 +19,7 @@ function PopulationGridOverlay(props: {
   readonly scenario?: CanonicalScenario;
   readonly project?: (position: PopulationCell['center']) => SvgPoint;
 }) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const scenarioProject = useMemo(
     () =>
       props.scenario

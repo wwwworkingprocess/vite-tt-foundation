@@ -172,13 +172,43 @@ summary {
   position: relative;
 }
 
-.vehicle-movement-representation > svg,
 .population-grid-overlay,
-.population-grid-overlay > svg {
+.population-grid-overlay > svg,
+.passenger-map-diagnostics,
+.passenger-map-diagnostics > svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.passenger-map-diagnostics {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.passenger-map-diagnostics > button {
+  position: absolute;
+  z-index: 1;
+  top: 0.75rem;
+  left: 9rem;
+  pointer-events: auto;
+}
+
+.passenger-map-diagnostics > svg {
+  pointer-events: none;
+}
+
+.passenger-map-diagnostics > svg [role='button'] {
+  pointer-events: auto;
+}
+
+.passenger-map-diagnostics text {
+  font-size: 3px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: white;
+  stroke-width: 0.5px;
 }
 
 .population-grid-overlay {

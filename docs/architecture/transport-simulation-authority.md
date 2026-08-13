@@ -3,7 +3,7 @@
 **Document status:** Historical phase architecture contract
 **Applies to:** Phase 4B
 **Current aggregate contract:** Transport Snapshot V9, Transport Save V7,
-client V3, Worker V3. See [`../current-state.md`](../current-state.md).
+client V4, Worker V4. See [`../current-state.md`](../current-state.md).
 
 ## Phase 4B decision
 

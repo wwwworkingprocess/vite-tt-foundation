@@ -29,7 +29,12 @@ Session composition resolves the active settlement's checksum-pinned canonical
 population grid, exact operational crop, StopPlace catchments, and deterministic
 development-seed Production Passenger Demand Policy V1 for both new games and
 restore preflight. The SVG exposes the active nonzero population cells as a
-presentation-only diagnostic overlay.
+presentation-only diagnostic overlay, visible by default. Passenger map
+diagnostics are also visible by default: physical StopPlace waiting totals,
+vehicle onboard totals, and a five-authoritative-tick pulse driven by explicit
+origin-StopPlace arrival transition evidence. Arrival evidence is aggregated by
+tick and StopPlace, survives batched advancement, and is published rather than
+persisted; it cannot be inferred from the net queue delta.
 The next planned product layer is Phase 4F economics and objectives. Transfers,
 multi-pattern passenger routing, advanced services, traffic, schedules, and
 richer operational realism remain later work unless an active task explicitly
@@ -58,8 +63,8 @@ audits.
 | --------------------------------- | --------------------: | ---------------------------------------------------------------------------------------------------------- |
 | Transport Simulation Snapshot     |                    V9 | Current schema only; unsupported or malformed authority fails closed                                       |
 | Transport Save Record             |                    V7 | Earlier foundation/transport records are obsolete pre-release data unless source explicitly says otherwise |
-| Transport client contract         |                    V3 | Older envelopes are rejected                                                                               |
-| Transport Worker contract         |                    V3 | Older envelopes are rejected                                                                               |
+| Transport client contract         |                    V4 | Older envelopes are rejected                                                                               |
+| Transport Worker contract         |                    V4 | Older envelopes are rejected                                                                               |
 | Foundation Template snapshot/save | V1 reference contract | Belongs to the domain-free template snapshot, not current transport authority                              |
 
 Machine-readable authority: `torrevieja-project.json`, simulation snapshot

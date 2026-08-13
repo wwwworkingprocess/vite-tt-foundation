@@ -14,6 +14,7 @@ import {
   parseCurrentAlightingEvents,
   parsePassengerJourneyCompletionEvents,
   parseVehiclePassengerLoadProjections,
+  parsePassengerOriginStopArrivalEvents,
 } from '@torrevieja-tycoon/simulation';
 import {
   foundationCommandEnvelopeSchema,
@@ -33,7 +34,7 @@ import type {
 } from './transport-client.js';
 import { transportClientContractVersion } from './transport-client.js';
 
-export const transportWorkerContractVersion = 3 as const;
+export const transportWorkerContractVersion = 4 as const;
 const requestId = z.number().int().positive().safe();
 const operation = z.enum([
   'connect',
@@ -221,6 +222,7 @@ const publication = z.discriminatedUnion('channel', [
       currentAlightingEvents: z.unknown(),
       currentJourneyCompletionEvents: z.unknown(),
       vehiclePassengerLoads: z.unknown(),
+      passengerOriginStopArrivalEvents: z.unknown(),
     }),
   }),
   z.strictObject({
@@ -237,6 +239,7 @@ const publication = z.discriminatedUnion('channel', [
       currentAlightingEvents: z.unknown(),
       currentJourneyCompletionEvents: z.unknown(),
       vehiclePassengerLoads: z.unknown(),
+      passengerOriginStopArrivalEvents: z.unknown(),
     }),
   }),
 ]);
@@ -269,6 +272,7 @@ export function parseTransportSynchronizationResult(
       currentAlightingEvents: z.unknown(),
       currentJourneyCompletionEvents: z.unknown(),
       vehiclePassengerLoads: z.unknown(),
+      passengerOriginStopArrivalEvents: z.unknown(),
     })
     .parse(value);
   return deepFreeze({
@@ -292,6 +296,9 @@ export function parseTransportSynchronizationResult(
     ),
     vehiclePassengerLoads: parseVehiclePassengerLoadProjections(
       parsed.vehiclePassengerLoads,
+    ),
+    passengerOriginStopArrivalEvents: parsePassengerOriginStopArrivalEvents(
+      parsed.passengerOriginStopArrivalEvents,
     ),
   }) as TransportSynchronizationResponse;
 }
@@ -369,6 +376,9 @@ export function parseTransportWorkerResponse(
         ),
         vehiclePassengerLoads: parseVehiclePassengerLoadProjections(
           parsed.payload.vehiclePassengerLoads,
+        ),
+        passengerOriginStopArrivalEvents: parsePassengerOriginStopArrivalEvents(
+          parsed.payload.passengerOriginStopArrivalEvents,
         ),
       },
     }) as TransportWorkerResponse;

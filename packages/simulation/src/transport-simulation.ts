@@ -26,6 +26,7 @@ import {
 } from './vehicle-movement.js';
 import {
   advanceTrustedPassengerDemandToTick,
+  advanceTrustedPassengerDemandToTickWithEvents,
   createDisabledPassengerDemandState,
   createInitialPassengerDemandState,
   parsePassengerDemandState,
@@ -33,6 +34,7 @@ import {
   validatePassengerDemandState,
   type PassengerDemandPlanV1,
   type PassengerDemandState,
+  type PassengerOriginStopArrivalEvent,
 } from './passenger-demand.js';
 import {
   buildPassengerDirectItineraryPlan,
@@ -266,9 +268,10 @@ export function createTransportSimulationState(
   });
 }
 
-export function advanceTransportTicks(
+function advanceTransportTicksInternal(
   state: TransportSimulationState,
   count: TickAdvancement | number,
+  arrivalEvents?: PassengerOriginStopArrivalEvent[],
 ): TransportSimulationState {
   const tickCount = parseTickAdvancement(count) as number;
   let current = state;
@@ -336,15 +339,30 @@ export function advanceTransportTicks(
         left.vehicleId.localeCompare(right.vehicleId) ||
         left.stopCallSequence - right.stopCallSequence,
     );
-    const passengerDemand =
-      current.passengerDemand.status === 'disabled'
-        ? current.passengerDemand
-        : advanceTrustedPassengerDemandToTick(
+    const demandAdvancement =
+      current.passengerDemand.status === 'active' && arrivalEvents !== undefined
+        ? advanceTrustedPassengerDemandToTickWithEvents(
             current.passengerDemandPlan!,
             current.passengerDirectItineraryIndex!,
             current.passengerDemand,
             tick,
-          );
+          )
+        : undefined;
+    if (demandAdvancement !== undefined) {
+      arrivalEvents!.push(
+        ...demandAdvancement.passengerOriginStopArrivalEvents,
+      );
+    }
+    const passengerDemand =
+      current.passengerDemand.status === 'disabled'
+        ? current.passengerDemand
+        : (demandAdvancement?.state ??
+          advanceTrustedPassengerDemandToTick(
+            current.passengerDemandPlan!,
+            current.passengerDirectItineraryIndex!,
+            current.passengerDemand,
+            tick,
+          ));
     const transit =
       passengerDemand.status === 'disabled'
         ? null
@@ -418,6 +436,31 @@ export function advanceTransportTicks(
     });
   }
   return current;
+}
+
+export function advanceTransportTicks(
+  state: TransportSimulationState,
+  count: TickAdvancement | number,
+): TransportSimulationState {
+  return advanceTransportTicksInternal(state, count);
+}
+
+export interface TransportTickAdvancementResult {
+  readonly state: TransportSimulationState;
+  readonly passengerOriginStopArrivalEvents: readonly Readonly<PassengerOriginStopArrivalEvent>[];
+}
+
+export function advanceTransportTicksWithEvents(
+  state: TransportSimulationState,
+  count: TickAdvancement | number,
+): TransportTickAdvancementResult {
+  const tickCount = parseTickAdvancement(count) as number;
+  const events: PassengerOriginStopArrivalEvent[] = [];
+  const current = advanceTransportTicksInternal(state, tickCount, events);
+  return freeze({
+    state: current,
+    passengerOriginStopArrivalEvents: events,
+  });
 }
 
 export function applyTransportVehicleCommand(

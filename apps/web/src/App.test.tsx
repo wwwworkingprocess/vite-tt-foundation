@@ -1263,7 +1263,6 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByRole('radio', { name: 'Manual' })).toBeChecked(),
     );
-    fireEvent.click(screen.getByRole('button', { name: 'Show population' }));
     expect(
       document.querySelector(
         `[data-authoritative-scenario-id="${alternateScenario.manifest.scenarioId}"]`,
@@ -1291,11 +1290,10 @@ describe('foundation screen', () => {
       expect(deferredPopulation?.release).toBeTypeOf('function'),
     );
     deferredPopulation?.release?.();
-    const showPopulation = await screen.findByRole('button', {
-      name: 'Show population',
+    await screen.findByRole('button', {
+      name: 'Hide population',
     });
-    expect(screen.queryByTestId('population-band')).toBeNull();
-    fireEvent.click(showPopulation);
+    expect(screen.getByTestId('population-band')).toBeInTheDocument();
     expect(
       document.querySelector(
         `[data-authoritative-scenario-id="${scenario.manifest.scenarioId}"]`,

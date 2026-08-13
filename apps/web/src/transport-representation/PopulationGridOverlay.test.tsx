@@ -1,10 +1,4 @@
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  within,
-} from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -57,8 +51,6 @@ it('renders and toggles deterministic nonzero population cells', () => {
       })}
     />,
   );
-  expect(screen.queryByTestId('population-band')).toBeNull();
-  fireEvent.click(screen.getByRole('button', { name: 'Show population' }));
   expect(screen.getAllByTestId('population-band')).toHaveLength(2);
   expect(screen.getAllByTestId('population-band')[0]).toHaveAttribute(
     'data-population-band-cell-count',
@@ -72,6 +64,8 @@ it('renders and toggles deterministic nonzero population cells', () => {
   ).toHaveAttribute('data-population-cell-count', '2');
   fireEvent.click(screen.getByRole('button', { name: 'Hide population' }));
   expect(screen.queryByTestId('population-band')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Show population' }));
+  expect(screen.getAllByTestId('population-band')).toHaveLength(2);
 });
 
 it('does not rerender for unrelated parent authority updates', () => {
@@ -107,7 +101,6 @@ it('does not rerender for unrelated parent authority updates', () => {
     </div>
   );
   const rendered = render(view(0));
-  fireEvent.click(screen.getByRole('button', { name: 'Show population' }));
   expect(cellMapReads).toBeGreaterThan(0);
   const readsAfterGeometry = cellMapReads;
   rendered.rerender(view(1));
@@ -128,7 +121,6 @@ it('projects canonical population positions from the active scenario', () => {
       ]}
     />,
   );
-  fireEvent.click(screen.getByRole('button', { name: 'Show population' }));
   expect(
     container.querySelector('[data-testid="population-band"]'),
   ).toHaveAttribute('d');
@@ -151,9 +143,6 @@ it('projects canonical cell boundaries through the shared geographic projector',
       })}
     />,
   );
-  fireEvent.click(
-    within(container).getByRole('button', { name: 'Show population' }),
-  );
   const values = container
     .querySelector('[data-testid="population-band"]')!
     .getAttribute('d')!
@@ -175,23 +164,18 @@ it('renders an empty field and rejects a missing geographic projection', () => {
   );
   expect(container.querySelector('[data-testid="population-band"]')).toBeNull();
   unmount();
-  const missing = render(
-    <PopulationGridOverlay
-      cells={[
-        {
-          cellId: 'r0c0',
-          center: { latitude: 0, longitude: 0 },
-          populationWeight: 1,
-        },
-      ]}
-      resolutionDegrees={0.001}
-    />,
-  );
   expect(() =>
-    fireEvent.click(
-      within(missing.container).getByRole('button', {
-        name: 'Show population',
-      }),
+    render(
+      <PopulationGridOverlay
+        cells={[
+          {
+            cellId: 'r0c0',
+            center: { latitude: 0, longitude: 0 },
+            populationWeight: 1,
+          },
+        ]}
+        resolutionDegrees={0.001}
+      />,
     ),
   ).toThrow(/geographic projection/i);
 });

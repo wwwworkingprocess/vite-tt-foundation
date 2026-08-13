@@ -1,5 +1,6 @@
 import {
   advanceTransportTicks,
+  advanceTransportTicksWithEvents,
   applyTransportVehicleCommand,
   createFoundationSimulationSnapshot,
   createFoundationState,
@@ -25,6 +26,7 @@ import {
   type CurrentBoardingEvent,
   type CurrentAlightingEvent,
   type PassengerJourneyCompletionEvent,
+  type PassengerOriginStopArrivalEvent,
   type VehiclePassengerLoadProjection,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
@@ -45,12 +47,12 @@ import {
 } from '@torrevieja-tycoon/protocol';
 import { createDirectFoundationClient } from '../simulation-host/direct-client.js';
 
-export const transportClientContractVersion = 3 as const;
+export const transportClientContractVersion = 4 as const;
 
 export type TransportClientConnectRequest =
   | Readonly<{
       kind: 'transport-client-connect';
-      contractVersion: 3;
+      contractVersion: 4;
       mode: 'new';
       gameId: GameId;
       timelineId: TimelineId;
@@ -60,7 +62,7 @@ export type TransportClientConnectRequest =
     }>
   | Readonly<{
       kind: 'transport-client-connect';
-      contractVersion: 3;
+      contractVersion: 4;
       mode: 'restore';
       gameId: GameId;
       timelineId: TimelineId;
@@ -106,6 +108,7 @@ export type TransportStateUpdate = Readonly<
     readonly currentAlightingEvents: readonly CurrentAlightingEvent[];
     readonly currentJourneyCompletionEvents: readonly PassengerJourneyCompletionEvent[];
     readonly vehiclePassengerLoads: readonly VehiclePassengerLoadProjection[];
+    readonly passengerOriginStopArrivalEvents: readonly PassengerOriginStopArrivalEvent[];
   }
 >;
 export type TransportRenderSnapshot = Readonly<
@@ -119,6 +122,7 @@ export type TransportRenderSnapshot = Readonly<
     readonly currentAlightingEvents: readonly CurrentAlightingEvent[];
     readonly currentJourneyCompletionEvents: readonly PassengerJourneyCompletionEvent[];
     readonly vehiclePassengerLoads: readonly VehiclePassengerLoadProjection[];
+    readonly passengerOriginStopArrivalEvents: readonly PassengerOriginStopArrivalEvent[];
   }
 >;
 
@@ -137,6 +141,7 @@ export type TransportSynchronizationResponse =
       currentAlightingEvents: readonly CurrentAlightingEvent[];
       currentJourneyCompletionEvents: readonly PassengerJourneyCompletionEvent[];
       vehiclePassengerLoads: readonly VehiclePassengerLoadProjection[];
+      passengerOriginStopArrivalEvents: readonly PassengerOriginStopArrivalEvent[];
     }>;
 
 export interface TransportSimulationClient {
@@ -188,6 +193,8 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
   let publicationSequence = 0;
   let latestFoundationUpdate: FoundationStateUpdate | undefined;
   let latestFoundationRender: FoundationRenderSnapshot | undefined;
+  let pendingPassengerOriginStopArrivalEvents: readonly PassengerOriginStopArrivalEvent[] =
+    [];
   const reliableListeners = new Map<
     number,
     (update: TransportStateUpdate) => void
@@ -214,10 +221,13 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
     (update) => {
       latestFoundationUpdate = update;
       const currentAuthority = authority!;
-      authority = advanceTransportTicks(
+      const advancement = advanceTransportTicksWithEvents(
         currentAuthority,
         parseTickAdvancement(update.simulationTick - currentAuthority.tick),
       );
+      authority = advancement.state;
+      pendingPassengerOriginStopArrivalEvents =
+        advancement.passengerOriginStopArrivalEvents;
     },
   );
   const removeFoundationRender = foundation.subscribeRenderSnapshots(
@@ -294,6 +304,7 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
       currentAlightingEvents: authority!.currentAlightingEvents,
       currentJourneyCompletionEvents: authority!.currentJourneyCompletionEvents,
       vehiclePassengerLoads,
+      passengerOriginStopArrivalEvents: pendingPassengerOriginStopArrivalEvents,
     };
     publish(
       reliableListeners,
@@ -307,6 +318,7 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
           ...projection,
         }),
       );
+    pendingPassengerOriginStopArrivalEvents = [];
   };
   const enqueueOperation = <T>(operation: () => Promise<T>): Promise<T> => {
     const result = commandQueue.then(operation);
@@ -498,6 +510,7 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
             current.currentAlightingEvents,
             current.currentBoardingEvents,
           ),
+          passengerOriginStopArrivalEvents: [],
         });
       });
     },

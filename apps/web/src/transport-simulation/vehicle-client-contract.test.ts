@@ -228,7 +228,7 @@ describe.each(factories)(
       client.subscribeReliableUpdates((update) => updates.push(update));
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 3,
+        contractVersion: 4,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -317,10 +317,12 @@ describe.each(factories)(
       const client = createClient();
       const canonical = scenario();
       const reliable: unknown[] = [];
+      const render: unknown[] = [];
       client.subscribeReliableUpdates((update) => reliable.push(update));
+      client.subscribeRenderSnapshots((snapshot) => render.push(snapshot));
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 3,
+        contractVersion: 4,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -345,6 +347,38 @@ describe.each(factories)(
           totalEmittedPassengerCount: 12,
           unservedAtSourcePassengerCount: 4,
         },
+        passengerOriginStopArrivalEvents: [
+          {
+            tick: 2,
+            stopPlaceId: 'tv-place-0053',
+            arrivedPassengerCount: 1,
+          },
+          {
+            tick: 3,
+            stopPlaceId: 'tv-place-0053',
+            arrivedPassengerCount: 1,
+          },
+          {
+            tick: 3,
+            stopPlaceId: 'tv-place-0065',
+            arrivedPassengerCount: 2,
+          },
+        ],
+      });
+      expect(render.at(-1)).toMatchObject({
+        passengerOriginStopArrivalEvents: (
+          reliable.at(-1) as {
+            passengerOriginStopArrivalEvents: unknown;
+          }
+        ).passengerOriginStopArrivalEvents,
+      });
+      const synchronized = await client.synchronize({
+        kind: 'foundation-synchronization-request',
+        gameId: parseGameId('game'),
+        timelineId: parseTimelineId('timeline'),
+      });
+      expect(synchronized).toMatchObject({
+        passengerOriginStopArrivalEvents: [],
       });
       expect(Object.isFrozen(exported.snapshot.state.passengerDemand)).toBe(
         true,
@@ -359,7 +393,7 @@ describe.each(factories)(
       const route = canonical.routes.routes[0]!;
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 3,
+        contractVersion: 4,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -410,7 +444,7 @@ describe.each(factories)(
       const patternId = canonical.routes.routes[0]!.patterns[0]!.patternId;
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 3,
+        contractVersion: 4,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -449,7 +483,7 @@ describe.each(factories)(
       client.subscribeReliableUpdates((value) => publications.push(value));
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 3,
+        contractVersion: 4,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -623,7 +657,7 @@ it('keeps one-leg route-cycle handoffs identical across direct, clone, and Worke
       const pattern = route.patterns[0]!;
       await client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 3,
+        contractVersion: 4,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('timeline'),
@@ -717,7 +751,7 @@ describe('direct vehicle client failure and idempotency behavior', () => {
     ).rejects.toThrow('not ready');
     await client.connect({
       kind: 'transport-client-connect',
-      contractVersion: 3,
+      contractVersion: 4,
       mode: 'new',
       gameId: parseGameId('game'),
       timelineId: parseTimelineId('timeline'),
@@ -727,7 +761,7 @@ describe('direct vehicle client failure and idempotency behavior', () => {
     await expect(
       client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 3,
+        contractVersion: 4,
         mode: 'new',
         gameId: parseGameId('game'),
         timelineId: parseTimelineId('other'),

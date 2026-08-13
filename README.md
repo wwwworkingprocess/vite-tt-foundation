@@ -77,7 +77,7 @@ exact vehicle calls, boarding/capacity, alighting, destination access, lineage,
 and completed journeys.
 
 Current aggregate contracts are Transport Snapshot V9, Transport Save V7,
-transport client V3, and transport Worker V3. The public catalogue contains
+transport client V4, and transport Worker V4. The public catalogue contains
 multiple Torrevieja, Elche, Elche-radial, Alicante, Benidorm, and
 Benidorm-radial development-seed packages. Application/session lifecycle, object selection, inspector
 diagnostics, and deterministic population-backed passenger demand are active.

@@ -5,8 +5,8 @@
     "transportSaveRecord": 7
   },
   "contractVersions": {
-    "transportClientContract": 3,
-    "transportWorkerContract": 3
+    "transportClientContract": 4,
+    "transportWorkerContract": 4
   },
   "criticalCoverage": {
     "statements": 95,

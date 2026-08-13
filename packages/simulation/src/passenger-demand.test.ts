@@ -5,6 +5,7 @@ import {
 } from '@torrevieja-tycoon/transport-domain';
 import {
   advancePassengerDemandToTick,
+  advancePassengerDemandToTickWithEvents,
   advanceTrustedPassengerDemandToTick,
   calculatePassengerAccessTicks,
   createInitialPassengerDemandState,
@@ -12,8 +13,10 @@ import {
   createDisabledPassengerDemandState,
   parsePassengerDemandPlan,
   parsePassengerDemandProjection,
+  parsePassengerOriginStopArrivalEvents,
   projectPassengerDemand,
   validatePassengerDemandState,
+  type PassengerOriginStopArrivalEvent,
 } from './passenger-demand.js';
 import {
   buildPassengerDirectItineraryPlan,
@@ -411,6 +414,64 @@ describe('Passenger Demand Plan V1', () => {
 });
 
 describe('deterministic passenger emission and access', () => {
+  it('strictly parses positive immutable origin-stop arrival evidence', () => {
+    const parsed = parsePassengerOriginStopArrivalEvents([
+      { tick: 3, stopPlaceId: 'stop-a', arrivedPassengerCount: 2 },
+    ]);
+    expect(parsed[0]).toMatchObject({
+      tick: 3,
+      stopPlaceId: 'stop-a',
+      arrivedPassengerCount: 2,
+    });
+    expect(Object.isFrozen(parsed[0])).toBe(true);
+    for (const value of [
+      [{ tick: -1, stopPlaceId: 'stop-a', arrivedPassengerCount: 2 }],
+      [{ tick: 3, stopPlaceId: '', arrivedPassengerCount: 2 }],
+      [{ tick: 3, stopPlaceId: 'stop-a', arrivedPassengerCount: 0 }],
+      [{ tick: 3, stopPlaceId: 'stop-a', arrivedPassengerCount: 2, extra: 1 }],
+    ])
+      expect(() => parsePassengerOriginStopArrivalEvents(value)).toThrow();
+  });
+
+  it('publishes immutable physical-stop arrivals across a batched interval', () => {
+    const plan = createPlan();
+    const index = createItineraryIndex();
+    const initial = createInitialPassengerDemandState(plan, 0);
+    const batch = advancePassengerDemandToTickWithEvents(
+      plan,
+      index,
+      initial,
+      10,
+    );
+    let splitState = initial;
+    const splitEvents: PassengerOriginStopArrivalEvent[] = [];
+    for (let tick = 1; tick <= 10; tick += 1) {
+      const step = advancePassengerDemandToTickWithEvents(
+        plan,
+        index,
+        splitState,
+        tick,
+      );
+      splitState = step.state;
+      splitEvents.push(...step.passengerOriginStopArrivalEvents);
+    }
+    expect(batch.state).toEqual(splitState);
+    expect(batch.passengerOriginStopArrivalEvents).toEqual(splitEvents);
+    expect(batch.passengerOriginStopArrivalEvents.length).toBeGreaterThan(0);
+    expect(
+      batch.passengerOriginStopArrivalEvents.every(
+        (event) =>
+          event.arrivedPassengerCount > 0 &&
+          Number.isSafeInteger(event.arrivedPassengerCount),
+      ),
+    ).toBe(true);
+    expect(Object.isFrozen(batch)).toBe(true);
+    expect(Object.isFrozen(batch.passengerOriginStopArrivalEvents)).toBe(true);
+    expect(Object.isFrozen(batch.passengerOriginStopArrivalEvents[0])).toBe(
+      true,
+    );
+  });
+
   it('starts with zero credit and settles zero-distance emissions on their spawn tick', () => {
     const plan = createPlan();
     const initial = createInitialPassengerDemandState(plan, 0);

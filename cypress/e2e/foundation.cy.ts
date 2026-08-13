@@ -156,6 +156,8 @@ describe('foundation screen', () => {
     cy.contains('label', 'Vehicle route').find('select').select('legacy-C');
     cy.contains('button', 'Create demo vehicle').click();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '3');
+    cy.get('[role="dialog"]').contains('button', 'Pause').click();
+    cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     cy.contains('button', 'Start browser-demo-vehicle-001').click();
     cy.get('[data-testid="vehicle-movement"]').should(
       'contain.text',

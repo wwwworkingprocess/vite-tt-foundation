@@ -8,6 +8,7 @@ import {
   createTransportSimulationState,
   parseTickAdvancement,
   parseVehicleId,
+  type PassengerDemandProjection,
 } from '@torrevieja-tycoon/simulation';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import { VehicleMovementSvg } from './VehicleMovementSvg.js';
@@ -295,3 +296,128 @@ it('adapts pointer and keyboard input into renderer-independent selections', () 
 
 const stopPlaceId = (element: Element) =>
   element.getAttribute('data-stop-place-id')!;
+
+it('renders bounded physical-stop and vehicle passenger diagnostics with tick pulses', () => {
+  const pattern = selectionScenario.routes.routes[0]!.patterns[0]!;
+  let state = createTransportSimulationState(selectionScenario, 0);
+  state = applyTransportVehicleCommand(state, {
+    kind: 'transport.vehicle.create',
+    vehicleId: parseVehicleId('passenger-bus'),
+    label: 'Passenger bus',
+    patternId: pattern.patternId,
+    movementPlan: {
+      kind: 'vehicle-movement-plan-v1',
+      edgeTravelTicks: Array.from(
+        { length: pattern.stopNodeIds.length - 1 },
+        () => 10,
+      ),
+    },
+  });
+  const place = selectionScenario.stops.stopNodes.find(
+    ({ stopPlaceId }) => stopPlaceId !== null,
+  )!.stopPlaceId!;
+  const demand = {
+    status: 'active',
+    waitingCohorts: [
+      { originStopPlaceId: place, destinationStopPlaceId: place, count: 2 },
+      { originStopPlaceId: place, destinationStopPlaceId: place, count: 3 },
+    ],
+  } as unknown as PassengerDemandProjection;
+  const view = render(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={state.fleet}
+      passengerDemand={demand}
+      vehiclePassengerLoads={[
+        {
+          vehicleId: parseVehicleId('passenger-bus'),
+          passengerCapacity: 80,
+          onboardPassengerCount: 14,
+          remainingPassengerCapacity: 66,
+          currentAlightedPassengerCount: 0,
+          currentBoardedPassengerCount: 0,
+        },
+      ]}
+      passengerOriginStopArrivalEvents={[
+        { tick: 10 as never, stopPlaceId: place, arrivedPassengerCount: 5 },
+      ]}
+      simulationTick={10}
+    />,
+  );
+  expect(screen.getByRole('button', { name: 'Hide passengers' })).toBeVisible();
+  expect(screen.getByTestId('stop-waiting-passenger-count')).toHaveTextContent(
+    '5',
+  );
+  expect(screen.getAllByTestId('stop-waiting-passenger-count')).toHaveLength(1);
+  expect(
+    screen.getByTestId('vehicle-onboard-passenger-count'),
+  ).toHaveTextContent('14');
+  expect(screen.getByTestId('passenger-arrival-pulse')).toBeVisible();
+  view.rerender(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={state.fleet}
+      passengerDemand={demand}
+      vehiclePassengerLoads={[]}
+      passengerOriginStopArrivalEvents={[
+        { tick: 9 as never, stopPlaceId: place, arrivedPassengerCount: 1 },
+      ]}
+      simulationTick={11}
+    />,
+  );
+  expect(screen.getByTestId('passenger-arrival-pulse')).toHaveAttribute(
+    'data-last-arrival-tick',
+    '10',
+  );
+  view.rerender(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={state.fleet}
+      passengerDemand={demand}
+      vehiclePassengerLoads={[]}
+      passengerOriginStopArrivalEvents={[
+        { tick: 12 as never, stopPlaceId: place, arrivedPassengerCount: 1 },
+      ]}
+      simulationTick={12}
+    />,
+  );
+  expect(screen.getByTestId('passenger-arrival-pulse')).toHaveAttribute(
+    'data-last-arrival-tick',
+    '12',
+  );
+  view.rerender(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={state.fleet}
+      passengerDemand={demand}
+      vehiclePassengerLoads={[]}
+      passengerOriginStopArrivalEvents={[
+        { tick: 12 as never, stopPlaceId: place, arrivedPassengerCount: 1 },
+      ]}
+      simulationTick={17}
+    />,
+  );
+  expect(screen.queryByTestId('passenger-arrival-pulse')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Hide passengers' }));
+  expect(screen.queryByTestId('stop-waiting-passenger-count')).toBeNull();
+  expect(screen.queryByTestId('vehicle-onboard-passenger-count')).toBeNull();
+  expect(screen.getByRole('button', { name: 'Show passengers' })).toBeVisible();
+  view.unmount();
+  expect(() =>
+    render(
+      <VehicleMovementSvg
+        scenario={selectionScenario}
+        fleet={[]}
+        passengerDemand={
+          {
+            status: 'active',
+            waitingCohorts: [
+              { originStopPlaceId: place, count: Number.MAX_SAFE_INTEGER },
+              { originStopPlaceId: place, count: 1 },
+            ],
+          } as unknown as PassengerDemandProjection
+        }
+      />,
+    ),
+  ).toThrow(/safe range/i);
+}, 15_000);

@@ -152,7 +152,7 @@ describe.each(factories)('%s transport client', (_name, createClient) => {
     ).rejects.toThrow('Unsupported');
     await client.connect({
       kind: 'transport-client-connect',
-      contractVersion: 3,
+      contractVersion: 4,
       mode: 'new',
       gameId: parseGameId('game-fixture'),
       timelineId: parseTimelineId('timeline-lifecycle'),
@@ -163,7 +163,7 @@ describe.each(factories)('%s transport client', (_name, createClient) => {
     await expect(
       client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 3,
+        contractVersion: 4,
         mode: 'new',
         gameId: parseGameId('game-fixture'),
         timelineId: parseTimelineId('duplicate'),
@@ -190,7 +190,7 @@ describe.each(factories)('%s transport client', (_name, createClient) => {
     const client = createClient();
     await client.connect({
       kind: 'transport-client-connect',
-      contractVersion: 3,
+      contractVersion: 4,
       mode: 'new',
       gameId: parseGameId('game-fixture'),
       timelineId: parseTimelineId('timeline-new'),
@@ -218,7 +218,7 @@ describe.each(factories)('%s transport client', (_name, createClient) => {
     const restored = createClient();
     await restored.connect({
       kind: 'transport-client-connect',
-      contractVersion: 3,
+      contractVersion: 4,
       mode: 'restore',
       gameId: parseGameId('game-fixture'),
       timelineId: parseTimelineId('timeline-restored'),
@@ -240,7 +240,7 @@ describe.each(factories)('%s transport client', (_name, createClient) => {
     const client = createClient();
     await client.connect({
       kind: 'transport-client-connect',
-      contractVersion: 3,
+      contractVersion: 4,
       mode: 'new',
       gameId: parseGameId('game-fixture'),
       timelineId: parseTimelineId('timeline-fifo'),
@@ -270,7 +270,7 @@ describe.each(factories)('%s transport client', (_name, createClient) => {
     const client = createClient();
     await client.connect({
       kind: 'transport-client-connect',
-      contractVersion: 3,
+      contractVersion: 4,
       mode: 'new',
       gameId: parseGameId('game-fixture'),
       timelineId: parseTimelineId('timeline-freeze'),
@@ -288,7 +288,7 @@ describe.each(factories)('%s transport client', (_name, createClient) => {
     const client = createClient();
     await client.connect({
       kind: 'transport-client-connect',
-      contractVersion: 3,
+      contractVersion: 4,
       mode: 'new',
       gameId: parseGameId('game-fixture'),
       timelineId: parseTimelineId('timeline-update'),
@@ -329,7 +329,7 @@ describe('direct transport startup failure', () => {
     await expect(
       client.connect({
         kind: 'transport-client-connect',
-        contractVersion: 3,
+        contractVersion: 4,
         mode: 'new',
         gameId: '',
         timelineId: 'timeline',
@@ -346,7 +346,7 @@ describe('direct transport startup failure', () => {
     const client = createDirectTransportSimulationClient();
     await client.connect({
       kind: 'transport-client-connect',
-      contractVersion: 3,
+      contractVersion: 4,
       mode: 'new',
       gameId: parseGameId('game-fixture'),
       timelineId: parseTimelineId('malformed-foundation-envelope'),

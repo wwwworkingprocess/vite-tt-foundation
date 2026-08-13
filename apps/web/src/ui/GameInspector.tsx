@@ -174,6 +174,17 @@ export default function GameInspector(props: GameInspectorProps) {
         </p>
         <p>Services: {patterns.join(', ') || 'none'}</p>
         <p>Waiting passengers: {sum(waiting.map(({ count }) => count))}</p>
+        <p>Waiting cohorts: {waiting.length}</p>
+        <p>
+          Distinct destination StopPlaces:{' '}
+          {
+            new Set(
+              waiting.map(
+                ({ destinationStopPlaceId }) => destinationStopPlaceId,
+              ),
+            ).size
+          }
+        </p>
         <p>
           Boarding this tick:{' '}
           {sum(

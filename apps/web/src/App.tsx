@@ -14,6 +14,7 @@ import {
   type PassengerDemandProjection,
   type PassengerDemandPlanV1,
   type PassengerJourneyCompletionEvent,
+  type PassengerOriginStopArrivalEvent,
   type VehiclePassengerLoadProjection,
   type VehiclePatternRunState,
   type VehicleState,
@@ -468,6 +469,7 @@ export function App() {
         readonly currentBoardingEvents?: readonly CurrentBoardingEvent[];
         readonly currentAlightingEvents?: readonly CurrentAlightingEvent[];
         readonly currentJourneyCompletionEvents?: readonly PassengerJourneyCompletionEvent[];
+        readonly passengerOriginStopArrivalEvents?: readonly PassengerOriginStopArrivalEvent[];
       })
     | undefined;
   const fleet = transportApplication?.fleet;
@@ -910,10 +912,19 @@ export function App() {
                 </Suspense>
               ) : null}
               <VehicleMovementSvg
+                key={`${authoritativeCoordinateKey ?? 'none'}:${application?.session.status === 'ready' ? application.session.timelineId : 'none'}`}
                 scenario={authoritativeScenarioPackage}
                 fleet={fleet}
                 selection={gameSelection}
                 onSelectionChange={setGameSelection}
+                passengerDemand={transportApplication?.passengerDemand}
+                vehiclePassengerLoads={
+                  transportApplication?.vehiclePassengerLoads
+                }
+                passengerOriginStopArrivalEvents={
+                  transportApplication?.passengerOriginStopArrivalEvents
+                }
+                simulationTick={application?.authoritative?.simulationTick}
               />
             </div>
           ) : (

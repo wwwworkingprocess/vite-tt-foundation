@@ -82,6 +82,11 @@ const emissionPolicySchema = z.strictObject({
 const accessPolicySchema = z.strictObject({
   accessTicksPerCell: positiveSafeInteger,
 });
+const passengerOriginStopArrivalEventSchema = z.strictObject({
+  tick: nonnegativeSafeInteger,
+  stopPlaceId: z.string().min(1),
+  arrivedPassengerCount: positiveSafeInteger,
+});
 const planCellSchema = z.strictObject({
   cellId: z.string().regex(/^r(?:0|[1-9]\d*)c(?:0|[1-9]\d*)$/),
   row: nonnegativeSafeInteger,
@@ -176,6 +181,32 @@ export interface PassengerDestinationCandidate {
 export interface PassengerDestinationCursorState {
   readonly stopPlaceId: StopPlaceId;
   readonly destinationCursor: number;
+}
+
+export interface PassengerOriginStopArrivalEvent {
+  readonly tick: SimulationTick;
+  readonly stopPlaceId: StopPlaceId;
+  readonly arrivedPassengerCount: number;
+}
+
+export interface PassengerDemandAdvancementResult {
+  readonly state: ActivePassengerDemandState;
+  readonly passengerOriginStopArrivalEvents: readonly Readonly<PassengerOriginStopArrivalEvent>[];
+}
+
+export function parsePassengerOriginStopArrivalEvents(
+  input: unknown,
+): readonly Readonly<PassengerOriginStopArrivalEvent>[] {
+  return deepFreeze(
+    z
+      .array(passengerOriginStopArrivalEventSchema)
+      .parse(input)
+      .map((event) => ({
+        ...event,
+        tick: parseSimulationTick(event.tick),
+        stopPlaceId: event.stopPlaceId as StopPlaceId,
+      })),
+  );
 }
 
 export interface DestinationAssignedPassengerGroup {
@@ -977,6 +1008,7 @@ const advancePassengerDemand = (
   state: ActivePassengerDemandState,
   targetTickValue: number,
   trusted: boolean,
+  arrivalEvents?: PassengerOriginStopArrivalEvent[],
 ): ActivePassengerDemandState => {
   const parsedPlan = trusted ? plan : parsePassengerDemandPlan(plan);
   let current = trusted
@@ -1062,9 +1094,18 @@ const advancePassengerDemand = (
       ]),
     );
     let arrivedTotal = current.totalArrivedAtStopPassengerCount;
+    const arrivedByStopPlace = new Map<StopPlaceId, number>();
     const accessingGroups: AccessingPassengerGroup[] = [];
     for (const group of groups)
       if (group.arrivalTick <= tick) {
+        arrivedByStopPlace.set(
+          group.targetStopPlaceId,
+          checkedAdd(
+            arrivedByStopPlace.get(group.targetStopPlaceId) ?? 0,
+            group.count,
+            `arrival evidence at ${group.targetStopPlaceId}`,
+          ),
+        );
         arrivals.set(
           group.targetStopPlaceId,
           checkedAdd(
@@ -1079,6 +1120,13 @@ const advancePassengerDemand = (
           'arrived passengers',
         );
       } else accessingGroups.push(group);
+    if (arrivalEvents)
+      for (const [stopPlaceId, arrivedPassengerCount] of [
+        ...arrivedByStopPlace,
+      ].sort(([left], [right]) => left.localeCompare(right)))
+        arrivalEvents.push(
+          freezeTrustedAuthority({ tick, stopPlaceId, arrivedPassengerCount }),
+        );
     const destinationCursors = new Map(
       current.destinationCursors.map((cursor) => [
         cursor.stopPlaceId,
@@ -1216,6 +1264,27 @@ export function advancePassengerDemandToTick(
   );
 }
 
+export function advancePassengerDemandToTickWithEvents(
+  plan: PassengerDemandPlanV1,
+  itineraryIndex: PassengerDirectItineraryRuntimeIndex,
+  state: ActivePassengerDemandState,
+  targetTickValue: number,
+): PassengerDemandAdvancementResult {
+  const events: PassengerOriginStopArrivalEvent[] = [];
+  const next = advancePassengerDemand(
+    plan,
+    itineraryIndex,
+    state,
+    targetTickValue,
+    false,
+    events,
+  );
+  return deepFreeze({
+    state: next,
+    passengerOriginStopArrivalEvents: events,
+  });
+}
+
 export function advanceTrustedPassengerDemandToTick(
   plan: PassengerDemandPlanV1,
   itineraryIndex: PassengerDirectItineraryRuntimeIndex,
@@ -1229,6 +1298,27 @@ export function advanceTrustedPassengerDemandToTick(
     targetTickValue,
     true,
   );
+}
+
+export function advanceTrustedPassengerDemandToTickWithEvents(
+  plan: PassengerDemandPlanV1,
+  itineraryIndex: PassengerDirectItineraryRuntimeIndex,
+  state: ActivePassengerDemandState,
+  targetTickValue: number,
+): PassengerDemandAdvancementResult {
+  const events: PassengerOriginStopArrivalEvent[] = [];
+  const next = advancePassengerDemand(
+    plan,
+    itineraryIndex,
+    state,
+    targetTickValue,
+    true,
+    events,
+  );
+  return freezeTrustedAuthority({
+    state: next,
+    passengerOriginStopArrivalEvents: Object.freeze(events),
+  });
 }
 
 export function parsePassengerDemandProjection(

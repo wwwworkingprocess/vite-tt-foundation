@@ -11,6 +11,7 @@ import type {
   CurrentAlightingEvent,
   PassengerJourneyCompletionEvent,
   VehiclePassengerLoadProjection,
+  PassengerOriginStopArrivalEvent,
 } from '@torrevieja-tycoon/simulation';
 import type { FoundationApplicationState } from '../application/foundation-controller.js';
 import type { TransportSaveSummary } from './transport-save-record.js';
@@ -44,6 +45,8 @@ type TransportFoundationApplicationState = FoundationApplicationState &
       readonly PassengerJourneyCompletionEvent[] | undefined;
     vehiclePassengerLoads?:
       readonly VehiclePassengerLoadProjection[] | undefined;
+    passengerOriginStopArrivalEvents?:
+      readonly PassengerOriginStopArrivalEvent[] | undefined;
   }>;
 
 export function createTransportFoundationApplication(input: {
@@ -99,6 +102,8 @@ export function createTransportFoundationApplication(input: {
             currentJourneyCompletionEvents:
               state.currentJourneyCompletionEvents!,
             vehiclePassengerLoads: state.vehiclePassengerLoads!,
+            passengerOriginStopArrivalEvents:
+              state.passengerOriginStopArrivalEvents!,
           }
         : {
             session:

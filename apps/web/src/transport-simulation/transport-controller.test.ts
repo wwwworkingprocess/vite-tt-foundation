@@ -1934,7 +1934,7 @@ describe('transport application controller', () => {
               synchronize: async () =>
                 ({
                   kind: 'transport-synchronization-response',
-                  contractVersion: 3,
+                  contractVersion: 4,
                   foundation: {
                     kind: 'foundation-synchronization-response',
                     contractVersion: 1,

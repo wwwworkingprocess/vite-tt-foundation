@@ -22,7 +22,7 @@
   "notes": [
     "Western core discovery component for the Benidorm legacy scenario family.",
     "All four official directions are stored independently with closesLoop false; reverse patterns are never inferred.",
-    "The captured official pages reflect the July 2026 temporary works routing for Lines 002 and 003.",
+    "The captured official pages reflect the July 2026 temporary works route alignment for Lines 002 and 003.",
     "Optional representation metadata. It is not authoritative simulation state.",
     "Package identity moved into the Benidorm radial family; route, pattern, stop, coordinate and settlement data are otherwise unchanged."
   ]

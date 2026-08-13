@@ -63,7 +63,7 @@
       "gridPath": "benidorm-v1/benidorm-city-population-grid-v1.round2.json",
       "cropPath": "benidorm-v1/benidorm-population-grid-round3-crops.json",
       "gridSha256": "712deed4b637ce07f2fec16728e8406dd93e53828348627246a4896653fe048f",
-      "cropSha256": "c4efd8f7ed8807cb65db81578ce33b54612f8afae37b6558040f586ad0843b73",
+      "cropSha256": "2380bc5e9b0e63c0da4c116efc675f991864fcffb6bfbd0a4e01aa65a4220132",
       "rows": 176,
       "columns": 198,
       "resolutionDegrees": 0.001,

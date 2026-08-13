@@ -16,7 +16,7 @@
     "es-callosa-den-sarria",
     "es-el-castell-de-guadalest"
   ],
-  "contentHash": "e219cb7c5161de65f7a0630a63dc7e87bbe50eb2a2d5c0064fd7de0aff8b0c49",
+  "contentHash": "2484373f1d891d658660eec93b345ddd9ea2dfa999b2c3b579dd8fba9a5aabc7",
   "assets": {
     "settlements": {
       "path": "settlements.json",
@@ -41,7 +41,7 @@
     "provenance": {
       "path": "provenance.json",
       "required": false,
-      "sha256": "ecd5c823e8afd392199657c88f1aae8bdde5ca55b6de29b169042c35a6bf7958"
+      "sha256": "474a53520a498a86ffe2134f38a74bb6c593dba03f9c6175e6b12d7f7481d4f6"
     }
   },
   "graphContract": {

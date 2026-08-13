@@ -10,7 +10,7 @@
     "es-finestrat",
     "es-la-vila-joiosa"
   ],
-  "contentHash": "b68c4a71fc97b069709ddd448692e837852560e9029a5aea365e289a83b11e48",
+  "contentHash": "f5167b4a2bbbbf09a957d48097bfe226df32d9b0756f35b297d92948e7c26754",
   "assets": {
     "settlements": {
       "path": "settlements.json",
@@ -30,12 +30,12 @@
     "presentation": {
       "path": "presentation.json",
       "required": false,
-      "sha256": "9fa6765b659e043a2e95a38bbb4feee5d8cd66609d68bc1a14c8a4be67cb72ff"
+      "sha256": "0d5413f3ebb7c3bb680d4e0dc8a5f179d6e91ee2b16402eac5cebd0e2eab07be"
     },
     "provenance": {
       "path": "provenance.json",
       "required": false,
-      "sha256": "0993675014dda7ef4b947d17263890743ef6df23cbb9d907cd049dc32df48bcb"
+      "sha256": "b31612756b8955378dc0d71bb743606db395c7fb76a4b16fffe9727f1082df39"
     }
   },
   "graphContract": {

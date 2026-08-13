@@ -1,8 +1,8 @@
 d549c4a3af021175ab65b10d41575fa1fa9db93a12a45544c8a77d0979585eda  ./POPULATION-FIELD-PREPARATION.md
-1174ef62d5805556c8528e863294068c9a12f401c2046683d47d4c756c4f1165  ./apps/web/public/population-fields/CHECKSUMS.sha256
+dea297d95b702a54ec5a07b2fd21b3d75f0779c37b281c10ff2c0fb3cc382a66  ./apps/web/public/population-fields/CHECKSUMS.sha256
 cbe2068d3bf4a97bcf062b995ad5cd4d2c23bbf1957abf96d07db72419cfa3fb  ./apps/web/public/population-fields/alicante-v1/alicante-city-population-grid-v1.round2.json
 34f681562a8c721871ef3fe571d35dc24a7473dfc984b23054ad6977ec40e8ee  ./apps/web/public/population-fields/alicante-v1/alicante-population-grid-round3-crops.json
-00f1ba57c5e93e0a96f5472b349a4870797fa8074c9d1eb17e8fa706851802c2  ./apps/web/public/population-fields/catalog.json
+86cc9adc7bba3297a8919b8a085a5cc8a9bc3583126f016297658ce983713b11  ./apps/web/public/population-fields/catalog.json
 b125ee476aff0d27fdfc8a422466b47a87f6e9626a5ff1ffc04a1a0fe8ded3fb  ./apps/web/public/population-fields/elche-v1/elche-city-population-grid-v1.round2.json
 dc81cc47fc4a4835f5393bead8c632d5681d7ddcf5f2d9c13e8fdff8e688191a  ./apps/web/public/population-fields/elche-v1/elche-population-grid-round3-crops.json
 c507d7f3a11bde457118ccba329285d49550a0c8959c6865c15b3ec7e12ddd3c  ./apps/web/public/population-fields/torrevieja-v1/torrevieja-city-population-grid-v1.round2.json
@@ -10,4 +10,4 @@ a331f90a017496529f4453fac886be3b5eec9a62069c4bc9c4f637e10786eab4  ./apps/web/pub
 70f609e8ca1b1ccf1d14659a77e936e5c6557ce047e951e09589b6e237f6cfc4  ./docs/data/population-fields-v1-provenance.md
 4a5f6ad01c0f37e962f51c38eaac688b47efab740fddc301d80afd1e20dd6349  ./docs/data/population-fields-v1.md
 712deed4b637ce07f2fec16728e8406dd93e53828348627246a4896653fe048f  ./apps/web/public/population-fields/benidorm-v1/benidorm-city-population-grid-v1.round2.json
-c4efd8f7ed8807cb65db81578ce33b54612f8afae37b6558040f586ad0843b73  ./apps/web/public/population-fields/benidorm-v1/benidorm-population-grid-round3-crops.json
+2380bc5e9b0e63c0da4c116efc675f991864fcffb6bfbd0a4e01aa65a4220132  ./apps/web/public/population-fields/benidorm-v1/benidorm-population-grid-round3-crops.json

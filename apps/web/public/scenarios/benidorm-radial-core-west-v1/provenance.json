@@ -22,7 +22,7 @@
       "name": "Avanza notice: route changes on Lines 02 and 03",
       "accessedAt": "2026-08-04",
       "sourceFile": "https://alicante.avanzagrupo.com/de/nachrichten/aviso-cambio-de-recorrido-en-lineas-02-y-03",
-      "role": "Establishes that the captured Line 002 and 003 sequences include temporary routing caused by Av. Rey Jaime I works, effective 2026-07-01 until works end."
+      "role": "Establishes that the captured Line 002 and 003 sequences include temporary route alignment caused by Av. Rey Jaime I works, effective 2026-07-01 until works end."
     },
     {
       "sourceId": "benidorm-legacy-core-v1",
@@ -43,7 +43,7 @@
     },
     {
       "transformationId": "benidorm-core-west-july-2026-works-snapshot-v1",
-      "description": "Models the current official route-page order captured on 2026-08-04, which reflects the temporary July 2026 Line 002/003 works routing. The pre-works route is not reconstructed."
+      "description": "Models the current official route-page order captured on 2026-08-04, which reflects the temporary July 2026 Line 002/003 works route alignment. The pre-works route is not reconstructed."
     },
     {
       "transformationId": "benidorm-line-003-canonical-full-service-v1",
@@ -68,7 +68,7 @@
   ],
   "warnings": [
     "The project-owner naming policy uses legacy, while ordered route evidence is a current 2026 capture.",
-    "The Line 002 and 003 source pages reflect a temporary July 2026 works routing. This package is a dated topology snapshot, not a claim about the permanent post-works network.",
+    "The Line 002 and 003 source pages reflect a temporary July 2026 works route alignment. This package is a dated topology snapshot, not a claim about the permanent post-works network.",
     "Line 003 has timetable-supported early short workings beginning or ending at VIL 703; they are recorded in provenance and not represented as sequential alternative patterns on the canonical Route.",
     "New FIN and VIL identities are assigned to Finestrat and La Vila Joiosa respectively from the operator composite prefix; exact municipal-boundary review remains appropriate for mixed Cala corridor stops.",
     "New address/corridor and interpolated coordinates are explicitly provisional. Identity-preserving exact-source replacement is required before treating geography as authoritative.",

@@ -1,5 +1,6 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { basename, posix } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const dist = new URL('../apps/web/dist/', import.meta.url);
 const walk = async (directory = '') => {
@@ -29,6 +30,7 @@ const projectInfo = one(/^ProjectInfo-[\w-]+\.js$/);
 const simulationControls = one(/^SimulationControls-[\w-]+\.js$/);
 const sessionControls = one(/^SessionControls-[\w-]+\.js$/);
 const svgRepresentation = one(/^VehicleMovementSvg-[\w-]+\.js$/);
+const populationOverlay = one(/^PopulationGridOverlay-[\w-]+\.js$/);
 const openScreen = one(/^OpenScreen-[\w-]+\.js$/);
 const gameInspector = one(/^GameInspector-[\w-]+\.js$/);
 const persistenceRuntime = one(/^persistence-runtime-[\w-]+\.js$/);
@@ -43,6 +45,7 @@ for (const [name, matches] of Object.entries({
   simulationControls,
   sessionControls,
   svgRepresentation,
+  populationOverlay,
   openScreen,
   gameInspector,
   persistenceRuntime,
@@ -75,6 +78,7 @@ const sizes = {
   simulationControls: await size(simulationControls[0]),
   sessionControls: await size(sessionControls[0]),
   svgRepresentation: await size(svgRepresentation[0]),
+  populationOverlay: await size(populationOverlay[0]),
   openScreen: await size(openScreen[0]),
   gameInspector: await size(gameInspector[0]),
   persistenceRuntime: await size(persistenceRuntime[0]),
@@ -140,6 +144,30 @@ for (const descriptor of catalogue.scenarios ?? []) {
 for (const scenarioAsset of scenarioAssets)
   if (!serviceWorkerSource.includes(`url:${JSON.stringify(scenarioAsset)}`))
     throw new Error(`Service Worker does not precache ${scenarioAsset}.`);
+const populationCatalogueAsset = 'population-fields/catalog.json';
+const populationCatalogue = JSON.parse(
+  await readFile(new URL(populationCatalogueAsset, dist), 'utf8'),
+);
+const populationAssets = [
+  populationCatalogueAsset,
+  'population-fields/CHECKSUMS.sha256',
+];
+for (const city of populationCatalogue.cities ?? []) {
+  for (const [path, expectedHash] of [
+    [city.gridPath, city.gridSha256],
+    [city.cropPath, city.cropSha256],
+  ]) {
+    const asset = `population-fields/${path}`;
+    const bytes = await readFile(new URL(asset, dist));
+    const actualHash = createHash('sha256').update(bytes).digest('hex');
+    if (actualHash !== expectedHash)
+      throw new Error(`Built population asset integrity mismatch: ${asset}.`);
+    populationAssets.push(asset);
+  }
+}
+for (const asset of populationAssets)
+  if (!serviceWorkerSource.includes(`url:${JSON.stringify(asset)}`))
+    throw new Error(`Service Worker does not precache ${asset}.`);
 console.log(
   `Build and installability audit passed: ${JSON.stringify({ javascript, sizes, budgets: configured })}.`,
 );

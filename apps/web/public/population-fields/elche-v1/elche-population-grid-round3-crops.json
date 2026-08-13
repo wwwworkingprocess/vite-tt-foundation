@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "purpose": "scenario-crop-metadata",
+  "purpose": "es-elche current deterministic operational population crop metadata",
   "city": "Elche",
   "indexSemantics": "half-open [start, end)",
   "canonicalGrid": {
@@ -22,11 +22,6 @@
     "primarySettlementId": "es-elche",
     "scenarioCount": 13
   },
-  "stopPlaceValidation": {
-    "rule": "route-used StopNode -> referenced positioned StopPlace, matching the transport-domain catchment eligibility semantics",
-    "sourceBasis": "current public package routes/stops inspected on 2026-08-09",
-    "note": "Normal crop metadata is never silently expanded. Where violations exist, the minimum aligned extension is advisory only."
-  },
   "scenarios": [
     {
       "scenarioId": "elche-urban-abc-v1",
@@ -41,30 +36,40 @@
         "east": -0.68442
       },
       "crop": {
-        "rowStart": 31,
-        "rowEnd": 54,
-        "columnStart": 47,
-        "columnEnd": 88,
+        "rowStart": 28,
+        "rowEnd": 58,
+        "columnStart": 44,
+        "columnEnd": 91,
         "dimensions": {
-          "rows": 23,
-          "columns": 41
+          "rows": 30,
+          "columns": 47
         },
         "alignedGeographicBounds": {
-          "south": 38.2585,
-          "west": -0.7245,
-          "north": 38.2815,
-          "east": -0.6835
+          "south": 38.2545,
+          "west": -0.7275,
+          "north": 38.2845,
+          "east": -0.6805
         }
       },
-      "totalIncludedWeight": 142335,
-      "nonzeroCellCount": 748,
-      "cityWeightPercent": 50.45533337350807,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 162706,
+      "nonzeroCellCount": 1072,
+      "cityWeightPercent": 57.676505932272484,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "elche-legacy-east-v1",
@@ -79,30 +84,40 @@
         "east": -0.662663435636953
       },
       "crop": {
-        "rowStart": 31,
-        "rowEnd": 55,
-        "columnStart": 58,
-        "columnEnd": 109,
+        "rowStart": 28,
+        "rowEnd": 58,
+        "columnStart": 55,
+        "columnEnd": 112,
         "dimensions": {
-          "rows": 24,
-          "columns": 51
+          "rows": 30,
+          "columns": 57
         },
         "alignedGeographicBounds": {
-          "south": 38.2575,
-          "west": -0.7135,
-          "north": 38.2815,
-          "east": -0.6625
+          "south": 38.2545,
+          "west": -0.7165,
+          "north": 38.2845,
+          "east": -0.6595
         }
       },
-      "totalIncludedWeight": 158742,
-      "nonzeroCellCount": 1036,
-      "cityWeightPercent": 56.271335443688606,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 184133,
+      "nonzeroCellCount": 1441,
+      "cityWeightPercent": 65.27201250615914,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "elche-legacy-hospital-general-v1",
@@ -117,30 +132,40 @@
         "east": -0.660770128928576
       },
       "crop": {
-        "rowStart": 38,
-        "rowEnd": 62,
-        "columnStart": 64,
-        "columnEnd": 111,
+        "rowStart": 36,
+        "rowEnd": 64,
+        "columnStart": 61,
+        "columnEnd": 114,
         "dimensions": {
-          "rows": 24,
-          "columns": 47
+          "rows": 28,
+          "columns": 53
         },
         "alignedGeographicBounds": {
-          "south": 38.2505,
-          "west": -0.7075,
-          "north": 38.2745,
-          "east": -0.6605
+          "south": 38.2485,
+          "west": -0.7105,
+          "north": 38.2765,
+          "east": -0.6575
         }
       },
-      "totalIncludedWeight": 106718,
-      "nonzeroCellCount": 977,
-      "cityWeightPercent": 37.82971347141626,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 138645,
+      "nonzeroCellCount": 1227,
+      "cityWeightPercent": 49.14729121839341,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "elche-legacy-vinalopo-v1",
@@ -155,30 +180,40 @@
         "east": -0.6986693
       },
       "crop": {
-        "rowStart": 41,
-        "rowEnd": 62,
-        "columnStart": 52,
-        "columnEnd": 73,
+        "rowStart": 38,
+        "rowEnd": 65,
+        "columnStart": 49,
+        "columnEnd": 76,
         "dimensions": {
-          "rows": 21,
-          "columns": 21
+          "rows": 27,
+          "columns": 27
         },
         "alignedGeographicBounds": {
-          "south": 38.2505,
-          "west": -0.7195,
-          "north": 38.2715,
-          "east": -0.6985
+          "south": 38.2475,
+          "west": -0.7225,
+          "north": 38.2745,
+          "east": -0.6955
         }
       },
-      "totalIncludedWeight": 88737,
-      "nonzeroCellCount": 391,
-      "cityWeightPercent": 31.455755208241023,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 120060,
+      "nonzeroCellCount": 608,
+      "cityWeightPercent": 42.559225242023246,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "elche-legacy-crosscity-v1",
@@ -193,30 +228,40 @@
         "east": -0.66821161251656
       },
       "crop": {
-        "rowStart": 32,
-        "rowEnd": 59,
-        "columnStart": 51,
-        "columnEnd": 104,
+        "rowStart": 30,
+        "rowEnd": 62,
+        "columnStart": 48,
+        "columnEnd": 106,
         "dimensions": {
-          "rows": 27,
-          "columns": 53
+          "rows": 32,
+          "columns": 58
         },
         "alignedGeographicBounds": {
-          "south": 38.2535,
-          "west": -0.7205,
-          "north": 38.2805,
-          "east": -0.6675
+          "south": 38.2505,
+          "west": -0.7235,
+          "north": 38.2825,
+          "east": -0.6655
         }
       },
-      "totalIncludedWeight": 185046,
-      "nonzeroCellCount": 1218,
-      "cityWeightPercent": 65.59565545673358,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 189081,
+      "nonzeroCellCount": 1520,
+      "cityWeightPercent": 67.02599423610692,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "elche-legacy-night-v1",
@@ -231,30 +276,40 @@
         "east": -0.669842395600748
       },
       "crop": {
-        "rowStart": 37,
-        "rowEnd": 53,
-        "columnStart": 51,
-        "columnEnd": 102,
+        "rowStart": 34,
+        "rowEnd": 55,
+        "columnStart": 49,
+        "columnEnd": 105,
         "dimensions": {
-          "rows": 16,
-          "columns": 51
+          "rows": 21,
+          "columns": 56
         },
         "alignedGeographicBounds": {
-          "south": 38.2595,
-          "west": -0.7205,
-          "north": 38.2755,
-          "east": -0.6695
+          "south": 38.2575,
+          "west": -0.7225,
+          "north": 38.2785,
+          "east": -0.6665
         }
       },
-      "totalIncludedWeight": 145509,
-      "nonzeroCellCount": 719,
-      "cityWeightPercent": 51.58046231668799,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 172783,
+      "nonzeroCellCount": 978,
+      "cityWeightPercent": 61.248630809532756,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "elche-legacy-all-v1",
@@ -269,30 +324,40 @@
         "east": -0.660770128928576
       },
       "crop": {
-        "rowStart": 30,
-        "rowEnd": 62,
-        "columnStart": 46,
-        "columnEnd": 111,
+        "rowStart": 28,
+        "rowEnd": 65,
+        "columnStart": 44,
+        "columnEnd": 114,
         "dimensions": {
-          "rows": 32,
-          "columns": 65
+          "rows": 37,
+          "columns": 70
         },
         "alignedGeographicBounds": {
-          "south": 38.2505,
-          "west": -0.7255,
-          "north": 38.2825,
-          "east": -0.6605
+          "south": 38.2475,
+          "west": -0.7275,
+          "north": 38.2845,
+          "east": -0.6575
         }
       },
-      "totalIncludedWeight": 192828,
-      "nonzeroCellCount": 1675,
-      "cityWeightPercent": 68.35424192044694,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 194503,
+      "nonzeroCellCount": 1987,
+      "cityWeightPercent": 68.94800089329708,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "elche-radial-inner-v1",
@@ -307,30 +372,40 @@
         "east": -0.662710401815381
       },
       "crop": {
-        "rowStart": 2,
-        "rowEnd": 57,
-        "columnStart": 22,
-        "columnEnd": 109,
+        "rowStart": 0,
+        "rowEnd": 59,
+        "columnStart": 21,
+        "columnEnd": 112,
         "dimensions": {
-          "rows": 55,
-          "columns": 87
+          "rows": 59,
+          "columns": 91
         },
         "alignedGeographicBounds": {
-          "south": 38.2555,
-          "west": -0.7495,
-          "north": 38.3105,
-          "east": -0.6625
+          "south": 38.2535,
+          "west": -0.7505,
+          "north": 38.3125,
+          "east": -0.6595
         }
       },
-      "totalIncludedWeight": 191115,
-      "nonzeroCellCount": 2862,
-      "cityWeightPercent": 67.74701259477989,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 196227,
+      "nonzeroCellCount": 3126,
+      "cityWeightPercent": 69.55912953162165,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "elche-radial-west-v1",
@@ -345,30 +420,40 @@
         "east": -0.667620649392051
       },
       "crop": {
-        "rowStart": 34,
+        "rowStart": 33,
         "rowEnd": 157,
         "columnStart": 1,
-        "columnEnd": 104,
+        "columnEnd": 106,
         "dimensions": {
-          "rows": 123,
-          "columns": 103
+          "rows": 124,
+          "columns": 105
         },
         "alignedGeographicBounds": {
           "south": 38.1555,
           "west": -0.7705,
-          "north": 38.2785,
-          "east": -0.6675
+          "north": 38.2795,
+          "east": -0.6655
         }
       },
-      "totalIncludedWeight": 196525,
-      "nonzeroCellCount": 5640,
-      "cityWeightPercent": 69.66476545634364,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 199582,
+      "nonzeroCellCount": 5804,
+      "cityWeightPercent": 70.74841989216628,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "elche-radial-south-v1",
@@ -383,30 +468,40 @@
         "east": -0.628497001759356
       },
       "crop": {
-        "rowStart": 36,
-        "rowEnd": 186,
+        "rowStart": 35,
+        "rowEnd": 187,
         "columnStart": 68,
-        "columnEnd": 144,
+        "columnEnd": 145,
         "dimensions": {
-          "rows": 150,
-          "columns": 76
+          "rows": 152,
+          "columns": 77
         },
         "alignedGeographicBounds": {
-          "south": 38.1265,
+          "south": 38.1255,
           "west": -0.7035,
-          "north": 38.2765,
-          "east": -0.6275
+          "north": 38.2775,
+          "east": -0.6265
         }
       },
-      "totalIncludedWeight": 99022,
-      "nonzeroCellCount": 4693,
-      "cityWeightPercent": 35.10161254302537,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 101466,
+      "nonzeroCellCount": 4802,
+      "cityWeightPercent": 35.96796891893329,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "elche-radial-airport-v1",
@@ -421,87 +516,97 @@
         "east": -0.628497001759356
       },
       "crop": {
-        "rowStart": 36,
+        "rowStart": 11,
         "rowEnd": 186,
-        "columnStart": 68,
-        "columnEnd": 144,
+        "columnStart": 51,
+        "columnEnd": 257,
         "dimensions": {
-          "rows": 150,
-          "columns": 76
+          "rows": 175,
+          "columns": 206
         },
         "alignedGeographicBounds": {
           "south": 38.1265,
-          "west": -0.7035,
-          "north": 38.2765,
-          "east": -0.6275
+          "west": -0.7205,
+          "north": 38.3015,
+          "east": -0.5145
         }
       },
-      "totalIncludedWeight": 99022,
-      "nonzeroCellCount": 4693,
-      "cityWeightPercent": 35.10161254302537,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": false,
-      "everyEligiblePositionedStopPlaceInsideCrop": false,
-      "anomalies": [
-        "Route-used positioned StopPlaces extend west, north and east beyond the declared viewport.",
-        "Route-used positioned StopPlaces extend west, north and east beyond the normal aligned crop."
-      ],
-      "representativeOutsideStopPlaces": [
-        {
-          "stopPlaceId": "elche-place-015",
-          "name": "Tanatori Carrús",
-          "position": {
-            "latitude": 38.275606,
-            "longitude": -0.7162012
+      "totalIncludedWeight": 268194,
+      "nonzeroCellCount": 10516,
+      "cityWeightPercent": 95.07020535198386,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": false,
+        "everyEligiblePositionedStopPlaceInsideCrop": false,
+        "anomalies": [
+          "Route-used positioned StopPlaces extend west, north and east beyond the declared viewport.",
+          "Route-used positioned StopPlaces extend west, north and east beyond the normal aligned crop."
+        ],
+        "representativeOutsideStopPlaces": [
+          {
+            "stopPlaceId": "elche-place-015",
+            "name": "Tanatori Carrús",
+            "position": {
+              "latitude": 38.275606,
+              "longitude": -0.7162012
+            },
+            "reason": [
+              "west of declared viewport",
+              "west of aligned crop"
+            ]
           },
-          "reason": [
-            "west of declared viewport",
-            "west of aligned crop"
-          ]
-        },
-        {
-          "stopPlaceId": "elche-place-1216",
-          "name": "I.F.A. > Aeropuerto",
-          "position": {
-            "latitude": 38.2970408090716,
-            "longitude": -0.57721660171368
+          {
+            "stopPlaceId": "elche-place-1216",
+            "name": "I.F.A. > Aeropuerto",
+            "position": {
+              "latitude": 38.2970408090716,
+              "longitude": -0.57721660171368
+            },
+            "reason": [
+              "north of declared viewport",
+              "north of aligned crop"
+            ]
           },
-          "reason": [
-            "north of declared viewport",
-            "north of aligned crop"
-          ]
-        },
-        {
-          "stopPlaceId": "elche-place-1311",
-          "name": "San Bartolome Tirajana 3",
-          "position": {
-            "latitude": 38.2477483195681,
-            "longitude": -0.516716836850615
+          {
+            "stopPlaceId": "elche-place-1311",
+            "name": "San Bartolome Tirajana 3",
+            "position": {
+              "latitude": 38.2477483195681,
+              "longitude": -0.516716836850615
+            },
+            "reason": [
+              "east of declared viewport",
+              "east of aligned crop"
+            ]
+          }
+        ],
+        "minimumAlignedExtensionRecommended": {
+          "rowStart": 15,
+          "rowEnd": 186,
+          "columnStart": 55,
+          "columnEnd": 255,
+          "dimensions": {
+            "rows": 171,
+            "columns": 200
           },
-          "reason": [
-            "east of declared viewport",
-            "east of aligned crop"
-          ]
+          "alignedGeographicBounds": {
+            "south": 38.1265,
+            "west": -0.7165,
+            "north": 38.2975,
+            "east": -0.5165
+          },
+          "totalIncludedWeight": 261900,
+          "nonzeroCellCount": 10029,
+          "cityWeightPercent": 92.83908954594277
         }
-      ],
-      "minimumAlignedExtensionRecommended": {
-        "rowStart": 15,
-        "rowEnd": 186,
-        "columnStart": 55,
-        "columnEnd": 255,
-        "dimensions": {
-          "rows": 171,
-          "columns": 200
-        },
-        "alignedGeographicBounds": {
-          "south": 38.1265,
-          "west": -0.7165,
-          "north": 38.2975,
-          "east": -0.5165
-        },
-        "totalIncludedWeight": 261900,
-        "nonzeroCellCount": 10029,
-        "cityWeightPercent": 92.83908954594277
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
       }
     },
     {
@@ -517,75 +622,85 @@
         "east": -0.628497001759356
       },
       "crop": {
-        "rowStart": 36,
+        "rowStart": 32,
         "rowEnd": 186,
         "columnStart": 68,
-        "columnEnd": 144,
+        "columnEnd": 257,
         "dimensions": {
-          "rows": 150,
-          "columns": 76
+          "rows": 154,
+          "columns": 189
         },
         "alignedGeographicBounds": {
           "south": 38.1265,
           "west": -0.7035,
-          "north": 38.2765,
-          "east": -0.6275
+          "north": 38.2805,
+          "east": -0.5145
         }
       },
-      "totalIncludedWeight": 99022,
-      "nonzeroCellCount": 4693,
-      "cityWeightPercent": 35.10161254302537,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": false,
-      "everyEligiblePositionedStopPlaceInsideCrop": false,
-      "anomalies": [
-        "Route-used positioned StopPlaces extend north and east beyond the declared viewport.",
-        "Route-used positioned StopPlaces extend north and east beyond the normal aligned crop."
-      ],
-      "representativeOutsideStopPlaces": [
-        {
-          "stopPlaceId": "elche-place-1260",
-          "name": "Crta. Altet - Gasolinera 2",
-          "position": {
-            "latitude": 38.2787805028974,
-            "longitude": -0.564792099354899
+      "totalIncludedWeight": 151881,
+      "nonzeroCellCount": 8034,
+      "cityWeightPercent": 53.839227794300626,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": false,
+        "everyEligiblePositionedStopPlaceInsideCrop": false,
+        "anomalies": [
+          "Route-used positioned StopPlaces extend north and east beyond the declared viewport.",
+          "Route-used positioned StopPlaces extend north and east beyond the normal aligned crop."
+        ],
+        "representativeOutsideStopPlaces": [
+          {
+            "stopPlaceId": "elche-place-1260",
+            "name": "Crta. Altet - Gasolinera 2",
+            "position": {
+              "latitude": 38.2787805028974,
+              "longitude": -0.564792099354899
+            },
+            "reason": [
+              "north of declared viewport",
+              "north of aligned crop"
+            ]
           },
-          "reason": [
-            "north of declared viewport",
-            "north of aligned crop"
-          ]
-        },
-        {
-          "stopPlaceId": "elche-place-1311",
-          "name": "San Bartolome Tirajana 3",
-          "position": {
-            "latitude": 38.2477483195681,
-            "longitude": -0.516716836850615
+          {
+            "stopPlaceId": "elche-place-1311",
+            "name": "San Bartolome Tirajana 3",
+            "position": {
+              "latitude": 38.2477483195681,
+              "longitude": -0.516716836850615
+            },
+            "reason": [
+              "east of declared viewport",
+              "east of aligned crop"
+            ]
+          }
+        ],
+        "minimumAlignedExtensionRecommended": {
+          "rowStart": 33,
+          "rowEnd": 186,
+          "columnStart": 68,
+          "columnEnd": 255,
+          "dimensions": {
+            "rows": 153,
+            "columns": 187
           },
-          "reason": [
-            "east of declared viewport",
-            "east of aligned crop"
-          ]
+          "alignedGeographicBounds": {
+            "south": 38.1265,
+            "west": -0.7035,
+            "north": 38.2795,
+            "east": -0.5165
+          },
+          "totalIncludedWeight": 150970,
+          "nonzeroCellCount": 7909,
+          "cityWeightPercent": 53.51629380966392
         }
-      ],
-      "minimumAlignedExtensionRecommended": {
-        "rowStart": 33,
-        "rowEnd": 186,
-        "columnStart": 68,
-        "columnEnd": 255,
-        "dimensions": {
-          "rows": 153,
-          "columns": 187
-        },
-        "alignedGeographicBounds": {
-          "south": 38.1265,
-          "west": -0.7035,
-          "north": 38.2795,
-          "east": -0.5165
-        },
-        "totalIncludedWeight": 150970,
-        "nonzeroCellCount": 7909,
-        "cityWeightPercent": 53.51629380966392
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
       }
     },
     {
@@ -601,30 +716,56 @@
         "east": -0.513716836850615
       },
       "crop": {
-        "rowStart": 1,
-        "rowEnd": 186,
+        "rowStart": 0,
+        "rowEnd": 187,
         "columnStart": 1,
         "columnEnd": 258,
         "dimensions": {
-          "rows": 185,
+          "rows": 187,
           "columns": 257
         },
         "alignedGeographicBounds": {
-          "south": 38.1265,
+          "south": 38.1255,
           "west": -0.7705,
-          "north": 38.3115,
+          "north": 38.3125,
           "east": -0.5135
         }
       },
-      "totalIncludedWeight": 280836,
-      "nonzeroCellCount": 14172,
-      "cityWeightPercent": 99.55157904438481,
-      "extensionApplied": false,
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 281397,
+      "nonzeroCellCount": 14259,
+      "cityWeightPercent": 99.75044398991851,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     }
-  ]
+  ],
+  "historicalPreparation": {
+    "status": "historical-round-3-round-4-preparation-evidence",
+    "purpose": "scenario-crop-metadata",
+    "stopPlaceValidation": {
+      "rule": "route-used StopNode -> referenced positioned StopPlace, matching the transport-domain catchment eligibility semantics",
+      "sourceBasis": "current public package routes/stops inspected on 2026-08-09",
+      "note": "Normal crop metadata is never silently expanded. Where violations exist, the minimum aligned extension is advisory only."
+    }
+  },
+  "operationalCropPolicy": {
+    "maxAccessDistanceCells": 5
+  },
+  "operationalStatus": {
+    "allSupportedScenarioCropsSufficient": true,
+    "scenarioViewportsUnchanged": true
+  }
 }

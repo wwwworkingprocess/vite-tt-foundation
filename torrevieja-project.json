@@ -28,7 +28,10 @@
       "apps/web/src/ui/OpenScreen.tsx",
       "apps/web/src/ui/open-screen-model.ts",
       "apps/web/src/ui/game-selection.ts",
-      "apps/web/src/ui/GameInspector.tsx"
+      "apps/web/src/ui/GameInspector.tsx",
+      "apps/web/src/population/population-field-loader.ts",
+      "apps/web/src/population/population-demand-plan.ts",
+      "apps/web/src/transport-representation/PopulationGridOverlay.tsx"
     ]
   },
   "simulationCriticalCoverage": {
@@ -64,6 +67,7 @@
     "simulationControls": 8000,
     "sessionControls": 6000,
     "svgRepresentation": 6000,
+    "populationOverlay": 3000,
     "openScreen": 4000,
     "gameInspector": 8000,
     "persistenceRuntime": 260000,

@@ -730,6 +730,33 @@ export function processPassengerTransitAtVehicleCalls(
   input: PassengerTransitInput,
 ): Readonly<PassengerTransitResult> {
   const tick = parseSimulationTick(input.tick);
+  if (
+    input.currentStopCalls.length === 0 &&
+    input.destinationAccessGroups.length === 0
+  )
+    return deepFreeze({
+      waitingCohorts: input.waitingCohorts,
+      waitingGenerationLineageWatermarks:
+        input.waitingGenerationLineageWatermarks,
+      onboardGroups: input.onboardGroups,
+      destinationAccessGroups: input.destinationAccessGroups,
+      nextPassengerOnboardGroupSequence:
+        input.nextPassengerOnboardGroupSequence,
+      nextPassengerDestinationAccessGroupSequence:
+        input.nextPassengerDestinationAccessGroupSequence,
+      totalWaitingForVehiclePassengerCount:
+        input.totalWaitingForVehiclePassengerCount,
+      totalBoardedPassengerCount: input.totalBoardedPassengerCount,
+      totalOnboardPassengerCount: input.totalOnboardPassengerCount,
+      totalAlightedPassengerCount: input.totalAlightedPassengerCount,
+      totalInDestinationAccessPassengerCount:
+        input.totalInDestinationAccessPassengerCount,
+      totalCompletedJourneyPassengerCount:
+        input.totalCompletedJourneyPassengerCount,
+      currentAlightingEvents: [],
+      currentBoardingEvents: [],
+      currentJourneyCompletionEvents: [],
+    });
   const settled = advancePassengerDestinationAccessToTick({
     tick,
     destinationAccessGroups: input.destinationAccessGroups,

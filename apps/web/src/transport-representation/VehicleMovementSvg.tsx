@@ -1,60 +1,9 @@
 import type { VehicleState } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import type { KeyboardEvent } from 'react';
-import {
-  selectRoute,
-  selectStop,
-  selectVehicle,
-  type GameSelection,
-} from '../ui/game-selection.js';
+import { selectVehicle, type GameSelection } from '../ui/game-selection.js';
 import { projectVehicleMovementSvg } from './vehicle-svg-projection.js';
-
-type SvgEdgeGeometry = Readonly<{
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-}>;
-
-const createMidpointArrowPoints = ({
-  x1,
-  y1,
-  x2,
-  y2,
-}: SvgEdgeGeometry): string | undefined => {
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  const distance = Math.hypot(dx, dy);
-
-  if (distance === 0) return undefined;
-
-  const unitX = dx / distance;
-  const unitY = dy / distance;
-
-  // Perpendicular unit vector.
-  const perpendicularX = -unitY;
-  const perpendicularY = unitX;
-
-  const midpointX = (x1 + x2) / 2;
-  const midpointY = (y1 + y2) / 2;
-
-  // Keep arrows compact on short edges.
-  const halfLength = Math.min(1.2, distance * 0.18);
-  const halfWidth = Math.min(0.8, distance * 0.12);
-
-  const tipX = midpointX + unitX * halfLength;
-  const tipY = midpointY + unitY * halfLength;
-
-  const baseX = midpointX - unitX * halfLength;
-  const baseY = midpointY - unitY * halfLength;
-
-  const leftX = baseX + perpendicularX * halfWidth;
-  const leftY = baseY + perpendicularY * halfWidth;
-  const rightX = baseX - perpendicularX * halfWidth;
-  const rightY = baseY - perpendicularY * halfWidth;
-
-  return `${tipX},${tipY} ${leftX},${leftY} ${rightX},${rightY}`;
-};
+import StaticScenarioSvgLayer from './StaticScenarioSvgLayer.js';
 
 export function VehicleMovementSvg({
   scenario,
@@ -85,90 +34,16 @@ export function VehicleMovementSvg({
       role="group"
       aria-label="Authoritative vehicle movement"
     >
-      <g aria-label="Directed route edges">
-        {projection.edges.map((edge) => {
-          const color = edge.color ?? 'currentColor';
-          const arrowPoints = createMidpointArrowPoints(edge);
-
-          return (
-            <g
-              key={edge.edgeId}
-              data-edge-group-id={edge.edgeId}
-              data-route-id={edge.routeId}
-              data-pattern-id={edge.patternId}
-            >
-              <line
-                data-edge-id={edge.edgeId}
-                data-route-id={edge.routeId}
-                data-pattern-id={edge.patternId}
-                x1={edge.x1}
-                y1={edge.y1}
-                x2={edge.x2}
-                y2={edge.y2}
-                stroke={color}
-                strokeWidth="0.6"
-                role="button"
-                tabIndex={0}
-                aria-label={`Select route ${edge.routeId}`}
-                data-selected={
-                  selection?.kind === 'route' &&
-                  selection.routeId === edge.routeId
-                }
-                onClick={() => onSelectionChange?.(selectRoute(edge.routeId))}
-                onKeyDown={activate(() =>
-                  onSelectionChange?.(selectRoute(edge.routeId)),
-                )}
-              />
-
-              {arrowPoints ? (
-                <polygon
-                  data-testid="edge-direction"
-                  data-direction-edge-id={edge.edgeId}
-                  data-route-id={edge.routeId}
-                  data-pattern-id={edge.patternId}
-                  points={arrowPoints}
-                  fill={color}
-                  pointerEvents="none"
-                  aria-hidden="true"
-                />
-              ) : null}
-            </g>
-          );
-        })}
-      </g>
-      <g aria-label="Canonical stops">
-        {projection.nodes.map((node) => (
-          <circle
-            key={node.stopNodeId}
-            data-stop-node-id={node.stopNodeId}
-            cx={node.cx}
-            cy={node.cy}
-            r="0.8"
-            fill="currentColor"
-            role={node.stopPlaceId ? 'button' : undefined}
-            tabIndex={node.stopPlaceId ? 0 : undefined}
-            aria-label={
-              node.stopPlaceId ? `Select stop ${node.name}` : undefined
-            }
-            data-stop-place-id={node.stopPlaceId}
-            data-selected={
-              selection?.kind === 'stop' &&
-              selection.stopPlaceId === node.stopPlaceId
-            }
-            onClick={() =>
-              node.stopPlaceId &&
-              onSelectionChange?.(selectStop(node.stopPlaceId))
-            }
-            onKeyDown={
-              node.stopPlaceId
-                ? activate(() =>
-                    onSelectionChange?.(selectStop(node.stopPlaceId!)),
-                  )
-                : undefined
-            }
-          />
-        ))}
-      </g>
+      <StaticScenarioSvgLayer
+        edges={projection.edges}
+        nodes={projection.nodes}
+        selection={
+          selection?.kind === 'route' || selection?.kind === 'stop'
+            ? selection
+            : null
+        }
+        onSelectionChange={onSelectionChange}
+      />
       <g aria-label="Authoritative vehicles">
         {projection.vehicles.map((vehicle) => (
           <circle

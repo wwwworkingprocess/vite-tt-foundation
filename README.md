@@ -79,8 +79,9 @@ and completed journeys.
 Current aggregate contracts are Transport Snapshot V9, Transport Save V7,
 transport client V3, and transport Worker V3. The public catalogue contains
 multiple Torrevieja, Elche, Elche-radial, and Alicante development-seed
-packages. The next planned product layer is diagnostic/game UI for live
-passenger authority, followed by Phase 4F economics and objectives. Transfers,
+packages. Application/session lifecycle, object selection, inspector
+diagnostics, and deterministic population-backed passenger demand are active.
+The next planned product layer is Phase 4F economics and objectives. Transfers,
 advanced services, and richer operational realism remain deferred.
 
 See [`docs/current-state.md`](docs/current-state.md) for the current contract and

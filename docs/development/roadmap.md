@@ -176,6 +176,11 @@ duplicating simulation rules or retaining unbounded event history.
 
 ## Phase 4F — Economics and objectives
 
+The population-field integration prerequisite is complete: supported public
+scenarios resolve immutable runtime population crops, deterministic StopPlace
+catchments, and the development-seed Production Passenger Demand Policy V1.
+This activation does not add or tune economics.
+
 The live passenger authority is now visible and inspectable. Exact starting
 money, integer currency units, fare calculation, operating costs, accounting
 frequency, objective definitions, and win/fail conditions still require a
@@ -197,10 +202,12 @@ Deferred work includes:
 **Status:** Partially proven infrastructure; product scope remains.
 
 The SVG/R3F boundary, mounting, lifecycle, and view swapping already exist. The
-remaining phase is production-quality graph rendering, smooth visual
-interpolation, live passenger/occupancy display, selection/inspection, and
-performance acceptance. This phase must consume immutable authority and may be
-sequenced around Phase 4F through an explicit task decision.
+Renderer-independent selection, authority inspection, and live passenger
+diagnostics are complete. The remaining phase is production-quality graph/R3F
+rendering, smooth visual interpolation, richer visual presentation, and
+richer-scene performance acceptance. It must reuse the existing selection and
+inspector contract, consume immutable authority, and may be sequenced around
+Phase 4F through an explicit task decision.
 
 ## Phase 6 — Torrevieja Tycoon vertical slice
 

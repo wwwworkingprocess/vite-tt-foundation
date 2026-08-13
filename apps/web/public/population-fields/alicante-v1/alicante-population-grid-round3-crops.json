@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "purpose": "scenario-crop-metadata",
+  "purpose": "es-alicante current deterministic operational population crop metadata",
   "city": "Alicante",
   "indexSemantics": "half-open [start, end)",
   "canonicalGrid": {
@@ -26,14 +26,6 @@
     "sourceFile": "alicante-scenario-viewports.round3.json",
     "sha256": "d2e08f50de00c00566cae083e2a9f540fc938f3553ac2b4fbc6e0557bc647f52"
   },
-  "stopPlaceValidation": {
-    "rule": "route-used StopNode -> referenced positioned StopPlace; all such positions must lie inside the normal scenario viewport/crop unless explicitly reported",
-    "auditBasis": "accepted Alicante audits establish all StopNodes are routed, all routed StopNodes have exactly one StopPlace, all referenced StopPlaces have valid WGS84 positions, and there are no orphan StopPlaces",
-    "crossMunicipalityFact": "north and all each contain exactly one es-sant-joan-dalacant StopPlace, Hospital Sant Joan code 4912",
-    "sandboxLimitation": "exact current scenario stops.json/routes.json package bytes are not mounted in the active filesystem; therefore this round does not claim a fresh byte-level re-run over all seven package files",
-    "externalCrossCheck": "current official Vectalia line 11H still uses stop 4912 Hospital Sant Joan; current GTFS-derived locality evidence places it near 38.3899,-0.4351",
-    "note": "Normal crop metadata is never silently expanded. Advisory extension metadata remains extensionApplied=false."
-  },
   "scenarios": [
     {
       "scenarioId": "alicante-legacy-core-v1",
@@ -48,32 +40,42 @@
         "east": -0.471486686
       },
       "crop": {
-        "rowStart": 16,
-        "rowEnd": 66,
-        "columnStart": 102,
-        "columnEnd": 149,
+        "rowStart": 12,
+        "rowEnd": 67,
+        "columnStart": 99,
+        "columnEnd": 153,
         "dimensions": {
-          "rows": 50,
-          "columns": 47
+          "rows": 55,
+          "columns": 54
         },
         "alignedGeographicBounds": {
-          "south": 38.3255,
-          "west": -0.5175,
-          "north": 38.3755,
-          "east": -0.4705
+          "south": 38.3245,
+          "west": -0.5205,
+          "north": 38.3795,
+          "east": -0.4665
         }
       },
-      "totalIncludedWeight": 261034,
-      "nonzeroCellCount": 1583,
-      "cityWeightPercent": 74.36336443273271,
-      "extensionApplied": false,
-      "eligiblePositionedStopPlaceCount": 159,
-      "stopPlaceVerificationBasis": "accepted scenario audit invariants and scenario-specific primary-settlement bounds",
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 271458,
+      "nonzeroCellCount": 1774,
+      "cityWeightPercent": 77.33295349334092,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "eligiblePositionedStopPlaceCount": 159,
+        "stopPlaceVerificationBasis": "accepted scenario audit invariants and scenario-specific primary-settlement bounds",
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "alicante-legacy-west-v1",
@@ -88,32 +90,42 @@
         "east": -0.47687436
       },
       "crop": {
-        "rowStart": 14,
-        "rowEnd": 55,
-        "columnStart": 89,
-        "columnEnd": 143,
+        "rowStart": 11,
+        "rowEnd": 56,
+        "columnStart": 84,
+        "columnEnd": 148,
         "dimensions": {
-          "rows": 41,
-          "columns": 54
+          "rows": 45,
+          "columns": 64
         },
         "alignedGeographicBounds": {
-          "south": 38.3365,
-          "west": -0.5305,
-          "north": 38.3775,
-          "east": -0.4765
+          "south": 38.3355,
+          "west": -0.5355,
+          "north": 38.3805,
+          "east": -0.4715
         }
       },
-      "totalIncludedWeight": 232522,
-      "nonzeroCellCount": 1405,
-      "cityWeightPercent": 66.24086603518268,
-      "extensionApplied": false,
-      "eligiblePositionedStopPlaceCount": 205,
-      "stopPlaceVerificationBasis": "accepted scenario audit invariants and scenario-specific primary-settlement bounds",
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 253725,
+      "nonzeroCellCount": 1628,
+      "cityWeightPercent": 72.28117655437647,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "eligiblePositionedStopPlaceCount": 205,
+        "stopPlaceVerificationBasis": "accepted scenario audit invariants and scenario-specific primary-settlement bounds",
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "alicante-legacy-north-v1",
@@ -128,68 +140,78 @@
         "east": -0.447150035
       },
       "crop": {
-        "rowStart": 2,
-        "rowEnd": 47,
-        "columnStart": 121,
-        "columnEnd": 173,
+        "rowStart": 0,
+        "rowEnd": 51,
+        "columnStart": 116,
+        "columnEnd": 190,
         "dimensions": {
-          "rows": 45,
-          "columns": 52
+          "rows": 51,
+          "columns": 74
         },
         "alignedGeographicBounds": {
-          "south": 38.3445,
-          "west": -0.4985,
-          "north": 38.3895,
-          "east": -0.4465
+          "south": 38.3405,
+          "west": -0.5035,
+          "north": 38.3915,
+          "east": -0.4295
         }
       },
-      "totalIncludedWeight": 180445,
-      "nonzeroCellCount": 1458,
-      "cityWeightPercent": 51.40517057189658,
-      "extensionApplied": false,
-      "eligiblePositionedStopPlaceCount": 119,
-      "stopPlaceVerificationBasis": "accepted scenario audit invariants plus independent current cross-check for the one cross-municipality StopPlace",
-      "everyEligiblePositionedStopPlaceInsideViewport": false,
-      "everyEligiblePositionedStopPlaceInsideCrop": false,
-      "anomalies": [
-        "Hospital Sant Joan (stop code 4912) is route-used but assigned to es-sant-joan-dalacant; independent current locality evidence places it outside the primary Alicante viewport and aligned crop."
-      ],
-      "representativeOutsideStopPlaces": [
-        {
-          "stopNodeId": "alicante-stop-4912",
-          "stopCode": "4912",
-          "name": "Hospital Sant Joan",
-          "settlementId": "es-sant-joan-dalacant",
-          "verificationPosition": {
-            "latitude": 38.3899,
-            "longitude": -0.4351
+      "totalIncludedWeight": 233920,
+      "nonzeroCellCount": 2170,
+      "cityWeightPercent": 66.63912826721744,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "eligiblePositionedStopPlaceCount": 119,
+        "stopPlaceVerificationBasis": "accepted scenario audit invariants plus independent current cross-check for the one cross-municipality StopPlace",
+        "everyEligiblePositionedStopPlaceInsideViewport": false,
+        "everyEligiblePositionedStopPlaceInsideCrop": false,
+        "anomalies": [
+          "Hospital Sant Joan (stop code 4912) is route-used but assigned to es-sant-joan-dalacant; independent current locality evidence places it outside the primary Alicante viewport and aligned crop."
+        ],
+        "representativeOutsideStopPlaces": [
+          {
+            "stopNodeId": "alicante-stop-4912",
+            "stopCode": "4912",
+            "name": "Hospital Sant Joan",
+            "settlementId": "es-sant-joan-dalacant",
+            "verificationPosition": {
+              "latitude": 38.3899,
+              "longitude": -0.4351
+            },
+            "positionBasis": "independent current street/GTFS locality cross-check; not asserted byte-identical to accepted package coordinate",
+            "reason": [
+              "outside declared viewport",
+              "outside aligned crop"
+            ]
+          }
+        ],
+        "minimumAlignedExtensionRecommended": {
+          "rowStart": 1,
+          "rowEnd": 47,
+          "columnStart": 121,
+          "columnEnd": 185,
+          "dimensions": {
+            "rows": 46,
+            "columns": 64
           },
-          "positionBasis": "independent current street/GTFS locality cross-check; not asserted byte-identical to accepted package coordinate",
-          "reason": [
-            "outside declared viewport",
-            "outside aligned crop"
-          ]
+          "alignedGeographicBounds": {
+            "south": 38.3445,
+            "west": -0.4985,
+            "north": 38.3905,
+            "east": -0.4345
+          },
+          "totalIncludedWeight": 187027,
+          "nonzeroCellCount": 1681,
+          "cityWeightPercent": 53.28025069439498,
+          "basis": "conservative aligned extension from independent current locality cross-check; advisory only"
         }
-      ],
-      "minimumAlignedExtensionRecommended": {
-        "rowStart": 1,
-        "rowEnd": 47,
-        "columnStart": 121,
-        "columnEnd": 185,
-        "dimensions": {
-          "rows": 46,
-          "columns": 64
-        },
-        "alignedGeographicBounds": {
-          "south": 38.3445,
-          "west": -0.4985,
-          "north": 38.3905,
-          "east": -0.4345
-        },
-        "totalIncludedWeight": 187027,
-        "nonzeroCellCount": 1681,
-        "cityWeightPercent": 53.28025069439498,
-        "basis": "conservative aligned extension from independent current locality cross-check; advisory only"
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
       }
     },
     {
@@ -205,32 +227,42 @@
         "east": -0.4118105
       },
       "crop": {
-        "rowStart": 4,
-        "rowEnd": 50,
-        "columnStart": 124,
-        "columnEnd": 208,
+        "rowStart": 0,
+        "rowEnd": 54,
+        "columnStart": 120,
+        "columnEnd": 209,
         "dimensions": {
-          "rows": 46,
-          "columns": 84
+          "rows": 54,
+          "columns": 89
         },
         "alignedGeographicBounds": {
-          "south": 38.3415,
-          "west": -0.4955,
-          "north": 38.3875,
-          "east": -0.4115
+          "south": 38.3375,
+          "west": -0.4995,
+          "north": 38.3915,
+          "east": -0.4105
         }
       },
-      "totalIncludedWeight": 222340,
-      "nonzeroCellCount": 2282,
-      "cityWeightPercent": 63.34021793319564,
-      "extensionApplied": false,
-      "eligiblePositionedStopPlaceCount": 140,
-      "stopPlaceVerificationBasis": "accepted scenario audit invariants and scenario-specific primary-settlement bounds",
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 254825,
+      "nonzeroCellCount": 2749,
+      "cityWeightPercent": 72.59454454810911,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "eligiblePositionedStopPlaceCount": 140,
+        "stopPlaceVerificationBasis": "accepted scenario audit invariants and scenario-specific primary-settlement bounds",
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "alicante-legacy-periphery-v1",
@@ -245,32 +277,42 @@
         "east": -0.4894660498882855
       },
       "crop": {
-        "rowStart": 42,
-        "rowEnd": 112,
-        "columnStart": 1,
-        "columnEnd": 131,
+        "rowStart": 40,
+        "rowEnd": 113,
+        "columnStart": 0,
+        "columnEnd": 135,
         "dimensions": {
-          "rows": 70,
-          "columns": 130
+          "rows": 73,
+          "columns": 135
         },
         "alignedGeographicBounds": {
-          "south": 38.2795,
-          "west": -0.6185,
-          "north": 38.3495,
-          "east": -0.4885
+          "south": 38.2785,
+          "west": -0.6195,
+          "north": 38.3515,
+          "east": -0.4845
         }
       },
-      "totalIncludedWeight": 100782,
-      "nonzeroCellCount": 1580,
-      "cityWeightPercent": 28.710775585784486,
-      "extensionApplied": false,
-      "eligiblePositionedStopPlaceCount": 79,
-      "stopPlaceVerificationBasis": "accepted scenario audit invariants and scenario-specific primary-settlement bounds",
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 118579,
+      "nonzeroCellCount": 1795,
+      "cityWeightPercent": 33.78078484438431,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "eligiblePositionedStopPlaceCount": 79,
+        "stopPlaceVerificationBasis": "accepted scenario audit invariants and scenario-specific primary-settlement bounds",
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "alicante-legacy-circular-v1",
@@ -285,32 +327,42 @@
         "east": -0.464303627
       },
       "crop": {
-        "rowStart": 24,
-        "rowEnd": 55,
-        "columnStart": 110,
-        "columnEnd": 156,
+        "rowStart": 20,
+        "rowEnd": 58,
+        "columnStart": 105,
+        "columnEnd": 160,
         "dimensions": {
-          "rows": 31,
-          "columns": 46
+          "rows": 38,
+          "columns": 55
         },
         "alignedGeographicBounds": {
-          "south": 38.3365,
-          "west": -0.5095,
-          "north": 38.3675,
-          "east": -0.4635
+          "south": 38.3335,
+          "west": -0.5145,
+          "north": 38.3715,
+          "east": -0.4595
         }
       },
-      "totalIncludedWeight": 194961,
-      "nonzeroCellCount": 1144,
-      "cityWeightPercent": 55.54048856919023,
-      "extensionApplied": false,
-      "eligiblePositionedStopPlaceCount": 60,
-      "stopPlaceVerificationBasis": "accepted scenario audit invariants and scenario-specific primary-settlement bounds",
-      "everyEligiblePositionedStopPlaceInsideViewport": true,
-      "everyEligiblePositionedStopPlaceInsideCrop": true,
-      "anomalies": [],
-      "representativeOutsideStopPlaces": [],
-      "minimumAlignedExtensionRecommended": null
+      "totalIncludedWeight": 231526,
+      "nonzeroCellCount": 1498,
+      "cityWeightPercent": 65.95712556085749,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "eligiblePositionedStopPlaceCount": 60,
+        "stopPlaceVerificationBasis": "accepted scenario audit invariants and scenario-specific primary-settlement bounds",
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": [],
+        "representativeOutsideStopPlaces": [],
+        "minimumAlignedExtensionRecommended": null
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
     },
     {
       "scenarioId": "alicante-legacy-all-v1",
@@ -325,69 +377,98 @@
         "east": -0.4118105
       },
       "crop": {
-        "rowStart": 2,
-        "rowEnd": 112,
-        "columnStart": 1,
-        "columnEnd": 208,
+        "rowStart": 0,
+        "rowEnd": 113,
+        "columnStart": 0,
+        "columnEnd": 209,
         "dimensions": {
-          "rows": 110,
-          "columns": 207
+          "rows": 113,
+          "columns": 209
         },
         "alignedGeographicBounds": {
-          "south": 38.2795,
-          "west": -0.6185,
-          "north": 38.3895,
-          "east": -0.4115
+          "south": 38.2785,
+          "west": -0.6195,
+          "north": 38.3915,
+          "east": -0.4105
         }
       },
-      "totalIncludedWeight": 344643,
-      "nonzeroCellCount": 4852,
-      "cityWeightPercent": 98.18189587636208,
-      "extensionApplied": false,
-      "eligiblePositionedStopPlaceCount": 593,
-      "stopPlaceVerificationBasis": "accepted scenario audit invariants plus independent current cross-check for the one cross-municipality StopPlace",
-      "everyEligiblePositionedStopPlaceInsideViewport": false,
-      "everyEligiblePositionedStopPlaceInsideCrop": false,
-      "anomalies": [
-        "Hospital Sant Joan (stop code 4912) is route-used but assigned to es-sant-joan-dalacant; independent current locality evidence places it outside the primary Alicante viewport and aligned crop."
-      ],
-      "representativeOutsideStopPlaces": [
-        {
-          "stopNodeId": "alicante-stop-4912",
-          "stopCode": "4912",
-          "name": "Hospital Sant Joan",
-          "settlementId": "es-sant-joan-dalacant",
-          "verificationPosition": {
-            "latitude": 38.3899,
-            "longitude": -0.4351
+      "totalIncludedWeight": 351025,
+      "nonzeroCellCount": 5184,
+      "cityWeightPercent": 100,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "extensionApplied": false,
+        "eligiblePositionedStopPlaceCount": 593,
+        "stopPlaceVerificationBasis": "accepted scenario audit invariants plus independent current cross-check for the one cross-municipality StopPlace",
+        "everyEligiblePositionedStopPlaceInsideViewport": false,
+        "everyEligiblePositionedStopPlaceInsideCrop": false,
+        "anomalies": [
+          "Hospital Sant Joan (stop code 4912) is route-used but assigned to es-sant-joan-dalacant; independent current locality evidence places it outside the primary Alicante viewport and aligned crop."
+        ],
+        "representativeOutsideStopPlaces": [
+          {
+            "stopNodeId": "alicante-stop-4912",
+            "stopCode": "4912",
+            "name": "Hospital Sant Joan",
+            "settlementId": "es-sant-joan-dalacant",
+            "verificationPosition": {
+              "latitude": 38.3899,
+              "longitude": -0.4351
+            },
+            "positionBasis": "independent current street/GTFS locality cross-check; not asserted byte-identical to accepted package coordinate",
+            "reason": [
+              "outside declared viewport",
+              "outside aligned crop"
+            ]
+          }
+        ],
+        "minimumAlignedExtensionRecommended": {
+          "rowStart": 1,
+          "rowEnd": 112,
+          "columnStart": 1,
+          "columnEnd": 208,
+          "dimensions": {
+            "rows": 111,
+            "columns": 207
           },
-          "positionBasis": "independent current street/GTFS locality cross-check; not asserted byte-identical to accepted package coordinate",
-          "reason": [
-            "outside declared viewport",
-            "outside aligned crop"
-          ]
+          "alignedGeographicBounds": {
+            "south": 38.2795,
+            "west": -0.6185,
+            "north": 38.3905,
+            "east": -0.4115
+          },
+          "totalIncludedWeight": 346817,
+          "nonzeroCellCount": 4962,
+          "cityWeightPercent": 98.8012249839755,
+          "basis": "conservative aligned extension from independent current locality cross-check; advisory only"
         }
-      ],
-      "minimumAlignedExtensionRecommended": {
-        "rowStart": 1,
-        "rowEnd": 112,
-        "columnStart": 1,
-        "columnEnd": 208,
-        "dimensions": {
-          "rows": 111,
-          "columns": 207
-        },
-        "alignedGeographicBounds": {
-          "south": 38.2795,
-          "west": -0.6185,
-          "north": 38.3905,
-          "east": -0.4115
-        },
-        "totalIncludedWeight": 346817,
-        "nonzeroCellCount": 4962,
-        "cityWeightPercent": 98.8012249839755,
-        "basis": "conservative aligned extension from independent current locality cross-check; advisory only"
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
       }
     }
-  ]
+  ],
+  "historicalPreparation": {
+    "status": "historical-round-3-round-4-preparation-evidence",
+    "purpose": "scenario-crop-metadata",
+    "stopPlaceValidation": {
+      "rule": "route-used StopNode -> referenced positioned StopPlace; all such positions must lie inside the normal scenario viewport/crop unless explicitly reported",
+      "auditBasis": "accepted Alicante audits establish all StopNodes are routed, all routed StopNodes have exactly one StopPlace, all referenced StopPlaces have valid WGS84 positions, and there are no orphan StopPlaces",
+      "crossMunicipalityFact": "north and all each contain exactly one es-sant-joan-dalacant StopPlace, Hospital Sant Joan code 4912",
+      "sandboxLimitation": "exact current scenario stops.json/routes.json package bytes are not mounted in the active filesystem; therefore this round does not claim a fresh byte-level re-run over all seven package files",
+      "externalCrossCheck": "current official Vectalia line 11H still uses stop 4912 Hospital Sant Joan; current GTFS-derived locality evidence places it near 38.3899,-0.4351",
+      "note": "Normal crop metadata is never silently expanded. Advisory extension metadata remains extensionApplied=false."
+    }
+  },
+  "operationalCropPolicy": {
+    "maxAccessDistanceCells": 5
+  },
+  "operationalStatus": {
+    "allSupportedScenarioCropsSufficient": true,
+    "scenarioViewportsUnchanged": true
+  }
 }

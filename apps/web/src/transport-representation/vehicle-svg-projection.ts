@@ -48,8 +48,66 @@ export interface VehicleSvgProjection {
 
 const deepFreeze = <T>(value: T): T => {
   if (value === null || typeof value !== 'object') return value;
+  if (Object.isFrozen(value)) return value;
   for (const child of Object.values(value)) deepFreeze(child);
   return Object.freeze(value);
+};
+
+type ScenarioProjectionIndex = Readonly<{
+  graph: ReturnType<typeof buildDirectedScenarioGraph>;
+  stops: ReadonlyMap<
+    string,
+    ReturnType<typeof buildDirectedScenarioGraph>['nodes'][number]
+  >;
+  edges: ReadonlyMap<
+    string,
+    ReturnType<typeof buildDirectedScenarioGraph>['edges'][number]
+  >;
+  project: (position: GeographicPosition) => SvgPosition;
+}>;
+
+const scenarioProjectionIndexes = new WeakMap<
+  CanonicalScenario,
+  ScenarioProjectionIndex
+>();
+const staticScenarioProjections = new WeakMap<
+  CanonicalScenario,
+  Pick<VehicleSvgProjection, 'nodes' | 'edges'>
+>();
+
+const scenarioProjectionIndex = (scenario: CanonicalScenario) => {
+  const existing = scenarioProjectionIndexes.get(scenario);
+  if (existing) return existing;
+  const graph = buildDirectedScenarioGraph(scenario);
+  if (graph.nodes.length === 0)
+    throw new Error('SVG projection requires at least one canonical stop.');
+  const latitudes = graph.nodes.map((node) => node.position.latitude);
+  const longitudes = graph.nodes.map((node) => node.position.longitude);
+  const south = Math.min(...latitudes);
+  const north = Math.max(...latitudes);
+  const west = Math.min(...longitudes);
+  const east = Math.max(...longitudes);
+  const latitudeSpan = north - south;
+  const longitudeSpan = east - west;
+  const project = (position: GeographicPosition) =>
+    deepFreeze({
+      cx:
+        longitudeSpan === 0
+          ? 50
+          : 5 + ((position.longitude - west) / longitudeSpan) * 90,
+      cy:
+        latitudeSpan === 0
+          ? 50
+          : 5 + ((north - position.latitude) / latitudeSpan) * 90,
+    });
+  const created = {
+    graph,
+    stops: new Map(graph.nodes.map((node) => [node.stopNodeId, node])),
+    edges: new Map(graph.edges.map((edge) => [edge.edgeId, edge])),
+    project,
+  };
+  scenarioProjectionIndexes.set(scenario, created);
+  return created;
 };
 
 export function interpolateSvgPosition(
@@ -73,35 +131,19 @@ export function interpolateSvgPosition(
   });
 }
 
+export function createScenarioSvgPositionProjector(
+  scenario: CanonicalScenario,
+): (position: GeographicPosition) => SvgPosition {
+  return scenarioProjectionIndex(scenario).project;
+}
+
 export function projectVehicleMovementSvg(
   scenario: CanonicalScenario,
   fleet: readonly VehicleState[],
 ): VehicleSvgProjection {
-  const graph = buildDirectedScenarioGraph(scenario);
-  if (graph.nodes.length === 0)
-    throw new Error('SVG projection requires at least one canonical stop.');
-  const stops = new Map<string, (typeof graph.nodes)[number]>(
-    graph.nodes.map((node) => [node.stopNodeId, node]),
-  );
-  const latitudes = graph.nodes.map((node) => node.position.latitude);
-  const longitudes = graph.nodes.map((node) => node.position.longitude);
-  const south = Math.min(...latitudes);
-  const north = Math.max(...latitudes);
-  const west = Math.min(...longitudes);
-  const east = Math.max(...longitudes);
-  const latitudeSpan = north - south;
-  const longitudeSpan = east - west;
-  const mapPosition = (position: GeographicPosition): SvgPosition =>
-    deepFreeze({
-      cx:
-        longitudeSpan === 0
-          ? 50
-          : 5 + ((position.longitude - west) / longitudeSpan) * 90,
-      cy:
-        latitudeSpan === 0
-          ? 50
-          : 5 + ((north - position.latitude) / latitudeSpan) * 90,
-    });
+  const index = scenarioProjectionIndex(scenario);
+  const { graph, stops } = index;
+  const mapPosition = index.project;
   const requireStop = (stopNodeId: string) => {
     const stop = stops.get(stopNodeId);
     if (!stop)
@@ -110,31 +152,36 @@ export function projectVehicleMovementSvg(
       );
     return stop;
   };
-  const nodes = graph.nodes.map((node) => ({
-    stopNodeId: node.stopNodeId,
-    ...(node.stopPlaceId ? { stopPlaceId: node.stopPlaceId } : {}),
-    name: node.name ?? node.stopNodeId,
-    latitude: node.position.latitude,
-    longitude: node.position.longitude,
-    ...mapPosition(node.position),
-  }));
-  const edges = graph.edges.map((edge) => {
-    const from = mapPosition(requireStop(edge.fromStopNodeId).position);
-    const to = mapPosition(requireStop(edge.toStopNodeId).position);
-    const presentation = scenario.presentation as
-      { routeStyles?: Record<string, { color?: unknown }> } | undefined;
-    const color = presentation?.routeStyles?.[edge.routeId]?.color;
-    return {
-      edgeId: edge.edgeId,
-      routeId: edge.routeId,
-      patternId: edge.patternId,
-      ...(typeof color === 'string' ? { color } : {}),
-      x1: from.cx,
-      y1: from.cy,
-      x2: to.cx,
-      y2: to.cy,
-    };
-  });
+  let staticProjection = staticScenarioProjections.get(scenario);
+  if (!staticProjection) {
+    const nodes = graph.nodes.map((node) => ({
+      stopNodeId: node.stopNodeId,
+      ...(node.stopPlaceId ? { stopPlaceId: node.stopPlaceId } : {}),
+      name: node.name ?? node.stopNodeId,
+      latitude: node.position.latitude,
+      longitude: node.position.longitude,
+      ...mapPosition(node.position),
+    }));
+    const edges = graph.edges.map((edge) => {
+      const from = mapPosition(requireStop(edge.fromStopNodeId).position);
+      const to = mapPosition(requireStop(edge.toStopNodeId).position);
+      const presentation = scenario.presentation as
+        { routeStyles?: Record<string, { color?: unknown }> } | undefined;
+      const color = presentation?.routeStyles?.[edge.routeId]?.color;
+      return {
+        edgeId: edge.edgeId,
+        routeId: edge.routeId,
+        patternId: edge.patternId,
+        ...(typeof color === 'string' ? { color } : {}),
+        x1: from.cx,
+        y1: from.cy,
+        x2: to.cx,
+        y2: to.cy,
+      };
+    });
+    staticProjection = deepFreeze({ nodes, edges });
+    staticScenarioProjections.set(scenario, staticProjection);
+  }
   const vehicles = fleet.map((vehicle) => {
     const movement = vehicle.movement;
     if (movement.kind !== 'running-on-edge') {
@@ -154,7 +201,7 @@ export function projectVehicleMovementSvg(
         ...position,
       };
     }
-    const edge = graph.edges.find(({ edgeId }) => edgeId === movement.edgeId);
+    const edge = index.edges.get(movement.edgeId);
     if (!edge)
       throw new Error(
         `Vehicle references missing canonical edge: ${movement.edgeId}.`,
@@ -190,5 +237,10 @@ export function projectVehicleMovementSvg(
       ...mapPosition(geographic),
     };
   });
-  return deepFreeze({ viewBox: '0 0 100 100', nodes, edges, vehicles });
+  return deepFreeze({
+    viewBox: '0 0 100 100',
+    nodes: staticProjection.nodes,
+    edges: staticProjection.edges,
+    vehicles,
+  });
 }

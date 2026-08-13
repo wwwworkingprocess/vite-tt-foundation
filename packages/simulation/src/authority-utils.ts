@@ -4,6 +4,13 @@ export const deepFreeze = <T>(value: T): T => {
   return Object.isFrozen(value) ? value : Object.freeze(value);
 };
 
+export const freezeTrustedAuthority = <T>(value: T): T => {
+  if (value === null || typeof value !== 'object' || Object.isFrozen(value))
+    return value;
+  for (const child of Object.values(value)) freezeTrustedAuthority(child);
+  return Object.freeze(value);
+};
+
 export const checkedAdd = (
   left: number,
   right: number,

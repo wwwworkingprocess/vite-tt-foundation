@@ -27,6 +27,18 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
 };
 const openSimulationControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
+const restoreReadyTimeoutMs = 15_000;
+const expectRestoredAuthority = (scenarioId: string) => {
+  cy.get('[data-testid="worker-timeline"]', {
+    timeout: restoreReadyTimeoutMs,
+  }).should('contain.text', 'browser-foundation-restored-');
+  cy.get('[data-testid="scenario-coordinate"]', {
+    timeout: restoreReadyTimeoutMs,
+  }).should('contain.text', `${scenarioId}@1.0.0#`);
+  cy.get('[data-testid="worker-status"]', {
+    timeout: restoreReadyTimeoutMs,
+  }).should('contain.text', 'ready');
+};
 const startDefaultGame = () => {
   cy.get('[data-testid="open-screen"]', { timeout: 15_000 }).should(
     'be.visible',
@@ -301,10 +313,7 @@ describe('foundation screen', () => {
 
     restoreScenario('torrevieja-legacy-abc-v1');
     openSimulationControls();
-    cy.get('[data-testid="scenario-coordinate"]').should(
-      'contain.text',
-      'torrevieja-legacy-abc-v1@1.0.0#',
-    );
+    expectRestoredAuthority('torrevieja-legacy-abc-v1');
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(fullTick),
     );
@@ -319,10 +328,7 @@ describe('foundation screen', () => {
     );
     restoreScenario('torrevieja-legacy-east-v1');
     openSimulationControls();
-    cy.get('[data-testid="scenario-coordinate"]').should(
-      'contain.text',
-      'torrevieja-legacy-east-v1@1.0.0#',
-    );
+    expectRestoredAuthority('torrevieja-legacy-east-v1');
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(secondaryTick),
     );

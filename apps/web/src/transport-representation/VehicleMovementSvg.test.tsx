@@ -269,6 +269,8 @@ it('adapts pointer and keyboard input into renderer-independent selections', () 
   const vehicle = screen.getByTestId('vehicle-position');
   fireEvent.click(vehicle);
   fireEvent.keyDown(vehicle, { key: 'Enter' });
+  fireEvent.keyDown(vehicle, { key: ' ' });
+  fireEvent.keyDown(vehicle, { key: 'Escape' });
   expect(onSelectionChange).toHaveBeenLastCalledWith({
     kind: 'vehicle',
     vehicleId: 'selectable-vehicle',

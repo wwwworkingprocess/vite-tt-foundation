@@ -1781,6 +1781,7 @@ describe('transport application controller', () => {
         },
       }),
       createDirectTransportSimulationClient(),
+      createDirectTransportSimulationClient(),
     ];
     const controller = createTransportApplicationController({
       createClient: () => clients.shift()!,
@@ -1852,16 +1853,258 @@ describe('transport application controller', () => {
         timelineId: parseTimelineId('replacement'),
       }),
     ).rejects.toThrow('construction failed');
-    expect(controller.projection.getState()).toEqual({
-      status: 'failed',
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'current',
       message: 'construction failed',
+    });
+    await controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('recovered'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'recovered',
+    });
+    await controller.close();
+  });
+
+  it('keeps ready authority when a restore candidate fails and validates candidate cleanup', async () => {
+    const current = createDirectTransportSimulationClient();
+    const failed = createDirectTransportSimulationClient();
+    const failedClose = vi.fn(async () => {
+      await failed.close();
+      throw new Error('candidate cleanup failed');
+    });
+    let creation = 0;
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        ++creation === 1
+          ? current
+          : Object.freeze({
+              ...failed,
+              connect: async () => {
+                throw new Error('candidate connect failed');
+              },
+              close: failedClose,
+            }),
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
     });
     await controller.startNew({
       gameId: parseGameId('game-fixture'),
-      timelineId: parseTimelineId('recovered'),
+      timelineId: parseTimelineId('current'),
       scenario: scenario(),
     });
+    const before = controller.projection.getState();
+    await expect(
+      controller.restore({
+        saveId: 'slot',
+        timelineId: parseTimelineId('candidate-failed'),
+      }),
+    ).rejects.toBeInstanceOf(AggregateError);
+    expect(failedClose).toHaveBeenCalledOnce();
+    expect(controller.projection.getState()).toEqual({
+      ...before,
+      message: 'candidate connect failed',
+    });
+    await controller.advanceTicks(1);
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'current',
+      simulationTick: 1,
+    });
     await controller.close();
+  });
+
+  it('rejects a candidate without full synchronization before replacing authority', async () => {
+    const current = createDirectTransportSimulationClient();
+    const candidate = createDirectTransportSimulationClient();
+    const candidateClose = vi.fn(() => candidate.close());
+    let creation = 0;
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        ++creation === 1
+          ? current
+          : Object.freeze({
+              ...candidate,
+              synchronize: async () =>
+                ({
+                  kind: 'transport-synchronization-response',
+                  contractVersion: 3,
+                  foundation: {
+                    kind: 'foundation-synchronization-response',
+                    contractVersion: 1,
+                    mode: 'incremental',
+                    updates: [],
+                  },
+                }) as never,
+              close: candidateClose,
+            }),
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('current'),
+      scenario: scenario(),
+    });
+    await expect(
+      controller.restore({
+        saveId: 'slot',
+        timelineId: parseTimelineId('invalid-sync'),
+      }),
+    ).rejects.toThrow('Full transport synchronization');
+    expect(candidateClose).toHaveBeenCalledOnce();
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'current',
+    });
+    await controller.close();
+  });
+
+  it('discards a prepared restore candidate when terminal close makes it stale', async () => {
+    const current = createDirectTransportSimulationClient();
+    const candidate = createDirectTransportSimulationClient();
+    const candidateClose = vi.fn(() => candidate.close());
+    let release!: () => void;
+    let entered!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const connecting = new Promise<void>((resolve) => {
+      entered = resolve;
+    });
+    let creation = 0;
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        ++creation === 1
+          ? current
+          : Object.freeze({
+              ...candidate,
+              async connect(request: Parameters<typeof candidate.connect>[0]) {
+                entered();
+                await gate;
+                await candidate.connect(request);
+              },
+              close: candidateClose,
+            }),
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('current'),
+      scenario: scenario(),
+    });
+    const restoring = controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('stale-candidate'),
+    });
+    await connecting;
+    const closing = controller.close();
+    release();
+    await expect(restoring).rejects.toThrow('stale');
+    await closing;
+    expect(candidateClose).toHaveBeenCalledOnce();
+    expect(controller.projection.getState()).toEqual({ status: 'closed' });
+  });
+
+  it('accepts a direct full synchronization response from a restore candidate', async () => {
+    const current = createDirectTransportSimulationClient();
+    const candidate = createDirectTransportSimulationClient();
+    let creation = 0;
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        ++creation === 1
+          ? current
+          : Object.freeze({
+              ...candidate,
+              async synchronize(
+                request: Parameters<typeof candidate.synchronize>[0],
+              ) {
+                const response = await candidate.synchronize(request);
+                return response.kind === 'transport-synchronization-response'
+                  ? response.foundation
+                  : response;
+              },
+            }),
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('current'),
+      scenario: scenario(),
+    });
+    await controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('direct-sync'),
+    });
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'direct-sync',
+    });
+    await controller.close();
+  });
+
+  it('does not publish candidate failure after terminal close begins', async () => {
+    const current = createDirectTransportSimulationClient();
+    const candidate = createDirectTransportSimulationClient();
+    let release!: () => void;
+    let entered!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const connecting = new Promise<void>((resolve) => {
+      entered = resolve;
+    });
+    let creation = 0;
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        ++creation === 1
+          ? current
+          : Object.freeze({
+              ...candidate,
+              async connect() {
+                entered();
+                await gate;
+                throw new Error('late candidate failure');
+              },
+            }),
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('current'),
+      scenario: scenario(),
+    });
+    const restoring = controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('late-failure'),
+    });
+    await connecting;
+    const closing = controller.close();
+    release();
+    await expect(restoring).rejects.toThrow('late candidate failure');
+    await closing;
+    expect(controller.projection.getState()).toEqual({ status: 'closed' });
   });
 
   it('preserves ready authority when an active restore has no demand-plan resolver', async () => {
@@ -1973,30 +2216,15 @@ describe('transport application controller', () => {
   });
 
   it.each(['send-command', 'advance-ticks'] as const)(
-    'suppresses a stale %s snapshot after close begins',
+    'uses reliable authority without exporting a %s snapshot',
     async (operation) => {
       const base = createDirectTransportSimulationClient();
-      let delayExport = false;
-      let enterExport!: () => void;
-      let releaseExport!: () => void;
-      const exportEntered = new Promise<void>((resolve) => {
-        enterExport = resolve;
-      });
-      const exportGate = new Promise<void>((resolve) => {
-        releaseExport = resolve;
-      });
+      const exported = vi.fn(() => base.exportSnapshot());
       const controller = createTransportApplicationController({
         createClient: () =>
           Object.freeze({
             ...base,
-            async exportSnapshot() {
-              const exported = await base.exportSnapshot();
-              if (delayExport) {
-                enterExport();
-                await exportGate;
-              }
-              return exported;
-            },
+            exportSnapshot: exported,
           }),
         repository: { get: async () => undefined, put: async () => undefined },
         scenarioResolver: { resolve: async () => scenario() },
@@ -2006,7 +2234,7 @@ describe('transport application controller', () => {
         timelineId: parseTimelineId(`stale-${operation}`),
         scenario: scenario(),
       });
-      delayExport = true;
+      exported.mockClear();
       const pending =
         operation === 'send-command'
           ? controller.sendCommand({
@@ -2020,13 +2248,13 @@ describe('transport application controller', () => {
               command: { type: 'foundation.advance-ticks', count: 1 },
             } as never)
           : controller.advanceTicks(1);
-      await exportEntered;
-      const closing = controller.close();
-      releaseExport();
       await pending;
-      await closing;
-
-      expect(controller.projection.getState()).toEqual({ status: 'closed' });
+      expect(exported).not.toHaveBeenCalled();
+      expect(controller.projection.getState()).toMatchObject({
+        status: 'ready',
+        simulationTick: 1,
+      });
+      await controller.close();
     },
   );
 
@@ -2073,6 +2301,117 @@ describe('transport application controller', () => {
     await closing;
 
     expect(exported).not.toHaveBeenCalled();
+    expect(controller.projection.getState()).toEqual({ status: 'closed' });
+  });
+
+  it('publishes starting while new authority connection is pending', async () => {
+    const base = createDirectTransportSimulationClient();
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        Object.freeze({
+          ...base,
+          async connect(request: Parameters<typeof base.connect>[0]) {
+            await gate;
+            await base.connect(request);
+          },
+        }),
+      repository: { get: async () => undefined, put: async () => undefined },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+
+    const starting = controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('pending-start'),
+      scenario: scenario(),
+    });
+
+    await vi.waitFor(() =>
+      expect(controller.projection.getState()).toMatchObject({
+        status: 'starting',
+        timelineId: 'pending-start',
+      }),
+    );
+    release();
+    await starting;
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'ready',
+      timelineId: 'pending-start',
+    });
+    await controller.close();
+  });
+
+  it('keeps terminal close authoritative when restore teardown fails late', async () => {
+    const current = createDirectTransportSimulationClient();
+    const candidate = createDirectTransportSimulationClient();
+    let creation = 0;
+    let release!: () => void;
+    let enterClose!: () => void;
+    const closeGate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const closeEntered = new Promise<void>((resolve) => {
+      enterClose = resolve;
+    });
+    let delayCurrentClose = false;
+    let delayedCloseFailed = false;
+    const controller = createTransportApplicationController({
+      createClient: () => {
+        const selected = ++creation === 1 ? current : candidate;
+        const isCurrent = selected === current;
+        return Object.freeze({
+          ...selected,
+          async close() {
+            if (isCurrent && delayCurrentClose && !delayedCloseFailed) {
+              delayedCloseFailed = true;
+              enterClose();
+              await closeGate;
+              throw new Error('late authority teardown failed');
+            }
+            await selected.close();
+          },
+        });
+      },
+      repository: {
+        get: async () => classifyPersistedSaveRecord(record()),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    const projections: Array<
+      ReturnType<typeof controller.projection.getState>
+    > = [];
+    controller.projection.subscribe((projection) => {
+      projections.push(projection);
+    });
+    await controller.startNew({
+      gameId: parseGameId('game-fixture'),
+      timelineId: parseTimelineId('teardown-current'),
+      scenario: scenario(),
+    });
+
+    delayCurrentClose = true;
+    const restoring = controller.restore({
+      saveId: 'slot',
+      timelineId: parseTimelineId('teardown-restored'),
+    });
+    await closeEntered;
+    const closing = controller.close();
+    release();
+
+    await expect(restoring).rejects.toThrow('late authority teardown failed');
+    await closing;
+
+    expect(
+      projections.some(
+        (projection) =>
+          projection.status === 'failed' &&
+          projection.message === 'late authority teardown failed',
+      ),
+    ).toBe(false);
     expect(controller.projection.getState()).toEqual({ status: 'closed' });
   });
 

@@ -6,7 +6,10 @@ import {
   type ScenarioId,
 } from '@torrevieja-tycoon/transport-domain';
 import { z } from 'zod';
-import { deepFreeze as freeze } from './authority-utils.js';
+import {
+  deepFreeze as freeze,
+  freezeTrustedAuthority,
+} from './authority-utils.js';
 import {
   parseSimulationTick,
   parseTickAdvancement,
@@ -22,7 +25,7 @@ import {
   type VehicleState,
 } from './vehicle-movement.js';
 import {
-  advancePassengerDemandToTick,
+  advanceTrustedPassengerDemandToTick,
   createDisabledPassengerDemandState,
   createInitialPassengerDemandState,
   parsePassengerDemandState,
@@ -287,7 +290,7 @@ export function advanceTransportTicks(
       state.fleet,
       parseTickAdvancement(skipped),
     );
-    current = freeze({
+    current = freezeTrustedAuthority({
       ...state,
       tick,
       fleet,
@@ -336,7 +339,7 @@ export function advanceTransportTicks(
     const passengerDemand =
       current.passengerDemand.status === 'disabled'
         ? current.passengerDemand
-        : advancePassengerDemandToTick(
+        : advanceTrustedPassengerDemandToTick(
             current.passengerDemandPlan!,
             current.passengerDirectItineraryIndex!,
             current.passengerDemand,
@@ -378,7 +381,7 @@ export function advanceTransportTicks(
                 current.passengerDirectItineraryIndex!,
               ),
           });
-    current = freeze({
+    current = freezeTrustedAuthority({
       ...current,
       tick,
       fleet,

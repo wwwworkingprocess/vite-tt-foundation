@@ -110,7 +110,7 @@ describe('transport controller subscription correction', () => {
     await controller.close();
   });
 
-  it('removes a partial registration, preserves the primary failure, and ignores its stale callback', async () => {
+  it('removes a partial reliable registration without creating an unused render subscription', async () => {
     const failed = createDirectTransportSimulationClient();
     const unsubscribe = vi.fn(() => {
       throw new Error('reliable cleanup failed');
@@ -120,6 +120,7 @@ describe('transport controller subscription correction', () => {
       throw new Error('candidate close failed');
     });
     let retained!: Parameters<typeof failed.subscribeReliableUpdates>[0];
+    const render = vi.fn(failed.subscribeRenderSnapshots);
     let creation = 0;
     const controller = createTransportApplicationController({
       createClient: () =>
@@ -130,8 +131,9 @@ describe('transport controller subscription correction', () => {
                 retained = listener;
                 return unsubscribe;
               },
-              subscribeRenderSnapshots: () => {
-                throw new Error('render registration failed');
+              subscribeRenderSnapshots: render,
+              async connect() {
+                throw new Error('candidate connect failed');
               },
               close,
             })
@@ -145,15 +147,16 @@ describe('transport controller subscription correction', () => {
     );
     expect(failure).toBeInstanceOf(AggregateError);
     expect((failure as AggregateError).errors).toEqual([
-      expect.objectContaining({ message: 'render registration failed' }),
+      expect.objectContaining({ message: 'candidate connect failed' }),
       expect.objectContaining({ message: 'reliable cleanup failed' }),
       expect.objectContaining({ message: 'candidate close failed' }),
     ]);
+    expect(render).not.toHaveBeenCalled();
     expect(unsubscribe).toHaveBeenCalledOnce();
     expect(close).toHaveBeenCalledOnce();
     expect(controller.projection.getState()).toEqual({
       status: 'failed',
-      message: 'render registration failed',
+      message: 'candidate connect failed',
     });
     await start(controller, 'retry');
     const ready = controller.projection.getState();
@@ -191,11 +194,11 @@ describe('transport controller subscription correction', () => {
         scenarioResolver: { resolve: async () => scenario() },
       });
       await start(controller, 'cleanup');
-      if (failReliable || failRender)
+      if (failReliable)
         await expect(controller.close()).rejects.toBeInstanceOf(AggregateError);
       else await controller.close();
       expect(reliableCleanup).toHaveBeenCalledOnce();
-      expect(renderCleanup).toHaveBeenCalledOnce();
+      expect(renderCleanup).not.toHaveBeenCalled();
       expect(controller.projection.getState()).toEqual({ status: 'closed' });
     },
   );
@@ -241,10 +244,10 @@ describe('transport controller subscription correction', () => {
     );
     const failure = await first.catch((error: unknown) => error);
     expect(failure).toBeInstanceOf(AggregateError);
-    expect((failure as AggregateError).errors).toHaveLength(4);
+    expect((failure as AggregateError).errors).toHaveLength(3);
     expect(controller.projection.getState()).toEqual({ status: 'closed' });
     expect(reliableCleanup).toHaveBeenCalledOnce();
-    expect(renderCleanup).toHaveBeenCalledOnce();
+    expect(renderCleanup).not.toHaveBeenCalled();
     expect(clientClose).toHaveBeenCalledOnce();
     expect(repositoryClose).toHaveBeenCalledOnce();
     expect(controller.close()).toBe(first);
@@ -256,7 +259,10 @@ describe('transport controller subscription correction', () => {
       throw new Error('restore reliable cleanup failed');
     });
     const renderCleanup = vi.fn();
-    const oldClose = vi.fn(() => first.close());
+    const oldClose = vi.fn(async () => {
+      await first.close();
+      throw new Error('restore old close failed');
+    });
     let creation = 0;
     const controller = createTransportApplicationController({
       createClient: () =>
@@ -282,7 +288,7 @@ describe('transport controller subscription correction', () => {
       }),
     ).rejects.toBeInstanceOf(AggregateError);
     expect(reliableCleanup).toHaveBeenCalledOnce();
-    expect(renderCleanup).toHaveBeenCalledOnce();
+    expect(renderCleanup).not.toHaveBeenCalled();
     expect(oldClose).toHaveBeenCalledOnce();
     expect(controller.projection.getState()).toMatchObject({
       status: 'failed',
@@ -291,6 +297,40 @@ describe('transport controller subscription correction', () => {
     expect(controller.projection.getState()).toMatchObject({
       status: 'ready',
       timelineId: 'recovered',
+    });
+    await controller.close();
+  });
+
+  it('aggregates restore subscription teardown without a close failure', async () => {
+    const first = createDirectTransportSimulationClient();
+    const reliableCleanup = vi.fn(() => {
+      throw new Error('restore subscription cleanup failed');
+    });
+    let creation = 0;
+    const controller = createTransportApplicationController({
+      createClient: () =>
+        ++creation === 1
+          ? Object.freeze({
+              ...first,
+              subscribeReliableUpdates: () => reliableCleanup,
+            })
+          : createDirectTransportSimulationClient(),
+      repository: {
+        get: async () => currentSave(),
+        put: async () => undefined,
+      },
+      scenarioResolver: { resolve: async () => scenario() },
+    });
+    await start(controller, 'current');
+    await expect(
+      controller.restore({
+        saveId: 'slot',
+        timelineId: parseTimelineId('restored'),
+      }),
+    ).rejects.toBeInstanceOf(AggregateError);
+    expect(reliableCleanup).toHaveBeenCalledOnce();
+    expect(controller.projection.getState()).toMatchObject({
+      status: 'failed',
     });
     await controller.close();
   });

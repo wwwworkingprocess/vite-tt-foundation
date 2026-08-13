@@ -3,6 +3,21 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
+  parseClientId,
+  parseCommandId,
+  parseCorrelationId,
+  parseGameId,
+  parseSessionId,
+  parseTimelineId,
+} from '@torrevieja-tycoon/protocol';
+import {
+  createTransportSimulationSnapshot,
+  createTransportSimulationState,
+} from '@torrevieja-tycoon/simulation';
+import { createHash } from 'node:crypto';
+import { createPopulationFieldLoader } from '../population/population-field-loader.js';
+import { createProductionPassengerDemandPlan } from '../population/population-demand-plan.js';
+import {
   createDirectTransportSimulationClient,
   type TransportStateUpdate,
 } from './transport-client.js';
@@ -37,7 +52,198 @@ const scenario = () =>
     provenance: json('provenance.json'),
   });
 
+const publicRoot = join(import.meta.dirname, '..', '..', 'public');
+const productionScenario = (scenarioId: string) => {
+  const directory = join(publicRoot, 'scenarios', scenarioId);
+  const asset = (name: string) =>
+    JSON.parse(readFileSync(join(directory, name), 'utf8')) as unknown;
+  return parseScenarioPackage({
+    manifest: asset('scenario.json'),
+    settlements: asset('settlements.json'),
+    stops: asset('stops.json'),
+    routes: asset('routes.json'),
+    presentation: asset('presentation.json'),
+    provenance: asset('provenance.json'),
+  });
+};
+const populationLoader = createPopulationFieldLoader({
+  baseUrl: '/',
+  fetchText: async (url) => {
+    try {
+      const text = readFileSync(
+        join(publicRoot, url.replace(/^\//, '')),
+        'utf8',
+      );
+      return { ok: true, text: async () => text };
+    } catch {
+      return { ok: false, text: async () => '' };
+    }
+  },
+  digestSha256: async (text) => createHash('sha256').update(text).digest('hex'),
+});
+const loopbackWorker = (): TransportWorkerLike => {
+  const listeners = new Map<
+    'message' | 'error' | 'messageerror',
+    (event: TransportWorkerEvent) => void
+  >();
+  const endpoint: TransportWorkerEndpoint = {
+    postMessage: (data) =>
+      queueMicrotask(() => listeners.get('message')?.({ data })),
+    addEventListener: () => undefined,
+    removeEventListener: () => undefined,
+  };
+  const worker: TransportWorkerLike = {
+    postMessage: (data) =>
+      queueMicrotask(() => runtimeEndpointListener({ data })),
+    addEventListener: (type, listener) => listeners.set(type, listener),
+    removeEventListener: (type, listener) => {
+      if (listeners.get(type) === listener) listeners.delete(type);
+    },
+    terminate: () => undefined,
+  };
+  let runtimeEndpointListener: (event: TransportWorkerEvent) => void = () =>
+    undefined;
+  startTransportWorkerRuntime(
+    {
+      ...endpoint,
+      addEventListener: (_type, listener) => {
+        runtimeEndpointListener = listener;
+      },
+    },
+    createDirectTransportSimulationClient,
+  );
+  return worker;
+};
+
 describe('transport Worker boundary failures', () => {
+  it('restores a real production passenger plan reconstructed from canonical assets', async () => {
+    const canonical = productionScenario('torrevieja-legacy-abc-v1');
+    const savedPlan = createProductionPassengerDemandPlan({
+      scenario: canonical,
+      population: await populationLoader.resolveScenarioPopulation(canonical),
+    });
+    const snapshot = createTransportSimulationSnapshot(
+      createTransportSimulationState(canonical, 0, savedPlan),
+    );
+    const reconstructedPlan = createProductionPassengerDemandPlan({
+      scenario: canonical,
+      population: await populationLoader.resolveScenarioPopulation(canonical),
+    });
+    expect(reconstructedPlan).toEqual(savedPlan);
+    const client = createWorkerTransportSimulationClient({
+      workerFactory: loopbackWorker,
+    });
+    await client.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 3,
+      mode: 'restore',
+      gameId: parseGameId('production-restore'),
+      timelineId: parseTimelineId('production-restore'),
+      scenario: canonical,
+      snapshot,
+      passengerDemandPlan: reconstructedPlan,
+    });
+    await expect(client.exportSnapshot()).resolves.toMatchObject({ snapshot });
+    await client.close();
+  }, 30_000);
+  it('demands render publications only while a consumer is registered', async () => {
+    const direct = createDirectTransportSimulationClient();
+    let renderSnapshot!: Parameters<
+      Parameters<typeof direct.subscribeRenderSnapshots>[0]
+    >[0];
+    direct.subscribeRenderSnapshots((snapshot) => {
+      renderSnapshot = snapshot;
+    });
+    await direct.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 3,
+      mode: 'new',
+      gameId: parseGameId('game'),
+      timelineId: parseTimelineId('snapshot'),
+      initialSimulationTick: 0,
+      scenario: scenario(),
+    });
+    await direct.sendCommand({
+      kind: 'foundation-command',
+      gameId: parseGameId('game'),
+      timelineId: parseTimelineId('snapshot'),
+      commandId: parseCommandId('advance'),
+      correlationId: parseCorrelationId('advance'),
+      clientId: parseClientId('client'),
+      sessionId: parseSessionId('session'),
+      command: { type: 'foundation.advance-ticks', count: 1 },
+    });
+    expect(renderSnapshot).toBeDefined();
+    await direct.close();
+    let listener!: (event: { data: unknown }) => void;
+    const operations: string[] = [];
+    const worker: TransportWorkerLike = {
+      postMessage(message) {
+        operations.push(message.operation);
+        queueMicrotask(() =>
+          listener({
+            data: {
+              kind: 'transport-worker-result',
+              contractVersion: 3,
+              requestId: message.requestId,
+              operation: message.operation,
+              payload: null,
+            },
+          }),
+        );
+      },
+      addEventListener: (_type, next) => {
+        listener = next;
+      },
+      removeEventListener: vi.fn(),
+      terminate: vi.fn(),
+    };
+    const client = createWorkerTransportSimulationClient({
+      workerFactory: () => worker,
+    });
+    let lifecycle = 'idle';
+    client.subscribeLifecycle((projection) => {
+      lifecycle = projection.state;
+    });
+    const remove = client.subscribeRenderSnapshots(() => {
+      throw new Error('isolated render listener');
+    });
+    await client.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 3,
+      mode: 'new',
+      gameId: parseGameId('game'),
+      timelineId: parseTimelineId('timeline'),
+      initialSimulationTick: 0,
+      scenario: scenario(),
+    });
+    await vi.waitFor(() => expect(lifecycle).toBe('ready'));
+    expect(operations).toEqual(['connect', 'set-render-subscription']);
+    const removeSecond = client.subscribeRenderSnapshots(() => undefined);
+    remove();
+    expect(operations).toHaveLength(2);
+    removeSecond();
+    await vi.waitFor(() => expect(operations).toHaveLength(3));
+    expect(operations.at(-1)).toBe('set-render-subscription');
+    const renderListener = vi.fn(() => {
+      throw new Error('isolated render listener');
+    });
+    const removeReady = client.subscribeRenderSnapshots(renderListener);
+    await vi.waitFor(() => expect(operations).toHaveLength(4));
+    listener({
+      data: {
+        kind: 'transport-worker-publication',
+        contractVersion: 3,
+        channel: 'render',
+        payload: renderSnapshot,
+      },
+    });
+    expect(renderListener).toHaveBeenCalledOnce();
+    removeReady();
+    await vi.waitFor(() => expect(operations).toHaveLength(5));
+    await client.close();
+  });
+
   it('shuts down when invalid-request failure publication throws', async () => {
     let listener!: (event: { data: unknown }) => void;
     const remove = vi.fn();

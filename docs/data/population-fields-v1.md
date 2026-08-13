@@ -1,117 +1,91 @@
-# Canonical population fields v1 — preparation contract
+# Canonical population fields v1 — active runtime contract
 
 ## Status
 
-**Prepared data baseline. Not yet connected to passenger demand.**
+The population fields are active runtime authority for deterministic passenger
+demand in Torrevieja, Elche, and Alicante. Benidorm is intentionally absent.
 
-This directory documents the canonical population-field assets staged for the next Torrevieja Tycoon implementation milestone. The preparation commit is intentionally data/documentation-only: adding these files must not cause passengers to spawn, alter simulation authority, or change save/snapshot/client/Worker contracts.
+Runtime assets live under `apps/web/public/population-fields/`. The catalogue
+maps canonical scenario `primarySettlementId` values to one city grid and one
+scenario-crop document. Scenario IDs, versions, and content hashes select the
+exact crop; display names and scenario-ID prefixes are not authority.
 
-Current prepared cities:
+## Canonical grids
 
-- Torrevieja — primary settlement `es-torrevieja`
-- Elche — primary settlement `es-elche`
-- Alicante — primary settlement `es-alicante`
+Each city owns one byte-frozen Round-4-derived canonical grid:
 
-Benidorm is a planned fourth city, including radial scenario families, but **is not part of the current game/scenario baseline and is not bundled in this preparation package**. Do not invent a Benidorm settlement identity, scenario mapping, or runtime fallback. Its accepted population package can be added later using this same format after the engine/browser integration is proven with the current cities.
+- cell centres use WGS84 latitude and longitude;
+- resolution is exactly `0.001° × 0.001°`;
+- rows run north to south and columns west to east;
+- every non-negative integer population weight is preserved exactly.
 
-## Runtime data location
+Runtime and authoring code must not interpolate, resample, smooth, normalize,
+or create scenario-specific population matrices.
 
-Static data is staged under:
+## Operational scenario crops
 
-`apps/web/public/population-fields/`
+Operational crops are reviewed deterministic derivatives, not byte-frozen
+source authority. A crop is the smallest canonical-grid-aligned half-open
+rectangle containing its accepted preparation crop plus every canonical cell
+required by route-used eligible StopPlace catchments. It may be regenerated
+when the service/catchment footprint expands without changing the scenario
+viewport or canonical weights.
 
-The discovery index is:
+The scenario viewport remains presentation framing. It is not the passenger
+service boundary.
 
-`apps/web/public/population-fields/catalog.json`
+The population catalogue records the machine-readable operational crop policy:
 
-The index maps game-domain `primarySettlementId` values to canonical city fields. The canonical grid's external `cityId` (currently a Wikidata QID) is provenance/geographic identity and must **not** replace the game's settlement identity.
-
-## Canonical model
-
-There is exactly one canonical population grid per city:
-
-```text
-canonical city grid
-├─ fixed originCellCenter
-├─ fixed resolutionDegrees
-├─ north-to-south rows
-├─ west-to-east columns
-└─ immutable integer populationWeights[row][column]
+```json
+{ "maxAccessDistanceCells": 5 }
 ```
 
-A scenario does not own a separately authored or normalized population matrix. It references an aligned crop window from its city's canonical grid:
+The authoring audit, runtime population view, and Production Passenger Demand
+Policy V1 must agree on that value. Runtime mismatch fails closed; runtime does
+not widen a crop.
+
+## Active passenger pipeline
+
+The application resolves:
 
 ```text
-city populationWeights
-  [rowStart:rowEnd)
-  [columnStart:columnEnd)
-       ↓
-scenario-aligned population view
+exact canonical scenario
+→ primary settlement population entry
+→ hash-verified canonical grid and operational crop
+→ immutable scenario population view
+→ deterministic StopPlace catchments
+→ PassengerDemandPlanV1
+→ new-game or restore semantic preflight
 ```
 
-Crop indices are half-open. A canonical cell keeps exactly the same weight in every scenario that includes it.
+Population weights express relative demand potential, not passengers per tick.
+StopPlaces are physical access magnets; directional StopNodes remain itinerary
+and vehicle-call identities.
 
-Do not:
+## Production Passenger Demand Policy V1
 
-- interpolate;
-- resample;
-- smooth per scenario;
-- renormalize per scenario;
-- mutate canonical weights;
-- duplicate scenario-specific population matrices in source control.
+The deterministic development-seed policy is:
 
-## Scenario matching
+- maximum access distance: `5` grid cells;
+- emission credits per weight per tick: `1`;
+- credits per passenger: `50,000`;
+- access ticks per cell: `1`.
 
-Future integration must resolve population data from canonical scenario identity, not from scenario-name prefixes.
-
-The intended lookup chain is:
-
-```text
-CanonicalScenario.manifest.primarySettlementId
-→ population-fields/catalog.json
-→ canonical city grid
-
-CanonicalScenario.manifest.scenarioId
-+ scenarioVersion/contentHash where available in crop metadata
-→ exact crop record
-```
-
-Where crop metadata pins a scenario content hash, integration should treat a mismatch as stale/incompatible data rather than silently applying a crop produced for different package bytes.
-
-## Population weights versus passenger emission
-
-The matrix answers **where potential origin population exists**. It does not define a passenger spawn rate.
-
-Passenger activation is a separate implementation milestone that must combine the canonical field/crop with the existing transport-domain/simulation concepts, including StopPlace catchments and `PassengerDemandPlanV1` policy.
-
-The preparation baseline therefore does **not** define:
-
-- passengers per tick;
-- emission-rate constants;
-- access radius/policy changes;
-- destination probabilities;
-- economic values;
-- offline progression.
-
-## Scenario crop safety and anomalies
-
-Crop metadata is evidence, not permission to rewrite scenario geography.
-
-Most current crop records contain every route-used positioned StopPlace. Known accepted exceptions are preserved explicitly in the source crop metadata:
-
-- Elche: `elche-radial-airport-v1`, `elche-radial-coast-v1`
-- Alicante: `alicante-legacy-north-v1`, `alicante-legacy-all-v1`
-
-Those records contain advisory `minimumAlignedExtensionRecommended` data. The preparation commit deliberately does **not** apply those extensions or modify scenario bounds.
-
-The later integration task must choose and test its behavior explicitly. It must not silently expand a crop, silently rewrite scenario bounds, or fall back to the complete city grid merely to make a test pass.
-
-Torrevieja's five current crop records pass their StopPlace safety check and are suitable as the first end-to-end passenger-demand integration target.
+The 50,000-credit threshold makes the real fields observable without flooding
+passenger authority. It is initial/debug tuning, not final economics or game
+balance.
 
 ## Integrity
 
-The accepted canonical and crop JSON bytes are copied unchanged from their Round-4 review packages. Their historical filenames are preserved so the accepted SHA-256 values remain directly traceable.
+Canonical grids remain byte-frozen and retain their accepted SHA-256 values.
+Operational crop JSON is reviewed generated metadata and has current hashes
+distinct from its historical Round-4 preparation hashes.
 
-`apps/web/public/population-fields/CHECKSUMS.sha256` covers the staged static data files.
+`apps/web/public/population-fields/CHECKSUMS.sha256` protects all public
+population assets. `PREPARATION-CHECKSUMS.sha256` preserves the complete
+population preparation/current-document integrity set. The normal population
+audit verifies both manifests, catalogue reconciliation, crop policy, grid
+containment, scenario content hashes, and catchment sufficiency.
 
-No production TypeScript/JavaScript, scenario package, persistence contract, or build configuration belongs in this preparation commit.
+The diagnostic SVG overlay is hidden by default and derives presentation
+geometry from canonical cell boundaries. It never becomes simulation authority.

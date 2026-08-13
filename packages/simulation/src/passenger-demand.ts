@@ -12,6 +12,7 @@ import {
   checkedAdd,
   checkedMultiply,
   deepFreeze,
+  freezeTrustedAuthority,
   nonnegativeSafeInteger,
   positiveSafeInteger,
 } from './authority-utils.js';
@@ -33,6 +34,10 @@ import {
   type PassengerDestinationAccessGroup,
   type WaitingGenerationLineageWatermark,
 } from './passenger-transit.js';
+import {
+  allocateTrustedPassengerDestinations,
+  passengerDemandRuntimeIndex,
+} from './passenger-demand-runtime.js';
 
 export const passengerDemandPlanSchemaVersion = '1.0.0' as const;
 const distanceTieToleranceSquaredCells = 1e-9;
@@ -363,8 +368,15 @@ export function listPassengerDestinationCandidates(
   const parsedPlan = parsePassengerDemandPlan(plan);
   if (!parsedPlan.stops.some((stop) => stop.stopPlaceId === originStopPlaceId))
     throw new Error('Unknown origin StopPlace.');
-  return deepFreeze(
-    parsedPlan.cells
+  return destinationCandidates(parsedPlan, originStopPlaceId);
+}
+
+const destinationCandidates = (
+  plan: PassengerDemandPlanV1,
+  originStopPlaceId: StopPlaceId | string,
+) =>
+  deepFreeze(
+    plan.cells
       .filter(
         (cell) =>
           cell.assignedStopPlaceId !== null &&
@@ -378,7 +390,6 @@ export function listPassengerDestinationCandidates(
         weight: cell.populationWeight,
       })),
   );
-}
 
 const intervalOverlap = (
   start: number,
@@ -960,14 +971,18 @@ export function validatePassengerDemandState(
   });
 }
 
-export function advancePassengerDemandToTick(
+const advancePassengerDemand = (
   plan: PassengerDemandPlanV1,
   itineraryIndex: PassengerDirectItineraryRuntimeIndex,
   state: ActivePassengerDemandState,
   targetTickValue: number,
-): ActivePassengerDemandState {
-  const parsedPlan = parsePassengerDemandPlan(plan);
-  let current = validatePassengerDemandState(parsedPlan, itineraryIndex, state);
+  trusted: boolean,
+): ActivePassengerDemandState => {
+  const parsedPlan = trusted ? plan : parsePassengerDemandPlan(plan);
+  let current = trusted
+    ? state
+    : validatePassengerDemandState(parsedPlan, itineraryIndex, state);
+  const runtimeIndex = passengerDemandRuntimeIndex(parsedPlan);
   const targetTick = parseSimulationTick(targetTickValue);
   if (targetTick < current.processedThroughTick)
     throw new Error('Passenger demand cannot advance backwards.');
@@ -1074,11 +1089,10 @@ export function advancePassengerDemandToTick(
     for (const stop of parsedPlan.stops) {
       const waiting = arrivals.get(stop.stopPlaceId)!;
       if (waiting === 0) continue;
-      const candidates = listPassengerDestinationCandidates(
-        parsedPlan,
-        stop.stopPlaceId,
-      );
-      if (candidates.length === 0) {
+      const eligibleWeight =
+        runtimeIndex.totalServedDestinationWeight -
+        runtimeIndex.assignedWeightByStopPlace.get(stop.stopPlaceId)!;
+      if (eligibleWeight === 0) {
         destinationUnavailable = checkedAdd(
           destinationUnavailable,
           waiting,
@@ -1087,14 +1101,14 @@ export function advancePassengerDemandToTick(
         arrivals.set(stop.stopPlaceId, 0);
         continue;
       }
-      const allocation = allocatePassengerDestinations(
-        candidates,
+      const allocation = allocateTrustedPassengerDestinations(
+        runtimeIndex,
+        stop.stopPlaceId,
         destinationCursors.get(stop.stopPlaceId)!,
         waiting,
       );
       destinationCursors.set(stop.stopPlaceId, allocation.nextCursor);
       for (const candidate of allocation.allocations) {
-        if (candidate.count === 0) continue;
         destinationGroups.push({
           passengerJourneyGroupId: passengerJourneyGroupIdSchema.parse(
             `passenger-journey-group-${nextJourneySequence}`,
@@ -1136,7 +1150,7 @@ export function advancePassengerDemandToTick(
         ),
       ]),
     });
-    current = validatePassengerDemandState(parsedPlan, itineraryIndex, {
+    const next: ActivePassengerDemandState = {
       status: 'active',
       demandPlanCoordinate: current.demandPlanCoordinate,
       processedThroughTick: tick,
@@ -1179,9 +1193,42 @@ export function advancePassengerDemandToTick(
         current.totalInDestinationAccessPassengerCount,
       totalCompletedJourneyPassengerCount:
         current.totalCompletedJourneyPassengerCount,
-    });
+    };
+    current = trusted
+      ? freezeTrustedAuthority(next)
+      : validatePassengerDemandState(parsedPlan, itineraryIndex, next);
   }
   return current;
+};
+
+export function advancePassengerDemandToTick(
+  plan: PassengerDemandPlanV1,
+  itineraryIndex: PassengerDirectItineraryRuntimeIndex,
+  state: ActivePassengerDemandState,
+  targetTickValue: number,
+): ActivePassengerDemandState {
+  return advancePassengerDemand(
+    plan,
+    itineraryIndex,
+    state,
+    targetTickValue,
+    false,
+  );
+}
+
+export function advanceTrustedPassengerDemandToTick(
+  plan: PassengerDemandPlanV1,
+  itineraryIndex: PassengerDirectItineraryRuntimeIndex,
+  state: ActivePassengerDemandState,
+  targetTickValue: number,
+): ActivePassengerDemandState {
+  return advancePassengerDemand(
+    plan,
+    itineraryIndex,
+    state,
+    targetTickValue,
+    true,
+  );
 }
 
 export function parsePassengerDemandProjection(

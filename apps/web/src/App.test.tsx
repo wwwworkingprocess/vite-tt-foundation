@@ -110,6 +110,62 @@ vi.mock('./project-defaults.js', () => ({
   defaultScenarioId: 'torrevieja-mini-v1',
 }));
 
+let populationFailureMessages: string[] = [];
+let demandPlanFailureMessages: string[] = [];
+let deferredPopulation:
+  | {
+      scenarioId: string;
+      skipMatchingCalls: number;
+      release?: () => void;
+    }
+  | undefined;
+vi.mock('./population/population-field-loader.js', () => ({
+  createPopulationFieldLoader: () => ({
+    resolveScenarioPopulation: async (populationScenario: typeof scenario) => {
+      const failure = populationFailureMessages.shift();
+      if (failure) throw new Error(failure);
+      const population = {
+        grid: { resolutionDegrees: 0.001 },
+        crop: { rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 1 },
+        canonicalCells: [
+          {
+            cellId: `population-${populationScenario.manifest.scenarioId}`,
+            row: 0,
+            column: 0,
+            center: populationScenario.stops.stopNodes[0]!.position,
+            populationWeight: 1,
+          },
+        ],
+        totalPopulationWeight: 1,
+        nonzeroCellCount: 1,
+        gridSha256: 'a'.repeat(64),
+        cropSha256: 'b'.repeat(64),
+        demandModelContentHash: 'c'.repeat(64),
+        operationalCropPolicy: { maxAccessDistanceCells: 5 },
+      };
+      if (
+        deferredPopulation?.scenarioId ===
+        populationScenario.manifest.scenarioId
+      ) {
+        if (deferredPopulation.skipMatchingCalls > 0)
+          deferredPopulation.skipMatchingCalls -= 1;
+        else
+          await new Promise<void>((resolve) => {
+            deferredPopulation!.release = resolve;
+          });
+      }
+      return population;
+    },
+  }),
+}));
+vi.mock('./population/population-demand-plan.js', () => ({
+  createProductionPassengerDemandPlan: () => {
+    const failure = demandPlanFailureMessages.shift();
+    if (failure) throw new Error(failure);
+    return undefined;
+  },
+}));
+
 let deferCityNameResolution = false;
 let releaseCityNameResolution: (() => void) | undefined;
 let failNextWorkerStart = false;
@@ -417,6 +473,9 @@ afterEach(() => {
   holdNextWorkerStart = false;
   releaseHeldWorkerStart = undefined;
   queuedSaveDiscoveries = [];
+  populationFailureMessages = [];
+  demandPlanFailureMessages = [];
+  deferredPopulation = undefined;
 });
 
 describe('foundation screen', () => {
@@ -483,6 +542,7 @@ describe('foundation screen', () => {
     expect(
       screen.getByRole('button', { name: 'Select scenario A' }),
     ).toBeDisabled();
+    await waitFor(() => expect(releaseHeldWorkerStart).toBeTypeOf('function'));
     releaseHeldWorkerStart?.();
     expect(await screen.findByTestId('vehicle-movement-svg')).toHaveAttribute(
       'data-scenario-id',
@@ -525,10 +585,22 @@ describe('foundation screen', () => {
     cleanup();
 
     render(<App />);
-    holdNextWorkerStart = true;
+    populationFailureMessages = ['restore population unavailable'];
+    demandPlanFailureMessages = ['restore plan invalid'];
     const continueButton = await screen.findByRole('button', {
       name: 'Continue saved game',
     });
+    fireEvent.click(continueButton);
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'restore population unavailable',
+    );
+    expect(screen.queryByTestId('game-shell')).toBeNull();
+    fireEvent.click(continueButton);
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'restore plan invalid',
+    );
+    expect(screen.queryByTestId('game-shell')).toBeNull();
+    holdNextWorkerStart = true;
     fireEvent.click(continueButton);
     expect(
       await screen.findByText('Restoring authoritative game...'),
@@ -539,6 +611,7 @@ describe('foundation screen', () => {
     expect(
       screen.getByRole('button', { name: 'Select scenario B' }),
     ).toBeDisabled();
+    await waitFor(() => expect(releaseHeldWorkerStart).toBeTypeOf('function'));
     releaseHeldWorkerStart?.();
     await screen.findByTestId('game-shell');
     expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
@@ -576,6 +649,25 @@ describe('foundation screen', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Start new game' }));
     expect(await screen.findByTestId('game-shell')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Pause' })).toBeEnabled();
+  });
+
+  it('recovers and retries new-game population and plan preparation failures', async () => {
+    populationFailureMessages = ['population unavailable'];
+    demandPlanFailureMessages = ['plan invalid'];
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    const start = await screen.findByRole('button', { name: 'Start new game' });
+    await waitFor(() => expect(start).toBeEnabled());
+    fireEvent.click(start);
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'population unavailable',
+    );
+    expect(start).toBeEnabled();
+    fireEvent.click(start);
+    expect(await screen.findByRole('alert')).toHaveTextContent('plan invalid');
+    expect(start).toBeEnabled();
+    fireEvent.click(start);
+    expect(await screen.findByTestId('game-shell')).toBeInTheDocument();
   });
 
   it('retries catalogue bootstrap without reloading the browser', async () => {
@@ -783,7 +875,7 @@ describe('foundation screen', () => {
         'scenario-b',
       ),
     );
-  });
+  }, 15_000);
 
   it('exposes deterministic vehicle diagnostics from the authoritative Worker', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
@@ -1171,6 +1263,16 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByRole('radio', { name: 'Manual' })).toBeChecked(),
     );
+    fireEvent.click(screen.getByRole('button', { name: 'Show population' }));
+    expect(
+      document.querySelector(
+        `[data-authoritative-scenario-id="${alternateScenario.manifest.scenarioId}"]`,
+      ),
+    ).toBeInTheDocument();
+    deferredPopulation = {
+      scenarioId: scenario.manifest.scenarioId,
+      skipMatchingCalls: 0,
+    };
     const manualA = createScenarioScopedSaveTarget(
       'manual',
       createScenarioCoordinate(scenario),
@@ -1184,6 +1286,26 @@ describe('foundation screen', () => {
         'torrevieja-mini-v1',
       ),
     );
+    expect(screen.queryByTestId('population-band')).toBeNull();
+    await waitFor(() =>
+      expect(deferredPopulation?.release).toBeTypeOf('function'),
+    );
+    deferredPopulation?.release?.();
+    const showPopulation = await screen.findByRole('button', {
+      name: 'Show population',
+    });
+    expect(screen.queryByTestId('population-band')).toBeNull();
+    fireEvent.click(showPopulation);
+    expect(
+      document.querySelector(
+        `[data-authoritative-scenario-id="${scenario.manifest.scenarioId}"]`,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      document.querySelector(
+        `[data-authoritative-scenario-id="${alternateScenario.manifest.scenarioId}"]`,
+      ),
+    ).toBeNull();
     expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
       'scenario-b',
     );

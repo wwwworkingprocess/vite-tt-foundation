@@ -77,10 +77,20 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
 const openControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
 const workerReadyTimeoutMs = 15_000;
+const restoreReadyTimeoutMs = 15_000;
 const expectWorkerReady = () =>
   cy
     .get('[data-testid="worker-status"]', { timeout: workerReadyTimeoutMs })
     .should('contain.text', 'ready');
+const expectRestoredAuthority = (scenarioId: string) => {
+  cy.get('[data-testid="worker-timeline"]', {
+    timeout: restoreReadyTimeoutMs,
+  }).should('contain.text', 'browser-foundation-restored-');
+  cy.get('[data-testid="scenario-coordinate"]', {
+    timeout: restoreReadyTimeoutMs,
+  }).should('contain.text', `${scenarioId}@1.0.0#`);
+  expectWorkerReady();
+};
 const startDefaultGame = () => {
   cy.get('[data-testid="open-screen"]', { timeout: 15_000 }).should(
     'be.visible',
@@ -362,6 +372,7 @@ describe('built foundation PWA offline lifecycle', () => {
       }
     });
     restoreScenario('torrevieja-legacy-abc-v1');
+    expectRestoredAuthority('torrevieja-legacy-abc-v1');
     cy.get('[data-testid="worker-timeline"]').should(
       'contain.text',
       'browser-foundation-restored-',
@@ -392,6 +403,7 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '3');
     cy.then(() => expectVehicleSvg(savedSvg));
     restoreScenario('torrevieja-legacy-east-v1');
+    expectRestoredAuthority('torrevieja-legacy-east-v1');
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.equal(secondarySavedTick),
     );

@@ -1,13 +1,20 @@
-# Population-field preparation overlay
+# Population-field preparation overlay — historical record
 
-This overlay stages accepted population-field data for the next Torrevieja Tycoon development phase.
+> **Historical status:** This file describes the original data-only preparation
+> overlay. It is not the current runtime contract. See
+> `docs/current-state.md` and `docs/data/population-fields-v1.md`.
+
+This overlay originally staged accepted population-field data for a later
+Torrevieja Tycoon development phase.
 
 Apply it to a clean repository by extracting at repository root. It adds only new files under:
 
 - `apps/web/public/population-fields/`
 - `docs/data/`
 
-It intentionally contains no production-code change. Passenger demand remains disabled until the subsequent implementation milestone explicitly wires these assets into the existing deterministic demand pipeline.
+At that historical point it intentionally contained no production-code change,
+and passenger demand remained disabled pending a subsequent implementation
+milestone. Population-backed passenger demand is active in the current product.
 
 Read before implementation:
 

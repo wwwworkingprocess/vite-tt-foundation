@@ -40,6 +40,7 @@ const operation = z.enum([
   'send-command',
   'synchronize',
   'export-snapshot',
+  'set-render-subscription',
   'close',
 ]);
 const coordinate = z.strictObject({
@@ -174,6 +175,13 @@ export const transportWorkerRequestSchema = z.discriminatedUnion('operation', [
     requestId,
     operation: z.literal('export-snapshot'),
     payload: z.null(),
+  }),
+  z.strictObject({
+    kind: z.literal('transport-worker-request'),
+    contractVersion: z.literal(transportWorkerContractVersion),
+    requestId,
+    operation: z.literal('set-render-subscription'),
+    payload: z.boolean(),
   }),
   z.strictObject({
     kind: z.literal('transport-worker-request'),
@@ -365,7 +373,11 @@ export function parseTransportWorkerResponse(
       },
     }) as TransportWorkerResponse;
   if (parsed.kind !== 'transport-worker-result') return parsed;
-  if (parsed.operation === 'connect' || parsed.operation === 'close') {
+  if (
+    parsed.operation === 'connect' ||
+    parsed.operation === 'close' ||
+    parsed.operation === 'set-render-subscription'
+  ) {
     if (parsed.payload !== null)
       throw new Error('Expected a null Worker result.');
   } else if (parsed.operation === 'send-command') {

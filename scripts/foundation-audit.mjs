@@ -502,6 +502,7 @@ for (const file of [...simulation, ...protocol, ...web]) {
   const text = await source(file);
   const normalized = file.replaceAll('\\', '/');
   const transportExtension =
+    normalized.includes('apps/web/src/population') ||
     normalized.includes('apps/web/src/scenarios') ||
     normalized.includes('apps/web/src/transport-simulation') ||
     normalized.includes('apps/web/src/transport-representation') ||
@@ -512,6 +513,9 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('apps/web/src/ui/game-selection.ts') ||
     normalized.endsWith('packages/simulation/src/transport-simulation.ts') ||
     normalized.endsWith('packages/simulation/src/passenger-demand.ts') ||
+    normalized.endsWith(
+      'packages/simulation/src/passenger-demand-runtime.ts',
+    ) ||
     normalized.endsWith(
       'packages/simulation/src/passenger-direct-itinerary.ts',
     ) ||
@@ -537,6 +541,9 @@ for (const file of [
       !path
         .replaceAll('\\', '/')
         .endsWith('packages/simulation/src/passenger-demand.ts') &&
+      !path
+        .replaceAll('\\', '/')
+        .endsWith('packages/simulation/src/passenger-demand-runtime.ts') &&
       !path
         .replaceAll('\\', '/')
         .endsWith('packages/simulation/src/passenger-direct-itinerary.ts') &&

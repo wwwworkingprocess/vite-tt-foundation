@@ -169,7 +169,6 @@ export function createTransportApplicationController(input: {
         });
       }),
     );
-    cleanups.push(candidate.subscribeRenderSnapshots(() => undefined));
   };
   const enqueue = <T>(operation: () => Promise<T>): Promise<T> => {
     let resolve!: (value: T) => void;
@@ -218,7 +217,7 @@ export function createTransportApplicationController(input: {
   ) => {
     client = candidate;
     set({
-      status: request.mode === 'new' ? 'starting' : 'restoring',
+      status: 'starting',
       timelineId: request.timelineId,
     });
     try {
@@ -395,56 +394,122 @@ export function createTransportApplicationController(input: {
         if (client !== previous || closing || closed)
           throw new Error('Transport restore became stale.');
         const timelineId = parseTimelineId(request.timelineId);
-        const token = ++generation;
-        const teardownErrors = removeSubscriptions();
-        client = undefined;
-        set({ status: 'restoring' });
         let next: TransportSimulationClient | undefined;
+        let baseline: Awaited<
+          ReturnType<TransportSimulationClient['synchronize']>
+        >;
+        let exported: Awaited<
+          ReturnType<TransportSimulationClient['exportSnapshot']>
+        >;
         try {
-          try {
-            await previous.close();
-          } catch (closeError) {
-            throw withCleanupFailures(
-              closeError,
-              teardownErrors,
-              'Transport authority teardown failed.',
-            );
-          }
-          if (teardownErrors.length)
-            throw new AggregateError(
-              teardownErrors,
-              'Transport subscription teardown failed.',
-            );
-          if (closing || closed || generation !== token)
-            throw new Error('Transport restore became stale.');
           next = input.createClient();
-          await activate(
-            next,
-            {
-              kind: 'transport-client-connect',
-              contractVersion: 3,
-              mode: 'restore',
-              gameId: restoredRecord.gameId,
-              timelineId,
-              scenario,
-              snapshot: restoredRecord.snapshot,
-              ...(passengerDemandPlan === undefined
-                ? {}
-                : { passengerDemandPlan }),
-            },
-            token,
-          );
+          await next.connect({
+            kind: 'transport-client-connect',
+            contractVersion: 3,
+            mode: 'restore',
+            gameId: restoredRecord.gameId,
+            timelineId,
+            scenario,
+            snapshot: restoredRecord.snapshot,
+            ...(passengerDemandPlan === undefined
+              ? {}
+              : { passengerDemandPlan }),
+          });
+          baseline = await next.synchronize({
+            kind: 'foundation-synchronization-request',
+            gameId: restoredRecord.gameId,
+          });
+          exported = await next.exportSnapshot();
         } catch (error) {
-          const cleanupErrors = removeSubscriptions();
-          sessionClaimed = false;
-          if (!closing && !closed)
-            set({ status: 'failed', message: errorMessage(error) });
+          const cleanupErrors: unknown[] = [];
+          if (next)
+            try {
+              await next.close();
+            } catch (closeError) {
+              cleanupErrors.push(closeError);
+            }
+          if (client === previous && !closing && !closed)
+            set({ ...previousState, message: errorMessage(error) });
           throw withCleanupFailures(
             error,
             cleanupErrors,
-            'Transport restore and cleanup failed.',
+            'Transport restore candidate cleanup failed.',
           );
         }
+        if (client !== previous || closing || closed) {
+          await next.close();
+          throw new Error('Transport restore became stale.');
+        }
+        const foundation =
+          baseline.kind === 'transport-synchronization-response'
+            ? baseline.foundation
+            : baseline;
+        if (
+          foundation.kind !== 'foundation-synchronization-response' ||
+          foundation.mode !== 'full'
+        ) {
+          await next.close();
+          throw new Error('Full transport synchronization is required.');
+        }
+        const teardownErrors = removeSubscriptions();
+        let closeFailure: unknown;
+        try {
+          await previous.close();
+        } catch (closeError) {
+          closeFailure = closeError;
+        }
+        if (teardownErrors.length || closeFailure !== undefined) {
+          await next.close();
+          client = undefined;
+          sessionClaimed = false;
+          const error = teardownErrors.length
+            ? new AggregateError(
+                closeFailure === undefined
+                  ? teardownErrors
+                  : [closeFailure, ...teardownErrors],
+                'Transport authority teardown failed.',
+              )
+            : closeFailure;
+          if (!closing && !closed)
+            set({ status: 'failed', message: errorMessage(error) });
+          throw error;
+        }
+        if (client !== previous || closing || closed) {
+          await next.close();
+          throw new Error('Transport restore became stale.');
+        }
+        const token = ++generation;
+        client = next;
+        subscribeClient(next, token, timelineId);
+        set({
+          status: 'ready',
+          gameId: restoredRecord.gameId,
+          timelineId,
+          scenario: exported.snapshot.scenario,
+          simulationTick: foundation.baseline.simulationTick,
+          commandRevision: foundation.baseline.commandRevision,
+          streamOffset: foundation.baseline.lastIncludedStreamOffset,
+          fleet: exported.snapshot.state.fleet,
+          passengerDemand: projectPassengerDemand(
+            exported.snapshot.state.passengerDemand,
+          ),
+          vehicleOperations: exported.snapshot.state.vehicleOperations,
+          currentStopCalls: exported.snapshot.state.currentStopCalls,
+          vehicleCapacities: exported.snapshot.state.vehicleCapacities,
+          currentBoardingEvents: exported.snapshot.state.currentBoardingEvents,
+          currentAlightingEvents:
+            exported.snapshot.state.currentAlightingEvents,
+          currentJourneyCompletionEvents:
+            exported.snapshot.state.currentJourneyCompletionEvents,
+          vehiclePassengerLoads: projectVehiclePassengerLoads(
+            exported.snapshot.state.vehicleCapacities,
+            exported.snapshot.state.passengerDemand.status === 'active'
+              ? exported.snapshot.state.passengerDemand.onboardGroups
+              : [],
+            exported.snapshot.state.currentAlightingEvents,
+            exported.snapshot.state.currentBoardingEvents,
+          ),
+        });
       });
     },
     save(metadata: {
@@ -499,38 +564,8 @@ export function createTransportApplicationController(input: {
           throw new Error('No ready transport session.');
         try {
           const result = await candidate.sendCommand(envelope);
-          if (isCurrent(candidate, token, operationState.timelineId!)) {
-            const exported = await candidate.exportSnapshot();
-            if (isCurrent(candidate, token, operationState.timelineId!))
-              set({
-                ...state,
-                simulationTick: exported.simulationTick,
-                commandRevision: exported.commandRevision,
-                streamOffset: exported.streamOffset,
-                fleet: exported.snapshot.state.fleet,
-                passengerDemand: projectPassengerDemand(
-                  exported.snapshot.state.passengerDemand,
-                ),
-                vehicleOperations: exported.snapshot.state.vehicleOperations,
-                currentStopCalls: exported.snapshot.state.currentStopCalls,
-                vehicleCapacities: exported.snapshot.state.vehicleCapacities,
-                currentBoardingEvents:
-                  exported.snapshot.state.currentBoardingEvents,
-                currentAlightingEvents:
-                  exported.snapshot.state.currentAlightingEvents,
-                currentJourneyCompletionEvents:
-                  exported.snapshot.state.currentJourneyCompletionEvents,
-                vehiclePassengerLoads: projectVehiclePassengerLoads(
-                  exported.snapshot.state.vehicleCapacities,
-                  exported.snapshot.state.passengerDemand.status === 'active'
-                    ? exported.snapshot.state.passengerDemand.onboardGroups
-                    : [],
-                  exported.snapshot.state.currentAlightingEvents,
-                  exported.snapshot.state.currentBoardingEvents,
-                ),
-                message: undefined,
-              });
-          }
+          if (isCurrent(candidate, token, operationState.timelineId!))
+            set({ ...state, message: undefined });
           return result;
         } catch (error) {
           if (isCurrent(candidate, token, operationState.timelineId!))
@@ -562,38 +597,8 @@ export function createTransportApplicationController(input: {
           sessionId: parseSessionId('transport-session'),
           command: { type: 'foundation.advance-ticks', count },
         });
-        if (isCurrent(candidate, token, current.timelineId)) {
-          const exported = await candidate.exportSnapshot();
-          if (isCurrent(candidate, token, current.timelineId))
-            set({
-              ...state,
-              simulationTick: exported.simulationTick,
-              commandRevision: exported.commandRevision,
-              streamOffset: exported.streamOffset,
-              fleet: exported.snapshot.state.fleet,
-              passengerDemand: projectPassengerDemand(
-                exported.snapshot.state.passengerDemand,
-              ),
-              vehicleOperations: exported.snapshot.state.vehicleOperations,
-              currentStopCalls: exported.snapshot.state.currentStopCalls,
-              vehicleCapacities: exported.snapshot.state.vehicleCapacities,
-              currentBoardingEvents:
-                exported.snapshot.state.currentBoardingEvents,
-              currentAlightingEvents:
-                exported.snapshot.state.currentAlightingEvents,
-              currentJourneyCompletionEvents:
-                exported.snapshot.state.currentJourneyCompletionEvents,
-              vehiclePassengerLoads: projectVehiclePassengerLoads(
-                exported.snapshot.state.vehicleCapacities,
-                exported.snapshot.state.passengerDemand.status === 'active'
-                  ? exported.snapshot.state.passengerDemand.onboardGroups
-                  : [],
-                exported.snapshot.state.currentAlightingEvents,
-                exported.snapshot.state.currentBoardingEvents,
-              ),
-              message: undefined,
-            });
-        }
+        if (isCurrent(candidate, token, current.timelineId))
+          set({ ...state, message: undefined });
         return result;
       });
     },

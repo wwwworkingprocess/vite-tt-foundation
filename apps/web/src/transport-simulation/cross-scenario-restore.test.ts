@@ -231,7 +231,7 @@ describe('exact cross-scenario restore', () => {
     const repository = createInMemoryTransportSaveRepository([
       save(mini, 'mini', 17),
     ]);
-    const direct = createDirectTransportSimulationClient();
+    let creation = 0;
     let release!: () => void;
     let entered!: () => void;
     let delayClose = false;
@@ -242,17 +242,20 @@ describe('exact cross-scenario restore', () => {
       entered = resolve;
     });
     const controller = createTransportApplicationController({
-      createClient: () =>
-        Object.freeze({
+      createClient: () => {
+        const direct = createDirectTransportSimulationClient();
+        const isCurrentAuthority = ++creation === 1;
+        return Object.freeze({
           ...direct,
           async close() {
-            if (delayClose) {
+            if (isCurrentAuthority && delayClose) {
               entered();
               await gate;
             }
             await direct.close();
           },
-        }),
+        });
+      },
       repository,
       scenarioResolver: { resolve: async () => mini },
     });

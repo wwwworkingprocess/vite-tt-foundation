@@ -275,52 +275,38 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
       }),
     );
   const publishAuthority = () => {
+    const passengerDemand = projectPassengerDemand(authority!.passengerDemand);
+    const vehiclePassengerLoads = projectVehiclePassengerLoads(
+      authority!.vehicleCapacities,
+      authority!.passengerDemand.status === 'active'
+        ? authority!.passengerDemand.onboardGroups
+        : [],
+      authority!.currentAlightingEvents,
+      authority!.currentBoardingEvents,
+    );
+    const projection = {
+      fleet: authority!.fleet,
+      passengerDemand,
+      vehicleOperations: authority!.vehicleOperations,
+      currentStopCalls: authority!.currentStopCalls,
+      vehicleCapacities: authority!.vehicleCapacities,
+      currentBoardingEvents: authority!.currentBoardingEvents,
+      currentAlightingEvents: authority!.currentAlightingEvents,
+      currentJourneyCompletionEvents: authority!.currentJourneyCompletionEvents,
+      vehiclePassengerLoads,
+    };
     publish(
       reliableListeners,
-      freeze({
-        ...latestFoundationUpdate!,
-        fleet: authority!.fleet,
-        passengerDemand: projectPassengerDemand(authority!.passengerDemand),
-        vehicleOperations: authority!.vehicleOperations,
-        currentStopCalls: authority!.currentStopCalls,
-        vehicleCapacities: authority!.vehicleCapacities,
-        currentBoardingEvents: authority!.currentBoardingEvents,
-        currentAlightingEvents: authority!.currentAlightingEvents,
-        currentJourneyCompletionEvents:
-          authority!.currentJourneyCompletionEvents,
-        vehiclePassengerLoads: projectVehiclePassengerLoads(
-          authority!.vehicleCapacities,
-          authority!.passengerDemand.status === 'active'
-            ? authority!.passengerDemand.onboardGroups
-            : [],
-          authority!.currentAlightingEvents,
-          authority!.currentBoardingEvents,
-        ),
-      }),
+      freeze({ ...latestFoundationUpdate!, ...projection }),
     );
-    publish(
-      renderListeners,
-      freeze({
-        ...latestFoundationRender!,
-        fleet: authority!.fleet,
-        passengerDemand: projectPassengerDemand(authority!.passengerDemand),
-        vehicleOperations: authority!.vehicleOperations,
-        currentStopCalls: authority!.currentStopCalls,
-        vehicleCapacities: authority!.vehicleCapacities,
-        currentBoardingEvents: authority!.currentBoardingEvents,
-        currentAlightingEvents: authority!.currentAlightingEvents,
-        currentJourneyCompletionEvents:
-          authority!.currentJourneyCompletionEvents,
-        vehiclePassengerLoads: projectVehiclePassengerLoads(
-          authority!.vehicleCapacities,
-          authority!.passengerDemand.status === 'active'
-            ? authority!.passengerDemand.onboardGroups
-            : [],
-          authority!.currentAlightingEvents,
-          authority!.currentBoardingEvents,
-        ),
-      }),
-    );
+    if (renderListeners.size > 0)
+      publish(
+        renderListeners,
+        freeze({
+          ...latestFoundationRender!,
+          ...projection,
+        }),
+      );
   };
   const enqueueOperation = <T>(operation: () => Promise<T>): Promise<T> => {
     const result = commandQueue.then(operation);

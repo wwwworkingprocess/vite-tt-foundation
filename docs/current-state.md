@@ -25,6 +25,11 @@ population field
 The browser now provides an explicit Open Screen lifecycle, city/scenario new-game
 entry, resumable-session discovery, renderer-independent Route/StopPlace/Vehicle
 selection, and exact authority inspectors including live passenger diagnostics.
+Session composition resolves the active settlement's checksum-pinned canonical
+population grid, exact operational crop, StopPlace catchments, and deterministic
+development-seed Production Passenger Demand Policy V1 for both new games and
+restore preflight. The SVG exposes the active nonzero population cells as a
+presentation-only diagnostic overlay.
 The next planned product layer is Phase 4F economics and objectives. Transfers,
 multi-pattern passenger routing, advanced services, traffic, schedules, and
 richer operational realism remain later work unless an active task explicitly
@@ -71,7 +76,8 @@ before current authority is replaced. Failed restore is non-destructive.
   `development-seed`.
 - Scenario directories: 27. `torrevieja-mini-v1` and `torrevieja-v1` are not
   public catalogue entries.
-- Current PWA build includes `scenarios/**/*.json` in generated assets. The
+- Current PWA build includes `scenarios/**/*.json` and
+  `population-fields/**/*` in generated assets. The
   earlier catalogue/default-plus-runtime-cache proposal is not implemented.
 
 Machine-readable authority: `torrevieja-project.json`,

@@ -5,6 +5,7 @@ import {
 } from '@torrevieja-tycoon/transport-domain';
 import {
   advancePassengerDemandToTick,
+  advanceTrustedPassengerDemandToTick,
   calculatePassengerAccessTicks,
   createInitialPassengerDemandState,
   createPassengerDemandPlan,
@@ -215,6 +216,29 @@ const createItineraryIndex = () => {
     demandPlan,
   });
 };
+
+it('keeps validated and package-internal trusted multi-tick demand equal', () => {
+  const plan = createPlan();
+  const itineraryIndex = createItineraryIndex();
+  let validated = createInitialPassengerDemandState(plan, 0);
+  let trusted = validated;
+  if (validated.status !== 'active') throw new Error('Expected active demand.');
+  for (const tick of [1, 3, 7, 12]) {
+    validated = advancePassengerDemandToTick(
+      plan,
+      itineraryIndex,
+      validated,
+      tick,
+    );
+    trusted = advanceTrustedPassengerDemandToTick(
+      plan,
+      itineraryIndex,
+      trusted,
+      tick,
+    );
+    expect(trusted).toEqual(validated);
+  }
+});
 
 type MutablePlan = {
   schemaVersion: string;

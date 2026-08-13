@@ -10,6 +10,7 @@ import {
 } from '@torrevieja-tycoon/simulation';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
+  createScenarioSvgPositionProjector,
   interpolateSvgPosition,
   projectVehicleMovementSvg,
 } from './vehicle-svg-projection.js';
@@ -155,6 +156,9 @@ describe('vehicle SVG projection', () => {
     };
     noStops.stops.stopNodes = [];
     expect(() => projectVehicleMovementSvg(noStops as never, [])).toThrow(
+      'at least one canonical stop',
+    );
+    expect(() => createScenarioSvgPositionProjector(noStops as never)).toThrow(
       'at least one canonical stop',
     );
     expect(() =>

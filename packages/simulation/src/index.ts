@@ -5,7 +5,37 @@ export const simulationFoundationLabel =
 export * from './foundation-command.js';
 export * from './foundation-state.js';
 export * from './foundation-snapshot.js';
-export * from './passenger-demand.js';
+export {
+  passengerDemandPlanSchemaVersion,
+  listPassengerDestinationCandidates,
+  allocatePassengerDestinations,
+  parsePassengerDemandPlan,
+  createPassengerDemandPlan,
+  createDisabledPassengerDemandState,
+  parsePassengerDemandState,
+  createInitialPassengerDemandState,
+  calculatePassengerAccessTicks,
+  validatePassengerDemandState,
+  advancePassengerDemandToTick,
+  parsePassengerDemandProjection,
+  projectPassengerDemand,
+  type PassengerDemandModelHash,
+  type PassengerGroupId,
+  type PassengerJourneyGroupId,
+  type PassengerDemandPlanCell,
+  type PassengerDemandPlanStop,
+  type PassengerDemandPlanV1,
+  type PassengerCellCreditState,
+  type AccessingPassengerGroup,
+  type StopPlaceArrivalState,
+  type PassengerDestinationCandidate,
+  type PassengerDestinationCursorState,
+  type DestinationAssignedPassengerGroup,
+  type DisabledPassengerDemandState,
+  type ActivePassengerDemandState,
+  type PassengerDemandState,
+  type PassengerDemandProjection,
+} from './passenger-demand.js';
 export * from './passenger-waiting-cohort.js';
 export * from './passenger-boarding.js';
 export * from './passenger-transit.js';

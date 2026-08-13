@@ -117,6 +117,14 @@ const input = (
 });
 
 describe('deterministic passenger alighting and destination access', () => {
+  it('structurally shares passenger collections on a no-call, no-access tick', () => {
+    const source = input({ currentStopCalls: [], destinationAccessGroups: [] });
+    const result = processPassengerTransitAtVehicleCalls(source);
+    expect(result.waitingCohorts).toBe(source.waitingCohorts);
+    expect(result.onboardGroups).toBe(source.onboardGroups);
+    expect(result.destinationAccessGroups).toBe(source.destinationAccessGroups);
+    expect(result.currentBoardingEvents).toEqual([]);
+  });
   it('alights only at the exact canonical destination call', () => {
     const source = input();
     const result = processPassengerTransitAtVehicleCalls(source);

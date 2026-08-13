@@ -1,6 +1,7 @@
 import {
   createScenarioCoordinate,
   createTransportSimulationState,
+  parsePassengerDemandPlan,
   parseSimulationTick,
   restoreTransportSimulationState,
   type TransportSimulationState,
@@ -29,7 +30,12 @@ import {
 } from './transport-worker-wire.js';
 
 type Operation =
-  'connect' | 'send-command' | 'synchronize' | 'export-snapshot' | 'close';
+  | 'connect'
+  | 'send-command'
+  | 'synchronize'
+  | 'export-snapshot'
+  | 'set-render-subscription'
+  | 'close';
 
 export interface TransportWorkerEndpoint {
   postMessage(message: TransportWorkerResponse): void;
@@ -75,6 +81,7 @@ export function startTransportWorkerRuntime(
 ) {
   let client: TransportSimulationClient | undefined;
   let closed = false;
+  let renderCleanup: (() => void) | undefined;
   let operationQueue = Promise.resolve();
   const cleanups: Array<() => void> = [];
   const removeSubscriptions = () => {
@@ -84,6 +91,14 @@ export function startTransportWorkerRuntime(
         cleanup();
       } catch (error) {
         errors.push(error);
+      }
+    if (renderCleanup)
+      try {
+        renderCleanup();
+      } catch (error) {
+        errors.push(error);
+      } finally {
+        renderCleanup = undefined;
       }
     return errors;
   };
@@ -152,16 +167,6 @@ export function startTransportWorkerRuntime(
                 }),
               ),
             );
-            cleanups.push(
-              next.subscribeRenderSnapshots((snapshot) =>
-                endpoint.postMessage({
-                  kind: 'transport-worker-publication',
-                  contractVersion: 3,
-                  channel: 'render',
-                  payload: snapshot,
-                }),
-              ),
-            );
             await next.connect(
               request.payload as TransportClientConnectRequest,
             );
@@ -194,6 +199,21 @@ export function startTransportWorkerRuntime(
         } else if (request.operation === 'export-snapshot') {
           if (!client) throw new Error('Transport Worker is not connected.');
           payload = await client.exportSnapshot();
+        } else if (request.operation === 'set-render-subscription') {
+          if (!client) throw new Error('Transport Worker is not connected.');
+          if (request.payload && !renderCleanup)
+            renderCleanup = client.subscribeRenderSnapshots((snapshot) =>
+              endpoint.postMessage({
+                kind: 'transport-worker-publication',
+                contractVersion: 3,
+                channel: 'render',
+                payload: snapshot,
+              }),
+            );
+          else if (!request.payload && renderCleanup) {
+            renderCleanup();
+            renderCleanup = undefined;
+          }
         } else {
           let cleanupError: unknown;
           try {
@@ -248,7 +268,11 @@ export function startTransportWorkerRuntime(
             message: errorMessage(error),
           });
         } catch {
-          await shutdown();
+          try {
+            await shutdown();
+          } catch (shutdownError) {
+            endpoint.reportError?.(shutdownError);
+          }
         }
       }
     });
@@ -424,6 +448,19 @@ export function createWorkerTransportSimulationClient(input: {
     map.set(id, listener);
     return () => map.delete(id);
   };
+  const subscribeRender = (
+    listener: (value: TransportRenderSnapshot) => void,
+  ) => {
+    const wasEmpty = render.size === 0;
+    const remove = subscribe(render, listener);
+    if (wasEmpty && worker && lifecycle.state === 'ready')
+      void post('set-render-subscription', true).catch(failTerminal);
+    return () => {
+      remove();
+      if (render.size === 0 && worker && lifecycle.state === 'ready')
+        void post('set-render-subscription', false).catch(failTerminal);
+    };
+  };
   const client: TransportSimulationClient = {
     async connect(request) {
       if (lifecycle.state !== 'idle' || worker || closed)
@@ -434,13 +471,22 @@ export function createWorkerTransportSimulationClient(input: {
         (request.mode !== 'new' && request.mode !== 'restore')
       )
         throw new Error('Unsupported transport client connect request.');
+      const passengerDemandPlan =
+        request.passengerDemandPlan === undefined
+          ? undefined
+          : parsePassengerDemandPlan(request.passengerDemandPlan);
       const nextAuthority =
         request.mode === 'new'
           ? createTransportSimulationState(
               request.scenario,
               request.initialSimulationTick,
+              passengerDemandPlan,
             )
-          : restoreTransportSimulationState(request.snapshot, request.scenario);
+          : restoreTransportSimulationState(
+              request.snapshot,
+              request.scenario,
+              passengerDemandPlan,
+            );
       publishLifecycle({ state: 'connecting' });
       try {
         worker = input.workerFactory();
@@ -449,6 +495,7 @@ export function createWorkerTransportSimulationClient(input: {
         worker.addEventListener('message', onMessage);
         authority = nextAuthority;
         await post('connect', structuredClone(request));
+        if (render.size > 0) await post('set-render-subscription', true);
         publishLifecycle({
           state: 'ready',
           gameId: request.gameId,
@@ -486,7 +533,7 @@ export function createWorkerTransportSimulationClient(input: {
       );
     },
     subscribeReliableUpdates: (listener) => subscribe(reliable, listener),
-    subscribeRenderSnapshots: (listener) => subscribe(render, listener),
+    subscribeRenderSnapshots: subscribeRender,
     getLifecycle: () => lifecycle,
     subscribeLifecycle: (listener) => subscribe(lifecycleListeners, listener),
     getAuthoritativeState() {

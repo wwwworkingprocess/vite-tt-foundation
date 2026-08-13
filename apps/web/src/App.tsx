@@ -12,6 +12,7 @@ import {
   type CurrentAlightingEvent,
   type CurrentBoardingEvent,
   type PassengerDemandProjection,
+  type PassengerDemandPlanV1,
   type PassengerJourneyCompletionEvent,
   type VehiclePassengerLoadProjection,
   type VehiclePatternRunState,
@@ -46,6 +47,11 @@ import {
   type ScenarioLoaderState,
 } from './scenarios/scenario-loader.js';
 import { defaultScenarioId } from './project-defaults.js';
+import { createProductionPassengerDemandPlan } from './population/population-demand-plan.js';
+import {
+  createPopulationFieldLoader,
+  type ScenarioPopulationView,
+} from './population/population-field-loader.js';
 import { GameShell } from './ui/GameShell.js';
 import { selectionExists, type GameSelection } from './ui/game-selection.js';
 import {
@@ -60,6 +66,9 @@ const VehicleMovementSvg = lazy(() =>
   import('./transport-representation/VehicleMovementSvg.js').then((module) => ({
     default: module.VehicleMovementSvg,
   })),
+);
+const PopulationGridOverlay = lazy(
+  () => import('./transport-representation/PopulationGridOverlay.js'),
 );
 
 type Actions = Readonly<{
@@ -93,9 +102,17 @@ type AuthoritativeScenarioPackageState = Readonly<{
   message?: string;
 }>;
 
+type AuthoritativePopulationState = Readonly<{
+  status: 'idle' | 'loading' | 'ready' | 'failed';
+  coordinateKey?: string;
+  population?: ScenarioPopulationView;
+  message?: string;
+}>;
+
 type SessionLaunchRequest = Readonly<{
   sequence: number;
   scenario: CanonicalScenario;
+  passengerDemandPlan: PassengerDemandPlanV1;
   action:
     | { readonly kind: 'new' }
     | { readonly kind: 'restore'; readonly saveId: string };
@@ -164,6 +181,19 @@ export function App() {
       digestSha256: browserSha256,
     }),
   );
+  const [populationFieldLoader] = useState(() =>
+    createPopulationFieldLoader({
+      baseUrl: import.meta.env.BASE_URL,
+      fetchText: async (url) => {
+        const response = await fetch(url);
+        return { ok: response.ok, text: () => response.text() };
+      },
+      digestSha256: browserSha256,
+    }),
+  );
+  const [authoritativePopulationState, setAuthoritativePopulationState] =
+    useState<AuthoritativePopulationState>({ status: 'idle' });
+  const authoritativePopulationGeneration = useRef(0);
   const saveMode = useRef<FoundationSaveMode>('manual');
   const sessionLaunchSequence = useRef(0);
   const cacheScenario = useCallback((next: CanonicalScenario) => {
@@ -329,11 +359,34 @@ export function App() {
                   );
             },
           },
+          passengerDemandPlanResolver: {
+            async resolve(coordinate) {
+              const resolve = scenarioResolver.current;
+              if (!resolve)
+                throw new Error(
+                  'The exact passenger-demand scenario is unavailable.',
+                );
+              const scenario = await resolve(coordinate.scenario);
+              const population =
+                await populationFieldLoader.resolveScenarioPopulation(scenario);
+              return createProductionPassengerDemandPlan({
+                scenario,
+                population,
+              });
+            },
+          },
         });
         currentApplication = application;
         const pacing = createFoundationPacingController({ application });
         return {
-          application,
+          application: {
+            ...application,
+            startNew: (request) =>
+              application.startNew({
+                ...request,
+                passengerDemandPlan: sessionLaunch.passengerDemandPlan,
+              }),
+          },
           pacing,
           driver: createDefaultBrowserPacingDriver(),
         };
@@ -392,7 +445,7 @@ export function App() {
       remove();
       void composition.dispose();
     };
-  }, [sessionLaunch]);
+  }, [populationFieldLoader, sessionLaunch]);
 
   const application = state?.application;
   const pacing = state?.pacing;
@@ -500,6 +553,51 @@ export function App() {
     );
   }, [authoritativeCoordinateKey, scenarioCacheRevision]);
   useEffect(() => {
+    const generation = ++authoritativePopulationGeneration.current;
+    if (!authoritativeCoordinateKey) {
+      setAuthoritativePopulationState({ status: 'idle' });
+      return;
+    }
+    if (!authoritativeScenarioPackage) {
+      setAuthoritativePopulationState({
+        status: 'loading',
+        coordinateKey: authoritativeCoordinateKey,
+      });
+      return;
+    }
+    setAuthoritativePopulationState({
+      status: 'loading',
+      coordinateKey: authoritativeCoordinateKey,
+    });
+    void populationFieldLoader
+      .resolveScenarioPopulation(authoritativeScenarioPackage)
+      .then(
+        (population) => {
+          if (generation !== authoritativePopulationGeneration.current) return;
+          setAuthoritativePopulationState({
+            status: 'ready',
+            coordinateKey: authoritativeCoordinateKey,
+            population,
+          });
+        },
+        (error: unknown) => {
+          if (generation !== authoritativePopulationGeneration.current) return;
+          setAuthoritativePopulationState({
+            status: 'failed',
+            coordinateKey: authoritativeCoordinateKey,
+            message:
+              error instanceof Error
+                ? error.message
+                : 'The authoritative population field could not be loaded.',
+          });
+        },
+      );
+  }, [
+    authoritativeCoordinateKey,
+    authoritativeScenarioPackage,
+    populationFieldLoader,
+  ]);
+  useEffect(() => {
     if (!authoritativeScenarioPackage) {
       selectedRouteIdRef.current = undefined;
       setSelectedRouteId(undefined);
@@ -562,47 +660,64 @@ export function App() {
   const requestSessionLaunch = (
     scenario: CanonicalScenario,
     launchAction: SessionLaunchRequest['action'],
+    passengerDemandPlan: PassengerDemandPlanV1,
   ) => {
     setStackSeedScenario(scenario);
     setSessionLaunch({
       sequence: ++sessionLaunchSequence.current,
       scenario,
+      passengerDemandPlan,
       action: launchAction,
     });
   };
-  const createGame = () => {
+  const preparationFailure = (error: unknown, fallback: string) =>
+    setLifecycle({
+      status: 'recoverable-failure',
+      message: error instanceof Error ? error.message : fallback,
+    });
+  const createGame = async () => {
     if (scenarioSelection.status !== 'ready' || !selectedScenario) return;
     setLifecycle({ status: 'creating' });
-    requestSessionLaunch(selectedScenario, { kind: 'new' });
+    const scenario = selectedScenario;
+    try {
+      const population =
+        await populationFieldLoader.resolveScenarioPopulation(scenario);
+      const passengerDemandPlan = createProductionPassengerDemandPlan({
+        scenario,
+        population,
+      });
+      requestSessionLaunch(scenario, { kind: 'new' }, passengerDemandPlan);
+    } catch (error) {
+      preparationFailure(error, 'Population authority could not be prepared.');
+    }
   };
-  const continueGame = (save: TransportSaveSummary) => {
+  const continueGame = async (save: TransportSaveSummary) => {
     const resolve = scenarioResolver.current;
     if (!resolve) return;
     setLifecycle({ status: 'restoring' });
-    void resolve({
-      scenarioSchemaVersion: save.scenarioSchemaVersion as '1.0.0',
-      scenarioId: save.scenarioId as ScenarioCoordinate['scenarioId'],
-      scenarioVersion: save.scenarioVersion,
-      contentHash: save.contentHash,
-    }).then(
-      (scenario) => {
-        explicitScenarioSelection.current = true;
-        scenarioLoader.adoptResolvedScenario(scenario);
-        requestSessionLaunch(scenario, {
-          kind: 'restore',
-          saveId: save.saveId,
-        });
-      },
-      (error: unknown) => {
-        setLifecycle({
-          status: 'recoverable-failure',
-          message:
-            error instanceof Error
-              ? error.message
-              : 'The saved scenario is unavailable.',
-        });
-      },
-    );
+    try {
+      const scenario = await resolve({
+        scenarioSchemaVersion: save.scenarioSchemaVersion as '1.0.0',
+        scenarioId: save.scenarioId as ScenarioCoordinate['scenarioId'],
+        scenarioVersion: save.scenarioVersion,
+        contentHash: save.contentHash,
+      });
+      const population =
+        await populationFieldLoader.resolveScenarioPopulation(scenario);
+      const passengerDemandPlan = createProductionPassengerDemandPlan({
+        scenario,
+        population,
+      });
+      explicitScenarioSelection.current = true;
+      scenarioLoader.adoptResolvedScenario(scenario);
+      requestSessionLaunch(
+        scenario,
+        { kind: 'restore', saveId: save.saveId },
+        passengerDemandPlan,
+      );
+    } catch (error) {
+      preparationFailure(error, 'The saved scenario could not be prepared.');
+    }
   };
   const retryBootstrap = () => {
     if (!bootstrapRetryAvailable) return;
@@ -626,8 +741,8 @@ export function App() {
           onRetryBootstrap={
             bootstrapRetryAvailable ? retryBootstrap : undefined
           }
-          onCreate={createGame}
-          onContinue={continueGame}
+          onCreate={() => void createGame()}
+          onContinue={(save) => void continueGame(save)}
         />
       </Suspense>
     );
@@ -666,7 +781,7 @@ export function App() {
       )
     ) {
       setLifecycle({ status: 'creating' });
-      requestSessionLaunch(selectedScenario, { kind: 'new' });
+      void createGame();
       return;
     }
     await actions?.start();
@@ -731,7 +846,7 @@ export function App() {
       )
     ) {
       setLifecycle({ status: 'creating' });
-      requestSessionLaunch(selectedScenario, { kind: 'new' });
+      void createGame();
       return;
     }
     await actions?.start();
@@ -771,12 +886,36 @@ export function App() {
       primaryVisualization={
         <Suspense fallback={<p>Loading transport representation…</p>}>
           {authoritativeScenarioPackage && fleet ? (
-            <VehicleMovementSvg
-              scenario={authoritativeScenarioPackage}
-              fleet={fleet}
-              selection={gameSelection}
-              onSelectionChange={setGameSelection}
-            />
+            <div className="vehicle-movement-representation">
+              {authoritativePopulationState.status === 'ready' &&
+              authoritativePopulationState.coordinateKey ===
+                authoritativeCoordinateKey &&
+              authoritativePopulationState.population ? (
+                <Suspense fallback={<p>Loading population field...</p>}>
+                  <PopulationGridOverlay
+                    key={authoritativeCoordinateKey}
+                    scenario={authoritativeScenarioPackage}
+                    cells={
+                      authoritativePopulationState.population.canonicalCells
+                    }
+                    resolutionDegrees={
+                      authoritativePopulationState.population.grid
+                        .resolutionDegrees
+                    }
+                    demandModelContentHash={
+                      authoritativePopulationState.population
+                        .demandModelContentHash
+                    }
+                  />
+                </Suspense>
+              ) : null}
+              <VehicleMovementSvg
+                scenario={authoritativeScenarioPackage}
+                fleet={fleet}
+                selection={gameSelection}
+                onSelectionChange={setGameSelection}
+              />
+            </div>
           ) : (
             <p>Authoritative scenario representation loading.</p>
           )}

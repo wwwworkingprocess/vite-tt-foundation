@@ -303,6 +303,178 @@
       "manifestPath": "alicante-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "896da0ffb37686fe226dda529af78919d86b1cf8c960f7df95743471540b46a1"
+    },
+    {
+      "scenarioId": "benidorm-legacy-core-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Legacy Core Network - Lines 001, 004 and 005",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm"
+      ],
+      "manifestPath": "benidorm-legacy-core-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "2112c66ed052f79512489f64602c4db6dc289a9832905cc8854a66349ffd96ec"
+    },
+    {
+      "scenarioId": "benidorm-legacy-core-inland-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Legacy Core Inland Network - Lines 007, 008 and 009",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm"
+      ],
+      "manifestPath": "benidorm-legacy-core-inland-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "8146a3f4f61713749f45f89091b98a26fc3f97a8f23714b258be986e81b5bdb3"
+    },
+    {
+      "scenarioId": "benidorm-legacy-local-special-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Legacy Local and Special Network - Lines 006 and 026",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm"
+      ],
+      "manifestPath": "benidorm-legacy-local-special-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "96d0fbd4d21c972a94914488bf5acd7b96294604458c09bcb1666c8250c2b210"
+    },
+    {
+      "scenarioId": "benidorm-legacy-attractions-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Legacy Attractions Network - Lines 011 and 042",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm"
+      ],
+      "manifestPath": "benidorm-legacy-attractions-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "527349ea9764a9170f474d0c775741ae612a0806298af7eade71d8f6958acf1c"
+    },
+    {
+      "scenarioId": "benidorm-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Legacy Network - All City Lines",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm"
+      ],
+      "manifestPath": "benidorm-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "e5e643fcdc8777cfc20229222fefc43600cdf94badf0f375e25de79307f1403e"
+    },
+    {
+      "scenarioId": "benidorm-radial-core-west-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Radial Core West Network - Lines 002 and 003",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm",
+        "es-finestrat",
+        "es-la-vila-joiosa"
+      ],
+      "manifestPath": "benidorm-radial-core-west-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "b68c4a71fc97b069709ddd448692e837852560e9029a5aea365e289a83b11e48"
+    },
+    {
+      "scenarioId": "benidorm-radial-east-corridor-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Radial East Corridor Network - Lines 010 and 050",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm",
+        "es-lalfas-del-pi",
+        "es-altea"
+      ],
+      "manifestPath": "benidorm-radial-east-corridor-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "53bac7c91fb480f92bc294bff8748019fce59bb8e099dd7bee7efec77d55a488"
+    },
+    {
+      "scenarioId": "benidorm-radial-coast-crosscity-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Radial Coast Cross-City Network - Lines 012 and 054",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm",
+        "es-lalfas-del-pi",
+        "es-altea",
+        "es-finestrat",
+        "es-la-vila-joiosa"
+      ],
+      "manifestPath": "benidorm-radial-coast-crosscity-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "cedb86d11e5d10c5b176027cb26ea519c58ee1d885da75e8ffa2bdc233b94ddf"
+    },
+    {
+      "scenarioId": "benidorm-radial-finestrat-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Radial Finestrat Network - Lines 014 and 015",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm",
+        "es-finestrat",
+        "es-la-vila-joiosa"
+      ],
+      "manifestPath": "benidorm-radial-finestrat-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "0099f5751d89436e30702f1e769d8f4f4893f034c295bf30e97113b475211a71"
+    },
+    {
+      "scenarioId": "benidorm-radial-north-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Radial North Network - Lines 016, 018 and 052",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm",
+        "es-finestrat",
+        "es-la-vila-joiosa",
+        "es-la-nucia",
+        "es-polop",
+        "es-callosa-den-sarria",
+        "es-el-castell-de-guadalest"
+      ],
+      "manifestPath": "benidorm-radial-north-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "5a3f16596763493f02b6df900e50d630ce276d908166e20b3dd098a796fe43ff"
+    },
+    {
+      "scenarioId": "benidorm-radial-panoramic-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Radial Panoramic Network - Lines 030 and 031",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm",
+        "es-finestrat",
+        "es-la-vila-joiosa",
+        "es-lalfas-del-pi",
+        "es-altea"
+      ],
+      "manifestPath": "benidorm-radial-panoramic-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "7146023bd0ccabaea13126b20d3834b6ae0b68047b56589d024e3314a5e59181"
+    },
+    {
+      "scenarioId": "benidorm-radial-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Benidorm Radial Legacy Network - All Outward Lines",
+      "primarySettlementId": "es-benidorm",
+      "settlementIds": [
+        "es-benidorm",
+        "es-finestrat",
+        "es-la-vila-joiosa",
+        "es-lalfas-del-pi",
+        "es-altea",
+        "es-la-nucia",
+        "es-polop",
+        "es-callosa-den-sarria",
+        "es-el-castell-de-guadalest"
+      ],
+      "manifestPath": "benidorm-radial-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "e219cb7c5161de65f7a0630a63dc7e87bbe50eb2a2d5c0064fd7de0aff8b0c49"
     }
   ]
 }

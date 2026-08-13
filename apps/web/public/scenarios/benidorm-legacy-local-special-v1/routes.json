@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-local-special-v1",
+  "routes": [
+    {
+      "routeId": "benidorm-006",
+      "publicCode": "006",
+      "name": "Benidorm Centro - Mediterráneo - Europa - Lepanto - Mercadillo Hotel Pueblo",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-006-ida",
+          "directionLabel": "Hacia Lepanto y Mercadillo Hotel Pueblo",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 5
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-332",
+            "marina-baixa-stop-bnd-312"
+          ]
+        },
+        {
+          "patternId": "benidorm-006-vuelta",
+          "directionLabel": "Hacia Europa y Benidorm Centro",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 5
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-312",
+            "marina-baixa-stop-bnd-324",
+            "marina-baixa-stop-bnd-291",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "006",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/006?fecha=02%2F07%2F2026"
+        },
+        {
+          "source": "benidorm-local-special-source-capture",
+          "sourceRouteId": "006",
+          "sourceFile": "line-006-ordered-capture.json"
+        }
+      ]
+    },
+    {
+      "routeId": "benidorm-026",
+      "publicCode": "026",
+      "name": "Benidorm Centro - Els Tolls - Colonia Madrid - Centros Médicos Foietes - Cuba - Nicaragua - P.Devesa - A. Suarez",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-026-ida",
+          "directionLabel": "Hacia C. Salud / Especialidades y Nicaragua o Adolfo Suarez",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-242",
+            "marina-baixa-stop-bnd-243",
+            "marina-baixa-stop-bnd-343",
+            "marina-baixa-stop-bnd-278",
+            "marina-baixa-stop-bnd-279",
+            "marina-baixa-stop-bnd-280",
+            "marina-baixa-stop-bnd-281",
+            "marina-baixa-stop-bnd-282",
+            "marina-baixa-stop-bnd-133",
+            "marina-baixa-stop-bnd-134",
+            "marina-baixa-stop-bnd-378",
+            "marina-baixa-stop-bnd-379",
+            "marina-baixa-stop-bnd-380",
+            "marina-baixa-stop-bnd-139",
+            "marina-baixa-stop-bnd-98",
+            "marina-baixa-stop-bnd-140",
+            "marina-baixa-stop-bnd-141",
+            "marina-baixa-stop-bnd-376",
+            "marina-baixa-stop-bnd-374",
+            "marina-baixa-stop-bnd-377"
+          ]
+        },
+        {
+          "patternId": "benidorm-026-vuelta",
+          "directionLabel": "Hacia Els Tolls y Centro",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-377",
+            "marina-baixa-stop-bnd-375",
+            "marina-baixa-stop-bnd-148",
+            "marina-baixa-stop-bnd-123",
+            "marina-baixa-stop-bnd-149",
+            "marina-baixa-stop-bnd-99",
+            "marina-baixa-stop-bnd-137",
+            "marina-baixa-stop-bnd-381",
+            "marina-baixa-stop-bnd-382",
+            "marina-baixa-stop-bnd-383",
+            "marina-baixa-stop-bnd-128",
+            "marina-baixa-stop-bnd-129",
+            "marina-baixa-stop-bnd-153",
+            "marina-baixa-stop-bnd-159",
+            "marina-baixa-stop-bnd-283",
+            "marina-baixa-stop-bnd-284",
+            "marina-baixa-stop-bnd-285",
+            "marina-baixa-stop-bnd-286",
+            "marina-baixa-stop-bnd-342",
+            "marina-baixa-stop-bnd-290",
+            "marina-baixa-stop-bnd-291",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "026",
+          "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/026-benidorm-centro-els-tolls-colonia-madrid-centros-medicos-foietes-cuba-nicaragua-pdevesa-a-suarez?fecha=26%2F06%2F2026"
+        },
+        {
+          "source": "benidorm-local-special-source-capture",
+          "sourceRouteId": "026",
+          "sourceFile": "line-026-ordered-capture.json"
+        }
+      ]
+    }
+  ]
+}

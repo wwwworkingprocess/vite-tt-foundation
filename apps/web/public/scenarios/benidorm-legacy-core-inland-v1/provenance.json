@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-core-inland-v1",
+  "generatedAt": "2026-08-04T16:23:00+02:00",
+  "sources": [
+    {
+      "sourceId": "avanza-line-007-current",
+      "name": "Avanza / LLorente Bus Line 007 ordered stop lists",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/007?fecha=23%2F12%2F2025",
+      "role": "Official route identity, ordered ida/vuelta occurrences, stop codes and names."
+    },
+    {
+      "sourceId": "avanza-line-008-current",
+      "name": "Avanza / LLorente Bus Line 008 ordered stop lists",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/008?fecha=05%2F02%2F2026",
+      "role": "Official route identity, ordered ida/vuelta occurrences, stop codes and names."
+    },
+    {
+      "sourceId": "avanza-line-009-current",
+      "name": "Avanza / LLorente Bus Line 009 route page",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/009-jaime-i-alfonso-puchades-comunitat-valenciana-salto-del-agua",
+      "role": "Official route identity and current service scope; the page did not expose a complete machine-readable ordered list in the captured response."
+    },
+    {
+      "sourceId": "moovit-line-009-current-pdf",
+      "name": "Moovit Line 009 schedule and route PDF",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://appassets.mvtdev.com/map/149/l/4487/83699963.pdf",
+      "role": "Secondary current evidence for both independently ordered nine-stop directions and weekday operating windows."
+    },
+    {
+      "sourceId": "accepted-benidorm-identity-registry",
+      "name": "Accepted Benidorm legacy component scenarios",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "benidorm-legacy-core-v1, benidorm-legacy-core-west-v1",
+      "role": "Exact StopNode and StopPlace reuse for every previously accepted composite operator stop code."
+    },
+    {
+      "sourceId": "public-address-and-map-context",
+      "name": "Public address and corridor map context for three new identities",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "See coordinateEvidence below.",
+      "role": "Development-stage geometry only; not treated as authoritative stop-platform coordinates."
+    }
+  ],
+  "coordinateEvidence": [
+    {
+      "operatorStopCode": "BND 154",
+      "method": "secondary-address-geocode-anchor",
+      "source": "Public address geocode for Av. Beniardá, 16.",
+      "position": {
+        "latitude": 38.54713,
+        "longitude": -0.1333214
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement recommended"
+    },
+    {
+      "operatorStopCode": "BND 183",
+      "method": "public-map-corridor-offset-anchor",
+      "source": "Public map context locating the Tivoli stop approximately 310 m south of a mapped point at 38.56312,-0.13360.",
+      "position": {
+        "latitude": 38.56033,
+        "longitude": -0.1336
+      },
+      "reviewStatus": "approximate corridor anchor; exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 247",
+      "method": "same-address-opposite-direction-anchor-from-accepted-bnd-246",
+      "source": "Same published address as accepted opposite-direction code BND 246.",
+      "position": {
+        "latitude": 38.5481,
+        "longitude": -0.1173
+      },
+      "reviewStatus": "distinct identity retained despite exact-coordinate equality"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "marina-baixa-composite-stop-identity-v1",
+      "description": "Uses the complete BND operator code as the stable identity suffix and creates a singleton StopPlace for each new directional StopNode."
+    },
+    {
+      "transformationId": "benidorm-core-inland-independent-directions-v1",
+      "description": "Stores six source-backed directional lists independently with closesLoop false; no reverse sequence or closing edge is inferred."
+    },
+    {
+      "transformationId": "benidorm-line-009-dual-source-reconciliation-v1",
+      "description": "Uses the official operator page for route identity and a current secondary PDF for both ordered directions. Operator codes are reconciled by exact address/name matches against the accepted identity registry."
+    },
+    {
+      "transformationId": "accepted-identity-reuse-v1",
+      "description": "Reuses 31 complete StopNode and StopPlace objects exactly from accepted Benidorm component scenarios; creates 3 new composite identities."
+    },
+    {
+      "transformationId": "benidorm-inland-development-coordinate-reconciliation-v1",
+      "description": "Uses 31 exact accepted positions and three explicitly documented development-stage anchors for new identities."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Adds exactly one catalog descriptor and computes asset and aggregate SHA-256 values from final serialized bytes."
+    }
+  ],
+  "warnings": [
+    "The project-owner naming policy uses legacy, while route evidence is a current 2025-2026 capture.",
+    "Line 009 ordered sequences are supported by a current secondary route PDF because the official page capture supplied route identity but not a complete ordered list.",
+    "The three new coordinates are development-stage. Replace them only with exact authoritative coordinates while preserving accepted composite IDs.",
+    "BND 246 and BND 247 remain distinct directional StopNodes and singleton StopPlaces despite the same public address and equal development coordinates.",
+    "StopNode.sourceReferences is empty for new nodes because no individual OSM platform or stop_position object was adopted as strict runtime evidence."
+  ],
+  "identityNameDiscrepancies": [
+    {
+      "operatorStopCode": "BND 199",
+      "acceptedName": "Av. Jaime I, fr. 22",
+      "sourceName": "Av. Jaime I, Fr. 22",
+      "decision": "reused accepted complete object exactly"
+    }
+  ]
+}

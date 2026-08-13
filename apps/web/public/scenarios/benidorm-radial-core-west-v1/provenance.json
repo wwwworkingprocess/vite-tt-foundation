@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-core-west-v1",
+  "generatedAt": "2026-08-04T15:39:00+02:00",
+  "sources": [
+    {
+      "sourceId": "avanza-line-002-current",
+      "name": "Avanza / LLorente Bus Line 002 ordered stop lists",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/002-rincon-loix-mediterraneo-bnd-centro-europa-a-puchades-parque-elche-jaime-i-p-devesa-bali-calas-centros-comerciales?fecha=26%2F06%2F2026",
+      "role": "Official route identity and ordered ida/vuelta occurrences, stop codes and names."
+    },
+    {
+      "sourceId": "avanza-line-003-current",
+      "name": "Avanza / LLorente Bus Line 003 ordered stop lists and timetable",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/003",
+      "role": "Official route identity, ordered ida/vuelta occurrences, stop codes, names and current termini."
+    },
+    {
+      "sourceId": "avanza-july-2026-works-notice",
+      "name": "Avanza notice: route changes on Lines 02 and 03",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/de/nachrichten/aviso-cambio-de-recorrido-en-lineas-02-y-03",
+      "role": "Establishes that the captured Line 002 and 003 sequences include temporary routing caused by Av. Rey Jaime I works, effective 2026-07-01 until works end."
+    },
+    {
+      "sourceId": "benidorm-legacy-core-v1",
+      "name": "Accepted Benidorm core scenario identity registry",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "benidorm-legacy-core-v1/stops.json",
+      "role": "Exact StopNode and StopPlace reuse for all shared composite operator stop codes."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "marina-baixa-composite-stop-identity-v1",
+      "description": "Uses the full operator stop code, including BND/FIN/VIL prefix, as the stable StopNode suffix and creates singleton StopPlaces for new identities."
+    },
+    {
+      "transformationId": "benidorm-core-west-independent-directions-v1",
+      "description": "Stores four official ida/vuelta lists independently with closesLoop false and never infers reverse edges."
+    },
+    {
+      "transformationId": "benidorm-core-west-july-2026-works-snapshot-v1",
+      "description": "Models the current official route-page order captured on 2026-08-04, which reflects the temporary July 2026 Line 002/003 works routing. The pre-works route is not reconstructed."
+    },
+    {
+      "transformationId": "benidorm-line-003-canonical-full-service-v1",
+      "description": "Selects the full BND 385 to FIN 617 and FIN 617 to BND 385 ordered lists as the canonical Line 003 representation; timetable-supported early short workings at VIL 703 are recorded but not modeled as sequential alternative patterns."
+    },
+    {
+      "transformationId": "accepted-identity-reuse-v1",
+      "description": "Reuses 35 complete StopNode and StopPlace objects byte-semantically from benidorm-legacy-core-v1; creates 74 new composite identities."
+    },
+    {
+      "transformationId": "benidorm-west-development-coordinate-reconciliation-v1",
+      "description": "Uses 35 exact accepted positions, 66 explicit address/corridor anchors, and 8 ordered-route interpolations. New coordinates remain development-stage review items."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Adds exactly one catalog descriptor and recomputes asset and aggregate SHA-256 values from serialized bytes."
+    },
+    {
+      "transformationId": "benidorm-radial-family-rename-v1",
+      "description": "Renames package identity from benidorm-legacy-core-west-v1 to benidorm-radial-core-west-v1 without changing route/pattern objects, StopNode/StopPlace identities, coordinates, or settlement assignments."
+    }
+  ],
+  "warnings": [
+    "The project-owner naming policy uses legacy, while ordered route evidence is a current 2026 capture.",
+    "The Line 002 and 003 source pages reflect a temporary July 2026 works routing. This package is a dated topology snapshot, not a claim about the permanent post-works network.",
+    "Line 003 has timetable-supported early short workings beginning or ending at VIL 703; they are recorded in provenance and not represented as sequential alternative patterns on the canonical Route.",
+    "New FIN and VIL identities are assigned to Finestrat and La Vila Joiosa respectively from the operator composite prefix; exact municipal-boundary review remains appropriate for mixed Cala corridor stops.",
+    "New address/corridor and interpolated coordinates are explicitly provisional. Identity-preserving exact-source replacement is required before treating geography as authoritative.",
+    "Different composite stop codes remain separate StopNodes and singleton StopPlaces even when names or positions are close.",
+    "StopNode.sourceReferences is empty for new nodes because no individual OSM platform/stop_position object was adopted as strict runtime evidence."
+  ]
+}

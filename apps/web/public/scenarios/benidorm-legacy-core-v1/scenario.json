@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-core-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Benidorm Legacy Core Network - Lines 001, 004 and 005",
+  "primarySettlementId": "es-benidorm",
+  "settlementIds": [
+    "es-benidorm"
+  ],
+  "contentHash": "2112c66ed052f79512489f64602c4db6dc289a9832905cc8854a66349ffd96ec",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "91517ff93bcaf55569663dcf0de7835ef97712be034b407e505dec724b11d3ab"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "f0ec5023db60a2c059c6f15d4e9fa2c0ce539ba794c6f5c0db311b6f51bf2d92"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "7ef76ee86277bed07bccd6152f4d19e18767e901aadf266cb6ad51a68da5a099"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "f18064c7069f6a2cba1448eef329227cc75df383e2a74a2c4ed02a513168966c"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "806e98bfd42c9670a9184a990da6fa841993316e99ecbaafda1a0ff19112e0a8"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

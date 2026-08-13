@@ -1,0 +1,461 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-north-v1",
+  "generatedAt": "2026-08-04T18:12:00+02:00",
+  "sources": [
+    {
+      "sourceId": "avanza-line-016-ordered",
+      "name": "Avanza / LLorente Bus Line 016 official ordered route page",
+      "url": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/016?fecha=10%2F06%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Route identity and independently ordered ida/vuelta stop codes and names."
+    },
+    {
+      "sourceId": "avanza-line-018-ordered",
+      "name": "Avanza / LLorente Bus Line 018 official route page",
+      "url": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/018-cala-finestrat-bali-perez-devesa-jaime-i-a-puchades-bnd-centro-mediterraneo-rincon-loix-s-ochoa-la-nucia-polop-fuentes-algar?fecha=26%2F06%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Current route identity and ordered route evidence."
+    },
+    {
+      "sourceId": "avanza-line-018-print-cross-check",
+      "name": "Avanza / LLorente Bus Line 018 complete official print capture",
+      "url": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/018?fecha=14%2F01%2F2025",
+      "accessedAt": "2026-08-04",
+      "role": "Complete ordered-list cross-check for the current route page."
+    },
+    {
+      "sourceId": "avanza-line-052-ordered",
+      "name": "Avanza / LLorente Bus Line 052 official ordered route page",
+      "url": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/052?fecha=20%2F07%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Route identity and independently ordered ida/vuelta stop codes and names."
+    },
+    {
+      "sourceId": "avanza-line-055-prefix-reconciliation",
+      "name": "Avanza / LLorente Bus Line 055 official ordered route page",
+      "url": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/055?fecha=12%2F06%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Cross-route evidence that numeric stops 1110 and 1111 at C/ Aitana belong to El Castell de Guadalest rather than Polop."
+    },
+    {
+      "sourceId": "accepted-benidorm-registry",
+      "name": "Previously accepted Benidorm legacy component scenarios",
+      "role": "Exact StopNode and StopPlace identity reuse.",
+      "scenarioIds": [
+        "benidorm-legacy-attractions-v1",
+        "benidorm-legacy-coast-crosscity-v1",
+        "benidorm-legacy-core-inland-v1",
+        "benidorm-legacy-core-v1",
+        "benidorm-legacy-core-west-v1",
+        "benidorm-legacy-east-corridor-v1",
+        "benidorm-legacy-finestrat-v1",
+        "benidorm-legacy-local-special-v1"
+      ]
+    }
+  ],
+  "identityContract": {
+    "stableKey": "operator composite stop code including municipality prefix",
+    "stopNodePattern": "marina-baixa-stop-<prefix-lower>-<number>",
+    "stopPlacePattern": "marina-baixa-place-<prefix-lower>-<number>",
+    "physicalGroupingPolicy": "singleton StopPlace per composite StopNode unless separately approved"
+  },
+  "prefixNormalization": [
+    {
+      "rawCodes": [
+        "1113",
+        "1114",
+        "1115",
+        "1116",
+        "1117",
+        "1118",
+        "1124",
+        "1125"
+      ],
+      "normalizedPrefix": "NUC",
+      "basis": "The official rendered route page omits the prefix on some occurrences; adjacent explicitly prefixed La Nucia stops and La Nucia street/urbanization names make the municipality assignment unambiguous."
+    },
+    {
+      "rawCodes": [
+        "1110",
+        "1111"
+      ],
+      "normalizedPrefix": "GUA",
+      "basis": "The official page labels the stops C/ Aitana. Cross-route Line 055 evidence identifies this as El Castell de Guadalest; the codes are kept separate from GUA 30 and from Polop identities."
+    }
+  ],
+  "coordinateSummary": {
+    "methods": {
+      "development-av-marina-baixa-la-nucia-corridor": 4,
+      "development-av-villajoyosa-corridor": 1,
+      "development-callosa-alacant-road-area": 1,
+      "development-callosa-colomer-corridor": 1,
+      "development-cv70-central-la-nucia-corridor": 4,
+      "development-cv70-la-nucia-corridor": 2,
+      "development-cv70-south-la-nucia-corridor": 2,
+      "development-fonts-algar-area-anchor": 1,
+      "development-fonts-algar-dinopark-area-anchor": 1,
+      "development-guadalest-carrer-aitana-corridor": 2,
+      "development-guadalest-parking-area-anchor": 1,
+      "development-la-carretera-la-nucia-corridor": 2,
+      "development-panorama-corridor": 2,
+      "development-partida-torrent-la-nucia-corridor": 2,
+      "development-pinar-de-garita-corridor": 2,
+      "development-polop-callosa-road-corridor": 1,
+      "development-polop-chirles-road-corridor": 1,
+      "development-polop-gabriel-miro-area": 1,
+      "reused-accepted-exact": 90
+    },
+    "newCoordinateEvidence": [
+      {
+        "operatorStopCode": "BND 161",
+        "method": "development-av-villajoyosa-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5329,
+          "longitude": -0.1571
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "CSA 50",
+        "method": "development-fonts-algar-area-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.659,
+          "longitude": -0.099
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "CSA 51",
+        "method": "development-fonts-algar-dinopark-area-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.661,
+          "longitude": -0.0975
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "CSA 1107",
+        "method": "development-callosa-alacant-road-area",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.647,
+          "longitude": -0.122
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "CSA 1108",
+        "method": "development-callosa-colomer-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6385,
+          "longitude": -0.126
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "GUA 30",
+        "method": "development-guadalest-parking-area-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6765,
+          "longitude": -0.1996
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "GUA 1110",
+        "method": "development-guadalest-carrer-aitana-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6759,
+          "longitude": -0.1988
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "GUA 1111",
+        "method": "development-guadalest-carrer-aitana-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6761,
+          "longitude": -0.1985
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 10",
+        "method": "development-la-carretera-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6174,
+          "longitude": -0.1224
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 11",
+        "method": "development-la-carretera-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6176,
+          "longitude": -0.1221
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 13",
+        "method": "development-av-marina-baixa-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6145,
+          "longitude": -0.122
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 15",
+        "method": "development-cv70-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5752,
+          "longitude": -0.1267
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 16",
+        "method": "development-cv70-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.575,
+          "longitude": -0.127
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 17",
+        "method": "development-cv70-central-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.606,
+          "longitude": -0.1237
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 18",
+        "method": "development-cv70-central-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6062,
+          "longitude": -0.1234
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 39",
+        "method": "development-cv70-central-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5999,
+          "longitude": -0.1242
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 42",
+        "method": "development-cv70-central-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5997,
+          "longitude": -0.1245
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 43",
+        "method": "development-cv70-south-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.565,
+          "longitude": -0.128
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 44",
+        "method": "development-cv70-south-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5652,
+          "longitude": -0.1277
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 45",
+        "method": "development-av-marina-baixa-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6147,
+          "longitude": -0.1217
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 1113",
+        "method": "development-av-marina-baixa-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6112,
+          "longitude": -0.1224
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 1114",
+        "method": "development-panorama-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5922,
+          "longitude": -0.1251
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 1115",
+        "method": "development-pinar-de-garita-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5842,
+          "longitude": -0.126
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 1116",
+        "method": "development-panorama-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.592,
+          "longitude": -0.1254
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 1117",
+        "method": "development-av-marina-baixa-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.611,
+          "longitude": -0.1227
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 1118",
+        "method": "development-pinar-de-garita-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.584,
+          "longitude": -0.1263
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 1124",
+        "method": "development-partida-torrent-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.62,
+          "longitude": -0.125
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "NUC 1125",
+        "method": "development-partida-torrent-la-nucia-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6202,
+          "longitude": -0.1253
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "POL 20",
+        "method": "development-polop-callosa-road-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6225,
+          "longitude": -0.1305
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "POL 21",
+        "method": "development-polop-gabriel-miro-area",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6228,
+          "longitude": -0.1288
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "POL 22",
+        "method": "development-polop-chirles-road-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.625,
+          "longitude": -0.133
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      }
+    ],
+    "warning": "All newly created positions are development-stage corridor reconciliations. They must be replaced with exact authoritative stop coordinates without changing composite IDs."
+  },
+  "topologyDecisions": [
+    "Lines 016, 018 and 052 are each stored as two independently ordered open patterns.",
+    "All six patterns use closesLoop false; no reverse sequence or last-to-first edge is inferred.",
+    "Lines 016 and 018 share the complete Cala Finestrat–Benidorm–La Nucia trunk but diverge after Polop toward Guadalest and Fonts de l’Algar.",
+    "Line 052 remains a shorter Callosa–Polop–La Nucia–Benidorm service rather than being concatenated with either long-distance route.",
+    "Shared terminals may end one direction and begin another without converting the pair into a closed cycle."
+  ],
+  "identityDecisions": [
+    "All accepted shared StopNodes and StopPlaces are copied exactly from prior Benidorm scenarios.",
+    "NUC directional pairs and repeated CV-70 names remain distinct because their operator codes differ.",
+    "GUA 1110 and GUA 1111 remain separate C/ Aitana directional identities and are not merged with GUA 30.",
+    "CSA 50 and CSA 51 remain separate Fonts de l’Algar and Dinopark identities.",
+    "Every new StopNode receives a singleton StopPlace; proximity and matching names do not merge identities.",
+    "StopNode.sourceReferences is empty for new nodes because no individual OSM platform or stop_position object was adopted as strict runtime evidence."
+  ],
+  "reviewItems": [
+    {
+      "type": "coordinates",
+      "required": true,
+      "detail": "Replace all 31 newly created development positions with exact authoritative coordinates while preserving composite IDs and cross-package exact equality."
+    },
+    {
+      "type": "unprefixed-code-normalization",
+      "required": true,
+      "detail": "Confirm the operator’s canonical machine prefixes for page-rendered numeric codes 1110–1118 and 1124–1125. Current namespace normalization is source-context based and recorded explicitly."
+    },
+    {
+      "type": "line-018-date-cross-check",
+      "required": false,
+      "detail": "The current 2026 route page was cross-checked against a complete 2025 official print sequence. Recheck for route drift if a newer complete printable capture becomes available."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "benidorm-radial-family-rename-v1",
+      "description": "Renames package identity from benidorm-legacy-north-v1 to benidorm-radial-north-v1 without changing route/pattern objects, StopNode/StopPlace identities, coordinates, or settlement assignments."
+    }
+  ]
+}

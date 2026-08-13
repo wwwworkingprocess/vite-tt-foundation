@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-finestrat-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Benidorm Radial Finestrat Network - Lines 014 and 015",
+  "primarySettlementId": "es-benidorm",
+  "settlementIds": [
+    "es-benidorm",
+    "es-finestrat",
+    "es-la-vila-joiosa"
+  ],
+  "contentHash": "0099f5751d89436e30702f1e769d8f4f4893f034c295bf30e97113b475211a71",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "2d121e907152f60ad5616cc7bf3165a692560a9079d692b3cb33ad1dbc806e5f"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "57c4083f21fec18645ff87e496bcd04409161a8b1c1beace881636f0f79031f6"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "fc2dd6899a6c74048fdd12f633c2dfd089b3e831e33bca26bf7c382223c1ab28"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "a23fb355651b20d3d56562f3b25660963e79a519e322125a462c3a5cf363784b"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "51edede2970f8b846688e9d3becbd309b6df9805e4bbe071351855c67b9bb2fa"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

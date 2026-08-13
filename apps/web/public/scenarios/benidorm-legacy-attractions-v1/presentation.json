@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-attractions-v1",
+  "title": "Benidorm Legacy Attractions Network - Lines 011 and 042",
+  "initialView": {
+    "center": {
+      "latitude": 38.551503036,
+      "longitude": -0.1267445
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "benidorm-011": {
+      "label": "011",
+      "color": "#1976d2"
+    },
+    "benidorm-042": {
+      "label": "042",
+      "color": "#ef6c00"
+    }
+  },
+  "notes": [
+    "Attractions discovery component for the Benidorm legacy scenario family.",
+    "Both routes use independently ordered official outward/return patterns with closesLoop false.",
+    "Line 011 links the bus station and central/eastern corridor with Aqualandia/Mundomar.",
+    "Line 042 links Av. Beniardá with Terra Natura and Terra Mítica.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

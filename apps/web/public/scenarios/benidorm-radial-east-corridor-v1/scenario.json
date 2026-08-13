@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-east-corridor-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Benidorm Radial East Corridor Network - Lines 010 and 050",
+  "primarySettlementId": "es-benidorm",
+  "settlementIds": [
+    "es-benidorm",
+    "es-lalfas-del-pi",
+    "es-altea"
+  ],
+  "contentHash": "53bac7c91fb480f92bc294bff8748019fce59bb8e099dd7bee7efec77d55a488",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "72069728be8b6003c52b6305b776b53715f58df450e40e25c5b71e7a4a6a8611"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "e6c44dc5a98680ba20ae611f9273af4556599704004cb2cd1349955a25a4c6fd"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "b989e7ee9e4474e2742f3b5b633d67ab8c0ac09f9cd296d05211703c995e718c"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "732e6b679b0c61eab1a583dbcb9264e169569be9ee80c59258aa74591f6f715a"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "cfe668fe23a5aca91f420761b6a88d4ada63e7b08500399112a008acd639383a"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

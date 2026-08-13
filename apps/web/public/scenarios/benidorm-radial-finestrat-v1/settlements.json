@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-finestrat-v1",
+  "settlements": [
+    {
+      "settlementId": "es-benidorm",
+      "name": "Benidorm",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.55045,
+        "longitude": -0.14865
+      },
+      "bounds": {
+        "south": 38.52844,
+        "west": -0.187524,
+        "north": 38.57246,
+        "east": -0.109776
+      }
+    },
+    {
+      "settlementId": "es-finestrat",
+      "name": "Finestrat",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.5466,
+        "longitude": -0.1819
+      },
+      "bounds": {
+        "south": 38.520932,
+        "west": -0.219224,
+        "north": 38.572268,
+        "east": -0.144576
+      }
+    },
+    {
+      "settlementId": "es-la-vila-joiosa",
+      "name": "La Vila Joiosa",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.5282,
+        "longitude": -0.16885
+      },
+      "bounds": {
+        "south": 38.5262,
+        "west": -0.1725,
+        "north": 38.5302,
+        "east": -0.1652
+      }
+    }
+  ]
+}

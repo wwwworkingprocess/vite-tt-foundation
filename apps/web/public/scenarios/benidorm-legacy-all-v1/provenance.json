@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-all-v1",
+  "generatedAt": "2026-08-13T13:37:00+02:00",
+  "sources": [
+    {
+      "sourceId": "benidorm-legacy-core-v1",
+      "name": "Accepted component scenario benidorm-legacy-core-v1",
+      "scenarioId": "benidorm-legacy-core-v1",
+      "contentHash": "2112c66ed052f79512489f64602c4db6dc289a9832905cc8854a66349ffd96ec",
+      "sourceFile": "scenarios/benidorm-legacy-core-v1/scenario.json"
+    },
+    {
+      "sourceId": "benidorm-legacy-core-inland-v1",
+      "name": "Accepted component scenario benidorm-legacy-core-inland-v1",
+      "scenarioId": "benidorm-legacy-core-inland-v1",
+      "contentHash": "8146a3f4f61713749f45f89091b98a26fc3f97a8f23714b258be986e81b5bdb3",
+      "sourceFile": "scenarios/benidorm-legacy-core-inland-v1/scenario.json"
+    },
+    {
+      "sourceId": "benidorm-legacy-local-special-v1",
+      "name": "Accepted component scenario benidorm-legacy-local-special-v1",
+      "scenarioId": "benidorm-legacy-local-special-v1",
+      "contentHash": "96d0fbd4d21c972a94914488bf5acd7b96294604458c09bcb1666c8250c2b210",
+      "sourceFile": "scenarios/benidorm-legacy-local-special-v1/scenario.json"
+    },
+    {
+      "sourceId": "benidorm-legacy-attractions-v1",
+      "name": "Accepted component scenario benidorm-legacy-attractions-v1",
+      "scenarioId": "benidorm-legacy-attractions-v1",
+      "contentHash": "527349ea9764a9170f474d0c775741ae612a0806298af7eade71d8f6958acf1c",
+      "sourceFile": "scenarios/benidorm-legacy-attractions-v1/scenario.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "benidorm-legacy-all-v1-component-union-v1",
+      "description": "Copies route and pattern objects from the accepted city component scenarios, orders routes numerically, and unions StopNodes/StopPlaces by stable ID; any complete-object conflict is a hard failure."
+    },
+    {
+      "transformationId": "benidorm-legacy-all-v1-routed-identity-projection-v1",
+      "description": "Includes only StopNodes referenced by copied route patterns and only their referenced StopPlaces; no name, proximity or coordinate merge is performed."
+    },
+    {
+      "transformationId": "benidorm-legacy-all-v1-settlement-bounds-union-v1",
+      "description": "Preserves settlement identity fields and derives package-local center/bounds as the union of the corresponding accepted component settlement bounds, matching the approved population-workflow viewport semantics."
+    },
+    {
+      "transformationId": "benidorm-legacy-all-v1-presentation-v1",
+      "description": "Copies component route styles, combines them in numerical route order, and provides one aggregate initial view. Presentation metadata creates no graph semantics."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Adds one catalog descriptor and recomputes all asset and aggregate SHA-256 values from serialized bytes."
+    }
+  ],
+  "warnings": [
+    "This is a pure merge of accepted Benidorm city components; no route sequence, pattern, operator identity, coordinate, settlement assignment or StopPlace mapping was rediscovered or normalized during the merge.",
+    "The included route scope is exactly 001, 004, 005, 006, 007, 008, 009, 011, 026, 042.",
+    "No continuous vehicle cycle or reverse pattern is inferred by this merge.",
+    "Development-stage coordinates and all component-level coordinate-review warnings are inherited unchanged; the merge creates no new stop position.",
+    "The project-owner naming policy uses legacy, while ordered route evidence and geography are current 2026 captures; this package does not claim a historical timetable date.",
+    "Address-reconciled development coordinates are explicitly provisional. Replace them only through an identity-preserving reviewed update using exact official GTFS or operator map coordinates.",
+    "Line 001 has source-backed BND 229 short workings; they are not represented as sequential patterns on the canonical Route.",
+    "Line 004 advertises a bracketed Ramón y Cajal form, but the captured ordered lists do not prove its sequence, so it is not modeled.",
+    "Different composite stop codes remain separate StopNodes and singleton StopPlaces even when names or positions are close.",
+    "StopNode.sourceReferences is empty because no individual OSM platform/stop_position object was adopted as strict runtime evidence.",
+    "Powered by MITRAMS for the referenced official NAP/GVA feed ecosystem. Attribution: https://www.transportes.gob.es/",
+    "The project-owner naming policy uses legacy, while route evidence is a current 2025-2026 capture.",
+    "Line 009 ordered sequences are supported by a current secondary route PDF because the official page capture supplied route identity but not a complete ordered list.",
+    "The three new coordinates are development-stage. Replace them only with exact authoritative coordinates while preserving accepted composite IDs.",
+    "BND 246 and BND 247 remain distinct directional StopNodes and singleton StopPlaces despite the same public address and equal development coordinates.",
+    "StopNode.sourceReferences is empty for new nodes because no individual OSM platform or stop_position object was adopted as strict runtime evidence.",
+    "The project-owner naming policy uses legacy, while route evidence is a current 2026 capture.",
+    "Line 006 is a limited Wednesday/Sunday market service; its operating-day rule is provenance and does not create additional route patterns.",
+    "The new coordinates are development-stage. Replace them only with exact authoritative coordinates while preserving accepted composite IDs."
+  ]
+}

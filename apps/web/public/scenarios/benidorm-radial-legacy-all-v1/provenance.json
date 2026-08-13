@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-legacy-all-v1",
+  "generatedAt": "2026-08-13T13:37:00+02:00",
+  "sources": [
+    {
+      "sourceId": "benidorm-radial-core-west-v1",
+      "name": "Accepted component scenario benidorm-radial-core-west-v1",
+      "scenarioId": "benidorm-radial-core-west-v1",
+      "contentHash": "b68c4a71fc97b069709ddd448692e837852560e9029a5aea365e289a83b11e48",
+      "sourceFile": "scenarios/benidorm-radial-core-west-v1/scenario.json"
+    },
+    {
+      "sourceId": "benidorm-radial-east-corridor-v1",
+      "name": "Accepted component scenario benidorm-radial-east-corridor-v1",
+      "scenarioId": "benidorm-radial-east-corridor-v1",
+      "contentHash": "53bac7c91fb480f92bc294bff8748019fce59bb8e099dd7bee7efec77d55a488",
+      "sourceFile": "scenarios/benidorm-radial-east-corridor-v1/scenario.json"
+    },
+    {
+      "sourceId": "benidorm-radial-coast-crosscity-v1",
+      "name": "Accepted component scenario benidorm-radial-coast-crosscity-v1",
+      "scenarioId": "benidorm-radial-coast-crosscity-v1",
+      "contentHash": "cedb86d11e5d10c5b176027cb26ea519c58ee1d885da75e8ffa2bdc233b94ddf",
+      "sourceFile": "scenarios/benidorm-radial-coast-crosscity-v1/scenario.json"
+    },
+    {
+      "sourceId": "benidorm-radial-finestrat-v1",
+      "name": "Accepted component scenario benidorm-radial-finestrat-v1",
+      "scenarioId": "benidorm-radial-finestrat-v1",
+      "contentHash": "0099f5751d89436e30702f1e769d8f4f4893f034c295bf30e97113b475211a71",
+      "sourceFile": "scenarios/benidorm-radial-finestrat-v1/scenario.json"
+    },
+    {
+      "sourceId": "benidorm-radial-north-v1",
+      "name": "Accepted component scenario benidorm-radial-north-v1",
+      "scenarioId": "benidorm-radial-north-v1",
+      "contentHash": "5a3f16596763493f02b6df900e50d630ce276d908166e20b3dd098a796fe43ff",
+      "sourceFile": "scenarios/benidorm-radial-north-v1/scenario.json"
+    },
+    {
+      "sourceId": "benidorm-radial-panoramic-v1",
+      "name": "Accepted component scenario benidorm-radial-panoramic-v1",
+      "scenarioId": "benidorm-radial-panoramic-v1",
+      "contentHash": "7146023bd0ccabaea13126b20d3834b6ae0b68047b56589d024e3314a5e59181",
+      "sourceFile": "scenarios/benidorm-radial-panoramic-v1/scenario.json"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "benidorm-radial-legacy-all-v1-component-union-v1",
+      "description": "Copies route and pattern objects from the accepted radial component scenarios, orders routes numerically, and unions StopNodes/StopPlaces by stable ID; any complete-object conflict is a hard failure."
+    },
+    {
+      "transformationId": "benidorm-radial-legacy-all-v1-routed-identity-projection-v1",
+      "description": "Includes only StopNodes referenced by copied route patterns and only their referenced StopPlaces; no name, proximity or coordinate merge is performed."
+    },
+    {
+      "transformationId": "benidorm-radial-legacy-all-v1-settlement-bounds-union-v1",
+      "description": "Preserves settlement identity fields and derives package-local center/bounds as the union of the corresponding accepted component settlement bounds, matching the approved population-workflow viewport semantics."
+    },
+    {
+      "transformationId": "benidorm-radial-legacy-all-v1-presentation-v1",
+      "description": "Copies component route styles, combines them in numerical route order, and provides one aggregate initial view. Presentation metadata creates no graph semantics."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Adds one catalog descriptor and recomputes all asset and aggregate SHA-256 values from serialized bytes."
+    }
+  ],
+  "warnings": [
+    "This is a pure merge of accepted Benidorm radial components; no route sequence, pattern, operator identity, coordinate, settlement assignment or StopPlace mapping was rediscovered or normalized during the merge.",
+    "The included route scope is exactly 002, 003, 010, 012, 014, 015, 016, 018, 030, 031, 050, 052, 054.",
+    "No continuous vehicle cycle or reverse pattern is inferred by this merge.",
+    "Development-stage coordinates and all component-level coordinate-review warnings are inherited unchanged; the merge creates no new stop position.",
+    "The project-owner naming policy uses legacy, while ordered route evidence is a current 2026 capture.",
+    "The Line 002 and 003 source pages reflect a temporary July 2026 works routing. This package is a dated topology snapshot, not a claim about the permanent post-works network.",
+    "Line 003 has timetable-supported early short workings beginning or ending at VIL 703; they are recorded in provenance and not represented as sequential alternative patterns on the canonical Route.",
+    "New FIN and VIL identities are assigned to Finestrat and La Vila Joiosa respectively from the operator composite prefix; exact municipal-boundary review remains appropriate for mixed Cala corridor stops.",
+    "New address/corridor and interpolated coordinates are explicitly provisional. Identity-preserving exact-source replacement is required before treating geography as authoritative.",
+    "Different composite stop codes remain separate StopNodes and singleton StopPlaces even when names or positions are close.",
+    "StopNode.sourceReferences is empty for new nodes because no individual OSM platform/stop_position object was adopted as strict runtime evidence."
+  ]
+}

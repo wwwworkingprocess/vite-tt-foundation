@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-legacy-all-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Benidorm Radial Legacy Network - All Outward Lines",
+  "primarySettlementId": "es-benidorm",
+  "settlementIds": [
+    "es-benidorm",
+    "es-finestrat",
+    "es-la-vila-joiosa",
+    "es-lalfas-del-pi",
+    "es-altea",
+    "es-la-nucia",
+    "es-polop",
+    "es-callosa-den-sarria",
+    "es-el-castell-de-guadalest"
+  ],
+  "contentHash": "e219cb7c5161de65f7a0630a63dc7e87bbe50eb2a2d5c0064fd7de0aff8b0c49",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "a81053816aa60523efcfab7aa4841c898115d71cfa5bac8a8a28032a3862e161"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "36701e1571137e0dc88397625881fc22c64965b3fbf04414067bd1112f32cc0c"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "8cde66843dec29e7a58bf5d7aee42868a8e2f5ea32be93d340d6866fb0e82dee"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "f358aa38b61e963cfc7ceeee29a679a1a911f397805243878a1729689c09bcc9"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "ecd5c823e8afd392199657c88f1aae8bdde5ca55b6de29b169042c35a6bf7958"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

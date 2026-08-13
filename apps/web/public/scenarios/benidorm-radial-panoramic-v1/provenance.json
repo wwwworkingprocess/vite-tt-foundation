@@ -1,0 +1,211 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-panoramic-v1",
+  "generatedAt": "2026-08-04T18:21:00+02:00",
+  "sources": [
+    {
+      "sourceId": "avanza-line-030-ordered",
+      "name": "Avanza / LLorente Bus Line 030 official ordered print page",
+      "url": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/030?fecha=25%2F07%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Route identity and independently ordered ida/vuelta stop codes and names."
+    },
+    {
+      "sourceId": "avanza-line-031-current",
+      "name": "Avanza / LLorente Bus Line 031 current route page",
+      "url": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/031-rincon-loix-ametlla-de-mar-severo-ochoa-el-albir-puerto-altea-altea",
+      "accessedAt": "2026-08-04",
+      "role": "Current route identity and current ordered stop-page evidence."
+    },
+    {
+      "sourceId": "avanza-line-031-print-cross-check",
+      "name": "Avanza / LLorente Bus Line 031 complete official print capture",
+      "url": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/031?fecha=26%2F01%2F2025",
+      "accessedAt": "2026-08-04",
+      "role": "Complete ordered-list cross-check for the current route page."
+    },
+    {
+      "sourceId": "avanza-special-service-classification",
+      "name": "Avanza / LLorente Bus ticket types",
+      "url": "https://alicante.avanzagrupo.com/es/billetes-y-bonos/tipos-de-titulos",
+      "accessedAt": "2026-08-04",
+      "role": "Official classification of Lines 030 and 031 as special panoramic double-decker services."
+    },
+    {
+      "sourceId": "accepted-benidorm-registry",
+      "name": "Previously accepted Benidorm legacy component scenarios",
+      "role": "Exact StopNode and StopPlace identity reuse.",
+      "scenarioIds": [
+        "benidorm-legacy-attractions-v1",
+        "benidorm-legacy-coast-crosscity-v1",
+        "benidorm-legacy-core-inland-v1",
+        "benidorm-legacy-core-v1",
+        "benidorm-legacy-core-west-v1",
+        "benidorm-legacy-east-corridor-v1",
+        "benidorm-legacy-finestrat-v1",
+        "benidorm-legacy-local-special-v1",
+        "benidorm-legacy-north-v1"
+      ]
+    }
+  ],
+  "identityContract": {
+    "stableKey": "operator composite stop code including municipality prefix",
+    "stopNodePattern": "marina-baixa-stop-<prefix-lower>-<number>",
+    "stopPlacePattern": "marina-baixa-place-<prefix-lower>-<number>",
+    "physicalGroupingPolicy": "singleton StopPlace per composite StopNode unless separately approved"
+  },
+  "coordinateSummary": {
+    "methods": {
+      "development-albir-altea-road-corridor": 1,
+      "development-ametlla-de-mar-terminal-corridor": 1,
+      "development-av-la-nucia-altea-corridor": 2,
+      "development-cuesta-narices-altea-corridor": 1,
+      "development-n332-albir-altea-corridor": 1,
+      "development-palau-altea-corridor": 2,
+      "development-puerto-altea-corridor": 2,
+      "reused-accepted-exact": 86
+    },
+    "newCoordinateEvidence": [
+      {
+        "operatorStopCode": "ALF 567",
+        "method": "development-n332-albir-altea-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5792,
+          "longitude": -0.0607
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 417",
+        "method": "development-puerto-altea-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5946,
+          "longitude": -0.0566
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 418",
+        "method": "development-puerto-altea-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5901,
+          "longitude": -0.0587
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 419",
+        "method": "development-albir-altea-road-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5842,
+          "longitude": -0.0605
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 444",
+        "method": "development-av-la-nucia-altea-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5945,
+          "longitude": -0.0559
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 451",
+        "method": "development-palau-altea-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5985,
+          "longitude": -0.0527
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 461",
+        "method": "development-av-la-nucia-altea-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5919,
+          "longitude": -0.0582
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 463",
+        "method": "development-palau-altea-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5972,
+          "longitude": -0.0538
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 470",
+        "method": "development-cuesta-narices-altea-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5982,
+          "longitude": -0.053
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 257",
+        "method": "development-ametlla-de-mar-terminal-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5362,
+          "longitude": -0.1073
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      }
+    ],
+    "warning": "All newly created positions are development-stage corridor reconciliations. They must be replaced with exact authoritative stop coordinates without changing composite IDs."
+  },
+  "topologyDecisions": [
+    "Lines 030 and 031 are each stored as two independently ordered open patterns.",
+    "All four patterns use closesLoop false; no reverse sequence or last-to-first edge is inferred.",
+    "The operator classifies both lines as special panoramic double-decker services, but that fare/service classification does not convert either route into a closed graph cycle.",
+    "Line 030 reuses the established Benidorm–Finestrat–La Vila western corridor identities.",
+    "Line 031 reuses the established Benidorm–L’Alfàs–Altea eastern corridor identities and adds only previously unseen operator codes.",
+    "Shared terminals may end one direction and begin another without converting the pair into a closed cycle."
+  ],
+  "identityDecisions": [
+    "All accepted shared StopNodes and StopPlaces are copied exactly from prior Benidorm scenarios.",
+    "BND 257 remains distinct from nearby BND 345, BND 208 and BND 364 because its operator code is different.",
+    "ALT 451 is reused as the Line 031 Altea terminal in both directions without closing the route cycle.",
+    "ALT 417, ALT 418 and ALT 419 remain separate port/coastal directional identities.",
+    "Every new StopNode receives a singleton StopPlace; proximity and matching corridor descriptions do not merge identities.",
+    "StopNode.sourceReferences is empty for new nodes because no individual OSM platform or stop_position object was adopted as strict runtime evidence."
+  ],
+  "reviewItems": [
+    {
+      "type": "coordinates",
+      "required": true,
+      "detail": "Replace all 10 newly created development positions with exact authoritative coordinates while preserving composite IDs and cross-package exact equality."
+    },
+    {
+      "type": "line-031-current-print",
+      "required": false,
+      "detail": "The current route page was cross-checked against a complete 2025 official print sequence. Recheck for route drift if a newer complete printable capture becomes available."
+    },
+    {
+      "type": "operating-calendar",
+      "required": false,
+      "detail": "The operator identifies Lines 030 and 031 as special panoramic services. Operating-calendar/fare eligibility remains provenance and is not encoded as route graph topology."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "benidorm-radial-family-rename-v1",
+      "description": "Renames package identity from benidorm-legacy-panoramic-v1 to benidorm-radial-panoramic-v1 without changing route/pattern objects, StopNode/StopPlace identities, coordinates, or settlement assignments."
+    }
+  ]
+}

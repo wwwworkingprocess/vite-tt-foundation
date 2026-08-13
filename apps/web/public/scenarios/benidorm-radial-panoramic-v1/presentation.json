@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-panoramic-v1",
+  "title": "Benidorm Radial Panoramic Network - Lines 030 and 031",
+  "initialView": {
+    "center": {
+      "latitude": 38.5622,
+      "longitude": -0.11025
+    },
+    "zoom": 11
+  },
+  "routeStyles": {
+    "benidorm-030": {
+      "label": "030",
+      "color": "#8e24aa"
+    },
+    "benidorm-031": {
+      "label": "031",
+      "color": "#ef6c00"
+    }
+  },
+  "notes": [
+    "Panoramic double-decker discovery component for the Benidorm legacy scenario family.",
+    "Line 030 covers the western panoramic corridor from Rincón de Loix to Cala Finestrat.",
+    "Line 031 covers the eastern panoramic corridor from Rincón de Loix to Altea.",
+    "All four patterns use independently ordered source lists with closesLoop false.",
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Package identity moved into the Benidorm radial family; route, pattern, stop, coordinate and settlement data are otherwise unchanged."
+  ]
+}

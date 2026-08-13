@@ -1,0 +1,233 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-finestrat-v1",
+  "routes": [
+    {
+      "routeId": "benidorm-014",
+      "publicCode": "014",
+      "name": "Finestrat Pueblo - Cala de Finestrat - Pérez Devesa - Salto del Agua",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-014-ida",
+          "directionLabel": "Hacia Benidorm",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 35
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-fin-623",
+            "marina-baixa-stop-fin-624",
+            "marina-baixa-stop-fin-625",
+            "marina-baixa-stop-fin-607",
+            "marina-baixa-stop-fin-632",
+            "marina-baixa-stop-fin-672",
+            "marina-baixa-stop-fin-627",
+            "marina-baixa-stop-fin-637",
+            "marina-baixa-stop-fin-628",
+            "marina-baixa-stop-fin-651",
+            "marina-baixa-stop-vil-827",
+            "marina-baixa-stop-vil-703",
+            "marina-baixa-stop-vil-707",
+            "marina-baixa-stop-vil-811",
+            "marina-baixa-stop-fin-608",
+            "marina-baixa-stop-fin-609",
+            "marina-baixa-stop-fin-610",
+            "marina-baixa-stop-fin-611",
+            "marina-baixa-stop-fin-612",
+            "marina-baixa-stop-bnd-115",
+            "marina-baixa-stop-bnd-116",
+            "marina-baixa-stop-bnd-145",
+            "marina-baixa-stop-bnd-146",
+            "marina-baixa-stop-bnd-148",
+            "marina-baixa-stop-bnd-149",
+            "marina-baixa-stop-bnd-99",
+            "marina-baixa-stop-bnd-150",
+            "marina-baixa-stop-bnd-128",
+            "marina-baixa-stop-bnd-129",
+            "marina-baixa-stop-bnd-355",
+            "marina-baixa-stop-bnd-288",
+            "marina-baixa-stop-bnd-289",
+            "marina-baixa-stop-bnd-342",
+            "marina-baixa-stop-bnd-249",
+            "marina-baixa-stop-bnd-246"
+          ]
+        },
+        {
+          "patternId": "benidorm-014-vuelta",
+          "directionLabel": "Hacia Finestrat Pueblo",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 36
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-249",
+            "marina-baixa-stop-bnd-246",
+            "marina-baixa-stop-bnd-343",
+            "marina-baixa-stop-bnd-277",
+            "marina-baixa-stop-bnd-303",
+            "marina-baixa-stop-bnd-287",
+            "marina-baixa-stop-bnd-133",
+            "marina-baixa-stop-bnd-134",
+            "marina-baixa-stop-bnd-135",
+            "marina-baixa-stop-bnd-136",
+            "marina-baixa-stop-bnd-98",
+            "marina-baixa-stop-bnd-140",
+            "marina-baixa-stop-bnd-141",
+            "marina-baixa-stop-bnd-143",
+            "marina-baixa-stop-bnd-109",
+            "marina-baixa-stop-bnd-144",
+            "marina-baixa-stop-bnd-114",
+            "marina-baixa-stop-fin-601",
+            "marina-baixa-stop-fin-603",
+            "marina-baixa-stop-fin-604",
+            "marina-baixa-stop-fin-634",
+            "marina-baixa-stop-fin-605",
+            "marina-baixa-stop-vil-809",
+            "marina-baixa-stop-vil-701",
+            "marina-baixa-stop-vil-702",
+            "marina-baixa-stop-vil-826",
+            "marina-baixa-stop-fin-652",
+            "marina-baixa-stop-fin-629",
+            "marina-baixa-stop-fin-636",
+            "marina-baixa-stop-fin-619",
+            "marina-baixa-stop-fin-672",
+            "marina-baixa-stop-fin-649",
+            "marina-baixa-stop-fin-606",
+            "marina-baixa-stop-fin-621",
+            "marina-baixa-stop-fin-622",
+            "marina-baixa-stop-fin-623"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "014",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/014?fecha=03%2F03%2F2026"
+        },
+        {
+          "source": "benidorm-finestrat-source-capture",
+          "sourceRouteId": "014",
+          "sourceFile": "line-014-ordered-capture.json"
+        }
+      ]
+    },
+    {
+      "routeId": "benidorm-015",
+      "publicCode": "015",
+      "name": "Finestrat Pueblo - [Balcón de Finestrat - Golf Bahía] / [Tapiada Umbria - Terra Natura] - Centros Comerciales - Calas Finestrat y Villajoyosa - Bali",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-015-ida",
+          "directionLabel": "Desde Benidorm (H. Bali) hacia centros comerciales y Finestrat",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 34
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-116",
+            "marina-baixa-stop-fin-601",
+            "marina-baixa-stop-fin-603",
+            "marina-baixa-stop-fin-604",
+            "marina-baixa-stop-fin-634",
+            "marina-baixa-stop-fin-605",
+            "marina-baixa-stop-vil-809",
+            "marina-baixa-stop-vil-701",
+            "marina-baixa-stop-vil-702",
+            "marina-baixa-stop-vil-826",
+            "marina-baixa-stop-fin-652",
+            "marina-baixa-stop-fin-629",
+            "marina-baixa-stop-fin-636",
+            "marina-baixa-stop-fin-661",
+            "marina-baixa-stop-fin-663",
+            "marina-baixa-stop-fin-619",
+            "marina-baixa-stop-bnd-95",
+            "marina-baixa-stop-bnd-97",
+            "marina-baixa-stop-fin-672",
+            "marina-baixa-stop-bnd-177",
+            "marina-baixa-stop-bnd-178",
+            "marina-baixa-stop-fin-649",
+            "marina-baixa-stop-bnd-179",
+            "marina-baixa-stop-bnd-180",
+            "marina-baixa-stop-fin-606",
+            "marina-baixa-stop-fin-621",
+            "marina-baixa-stop-fin-622",
+            "marina-baixa-stop-bnd-185",
+            "marina-baixa-stop-fin-647",
+            "marina-baixa-stop-fin-645",
+            "marina-baixa-stop-fin-643",
+            "marina-baixa-stop-fin-641",
+            "marina-baixa-stop-fin-639",
+            "marina-baixa-stop-fin-623"
+          ]
+        },
+        {
+          "patternId": "benidorm-015-vuelta",
+          "directionLabel": "Desde Finestrat hacia centros comerciales, Cala y Benidorm",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 38
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-fin-623",
+            "marina-baixa-stop-fin-624",
+            "marina-baixa-stop-fin-625",
+            "marina-baixa-stop-fin-607",
+            "marina-baixa-stop-fin-638",
+            "marina-baixa-stop-fin-640",
+            "marina-baixa-stop-fin-632",
+            "marina-baixa-stop-fin-642",
+            "marina-baixa-stop-fin-672",
+            "marina-baixa-stop-fin-644",
+            "marina-baixa-stop-fin-627",
+            "marina-baixa-stop-fin-646",
+            "marina-baixa-stop-bnd-189",
+            "marina-baixa-stop-fin-633",
+            "marina-baixa-stop-bnd-190",
+            "marina-baixa-stop-fin-650",
+            "marina-baixa-stop-bnd-191",
+            "marina-baixa-stop-fin-615",
+            "marina-baixa-stop-bnd-192",
+            "marina-baixa-stop-bnd-193",
+            "marina-baixa-stop-bnd-96",
+            "marina-baixa-stop-fin-665",
+            "marina-baixa-stop-fin-664",
+            "marina-baixa-stop-fin-662",
+            "marina-baixa-stop-fin-637",
+            "marina-baixa-stop-fin-628",
+            "marina-baixa-stop-fin-651",
+            "marina-baixa-stop-vil-827",
+            "marina-baixa-stop-vil-703",
+            "marina-baixa-stop-vil-707",
+            "marina-baixa-stop-vil-811",
+            "marina-baixa-stop-fin-608",
+            "marina-baixa-stop-fin-609",
+            "marina-baixa-stop-fin-610",
+            "marina-baixa-stop-fin-611",
+            "marina-baixa-stop-fin-612",
+            "marina-baixa-stop-bnd-115",
+            "marina-baixa-stop-bnd-116"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "015",
+          "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/015-finestrat-pueblo-balcon-de-finestrat-golf-bahia-tapiada-umbria-terra-natura-centros-comerciales-calas-finestrat-y-villajoyosa-bali?fecha=26%2F06%2F2026"
+        },
+        {
+          "source": "benidorm-finestrat-source-capture",
+          "sourceRouteId": "015",
+          "sourceFile": "line-015-ordered-capture.json"
+        }
+      ]
+    }
+  ]
+}

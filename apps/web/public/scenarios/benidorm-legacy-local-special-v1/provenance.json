@@ -1,0 +1,333 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-local-special-v1",
+  "generatedAt": "2026-08-04T16:34:00+02:00",
+  "sources": [
+    {
+      "sourceId": "avanza-line-006-current",
+      "name": "Avanza / LLorente Bus Line 006 ordered route and timetable page",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/006?fecha=02%2F07%2F2026",
+      "role": "Official route identity, ordered ida/vuelta occurrences, stop codes, names and Wednesday/Sunday service rule."
+    },
+    {
+      "sourceId": "avanza-line-026-current",
+      "name": "Avanza / LLorente Bus Line 026 ordered route and timetable page",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/026-benidorm-centro-els-tolls-colonia-madrid-centros-medicos-foietes-cuba-nicaragua-pdevesa-a-suarez?fecha=26%2F06%2F2026",
+      "role": "Official route identity, ordered ida/vuelta occurrences, stop codes, names and hourly terminal timetable."
+    },
+    {
+      "sourceId": "accepted-benidorm-identity-registry",
+      "name": "Accepted Benidorm legacy component scenarios",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "benidorm-legacy-core-inland-v1, benidorm-legacy-core-v1, benidorm-legacy-core-west-v1",
+      "role": "Exact StopNode and StopPlace reuse for every previously accepted composite operator stop code."
+    },
+    {
+      "sourceId": "public-map-and-street-corridor-context",
+      "name": "Public map and reviewed street-corridor context for new identities",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "See coordinateEvidence below.",
+      "role": "Development-stage geometry only; not treated as authoritative platform coordinates."
+    }
+  ],
+  "coordinateEvidence": [
+    {
+      "operatorStopCode": "BND 123",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.53625,
+        "longitude": -0.1458
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 137",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.53875,
+        "longitude": -0.138
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 139",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.5393,
+        "longitude": -0.13845
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 159",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.54515,
+        "longitude": -0.1302
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 278",
+      "method": "public-map-bus-stop-anchor",
+      "source": "Public map search result identifying the Av. Municipi, 6 bus stop near 38.54321,-0.12175.",
+      "position": {
+        "latitude": 38.54321,
+        "longitude": -0.12175
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 279",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.54465,
+        "longitude": -0.12195
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 280",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.54695,
+        "longitude": -0.12285
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 281",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.54635,
+        "longitude": -0.1251
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 282",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.54445,
+        "longitude": -0.12895
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 283",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.54625,
+        "longitude": -0.1286
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 284",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.5462,
+        "longitude": -0.1267
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 285",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.5452,
+        "longitude": -0.12495
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 286",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.54375,
+        "longitude": -0.1237
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 312",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.5399,
+        "longitude": -0.11055
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 324",
+      "method": "development-opposite-direction-street-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.53965,
+        "longitude": -0.11105
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 332",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.53865,
+        "longitude": -0.11275
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 374",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.53655,
+        "longitude": -0.15135
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 375",
+      "method": "development-opposite-direction-street-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.5365,
+        "longitude": -0.15265
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 376",
+      "method": "development-street-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.53645,
+        "longitude": -0.14975
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 377",
+      "method": "development-terminal-street-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.5366,
+        "longitude": -0.15405
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 378",
+      "method": "development-directional-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.541,
+        "longitude": -0.13555
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 379",
+      "method": "development-directional-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.54045,
+        "longitude": -0.13665
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 380",
+      "method": "development-directional-corridor-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.5399,
+        "longitude": -0.13775
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 381",
+      "method": "development-opposite-direction-street-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.53975,
+        "longitude": -0.13755
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 382",
+      "method": "development-opposite-direction-street-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.5403,
+        "longitude": -0.1365
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    },
+    {
+      "operatorStopCode": "BND 383",
+      "method": "development-opposite-direction-street-anchor",
+      "source": "Reviewed development-stage street/corridor placement preserving official directional order.",
+      "position": {
+        "latitude": 38.54085,
+        "longitude": -0.13545
+      },
+      "reviewStatus": "identity-preserving exact-coordinate replacement required"
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "marina-baixa-composite-stop-identity-v1",
+      "description": "Uses the complete BND operator code as the stable identity suffix and creates a singleton StopPlace for each new directional StopNode."
+    },
+    {
+      "transformationId": "benidorm-local-special-independent-directions-v1",
+      "description": "Stores four official directional lists independently with closesLoop false; no reverse sequence or closing edge is inferred."
+    },
+    {
+      "transformationId": "line-006-service-rule-provenance-v1",
+      "description": "Retains the official Wednesday/Sunday market-service rule as provenance without changing route graph topology."
+    },
+    {
+      "transformationId": "line-026-current-cross-neighbourhood-capture-v1",
+      "description": "Captures the official Benidorm Centro–Els Tolls–Foietes–Adolfo Suarez route in both directions as a current source snapshot under the project-owner legacy naming policy."
+    },
+    {
+      "transformationId": "accepted-identity-reuse-v1",
+      "description": "Reuses 21 complete StopNode and StopPlace objects exactly from accepted Benidorm component scenarios; creates 26 new composite identities."
+    },
+    {
+      "transformationId": "benidorm-local-special-development-coordinate-reconciliation-v1",
+      "description": "Uses 21 exact accepted positions, one public-map anchor and 25 reviewed development street/corridor positions."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Adds exactly one catalog descriptor and computes asset and aggregate SHA-256 values from final serialized bytes."
+    }
+  ],
+  "warnings": [
+    "The project-owner naming policy uses legacy, while route evidence is a current 2026 capture.",
+    "Line 006 is a limited Wednesday/Sunday market service; its operating-day rule is provenance and does not create additional route patterns.",
+    "The new coordinates are development-stage. Replace them only with exact authoritative coordinates while preserving accepted composite IDs.",
+    "StopNode.sourceReferences is empty for new nodes because no individual OSM platform or stop_position object was adopted as strict runtime evidence."
+  ]
+}

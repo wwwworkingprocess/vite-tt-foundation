@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-local-special-v1",
+  "title": "Benidorm Legacy Local and Special Network - Lines 006 and 026",
+  "initialView": {
+    "center": {
+      "latitude": 38.541575,
+      "longitude": -0.1323
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "benidorm-006": {
+      "label": "006",
+      "color": "#7b1fa2"
+    },
+    "benidorm-026": {
+      "label": "026",
+      "color": "#00796b"
+    }
+  },
+  "notes": [
+    "Local and special-service discovery component for the Benidorm legacy scenario family.",
+    "All four official directions are stored independently with closesLoop false; reverse patterns are never inferred.",
+    "Line 006 retains its Wednesday/Sunday market-service operating note in provenance.",
+    "Line 026 retains its hourly cross-neighbourhood service context in provenance.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

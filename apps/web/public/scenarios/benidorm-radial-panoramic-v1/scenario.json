@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-panoramic-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Benidorm Radial Panoramic Network - Lines 030 and 031",
+  "primarySettlementId": "es-benidorm",
+  "settlementIds": [
+    "es-benidorm",
+    "es-finestrat",
+    "es-la-vila-joiosa",
+    "es-lalfas-del-pi",
+    "es-altea"
+  ],
+  "contentHash": "7146023bd0ccabaea13126b20d3834b6ae0b68047b56589d024e3314a5e59181",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "8137acec629b192b518c065e81ebaa51486a31f5da47f0059f61fc11a4e5ea49"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "1d658da7d59491571f537cf577b3b44fec195e189a23a0a9310b442ea389b416"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "1babf794529ccf0874c1940092db9443830b1b10c6cebfc3830dad8ad38d4312"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "f156621f40bf449d99e83874a61741b12e76e876390d0f39a49070c1ee0e749d"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "e3480adae1f40f5e367cbb320d7b71efb4ff17e955ab39d59875869f07115c97"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

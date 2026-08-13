@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-coast-crosscity-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Benidorm Radial Coast Cross-City Network - Lines 012 and 054",
+  "primarySettlementId": "es-benidorm",
+  "settlementIds": [
+    "es-benidorm",
+    "es-lalfas-del-pi",
+    "es-altea",
+    "es-finestrat",
+    "es-la-vila-joiosa"
+  ],
+  "contentHash": "cedb86d11e5d10c5b176027cb26ea519c58ee1d885da75e8ffa2bdc233b94ddf",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "faca17cf83c9b8754e41713f40cc5638e691e3c2fa1ef306d02f9c6f8233dc55"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "7b06535f3c17f7791ee327f4ae099450fff866ab54269e7003f6bf1dedc15196"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "4222ddaf7a71baed7fc3bf65d62d52e9b13012febae21cb5aafd0feb088a0006"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "33d73890d53d3a3239959f2e2b340babdff5edef39e3be518b86a9f5d2aaa313"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "14cd075051958a26aa490c34e92736a39a02434e224109fadbc07ac5ed484a6c"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

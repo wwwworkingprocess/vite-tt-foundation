@@ -1,0 +1,498 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-east-corridor-v1",
+  "generatedAt": "2026-08-04T17:07:00+02:00",
+  "sources": [
+    {
+      "sourceId": "avanza-line-010-ordered",
+      "name": "Avanza / LLorente Bus Line 010 official ordered route page",
+      "url": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/010?fecha=12%2F06%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Route identity and independently ordered ida/vuelta stop codes and names."
+    },
+    {
+      "sourceId": "avanza-line-050-ordered",
+      "name": "Avanza / LLorente Bus Line 050 official ordered route page",
+      "url": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/050?fecha=28%2F07%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Route identity and independently ordered ida/vuelta stop codes and names."
+    },
+    {
+      "sourceId": "albir-garden-location",
+      "name": "Albir Garden Resort published location",
+      "url": "https://www.albirgardenresort.com/en/location/",
+      "accessedAt": "2026-08-04",
+      "role": "Public geographic anchor for the Albir Garden corridor; not platform-grade stop evidence."
+    },
+    {
+      "sourceId": "accepted-benidorm-registry",
+      "name": "Previously accepted Benidorm legacy component scenarios",
+      "role": "Exact StopNode and StopPlace identity reuse.",
+      "scenarioIds": [
+        "benidorm-legacy-attractions-v1",
+        "benidorm-legacy-core-inland-v1",
+        "benidorm-legacy-core-v1",
+        "benidorm-legacy-core-west-v1",
+        "benidorm-legacy-local-special-v1"
+      ]
+    }
+  ],
+  "identityContract": {
+    "stableKey": "operator composite stop code including municipality prefix",
+    "stopNodePattern": "marina-baixa-stop-<prefix-lower>-<number>",
+    "stopPlacePattern": "marina-baixa-place-<prefix-lower>-<number>",
+    "physicalGroupingPolicy": "singleton StopPlace per composite StopNode unless separately approved"
+  },
+  "coordinateSummary": {
+    "methods": {
+      "reused-accepted-exact": 35,
+      "development-cv70-corridor-anchor": 4,
+      "development-n332-corridor-anchor": 1,
+      "public-albir-garden-anchor": 1,
+      "development-albir-street-corridor-anchor": 13,
+      "development-altea-coastal-street-anchor": 4,
+      "development-altea-centre-anchor": 6,
+      "development-altea-terminal-anchor": 1,
+      "development-alfas-cami-mar-anchor": 6,
+      "development-alfas-town-anchor": 4
+    },
+    "newCoordinateEvidence": [
+      {
+        "operatorStopCode": "ALF 503",
+        "method": "development-alfas-town-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.58065,
+          "longitude": -0.10105
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 505",
+        "method": "development-alfas-cami-mar-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5786,
+          "longitude": -0.0883
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 506",
+        "method": "development-alfas-cami-mar-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5767,
+          "longitude": -0.0843
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 507",
+        "method": "development-alfas-cami-mar-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5747,
+          "longitude": -0.0808
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 508",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5681,
+          "longitude": -0.0618
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 509",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5703,
+          "longitude": -0.0669
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 510",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5704,
+          "longitude": -0.067
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 512",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.56965,
+          "longitude": -0.0641
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 513",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5693,
+          "longitude": -0.0628
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 514",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.56915,
+          "longitude": -0.0627
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 515",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.56975,
+          "longitude": -0.064
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 517",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5707,
+          "longitude": -0.0705
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 518",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5707,
+          "longitude": -0.0706
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 519",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5705,
+          "longitude": -0.07715
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 520",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5701,
+          "longitude": -0.079
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 521",
+        "method": "public-albir-garden-anchor",
+        "source": "Albir Garden Resort published location coordinates; used as a corridor anchor rather than claimed bus-platform geometry.",
+        "position": {
+          "latitude": 38.570403458,
+          "longitude": -0.077250795
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 522",
+        "method": "development-alfas-cami-mar-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5745,
+          "longitude": -0.081
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 523",
+        "method": "development-alfas-cami-mar-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5765,
+          "longitude": -0.0845
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 524",
+        "method": "development-alfas-cami-mar-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5785,
+          "longitude": -0.0885
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 525",
+        "method": "development-alfas-town-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.57985,
+          "longitude": -0.0991
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 526",
+        "method": "development-alfas-town-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5806,
+          "longitude": -0.1014
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 546",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.57105,
+          "longitude": -0.0747
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 547",
+        "method": "development-albir-street-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.57095,
+          "longitude": -0.0745
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALF 555",
+        "method": "development-alfas-town-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5799,
+          "longitude": -0.0989
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 406",
+        "method": "development-altea-coastal-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5915,
+          "longitude": -0.0586
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 407",
+        "method": "development-altea-coastal-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.596,
+          "longitude": -0.0558
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 408",
+        "method": "development-altea-centre-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5987,
+          "longitude": -0.052
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 409",
+        "method": "development-altea-centre-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6003,
+          "longitude": -0.0507
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 411",
+        "method": "development-altea-terminal-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.602,
+          "longitude": -0.0475
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 413",
+        "method": "development-altea-centre-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6005,
+          "longitude": -0.0509
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 414",
+        "method": "development-altea-centre-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5988,
+          "longitude": -0.0522
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 415",
+        "method": "development-altea-coastal-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5961,
+          "longitude": -0.0559
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 416",
+        "method": "development-altea-coastal-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5916,
+          "longitude": -0.0587
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 472",
+        "method": "development-altea-centre-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6018,
+          "longitude": -0.0484
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 484",
+        "method": "development-altea-centre-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.6013,
+          "longitude": -0.0489
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 218",
+        "method": "development-cv70-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5594,
+          "longitude": -0.0965
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 219",
+        "method": "development-n332-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5637,
+          "longitude": -0.0878
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 222",
+        "method": "development-cv70-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5575,
+          "longitude": -0.0985
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 223",
+        "method": "development-cv70-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5596,
+          "longitude": -0.0962
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 305",
+        "method": "development-cv70-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5573,
+          "longitude": -0.0989
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      }
+    ],
+    "warning": "All newly created positions are development-stage corridor reconciliations except the public Albir Garden anchor. They must be replaced with exact authoritative stop coordinates without changing composite IDs."
+  },
+  "topologyDecisions": [
+    "Line 010 is stored as two independently ordered open patterns: Benidorm to Altea and Altea to Benidorm.",
+    "Line 050 is stored as two independently ordered open patterns: Benidorm to L'Alfàs del Pi and L'Alfàs del Pi to Benidorm.",
+    "All four patterns use closesLoop false; no reverse sequence or last-to-first edge is inferred.",
+    "The shared Benidorm-to-Albir corridor is represented by exact shared composite StopNode identities where operator codes match.",
+    "Line 010 and Line 050 diverge after ALF 513: Line 010 continues toward Altea, while Line 050 continues via Camí de la Mar to L'Alfàs del Pi.",
+    "The same terminal StopNode may end one pattern and begin the opposite pattern without converting the pair into a closed cycle."
+  ],
+  "identityDecisions": [
+    "All accepted shared objects are copied exactly from prior Benidorm scenarios.",
+    "BND 305/BND 222 and BND 218/BND 223 remain distinct directional identities despite paired corridor descriptions.",
+    "ALF 525 and ALF 555 remain distinct directional Casa de Cultura identities.",
+    "ALF 526 is shared exactly as the Line 050 terminal at the end of ida and start of vuelta.",
+    "ALT 411 is shared exactly as the Line 010 terminal at the end of ida and start of vuelta.",
+    "Every new StopNode receives a singleton StopPlace; proximity and paired street names do not merge identities.",
+    "StopNode.sourceReferences is empty for new nodes because no individual OSM platform or stop_position object was adopted as strict runtime evidence."
+  ],
+  "reviewItems": [
+    {
+      "type": "coordinates",
+      "required": true,
+      "detail": "Replace all 40 newly created development positions with exact authoritative coordinates while preserving composite IDs and cross-package exact equality."
+    },
+    {
+      "type": "line-010-historical-variation",
+      "required": false,
+      "detail": "A 2025 Line 010 capture shows additional L'Alfàs stops not present in the selected 2026 ordered capture. Preserve the selected 2026 snapshot and review historical variants separately rather than mixing them."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "benidorm-radial-family-rename-v1",
+      "description": "Renames package identity from benidorm-legacy-east-corridor-v1 to benidorm-radial-east-corridor-v1 without changing route/pattern objects, StopNode/StopPlace identities, coordinates, or settlement assignments."
+    }
+  ]
+}

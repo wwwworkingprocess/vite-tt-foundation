@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-north-v1",
+  "settlements": [
+    {
+      "settlementId": "es-benidorm",
+      "name": "Benidorm",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.54535,
+        "longitude": -0.128736202
+      },
+      "bounds": {
+        "south": 38.530676,
+        "west": -0.162682208,
+        "north": 38.560024,
+        "east": -0.094790196
+      }
+    },
+    {
+      "settlementId": "es-finestrat",
+      "name": "Finestrat",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.5264,
+        "longitude": -0.1638
+      },
+      "bounds": {
+        "south": 38.5239,
+        "west": -0.1688,
+        "north": 38.5289,
+        "east": -0.1588
+      }
+    },
+    {
+      "settlementId": "es-la-vila-joiosa",
+      "name": "La Vila Joiosa",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.5272,
+        "longitude": -0.167
+      },
+      "bounds": {
+        "south": 38.5252,
+        "west": -0.1698,
+        "north": 38.5292,
+        "east": -0.1642
+      }
+    },
+    {
+      "settlementId": "es-la-nucia",
+      "name": "La Nucia",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.5926,
+        "longitude": -0.12485
+      },
+      "bounds": {
+        "south": 38.560584,
+        "west": -0.13,
+        "north": 38.624616,
+        "east": -0.1197
+      }
+    },
+    {
+      "settlementId": "es-polop",
+      "name": "Polop",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.62375,
+        "longitude": -0.1309
+      },
+      "bounds": {
+        "south": 38.6205,
+        "west": -0.135,
+        "north": 38.627,
+        "east": -0.1268
+      }
+    },
+    {
+      "settlementId": "es-callosa-den-sarria",
+      "name": "Callosa d'en Sarrià",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.64975,
+        "longitude": -0.11175
+      },
+      "bounds": {
+        "south": 38.6365,
+        "west": -0.12828,
+        "north": 38.663,
+        "east": -0.09522
+      }
+    },
+    {
+      "settlementId": "es-el-castell-de-guadalest",
+      "name": "El Castell de Guadalest",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.6762,
+        "longitude": -0.19905
+      },
+      "bounds": {
+        "south": 38.6739,
+        "west": -0.2016,
+        "north": 38.6785,
+        "east": -0.1965
+      }
+    }
+  ]
+}

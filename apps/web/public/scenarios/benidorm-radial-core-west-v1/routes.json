@@ -1,0 +1,238 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-core-west-v1",
+  "routes": [
+    {
+      "routeId": "benidorm-002",
+      "publicCode": "002",
+      "name": "Rincón Loix - Mediterráneo -Bnd. Centro - Europa - A. Puchades - Parque Elche - Jaime I - P. Devesa - Bali - Calas - [Centros Comerciales]",
+      "dataStatus": "legacy-family-current-official-order-july-2026-works-snapshot-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-002-ida",
+          "directionLabel": "Hacia Parque Elche, P.Devesa, Bali, Cala y C.Comerciales",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 41
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-234",
+            "marina-baixa-stop-bnd-235",
+            "marina-baixa-stop-bnd-236",
+            "marina-baixa-stop-bnd-237",
+            "marina-baixa-stop-bnd-238",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-242",
+            "marina-baixa-stop-bnd-243",
+            "marina-baixa-stop-bnd-343",
+            "marina-baixa-stop-bnd-277",
+            "marina-baixa-stop-bnd-303",
+            "marina-baixa-stop-bnd-287",
+            "marina-baixa-stop-bnd-130",
+            "marina-baixa-stop-bnd-131",
+            "marina-baixa-stop-bnd-101",
+            "marina-baixa-stop-bnd-102",
+            "marina-baixa-stop-bnd-103",
+            "marina-baixa-stop-bnd-104",
+            "marina-baixa-stop-bnd-105",
+            "marina-baixa-stop-bnd-106",
+            "marina-baixa-stop-bnd-107",
+            "marina-baixa-stop-bnd-373",
+            "marina-baixa-stop-bnd-118",
+            "marina-baixa-stop-bnd-113",
+            "marina-baixa-stop-fin-601",
+            "marina-baixa-stop-fin-603",
+            "marina-baixa-stop-fin-604",
+            "marina-baixa-stop-fin-634",
+            "marina-baixa-stop-fin-605",
+            "marina-baixa-stop-vil-809",
+            "marina-baixa-stop-vil-701",
+            "marina-baixa-stop-vil-702",
+            "marina-baixa-stop-vil-826",
+            "marina-baixa-stop-vil-703",
+            "marina-baixa-stop-fin-629",
+            "marina-baixa-stop-fin-653",
+            "marina-baixa-stop-fin-654",
+            "marina-baixa-stop-fin-650"
+          ]
+        },
+        {
+          "patternId": "benidorm-002-vuelta",
+          "directionLabel": "Hacia Benidorm Centro, Av. Mediterráneo y Rincón de Loix",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 38
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-fin-650",
+            "marina-baixa-stop-fin-615",
+            "marina-baixa-stop-fin-616",
+            "marina-baixa-stop-fin-617",
+            "marina-baixa-stop-fin-628",
+            "marina-baixa-stop-fin-651",
+            "marina-baixa-stop-vil-827",
+            "marina-baixa-stop-vil-703",
+            "marina-baixa-stop-vil-707",
+            "marina-baixa-stop-vil-811",
+            "marina-baixa-stop-fin-608",
+            "marina-baixa-stop-fin-609",
+            "marina-baixa-stop-fin-610",
+            "marina-baixa-stop-fin-611",
+            "marina-baixa-stop-fin-612",
+            "marina-baixa-stop-bnd-115",
+            "marina-baixa-stop-bnd-116",
+            "marina-baixa-stop-bnd-145",
+            "marina-baixa-stop-bnd-146",
+            "marina-baixa-stop-bnd-148",
+            "marina-baixa-stop-bnd-149",
+            "marina-baixa-stop-bnd-99",
+            "marina-baixa-stop-bnd-150",
+            "marina-baixa-stop-bnd-128",
+            "marina-baixa-stop-bnd-129",
+            "marina-baixa-stop-bnd-355",
+            "marina-baixa-stop-bnd-288",
+            "marina-baixa-stop-bnd-289",
+            "marina-baixa-stop-bnd-384",
+            "marina-baixa-stop-bnd-240",
+            "marina-baixa-stop-bnd-304",
+            "marina-baixa-stop-bnd-203",
+            "marina-baixa-stop-bnd-204",
+            "marina-baixa-stop-bnd-205",
+            "marina-baixa-stop-bnd-206",
+            "marina-baixa-stop-bnd-207",
+            "marina-baixa-stop-bnd-345",
+            "marina-baixa-stop-bnd-234"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-current-route-order",
+          "sourceRouteId": "002",
+          "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/002-rincon-loix-mediterraneo-bnd-centro-europa-a-puchades-parque-elche-jaime-i-p-devesa-bali-calas-centros-comerciales?fecha=26%2F06%2F2026"
+        },
+        {
+          "source": "benidorm-core-west-source-capture",
+          "sourceRouteId": "002",
+          "sourceFile": "line-002-ordered-capture.json"
+        }
+      ]
+    },
+    {
+      "routeId": "benidorm-003",
+      "publicCode": "003",
+      "name": "E. Autobuses - Europa - Triangular - [Aigüera/ Rufaza] - Jaime I - Pº Poniente - Bali - Calas - [Carrefour]",
+      "dataStatus": "legacy-family-current-official-order-july-2026-works-snapshot-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-003-ida",
+          "directionLabel": "Hacia Aiguera, JaimeI, Santander, Bali, Calas y Carrefour",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 34
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-385",
+            "marina-baixa-stop-bnd-290",
+            "marina-baixa-stop-bnd-291",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-370",
+            "marina-baixa-stop-bnd-371",
+            "marina-baixa-stop-bnd-372",
+            "marina-baixa-stop-bnd-157",
+            "marina-baixa-stop-bnd-133",
+            "marina-baixa-stop-bnd-134",
+            "marina-baixa-stop-bnd-135",
+            "marina-baixa-stop-bnd-136",
+            "marina-baixa-stop-bnd-98",
+            "marina-baixa-stop-bnd-140",
+            "marina-baixa-stop-bnd-141",
+            "marina-baixa-stop-bnd-143",
+            "marina-baixa-stop-bnd-109",
+            "marina-baixa-stop-bnd-110",
+            "marina-baixa-stop-bnd-144",
+            "marina-baixa-stop-bnd-114",
+            "marina-baixa-stop-bnd-115",
+            "marina-baixa-stop-bnd-365",
+            "marina-baixa-stop-fin-634",
+            "marina-baixa-stop-fin-605",
+            "marina-baixa-stop-vil-809",
+            "marina-baixa-stop-vil-701",
+            "marina-baixa-stop-vil-702",
+            "marina-baixa-stop-vil-826",
+            "marina-baixa-stop-fin-652",
+            "marina-baixa-stop-vil-703",
+            "marina-baixa-stop-fin-629",
+            "marina-baixa-stop-fin-616",
+            "marina-baixa-stop-fin-617"
+          ]
+        },
+        {
+          "patternId": "benidorm-003-vuelta",
+          "directionLabel": "Hacia Ruzafa, Benidorm Centro y Estación Autobuses",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 35
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-fin-617",
+            "marina-baixa-stop-fin-628",
+            "marina-baixa-stop-fin-651",
+            "marina-baixa-stop-vil-827",
+            "marina-baixa-stop-vil-703",
+            "marina-baixa-stop-vil-707",
+            "marina-baixa-stop-vil-811",
+            "marina-baixa-stop-fin-608",
+            "marina-baixa-stop-fin-609",
+            "marina-baixa-stop-bnd-366",
+            "marina-baixa-stop-bnd-367",
+            "marina-baixa-stop-bnd-116",
+            "marina-baixa-stop-bnd-118",
+            "marina-baixa-stop-bnd-119",
+            "marina-baixa-stop-bnd-120",
+            "marina-baixa-stop-bnd-121",
+            "marina-baixa-stop-bnd-122",
+            "marina-baixa-stop-bnd-327",
+            "marina-baixa-stop-bnd-148",
+            "marina-baixa-stop-bnd-149",
+            "marina-baixa-stop-bnd-99",
+            "marina-baixa-stop-bnd-150",
+            "marina-baixa-stop-bnd-128",
+            "marina-baixa-stop-bnd-129",
+            "marina-baixa-stop-bnd-130",
+            "marina-baixa-stop-bnd-368",
+            "marina-baixa-stop-bnd-386",
+            "marina-baixa-stop-bnd-384",
+            "marina-baixa-stop-bnd-240",
+            "marina-baixa-stop-bnd-242",
+            "marina-baixa-stop-bnd-243",
+            "marina-baixa-stop-bnd-245",
+            "marina-baixa-stop-bnd-249",
+            "marina-baixa-stop-bnd-295",
+            "marina-baixa-stop-bnd-385"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-current-route-order",
+          "sourceRouteId": "003",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/003"
+        },
+        {
+          "source": "benidorm-core-west-source-capture",
+          "sourceRouteId": "003",
+          "sourceFile": "line-003-ordered-capture.json"
+        }
+      ]
+    }
+  ]
+}

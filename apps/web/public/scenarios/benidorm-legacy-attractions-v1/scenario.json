@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-attractions-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Benidorm Legacy Attractions Network - Lines 011 and 042",
+  "primarySettlementId": "es-benidorm",
+  "settlementIds": [
+    "es-benidorm"
+  ],
+  "contentHash": "527349ea9764a9170f474d0c775741ae612a0806298af7eade71d8f6958acf1c",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "e3622449e97a3f2c8b4232be032c28f57756f1b929c090639cc466f49a81d5bc"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "84a97cc3192147fcf242d1d07041b5289b6ce28f4c0b5006cd42c278f5b818ac"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "e5e18bbcbb78d39f3d54edb0632a581a2ee32acbf4917d797e50f7683eb1cf0a"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "d713dc4e4980fc08ef5fdf483049860a551fa3e125460b229681c9af375de49a"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "5bade066bc481c290540ac71552d42ca20b5b9befb60b5380ea75abc1c0ce33b"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

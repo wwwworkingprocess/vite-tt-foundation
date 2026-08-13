@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-east-corridor-v1",
+  "settlements": [
+    {
+      "settlementId": "es-benidorm",
+      "name": "Benidorm",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.549253036,
+        "longitude": -0.107475
+      },
+      "bounds": {
+        "south": 38.531338802,
+        "west": -0.131872,
+        "north": 38.567167271,
+        "east": -0.083078
+      }
+    },
+    {
+      "settlementId": "es-lalfas-del-pi",
+      "name": "L'Alfàs del Pi",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.574375,
+        "longitude": -0.0816
+      },
+      "bounds": {
+        "south": 38.566594,
+        "west": -0.106152,
+        "north": 38.582156,
+        "east": -0.057048
+      }
+    },
+    {
+      "settlementId": "es-altea",
+      "name": "Altea",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.59675,
+        "longitude": -0.0531
+      },
+      "bounds": {
+        "south": 38.59024,
+        "west": -0.060044,
+        "north": 38.60326,
+        "east": -0.046156
+      }
+    }
+  ]
+}

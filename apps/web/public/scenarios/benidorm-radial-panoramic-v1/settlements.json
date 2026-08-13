@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-panoramic-v1",
+  "settlements": [
+    {
+      "settlementId": "es-benidorm",
+      "name": "Benidorm",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.542181818,
+        "longitude": -0.128736202
+      },
+      "bounds": {
+        "south": 38.53,
+        "west": -0.162682208,
+        "north": 38.554363636,
+        "east": -0.094790196
+      }
+    },
+    {
+      "settlementId": "es-finestrat",
+      "name": "Finestrat",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.5264,
+        "longitude": -0.1638
+      },
+      "bounds": {
+        "south": 38.5239,
+        "west": -0.1688,
+        "north": 38.5289,
+        "east": -0.1588
+      }
+    },
+    {
+      "settlementId": "es-la-vila-joiosa",
+      "name": "La Vila Joiosa",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.5272,
+        "longitude": -0.167
+      },
+      "bounds": {
+        "south": 38.5252,
+        "west": -0.1698,
+        "north": 38.5292,
+        "east": -0.1642
+      }
+    },
+    {
+      "settlementId": "es-lalfas-del-pi",
+      "name": "L'Alfàs del Pi",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.574175,
+        "longitude": -0.068975397
+      },
+      "bounds": {
+        "south": 38.56715,
+        "west": -0.079250795,
+        "north": 38.5812,
+        "east": -0.0587
+      }
+    },
+    {
+      "settlementId": "es-altea",
+      "name": "Altea",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.59135,
+        "longitude": -0.0566
+      },
+      "bounds": {
+        "south": 38.5822,
+        "west": -0.0625,
+        "north": 38.6005,
+        "east": -0.0507
+      }
+    }
+  ]
+}

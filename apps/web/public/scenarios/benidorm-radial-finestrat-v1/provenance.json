@@ -1,0 +1,532 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-finestrat-v1",
+  "generatedAt": "2026-08-04T18:02:00+02:00",
+  "sources": [
+    {
+      "sourceId": "avanza-line-014-ordered",
+      "name": "Avanza / LLorente Bus Line 014 official ordered route page",
+      "url": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/014?fecha=03%2F03%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Route identity and independently ordered ida/vuelta stop codes and names."
+    },
+    {
+      "sourceId": "avanza-line-015-ordered",
+      "name": "Avanza / LLorente Bus Line 015 official ordered route page",
+      "url": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/015-finestrat-pueblo-balcon-de-finestrat-golf-bahia-tapiada-umbria-terra-natura-centros-comerciales-calas-finestrat-y-villajoyosa-bali?fecha=26%2F06%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Route identity and independently ordered ida/vuelta stop codes and names."
+    },
+    {
+      "sourceId": "avanza-finestrat-associated-lines",
+      "name": "Avanza / LLorente Bus Finestrat associated-lines page",
+      "url": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/finestrat",
+      "accessedAt": "2026-08-04",
+      "role": "Confirms Lines 014 and 015 as Finestrat-associated services and preserves their public scope descriptions."
+    },
+    {
+      "sourceId": "accepted-benidorm-registry",
+      "name": "Previously accepted Benidorm legacy component scenarios",
+      "role": "Exact StopNode and StopPlace identity reuse.",
+      "scenarioIds": [
+        "benidorm-legacy-attractions-v1",
+        "benidorm-legacy-coast-crosscity-v1",
+        "benidorm-legacy-core-inland-v1",
+        "benidorm-legacy-core-v1",
+        "benidorm-legacy-core-west-v1",
+        "benidorm-legacy-east-corridor-v1",
+        "benidorm-legacy-local-special-v1"
+      ]
+    }
+  ],
+  "identityContract": {
+    "stableKey": "operator composite stop code including municipality prefix",
+    "stopNodePattern": "marina-baixa-stop-<prefix-lower>-<number>",
+    "stopPlacePattern": "marina-baixa-place-<prefix-lower>-<number>",
+    "physicalGroupingPolicy": "singleton StopPlace per composite StopNode unless separately approved"
+  },
+  "coordinateSummary": {
+    "methods": {
+      "development-finestrat-pueblo-area-anchor": 1,
+      "development-cv761-font-carrec-corridor": 2,
+      "development-cv761-cantareria-corridor": 2,
+      "development-cv767-corridor": 2,
+      "development-cv761-cv767-link-corridor": 1,
+      "development-balcon-finestrat-area-corridor": 1,
+      "development-golf-bahia-area-corridor": 2,
+      "development-commercial-center-directional-corridor": 2,
+      "reused-accepted-exact": 57,
+      "development-carquendo-golf-corridor": 1,
+      "development-av-europa-commercial-corridor": 5,
+      "development-eduardo-zaplana-asia-gardens-corridor": 1,
+      "development-eduardo-zaplana-corridor": 1,
+      "development-eduardo-zaplana-balcon-corridor": 2,
+      "development-villaitana-area-corridor": 1,
+      "development-eduardo-zaplana-terra-natura-corridor": 2,
+      "development-cv758-butano-corridor": 1,
+      "development-cv758-restaurante-corridor": 2,
+      "development-cv758-pinar-corridor": 1,
+      "development-cv758-les-tapiades-corridor": 1,
+      "development-cv758-plantacion-corridor": 2,
+      "development-cv758-anton-corridor": 1,
+      "development-cv758-barranquet-corridor": 1,
+      "development-terra-jardin-corridor": 1,
+      "development-castellon-terra-natura-corridor": 1,
+      "development-eduardo-zaplana-commercial-corridor": 4
+    },
+    "newCoordinateEvidence": [
+      {
+        "operatorStopCode": "BND 95",
+        "method": "development-eduardo-zaplana-asia-gardens-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5582,
+          "longitude": -0.171
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 96",
+        "method": "development-eduardo-zaplana-commercial-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.539,
+          "longitude": -0.176
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 97",
+        "method": "development-eduardo-zaplana-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5595,
+          "longitude": -0.166
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 177",
+        "method": "development-eduardo-zaplana-balcon-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.556,
+          "longitude": -0.18
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 178",
+        "method": "development-eduardo-zaplana-balcon-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.557,
+          "longitude": -0.1765
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 179",
+        "method": "development-villaitana-area-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.559,
+          "longitude": -0.163
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 180",
+        "method": "development-eduardo-zaplana-terra-natura-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5605,
+          "longitude": -0.1575
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 190",
+        "method": "development-eduardo-zaplana-terra-natura-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.561,
+          "longitude": -0.154
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 191",
+        "method": "development-eduardo-zaplana-commercial-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.548,
+          "longitude": -0.165
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 192",
+        "method": "development-eduardo-zaplana-commercial-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.544,
+          "longitude": -0.171
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 193",
+        "method": "development-eduardo-zaplana-commercial-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.541,
+          "longitude": -0.174
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 606",
+        "method": "development-cv767-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5579,
+          "longitude": -0.1977
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 607",
+        "method": "development-cv767-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5578,
+          "longitude": -0.198
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 619",
+        "method": "development-golf-bahia-area-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.551,
+          "longitude": -0.191
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 621",
+        "method": "development-cv761-cantareria-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5606,
+          "longitude": -0.2028
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 622",
+        "method": "development-cv761-font-carrec-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5637,
+          "longitude": -0.2072
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 623",
+        "method": "development-finestrat-pueblo-area-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5673,
+          "longitude": -0.212
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 624",
+        "method": "development-cv761-font-carrec-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5639,
+          "longitude": -0.2075
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 625",
+        "method": "development-cv761-cantareria-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5608,
+          "longitude": -0.203
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 627",
+        "method": "development-golf-bahia-area-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5508,
+          "longitude": -0.1912
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 632",
+        "method": "development-cv761-cv767-link-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5592,
+          "longitude": -0.193
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 633",
+        "method": "development-castellon-terra-natura-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5605,
+          "longitude": -0.1565
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 636",
+        "method": "development-commercial-center-directional-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5362,
+          "longitude": -0.1762
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 637",
+        "method": "development-commercial-center-directional-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5364,
+          "longitude": -0.176
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 638",
+        "method": "development-cv758-plantacion-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5668,
+          "longitude": -0.2035
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 639",
+        "method": "development-cv758-plantacion-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5669,
+          "longitude": -0.204
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 640",
+        "method": "development-cv758-anton-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5648,
+          "longitude": -0.197
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 641",
+        "method": "development-cv758-les-tapiades-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5663,
+          "longitude": -0.185
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 642",
+        "method": "development-cv758-barranquet-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5606,
+          "longitude": -0.1885
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 643",
+        "method": "development-cv758-pinar-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.567,
+          "longitude": -0.1775
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 644",
+        "method": "development-cv758-restaurante-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.563,
+          "longitude": -0.1715
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 645",
+        "method": "development-cv758-restaurante-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5632,
+          "longitude": -0.1718
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 646",
+        "method": "development-terra-jardin-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5653,
+          "longitude": -0.1605
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 647",
+        "method": "development-cv758-butano-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5672,
+          "longitude": -0.1518
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 649",
+        "method": "development-carquendo-golf-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5545,
+          "longitude": -0.1882
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 661",
+        "method": "development-av-europa-commercial-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.539,
+          "longitude": -0.1792
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 662",
+        "method": "development-av-europa-commercial-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5386,
+          "longitude": -0.1788
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 663",
+        "method": "development-av-europa-commercial-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5415,
+          "longitude": -0.182
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 664",
+        "method": "development-av-europa-commercial-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5408,
+          "longitude": -0.181
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 665",
+        "method": "development-av-europa-commercial-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.543,
+          "longitude": -0.184
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "FIN 672",
+        "method": "development-balcon-finestrat-area-corridor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5489,
+          "longitude": -0.1865
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      }
+    ],
+    "warning": "All newly created positions are development-stage corridor reconciliations. They must be replaced with exact authoritative stop coordinates without changing composite IDs."
+  },
+  "topologyDecisions": [
+    "Line 014 is stored as two independently ordered open patterns: Finestrat Pueblo to Salto del Agua and the published return direction.",
+    "Line 015 is stored as two independently ordered open patterns: Hotel Bali to Finestrat Pueblo and the published return direction.",
+    "All four patterns use closesLoop false; no reverse sequence or last-to-first edge is inferred.",
+    "The bracketed public title of Line 015 is preserved, but no separate branch pattern is invented because the official route page publishes one complete ordered list for each direction.",
+    "Shared terminal StopNodes may end one pattern and begin the opposite pattern without converting the pair into a closed cycle.",
+    "The repeated FIN 672 occurrence across both routes and directions is the same stable identity and is not duplicated route-specifically."
+  ],
+  "identityDecisions": [
+    "All accepted shared objects are copied exactly from prior Benidorm scenarios.",
+    "FIN 606 and FIN 607 remain distinct directional CV-767 identities.",
+    "FIN 619 and FIN 627 remain distinct directional Golf Bahía identities.",
+    "FIN 621/625 and FIN 622/624 remain distinct directional Cantareria and Font Carrec identities.",
+    "FIN 636 and FIN 637 remain distinct directional commercial-center identities.",
+    "BND 185 and BND 189 remain distinct Terra Natura directional identities and are reused exactly from the accepted attractions scenario.",
+    "Every new StopNode receives a singleton StopPlace; similar names and proximity do not merge identities.",
+    "StopNode.sourceReferences is empty for new nodes because no individual OSM platform or stop_position object was adopted as strict runtime evidence."
+  ],
+  "reviewItems": [
+    {
+      "type": "coordinates",
+      "required": true,
+      "detail": "Replace all 41 newly created development positions with exact authoritative coordinates while preserving composite IDs and cross-package exact equality."
+    },
+    {
+      "type": "line-015-operational-variants",
+      "required": true,
+      "detail": "Verify from a downloadable operator timetable whether the bracketed Balcón/Golf and Tapiada/Terra Natura wording denotes trip-level variants. The canonical graph currently follows the single complete ordered list published for each direction."
+    },
+    {
+      "type": "line-014-snapshot-date",
+      "required": false,
+      "detail": "The complete Line 014 order was captured from the official 2026-03-03 print view; later current pages should be checked for route drift before any future replacement."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "benidorm-radial-family-rename-v1",
+      "description": "Renames package identity from benidorm-legacy-finestrat-v1 to benidorm-radial-finestrat-v1 without changing route/pattern objects, StopNode/StopPlace identities, coordinates, or settlement assignments."
+    }
+  ]
+}

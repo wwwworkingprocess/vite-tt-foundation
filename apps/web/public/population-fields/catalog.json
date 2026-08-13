@@ -54,6 +54,22 @@
       "scenarioCount": 7,
       "cropAnomalyScenarioIds": [],
       "sourceRound4ArchiveSha256": "f6d13f7c62522e900a131f789635142464d1a127e7873f1586454a932b5ee020"
+    },
+    {
+      "cityName": "Benidorm",
+      "primarySettlementId": "es-benidorm",
+      "externalCityId": "Q487981",
+      "gridVersion": "1.0.0",
+      "gridPath": "benidorm-v1/benidorm-city-population-grid-v1.round2.json",
+      "cropPath": "benidorm-v1/benidorm-population-grid-round3-crops.json",
+      "gridSha256": "712deed4b637ce07f2fec16728e8406dd93e53828348627246a4896653fe048f",
+      "cropSha256": "c4efd8f7ed8807cb65db81578ce33b54612f8afae37b6558040f586ad0843b73",
+      "rows": 176,
+      "columns": 198,
+      "resolutionDegrees": 0.001,
+      "scenarioCount": 12,
+      "cropAnomalyScenarioIds": [],
+      "sourceRound4ArchiveSha256": "b3dfd424fa45c8406d9d7c875e282ab8581e221cbd64fec231b56d90cf9325db"
     }
   ]
 }

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-north-v1",
+  "title": "Benidorm Radial North Network - Lines 016, 018 and 052",
+  "initialView": {
+    "center": {
+      "latitude": 38.6012,
+      "longitude": -0.14855
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "benidorm-016": {
+      "label": "016",
+      "color": "#1565c0"
+    },
+    "benidorm-018": {
+      "label": "018",
+      "color": "#2e7d32"
+    },
+    "benidorm-052": {
+      "label": "052",
+      "color": "#c62828"
+    }
+  },
+  "notes": [
+    "Northern Marina Baixa discovery component for the Benidorm legacy scenario family.",
+    "Lines 016 and 018 share the Cala Finestrat–Benidorm–La Nucia–Polop trunk and diverge to Guadalest and Fonts de l’Algar.",
+    "Line 052 links Callosa, Polop and La Nucia with Benidorm Centro.",
+    "All six patterns use independently ordered source lists with closesLoop false.",
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Package identity moved into the Benidorm radial family; route, pattern, stop, coordinate and settlement data are otherwise unchanged."
+  ]
+}

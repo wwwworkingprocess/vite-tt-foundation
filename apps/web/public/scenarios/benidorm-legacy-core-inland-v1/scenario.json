@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-core-inland-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Benidorm Legacy Core Inland Network - Lines 007, 008 and 009",
+  "primarySettlementId": "es-benidorm",
+  "settlementIds": [
+    "es-benidorm"
+  ],
+  "contentHash": "8146a3f4f61713749f45f89091b98a26fc3f97a8f23714b258be986e81b5bdb3",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "3545653edfcba78f169981abe1f8a322305ed6e9333a7e5efbec2191c47be1a2"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "e2a099a5ccb505f2b3400cc6070e7862d5f0e0c61d92add39d98fe78697d9562"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "b91b3df18fd578b6b5475e67452399c52586bf6e67ce553b94b6f2a06a882332"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "078e9686fb23c5a706c6a226afa83d2be793726a2300b6e5b8d84d88b051ea4a"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "028052b4a925a91563478aa4c41967b324bfc01790a6219a1658de08c2aa3a7a"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

@@ -44,6 +44,7 @@ describe('population field loader', () => {
     ['torrevieja-legacy-abc-v1', 'Q36730'],
     ['elche-urban-abc-v1', 'Q10509'],
     ['alicante-legacy-core-v1', 'Q11959'],
+    ['benidorm-legacy-core-v1', 'Q487981'],
   ])('loads the exact operational view for %s', async (scenarioId, cityId) => {
     const loader = createPopulationFieldLoader({
       baseUrl: '/',

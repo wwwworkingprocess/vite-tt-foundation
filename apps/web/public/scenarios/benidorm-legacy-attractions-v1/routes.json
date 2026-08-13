@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-attractions-v1",
+  "routes": [
+    {
+      "routeId": "benidorm-011",
+      "publicCode": "011",
+      "name": "[Estación Autobuses] - Benidorm Centro - Mediterráneo - Rincón de Loix - Paris - Severo Ochoa - Ciudad Patricia - Aqualandia/Mundomar",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-011-ida",
+          "directionLabel": "Hacia Londres, Ciudad Patricia y Aqualandia",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 26
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-385",
+            "marina-baixa-stop-bnd-290",
+            "marina-baixa-stop-bnd-291",
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-304",
+            "marina-baixa-stop-bnd-203",
+            "marina-baixa-stop-bnd-204",
+            "marina-baixa-stop-bnd-205",
+            "marina-baixa-stop-bnd-206",
+            "marina-baixa-stop-bnd-207",
+            "marina-baixa-stop-bnd-208",
+            "marina-baixa-stop-bnd-336",
+            "marina-baixa-stop-bnd-337",
+            "marina-baixa-stop-bnd-338",
+            "marina-baixa-stop-bnd-311",
+            "marina-baixa-stop-bnd-310",
+            "marina-baixa-stop-bnd-211",
+            "marina-baixa-stop-bnd-212",
+            "marina-baixa-stop-bnd-213",
+            "marina-baixa-stop-bnd-301",
+            "marina-baixa-stop-bnd-300",
+            "marina-baixa-stop-bnd-272",
+            "marina-baixa-stop-bnd-339",
+            "marina-baixa-stop-bnd-292"
+          ]
+        },
+        {
+          "patternId": "benidorm-011-vuelta",
+          "directionLabel": "Hacia Centro y Estación de Autobuses",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 27
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-292",
+            "marina-baixa-stop-bnd-270",
+            "marina-baixa-stop-bnd-271",
+            "marina-baixa-stop-bnd-274",
+            "marina-baixa-stop-bnd-275",
+            "marina-baixa-stop-bnd-228",
+            "marina-baixa-stop-bnd-229",
+            "marina-baixa-stop-bnd-362",
+            "marina-baixa-stop-bnd-363",
+            "marina-baixa-stop-bnd-299",
+            "marina-baixa-stop-bnd-268",
+            "marina-baixa-stop-bnd-321",
+            "marina-baixa-stop-bnd-234",
+            "marina-baixa-stop-bnd-235",
+            "marina-baixa-stop-bnd-236",
+            "marina-baixa-stop-bnd-237",
+            "marina-baixa-stop-bnd-238",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-242",
+            "marina-baixa-stop-bnd-243",
+            "marina-baixa-stop-bnd-245",
+            "marina-baixa-stop-bnd-249",
+            "marina-baixa-stop-bnd-295",
+            "marina-baixa-stop-bnd-385"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "011",
+          "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/011-estacion-autobuses-benidorm-centro-mediterraneo-rincon-de-loix-paris-severo-ochoa-ciudad-patricia-aqualandiamundomar?fecha=26%2F06%2F2026"
+        },
+        {
+          "source": "benidorm-attractions-source-capture",
+          "sourceRouteId": "011",
+          "sourceFile": "line-011-ordered-capture.json"
+        }
+      ]
+    },
+    {
+      "routeId": "benidorm-042",
+      "publicCode": "042",
+      "name": "Av. Beniardá - Terra Natura - Terra Mítica",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-042-ida",
+          "directionLabel": "Av. Beniardá - Terra Natura - Terra Mítica",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 7
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-153",
+            "marina-baixa-stop-bnd-154",
+            "marina-baixa-stop-bnd-183",
+            "marina-baixa-stop-bnd-184",
+            "marina-baixa-stop-bnd-185",
+            "marina-baixa-stop-bnd-188",
+            "marina-baixa-stop-bnd-187"
+          ]
+        },
+        {
+          "patternId": "benidorm-042-vuelta",
+          "directionLabel": "Terra Mítica - Terra Natura - Av. Beniardá",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 7
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-187",
+            "marina-baixa-stop-bnd-186",
+            "marina-baixa-stop-bnd-189",
+            "marina-baixa-stop-bnd-181",
+            "marina-baixa-stop-bnd-182",
+            "marina-baixa-stop-bnd-157",
+            "marina-baixa-stop-bnd-153"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "042",
+          "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/042-av-beniarda-terra-natura-terra-mitica?fecha=26%2F06%2F2026"
+        },
+        {
+          "source": "benidorm-attractions-source-capture",
+          "sourceRouteId": "042",
+          "sourceFile": "line-042-ordered-capture.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-core-inland-v1",
+  "title": "Benidorm Legacy Core Inland Network - Lines 007, 008 and 009",
+  "initialView": {
+    "center": {
+      "latitude": 38.548265,
+      "longitude": -0.1328
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "benidorm-007": {
+      "label": "007",
+      "color": "#2e7d32"
+    },
+    "benidorm-008": {
+      "label": "008",
+      "color": "#1565c0"
+    },
+    "benidorm-009": {
+      "label": "009",
+      "color": "#c62828"
+    }
+  },
+  "notes": [
+    "Inland core discovery component for the Benidorm legacy scenario family.",
+    "All six directions are stored independently with closesLoop false; reverse patterns are never inferred.",
+    "Line 009 uses official route identity evidence and a current secondary ordered-route PDF for both directions.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

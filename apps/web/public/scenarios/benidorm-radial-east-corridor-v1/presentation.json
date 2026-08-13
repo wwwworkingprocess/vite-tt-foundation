@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-east-corridor-v1",
+  "title": "Benidorm Radial East Corridor Network - Lines 010 and 050",
+  "initialView": {
+    "center": {
+      "latitude": 38.568403037,
+      "longitude": -0.087325
+    },
+    "zoom": 11
+  },
+  "routeStyles": {
+    "benidorm-010": {
+      "label": "010",
+      "color": "#00897b"
+    },
+    "benidorm-050": {
+      "label": "050",
+      "color": "#5e35b1"
+    }
+  },
+  "notes": [
+    "East-corridor discovery component for the Benidorm legacy scenario family.",
+    "Both routes use independently ordered official ida/vuelta patterns with closesLoop false.",
+    "Line 010 continues through El Albir to Altea; Line 050 branches inland from El Albir to L'Alfàs del Pi.",
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Package identity moved into the Benidorm radial family; route, pattern, stop, coordinate and settlement data are otherwise unchanged."
+  ]
+}

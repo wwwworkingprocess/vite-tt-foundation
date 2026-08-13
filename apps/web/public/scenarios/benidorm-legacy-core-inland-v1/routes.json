@@ -1,0 +1,192 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-core-inland-v1",
+  "routes": [
+    {
+      "routeId": "benidorm-007",
+      "publicCode": "007",
+      "name": "Beniardá - Alfonso Puchades - Comunidad Valenciana - Salto del Agua",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-007-ida",
+          "directionLabel": "Hacia el Salto del Agua",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 7
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-183",
+            "marina-baixa-stop-bnd-157",
+            "marina-baixa-stop-bnd-355",
+            "marina-baixa-stop-bnd-288",
+            "marina-baixa-stop-bnd-289",
+            "marina-baixa-stop-bnd-342",
+            "marina-baixa-stop-bnd-246"
+          ]
+        },
+        {
+          "patternId": "benidorm-007-vuelta",
+          "directionLabel": "Hacia Alfonso Puchades, Beniardá",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 10
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-247",
+            "marina-baixa-stop-bnd-249",
+            "marina-baixa-stop-bnd-245",
+            "marina-baixa-stop-bnd-343",
+            "marina-baixa-stop-bnd-277",
+            "marina-baixa-stop-bnd-303",
+            "marina-baixa-stop-bnd-287",
+            "marina-baixa-stop-bnd-153",
+            "marina-baixa-stop-bnd-154",
+            "marina-baixa-stop-bnd-183"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "007",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/007?fecha=23%2F12%2F2025"
+        },
+        {
+          "source": "benidorm-core-inland-source-capture",
+          "sourceRouteId": "007",
+          "sourceFile": "line-007-ordered-capture.json"
+        }
+      ]
+    },
+    {
+      "routeId": "benidorm-008",
+      "publicCode": "008",
+      "name": "Estación Tren - Beniardá - Jaime I - [R. Bayona / Nicaragua] - Pérez Devesa (IES Mediterrania)",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-008-ida",
+          "directionLabel": "Hacia Perez Devesa",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 10
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-155",
+            "marina-baixa-stop-bnd-156",
+            "marina-baixa-stop-bnd-157",
+            "marina-baixa-stop-bnd-133",
+            "marina-baixa-stop-bnd-134",
+            "marina-baixa-stop-bnd-135",
+            "marina-baixa-stop-bnd-136",
+            "marina-baixa-stop-bnd-98",
+            "marina-baixa-stop-bnd-140",
+            "marina-baixa-stop-bnd-141"
+          ]
+        },
+        {
+          "patternId": "benidorm-008-vuelta",
+          "directionLabel": "Hacia Estación Tren",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 10
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-148",
+            "marina-baixa-stop-bnd-149",
+            "marina-baixa-stop-bnd-99",
+            "marina-baixa-stop-bnd-150",
+            "marina-baixa-stop-bnd-127",
+            "marina-baixa-stop-bnd-199",
+            "marina-baixa-stop-bnd-128",
+            "marina-baixa-stop-bnd-129",
+            "marina-baixa-stop-bnd-153",
+            "marina-baixa-stop-bnd-155"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "008",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/008?fecha=05%2F02%2F2026"
+        },
+        {
+          "source": "benidorm-core-inland-source-capture",
+          "sourceRouteId": "008",
+          "sourceFile": "line-008-ordered-capture.json"
+        }
+      ]
+    },
+    {
+      "routeId": "benidorm-009",
+      "publicCode": "009",
+      "name": "Jaime I - Alfonso Puchades - Comunitat Valenciana - Salto del Agua",
+      "dataStatus": "legacy-family-current-secondary-ordered-capture-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-009-ida",
+          "directionLabel": "Hacia C/ Llaut, 1 AC",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-127",
+            "marina-baixa-stop-bnd-199",
+            "marina-baixa-stop-bnd-128",
+            "marina-baixa-stop-bnd-129",
+            "marina-baixa-stop-bnd-355",
+            "marina-baixa-stop-bnd-288",
+            "marina-baixa-stop-bnd-289",
+            "marina-baixa-stop-bnd-342",
+            "marina-baixa-stop-bnd-249"
+          ]
+        },
+        {
+          "patternId": "benidorm-009-vuelta",
+          "directionLabel": "Hacia Av. Jaime I, 7",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-249",
+            "marina-baixa-stop-bnd-245",
+            "marina-baixa-stop-bnd-343",
+            "marina-baixa-stop-bnd-277",
+            "marina-baixa-stop-bnd-303",
+            "marina-baixa-stop-bnd-287",
+            "marina-baixa-stop-bnd-133",
+            "marina-baixa-stop-bnd-134",
+            "marina-baixa-stop-bnd-152"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "009",
+          "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/009-jaime-i-alfonso-puchades-comunitat-valenciana-salto-del-agua"
+        },
+        {
+          "source": "benidorm-core-inland-source-capture",
+          "sourceRouteId": "009",
+          "sourceFile": "line-009-ordered-capture.json"
+        },
+        {
+          "source": "moovit-current-ordered-route-pdf",
+          "sourceRouteId": "009",
+          "sourceFile": "https://appassets.mvtdev.com/map/149/l/4487/83699963.pdf"
+        }
+      ]
+    }
+  ]
+}

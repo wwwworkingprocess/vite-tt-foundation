@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-core-v1",
+  "generatedAt": "2026-08-04T14:35:00+02:00",
+  "sources": [
+    {
+      "sourceId": "avanza-line-001-current",
+      "name": "Avanza / LLorente Bus Line 001 ordered stop lists",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/001",
+      "role": "Official route identity, ordered ida/vuelta occurrences, stop codes, names, and short-working evidence."
+    },
+    {
+      "sourceId": "avanza-line-004-current",
+      "name": "Avanza / LLorente Bus Line 004 ordered stop lists",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/004",
+      "role": "Official route identity, ordered ida/vuelta occurrences, stop codes and names."
+    },
+    {
+      "sourceId": "avanza-line-005-current",
+      "name": "Avanza / LLorente Bus Line 005 ordered stop lists",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/005-cementerio-sjaime-severo-ochoa-ramon-y-cajal-ametlla-mar-rincon-loix-mediterraneo-benidorm-centro",
+      "role": "Official route identity, ordered ida/vuelta occurrences, stop codes, names and directional asymmetry."
+    },
+    {
+      "sourceId": "gva-current-interurban-gtfs-index",
+      "name": "Generalitat Valenciana open-data GTFS/CSV index",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://dadesobertes.gva.es/es/dataset/tra-hyr-atmv-horaris-i-rutes",
+      "role": "Confirms an official geolocated current transport dataset and stop coordinate fields; the complete CSV was not imported into this runtime."
+    },
+    {
+      "sourceId": "transitland-current-stop-geohashes",
+      "name": "Transitland current feed stop Onestop IDs",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "https://www.transit.land/feeds/f-autob%C3%BAs~interurbano~comunidad~valenciana",
+      "role": "Current GTFS-derived geohash centres for selected operator stops and feed cross-check."
+    },
+    {
+      "sourceId": "public-stop-location-spot-checks",
+      "name": "Public map and station pages for Benidorm stop-location spot checks",
+      "accessedAt": "2026-08-04",
+      "sourceFile": "Mapcarta, Busmaps and public station/destination pages recorded in the discovery audit",
+      "role": "Coordinates for selected anchors and address-level corridor reconciliation."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "marina-baixa-composite-stop-identity-v1",
+      "description": "Normalizes the full operator stop code as a stable lowercase StopNode suffix and creates one singleton StopPlace with the same composite suffix."
+    },
+    {
+      "transformationId": "benidorm-independent-directions-v1",
+      "description": "Stores the six official ida/vuelta lists independently, with closesLoop false and without inferred reverse edges."
+    },
+    {
+      "transformationId": "benidorm-line-001-canonical-full-service-v1",
+      "description": "Selects the full BND 155 to BND 292 and BND 292 to BND 155 lists as the canonical Line 001 representation; source-backed BND 229 short workings are recorded but not modeled as sequential alternative patterns."
+    },
+    {
+      "transformationId": "benidorm-line-004-no-unproved-branch-v1",
+      "description": "Does not invent a Ramón y Cajal branch absent from the captured ordered Line 004 lists."
+    },
+    {
+      "transformationId": "benidorm-line-005-directional-asymmetry-v1",
+      "description": "Preserves BND 362 and BND 363 only in the published vuelta sequence; no reverse sequence is inferred."
+    },
+    {
+      "transformationId": "benidorm-development-coordinate-reconciliation-v1",
+      "description": "Uses 23 directly source-anchored current positions and 49 deterministic address/corridor reconciliations. All positions are finite and suitable for development visualization; address-reconciled positions remain review items."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Adds exactly one catalog descriptor and recomputes asset and aggregate SHA-256 values from serialized bytes."
+    }
+  ],
+  "warnings": [
+    "The project-owner naming policy uses legacy, while ordered route evidence and geography are current 2026 captures; this package does not claim a historical timetable date.",
+    "Address-reconciled development coordinates are explicitly provisional. Replace them only through an identity-preserving reviewed update using exact official GTFS or operator map coordinates.",
+    "Line 001 has source-backed BND 229 short workings; they are not represented as sequential patterns on the canonical Route.",
+    "Line 004 advertises a bracketed Ramón y Cajal form, but the captured ordered lists do not prove its sequence, so it is not modeled.",
+    "Different composite stop codes remain separate StopNodes and singleton StopPlaces even when names or positions are close.",
+    "StopNode.sourceReferences is empty because no individual OSM platform/stop_position object was adopted as strict runtime evidence.",
+    "Powered by MITRAMS for the referenced official NAP/GVA feed ecosystem. Attribution: https://www.transportes.gob.es/"
+  ]
+}

@@ -22,6 +22,7 @@ Read before implementation:
 2. `docs/data/population-fields-v1-provenance.md`
 3. `apps/web/public/population-fields/catalog.json`
 
-Prepared current cities: Torrevieja, Elche, Alicante.
+Original preparation cities: Torrevieja, Elche, Alicante.
 
-Planned later city: Benidorm, including radial families. Benidorm is not bundled in this overlay.
+Benidorm, including radial families, was integrated later under the same canonical
+population-field contract; it was not part of this historical preparation overlay.

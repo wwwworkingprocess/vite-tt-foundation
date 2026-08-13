@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-finestrat-v1",
+  "title": "Benidorm Radial Finestrat Network - Lines 014 and 015",
+  "initialView": {
+    "center": {
+      "latitude": 38.54705,
+      "longitude": -0.16465
+    },
+    "zoom": 11
+  },
+  "routeStyles": {
+    "benidorm-014": {
+      "label": "014",
+      "color": "#7b1fa2"
+    },
+    "benidorm-015": {
+      "label": "015",
+      "color": "#2e7d32"
+    }
+  },
+  "notes": [
+    "Finestrat discovery component for the Benidorm legacy scenario family.",
+    "Both routes use independently ordered official ida/vuelta patterns with closesLoop false.",
+    "Line 014 links Finestrat Pueblo, Golf Bahía, Cala de Finestrat and western Benidorm to Salto del Agua.",
+    "Line 015 links Hotel Bali and the coastal/commercial corridor with Golf Bahía, Balcón de Finestrat, Terra Natura, Les Tapiades and Finestrat Pueblo.",
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Package identity moved into the Benidorm radial family; route, pattern, stop, coordinate and settlement data are otherwise unchanged."
+  ]
+}

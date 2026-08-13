@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-north-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Benidorm Radial North Network - Lines 016, 018 and 052",
+  "primarySettlementId": "es-benidorm",
+  "settlementIds": [
+    "es-benidorm",
+    "es-finestrat",
+    "es-la-vila-joiosa",
+    "es-la-nucia",
+    "es-polop",
+    "es-callosa-den-sarria",
+    "es-el-castell-de-guadalest"
+  ],
+  "contentHash": "5a3f16596763493f02b6df900e50d630ce276d908166e20b3dd098a796fe43ff",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "f8dc51853bfe0f2d80b39ab8710a6cd24ff222da1821d35eb6a6dd09963260fd"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "cbfd11341ccb8e383eb22571008a028166be24ba398af20f66dafb609e3f1252"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "57e9c1e68641141211abf45b3155dc2c87a8d78d58560717b64c75b0266ee9ec"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "04e3b3baca83328a46e75a4917f0a2a835bb2b8c15a307204cf0e104d13a73d0"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "5c2a416c6944222ad8afee421385d4d5c1e35c7de0241b79431d1ecc4d2da1bb"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

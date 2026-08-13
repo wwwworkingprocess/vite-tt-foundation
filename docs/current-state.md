@@ -72,10 +72,10 @@ before current authority is replaced. Failed restore is non-destructive.
 ## Scenario catalogue and distribution
 
 - Default scenario: `torrevieja-legacy-abc-v1`.
-- Public catalogue: 25 ordered entries, all currently marked
+- Public catalogue: 37 ordered entries, all currently marked
   `development-seed`.
-- Scenario directories: 27. `torrevieja-mini-v1` and `torrevieja-v1` are not
-  public catalogue entries.
+- Scenario directories: 38. `torrevieja-mini-v1` is not a public catalogue
+  entry.
 - Current PWA build includes `scenarios/**/*.json` and
   `population-fields/**/*` in generated assets. The
   earlier catalogue/default-plus-runtime-cache proposal is not implemented.

@@ -1,0 +1,525 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-coast-crosscity-v1",
+  "generatedAt": "2026-08-04T17:17:00+02:00",
+  "sources": [
+    {
+      "sourceId": "avanza-line-012-ordered",
+      "name": "Avanza / LLorente Bus Line 012 official ordered route page",
+      "url": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/012-altea-albir-21-albir-garden-comunidad-valenciana-alfonso-puchades-centros-comerciales-hospital-la-vila-joiosa?fecha=26%2F06%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Route identity and independently ordered ida/vuelta stop codes and names."
+    },
+    {
+      "sourceId": "avanza-line-054-ordered",
+      "name": "Avanza / LLorente Bus Line 054 official ordered route page",
+      "url": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/054-la-vila-joiosa-hospital-calas-benidorm-estacion-autobuses?fecha=26%2F06%2F2026",
+      "accessedAt": "2026-08-04",
+      "role": "Route identity and independently ordered ida/vuelta stop codes and names."
+    },
+    {
+      "sourceId": "hospital-marina-baixa-location",
+      "name": "Hospital Marina Baixa public map location",
+      "url": "https://mapcarta.com/es/W83405498",
+      "accessedAt": "2026-08-04",
+      "role": "Hospital-area geographic anchor; not exact bus-platform evidence."
+    },
+    {
+      "sourceId": "tanatorio-marina-baixa-location",
+      "name": "Tanatorio Crematorio Marina Baixa public map location",
+      "url": "https://mapcarta.com/es/W167270172",
+      "accessedAt": "2026-08-04",
+      "role": "Tanatorio-area geographic anchor; not exact bus-platform evidence."
+    },
+    {
+      "sourceId": "playa-torres-location",
+      "name": "Playa del Torres public map location",
+      "url": "https://mapcarta.com/33028132",
+      "accessedAt": "2026-08-04",
+      "role": "Beach-area geographic anchor; not exact bus-platform evidence."
+    },
+    {
+      "sourceId": "accepted-benidorm-registry",
+      "name": "Previously accepted Benidorm legacy component scenarios",
+      "role": "Exact StopNode and StopPlace identity reuse.",
+      "scenarioIds": [
+        "benidorm-legacy-attractions-v1",
+        "benidorm-legacy-core-inland-v1",
+        "benidorm-legacy-core-v1",
+        "benidorm-legacy-core-west-v1",
+        "benidorm-legacy-east-corridor-v1",
+        "benidorm-legacy-local-special-v1"
+      ]
+    }
+  ],
+  "identityContract": {
+    "stableKey": "operator composite stop code including municipality prefix",
+    "stopNodePattern": "marina-baixa-stop-<prefix-lower>-<number>",
+    "stopPlacePattern": "marina-baixa-place-<prefix-lower>-<number>",
+    "physicalGroupingPolicy": "singleton StopPlace per composite StopNode unless separately approved",
+    "bareNumericNormalization": {
+      "ALT": [
+        "479",
+        "482"
+      ],
+      "BND": [
+        "386"
+      ],
+      "VIL": [
+        "848",
+        "849",
+        "850",
+        "851",
+        "852",
+        "853"
+      ],
+      "decision": "Prefix inferred only from adjacent same-municipality route occurrences and published stop address context; recorded explicitly."
+    }
+  },
+  "coordinateSummary": {
+    "methods": {
+      "reused-accepted-exact": 98,
+      "development-cap-blanc-planet-corridor-anchor": 2,
+      "development-llebeig-cala-anchor": 4,
+      "development-tanatorio-corridor-anchor": 1,
+      "development-n332-hospital-corridor-anchor": 4,
+      "public-hospital-area-anchor": 1,
+      "development-hospital-west-approach-anchor": 4,
+      "development-colon-street-anchor": 7,
+      "development-pais-valencia-anchor": 3,
+      "development-huit-maig-terminal-anchor": 2,
+      "development-gonzalo-soriano-anchor": 1,
+      "development-pizarro-street-anchor": 1,
+      "development-port-roundabout-anchor": 1,
+      "development-n332-town-approach-anchor": 2,
+      "development-riu-torres-corridor-anchor": 1,
+      "public-tanatorio-area-anchor": 1,
+      "development-panama-street-anchor": 1,
+      "public-playa-torres-area-anchor": 1,
+      "development-hospital-pp33-anchor": 1
+    },
+    "newCoordinateEvidence": [
+      {
+        "operatorStopCode": "ALT 479",
+        "method": "development-cap-blanc-planet-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5858,
+          "longitude": -0.0603
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "ALT 482",
+        "method": "development-cap-blanc-planet-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.585,
+          "longitude": -0.06
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "BND 198",
+        "method": "development-panama-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5396,
+          "longitude": -0.1367
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 709",
+        "method": "development-tanatorio-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.528,
+          "longitude": -0.1868
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 710",
+        "method": "public-tanatorio-area-anchor",
+        "source": "Tanatorio Crematorio Marina Baixa public map location; used as an area anchor rather than claimed bus-platform geometry.",
+        "position": {
+          "latitude": 38.52814,
+          "longitude": -0.18664
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 711",
+        "method": "development-n332-hospital-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5278,
+          "longitude": -0.1887
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 712",
+        "method": "development-n332-hospital-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5283,
+          "longitude": -0.1895
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 713",
+        "method": "development-n332-hospital-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.529,
+          "longitude": -0.1935
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 714",
+        "method": "development-n332-hospital-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5288,
+          "longitude": -0.1938
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 715",
+        "method": "public-hospital-area-anchor",
+        "source": "Hospital Marina Baixa public map location; used as an area anchor rather than claimed bus-platform geometry.",
+        "position": {
+          "latitude": 38.53004,
+          "longitude": -0.19826
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 716",
+        "method": "development-riu-torres-corridor-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5188,
+          "longitude": -0.2005
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 717",
+        "method": "development-hospital-west-approach-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5288,
+          "longitude": -0.2
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 718",
+        "method": "development-n332-town-approach-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5175,
+          "longitude": -0.203
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 719",
+        "method": "development-hospital-west-approach-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5268,
+          "longitude": -0.2025
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 720",
+        "method": "development-n332-town-approach-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.516,
+          "longitude": -0.2065
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 721",
+        "method": "development-hospital-west-approach-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5248,
+          "longitude": -0.2045
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 722",
+        "method": "development-port-roundabout-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5145,
+          "longitude": -0.2095
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 723",
+        "method": "development-hospital-west-approach-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5225,
+          "longitude": -0.2065
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 725",
+        "method": "development-colon-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.515,
+          "longitude": -0.2105
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 726",
+        "method": "development-colon-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5127,
+          "longitude": -0.2155
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 727",
+        "method": "development-colon-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5135,
+          "longitude": -0.215
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 730",
+        "method": "development-huit-maig-terminal-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5075,
+          "longitude": -0.2328
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 731",
+        "method": "development-huit-maig-terminal-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5075,
+          "longitude": -0.2326
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 732",
+        "method": "development-pizarro-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5092,
+          "longitude": -0.2268
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 768",
+        "method": "development-gonzalo-soriano-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.509,
+          "longitude": -0.2295
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 770",
+        "method": "development-pais-valencia-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5098,
+          "longitude": -0.225
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 771",
+        "method": "development-pais-valencia-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.51,
+          "longitude": -0.226
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 773",
+        "method": "development-pais-valencia-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.511,
+          "longitude": -0.2225
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 807",
+        "method": "development-colon-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5142,
+          "longitude": -0.2128
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 808",
+        "method": "development-colon-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5135,
+          "longitude": -0.2128
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 818",
+        "method": "development-colon-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5115,
+          "longitude": -0.22
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 831",
+        "method": "development-colon-street-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5118,
+          "longitude": -0.2188
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 848",
+        "method": "development-llebeig-cala-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5279,
+          "longitude": -0.173
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 849",
+        "method": "development-llebeig-cala-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5277,
+          "longitude": -0.174
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 850",
+        "method": "development-llebeig-cala-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.5278,
+          "longitude": -0.1738
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 851",
+        "method": "development-llebeig-cala-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.528,
+          "longitude": -0.1728
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 852",
+        "method": "development-hospital-pp33-anchor",
+        "source": "Reviewed development-stage street/corridor placement preserving official route order and municipality assignment.",
+        "position": {
+          "latitude": 38.531,
+          "longitude": -0.199
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      },
+      {
+        "operatorStopCode": "VIL 853",
+        "method": "public-playa-torres-area-anchor",
+        "source": "Playa del Torres public map location; used as an area anchor rather than claimed bus-platform geometry.",
+        "position": {
+          "latitude": 38.51497,
+          "longitude": -0.19756
+        },
+        "reviewStatus": "identity-preserving exact-coordinate replacement required"
+      }
+    ],
+    "warning": "All newly created positions are development-stage corridor reconciliations or public place-area anchors. They must be replaced with exact authoritative stop coordinates without changing composite IDs."
+  },
+  "topologyDecisions": [
+    "Line 012 is stored as two independently ordered open patterns: Altea to La Vila Joiosa and La Vila Joiosa to Altea.",
+    "Line 054 is stored as two independently ordered open patterns: La Vila Joiosa to Benidorm bus station and the reverse published direction.",
+    "All four patterns use closesLoop false; no reverse sequence or last-to-first edge is inferred.",
+    "The same terminal StopNode may end one pattern and begin the opposite pattern without converting the pair into a closed cycle.",
+    "Shared BND, FIN and VIL composite identities are reused exactly across Lines 012 and 054 and from accepted prior scenarios.",
+    "Bare numeric codes rendered by the official pages are normalized only when surrounding route context makes the municipality prefix unambiguous."
+  ],
+  "identityDecisions": [
+    "All accepted shared objects are copied exactly from prior Benidorm scenarios.",
+    "VIL 730 and VIL 731 remain distinct directional Huit de Maig terminal identities.",
+    "VIL 848/VIL 850 and VIL 849/VIL 851 remain separate directional C/ Llebeig identities.",
+    "ALT 479 and ALT 482 remain distinct El Planet/Cap Blanc direction-specific identities.",
+    "VIL 715 is shared exactly by both routes and both directions where the operator code matches.",
+    "Every new StopNode receives a singleton StopPlace; proximity and paired street names do not merge identities.",
+    "StopNode.sourceReferences is empty for new nodes because no individual OSM platform or stop_position object was adopted as strict runtime evidence."
+  ],
+  "reviewItems": [
+    {
+      "type": "coordinates",
+      "required": true,
+      "detail": "Replace all 38 newly created development positions with exact authoritative coordinates while preserving composite IDs and cross-package exact equality."
+    },
+    {
+      "type": "bare-code-prefix-verification",
+      "required": true,
+      "detail": "Verify ALT 479/482, BND 386 and VIL 848-853 against an authoritative downloadable stop registry; current prefixes are explicit source-context reconciliations."
+    },
+    {
+      "type": "service-date",
+      "required": false,
+      "detail": "The selected operator pages displayed ordered route lists for 2026-06-26 even where the timetable panel showed no service for that date. Route topology is preserved; service calendar modeling remains outside this scenario graph."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "benidorm-radial-family-rename-v1",
+      "description": "Renames package identity from benidorm-legacy-coast-crosscity-v1 to benidorm-radial-coast-crosscity-v1 without changing route/pattern objects, StopNode/StopPlace identities, coordinates, or settlement assignments."
+    }
+  ]
+}

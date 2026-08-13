@@ -1,0 +1,223 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-east-corridor-v1",
+  "routes": [
+    {
+      "routeId": "benidorm-010",
+      "publicCode": "010",
+      "name": "Altea - Puerto de Altea - Playa Albir - Albir - Severo Ochoa - Rincón de Loix - Mediterráneo - Benidorm Centro",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-010-ida",
+          "directionLabel": "Desde Benidorm Centro hacia Rincón, Albir y Altea",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 34
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-304",
+            "marina-baixa-stop-bnd-203",
+            "marina-baixa-stop-bnd-204",
+            "marina-baixa-stop-bnd-205",
+            "marina-baixa-stop-bnd-206",
+            "marina-baixa-stop-bnd-207",
+            "marina-baixa-stop-bnd-208",
+            "marina-baixa-stop-bnd-209",
+            "marina-baixa-stop-bnd-210",
+            "marina-baixa-stop-bnd-211",
+            "marina-baixa-stop-bnd-212",
+            "marina-baixa-stop-bnd-213",
+            "marina-baixa-stop-bnd-214",
+            "marina-baixa-stop-bnd-215",
+            "marina-baixa-stop-bnd-216",
+            "marina-baixa-stop-bnd-217",
+            "marina-baixa-stop-bnd-305",
+            "marina-baixa-stop-bnd-218",
+            "marina-baixa-stop-bnd-219",
+            "marina-baixa-stop-alf-521",
+            "marina-baixa-stop-alf-547",
+            "marina-baixa-stop-alf-517",
+            "marina-baixa-stop-alf-510",
+            "marina-baixa-stop-alf-512",
+            "marina-baixa-stop-alf-513",
+            "marina-baixa-stop-alt-406",
+            "marina-baixa-stop-alt-407",
+            "marina-baixa-stop-alt-408",
+            "marina-baixa-stop-alt-409",
+            "marina-baixa-stop-alt-484",
+            "marina-baixa-stop-alt-411"
+          ]
+        },
+        {
+          "patternId": "benidorm-010-vuelta",
+          "directionLabel": "Desde Altea hacia Albir, Rincón y Benidorm Centro",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-alt-411",
+            "marina-baixa-stop-alt-472",
+            "marina-baixa-stop-alt-413",
+            "marina-baixa-stop-alt-414",
+            "marina-baixa-stop-alt-415",
+            "marina-baixa-stop-alt-416",
+            "marina-baixa-stop-alf-508",
+            "marina-baixa-stop-alf-514",
+            "marina-baixa-stop-alf-515",
+            "marina-baixa-stop-alf-509",
+            "marina-baixa-stop-alf-518",
+            "marina-baixa-stop-alf-546",
+            "marina-baixa-stop-alf-519",
+            "marina-baixa-stop-alf-520",
+            "marina-baixa-stop-bnd-222",
+            "marina-baixa-stop-bnd-223",
+            "marina-baixa-stop-bnd-224",
+            "marina-baixa-stop-bnd-225",
+            "marina-baixa-stop-bnd-226",
+            "marina-baixa-stop-bnd-227",
+            "marina-baixa-stop-bnd-228",
+            "marina-baixa-stop-bnd-229",
+            "marina-baixa-stop-bnd-230",
+            "marina-baixa-stop-bnd-231",
+            "marina-baixa-stop-bnd-232",
+            "marina-baixa-stop-bnd-364",
+            "marina-baixa-stop-bnd-234",
+            "marina-baixa-stop-bnd-235",
+            "marina-baixa-stop-bnd-236",
+            "marina-baixa-stop-bnd-237",
+            "marina-baixa-stop-bnd-238",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "010",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/010?fecha=12%2F06%2F2026"
+        },
+        {
+          "source": "benidorm-east-corridor-source-capture",
+          "sourceRouteId": "010",
+          "sourceFile": "line-010-ordered-capture.json"
+        }
+      ]
+    },
+    {
+      "routeId": "benidorm-050",
+      "publicCode": "050",
+      "name": "L'Alfàs del Pi - El Albir - Severo Ochoa - Rincón de Loix - Mediterráneo - Benidorm Centro",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-050-ida",
+          "directionLabel": "Desde Benidorm Centro hacia Rincón, Albir y Alfaz",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-304",
+            "marina-baixa-stop-bnd-203",
+            "marina-baixa-stop-bnd-204",
+            "marina-baixa-stop-bnd-205",
+            "marina-baixa-stop-bnd-206",
+            "marina-baixa-stop-bnd-207",
+            "marina-baixa-stop-bnd-208",
+            "marina-baixa-stop-bnd-209",
+            "marina-baixa-stop-bnd-210",
+            "marina-baixa-stop-bnd-211",
+            "marina-baixa-stop-bnd-212",
+            "marina-baixa-stop-bnd-213",
+            "marina-baixa-stop-bnd-214",
+            "marina-baixa-stop-bnd-215",
+            "marina-baixa-stop-bnd-216",
+            "marina-baixa-stop-bnd-217",
+            "marina-baixa-stop-bnd-305",
+            "marina-baixa-stop-bnd-218",
+            "marina-baixa-stop-bnd-219",
+            "marina-baixa-stop-alf-521",
+            "marina-baixa-stop-alf-547",
+            "marina-baixa-stop-alf-517",
+            "marina-baixa-stop-alf-510",
+            "marina-baixa-stop-alf-512",
+            "marina-baixa-stop-alf-513",
+            "marina-baixa-stop-alf-522",
+            "marina-baixa-stop-alf-523",
+            "marina-baixa-stop-alf-524",
+            "marina-baixa-stop-alf-525",
+            "marina-baixa-stop-alf-526"
+          ]
+        },
+        {
+          "patternId": "benidorm-050-vuelta",
+          "directionLabel": "Desde Alfaz hacia Albir, Rincón y Benidorm Centro",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-alf-526",
+            "marina-baixa-stop-alf-503",
+            "marina-baixa-stop-alf-555",
+            "marina-baixa-stop-alf-505",
+            "marina-baixa-stop-alf-506",
+            "marina-baixa-stop-alf-507",
+            "marina-baixa-stop-alf-508",
+            "marina-baixa-stop-alf-514",
+            "marina-baixa-stop-alf-515",
+            "marina-baixa-stop-alf-509",
+            "marina-baixa-stop-alf-518",
+            "marina-baixa-stop-alf-546",
+            "marina-baixa-stop-alf-519",
+            "marina-baixa-stop-alf-520",
+            "marina-baixa-stop-bnd-222",
+            "marina-baixa-stop-bnd-223",
+            "marina-baixa-stop-bnd-224",
+            "marina-baixa-stop-bnd-225",
+            "marina-baixa-stop-bnd-226",
+            "marina-baixa-stop-bnd-227",
+            "marina-baixa-stop-bnd-228",
+            "marina-baixa-stop-bnd-229",
+            "marina-baixa-stop-bnd-230",
+            "marina-baixa-stop-bnd-231",
+            "marina-baixa-stop-bnd-232",
+            "marina-baixa-stop-bnd-364",
+            "marina-baixa-stop-bnd-234",
+            "marina-baixa-stop-bnd-235",
+            "marina-baixa-stop-bnd-236",
+            "marina-baixa-stop-bnd-237",
+            "marina-baixa-stop-bnd-238",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "050",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/050?fecha=28%2F07%2F2026"
+        },
+        {
+          "source": "benidorm-east-corridor-source-capture",
+          "sourceRouteId": "050",
+          "sourceFile": "line-050-ordered-capture.json"
+        }
+      ]
+    }
+  ]
+}

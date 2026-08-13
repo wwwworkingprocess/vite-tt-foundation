@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-attractions-v1",
+  "settlements": [
+    {
+      "settlementId": "es-benidorm",
+      "name": "Benidorm",
+      "countryCode": "ES",
+      "adminArea": "Alicante",
+      "center": {
+        "latitude": 38.551503036,
+        "longitude": -0.1267445
+      },
+      "bounds": {
+        "south": 38.53146668,
+        "west": -0.1653311,
+        "north": 38.571539393,
+        "east": -0.0881579
+      }
+    }
+  ]
+}

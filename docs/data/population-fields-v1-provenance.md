@@ -2,7 +2,7 @@
 
 ## Common source
 
-The three canonical fields derive from the European Commission Joint Research
+The four canonical fields derive from the European Commission Joint Research
 Centre and Eurostat JRC-ESTAT Census Population Grid 2021, total resident
 population, native 100 m resolution, ETRS89 / LAEA Europe (EPSG:3035).
 
@@ -22,14 +22,18 @@ not be presented as address-level measured census truth.
 | Torrevieja | `Q36730` / `es-torrevieja` |   91×96 | `c507d7f3a11bde457118ccba329285d49550a0c8959c6865c15b3ec7e12ddd3c` | `79fdafb190fc29b130f99fd2b9570a8e093f01dbcffb79b70eced190aa8a8a18` | `00fc9e4b85706db9f27d4418af5040931580d3a46f8352ecddf0f4ea9b05eeb0` | `a331f90a017496529f4453fac886be3b5eec9a62069c4bc9c4f637e10786eab4` |
 | Elche      | `Q10509` / `es-elche`      | 187×259 | `b125ee476aff0d27fdfc8a422466b47a87f6e9626a5ff1ffc04a1a0fe8ded3fb` | `356df3269a7e557334f1e8814c0ef72d625052cd1360f0acf45f0ca011e842c5` | `56a12286494969b3b36d44175be33364133ad8bafde2eb0063ea3389548cab5b` | `dc81cc47fc4a4835f5393bead8c632d5681d7ddcf5f2d9c13e8fdff8e688191a` |
 | Alicante   | `Q11959` / `es-alicante`   | 113×209 | `cbe2068d3bf4a97bcf062b995ad5cd4d2c23bbf1957abf96d07db72419cfa3fb` | `2587608609dfb80e1afcab6f28508c7d574e60ddda16ec7e9f5f0e2b0730ef5b` | `bad6be640d18442d347be1ddcc80a94d7b200a1e488ed7e55b7a20240e54e04a` | `34f681562a8c721871ef3fe571d35dc24a7473dfc984b23054ad6977ec40e8ee` |
+| Benidorm   | `Q487981` / `es-benidorm`  | 176×198 | `712deed4b637ce07f2fec16728e8406dd93e53828348627246a4896653fe048f` | `73b88866ec7153f5155e323f6cc997028a7d7fce3e27c2315f6b2a4a7a060d37` | `1d9f19c37a6629c709351d1d443a90accab909d06af963888c8f2968863c8697` | `c4efd8f7ed8807cb65db81578ce33b54612f8afae37b6558040f586ad0843b73` |
 
 The historical hashes preserve the accepted Round-4 evidence. The expanded
 window hashes preserve the architect-reviewed crop bytes before current-status
 metadata reconciliation. The current hashes identify the same crop windows
-with truthful operational status metadata. Former Elche/Alicante
-insufficiencies were resolved by expanding operational crops; scenario
-viewports remained unchanged. All supported scenarios now have zero remaining
-operational catchment insufficiency.
+with truthful operational status metadata. Former Elche/Alicante insufficiencies were resolved by expanding operational
+crops. Benidorm preparation crops were already route-used StopPlace-anchor safe;
+11 of its 12 operational crops were widened only where the shared five-cell
+catchment policy required additional canonical cells, while
+`benidorm-radial-finestrat-v1` remained unchanged. Scenario viewports remained
+unchanged. All supported scenarios now have zero remaining operational
+catchment insufficiency.
 
 ## Freeze rule
 
@@ -38,5 +42,5 @@ deterministically regenerated when route-used catchment requirements expand.
 Any reviewed regeneration updates crop, catalogue, public checksum, and root
 preparation checksum records without modifying population weights.
 
-Benidorm remains intentionally absent and can later adopt the same generic
-contract without a production special case.
+Benidorm uses the same generic settlement-driven population contract, with no
+city-specific production special case.

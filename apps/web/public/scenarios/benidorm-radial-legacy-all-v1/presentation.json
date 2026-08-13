@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-legacy-all-v1",
+  "title": "Benidorm Radial Legacy Network - All Outward Lines",
+  "initialView": {
+    "center": {
+      "latitude": 38.59159,
+      "longitude": -0.143378
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "benidorm-002": {
+      "label": "002",
+      "color": "#7b1fa2"
+    },
+    "benidorm-003": {
+      "label": "003",
+      "color": "#ef6c00"
+    },
+    "benidorm-010": {
+      "label": "010",
+      "color": "#00897b"
+    },
+    "benidorm-012": {
+      "label": "012",
+      "color": "#00838f"
+    },
+    "benidorm-014": {
+      "label": "014",
+      "color": "#7b1fa2"
+    },
+    "benidorm-015": {
+      "label": "015",
+      "color": "#2e7d32"
+    },
+    "benidorm-016": {
+      "label": "016",
+      "color": "#1565c0"
+    },
+    "benidorm-018": {
+      "label": "018",
+      "color": "#2e7d32"
+    },
+    "benidorm-030": {
+      "label": "030",
+      "color": "#8e24aa"
+    },
+    "benidorm-031": {
+      "label": "031",
+      "color": "#ef6c00"
+    },
+    "benidorm-050": {
+      "label": "050",
+      "color": "#5e35b1"
+    },
+    "benidorm-052": {
+      "label": "052",
+      "color": "#c62828"
+    },
+    "benidorm-054": {
+      "label": "054",
+      "color": "#6d4c41"
+    }
+  },
+  "notes": [
+    "Merged accepted Benidorm radial components in numerical route order: 002, 003, 010, 012, 014, 015, 016, 018, 030, 031, 050, 052, 054.",
+    "This aggregate contains exactly 13 approved radial routes and is separate from the other Benidorm scenario family.",
+    "Every copied pattern retains its original closesLoop value; no reverse pattern or last-to-first edge is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

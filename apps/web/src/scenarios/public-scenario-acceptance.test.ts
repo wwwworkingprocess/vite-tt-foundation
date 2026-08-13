@@ -91,6 +91,18 @@ describe('public multi-scenario catalogue', () => {
         'alicante-legacy-periphery-v1',
         'alicante-legacy-circular-v1',
         'alicante-legacy-all-v1',
+        'benidorm-legacy-core-v1',
+        'benidorm-legacy-core-inland-v1',
+        'benidorm-legacy-local-special-v1',
+        'benidorm-legacy-attractions-v1',
+        'benidorm-legacy-all-v1',
+        'benidorm-radial-core-west-v1',
+        'benidorm-radial-east-corridor-v1',
+        'benidorm-radial-coast-crosscity-v1',
+        'benidorm-radial-finestrat-v1',
+        'benidorm-radial-north-v1',
+        'benidorm-radial-panoramic-v1',
+        'benidorm-radial-legacy-all-v1',
       ]);
       for (const descriptor of loader.projection.getState().catalog!
         .scenarios) {

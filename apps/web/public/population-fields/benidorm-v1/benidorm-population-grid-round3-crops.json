@@ -1,0 +1,855 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "es-benidorm current deterministic operational population crop metadata",
+  "indexSemantics": "half-open [start, end)",
+  "canonicalGrid": {
+    "cityId": "Q487981",
+    "gridVersion": "1.0.0",
+    "sourceFile": "benidorm-city-population-grid-v1.round2.json",
+    "sha256": "712deed4b637ce07f2fec16728e8406dd93e53828348627246a4896653fe048f",
+    "rows": 176,
+    "columns": 198,
+    "resolutionDegrees": 0.001,
+    "outerBounds": {
+      "south": 38.5035,
+      "west": -0.2425,
+      "north": 38.679500000000004,
+      "east": -0.044499999999999984
+    },
+    "cityTotalWeight": 176104,
+    "cityNonzeroCellCount": 8754
+  },
+  "scenarios": [
+    {
+      "scenarioId": "benidorm-legacy-core-v1",
+      "sourceScenarioId": "benidorm-legacy-core-v1",
+      "family": "city",
+      "aggregation": "component",
+      "routePublicCodes": [
+        "001",
+        "004",
+        "005"
+      ],
+      "routeCount": 3,
+      "patternCount": 6,
+      "settlementIds": [
+        "es-benidorm"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.532254559,
+        "west": -0.13959368,
+        "north": 38.569251514,
+        "east": -0.09125532
+      },
+      "crop": {
+        "rowStart": 108,
+        "rowEnd": 150,
+        "columnStart": 101,
+        "columnEnd": 153,
+        "dimensions": {
+          "rows": 42,
+          "columns": 52
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5295,
+          "west": -0.1415,
+          "north": 38.5715,
+          "east": -0.0895
+        }
+      },
+      "totalIncludedWeight": 61232,
+      "nonzeroCellCount": 1363,
+      "cityWeightPercent": 34.77036296733748,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 72,
+        "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideAssignedSettlementBounds": [],
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "2112c66ed052f79512489f64602c4db6dc289a9832905cc8854a66349ffd96ec",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-legacy-core-inland-v1",
+      "sourceScenarioId": "benidorm-legacy-core-inland-v1",
+      "family": "city",
+      "aggregation": "component",
+      "routePublicCodes": [
+        "007",
+        "008",
+        "009"
+      ],
+      "routeCount": 3,
+      "patternCount": 6,
+      "settlementIds": [
+        "es-benidorm"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.533787,
+        "west": -0.1514,
+        "north": 38.562743,
+        "east": -0.1142
+      },
+      "crop": {
+        "rowStart": 114,
+        "rowEnd": 146,
+        "columnStart": 89,
+        "columnEnd": 130,
+        "dimensions": {
+          "rows": 32,
+          "columns": 41
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5335,
+          "west": -0.1535,
+          "north": 38.5655,
+          "east": -0.1125
+        }
+      },
+      "totalIncludedWeight": 49082,
+      "nonzeroCellCount": 700,
+      "cityWeightPercent": 27.871030754554127,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 34,
+        "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideAssignedSettlementBounds": [],
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "8146a3f4f61713749f45f89091b98a26fc3f97a8f23714b258be986e81b5bdb3",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-legacy-local-special-v1",
+      "sourceScenarioId": "benidorm-legacy-local-special-v1",
+      "family": "city",
+      "aggregation": "component",
+      "routePublicCodes": [
+        "006",
+        "026"
+      ],
+      "routeCount": 2,
+      "patternCount": 4,
+      "settlementIds": [
+        "es-benidorm"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.535125,
+        "west": -0.1584,
+        "north": 38.548025,
+        "east": -0.1062
+      },
+      "crop": {
+        "rowStart": 128,
+        "rowEnd": 147,
+        "columnStart": 83,
+        "columnEnd": 137,
+        "dimensions": {
+          "rows": 19,
+          "columns": 54
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5325,
+          "west": -0.1595,
+          "north": 38.5515,
+          "east": -0.1055
+        }
+      },
+      "totalIncludedWeight": 53945,
+      "nonzeroCellCount": 745,
+      "cityWeightPercent": 30.632467178485438,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 47,
+        "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideAssignedSettlementBounds": [],
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "96d0fbd4d21c972a94914488bf5acd7b96294604458c09bcb1666c8250c2b210",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-legacy-attractions-v1",
+      "sourceScenarioId": "benidorm-legacy-attractions-v1",
+      "family": "city",
+      "aggregation": "component",
+      "routePublicCodes": [
+        "011",
+        "042"
+      ],
+      "routeCount": 2,
+      "patternCount": 4,
+      "settlementIds": [
+        "es-benidorm"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.53146668,
+        "west": -0.1653311,
+        "north": 38.571539393,
+        "east": -0.0881579
+      },
+      "crop": {
+        "rowStart": 107,
+        "rowEnd": 150,
+        "columnStart": 77,
+        "columnEnd": 155,
+        "dimensions": {
+          "rows": 43,
+          "columns": 78
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5295,
+          "west": -0.1655,
+          "north": 38.5725,
+          "east": -0.0875
+        }
+      },
+      "totalIncludedWeight": 69025,
+      "nonzeroCellCount": 1667,
+      "cityWeightPercent": 39.195588970154,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 60,
+        "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideAssignedSettlementBounds": [],
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "527349ea9764a9170f474d0c775741ae612a0806298af7eade71d8f6958acf1c",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-legacy-all-v1",
+      "sourceScenarioIds": [
+        "benidorm-legacy-core-v1",
+        "benidorm-legacy-core-inland-v1",
+        "benidorm-legacy-local-special-v1",
+        "benidorm-legacy-attractions-v1"
+      ],
+      "family": "city",
+      "aggregation": "logical-aggregate-from-components",
+      "routePublicCodes": [
+        "001",
+        "004",
+        "005",
+        "006",
+        "007",
+        "008",
+        "009",
+        "011",
+        "026",
+        "042"
+      ],
+      "routeCount": 10,
+      "patternCount": 20,
+      "settlementIds": [
+        "es-benidorm"
+      ],
+      "scenarioViewportSemantics": "union-of-component-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.53146668,
+        "west": -0.1653311,
+        "north": 38.571539393,
+        "east": -0.0881579
+      },
+      "crop": {
+        "rowStart": 107,
+        "rowEnd": 150,
+        "columnStart": 77,
+        "columnEnd": 155,
+        "dimensions": {
+          "rows": 43,
+          "columns": 78
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5295,
+          "west": -0.1655,
+          "north": 38.5725,
+          "east": -0.0875
+        }
+      },
+      "totalIncludedWeight": 69025,
+      "nonzeroCellCount": 1667,
+      "cityWeightPercent": 39.195588970154,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 134,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "e5e643fcdc8777cfc20229222fefc43600cdf94badf0f375e25de79307f1403e",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-radial-core-west-v1",
+      "sourceScenarioId": "benidorm-legacy-core-west-v1",
+      "family": "radial",
+      "aggregation": "component",
+      "routePublicCodes": [
+        "002",
+        "003"
+      ],
+      "routeCount": 2,
+      "patternCount": 4,
+      "settlementIds": [
+        "es-benidorm",
+        "es-finestrat",
+        "es-la-vila-joiosa"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.52471,
+        "west": -0.17862,
+        "north": 38.55099,
+        "east": -0.102807598
+      },
+      "crop": {
+        "rowStart": 126,
+        "rowEnd": 157,
+        "columnStart": 61,
+        "columnEnd": 140,
+        "dimensions": {
+          "rows": 31,
+          "columns": 79
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5225,
+          "west": -0.1815,
+          "north": 38.5535,
+          "east": -0.1025
+        }
+      },
+      "totalIncludedWeight": 71840,
+      "nonzeroCellCount": 1241,
+      "cityWeightPercent": 40.79407622768364,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 109,
+        "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideAssignedSettlementBounds": [],
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "b68c4a71fc97b069709ddd448692e837852560e9029a5aea365e289a83b11e48",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-radial-east-corridor-v1",
+      "sourceScenarioId": "benidorm-legacy-east-corridor-v1",
+      "family": "radial",
+      "aggregation": "component",
+      "routePublicCodes": [
+        "010",
+        "050"
+      ],
+      "routeCount": 2,
+      "patternCount": 4,
+      "settlementIds": [
+        "es-benidorm",
+        "es-lalfas-del-pi",
+        "es-altea"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.531338802,
+        "west": -0.131872,
+        "north": 38.60326,
+        "east": -0.046156
+      },
+      "crop": {
+        "rowStart": 73,
+        "rowEnd": 150,
+        "columnStart": 110,
+        "columnEnd": 198,
+        "dimensions": {
+          "rows": 77,
+          "columns": 88
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5295,
+          "west": -0.1325,
+          "north": 38.6065,
+          "east": -0.0445
+        }
+      },
+      "totalIncludedWeight": 86917,
+      "nonzeroCellCount": 3576,
+      "cityWeightPercent": 49.355494480534226,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 75,
+        "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideAssignedSettlementBounds": [],
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "53bac7c91fb480f92bc294bff8748019fce59bb8e099dd7bee7efec77d55a488",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-radial-coast-crosscity-v1",
+      "sourceScenarioId": "benidorm-legacy-coast-crosscity-v1",
+      "family": "radial",
+      "aggregation": "component",
+      "routePublicCodes": [
+        "012",
+        "054"
+      ],
+      "routeCount": 2,
+      "patternCount": 4,
+      "settlementIds": [
+        "es-benidorm",
+        "es-lalfas-del-pi",
+        "es-altea",
+        "es-finestrat",
+        "es-la-vila-joiosa"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.50468,
+        "west": -0.240792,
+        "north": 38.60404,
+        "east": -0.045964
+      },
+      "crop": {
+        "rowStart": 73,
+        "rowEnd": 176,
+        "columnStart": 1,
+        "columnEnd": 198,
+        "dimensions": {
+          "rows": 103,
+          "columns": 197
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5035,
+          "west": -0.2415,
+          "north": 38.6065,
+          "east": -0.0445
+        }
+      },
+      "totalIncludedWeight": 154917,
+      "nonzeroCellCount": 6322,
+      "cityWeightPercent": 87.96904102121474,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 136,
+        "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideAssignedSettlementBounds": [],
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "cedb86d11e5d10c5b176027cb26ea519c58ee1d885da75e8ffa2bdc233b94ddf",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-radial-finestrat-v1",
+      "sourceScenarioId": "benidorm-legacy-finestrat-v1",
+      "family": "radial",
+      "aggregation": "component",
+      "routePublicCodes": [
+        "014",
+        "015"
+      ],
+      "routeCount": 2,
+      "patternCount": 4,
+      "settlementIds": [
+        "es-benidorm",
+        "es-finestrat",
+        "es-la-vila-joiosa"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.520932,
+        "west": -0.219224,
+        "north": 38.57246,
+        "east": -0.109776
+      },
+      "crop": {
+        "rowStart": 107,
+        "rowEnd": 159,
+        "columnStart": 23,
+        "columnEnd": 133,
+        "dimensions": {
+          "rows": 52,
+          "columns": 110
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5205,
+          "west": -0.2195,
+          "north": 38.5725,
+          "east": -0.1095
+        }
+      },
+      "totalIncludedWeight": 72180,
+      "nonzeroCellCount": 1942,
+      "cityWeightPercent": 40.987143960387044,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 98,
+        "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideAssignedSettlementBounds": [],
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "0099f5751d89436e30702f1e769d8f4f4893f034c295bf30e97113b475211a71",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": false,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-radial-north-v1",
+      "sourceScenarioId": "benidorm-legacy-north-v1",
+      "family": "radial",
+      "aggregation": "component",
+      "routePublicCodes": [
+        "016",
+        "018",
+        "052"
+      ],
+      "routeCount": 3,
+      "patternCount": 6,
+      "settlementIds": [
+        "es-benidorm",
+        "es-finestrat",
+        "es-la-vila-joiosa",
+        "es-la-nucia",
+        "es-polop",
+        "es-callosa-den-sarria",
+        "es-el-castell-de-guadalest"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.5239,
+        "west": -0.2016,
+        "north": 38.6785,
+        "east": -0.094790196
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 157,
+        "columnStart": 38,
+        "columnEnd": 149,
+        "dimensions": {
+          "rows": 156,
+          "columns": 111
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5225,
+          "west": -0.2045,
+          "north": 38.6785,
+          "east": -0.0935
+        }
+      },
+      "totalIncludedWeight": 120682,
+      "nonzeroCellCount": 5221,
+      "cityWeightPercent": 68.52882387680008,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 121,
+        "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideAssignedSettlementBounds": [],
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "5a3f16596763493f02b6df900e50d630ce276d908166e20b3dd098a796fe43ff",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-radial-panoramic-v1",
+      "sourceScenarioId": "benidorm-legacy-panoramic-v1",
+      "family": "radial",
+      "aggregation": "component",
+      "routePublicCodes": [
+        "030",
+        "031"
+      ],
+      "routeCount": 2,
+      "patternCount": 4,
+      "settlementIds": [
+        "es-benidorm",
+        "es-finestrat",
+        "es-la-vila-joiosa",
+        "es-lalfas-del-pi",
+        "es-altea"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.5239,
+        "west": -0.1698,
+        "north": 38.6005,
+        "east": -0.0507
+      },
+      "crop": {
+        "rowStart": 76,
+        "rowEnd": 157,
+        "columnStart": 70,
+        "columnEnd": 195,
+        "dimensions": {
+          "rows": 81,
+          "columns": 125
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5225,
+          "west": -0.1725,
+          "north": 38.6035,
+          "east": -0.0475
+        }
+      },
+      "totalIncludedWeight": 116173,
+      "nonzeroCellCount": 4360,
+      "cityWeightPercent": 65.96840503338936,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 96,
+        "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideAssignedSettlementBounds": [],
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "7146023bd0ccabaea13126b20d3834b6ae0b68047b56589d024e3314a5e59181",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "benidorm-radial-legacy-all-v1",
+      "sourceScenarioIds": [
+        "benidorm-legacy-core-west-v1",
+        "benidorm-legacy-east-corridor-v1",
+        "benidorm-legacy-coast-crosscity-v1",
+        "benidorm-legacy-finestrat-v1",
+        "benidorm-legacy-north-v1",
+        "benidorm-legacy-panoramic-v1"
+      ],
+      "family": "radial",
+      "aggregation": "logical-aggregate-from-components",
+      "routePublicCodes": [
+        "002",
+        "003",
+        "010",
+        "012",
+        "014",
+        "015",
+        "016",
+        "018",
+        "030",
+        "031",
+        "050",
+        "052",
+        "054"
+      ],
+      "routeCount": 13,
+      "patternCount": 26,
+      "settlementIds": [
+        "es-benidorm",
+        "es-finestrat",
+        "es-la-vila-joiosa",
+        "es-lalfas-del-pi",
+        "es-altea",
+        "es-la-nucia",
+        "es-polop",
+        "es-callosa-den-sarria",
+        "es-el-castell-de-guadalest"
+      ],
+      "scenarioViewportSemantics": "union-of-component-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 38.50468,
+        "west": -0.240792,
+        "north": 38.6785,
+        "east": -0.045964
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 176,
+        "columnStart": 1,
+        "columnEnd": 198,
+        "dimensions": {
+          "rows": 175,
+          "columns": 197
+        },
+        "alignedGeographicBounds": {
+          "south": 38.5035,
+          "west": -0.2415,
+          "north": 38.6785,
+          "east": -0.0445
+        }
+      },
+      "totalIncludedWeight": 175956,
+      "nonzeroCellCount": 8727,
+      "cityWeightPercent": 99.91595875164676,
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 301,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "outsideViewport": [],
+        "outsideCrop": [],
+        "anomalies": []
+      },
+      "catalogContentHash": "e219cb7c5161de65f7a0630a63dc7e87bbe50eb2a2d5c0064fd7de0aff8b0c49",
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    }
+  ],
+  "city": "Benidorm",
+  "historicalPreparation": {
+    "status": "historical-round-3-round-4-preparation-evidence",
+    "purpose": "scenario-crop-metadata",
+    "boundarySemantics": "smallest aligned rectangle containing viewport; exact viewport-on-grid-edge does not include the exterior zero-area-touch cell",
+    "scenarioEvidence": {
+      "sourceArchive": "scenarios-benidorm-legacy-all-v1(1).zip",
+      "sourceArchiveSha256": "bab6a4081769dae6c8ead9f35c1a9e2f8f7369c92d575616622757b70faf50ff",
+      "obsoleteAggregateIgnored": "benidorm-legacy-all-v1 in the source archive is the former 23-route aggregate and is not used as an aggregate source in this metadata",
+      "cityAggregateDefinition": {
+        "scenarioId": "benidorm-legacy-all-v1",
+        "sourceComponents": [
+          "benidorm-legacy-core-v1",
+          "benidorm-legacy-core-inland-v1",
+          "benidorm-legacy-local-special-v1",
+          "benidorm-legacy-attractions-v1"
+        ],
+        "routeCount": 10
+      },
+      "radialAggregateDefinition": {
+        "scenarioId": "benidorm-radial-legacy-all-v1",
+        "sourceComponents": [
+          "benidorm-legacy-core-west-v1",
+          "benidorm-legacy-east-corridor-v1",
+          "benidorm-legacy-coast-crosscity-v1",
+          "benidorm-legacy-finestrat-v1",
+          "benidorm-legacy-north-v1",
+          "benidorm-legacy-panoramic-v1"
+        ],
+        "routeCount": 13
+      },
+      "radialRenames": {
+        "benidorm-legacy-core-west-v1": "benidorm-radial-core-west-v1",
+        "benidorm-legacy-east-corridor-v1": "benidorm-radial-east-corridor-v1",
+        "benidorm-legacy-coast-crosscity-v1": "benidorm-radial-coast-crosscity-v1",
+        "benidorm-legacy-finestrat-v1": "benidorm-radial-finestrat-v1",
+        "benidorm-legacy-north-v1": "benidorm-radial-north-v1",
+        "benidorm-legacy-panoramic-v1": "benidorm-radial-panoramic-v1"
+      }
+    }
+  },
+  "currentPublicCatalog": {
+    "primarySettlementId": "es-benidorm",
+    "scenarioCount": 12,
+    "catalogEntriesPinnedByContentHash": true
+  },
+  "operationalCropPolicy": {
+    "maxAccessDistanceCells": 5
+  },
+  "operationalStatus": {
+    "allSupportedScenarioCropsSufficient": true,
+    "scenarioViewportsUnchanged": true
+  }
+}

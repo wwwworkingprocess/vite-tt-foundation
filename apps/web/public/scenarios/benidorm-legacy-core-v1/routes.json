@@ -1,0 +1,283 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-core-v1",
+  "routes": [
+    {
+      "routeId": "benidorm-001",
+      "publicCode": "001",
+      "name": "[Aqualandia/Mundomar] - Severo Ochoa - Ametlla Mar - Rincón Loix - Mediterraneo - Bnd. Centro - Estacion Tren",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-001-ida",
+          "directionLabel": "Hacia Benidorm Centro, Rincón de Loix y Aqualandia",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-155",
+            "marina-baixa-stop-bnd-156",
+            "marina-baixa-stop-bnd-157",
+            "marina-baixa-stop-bnd-355",
+            "marina-baixa-stop-bnd-288",
+            "marina-baixa-stop-bnd-289",
+            "marina-baixa-stop-bnd-342",
+            "marina-baixa-stop-bnd-290",
+            "marina-baixa-stop-bnd-291",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-304",
+            "marina-baixa-stop-bnd-203",
+            "marina-baixa-stop-bnd-204",
+            "marina-baixa-stop-bnd-205",
+            "marina-baixa-stop-bnd-206",
+            "marina-baixa-stop-bnd-207",
+            "marina-baixa-stop-bnd-208",
+            "marina-baixa-stop-bnd-209",
+            "marina-baixa-stop-bnd-210",
+            "marina-baixa-stop-bnd-211",
+            "marina-baixa-stop-bnd-229",
+            "marina-baixa-stop-bnd-292"
+          ]
+        },
+        {
+          "patternId": "benidorm-001-vuelta",
+          "directionLabel": "Hacia Centro, Est. Tren",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-292",
+            "marina-baixa-stop-bnd-229",
+            "marina-baixa-stop-bnd-230",
+            "marina-baixa-stop-bnd-231",
+            "marina-baixa-stop-bnd-232",
+            "marina-baixa-stop-bnd-364",
+            "marina-baixa-stop-bnd-234",
+            "marina-baixa-stop-bnd-235",
+            "marina-baixa-stop-bnd-236",
+            "marina-baixa-stop-bnd-237",
+            "marina-baixa-stop-bnd-238",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-242",
+            "marina-baixa-stop-bnd-243",
+            "marina-baixa-stop-bnd-343",
+            "marina-baixa-stop-bnd-277",
+            "marina-baixa-stop-bnd-303",
+            "marina-baixa-stop-bnd-287",
+            "marina-baixa-stop-bnd-153",
+            "marina-baixa-stop-bnd-155"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-current-route-order",
+          "sourceRouteId": "001",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/001"
+        },
+        {
+          "source": "benidorm-core-source-prefetch",
+          "sourceRouteId": "001",
+          "sourceFile": "line-001-ordered-capture.json"
+        }
+      ]
+    },
+    {
+      "routeId": "benidorm-004",
+      "publicCode": "004",
+      "name": "Palau d' Esports - Est. Autobuses - C. Valenciana - Severo Ochoa - [Ramón y Cajal] - Ametlla Mar - Rincón Loix - Mediterráneo - Benidorm Centro",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-004-ida",
+          "directionLabel": "Hacia Rincón Loix, S. Ochoa, Palau Esports y Estacion Bus",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 27
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-304",
+            "marina-baixa-stop-bnd-203",
+            "marina-baixa-stop-bnd-204",
+            "marina-baixa-stop-bnd-205",
+            "marina-baixa-stop-bnd-206",
+            "marina-baixa-stop-bnd-207",
+            "marina-baixa-stop-bnd-208",
+            "marina-baixa-stop-bnd-209",
+            "marina-baixa-stop-bnd-210",
+            "marina-baixa-stop-bnd-211",
+            "marina-baixa-stop-bnd-212",
+            "marina-baixa-stop-bnd-213",
+            "marina-baixa-stop-bnd-214",
+            "marina-baixa-stop-bnd-215",
+            "marina-baixa-stop-bnd-216",
+            "marina-baixa-stop-bnd-217",
+            "marina-baixa-stop-bnd-360",
+            "marina-baixa-stop-bnd-358",
+            "marina-baixa-stop-bnd-359",
+            "marina-baixa-stop-bnd-246",
+            "marina-baixa-stop-bnd-249",
+            "marina-baixa-stop-bnd-245",
+            "marina-baixa-stop-bnd-295",
+            "marina-baixa-stop-bnd-385"
+          ]
+        },
+        {
+          "patternId": "benidorm-004-vuelta",
+          "directionLabel": "Hacia H.Levante, Av. Mediterráneo y Benidorm Centro",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-385",
+            "marina-baixa-stop-bnd-249",
+            "marina-baixa-stop-bnd-245",
+            "marina-baixa-stop-bnd-357",
+            "marina-baixa-stop-bnd-361",
+            "marina-baixa-stop-bnd-224",
+            "marina-baixa-stop-bnd-225",
+            "marina-baixa-stop-bnd-226",
+            "marina-baixa-stop-bnd-227",
+            "marina-baixa-stop-bnd-228",
+            "marina-baixa-stop-bnd-229",
+            "marina-baixa-stop-bnd-232",
+            "marina-baixa-stop-bnd-364",
+            "marina-baixa-stop-bnd-234",
+            "marina-baixa-stop-bnd-235",
+            "marina-baixa-stop-bnd-236",
+            "marina-baixa-stop-bnd-237",
+            "marina-baixa-stop-bnd-238",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-current-route-order",
+          "sourceRouteId": "004",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/004"
+        },
+        {
+          "source": "benidorm-core-source-prefetch",
+          "sourceRouteId": "004",
+          "sourceFile": "line-004-ordered-capture.json"
+        }
+      ]
+    },
+    {
+      "routeId": "benidorm-005",
+      "publicCode": "005",
+      "name": "[Cementerio S.Jaime] - Severo Ochoa - [Ramón y Cajal] - Ametlla Mar - Rincón Loix - Mediterráneo - Benidorm Centro",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-005-ida",
+          "directionLabel": "Hacia Rincón Loix, Severo Ochoa y Cementerio",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 31
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-127",
+            "marina-baixa-stop-bnd-199",
+            "marina-baixa-stop-bnd-128",
+            "marina-baixa-stop-bnd-129",
+            "marina-baixa-stop-bnd-355",
+            "marina-baixa-stop-bnd-288",
+            "marina-baixa-stop-bnd-289",
+            "marina-baixa-stop-bnd-342",
+            "marina-baixa-stop-bnd-290",
+            "marina-baixa-stop-bnd-291",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-202",
+            "marina-baixa-stop-bnd-304",
+            "marina-baixa-stop-bnd-203",
+            "marina-baixa-stop-bnd-204",
+            "marina-baixa-stop-bnd-205",
+            "marina-baixa-stop-bnd-206",
+            "marina-baixa-stop-bnd-207",
+            "marina-baixa-stop-bnd-208",
+            "marina-baixa-stop-bnd-209",
+            "marina-baixa-stop-bnd-210",
+            "marina-baixa-stop-bnd-211",
+            "marina-baixa-stop-bnd-212",
+            "marina-baixa-stop-bnd-213",
+            "marina-baixa-stop-bnd-214",
+            "marina-baixa-stop-bnd-215",
+            "marina-baixa-stop-bnd-216",
+            "marina-baixa-stop-bnd-217",
+            "marina-baixa-stop-bnd-276"
+          ]
+        },
+        {
+          "patternId": "benidorm-005-vuelta",
+          "directionLabel": "Hacia H.Levante, Av. Mediterráneo y Benidorm Centro",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 26
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-276",
+            "marina-baixa-stop-bnd-224",
+            "marina-baixa-stop-bnd-225",
+            "marina-baixa-stop-bnd-226",
+            "marina-baixa-stop-bnd-227",
+            "marina-baixa-stop-bnd-228",
+            "marina-baixa-stop-bnd-229",
+            "marina-baixa-stop-bnd-362",
+            "marina-baixa-stop-bnd-363",
+            "marina-baixa-stop-bnd-232",
+            "marina-baixa-stop-bnd-234",
+            "marina-baixa-stop-bnd-235",
+            "marina-baixa-stop-bnd-236",
+            "marina-baixa-stop-bnd-237",
+            "marina-baixa-stop-bnd-238",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-346",
+            "marina-baixa-stop-bnd-242",
+            "marina-baixa-stop-bnd-243",
+            "marina-baixa-stop-bnd-343",
+            "marina-baixa-stop-bnd-277",
+            "marina-baixa-stop-bnd-303",
+            "marina-baixa-stop-bnd-287",
+            "marina-baixa-stop-bnd-133",
+            "marina-baixa-stop-bnd-134",
+            "marina-baixa-stop-bnd-152"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-current-route-order",
+          "sourceRouteId": "005",
+          "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/005-cementerio-sjaime-severo-ochoa-ramon-y-cajal-ametlla-mar-rincon-loix-mediterraneo-benidorm-centro"
+        },
+        {
+          "source": "benidorm-core-source-prefetch",
+          "sourceRouteId": "005",
+          "sourceFile": "line-005-ordered-capture.json"
+        }
+      ]
+    }
+  ]
+}

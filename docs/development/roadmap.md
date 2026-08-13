@@ -138,8 +138,8 @@ Current aggregate contract values are listed in
 **Status:** Integrated as development-seed data; semantic cleanup remains for
 known alternative-route variants.
 
-The public catalogue contains Torrevieja, Elche, Elche-radial, and Alicante
-families plus aggregate packages. Package hashing, parsing, graph construction,
+The public catalogue contains Torrevieja, Elche, Elche-radial, Alicante,
+Benidorm, and Benidorm-radial families plus aggregate packages. Package hashing, parsing, graph construction,
 root/subpath/PWA delivery, route creation, and circular-route operation are
 covered. All entries remain `development-seed`, and known R10/R11/Alicante-27
 variant modeling debt is recorded in the current-state ledger.

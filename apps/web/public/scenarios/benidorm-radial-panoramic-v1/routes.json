@@ -1,0 +1,197 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-panoramic-v1",
+  "routes": [
+    {
+      "routeId": "benidorm-030",
+      "publicCode": "030",
+      "name": "Rincón Loix - Mediterráneo - Benidorm Centro - Almendros - Parque Elche - Playa Poniente - Hotel Bali - Cala Finestrat",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-030-ida",
+          "directionLabel": "Hacia Centro, Poniente, Hotel Bali y Cala Finestrat",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-345",
+            "marina-baixa-stop-bnd-234",
+            "marina-baixa-stop-bnd-235",
+            "marina-baixa-stop-bnd-236",
+            "marina-baixa-stop-bnd-237",
+            "marina-baixa-stop-bnd-238",
+            "marina-baixa-stop-bnd-239",
+            "marina-baixa-stop-bnd-201",
+            "marina-baixa-stop-bnd-370",
+            "marina-baixa-stop-bnd-371",
+            "marina-baixa-stop-bnd-372",
+            "marina-baixa-stop-bnd-157",
+            "marina-baixa-stop-bnd-130",
+            "marina-baixa-stop-bnd-131",
+            "marina-baixa-stop-bnd-101",
+            "marina-baixa-stop-bnd-103",
+            "marina-baixa-stop-bnd-104",
+            "marina-baixa-stop-bnd-105",
+            "marina-baixa-stop-bnd-106",
+            "marina-baixa-stop-bnd-107",
+            "marina-baixa-stop-bnd-161",
+            "marina-baixa-stop-bnd-114",
+            "marina-baixa-stop-fin-601",
+            "marina-baixa-stop-fin-603",
+            "marina-baixa-stop-fin-604",
+            "marina-baixa-stop-fin-634",
+            "marina-baixa-stop-fin-605",
+            "marina-baixa-stop-vil-809",
+            "marina-baixa-stop-vil-811"
+          ]
+        },
+        {
+          "patternId": "benidorm-030-vuelta",
+          "directionLabel": "Hacia Jaime I, Centro y Rincón de Loix",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-vil-811",
+            "marina-baixa-stop-fin-608",
+            "marina-baixa-stop-fin-609",
+            "marina-baixa-stop-fin-610",
+            "marina-baixa-stop-fin-611",
+            "marina-baixa-stop-fin-612",
+            "marina-baixa-stop-bnd-115",
+            "marina-baixa-stop-bnd-116",
+            "marina-baixa-stop-bnd-118",
+            "marina-baixa-stop-bnd-119",
+            "marina-baixa-stop-bnd-120",
+            "marina-baixa-stop-bnd-121",
+            "marina-baixa-stop-bnd-122",
+            "marina-baixa-stop-bnd-107",
+            "marina-baixa-stop-bnd-146",
+            "marina-baixa-stop-bnd-148",
+            "marina-baixa-stop-bnd-149",
+            "marina-baixa-stop-bnd-99",
+            "marina-baixa-stop-bnd-150",
+            "marina-baixa-stop-bnd-128",
+            "marina-baixa-stop-bnd-129",
+            "marina-baixa-stop-bnd-355",
+            "marina-baixa-stop-bnd-288",
+            "marina-baixa-stop-bnd-289",
+            "marina-baixa-stop-bnd-290",
+            "marina-baixa-stop-bnd-291",
+            "marina-baixa-stop-bnd-304",
+            "marina-baixa-stop-bnd-203",
+            "marina-baixa-stop-bnd-204",
+            "marina-baixa-stop-bnd-205",
+            "marina-baixa-stop-bnd-206",
+            "marina-baixa-stop-bnd-207",
+            "marina-baixa-stop-bnd-345"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "030",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/030?fecha=25%2F07%2F2026"
+        },
+        {
+          "source": "benidorm-panoramic-source-capture",
+          "sourceRouteId": "030",
+          "sourceFile": "line-030-ordered-capture.json"
+        }
+      ]
+    },
+    {
+      "routeId": "benidorm-031",
+      "publicCode": "031",
+      "name": "Rincón Loix - Ametlla de Mar - Severo Ochoa - El Albir - Puerto Altea - Altea",
+      "dataStatus": "legacy-family-current-official-order-development-coordinate-reconciliation",
+      "patterns": [
+        {
+          "patternId": "benidorm-031-ida",
+          "directionLabel": "Hacia Severo Ochoa, el Albir y Altea",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-bnd-257",
+            "marina-baixa-stop-bnd-208",
+            "marina-baixa-stop-bnd-209",
+            "marina-baixa-stop-bnd-210",
+            "marina-baixa-stop-bnd-211",
+            "marina-baixa-stop-bnd-212",
+            "marina-baixa-stop-bnd-213",
+            "marina-baixa-stop-bnd-214",
+            "marina-baixa-stop-bnd-215",
+            "marina-baixa-stop-alf-521",
+            "marina-baixa-stop-alf-547",
+            "marina-baixa-stop-alf-517",
+            "marina-baixa-stop-alf-510",
+            "marina-baixa-stop-alf-512",
+            "marina-baixa-stop-alf-513",
+            "marina-baixa-stop-alf-567",
+            "marina-baixa-stop-alt-461",
+            "marina-baixa-stop-alt-444",
+            "marina-baixa-stop-alt-463",
+            "marina-baixa-stop-alt-451"
+          ]
+        },
+        {
+          "patternId": "benidorm-031-vuelta",
+          "directionLabel": "Hacia el Albir y Rincón de Loix",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "marina-baixa-stop-alt-451",
+            "marina-baixa-stop-alt-470",
+            "marina-baixa-stop-alt-417",
+            "marina-baixa-stop-alt-418",
+            "marina-baixa-stop-alt-419",
+            "marina-baixa-stop-alf-514",
+            "marina-baixa-stop-alf-515",
+            "marina-baixa-stop-alf-509",
+            "marina-baixa-stop-alf-518",
+            "marina-baixa-stop-alf-546",
+            "marina-baixa-stop-alf-521",
+            "marina-baixa-stop-bnd-226",
+            "marina-baixa-stop-bnd-227",
+            "marina-baixa-stop-bnd-228",
+            "marina-baixa-stop-bnd-229",
+            "marina-baixa-stop-bnd-230",
+            "marina-baixa-stop-bnd-231",
+            "marina-baixa-stop-bnd-232",
+            "marina-baixa-stop-bnd-364",
+            "marina-baixa-stop-bnd-257"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "avanza-llorente-route-evidence",
+          "sourceRouteId": "031",
+          "sourceFile": "https://alicante.avanzagrupo.com/es/lineas-y-horarios/todas-las-lineas/031-rincon-loix-ametlla-de-mar-severo-ochoa-el-albir-puerto-altea-altea"
+        },
+        {
+          "source": "avanza-llorente-route-cross-check",
+          "sourceRouteId": "031",
+          "sourceFile": "https://alicante.avanzagrupo.com/contenido/lineas-siri/print/031?fecha=26%2F01%2F2025"
+        },
+        {
+          "source": "benidorm-panoramic-source-capture",
+          "sourceRouteId": "031",
+          "sourceFile": "line-031-ordered-capture.json"
+        }
+      ]
+    }
+  ]
+}

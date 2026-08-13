@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-core-v1",
+  "title": "Benidorm Legacy Core Network - Lines 001, 004 and 005",
+  "initialView": {
+    "center": {
+      "latitude": 38.550753036,
+      "longitude": -0.1154245
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "benidorm-001": {
+      "label": "001",
+      "color": "#1565c0"
+    },
+    "benidorm-004": {
+      "label": "004",
+      "color": "#2e7d32"
+    },
+    "benidorm-005": {
+      "label": "005",
+      "color": "#c62828"
+    }
+  },
+  "notes": [
+    "Core discovery component for the Benidorm legacy scenario family.",
+    "All six source directions are stored independently with closesLoop false; reverse patterns are never inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

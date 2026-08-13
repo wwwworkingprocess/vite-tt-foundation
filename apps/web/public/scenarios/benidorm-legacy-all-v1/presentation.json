@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-all-v1",
+  "title": "Benidorm Legacy Network - All City Lines",
+  "initialView": {
+    "center": {
+      "latitude": 38.5515030365,
+      "longitude": -0.1267445
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "benidorm-001": {
+      "label": "001",
+      "color": "#1565c0"
+    },
+    "benidorm-004": {
+      "label": "004",
+      "color": "#2e7d32"
+    },
+    "benidorm-005": {
+      "label": "005",
+      "color": "#c62828"
+    },
+    "benidorm-006": {
+      "label": "006",
+      "color": "#7b1fa2"
+    },
+    "benidorm-007": {
+      "label": "007",
+      "color": "#2e7d32"
+    },
+    "benidorm-008": {
+      "label": "008",
+      "color": "#1565c0"
+    },
+    "benidorm-009": {
+      "label": "009",
+      "color": "#c62828"
+    },
+    "benidorm-011": {
+      "label": "011",
+      "color": "#1976d2"
+    },
+    "benidorm-026": {
+      "label": "026",
+      "color": "#00796b"
+    },
+    "benidorm-042": {
+      "label": "042",
+      "color": "#ef6c00"
+    }
+  },
+  "notes": [
+    "Merged accepted Benidorm city components in numerical route order: 001, 004, 005, 006, 007, 008, 009, 011, 026, 042.",
+    "This aggregate contains exactly 10 approved city routes and is separate from the other Benidorm scenario family.",
+    "Every copied pattern retains its original closesLoop value; no reverse pattern or last-to-first edge is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

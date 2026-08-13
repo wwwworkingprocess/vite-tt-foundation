@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-coast-crosscity-v1",
+  "title": "Benidorm Radial Coast Cross-City Network - Lines 012 and 054",
+  "initialView": {
+    "center": {
+      "latitude": 38.55475,
+      "longitude": -0.14015
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "benidorm-012": {
+      "label": "012",
+      "color": "#00838f"
+    },
+    "benidorm-054": {
+      "label": "054",
+      "color": "#6d4c41"
+    }
+  },
+  "notes": [
+    "Coast cross-city discovery component for the Benidorm legacy scenario family.",
+    "Both routes use independently ordered official ida/vuelta patterns with closesLoop false.",
+    "Line 012 spans Altea, El Albir, Benidorm, Finestrat, Hospital Marina Baixa and La Vila Joiosa.",
+    "Line 054 links La Vila Joiosa, Hospital Marina Baixa, Cala de Finestrat, western Benidorm and the bus station.",
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Package identity moved into the Benidorm radial family; route, pattern, stop, coordinate and settlement data are otherwise unchanged."
+  ]
+}

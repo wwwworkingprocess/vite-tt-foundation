@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-radial-core-west-v1",
+  "title": "Benidorm Radial Core West Network - Lines 002 and 003",
+  "initialView": {
+    "center": {
+      "latitude": 38.53755,
+      "longitude": -0.142457999
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "benidorm-002": {
+      "label": "002",
+      "color": "#7b1fa2"
+    },
+    "benidorm-003": {
+      "label": "003",
+      "color": "#ef6c00"
+    }
+  },
+  "notes": [
+    "Western core discovery component for the Benidorm legacy scenario family.",
+    "All four official directions are stored independently with closesLoop false; reverse patterns are never inferred.",
+    "The captured official pages reflect the July 2026 temporary works routing for Lines 002 and 003.",
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Package identity moved into the Benidorm radial family; route, pattern, stop, coordinate and settlement data are otherwise unchanged."
+  ]
+}

@@ -1,0 +1,1388 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "benidorm-legacy-attractions-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-153",
+      "name": "Av. Beniardá, 4",
+      "position": {
+        "latitude": 38.544521034,
+        "longitude": -0.132549405
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-154",
+      "name": "Av. Beniardá, 16",
+      "position": {
+        "latitude": 38.54713,
+        "longitude": -0.1333214
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-157",
+      "name": "Av. Beniardá, 13",
+      "position": {
+        "latitude": 38.54425,
+        "longitude": -0.13292
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-181",
+      "name": "Av. E. Zaplana (H.Villaitana)",
+      "position": {
+        "latitude": 38.5595,
+        "longitude": -0.1507
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-182",
+      "name": "Av. Eduardo Zaplana, s/n",
+      "position": {
+        "latitude": 38.5589,
+        "longitude": -0.152
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-183",
+      "name": "Ctra. CV-70 (Tivoli)",
+      "position": {
+        "latitude": 38.56033,
+        "longitude": -0.1336
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-184",
+      "name": "Av. Eduardo Zaplana, s/n",
+      "position": {
+        "latitude": 38.562,
+        "longitude": -0.1376
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-185",
+      "name": "V. Nº8 (Terra Natura)",
+      "position": {
+        "latitude": 38.568,
+        "longitude": -0.1443
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-186",
+      "name": "V. Nº 92, s/n",
+      "position": {
+        "latitude": 38.561,
+        "longitude": -0.1574
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-187",
+      "name": "V. Terra Mitica",
+      "position": {
+        "latitude": 38.5603,
+        "longitude": -0.1589
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-188",
+      "name": "V. acceso parque",
+      "position": {
+        "latitude": 38.561,
+        "longitude": -0.1542
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-189",
+      "name": "V. Nº8 Terra Natura",
+      "position": {
+        "latitude": 38.5682,
+        "longitude": -0.1439
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-201",
+      "name": "Av. Mediterráneo, 3 (Benidorm Centro)",
+      "position": {
+        "latitude": 38.53664,
+        "longitude": -0.12715
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-202",
+      "name": "C/ Lepanto, 2",
+      "position": {
+        "latitude": 38.53715,
+        "longitude": -0.11895
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-203",
+      "name": "Av. Mediterráneo, 38",
+      "position": {
+        "latitude": 38.536474407,
+        "longitude": -0.11711061
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-204",
+      "name": "Av. Mediterráneo, 44",
+      "position": {
+        "latitude": 38.53522661,
+        "longitude": -0.11378678
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-205",
+      "name": "Av. Mediterráneo, 54",
+      "position": {
+        "latitude": 38.535959423,
+        "longitude": -0.112797618
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-206",
+      "name": "Av. Mediterráneo, 58",
+      "position": {
+        "latitude": 38.535659015,
+        "longitude": -0.110405087
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-207",
+      "name": "Av. Mediterráneo, 62 (R.Loix)",
+      "position": {
+        "latitude": 38.534806073,
+        "longitude": -0.107915998
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-208",
+      "name": "Av. Ametlla de Mar, 16 (H.Nereo)",
+      "position": {
+        "latitude": 38.537854545,
+        "longitude": -0.10623
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-211",
+      "name": "Av. Severo Ochoa, 8",
+      "position": {
+        "latitude": 38.541372727,
+        "longitude": -0.102751212
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-212",
+      "name": "Av. Severo Ochoa, 16 (H.Mediterráneo)",
+      "position": {
+        "latitude": 38.536123559,
+        "longitude": -0.122912881
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-213",
+      "name": "Av. Severo Ochoa, 34 (H.Deloix)",
+      "position": {
+        "latitude": 38.546527326,
+        "longitude": -0.099472404
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-228",
+      "name": "Av. Severo Ochoa, 15",
+      "position": {
+        "latitude": 38.543345455,
+        "longitude": -0.102662424
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-229",
+      "name": "Av. Severo Ochoa, 9 (Lope Vega)",
+      "position": {
+        "latitude": 38.541654545,
+        "longitude": -0.102944242
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-234",
+      "name": "Av. Mediterráneo, 55 (Casino)",
+      "position": {
+        "latitude": 38.535272777,
+        "longitude": -0.108570457
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-235",
+      "name": "Av. Mediterráneo, 49",
+      "position": {
+        "latitude": 38.535346441,
+        "longitude": -0.112157119
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-236",
+      "name": "Av. Mediterráneo, 41 (H.Don Pancho)",
+      "position": {
+        "latitude": 38.535602712,
+        "longitude": -0.114764576
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-237",
+      "name": "Av. Mediterráneo, 35",
+      "position": {
+        "latitude": 38.535794915,
+        "longitude": -0.116720169
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-238",
+      "name": "Av. Mediterráneo, 23",
+      "position": {
+        "latitude": 38.536179322,
+        "longitude": -0.120631356
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-239",
+      "name": "Av. Mediterráneo, 13 (H.Belroy)",
+      "position": {
+        "latitude": 38.537054,
+        "longitude": -0.120855
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-242",
+      "name": "Av. Europa, 12",
+      "position": {
+        "latitude": 38.53785,
+        "longitude": -0.12062
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-243",
+      "name": "Av. Europa, 16AC",
+      "position": {
+        "latitude": 38.53905,
+        "longitude": -0.12072
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-245",
+      "name": "C/ Nau Llondro, 1 (E.Idiomas)",
+      "position": {
+        "latitude": 38.54905,
+        "longitude": -0.1227
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-249",
+      "name": "C/ Llaut, 1 AC",
+      "position": {
+        "latitude": 38.5492,
+        "longitude": -0.12355
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-268",
+      "name": "Av. Montecarlo, 11",
+      "position": {
+        "latitude": 38.5398,
+        "longitude": -0.10305
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-270",
+      "name": "C/ Malta, 8",
+      "position": {
+        "latitude": 38.5433,
+        "longitude": -0.095
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-271",
+      "name": "C/ Malta, 12",
+      "position": {
+        "latitude": 38.5442,
+        "longitude": -0.0957
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-272",
+      "name": "C/ Rumanía, 26 (C.Patricia)",
+      "position": {
+        "latitude": 38.54665,
+        "longitude": -0.09625
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-274",
+      "name": "C/ Rumanía, 9 AC",
+      "position": {
+        "latitude": 38.5463,
+        "longitude": -0.0973
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-275",
+      "name": "C/ Rumanía, 3 AC",
+      "position": {
+        "latitude": 38.54665,
+        "longitude": -0.0985
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-290",
+      "name": "Av. Europa, 21",
+      "position": {
+        "latitude": 38.54055,
+        "longitude": -0.1202
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-291",
+      "name": "Av. Europa, 15",
+      "position": {
+        "latitude": 38.539232,
+        "longitude": -0.120415
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-292",
+      "name": "V. Aqualandia / Mundomar",
+      "position": {
+        "latitude": 38.542408,
+        "longitude": -0.094589
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-295",
+      "name": "Pº Els Tolls, 2 (Juzgados)",
+      "position": {
+        "latitude": 38.5482,
+        "longitude": -0.12605
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-299",
+      "name": "Av. Montecarlo, 15AC",
+      "position": {
+        "latitude": 38.5404,
+        "longitude": -0.10295
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-300",
+      "name": "C/ Rumanía, 6",
+      "position": {
+        "latitude": 38.54715,
+        "longitude": -0.0981
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-301",
+      "name": "C/ Rumanía, 2",
+      "position": {
+        "latitude": 38.5468,
+        "longitude": -0.099
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-304",
+      "name": "Av. Mediterráneo, 26",
+      "position": {
+        "latitude": 38.536801636,
+        "longitude": -0.119771361
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-310",
+      "name": "Av. Montecarlo, 36",
+      "position": {
+        "latitude": 38.5419,
+        "longitude": -0.10295
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-311",
+      "name": "Av. Montecarlo, 32",
+      "position": {
+        "latitude": 38.5411,
+        "longitude": -0.10325
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-321",
+      "name": "Av. Montecarlo, 1",
+      "position": {
+        "latitude": 38.5388,
+        "longitude": -0.10315
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-336",
+      "name": "C/ Londres, 16",
+      "position": {
+        "latitude": 38.53905,
+        "longitude": -0.10565
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-337",
+      "name": "C/ Londres, 20",
+      "position": {
+        "latitude": 38.53965,
+        "longitude": -0.10495
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-338",
+      "name": "Av. París, 5",
+      "position": {
+        "latitude": 38.54035,
+        "longitude": -0.10405
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-339",
+      "name": "C/ Marsella, 7",
+      "position": {
+        "latitude": 38.54485,
+        "longitude": -0.09515
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-346",
+      "name": "C/ Esperanto, 4",
+      "position": {
+        "latitude": 38.53735,
+        "longitude": -0.11965
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-362",
+      "name": "Av. Ciudad Real, 4",
+      "position": {
+        "latitude": 38.54025,
+        "longitude": -0.10145
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-363",
+      "name": "C/ Ramón y Cajal, 5 (Hosp. Levante)",
+      "position": {
+        "latitude": 38.53965,
+        "longitude": -0.10055
+      }
+    },
+    {
+      "settlementId": "es-benidorm",
+      "stopPlaceId": "marina-baixa-place-bnd-385",
+      "name": "C/ Francisco Llorca Antón (Estacion Bus)",
+      "position": {
+        "latitude": 38.548629,
+        "longitude": -0.124584
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-153",
+      "stopPlaceId": "marina-baixa-place-bnd-153",
+      "settlementId": "es-benidorm",
+      "name": "Av. Beniardá, 4",
+      "position": {
+        "latitude": 38.544521034,
+        "longitude": -0.132549405
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-154",
+      "stopPlaceId": "marina-baixa-place-bnd-154",
+      "settlementId": "es-benidorm",
+      "name": "Av. Beniardá, 16",
+      "position": {
+        "latitude": 38.54713,
+        "longitude": -0.1333214
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-157",
+      "stopPlaceId": "marina-baixa-place-bnd-157",
+      "settlementId": "es-benidorm",
+      "name": "Av. Beniardá, 13",
+      "position": {
+        "latitude": 38.54425,
+        "longitude": -0.13292
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-181",
+      "stopPlaceId": "marina-baixa-place-bnd-181",
+      "settlementId": "es-benidorm",
+      "name": "Av. E. Zaplana (H.Villaitana)",
+      "position": {
+        "latitude": 38.5595,
+        "longitude": -0.1507
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-182",
+      "stopPlaceId": "marina-baixa-place-bnd-182",
+      "settlementId": "es-benidorm",
+      "name": "Av. Eduardo Zaplana, s/n",
+      "position": {
+        "latitude": 38.5589,
+        "longitude": -0.152
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-183",
+      "stopPlaceId": "marina-baixa-place-bnd-183",
+      "settlementId": "es-benidorm",
+      "name": "Ctra. CV-70 (Tivoli)",
+      "position": {
+        "latitude": 38.56033,
+        "longitude": -0.1336
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-184",
+      "stopPlaceId": "marina-baixa-place-bnd-184",
+      "settlementId": "es-benidorm",
+      "name": "Av. Eduardo Zaplana, s/n",
+      "position": {
+        "latitude": 38.562,
+        "longitude": -0.1376
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-185",
+      "stopPlaceId": "marina-baixa-place-bnd-185",
+      "settlementId": "es-benidorm",
+      "name": "V. Nº8 (Terra Natura)",
+      "position": {
+        "latitude": 38.568,
+        "longitude": -0.1443
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-186",
+      "stopPlaceId": "marina-baixa-place-bnd-186",
+      "settlementId": "es-benidorm",
+      "name": "V. Nº 92, s/n",
+      "position": {
+        "latitude": 38.561,
+        "longitude": -0.1574
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-187",
+      "stopPlaceId": "marina-baixa-place-bnd-187",
+      "settlementId": "es-benidorm",
+      "name": "V. Terra Mitica",
+      "position": {
+        "latitude": 38.5603,
+        "longitude": -0.1589
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-188",
+      "stopPlaceId": "marina-baixa-place-bnd-188",
+      "settlementId": "es-benidorm",
+      "name": "V. acceso parque",
+      "position": {
+        "latitude": 38.561,
+        "longitude": -0.1542
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-189",
+      "stopPlaceId": "marina-baixa-place-bnd-189",
+      "settlementId": "es-benidorm",
+      "name": "V. Nº8 Terra Natura",
+      "position": {
+        "latitude": 38.5682,
+        "longitude": -0.1439
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-201",
+      "stopPlaceId": "marina-baixa-place-bnd-201",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 3 (Benidorm Centro)",
+      "position": {
+        "latitude": 38.53664,
+        "longitude": -0.12715
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-202",
+      "stopPlaceId": "marina-baixa-place-bnd-202",
+      "settlementId": "es-benidorm",
+      "name": "C/ Lepanto, 2",
+      "position": {
+        "latitude": 38.53715,
+        "longitude": -0.11895
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-203",
+      "stopPlaceId": "marina-baixa-place-bnd-203",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 38",
+      "position": {
+        "latitude": 38.536474407,
+        "longitude": -0.11711061
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-204",
+      "stopPlaceId": "marina-baixa-place-bnd-204",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 44",
+      "position": {
+        "latitude": 38.53522661,
+        "longitude": -0.11378678
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-205",
+      "stopPlaceId": "marina-baixa-place-bnd-205",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 54",
+      "position": {
+        "latitude": 38.535959423,
+        "longitude": -0.112797618
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-206",
+      "stopPlaceId": "marina-baixa-place-bnd-206",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 58",
+      "position": {
+        "latitude": 38.535659015,
+        "longitude": -0.110405087
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-207",
+      "stopPlaceId": "marina-baixa-place-bnd-207",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 62 (R.Loix)",
+      "position": {
+        "latitude": 38.534806073,
+        "longitude": -0.107915998
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-208",
+      "stopPlaceId": "marina-baixa-place-bnd-208",
+      "settlementId": "es-benidorm",
+      "name": "Av. Ametlla de Mar, 16 (H.Nereo)",
+      "position": {
+        "latitude": 38.537854545,
+        "longitude": -0.10623
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-211",
+      "stopPlaceId": "marina-baixa-place-bnd-211",
+      "settlementId": "es-benidorm",
+      "name": "Av. Severo Ochoa, 8",
+      "position": {
+        "latitude": 38.541372727,
+        "longitude": -0.102751212
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-212",
+      "stopPlaceId": "marina-baixa-place-bnd-212",
+      "settlementId": "es-benidorm",
+      "name": "Av. Severo Ochoa, 16 (H.Mediterráneo)",
+      "position": {
+        "latitude": 38.536123559,
+        "longitude": -0.122912881
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-213",
+      "stopPlaceId": "marina-baixa-place-bnd-213",
+      "settlementId": "es-benidorm",
+      "name": "Av. Severo Ochoa, 34 (H.Deloix)",
+      "position": {
+        "latitude": 38.546527326,
+        "longitude": -0.099472404
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-228",
+      "stopPlaceId": "marina-baixa-place-bnd-228",
+      "settlementId": "es-benidorm",
+      "name": "Av. Severo Ochoa, 15",
+      "position": {
+        "latitude": 38.543345455,
+        "longitude": -0.102662424
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-229",
+      "stopPlaceId": "marina-baixa-place-bnd-229",
+      "settlementId": "es-benidorm",
+      "name": "Av. Severo Ochoa, 9 (Lope Vega)",
+      "position": {
+        "latitude": 38.541654545,
+        "longitude": -0.102944242
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-234",
+      "stopPlaceId": "marina-baixa-place-bnd-234",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 55 (Casino)",
+      "position": {
+        "latitude": 38.535272777,
+        "longitude": -0.108570457
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-235",
+      "stopPlaceId": "marina-baixa-place-bnd-235",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 49",
+      "position": {
+        "latitude": 38.535346441,
+        "longitude": -0.112157119
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-236",
+      "stopPlaceId": "marina-baixa-place-bnd-236",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 41 (H.Don Pancho)",
+      "position": {
+        "latitude": 38.535602712,
+        "longitude": -0.114764576
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-237",
+      "stopPlaceId": "marina-baixa-place-bnd-237",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 35",
+      "position": {
+        "latitude": 38.535794915,
+        "longitude": -0.116720169
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-238",
+      "stopPlaceId": "marina-baixa-place-bnd-238",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 23",
+      "position": {
+        "latitude": 38.536179322,
+        "longitude": -0.120631356
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-239",
+      "stopPlaceId": "marina-baixa-place-bnd-239",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 13 (H.Belroy)",
+      "position": {
+        "latitude": 38.537054,
+        "longitude": -0.120855
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-242",
+      "stopPlaceId": "marina-baixa-place-bnd-242",
+      "settlementId": "es-benidorm",
+      "name": "Av. Europa, 12",
+      "position": {
+        "latitude": 38.53785,
+        "longitude": -0.12062
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-243",
+      "stopPlaceId": "marina-baixa-place-bnd-243",
+      "settlementId": "es-benidorm",
+      "name": "Av. Europa, 16AC",
+      "position": {
+        "latitude": 38.53905,
+        "longitude": -0.12072
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-245",
+      "stopPlaceId": "marina-baixa-place-bnd-245",
+      "settlementId": "es-benidorm",
+      "name": "C/ Nau Llondro, 1 (E.Idiomas)",
+      "position": {
+        "latitude": 38.54905,
+        "longitude": -0.1227
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-249",
+      "stopPlaceId": "marina-baixa-place-bnd-249",
+      "settlementId": "es-benidorm",
+      "name": "C/ Llaut, 1 AC",
+      "position": {
+        "latitude": 38.5492,
+        "longitude": -0.12355
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-268",
+      "stopPlaceId": "marina-baixa-place-bnd-268",
+      "settlementId": "es-benidorm",
+      "name": "Av. Montecarlo, 11",
+      "position": {
+        "latitude": 38.5398,
+        "longitude": -0.10305
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-270",
+      "stopPlaceId": "marina-baixa-place-bnd-270",
+      "settlementId": "es-benidorm",
+      "name": "C/ Malta, 8",
+      "position": {
+        "latitude": 38.5433,
+        "longitude": -0.095
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-271",
+      "stopPlaceId": "marina-baixa-place-bnd-271",
+      "settlementId": "es-benidorm",
+      "name": "C/ Malta, 12",
+      "position": {
+        "latitude": 38.5442,
+        "longitude": -0.0957
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-272",
+      "stopPlaceId": "marina-baixa-place-bnd-272",
+      "settlementId": "es-benidorm",
+      "name": "C/ Rumanía, 26 (C.Patricia)",
+      "position": {
+        "latitude": 38.54665,
+        "longitude": -0.09625
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-274",
+      "stopPlaceId": "marina-baixa-place-bnd-274",
+      "settlementId": "es-benidorm",
+      "name": "C/ Rumanía, 9 AC",
+      "position": {
+        "latitude": 38.5463,
+        "longitude": -0.0973
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-275",
+      "stopPlaceId": "marina-baixa-place-bnd-275",
+      "settlementId": "es-benidorm",
+      "name": "C/ Rumanía, 3 AC",
+      "position": {
+        "latitude": 38.54665,
+        "longitude": -0.0985
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-290",
+      "stopPlaceId": "marina-baixa-place-bnd-290",
+      "settlementId": "es-benidorm",
+      "name": "Av. Europa, 21",
+      "position": {
+        "latitude": 38.54055,
+        "longitude": -0.1202
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-291",
+      "stopPlaceId": "marina-baixa-place-bnd-291",
+      "settlementId": "es-benidorm",
+      "name": "Av. Europa, 15",
+      "position": {
+        "latitude": 38.539232,
+        "longitude": -0.120415
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-292",
+      "stopPlaceId": "marina-baixa-place-bnd-292",
+      "settlementId": "es-benidorm",
+      "name": "V. Aqualandia / Mundomar",
+      "position": {
+        "latitude": 38.542408,
+        "longitude": -0.094589
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-295",
+      "stopPlaceId": "marina-baixa-place-bnd-295",
+      "settlementId": "es-benidorm",
+      "name": "Pº Els Tolls, 2 (Juzgados)",
+      "position": {
+        "latitude": 38.5482,
+        "longitude": -0.12605
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-299",
+      "stopPlaceId": "marina-baixa-place-bnd-299",
+      "settlementId": "es-benidorm",
+      "name": "Av. Montecarlo, 15AC",
+      "position": {
+        "latitude": 38.5404,
+        "longitude": -0.10295
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-300",
+      "stopPlaceId": "marina-baixa-place-bnd-300",
+      "settlementId": "es-benidorm",
+      "name": "C/ Rumanía, 6",
+      "position": {
+        "latitude": 38.54715,
+        "longitude": -0.0981
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-301",
+      "stopPlaceId": "marina-baixa-place-bnd-301",
+      "settlementId": "es-benidorm",
+      "name": "C/ Rumanía, 2",
+      "position": {
+        "latitude": 38.5468,
+        "longitude": -0.099
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-304",
+      "stopPlaceId": "marina-baixa-place-bnd-304",
+      "settlementId": "es-benidorm",
+      "name": "Av. Mediterráneo, 26",
+      "position": {
+        "latitude": 38.536801636,
+        "longitude": -0.119771361
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-310",
+      "stopPlaceId": "marina-baixa-place-bnd-310",
+      "settlementId": "es-benidorm",
+      "name": "Av. Montecarlo, 36",
+      "position": {
+        "latitude": 38.5419,
+        "longitude": -0.10295
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-311",
+      "stopPlaceId": "marina-baixa-place-bnd-311",
+      "settlementId": "es-benidorm",
+      "name": "Av. Montecarlo, 32",
+      "position": {
+        "latitude": 38.5411,
+        "longitude": -0.10325
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-321",
+      "stopPlaceId": "marina-baixa-place-bnd-321",
+      "settlementId": "es-benidorm",
+      "name": "Av. Montecarlo, 1",
+      "position": {
+        "latitude": 38.5388,
+        "longitude": -0.10315
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-336",
+      "stopPlaceId": "marina-baixa-place-bnd-336",
+      "settlementId": "es-benidorm",
+      "name": "C/ Londres, 16",
+      "position": {
+        "latitude": 38.53905,
+        "longitude": -0.10565
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-337",
+      "stopPlaceId": "marina-baixa-place-bnd-337",
+      "settlementId": "es-benidorm",
+      "name": "C/ Londres, 20",
+      "position": {
+        "latitude": 38.53965,
+        "longitude": -0.10495
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-338",
+      "stopPlaceId": "marina-baixa-place-bnd-338",
+      "settlementId": "es-benidorm",
+      "name": "Av. París, 5",
+      "position": {
+        "latitude": 38.54035,
+        "longitude": -0.10405
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-339",
+      "stopPlaceId": "marina-baixa-place-bnd-339",
+      "settlementId": "es-benidorm",
+      "name": "C/ Marsella, 7",
+      "position": {
+        "latitude": 38.54485,
+        "longitude": -0.09515
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-346",
+      "stopPlaceId": "marina-baixa-place-bnd-346",
+      "settlementId": "es-benidorm",
+      "name": "C/ Esperanto, 4",
+      "position": {
+        "latitude": 38.53735,
+        "longitude": -0.11965
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-362",
+      "stopPlaceId": "marina-baixa-place-bnd-362",
+      "settlementId": "es-benidorm",
+      "name": "Av. Ciudad Real, 4",
+      "position": {
+        "latitude": 38.54025,
+        "longitude": -0.10145
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-363",
+      "stopPlaceId": "marina-baixa-place-bnd-363",
+      "settlementId": "es-benidorm",
+      "name": "C/ Ramón y Cajal, 5 (Hosp. Levante)",
+      "position": {
+        "latitude": 38.53965,
+        "longitude": -0.10055
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "marina-baixa-stop-bnd-385",
+      "stopPlaceId": "marina-baixa-place-bnd-385",
+      "settlementId": "es-benidorm",
+      "name": "C/ Francisco Llorca Antón (Estacion Bus)",
+      "position": {
+        "latitude": 38.548629,
+        "longitude": -0.124584
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

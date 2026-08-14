@@ -5,6 +5,10 @@
 **Current applicability:** Active destination-assignment decision. Historical persistence markers have evolved.
 **Current contract:** [`docs/current-state.md`](../../current-state.md)
 
+> **Traversal update:** ADR 0019 supersedes the contiguous row-major weighted
+> traversal with an origin-keyed affine permutation. This ADR's
+> network-independent spatial-intent decision remains active.
+
 ## Decision
 
 Served Passenger Demand Plan cells are destination attractors. Their initial

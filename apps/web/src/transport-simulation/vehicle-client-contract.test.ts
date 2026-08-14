@@ -128,6 +128,45 @@ const demandPlan = (canonical: ReturnType<typeof scenario>) =>
     stops: [{ stopPlaceId: 'tv-place-0065' }, { stopPlaceId: 'tv-place-0053' }],
   });
 
+const dispersedDemandPlan = (canonical: ReturnType<typeof scenario>) => {
+  const stopPlaceIds = [
+    'tv-place-0053',
+    'tv-place-0065',
+    'tv-place-0067',
+    'tv-place-0093',
+  ];
+  return parsePassengerDemandPlan({
+    schemaVersion: '1.0.0',
+    demandModelContentHash: 'a'.repeat(64),
+    scenario: createScenarioCoordinate(canonical),
+    grid: {
+      cityId: 'Q36730',
+      populationGridSchemaVersion: '1.0.0',
+      gridVersion: '1.0.0',
+      rows: 1,
+      columns: 4,
+      resolutionDegrees: 0.001,
+      totalActiveCellCount: 4,
+      totalPopulationWeight: 10,
+    },
+    catchmentPolicy: { maxAccessDistanceCells: 5 },
+    emissionPolicy: {
+      emissionCreditsPerWeightPerTick: 1,
+      creditsPerPassenger: 1,
+    },
+    accessPolicy: { accessTicksPerCell: 1 },
+    cells: stopPlaceIds.map((assignedStopPlaceId, column) => ({
+      cellId: `r0c${column}`,
+      row: 0,
+      column,
+      populationWeight: column + 1,
+      assignedStopPlaceId,
+      distanceSquaredCells: 0,
+    })),
+    stops: stopPlaceIds.map((stopPlaceId) => ({ stopPlaceId })),
+  });
+};
+
 class LoopbackWorker implements TransportWorkerLike {
   private readonly clientListeners = new Map<
     string,
@@ -641,6 +680,61 @@ describe.each(factories)(
     });
   },
 );
+
+it('keeps nontrivial dispersed passenger authority identical across direct, clone, and Worker clients', async () => {
+  const canonical = scenario();
+  const snapshots = [] as Awaited<
+    ReturnType<TransportSimulationClient['exportSnapshot']>
+  >[];
+  for (const [, createClient] of factories) {
+    const client = createClient();
+    await client.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 4,
+      mode: 'new',
+      gameId: parseGameId('game'),
+      timelineId: parseTimelineId('timeline'),
+      initialSimulationTick: 0,
+      scenario: canonical,
+      passengerDemandPlan: dispersedDemandPlan(canonical),
+    });
+    await client.sendCommand(
+      envelope(500, { type: 'foundation.advance-ticks', count: 9 }),
+    );
+    snapshots.push(await client.exportSnapshot());
+    await client.close();
+  }
+  expect(snapshots[1]).toEqual(snapshots[0]);
+  expect(snapshots[2]).toEqual(snapshots[0]);
+  const state = snapshots[0]!.snapshot.state;
+  if (state.passengerDemand.status !== 'active')
+    throw new Error('Expected active passenger authority.');
+  expect(state.passengerDemand.destinationCursors).toHaveLength(4);
+  expect(
+    state.passengerDemand.destinationCursors.some(
+      ({ destinationCursor }) => destinationCursor > 0,
+    ),
+  ).toBe(true);
+  expect(state.passengerDemand.waitingCohorts.length).toBeGreaterThan(0);
+  expect(
+    new Set(
+      state.passengerDemand.waitingCohorts.map(
+        ({ destinationCellId }) => destinationCellId,
+      ),
+    ).size,
+  ).toBeGreaterThan(1);
+  expect(
+    new Set(
+      state.passengerDemand.waitingCohorts.map(
+        ({ destinationStopPlaceId }) => destinationStopPlaceId,
+      ),
+    ).size,
+  ).toBeGreaterThan(1);
+  expect(
+    state.passengerDemand.directItineraryUnavailablePassengerCount,
+  ).toBeGreaterThan(0);
+  expect(state.tick).toBe(9);
+});
 
 type ExportedTransportState = Awaited<
   ReturnType<TransportSimulationClient['exportSnapshot']>

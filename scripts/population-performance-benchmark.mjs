@@ -199,8 +199,18 @@ console.log(
       eligibleStops: plan.stops.length,
       destinationRuntimeIndex: {
         servedCandidateRecords: destinationIndex.servedCandidates.length,
+        cumulativeWeightRecords: destinationIndex.cumulativeWeightEnds.length,
+        exclusionIndexRecords: [
+          ...destinationIndex.exclusionByStopPlace.values(),
+        ].reduce((total, exclusion) => total + exclusion.indexes.length, 0),
+        exclusionCumulativeRecords: [
+          ...destinationIndex.exclusionByStopPlace.values(),
+        ].reduce(
+          (total, exclusion) => total + exclusion.cumulativeEnds.length,
+          0,
+        ),
         stopWeightRecords: destinationIndex.assignedWeightByStopPlace.size,
-        retainedRecordCount: destinationIndex.retainedRecordCount,
+        exclusionStopRecords: destinationIndex.exclusionByStopPlace.size,
         indexConstructionMs,
         heapBeforeIndex,
         heapAfterIndex,

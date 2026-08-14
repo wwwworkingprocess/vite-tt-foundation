@@ -3,10 +3,12 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
+  allocatePassengerDestinations,
   advanceTransportTicks,
   applyTransportVehicleCommand,
   createScenarioCoordinate,
   createTransportSimulationState,
+  listPassengerDestinationCandidates,
 } from '@torrevieja-tycoon/simulation';
 import { createPopulationFieldLoader } from './population-field-loader.js';
 import { createProductionPassengerDemandPlan } from './population-demand-plan.js';
@@ -353,6 +355,167 @@ describe('population field loader', () => {
       !initial.passengerDirectItineraryIndex
     )
       throw new Error('Expected active passenger authority.');
+    const stopNodePlaces = new Map(
+      canonical.stops.stopNodes.map((node) => [
+        node.stopNodeId,
+        node.stopPlaceId,
+      ]),
+    );
+    const placesByRoute = new Map(
+      canonical.routes.routes.map((route) => [
+        route.routeId,
+        new Set(
+          route.patterns.flatMap((pattern) =>
+            pattern.stopNodeIds.flatMap((stopNodeId) => {
+              const stopPlaceId = stopNodePlaces.get(stopNodeId);
+              return stopPlaceId === null || stopPlaceId === undefined
+                ? []
+                : [stopPlaceId];
+            }),
+          ),
+        ),
+      ]),
+    );
+    const itineraryIndex = initial.passengerDirectItineraryIndex;
+    const exclusiveOrigin = (
+      routeId: (typeof canonical.routes.routes)[number]['routeId'],
+    ) =>
+      [...placesByRoute.get(routeId)!]
+        .filter((stopPlaceId) =>
+          [...placesByRoute].every(
+            ([candidateRouteId, places]) =>
+              candidateRouteId === routeId || !places.has(stopPlaceId),
+          ),
+        )
+        .sort()[0]!;
+    const metrics = canonical.routes.routes
+      .filter(({ routeId }) =>
+        ['legacy-A', 'legacy-B', 'legacy-C'].includes(routeId),
+      )
+      .map(({ routeId }) => {
+        const originStopPlaceId = exclusiveOrigin(routeId);
+        const candidates = listPassengerDestinationCandidates(
+          plan,
+          originStopPlaceId,
+        );
+        const allocations = allocatePassengerDestinations(
+          candidates,
+          0,
+          80,
+          plan.demandModelContentHash,
+          originStopPlaceId,
+        ).allocations.filter(({ count }) => count > 0);
+        let remainingBaseline = 80;
+        const baselineByPlace = new Map<string, number>();
+        let baselineAvailable = 0;
+        for (const candidate of candidates) {
+          const count = Math.min(remainingBaseline, candidate.weight);
+          if (count === 0) break;
+          baselineByPlace.set(
+            candidate.destinationStopPlaceId,
+            (baselineByPlace.get(candidate.destinationStopPlaceId) ?? 0) +
+              count,
+          );
+          if (
+            itineraryIndex.find(
+              originStopPlaceId,
+              candidate.destinationStopPlaceId,
+            ).status === 'direct'
+          )
+            baselineAvailable += count;
+          remainingBaseline -= count;
+        }
+        const byPlace = new Map<string, number>();
+        let available = 0;
+        for (const allocation of allocations) {
+          byPlace.set(
+            allocation.destinationStopPlaceId,
+            (byPlace.get(allocation.destinationStopPlaceId) ?? 0) +
+              allocation.count,
+          );
+          if (
+            itineraryIndex.find(
+              originStopPlaceId,
+              allocation.destinationStopPlaceId,
+            ).status === 'direct'
+          )
+            available += allocation.count;
+        }
+        return {
+          routeId,
+          originStopPlaceId,
+          distinctCells: allocations.length,
+          distinctStopPlaces: byPlace.size,
+          largestStopPlaceCount: Math.max(...byPlace.values()),
+          available,
+          unavailable: 80 - available,
+          observedPrefixCount:
+            (byPlace.get('tv-place-0067') ?? 0) +
+            (byPlace.get('tv-place-0093') ?? 0),
+          baseline: {
+            distinctStopPlaces: baselineByPlace.size,
+            largestStopPlaceCount: Math.max(...baselineByPlace.values()),
+            available: baselineAvailable,
+            unavailable: 80 - baselineAvailable,
+            observedPrefixCount:
+              (baselineByPlace.get('tv-place-0067') ?? 0) +
+              (baselineByPlace.get('tv-place-0093') ?? 0),
+          },
+        };
+      });
+    expect(metrics).toEqual([
+      {
+        routeId: 'legacy-A',
+        originStopPlaceId: 'tv-place-0053',
+        distinctCells: 80,
+        distinctStopPlaces: 40,
+        largestStopPlaceCount: 6,
+        available: 2,
+        unavailable: 78,
+        observedPrefixCount: 1,
+        baseline: {
+          distinctStopPlaces: 1,
+          largestStopPlaceCount: 80,
+          available: 80,
+          unavailable: 0,
+          observedPrefixCount: 80,
+        },
+      },
+      {
+        routeId: 'legacy-B',
+        originStopPlaceId: 'tv-place-0033',
+        distinctCells: 80,
+        distinctStopPlaces: 41,
+        largestStopPlaceCount: 8,
+        available: 4,
+        unavailable: 76,
+        observedPrefixCount: 1,
+        baseline: {
+          distinctStopPlaces: 1,
+          largestStopPlaceCount: 80,
+          available: 0,
+          unavailable: 80,
+          observedPrefixCount: 80,
+        },
+      },
+      {
+        routeId: 'legacy-C',
+        originStopPlaceId: 'tv-place-0031',
+        distinctCells: 80,
+        distinctStopPlaces: 39,
+        largestStopPlaceCount: 9,
+        available: 18,
+        unavailable: 62,
+        observedPrefixCount: 0,
+        baseline: {
+          distinctStopPlaces: 1,
+          largestStopPlaceCount: 80,
+          available: 0,
+          unavailable: 80,
+          observedPrefixCount: 80,
+        },
+      },
+    ]);
     const firstQualifyingTick = Math.min(
       ...plan.cells
         .filter((cell) => cell.populationWeight > 0)
@@ -403,7 +566,9 @@ describe('population field loader', () => {
         (cohort) => cohort.originOccurrenceIndex === 0,
       );
       expect(originCohort).toBeDefined();
-      expect(originCohort?.routeId).toBe('legacy-A');
+      expect(['legacy-A', 'legacy-B', 'legacy-C']).toContain(
+        originCohort?.routeId,
+      );
       const command = createDemoVehicleCommandForAuthority(
         createScenarioCoordinate(canonical),
         () => canonical,

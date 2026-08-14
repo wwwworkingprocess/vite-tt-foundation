@@ -95,6 +95,8 @@ describe('internal passenger-demand runtime', () => {
           referenceCandidates,
           cursor,
           passengerCount,
+          value.demandModelContentHash,
+          origin,
         );
         expect(
           allocateTrustedPassengerDestinations(
@@ -111,27 +113,93 @@ describe('internal passenger-demand runtime', () => {
     },
   );
 
-  it('retains one served-cell record plus one assigned-weight record per stop', () => {
+  it('retains only linear shared cell and StopPlace index records', () => {
     const index = passengerDemandRuntimeIndex(plan());
     expect(index.servedCandidates).toHaveLength(4);
     expect(index.assignedWeightByStopPlace.size).toBe(3);
-    expect(index.retainedRecordCount).toBe(7);
+    const exclusionRecords = [...index.exclusionByStopPlace.values()].reduce(
+      (total, exclusion) =>
+        total + exclusion.indexes.length + exclusion.cumulativeEnds.length,
+      0,
+    );
+    expect({
+      candidates: index.servedCandidates.length,
+      cumulativeEnds: index.cumulativeWeightEnds.length,
+      exclusionRecords,
+      assignedStops: index.assignedWeightByStopPlace.size,
+      exclusionStops: index.exclusionByStopPlace.size,
+    }).toEqual({
+      candidates: 4,
+      cumulativeEnds: 4,
+      exclusionRecords: 8,
+      assignedStops: 3,
+      exclusionStops: 3,
+    });
   });
 
   it('returns no allocation when the compact index has no alternate destination', () => {
     expect(
       allocateTrustedPassengerDestinations(
         {
+          demandModelContentHash: 'a'.repeat(64),
           servedCandidates: [],
           totalServedDestinationWeight: 0,
           assignedWeightByStopPlace: new Map(),
-          retainedRecordCount: 0,
+          exclusionByStopPlace: new Map(),
+          cumulativeWeightEnds: [],
         },
         'a',
         0,
         10,
       ),
     ).toEqual({ allocations: [], nextCursor: 0 });
+  });
+
+  it('keeps a moderately large index linear without weight-unit expansion', () => {
+    const base = plan();
+    const cellCount = 600;
+    const stopCount = 30;
+    const large = {
+      ...base,
+      grid: {
+        ...base.grid,
+        rows: 20,
+        columns: 30,
+        totalActiveCellCount: cellCount,
+        totalPopulationWeight: cellCount * 10_000,
+      },
+      cells: Array.from({ length: cellCount }, (_, index) => ({
+        cellId: `r${Math.floor(index / 30)}c${index % 30}`,
+        row: Math.floor(index / 30),
+        column: index % 30,
+        populationWeight: 10_000,
+        assignedStopPlaceId: `stop-${String(index % stopCount).padStart(2, '0')}`,
+        distanceSquaredCells: 1,
+      })),
+      stops: Array.from({ length: stopCount }, (_, index) => ({
+        stopPlaceId: `stop-${String(index).padStart(2, '0')}`,
+      })),
+    } as unknown as typeof base;
+    const index = passengerDemandRuntimeIndex(large);
+    const exclusionRecords = [...index.exclusionByStopPlace.values()].reduce(
+      (total, exclusion) =>
+        total + exclusion.indexes.length + exclusion.cumulativeEnds.length,
+      0,
+    );
+    expect(index.servedCandidates).toHaveLength(cellCount);
+    expect(index.cumulativeWeightEnds).toHaveLength(cellCount);
+    expect(exclusionRecords).toBe(cellCount * 2);
+    expect(index.assignedWeightByStopPlace.size).toBe(stopCount);
+    expect(index.exclusionByStopPlace.size).toBe(stopCount);
+    expect(index.servedCandidates).toHaveLength(cellCount);
+  });
+
+  it('uses the compact global index when the origin has no excluded cells', () => {
+    const index = passengerDemandRuntimeIndex(plan());
+    expect(
+      allocateTrustedPassengerDestinations(index, 'external-origin', 0, 1)
+        .allocations,
+    ).toHaveLength(1);
   });
 
   it('accounts for arrivals with no alternate destination in trusted advancement', () => {

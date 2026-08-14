@@ -8,12 +8,25 @@ import type {
   PassengerDemandPlanV1,
   PassengerDestinationCandidate,
 } from './passenger-demand.js';
+import {
+  addModulo,
+  derivePassengerDestinationPermutation,
+  multiplyModulo,
+} from './passenger-destination-permutation.js';
 
 export interface PassengerDemandRuntimeIndex {
+  readonly demandModelContentHash: string;
   readonly servedCandidates: readonly Readonly<PassengerDestinationCandidate>[];
   readonly totalServedDestinationWeight: number;
   readonly assignedWeightByStopPlace: ReadonlyMap<StopPlaceId, number>;
-  readonly retainedRecordCount: number;
+  readonly exclusionByStopPlace: ReadonlyMap<
+    StopPlaceId,
+    Readonly<{
+      readonly indexes: readonly number[];
+      readonly cumulativeEnds: readonly number[];
+    }>
+  >;
+  readonly cumulativeWeightEnds: readonly number[];
 }
 
 const indexes = new WeakMap<
@@ -30,6 +43,8 @@ export const passengerDemandRuntimeIndex = (
     plan.stops.map(({ stopPlaceId }) => [stopPlaceId, 0]),
   );
   let totalServedDestinationWeight = 0;
+  const candidateIndexesByStopPlace = new Map<StopPlaceId, number[]>();
+  const cumulativeWeightEnds: number[] = [];
   const servedCandidates = plan.cells.flatMap((cell) => {
     if (cell.assignedStopPlaceId === null) return [];
     totalServedDestinationWeight = checkedAdd(
@@ -45,6 +60,12 @@ export const passengerDemandRuntimeIndex = (
         'assigned StopPlace weight',
       ),
     );
+    const candidateIndex = cumulativeWeightEnds.length;
+    cumulativeWeightEnds.push(totalServedDestinationWeight);
+    const indexes =
+      candidateIndexesByStopPlace.get(cell.assignedStopPlaceId) ?? [];
+    indexes.push(candidateIndex);
+    candidateIndexesByStopPlace.set(cell.assignedStopPlaceId, indexes);
     return [
       freezeTrustedAuthority({
         cellId: cell.cellId,
@@ -55,23 +76,36 @@ export const passengerDemandRuntimeIndex = (
       }),
     ];
   });
+  const exclusionByStopPlace = new Map(
+    [...candidateIndexesByStopPlace].map(([stopPlaceId, candidateIndexes]) => {
+      let cumulative = 0;
+      return [
+        stopPlaceId,
+        {
+          indexes: candidateIndexes,
+          cumulativeEnds: candidateIndexes.map((candidateIndex) => {
+            cumulative = checkedAdd(
+              cumulative,
+              servedCandidates[candidateIndex]!.weight,
+              'excluded destination weight',
+            );
+            return cumulative;
+          }),
+        },
+      ] as const;
+    }),
+  );
   const created = freezeTrustedAuthority({
+    demandModelContentHash: plan.demandModelContentHash,
     servedCandidates,
     totalServedDestinationWeight,
     assignedWeightByStopPlace,
-    retainedRecordCount:
-      servedCandidates.length + assignedWeightByStopPlace.size,
+    exclusionByStopPlace,
+    cumulativeWeightEnds,
   });
   indexes.set(plan, created);
   return created;
 };
-
-const overlap = (
-  start: number,
-  end: number,
-  segmentStart: number,
-  segmentEnd: number,
-) => Math.max(0, Math.min(end, segmentEnd) - Math.max(start, segmentStart));
 
 export const allocateTrustedPassengerDestinations = (
   index: PassengerDemandRuntimeIndex,
@@ -85,37 +119,115 @@ export const allocateTrustedPassengerDestinations = (
       0);
   if (totalWeight === 0)
     return freezeTrustedAuthority({ allocations: [], nextCursor: 0 });
+  const exclusion = index.exclusionByStopPlace.get(
+    originStopPlaceId as StopPlaceId,
+  );
+  const excludedThrough = (candidateIndex: number) => {
+    if (!exclusion) return 0;
+    let low = 0;
+    let high = exclusion.indexes.length;
+    while (low < high) {
+      const middle = Math.floor((low + high) / 2);
+      if (exclusion.indexes[middle]! <= candidateIndex) low = middle + 1;
+      else high = middle;
+    }
+    return low === 0 ? 0 : exclusion.cumulativeEnds[low - 1]!;
+  };
+  const candidateAt = (position: number) => {
+    let low = 0;
+    let high = index.servedCandidates.length - 1;
+    while (low < high) {
+      const middle = Math.floor((low + high) / 2);
+      const eligibleEnd =
+        index.cumulativeWeightEnds[middle]! - excludedThrough(middle);
+      if (position < eligibleEnd) high = middle;
+      else low = middle + 1;
+    }
+    return low;
+  };
+  const counts = new Map<number, number>();
   const fullCycles = Math.floor(passengerCount / totalWeight);
+  if (fullCycles > 0)
+    index.servedCandidates.forEach((candidate, candidateIndex) => {
+      if (candidate.destinationStopPlaceId !== originStopPlaceId)
+        counts.set(
+          candidateIndex,
+          checkedMultiply(
+            fullCycles,
+            candidate.weight,
+            'destination allocation',
+          ),
+        );
+    });
+  const permutation = derivePassengerDestinationPermutation(
+    index.demandModelContentHash,
+    String(originStopPlaceId),
+    totalWeight,
+  );
   const remainder = passengerCount % totalWeight;
-  const distanceToCycleEnd = totalWeight - cursor;
-  const wraps = remainder >= distanceToCycleEnd;
-  const firstEnd = wraps ? totalWeight : cursor + remainder;
-  const wrappedEnd = wraps ? remainder - distanceToCycleEnd : 0;
-  let intervalStart = 0;
-  const allocations = [] as Array<
-    PassengerDestinationCandidate & { readonly count: number }
-  >;
-  for (const candidate of index.servedCandidates) {
-    if (candidate.destinationStopPlaceId === originStopPlaceId) continue;
-    const intervalEnd = checkedAdd(
-      intervalStart,
-      candidate.weight,
-      'destination interval',
-    );
-    const base = checkedMultiply(
-      fullCycles,
-      candidate.weight,
-      'destination allocation',
-    );
-    const extra =
-      overlap(intervalStart, intervalEnd, cursor, firstEnd) +
-      overlap(intervalStart, intervalEnd, 0, wrappedEnd);
-    const count = checkedAdd(base, extra, 'destination allocation');
-    if (count > 0) allocations.push({ ...candidate, count });
-    intervalStart = intervalEnd;
+  if (permutation.stride === 1) {
+    const start = addModulo(permutation.phase, cursor, totalWeight);
+    const distanceToEnd = totalWeight - start;
+    const wraps = remainder >= distanceToEnd;
+    const firstEnd = wraps ? totalWeight : start + remainder;
+    const wrappedEnd = wraps ? remainder - distanceToEnd : 0;
+    let eligibleStart = 0;
+    index.servedCandidates.forEach((candidate, candidateIndex) => {
+      if (candidate.destinationStopPlaceId === originStopPlaceId) return;
+      const eligibleEnd = checkedAdd(
+        eligibleStart,
+        candidate.weight,
+        'destination interval',
+      );
+      const overlap = (left: number, right: number) =>
+        Math.max(
+          0,
+          Math.min(eligibleEnd, right) - Math.max(eligibleStart, left),
+        );
+      const extra = overlap(start, firstEnd) + overlap(0, wrappedEnd);
+      if (extra > 0)
+        counts.set(
+          candidateIndex,
+          checkedAdd(
+            counts.get(candidateIndex) ?? 0,
+            extra,
+            'destination allocation',
+          ),
+        );
+      eligibleStart = eligibleEnd;
+    });
+    const allocations = [...counts]
+      .sort(([left], [right]) => left - right)
+      .map(([candidateIndex, count]) => ({
+        ...index.servedCandidates[candidateIndex]!,
+        count,
+      }));
+    return freezeTrustedAuthority({
+      allocations,
+      nextCursor: addModulo(cursor, remainder, totalWeight),
+    });
   }
+  let position = addModulo(
+    permutation.phase,
+    multiplyModulo(cursor, permutation.stride, totalWeight),
+    totalWeight,
+  );
+  for (let assigned = 0; assigned < remainder; assigned += 1) {
+    const candidateIndex = candidateAt(position);
+    counts.set(
+      candidateIndex,
+      checkedAdd(counts.get(candidateIndex) ?? 0, 1, 'destination allocation'),
+    );
+    position = addModulo(position, permutation.stride, totalWeight);
+  }
+  const allocations = [...counts]
+    .sort(([left], [right]) => left - right)
+    .map(([candidateIndex, count]) => ({
+      ...index.servedCandidates[candidateIndex]!,
+      count,
+    }));
   return freezeTrustedAuthority({
     allocations,
-    nextCursor: wraps ? wrappedEnd : firstEnd,
+    nextCursor: addModulo(cursor, remainder, totalWeight),
   });
 };

@@ -290,6 +290,64 @@ describe('deterministic passenger alighting and destination access', () => {
     ).toEqual(['passenger-onboard-group-2', 'passenger-onboard-group-10']);
   });
 
+  it('replays canonically ordered waiting cohorts after dispersed destination assignment', () => {
+    const first = {
+      passengerWaitingCohortId: 'passenger-waiting-cohort-1',
+      originStopPlaceId: 'z-place',
+      originStopNodeId: 'a-node',
+      routeId: 'route-a',
+      patternId: 'pattern-a',
+      originOccurrenceIndex: 0,
+      destinationCellId: 'r1c1',
+      destinationStopPlaceId: 'destination-a',
+      destinationStopNodeId: 'destination-node-a',
+      destinationOccurrenceIndex: 1,
+      wrapsPatternEnd: false,
+      edgeCount: 1,
+      count: 2,
+      firstAssignedTick: 2,
+      lastAssignedTick: 2,
+    };
+    const second = {
+      passengerWaitingCohortId: 'passenger-waiting-cohort-2',
+      originStopPlaceId: 'a-place',
+      originStopNodeId: 'z-node',
+      routeId: 'route-a',
+      patternId: 'pattern-a',
+      originOccurrenceIndex: 0,
+      destinationCellId: 'r1c2',
+      destinationStopPlaceId: 'destination-b',
+      destinationStopNodeId: 'destination-node-b',
+      destinationOccurrenceIndex: 1,
+      wrapsPatternEnd: false,
+      edgeCount: 1,
+      count: 3,
+      firstAssignedTick: 2,
+      lastAssignedTick: 2,
+    };
+    expect(() =>
+      validatePassengerTransitReplay({
+        ...input(),
+        waitingCohorts: [first, second] as never,
+        waitingGenerationLineageWatermarks: [],
+        onboardGroups: [],
+        destinationAccessGroups: [],
+        nextPassengerOnboardGroupSequence: 1,
+        nextPassengerDestinationAccessGroupSequence: 1,
+        totalWaitingForVehiclePassengerCount: 5,
+        totalBoardedPassengerCount: 0,
+        totalOnboardPassengerCount: 0,
+        totalAlightedPassengerCount: 0,
+        totalInDestinationAccessPassengerCount: 0,
+        totalCompletedJourneyPassengerCount: 0,
+        currentStopCalls: [],
+        currentAlightingEvents: [],
+        currentBoardingEvents: [],
+        currentJourneyCompletionEvents: [],
+      }),
+    ).not.toThrow();
+  });
+
   it('validates access authority and replays truthful bounded events', () => {
     const result = processPassengerTransitAtVehicleCalls(input());
     const authority = { ...input(), ...result };

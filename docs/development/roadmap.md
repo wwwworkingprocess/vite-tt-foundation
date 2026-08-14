@@ -87,8 +87,9 @@ implicit access timing, explicit unserved totals, and exact demand-plan identity
 
 **Status:** Complete.
 
-Added deterministic weighted cyclic destination-cell assignment, per-origin
-cursors, bounded groups, unavailable totals, and exact conservation.
+Added deterministic weighted destination-cell assignment, per-origin logical
+cursors and affine permutations, bounded groups, unavailable totals, exact
+full-cycle fidelity, and conservation.
 
 ## Phase 4E3A — Static direct-itinerary plan
 

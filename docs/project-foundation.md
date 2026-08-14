@@ -86,7 +86,7 @@ contract notes:
 ### Architecture decision records
 
 - [`architecture/decisions/README.md`](architecture/decisions/README.md) — ADR index, phase, status, and supersession/applicability notes.
-- ADR 0001–0018 under [`architecture/decisions/`](architecture/decisions/).
+- ADR 0001–0019 under [`architecture/decisions/`](architecture/decisions/).
 
 The index includes the previously omitted ADR 0012 and the correct ADR 0015
 path/title:

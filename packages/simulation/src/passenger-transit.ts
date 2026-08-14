@@ -27,6 +27,7 @@ import {
   type PassengerDemandPlanV1,
 } from './passenger-demand.js';
 import {
+  comparePassengerWaitingCohorts,
   passengerWaitingCohortIdSchema,
   passengerWaitingCohortKey,
   passengerWaitingCohortSequence,
@@ -1133,13 +1134,7 @@ export function validatePassengerTransitReplay(
     } else
       existing.count = checkedAdd(existing.count, group.count, transitContext);
   }
-  waiting.sort(
-    (left, right) =>
-      lexical(
-        passengerWaitingCohortKey(left),
-        passengerWaitingCohortKey(right),
-      ) || left.firstAssignedTick - right.firstAssignedTick,
-  );
+  waiting.sort(comparePassengerWaitingCohorts);
   const priorAccess = [
     ...input.destinationAccessGroups.filter(
       (group) => group.alightedAtTick < tick,

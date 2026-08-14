@@ -27,6 +27,7 @@ markers are superseded. Current aggregate versions are centralized in
 | [0016](0016-light-vehicle-pattern-runs-and-stop-calls.md)                | Pattern runs and canonical calls              | Light Phase 4D     | Active decision; V7/Save V5 markers superseded by 0017–0018                          |
 | [0017](0017-deterministic-passenger-boarding-and-capacity.md)            | Boarding and capacity                         | Phase 4E4          | Active decision; V8/Save V6 superseded by 0018                                       |
 | [0018](0018-deterministic-passenger-alighting-and-journey-completion.md) | Alighting and journey completion              | Phase 4E5          | Active and current aggregate persistence decision                                    |
+| [0019](0019-deterministically-dispersed-passenger-destinations.md)       | Deterministically dispersed destinations      | Before Phase 4F    | Active destination-dispersion decision; supersedes only 0013's contiguous traversal  |
 
 ## ADR editing rule
 

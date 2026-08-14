@@ -38,6 +38,10 @@ import {
   allocateTrustedPassengerDestinations,
   passengerDemandRuntimeIndex,
 } from './passenger-demand-runtime.js';
+import {
+  allocatePermutedDestinationCounts,
+  derivePassengerDestinationPermutation,
+} from './passenger-destination-permutation.js';
 
 export const passengerDemandPlanSchemaVersion = '1.0.0' as const;
 const distanceTieToleranceSquaredCells = 1e-9;
@@ -422,23 +426,23 @@ const destinationCandidates = (
       })),
   );
 
-const intervalOverlap = (
-  start: number,
-  end: number,
-  segmentStart: number,
-  segmentEnd: number,
-) => Math.max(0, Math.min(end, segmentEnd) - Math.max(start, segmentStart));
-
 export function allocatePassengerDestinations(
   candidatesInput: readonly Readonly<PassengerDestinationCandidate>[],
   cursor: number,
   passengerCount: number,
+  demandModelContentHash: string,
+  originStopPlaceId: string,
 ): Readonly<{
   readonly allocations: readonly Readonly<
     PassengerDestinationCandidate & { readonly count: number }
   >[];
   readonly nextCursor: number;
 }> {
+  if (
+    !/^[0-9a-f]{64}$/.test(demandModelContentHash) ||
+    originStopPlaceId.trim().length === 0
+  )
+    throw new Error('Invalid destination permutation coordinate.');
   if (
     !Number.isSafeInteger(cursor) ||
     cursor < 0 ||
@@ -474,34 +478,43 @@ export function allocatePassengerDestinations(
     return deepFreeze({ allocations: [], nextCursor: 0 });
   }
   if (cursor >= totalWeight) throw new Error('Invalid cursor.');
-  const fullCycles = Math.floor(passengerCount / totalWeight);
-  const remainder = passengerCount % totalWeight;
-  const distanceToCycleEnd = totalWeight - cursor;
-  const wraps = remainder >= distanceToCycleEnd;
-  const firstEnd = wraps ? totalWeight : cursor + remainder;
-  const wrappedEnd = wraps ? remainder - distanceToCycleEnd : 0;
-  let intervalStart = 0;
-  const allocations = candidates.map((candidate) => {
-    const intervalEnd = checkedAdd(
-      intervalStart,
+  const cumulativeEnds: number[] = [];
+  let cumulative = 0;
+  for (const candidate of candidates) {
+    cumulative = checkedAdd(
+      cumulative,
       candidate.weight,
       'destination interval',
     );
-    const base = checkedMultiply(
-      fullCycles,
-      candidate.weight,
-      'destination allocation',
-    );
-    const extra =
-      intervalOverlap(intervalStart, intervalEnd, cursor, firstEnd) +
-      intervalOverlap(intervalStart, intervalEnd, 0, wrappedEnd);
-    const count = checkedAdd(base, extra, 'destination allocation');
-    intervalStart = intervalEnd;
-    return { ...candidate, count };
-  });
+    cumulativeEnds.push(cumulative);
+  }
+  const result = allocatePermutedDestinationCounts(
+    candidates.map(({ weight }) => weight),
+    cursor,
+    passengerCount,
+    derivePassengerDestinationPermutation(
+      demandModelContentHash,
+      originStopPlaceId,
+      totalWeight,
+    ),
+    (position) => {
+      let low = 0;
+      let high = cumulativeEnds.length - 1;
+      while (low < high) {
+        const middle = Math.floor((low + high) / 2);
+        if (position < cumulativeEnds[middle]!) high = middle;
+        else low = middle + 1;
+      }
+      return low;
+    },
+  );
+  const allocations = candidates.map((candidate, index) => ({
+    ...candidate,
+    count: result.counts[index]!,
+  }));
   return deepFreeze({
     allocations,
-    nextCursor: wraps ? wrappedEnd : firstEnd,
+    nextCursor: result.nextCursor,
   });
 }
 

@@ -83,6 +83,46 @@ const demandPlan = () => {
   });
 };
 
+const dispersedDemandPlan = () => {
+  const canonical = scenario();
+  const stopPlaceIds = [
+    'tv-place-0053',
+    'tv-place-0065',
+    'tv-place-0067',
+    'tv-place-0093',
+  ];
+  return parsePassengerDemandPlan({
+    schemaVersion: '1.0.0',
+    demandModelContentHash: 'a'.repeat(64),
+    scenario: createScenarioCoordinate(canonical),
+    grid: {
+      cityId: 'Q36730',
+      populationGridSchemaVersion: '1.0.0',
+      gridVersion: '1.0.0',
+      rows: 1,
+      columns: 4,
+      resolutionDegrees: 0.001,
+      totalActiveCellCount: 4,
+      totalPopulationWeight: 10,
+    },
+    catchmentPolicy: { maxAccessDistanceCells: 5 },
+    emissionPolicy: {
+      emissionCreditsPerWeightPerTick: 1,
+      creditsPerPassenger: 1,
+    },
+    accessPolicy: { accessTicksPerCell: 1 },
+    cells: stopPlaceIds.map((assignedStopPlaceId, column) => ({
+      cellId: `r0c${column}`,
+      row: 0,
+      column,
+      populationWeight: column + 1,
+      assignedStopPlaceId,
+      distanceSquaredCells: 0,
+    })),
+    stops: stopPlaceIds.map((stopPlaceId) => ({ stopPlaceId })),
+  });
+};
+
 const boardingPlan = () => {
   const plan = structuredClone(demandPlan());
   plan.cells[0]!.assignedStopPlaceId = 'tv-place-0108';
@@ -223,6 +263,33 @@ const laterRunJourneyStates = () => {
 };
 
 describe('Transport Snapshot V9', () => {
+  it('rederives destination permutations and indexes across exact continuation restore', () => {
+    const canonical = scenario();
+    const plan = dispersedDemandPlan();
+    const atA = advanceTransportTicks(
+      createTransportSimulationState(canonical, 0, plan),
+      7,
+    );
+    if (atA.passengerDemand.status !== 'active')
+      throw new Error('Expected active passenger authority.');
+    expect(
+      atA.passengerDemand.destinationCursors.some(
+        ({ destinationCursor }) => destinationCursor > 0,
+      ),
+    ).toBe(true);
+    const snapshotAtA = createTransportSimulationSnapshot(atA);
+    const uninterrupted = advanceTransportTicks(atA, 11);
+    const restored = restoreTransportSimulationState(
+      snapshotAtA,
+      canonical,
+      plan,
+    );
+    const continued = advanceTransportTicks(restored, 11);
+    expect(createTransportSimulationSnapshot(continued)).toEqual(
+      createTransportSimulationSnapshot(uninterrupted),
+    );
+  });
+
   it('collects the complete immutable passenger-arrival interval without changing state semantics', () => {
     const canonical = scenario();
     const plan = demandPlan();

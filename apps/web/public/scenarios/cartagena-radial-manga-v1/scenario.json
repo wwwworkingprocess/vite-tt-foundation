@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-manga-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Cartagena Radial La Manga / Mar Menor Network - Lines 23, 43 and 44",
+  "primarySettlementId": "es-cartagena",
+  "settlementIds": [
+    "es-cartagena",
+    "es-la-union",
+    "es-san-javier",
+    "es-los-alcazares"
+  ],
+  "contentHash": "599e355c4e5797544ec3fc80788eaf4950619ba76ba059d10d6c159cf94a19c0",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "15089095c884bad69b9e894c49412186ba6773998cf865d62a0952286f58d33f"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "8b2bcf7688df4a5c4bd6fe0d477d44abbe7f15d7c60abad9d7b626a21ab24a27"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "9fd3a1c7233d540b44b732b97b69fd229e514f9c3f4798d70e3f585c4451c886"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "77d1fccb8f3566da629d60613987572591744a4097ea01e2cb8edb40c0e384fd"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "8be0610480f4566aa0fd8f5fc49adf136d573f6f0b87e13b1a207867732c5118"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

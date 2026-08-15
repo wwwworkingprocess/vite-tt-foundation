@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-circular-legacy-all-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Málaga Circular Legacy All Network",
+  "primarySettlementId": "es-malaga",
+  "settlementIds": [
+    "es-malaga"
+  ],
+  "contentHash": "1963eada6b56c81c178447489ce8fb440b84dc4d489875d71583898c0be36d6e",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "3082deb621ea13e40bdbff0daf7f91f1b5b7af1ee4a059d142f3fc363c6eec6f"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "2145fbdae48fe45448bc3eab89c1fac4ea08f87fa9f0d1e70b6aed9a7bc39891"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "a6d2efc50988b532ef62ab185820f6707a02b77a90f8e473c41fa2fccff0ecaf"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "6114a088701f0b6097471f6351b7300ff83a29258b3044337819aa09ae691b6e"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "b6476a015128062e71cd66c5507e82b57fb8439423d2a637532508daab3e6212"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

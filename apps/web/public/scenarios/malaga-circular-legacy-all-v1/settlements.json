@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-circular-legacy-all-v1",
+  "settlements": [
+    {
+      "settlementId": "es-malaga",
+      "name": "Málaga",
+      "countryCode": "ES",
+      "adminArea": "Málaga",
+      "center": {
+        "latitude": 36.697625771268704,
+        "longitude": -4.449236699049925
+      },
+      "bounds": {
+        "south": 36.63611114970226,
+        "west": -4.524552653916703,
+        "north": 36.759140392835135,
+        "east": -4.373920744183147
+      }
+    }
+  ]
+}

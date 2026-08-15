@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-legacy-all-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Cartagena Radial Legacy All Network",
+  "primarySettlementId": "es-cartagena",
+  "settlementIds": [
+    "es-cartagena",
+    "es-la-union",
+    "es-san-javier",
+    "es-los-alcazares",
+    "es-mazarron",
+    "es-fuente-alamo-de-murcia",
+    "es-alhama-de-murcia",
+    "es-totana",
+    "es-lorca"
+  ],
+  "contentHash": "cc91f352b914cce9cbc01d77f64910fffca591d1660d77a0d8778c2f9ff468d0",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "bbca9fa163382ca75001f4b5e81bb4a86d461b2277656971e3d31484815561ae"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "70739051804119d99235508538ef82c360c7558fb6299a3738556c4b816d4c7d"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "e6463338aaf08723f2ce6fc803955b0a8fcf460280af6a00d310be1073a04f0b"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "4c9c424737cf3e63811ad4b30cd31f28c2ded1ef93a64cee6d14accafb537a3a"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "b37c199848999a8752a1cfa1ac5f970e1e15182e36c917e9bf00a756b19992e7"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

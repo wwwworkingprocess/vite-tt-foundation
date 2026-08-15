@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-14-n4-c5-v1",
+  "title": "Málaga EMT - Lines 14, N4 and C5",
+  "initialView": {
+    "center": {
+      "latitude": 36.7304329067018,
+      "longitude": -4.45179422106289
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-14": {
+      "label": "14",
+      "color": "#7D8FED"
+    },
+    "malaga-n4": {
+      "label": "N4",
+      "color": "#0F7614"
+    },
+    "malaga-c5": {
+      "label": "C5",
+      "color": "#B92323"
+    }
+  },
+  "notes": [
+    "Fourth accepted Málaga component; extends the frozen Málaga identity registry for routes 14, N4 and C5 while exact-copying accepted shared identities.",
+    "All seven source-supported exact GTFS trip sequences are retained as independent directed patterns, including the source-supported full C5 loop and its partial workings.",
+    "No reverse edge, reverse pattern or loop closure is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-circular-13-v1",
+  "title": "Murcia Circular Network - Lines C1 and C3",
+  "initialView": {
+    "center": {
+      "latitude": 37.98379,
+      "longitude": -1.1249318
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "murcia-c1": {
+      "label": "C1",
+      "color": "#FF0000"
+    },
+    "murcia-c3": {
+      "label": "C3",
+      "color": "#000000"
+    }
+  },
+  "notes": [
+    "Second accepted Murcia component; extends the frozen Murcia identity registry for routes C1 and C3 while exact-copying accepted shared identities.",
+    "Exact GTFS trip sequences are stored as independent directed patterns; no reverse or closing edge is inferred.",
+    "The 18 Cocheras/Cabecera depot-working route records are preserved in the citywide prefetch but excluded from passenger topology by frozen architecture decision.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-17-18-v1",
+  "title": "Málaga EMT - Lines 17 and 18",
+  "initialView": {
+    "center": {
+      "latitude": 36.7345774052329,
+      "longitude": -4.448144898635485
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-17": {
+      "label": "17",
+      "color": "#B413CE"
+    },
+    "malaga-18": {
+      "label": "18",
+      "color": "#EA6868"
+    }
+  },
+  "notes": [
+    "Seventh accepted Málaga component; extends the frozen Málaga identity registry for routes 17 and 18 while exact-copying accepted shared identities.",
+    "All seven source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "No reverse edge, reverse pattern or loop closure is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

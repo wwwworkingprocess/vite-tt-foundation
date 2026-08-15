@@ -1,0 +1,289 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-22-27-31-v1",
+  "routes": [
+    {
+      "routeId": "malaga-22",
+      "publicCode": "22",
+      "name": "Avda. de Moliere - Tiro de Pichón - Universidad",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-22-s01",
+          "directionLabel": "Universidad",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "malaga-stop-2201",
+            "malaga-stop-353",
+            "malaga-stop-354",
+            "malaga-stop-355",
+            "malaga-stop-356",
+            "malaga-stop-2202",
+            "malaga-stop-2203",
+            "malaga-stop-1559",
+            "malaga-stop-1560",
+            "malaga-stop-410",
+            "malaga-stop-477",
+            "malaga-stop-414",
+            "malaga-stop-415",
+            "malaga-stop-418",
+            "malaga-stop-419",
+            "malaga-stop-420",
+            "malaga-stop-2207",
+            "malaga-stop-421",
+            "malaga-stop-833",
+            "malaga-stop-2011",
+            "malaga-stop-2206"
+          ]
+        },
+        {
+          "patternId": "malaga-line-22-s02",
+          "directionLabel": "Avda. Moliere",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "malaga-stop-2206",
+            "malaga-stop-2253",
+            "malaga-stop-472",
+            "malaga-stop-476",
+            "malaga-stop-473",
+            "malaga-stop-474",
+            "malaga-stop-475",
+            "malaga-stop-463",
+            "malaga-stop-464",
+            "malaga-stop-452",
+            "malaga-stop-453",
+            "malaga-stop-454",
+            "malaga-stop-455",
+            "malaga-stop-1516",
+            "malaga-stop-1517",
+            "malaga-stop-313",
+            "malaga-stop-314",
+            "malaga-stop-315",
+            "malaga-stop-316",
+            "malaga-stop-317",
+            "malaga-stop-2201"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "22",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "22",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "22",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=22"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-27",
+      "publicCode": "27",
+      "name": "Avda. M. A. Heredia - Santa Bárbara - P. I. Guadalhorce",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-27-s01",
+          "directionLabel": "P. I. Guadalhorce",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 22
+          },
+          "stopNodeIds": [
+            "malaga-stop-2401",
+            "malaga-stop-2416",
+            "malaga-stop-402",
+            "malaga-stop-307",
+            "malaga-stop-1606",
+            "malaga-stop-309",
+            "malaga-stop-310",
+            "malaga-stop-312",
+            "malaga-stop-313",
+            "malaga-stop-314",
+            "malaga-stop-315",
+            "malaga-stop-316",
+            "malaga-stop-2702",
+            "malaga-stop-2711",
+            "malaga-stop-2712",
+            "malaga-stop-1211",
+            "malaga-stop-2704",
+            "malaga-stop-2705",
+            "malaga-stop-2706",
+            "malaga-stop-2707",
+            "malaga-stop-2708",
+            "malaga-stop-2750"
+          ]
+        },
+        {
+          "patternId": "malaga-line-27-s02",
+          "directionLabel": "M. A. Heredia",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 22
+          },
+          "stopNodeIds": [
+            "malaga-stop-2750",
+            "malaga-stop-2752",
+            "malaga-stop-2753",
+            "malaga-stop-2754",
+            "malaga-stop-2761",
+            "malaga-stop-2762",
+            "malaga-stop-1261",
+            "malaga-stop-2758",
+            "malaga-stop-2759",
+            "malaga-stop-2760",
+            "malaga-stop-353",
+            "malaga-stop-354",
+            "malaga-stop-355",
+            "malaga-stop-356",
+            "malaga-stop-357",
+            "malaga-stop-1259",
+            "malaga-stop-360",
+            "malaga-stop-361",
+            "malaga-stop-362",
+            "malaga-stop-2466",
+            "malaga-stop-462",
+            "malaga-stop-2401"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "27",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "27",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "27",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=27"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-31",
+      "publicCode": "31",
+      "name": "Paseo del Parque - Carranque - Palacio Deportes",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-31-s01",
+          "directionLabel": "Paseo Parque",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 30
+          },
+          "stopNodeIds": [
+            "malaga-stop-3117",
+            "malaga-stop-3151",
+            "malaga-stop-3152",
+            "malaga-stop-3164",
+            "malaga-stop-3165",
+            "malaga-stop-1063",
+            "malaga-stop-353",
+            "malaga-stop-354",
+            "malaga-stop-355",
+            "malaga-stop-356",
+            "malaga-stop-357",
+            "malaga-stop-1558",
+            "malaga-stop-1559",
+            "malaga-stop-1560",
+            "malaga-stop-410",
+            "malaga-stop-411",
+            "malaga-stop-412",
+            "malaga-stop-3169",
+            "malaga-stop-1465",
+            "malaga-stop-1466",
+            "malaga-stop-1454",
+            "malaga-stop-1455",
+            "malaga-stop-3159",
+            "malaga-stop-3160",
+            "malaga-stop-3161",
+            "malaga-stop-1462",
+            "malaga-stop-1463",
+            "malaga-stop-889",
+            "malaga-stop-2169",
+            "malaga-stop-3124"
+          ]
+        },
+        {
+          "patternId": "malaga-line-31-s02",
+          "directionLabel": " P. Deportes",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 26
+          },
+          "stopNodeIds": [
+            "malaga-stop-3124",
+            "malaga-stop-888",
+            "malaga-stop-1402",
+            "malaga-stop-1403",
+            "malaga-stop-3105",
+            "malaga-stop-1852",
+            "malaga-stop-3111",
+            "malaga-stop-1410",
+            "malaga-stop-1412",
+            "malaga-stop-1413",
+            "malaga-stop-3121",
+            "malaga-stop-466",
+            "malaga-stop-1515",
+            "malaga-stop-1516",
+            "malaga-stop-1517",
+            "malaga-stop-313",
+            "malaga-stop-314",
+            "malaga-stop-315",
+            "malaga-stop-316",
+            "malaga-stop-317",
+            "malaga-stop-1002",
+            "malaga-stop-3118",
+            "malaga-stop-3120",
+            "malaga-stop-3115",
+            "malaga-stop-3116",
+            "malaga-stop-3117"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "31",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "31",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "31",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=31"
+        }
+      ]
+    }
+  ]
+}

@@ -3,8 +3,8 @@
 ## Status
 
 The population fields are active runtime authority for deterministic passenger
-demand in Torrevieja, Elche, Alicante, and Benidorm, including Benidorm
-radial scenarios.
+demand in Torrevieja, Elche, Alicante, Benidorm, Cartagena, Murcia, and
+Málaga, including the large Cartagena radial scenarios.
 
 Runtime assets live under `apps/web/public/population-fields/`. The catalogue
 maps canonical scenario `primarySettlementId` values to one city grid and one

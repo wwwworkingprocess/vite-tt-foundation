@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-33-34-35-v1",
+  "title": "Málaga EMT - Lines 33, 34 and 35",
+  "initialView": {
+    "center": {
+      "latitude": 36.7281539704002,
+      "longitude": -4.39552197111318
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-33": {
+      "label": "33",
+      "color": "#12B3BE"
+    },
+    "malaga-34": {
+      "label": "34",
+      "color": "#559C1C"
+    },
+    "malaga-35": {
+      "label": "35",
+      "color": "#361FBF"
+    }
+  },
+  "notes": [
+    "Thirteenth accepted Málaga component; extends the frozen Málaga identity registry for routes 33, 34 and 35 while exact-copying accepted shared identities.",
+    "All eight source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "Routes 33 and 34 each retain one contiguous short working; route 35 has two full source-distinct directional patterns.",
+    "All eight patterns are open. No reverse edge, reverse pattern, or loop-closing edge is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

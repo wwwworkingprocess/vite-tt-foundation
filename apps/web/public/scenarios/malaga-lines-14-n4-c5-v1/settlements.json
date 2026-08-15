@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-14-n4-c5-v1",
+  "settlements": [
+    {
+      "settlementId": "es-malaga",
+      "name": "Málaga",
+      "countryCode": "ES",
+      "adminArea": "Málaga",
+      "center": {
+        "latitude": 36.7304329067018,
+        "longitude": -4.45179422106289
+      },
+      "bounds": {
+        "south": 36.70828684765508,
+        "west": -4.50153763145545,
+        "north": 36.75257896574852,
+        "east": -4.40205081067033
+      }
+    }
+  ]
+}

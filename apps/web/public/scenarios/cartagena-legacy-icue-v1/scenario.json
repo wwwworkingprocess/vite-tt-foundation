@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-icue-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Cartagena Legacy Icue Network - Lines 8 and 9",
+  "primarySettlementId": "es-cartagena",
+  "settlementIds": [
+    "es-cartagena"
+  ],
+  "contentHash": "2149e40a9766f8162d9b23c4e85db831e0eccf41bd0d49227f49d93e5ca82be8",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "94b008dfda7a5a36e19066664232e34ff37a39667c8b19791c9748403d453d88"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "7e16707ee0428472878f696177382209cbc1d13e6e1541761f70f3aa2b97bd1e"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "0d57d7a171a854f70344d3d9ed5e2dc643e91a0fae1610739ec7406c5dab31c3"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "5ccff66b4d39aad5df0879c2f28a4ac541fcf1d1ffb30ef93c4fa619ef93ef82"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "36f8913373294dd4711e2dc17535f15dd4c9e6ee99b6a548760de4e7641e7a95"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

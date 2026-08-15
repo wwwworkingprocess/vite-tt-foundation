@@ -1,0 +1,331 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-33-34-35-v1",
+  "routes": [
+    {
+      "routeId": "malaga-33",
+      "publicCode": "33",
+      "name": "Av. Andalucía - Cerrado de Calderón",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-33-s01",
+          "directionLabel": "Cerrado Calderón",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "malaga-stop-3328",
+            "malaga-stop-1471",
+            "malaga-stop-3324",
+            "malaga-stop-1123",
+            "malaga-stop-1103",
+            "malaga-stop-1104",
+            "malaga-stop-1105",
+            "malaga-stop-1106",
+            "malaga-stop-1107",
+            "malaga-stop-1108",
+            "malaga-stop-1109",
+            "malaga-stop-1110",
+            "malaga-stop-3327",
+            "malaga-stop-3302",
+            "malaga-stop-3303",
+            "malaga-stop-3304",
+            "malaga-stop-3305",
+            "malaga-stop-3306",
+            "malaga-stop-3315",
+            "malaga-stop-3316",
+            "malaga-stop-3313",
+            "malaga-stop-3318",
+            "malaga-stop-3319"
+          ]
+        },
+        {
+          "patternId": "malaga-line-33-s02",
+          "directionLabel": "Av. Andalucía",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 28
+          },
+          "stopNodeIds": [
+            "malaga-stop-3319",
+            "malaga-stop-3320",
+            "malaga-stop-3321",
+            "malaga-stop-3314",
+            "malaga-stop-3323",
+            "malaga-stop-3325",
+            "malaga-stop-3326",
+            "malaga-stop-3351",
+            "malaga-stop-3352",
+            "malaga-stop-3353",
+            "malaga-stop-3354",
+            "malaga-stop-3355",
+            "malaga-stop-3356",
+            "malaga-stop-1160",
+            "malaga-stop-1161",
+            "malaga-stop-1162",
+            "malaga-stop-1163",
+            "malaga-stop-1164",
+            "malaga-stop-1165",
+            "malaga-stop-1166",
+            "malaga-stop-1167",
+            "malaga-stop-1168",
+            "malaga-stop-1169",
+            "malaga-stop-1170",
+            "malaga-stop-302",
+            "malaga-stop-1173",
+            "malaga-stop-2012",
+            "malaga-stop-3328"
+          ]
+        },
+        {
+          "patternId": "malaga-line-33-s03",
+          "directionLabel": "Cerrado Calderón",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 10
+          },
+          "stopNodeIds": [
+            "malaga-stop-3302",
+            "malaga-stop-3303",
+            "malaga-stop-3304",
+            "malaga-stop-3305",
+            "malaga-stop-3306",
+            "malaga-stop-3315",
+            "malaga-stop-3316",
+            "malaga-stop-3313",
+            "malaga-stop-3318",
+            "malaga-stop-3319"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "33",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "33",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "33",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=33"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-34",
+      "publicCode": "34",
+      "name": "Av. Andalucía  - Pedregalejo",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-34-s01",
+          "directionLabel": "Pedregalejo",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "malaga-stop-3328",
+            "malaga-stop-1471",
+            "malaga-stop-3324",
+            "malaga-stop-1123",
+            "malaga-stop-1103",
+            "malaga-stop-1104",
+            "malaga-stop-1105",
+            "malaga-stop-1106",
+            "malaga-stop-1107",
+            "malaga-stop-1108",
+            "malaga-stop-1109",
+            "malaga-stop-1110",
+            "malaga-stop-1111",
+            "malaga-stop-1112",
+            "malaga-stop-1113",
+            "malaga-stop-3402",
+            "malaga-stop-3403",
+            "malaga-stop-3404",
+            "malaga-stop-3405",
+            "malaga-stop-3406",
+            "malaga-stop-3414",
+            "malaga-stop-2953",
+            "malaga-stop-2916",
+            "malaga-stop-2917",
+            "malaga-stop-2925",
+            "malaga-stop-3415",
+            "malaga-stop-3408",
+            "malaga-stop-3409",
+            "malaga-stop-3410",
+            "malaga-stop-3411",
+            "malaga-stop-3412",
+            "malaga-stop-3413",
+            "malaga-stop-3451"
+          ]
+        },
+        {
+          "patternId": "malaga-line-34-s02",
+          "directionLabel": " Av. Andalucía",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "malaga-stop-3451",
+            "malaga-stop-3452",
+            "malaga-stop-3453",
+            "malaga-stop-3454",
+            "malaga-stop-3455",
+            "malaga-stop-3457",
+            "malaga-stop-3458",
+            "malaga-stop-1158",
+            "malaga-stop-1159",
+            "malaga-stop-1160",
+            "malaga-stop-1161",
+            "malaga-stop-1162",
+            "malaga-stop-1163",
+            "malaga-stop-1164",
+            "malaga-stop-1165",
+            "malaga-stop-1166",
+            "malaga-stop-1167",
+            "malaga-stop-1168",
+            "malaga-stop-1169",
+            "malaga-stop-1170",
+            "malaga-stop-302",
+            "malaga-stop-1173",
+            "malaga-stop-2012",
+            "malaga-stop-3328"
+          ]
+        },
+        {
+          "patternId": "malaga-line-34-s03",
+          "directionLabel": "Pedregalejo",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "malaga-stop-2953",
+            "malaga-stop-2916",
+            "malaga-stop-2917",
+            "malaga-stop-2925",
+            "malaga-stop-3415",
+            "malaga-stop-3408",
+            "malaga-stop-3409",
+            "malaga-stop-3410",
+            "malaga-stop-3411",
+            "malaga-stop-3412",
+            "malaga-stop-3413",
+            "malaga-stop-3451"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "34",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "34",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "34",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=34"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-35",
+      "publicCode": "35",
+      "name": "Av. Andalucía - Gibralfaro",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-35-s01",
+          "directionLabel": "Gibralfaro",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 16
+          },
+          "stopNodeIds": [
+            "malaga-stop-3208",
+            "malaga-stop-1471",
+            "malaga-stop-3324",
+            "malaga-stop-1123",
+            "malaga-stop-1103",
+            "malaga-stop-1104",
+            "malaga-stop-1105",
+            "malaga-stop-1106",
+            "malaga-stop-3502",
+            "malaga-stop-3503",
+            "malaga-stop-3504",
+            "malaga-stop-3505",
+            "malaga-stop-3506",
+            "malaga-stop-3507",
+            "malaga-stop-3508",
+            "malaga-stop-3551"
+          ]
+        },
+        {
+          "patternId": "malaga-line-35-s02",
+          "directionLabel": "Av. Andalucía",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 16
+          },
+          "stopNodeIds": [
+            "malaga-stop-3551",
+            "malaga-stop-3552",
+            "malaga-stop-3553",
+            "malaga-stop-3554",
+            "malaga-stop-3555",
+            "malaga-stop-3556",
+            "malaga-stop-3557",
+            "malaga-stop-3558",
+            "malaga-stop-1167",
+            "malaga-stop-1168",
+            "malaga-stop-1169",
+            "malaga-stop-1170",
+            "malaga-stop-302",
+            "malaga-stop-1173",
+            "malaga-stop-2012",
+            "malaga-stop-3208"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "35",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "35",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "35",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=35"
+        }
+      ]
+    }
+  ]
+}

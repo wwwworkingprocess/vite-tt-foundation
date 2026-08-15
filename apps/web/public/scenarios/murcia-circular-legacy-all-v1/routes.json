@@ -1,0 +1,322 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-circular-legacy-all-v1",
+  "routes": [
+    {
+      "routeId": "murcia-c1",
+      "publicCode": "C1",
+      "name": "C1 - PLZ CIRCUL - EROSKI - GLORIETA - RONDA NORTE",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-c1-s01",
+          "directionLabel": "Plz. Circular 2 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "murcia-stop-9000",
+            "murcia-stop-9001",
+            "murcia-stop-9002",
+            "murcia-stop-9003",
+            "murcia-stop-9004",
+            "murcia-stop-9005",
+            "murcia-stop-9006",
+            "murcia-stop-9007",
+            "murcia-stop-9008",
+            "murcia-stop-9009",
+            "murcia-stop-9167",
+            "murcia-stop-9010",
+            "murcia-stop-9171",
+            "murcia-stop-9143",
+            "murcia-stop-9160",
+            "murcia-stop-9252",
+            "murcia-stop-9253",
+            "murcia-stop-9183",
+            "murcia-stop-9017",
+            "murcia-stop-9254",
+            "murcia-stop-9019",
+            "murcia-stop-9255",
+            "murcia-stop-9021",
+            "murcia-stop-9022",
+            "murcia-stop-9023",
+            "murcia-stop-9024",
+            "murcia-stop-9025",
+            "murcia-stop-9026",
+            "murcia-stop-9027",
+            "murcia-stop-9028",
+            "murcia-stop-9029",
+            "murcia-stop-9152"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50010002",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "C1",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-c2",
+      "publicCode": "C2",
+      "name": "C2 - PLZ CIRCULAR - R.NORTE - FFCC - EROSKI - R.LEVANTE",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-c2-s01",
+          "directionLabel": "Plz. Circular 14 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 35
+          },
+          "stopNodeIds": [
+            "murcia-stop-9030",
+            "murcia-stop-9057",
+            "murcia-stop-9032",
+            "murcia-stop-9033",
+            "murcia-stop-9034",
+            "murcia-stop-9035",
+            "murcia-stop-9036",
+            "murcia-stop-9165",
+            "murcia-stop-9037",
+            "murcia-stop-9038",
+            "murcia-stop-9164",
+            "murcia-stop-9039",
+            "murcia-stop-9040",
+            "murcia-stop-9041",
+            "murcia-stop-9256",
+            "murcia-stop-9042",
+            "murcia-stop-9043",
+            "murcia-stop-9044",
+            "murcia-stop-9045",
+            "murcia-stop-9012",
+            "murcia-stop-9046",
+            "murcia-stop-9170",
+            "murcia-stop-9048",
+            "murcia-stop-9172",
+            "murcia-stop-9049",
+            "murcia-stop-9169",
+            "murcia-stop-9050",
+            "murcia-stop-9051",
+            "murcia-stop-9052",
+            "murcia-stop-9053",
+            "murcia-stop-9054",
+            "murcia-stop-9110",
+            "murcia-stop-9151",
+            "murcia-stop-9056",
+            "murcia-stop-9153"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50020002",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "C2",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-c3",
+      "publicCode": "C3",
+      "name": "C3 - CIRCUL- EROSKI- CIUDAD JUSTICIA-GLORIETA - R.NORTE",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-c3-s01",
+          "directionLabel": "Plz. Circular 2 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "murcia-stop-9000",
+            "murcia-stop-9001",
+            "murcia-stop-9002",
+            "murcia-stop-9003",
+            "murcia-stop-9004",
+            "murcia-stop-9005",
+            "murcia-stop-9006",
+            "murcia-stop-9007",
+            "murcia-stop-9008",
+            "murcia-stop-9009",
+            "murcia-stop-9169",
+            "murcia-stop-9262",
+            "murcia-stop-9176",
+            "murcia-stop-9177",
+            "murcia-stop-9178",
+            "murcia-stop-9160",
+            "murcia-stop-9252",
+            "murcia-stop-9253",
+            "murcia-stop-9183",
+            "murcia-stop-9017",
+            "murcia-stop-9254",
+            "murcia-stop-9019",
+            "murcia-stop-9255",
+            "murcia-stop-9021",
+            "murcia-stop-9022",
+            "murcia-stop-9023",
+            "murcia-stop-9024",
+            "murcia-stop-9025",
+            "murcia-stop-9026",
+            "murcia-stop-9027",
+            "murcia-stop-9028",
+            "murcia-stop-9029",
+            "murcia-stop-9152"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50030003",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "C3",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-c4",
+      "publicCode": "C4",
+      "name": "C4 - CIRCUL- R.NORTE- FFCC - CIUDAD JUSTICIA- R.LEVANTE",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-c4-s01",
+          "directionLabel": "Plz. Circular 14 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "murcia-stop-9030",
+            "murcia-stop-9057",
+            "murcia-stop-9032",
+            "murcia-stop-9033",
+            "murcia-stop-9034",
+            "murcia-stop-9035",
+            "murcia-stop-9036",
+            "murcia-stop-9165",
+            "murcia-stop-9037",
+            "murcia-stop-9038",
+            "murcia-stop-9164",
+            "murcia-stop-9039",
+            "murcia-stop-9040",
+            "murcia-stop-9041",
+            "murcia-stop-9256",
+            "murcia-stop-9042",
+            "murcia-stop-9043",
+            "murcia-stop-9044",
+            "murcia-stop-9045",
+            "murcia-stop-9012",
+            "murcia-stop-9179",
+            "murcia-stop-9180",
+            "murcia-stop-9176",
+            "murcia-stop-9169",
+            "murcia-stop-9050",
+            "murcia-stop-9051",
+            "murcia-stop-9052",
+            "murcia-stop-9053",
+            "murcia-stop-9054",
+            "murcia-stop-9110",
+            "murcia-stop-9151",
+            "murcia-stop-9056",
+            "murcia-stop-9153"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50040003",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "C4",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-c5",
+      "publicCode": "C5",
+      "name": "C5 - ABENARABI - GRAN VIA - FFCC - GLORIETA - CIRCULAR",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-c5-s01",
+          "directionLabel": "Residencia Issorm (Frente V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 28
+          },
+          "stopNodeIds": [
+            "murcia-stop-9120",
+            "murcia-stop-9121",
+            "murcia-stop-9182",
+            "murcia-stop-9029",
+            "murcia-stop-9070",
+            "murcia-stop-9071",
+            "murcia-stop-9072",
+            "murcia-stop-9039",
+            "murcia-stop-9040",
+            "murcia-stop-9041",
+            "murcia-stop-9256",
+            "murcia-stop-9042",
+            "murcia-stop-9043",
+            "murcia-stop-9183",
+            "murcia-stop-9017",
+            "murcia-stop-9254",
+            "murcia-stop-9019",
+            "murcia-stop-9185",
+            "murcia-stop-9186",
+            "murcia-stop-9081",
+            "murcia-stop-9082",
+            "murcia-stop-9000",
+            "murcia-stop-9030",
+            "murcia-stop-9058",
+            "murcia-stop-9187",
+            "murcia-stop-9188",
+            "murcia-stop-9210",
+            "murcia-stop-9189"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50050002",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "C5",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    }
+  ]
+}

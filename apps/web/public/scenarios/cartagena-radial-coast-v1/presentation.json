@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-coast-v1",
+  "title": "Cartagena Radial Coast Network - Lines 12 and 21",
+  "initialView": {
+    "center": {
+      "latitude": 37.64995983496835,
+      "longitude": -0.904006502651697
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "cartagena-12": {
+      "label": "12",
+      "color": "#039be5"
+    },
+    "cartagena-21": {
+      "label": "21",
+      "color": "#00897b"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "First Cartagena radial-family component, covering the seasonal Bus Playa and Cartagena–Los Urrutias/Playa Honda services.",
+    "All published variants remain independent open patterns; repeated Line 21 headings with different topology are preserved as distinct pattern objects.",
+    "No reverse pattern, branch concatenation or synthetic handoff edge is inferred.",
+    "Route style colors are presentation-only and are not claimed as operator livery."
+  ]
+}

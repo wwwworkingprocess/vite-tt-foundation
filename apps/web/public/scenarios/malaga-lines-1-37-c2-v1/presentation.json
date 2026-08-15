@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-1-37-c2-v1",
+  "title": "Málaga EMT - Lines 1, 37 and C2",
+  "initialView": {
+    "center": {
+      "latitude": 36.7207597175748,
+      "longitude": -4.43503233783529
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-1": {
+      "label": "1",
+      "color": "#12A96A"
+    },
+    "malaga-37": {
+      "label": "37",
+      "color": "#ED0D28"
+    },
+    "malaga-c2": {
+      "label": "C2",
+      "color": "#5597E4"
+    }
+  },
+  "notes": [
+    "Sixth accepted Málaga component; extends the frozen Málaga identity registry for routes 1, 37 and C2 while exact-copying accepted shared identities.",
+    "All thirteen source-supported exact GTFS trip sequences are retained as independent directed patterns, including the source-supported full C2 loop.",
+    "No reverse edge, reverse pattern or loop closure is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

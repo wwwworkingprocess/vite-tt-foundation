@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-circular-legacy-all-v1",
+  "generatedAt": "2026-08-14T16:28:00+02:00",
+  "sources": [
+    {
+      "sourceId": "malaga-circular-accepted-components",
+      "name": "Accepted Málaga construction components containing the six circular routes",
+      "sourceFile": "scenarios-malaga-day-legacy-all-v1.zip",
+      "sha256": "e8516048a015702d6a62a2ab77d785ea074505eef66409c29d2615146bb95906",
+      "role": "Authoritative merge sources. Selected route/pattern objects and their referenced StopNodes/StopPlaces are exact-copied from accepted component scenarios without source rediscovery."
+    },
+    {
+      "sourceId": "malaga-frozen-family-plan",
+      "name": "Frozen Málaga citywide family architecture",
+      "sourceFile": "malaga-source-prefetch.zip",
+      "sha256": "76c25335ba8f98234a88bc4c2e7d0709bd97acbfca113bd2ab61fb95a938d9d5",
+      "role": "Provides only the owner-approved Circular family membership and canonical route order; it is not used to reconstruct route topology or accepted identities."
+    }
+  ],
+  "mergeContract": {
+    "type": "pure-accepted-component-merge",
+    "components": [
+      {
+        "scenarioId": "malaga-lines-36-c1-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "951eb540310af33944ccccb206d2a3994232a190fa246a2105956e7f9fda594b",
+        "selectedRoutes": [
+          "C1"
+        ],
+        "selectedUniqueStopNodes": 31,
+        "selectedSourceTripOccurrences": 805
+      },
+      {
+        "scenarioId": "malaga-lines-1-37-c2-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "68a9e075030ad8a3db6add3198ef9c6c33ed0d70fee11656e25e18d5ae74da20",
+        "selectedRoutes": [
+          "C2"
+        ],
+        "selectedUniqueStopNodes": 34,
+        "selectedSourceTripOccurrences": 780
+      },
+      {
+        "scenarioId": "malaga-lines-32-c3-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "e76d1e977a1536d56bf0f11ec13d9624cb127fc4a56194133ee873a56f33e466",
+        "selectedRoutes": [
+          "C3"
+        ],
+        "selectedUniqueStopNodes": 17,
+        "selectedSourceTripOccurrences": 363
+      },
+      {
+        "scenarioId": "malaga-lines-14-n4-c5-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "2b97d423c0f31703e5cd3319801358926783c0b5e2d0fa9f3c6fdaa3bea6c7ac",
+        "selectedRoutes": [
+          "C5"
+        ],
+        "selectedUniqueStopNodes": 39,
+        "selectedSourceTripOccurrences": 180
+      },
+      {
+        "scenarioId": "malaga-lines-38-c6-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "d2bec3ad88a18682330ac2a161d79f7fcc94e89c8fb016adcb676934b816e5c0",
+        "selectedRoutes": [
+          "C6"
+        ],
+        "selectedUniqueStopNodes": 22,
+        "selectedSourceTripOccurrences": 461
+      },
+      {
+        "scenarioId": "malaga-lines-40-c8-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "58f82640edfca1e39e87b30b224da0ce740932b6eb844da5960a61b6daddc6be",
+        "selectedRoutes": [
+          "C8"
+        ],
+        "selectedUniqueStopNodes": 24,
+        "selectedSourceTripOccurrences": 84
+      }
+    ],
+    "canonicalRouteOrder": [
+      "C1",
+      "C2",
+      "C3",
+      "C5",
+      "C6",
+      "C8"
+    ],
+    "routeExactCopy": true,
+    "patternExactCopy": true,
+    "newRoutesCreated": 0,
+    "newPatternsCreated": 0,
+    "newStopNodesCreated": 0,
+    "newStopPlacesCreated": 0,
+    "newCoordinatesCreated": 0,
+    "conflicts": 0
+  },
+  "transformations": [
+    "Select only C1, C2, C3, C5, C6 and C8 from their accepted construction components in frozen canonical route order.",
+    "Union only StopNodes and StopPlaces referenced by selected route patterns; deep-compare repeated accepted objects and collapse exact duplicates.",
+    "Copy canonical es-malaga settlement identity fields exactly and recompute only package-local center and bounds from merged routed StopPlaces.",
+    "Copy accepted route presentation styles and preserve every accepted pattern including source-supported loop flags and partial workings."
+  ],
+  "warnings": [
+    "This is a pure merge. No current GTFS or web evidence was consulted during serialization.",
+    "Level 7 authoritative application/parser validation was not run because the authoritative repository/runtime is not present in this thread."
+  ]
+}

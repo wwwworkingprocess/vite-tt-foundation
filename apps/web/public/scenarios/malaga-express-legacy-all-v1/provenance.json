@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-express-legacy-all-v1",
+  "generatedAt": "2026-08-14T16:36:00+02:00",
+  "sources": [
+    {
+      "sourceId": "malaga-express-accepted-components",
+      "name": "Accepted Málaga construction components containing the two express/special routes",
+      "sourceFile": "scenarios-malaga-night-legacy-all-v1.zip",
+      "sha256": "2d0ff5077487d2a69404985c6944dbd1a72dd04c65be16b5b03ff8ded7ae0fd2",
+      "role": "Authoritative merge sources. Selected route/pattern objects and referenced StopNodes/StopPlaces are exact-copied without source rediscovery."
+    },
+    {
+      "sourceId": "malaga-frozen-family-plan",
+      "name": "Frozen Málaga citywide family architecture",
+      "sourceFile": "malaga-source-prefetch.zip",
+      "sha256": "76c25335ba8f98234a88bc4c2e7d0709bd97acbfca113bd2ab61fb95a938d9d5",
+      "role": "Provides only the owner-approved Express family membership and canonical route order; it is not used to reconstruct topology or accepted identities."
+    }
+  ],
+  "mergeContract": {
+    "type": "pure-accepted-component-merge",
+    "components": [
+      {
+        "scenarioId": "malaga-lines-25-28-e-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "fa986bd54d820e54699b5b0d3be1032d93bd64526ab52def28776af7a2c231a5",
+        "selectedRoutes": [
+          "E"
+        ],
+        "selectedUniqueStopNodes": 24
+      },
+      {
+        "scenarioId": "malaga-lines-29-a-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "845606c388defa7b804eb7e03a5687ba1ccb6dee45d560133ba039963d10daa2",
+        "selectedRoutes": [
+          "A"
+        ],
+        "selectedUniqueStopNodes": 26
+      }
+    ],
+    "canonicalRouteOrder": [
+      "A",
+      "E"
+    ],
+    "routeRediscovery": false,
+    "topologyReconciliation": false,
+    "coordinateRediscovery": false,
+    "newStopIdentitiesCreated": 0,
+    "sharedObjectConflictPolicy": "hard-fail",
+    "stopNodeOccurrences": 50,
+    "uniqueStopNodes": 49,
+    "collapsedStopNodeDuplicates": 1,
+    "stopPlaceOccurrences": 50,
+    "uniqueStopPlaces": 49,
+    "collapsedStopPlaceDuplicates": 1,
+    "sharedStopNodeExactComparisons": 1,
+    "sharedStopPlaceExactComparisons": 1,
+    "conflicts": 0
+  },
+  "settlementPolicy": {
+    "canonicalFields": "Copied exactly from accepted component settlement es-malaga.",
+    "packageLocalViewports": "Recomputed from all 49 merged routed StopPlace positions with 10 percent extent padding and a 0.003-degree minimum pad per axis.",
+    "settlementIds": [
+      "es-malaga"
+    ]
+  },
+  "warnings": [
+    "The Express family is the frozen project packaging classification of A and E; it does not alter operator topology.",
+    "All 17 source construction components and the already accepted Day/Circular/Night finals remain catalogued and byte-for-byte unchanged.",
+    "Mixed-family components contribute only their selected express/special routes to this merge.",
+    "Zero-trip records CC, L and 20E remain preserved only in frozen citywide source evidence and are not active passenger topology.",
+    "No authoritative application parser or repository test suite was available; Level 7 is not claimed."
+  ]
+}

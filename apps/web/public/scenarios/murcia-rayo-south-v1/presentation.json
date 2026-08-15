@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-south-v1",
+  "title": "Murcia Rayo South Network - Lines R12 and R80",
+  "initialView": {
+    "center": {
+      "latitude": 37.975260000000006,
+      "longitude": -1.1171921999999999
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "murcia-r12": {
+      "label": "R12",
+      "color": "#FF8040"
+    },
+    "murcia-r80": {
+      "label": "R80",
+      "color": "#F9F900"
+    }
+  },
+  "notes": [
+    "Fourth accepted Murcia component; extends the frozen Murcia identity registry for routes R12 and R80 while exact-copying accepted shared identities.",
+    "Exact GTFS trip sequences are stored as independent directed patterns; no reverse or closing edge is inferred.",
+    "The 18 Cocheras/Cabecera depot-working route records are preserved in the citywide prefetch but excluded from passenger topology by frozen architecture decision.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

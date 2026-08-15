@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-25-28-e-v1",
+  "title": "Málaga EMT - Lines 25, 28 and E",
+  "initialView": {
+    "center": {
+      "latitude": 36.742019466245,
+      "longitude": -4.49451847195978
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-25": {
+      "label": "25",
+      "color": "#000000"
+    },
+    "malaga-28": {
+      "label": "28",
+      "color": "#000000"
+    },
+    "malaga-e": {
+      "label": "E",
+      "color": "#257409"
+    }
+  },
+  "notes": [
+    "Tenth accepted Málaga component; extends the frozen Málaga identity registry for routes 25, 28 and E while exact-copying accepted shared identities.",
+    "All nine source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "Route 28 retains one source-supported contiguous short-working variant; no target pattern is a closed loop.",
+    "All nine patterns are open; no reverse edge, reverse pattern or loop closure is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

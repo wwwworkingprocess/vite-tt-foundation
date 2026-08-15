@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-7-15-n2-v1",
+  "title": "Málaga EMT - Lines 7, 15 and N2",
+  "initialView": {
+    "center": {
+      "latitude": 36.71515179696475,
+      "longitude": -4.435653625301365
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-7": {
+      "label": "7",
+      "color": "#D91010"
+    },
+    "malaga-15": {
+      "label": "15",
+      "color": "#F57B91"
+    },
+    "malaga-n2": {
+      "label": "N2",
+      "color": "#000000"
+    }
+  },
+  "notes": [
+    "Fifth accepted Málaga component; extends the frozen Málaga identity registry for routes 7, 15 and N2 while exact-copying accepted shared identities.",
+    "All five source-supported exact GTFS trip sequences are retained as independent directed patterns, including the source-supported full N2 loop.",
+    "No reverse edge, reverse pattern or loop closure is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

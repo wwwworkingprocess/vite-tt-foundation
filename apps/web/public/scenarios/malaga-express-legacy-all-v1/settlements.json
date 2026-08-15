@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-express-legacy-all-v1",
+  "settlements": [
+    {
+      "settlementId": "es-malaga",
+      "name": "Málaga",
+      "countryCode": "ES",
+      "adminArea": "Málaga",
+      "center": {
+        "latitude": 36.70732135369015,
+        "longitude": -4.48333735579285
+      },
+      "bounds": {
+        "south": 36.665417115336126,
+        "west": -4.567602226552559,
+        "north": 36.74922559204417,
+        "east": -4.399072485033143
+      }
+    }
+  ]
+}

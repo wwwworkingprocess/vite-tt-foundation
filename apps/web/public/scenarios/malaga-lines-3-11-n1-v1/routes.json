@@ -1,0 +1,404 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-3-11-n1-v1",
+  "routes": [
+    {
+      "routeId": "malaga-3",
+      "publicCode": "3",
+      "name": "Puerta Blanca - Alameda Principal - El Palo (Olias)",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-3-s01",
+          "directionLabel": "El Palo (Olias)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 38
+          },
+          "stopNodeIds": [
+            "malaga-stop-351",
+            "malaga-stop-352",
+            "malaga-stop-353",
+            "malaga-stop-354",
+            "malaga-stop-355",
+            "malaga-stop-356",
+            "malaga-stop-357",
+            "malaga-stop-1259",
+            "malaga-stop-360",
+            "malaga-stop-361",
+            "malaga-stop-362",
+            "malaga-stop-368",
+            "malaga-stop-364",
+            "malaga-stop-253",
+            "malaga-stop-322",
+            "malaga-stop-1122",
+            "malaga-stop-1123",
+            "malaga-stop-1103",
+            "malaga-stop-1104",
+            "malaga-stop-1105",
+            "malaga-stop-1106",
+            "malaga-stop-1107",
+            "malaga-stop-1108",
+            "malaga-stop-1109",
+            "malaga-stop-1110",
+            "malaga-stop-1111",
+            "malaga-stop-1124",
+            "malaga-stop-1125",
+            "malaga-stop-1127",
+            "malaga-stop-1135",
+            "malaga-stop-1128",
+            "malaga-stop-1129",
+            "malaga-stop-1130",
+            "malaga-stop-1131",
+            "malaga-stop-1132",
+            "malaga-stop-1120",
+            "malaga-stop-1121",
+            "malaga-stop-1151"
+          ]
+        },
+        {
+          "patternId": "malaga-line-3-s02",
+          "directionLabel": "Puerta Blanca",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 39
+          },
+          "stopNodeIds": [
+            "malaga-stop-1151",
+            "malaga-stop-1152",
+            "malaga-stop-1153",
+            "malaga-stop-1154",
+            "malaga-stop-1155",
+            "malaga-stop-1156",
+            "malaga-stop-1157",
+            "malaga-stop-1158",
+            "malaga-stop-1159",
+            "malaga-stop-1160",
+            "malaga-stop-1161",
+            "malaga-stop-1162",
+            "malaga-stop-1163",
+            "malaga-stop-1164",
+            "malaga-stop-1165",
+            "malaga-stop-1166",
+            "malaga-stop-1167",
+            "malaga-stop-1168",
+            "malaga-stop-1169",
+            "malaga-stop-1170",
+            "malaga-stop-302",
+            "malaga-stop-303",
+            "malaga-stop-370",
+            "malaga-stop-305",
+            "malaga-stop-306",
+            "malaga-stop-307",
+            "malaga-stop-308",
+            "malaga-stop-309",
+            "malaga-stop-310",
+            "malaga-stop-312",
+            "malaga-stop-313",
+            "malaga-stop-314",
+            "malaga-stop-315",
+            "malaga-stop-316",
+            "malaga-stop-317",
+            "malaga-stop-318",
+            "malaga-stop-319",
+            "malaga-stop-320",
+            "malaga-stop-351"
+          ]
+        },
+        {
+          "patternId": "malaga-line-3-s03",
+          "directionLabel": "Puerta Blanca",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 3
+          },
+          "stopNodeIds": [
+            "malaga-stop-319",
+            "malaga-stop-320",
+            "malaga-stop-351"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "3",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "3",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "3",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=3"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-11",
+      "publicCode": "11",
+      "name": "Universidad - Alameda Principal - El Palo (P. Virginia)",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-11-s01",
+          "directionLabel": "Universidad",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "malaga-stop-1119",
+            "malaga-stop-1153",
+            "malaga-stop-1154",
+            "malaga-stop-1155",
+            "malaga-stop-1156",
+            "malaga-stop-1157",
+            "malaga-stop-1158",
+            "malaga-stop-1159",
+            "malaga-stop-1160",
+            "malaga-stop-1161",
+            "malaga-stop-1162",
+            "malaga-stop-1163",
+            "malaga-stop-1164",
+            "malaga-stop-1165",
+            "malaga-stop-1166",
+            "malaga-stop-1167",
+            "malaga-stop-1168",
+            "malaga-stop-1169",
+            "malaga-stop-1170",
+            "malaga-stop-302",
+            "malaga-stop-303",
+            "malaga-stop-1177",
+            "malaga-stop-2009",
+            "malaga-stop-1403",
+            "malaga-stop-1404",
+            "malaga-stop-1405",
+            "malaga-stop-2003",
+            "malaga-stop-420",
+            "malaga-stop-2207",
+            "malaga-stop-421",
+            "malaga-stop-833",
+            "malaga-stop-2011",
+            "malaga-stop-2056"
+          ]
+        },
+        {
+          "patternId": "malaga-line-11-s02",
+          "directionLabel": "El Palo (P.Virginia)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 34
+          },
+          "stopNodeIds": [
+            "malaga-stop-2056",
+            "malaga-stop-832",
+            "malaga-stop-472",
+            "malaga-stop-476",
+            "malaga-stop-473",
+            "malaga-stop-2055",
+            "malaga-stop-1460",
+            "malaga-stop-1461",
+            "malaga-stop-1462",
+            "malaga-stop-1463",
+            "malaga-stop-322",
+            "malaga-stop-1122",
+            "malaga-stop-1123",
+            "malaga-stop-1103",
+            "malaga-stop-1104",
+            "malaga-stop-1105",
+            "malaga-stop-1106",
+            "malaga-stop-1107",
+            "malaga-stop-1108",
+            "malaga-stop-1109",
+            "malaga-stop-1110",
+            "malaga-stop-1111",
+            "malaga-stop-1124",
+            "malaga-stop-1125",
+            "malaga-stop-1127",
+            "malaga-stop-1135",
+            "malaga-stop-1128",
+            "malaga-stop-1129",
+            "malaga-stop-1130",
+            "malaga-stop-1131",
+            "malaga-stop-1132",
+            "malaga-stop-1133",
+            "malaga-stop-1134",
+            "malaga-stop-1119"
+          ]
+        },
+        {
+          "patternId": "malaga-line-11-s03",
+          "directionLabel": "Universidad",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "malaga-stop-302",
+            "malaga-stop-303",
+            "malaga-stop-1177",
+            "malaga-stop-2009",
+            "malaga-stop-1403",
+            "malaga-stop-1404",
+            "malaga-stop-1405",
+            "malaga-stop-2003",
+            "malaga-stop-420",
+            "malaga-stop-2207",
+            "malaga-stop-421",
+            "malaga-stop-833",
+            "malaga-stop-2011",
+            "malaga-stop-2056"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "11",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "11",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "11",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=11"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-n1",
+      "publicCode": "N1",
+      "name": "Puerta Blanca - Alameda Principal - El Palo (Nocturno 1)",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-n1-s01",
+          "directionLabel": "El Palo",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 37
+          },
+          "stopNodeIds": [
+            "malaga-stop-2201",
+            "malaga-stop-353",
+            "malaga-stop-354",
+            "malaga-stop-355",
+            "malaga-stop-356",
+            "malaga-stop-357",
+            "malaga-stop-1259",
+            "malaga-stop-360",
+            "malaga-stop-361",
+            "malaga-stop-362",
+            "malaga-stop-368",
+            "malaga-stop-364",
+            "malaga-stop-253",
+            "malaga-stop-322",
+            "malaga-stop-1122",
+            "malaga-stop-1123",
+            "malaga-stop-1103",
+            "malaga-stop-1104",
+            "malaga-stop-1105",
+            "malaga-stop-1106",
+            "malaga-stop-1107",
+            "malaga-stop-1108",
+            "malaga-stop-1109",
+            "malaga-stop-1110",
+            "malaga-stop-1111",
+            "malaga-stop-1124",
+            "malaga-stop-1125",
+            "malaga-stop-1127",
+            "malaga-stop-1135",
+            "malaga-stop-1128",
+            "malaga-stop-1129",
+            "malaga-stop-1130",
+            "malaga-stop-1131",
+            "malaga-stop-1132",
+            "malaga-stop-1133",
+            "malaga-stop-1134",
+            "malaga-stop-1119"
+          ]
+        },
+        {
+          "patternId": "malaga-line-n1-s02",
+          "directionLabel": "Puerta Blanca",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 37
+          },
+          "stopNodeIds": [
+            "malaga-stop-1119",
+            "malaga-stop-1153",
+            "malaga-stop-1154",
+            "malaga-stop-1155",
+            "malaga-stop-1156",
+            "malaga-stop-1157",
+            "malaga-stop-1158",
+            "malaga-stop-1159",
+            "malaga-stop-1160",
+            "malaga-stop-1161",
+            "malaga-stop-1162",
+            "malaga-stop-1163",
+            "malaga-stop-1164",
+            "malaga-stop-1165",
+            "malaga-stop-1166",
+            "malaga-stop-1167",
+            "malaga-stop-1168",
+            "malaga-stop-1169",
+            "malaga-stop-1170",
+            "malaga-stop-301",
+            "malaga-stop-302",
+            "malaga-stop-303",
+            "malaga-stop-370",
+            "malaga-stop-305",
+            "malaga-stop-306",
+            "malaga-stop-307",
+            "malaga-stop-308",
+            "malaga-stop-309",
+            "malaga-stop-310",
+            "malaga-stop-312",
+            "malaga-stop-313",
+            "malaga-stop-314",
+            "malaga-stop-315",
+            "malaga-stop-316",
+            "malaga-stop-317",
+            "malaga-stop-1002",
+            "malaga-stop-2201"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "41",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "N1",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "41",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=41"
+        }
+      ]
+    }
+  ]
+}

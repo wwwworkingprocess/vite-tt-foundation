@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-coast-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Cartagena Radial Coast Network - Lines 12 and 21",
+  "primarySettlementId": "es-cartagena",
+  "settlementIds": [
+    "es-cartagena",
+    "es-la-union"
+  ],
+  "contentHash": "2933a69a4bf440b5a443390a4546eae7b53ad6dcd88923d0ee462d991f8421db",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "c3a01b6a435d953e129060c1a3b6edc57d4f871bf04382ce8a424cb226e5e891"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "98c9890e7e18ccc0a5d36c8960d3bf1ae70b8e5ad9c3cbea2958a8e0e8a0f336"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "0e7edc315213c3af9dbb8ca1b2a49cbe1cda831b0737916246004bc13b052512"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "f7db8d12b9186bf28490c4d7b4f2fc51317ce94d2b95b320ae7e510f690483fb"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "b49cdb66717fa525629cd5103af23352bb46f5186d65e258a66cfaa540061705"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

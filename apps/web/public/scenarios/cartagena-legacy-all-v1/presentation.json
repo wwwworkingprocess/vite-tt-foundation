@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-all-v1",
+  "title": "Cartagena Legacy All Network - Inner Lines",
+  "initialView": {
+    "center": {
+      "latitude": 37.6542297601022,
+      "longitude": -1.039609959130463
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "cartagena-1": {
+      "label": "1",
+      "color": "#d32f2f"
+    },
+    "cartagena-2": {
+      "label": "2",
+      "color": "#0288d1"
+    },
+    "cartagena-3": {
+      "label": "3",
+      "color": "#7b1fa2"
+    },
+    "cartagena-4": {
+      "label": "4",
+      "color": "#388e3c"
+    },
+    "cartagena-5": {
+      "label": "5",
+      "color": "#f57c00"
+    },
+    "cartagena-6": {
+      "label": "6",
+      "color": "#455a64"
+    },
+    "cartagena-7": {
+      "label": "7",
+      "color": "#5d4037"
+    },
+    "cartagena-8": {
+      "label": "8",
+      "color": "#d32f2f"
+    },
+    "cartagena-9": {
+      "label": "9",
+      "color": "#1976d2"
+    },
+    "cartagena-14": {
+      "label": "14",
+      "color": "#6a1b9a"
+    },
+    "cartagena-18": {
+      "label": "18",
+      "color": "#00838f"
+    },
+    "cartagena-24": {
+      "label": "24",
+      "color": "#0277bd"
+    },
+    "cartagena-25": {
+      "label": "25",
+      "color": "#558b2f"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Pure merge of the six accepted inner Cartagena component scenarios.",
+    "Route and pattern objects are copied exactly from accepted components in canonical public-code order.",
+    "Shared StopNode and StopPlace identities are collapsed only by exact stable ID and deep exact-object equality.",
+    "No route, pattern, edge, identity or coordinate is rediscovered during this merge."
+  ]
+}

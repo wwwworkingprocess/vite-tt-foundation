@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-express-legacy-all-v1",
+  "title": "Málaga Express Legacy All Network",
+  "initialView": {
+    "center": {
+      "latitude": 36.70732135369015,
+      "longitude": -4.48333735579285
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "malaga-a": {
+      "label": "A",
+      "color": "#ECE53E"
+    },
+    "malaga-e": {
+      "label": "E",
+      "color": "#257409"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Pure exact-copy merge of the two accepted Málaga express/special route objects in frozen canonical public-code order.",
+    "All route and pattern objects are copied exactly from accepted construction components; shared StopNode and StopPlace identities are collapsed only after deep exact-object equality.",
+    "No source discovery, coordinate discovery, topology reconciliation, route creation, pattern creation or identity creation occurs during this merge.",
+    "Mixed-family construction components contribute only A and E; daytime, circular and night routes remain in their accepted/final families."
+  ]
+}

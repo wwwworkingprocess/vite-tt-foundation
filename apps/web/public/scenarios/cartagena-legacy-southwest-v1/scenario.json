@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-southwest-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Cartagena Legacy Southwest Network - Lines 5 and 6",
+  "primarySettlementId": "es-cartagena",
+  "settlementIds": [
+    "es-cartagena"
+  ],
+  "contentHash": "3831ece100a6d581c6dc0d04ef7b8ffed81d37d04d0d73ff3319129c0cf416d8",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "b1a52040d1c3f370d4d3ebad9b12ef168707aa8e09919b6f5535cfa7068c8977"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "5c231a9f8387b3b4b0a9129c6b081fc485afc977312dc284937b65877d2c45e5"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "d1324b06862a45875988f65dfc5ad6bfd7654e1b6a68db26e95eaafdc91874b3"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "2c87a838c2ee5147b03a8eb348e5a5ff8d00fc56ba7bcbf9c78d10a31b78a814"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "37d5842280236734bade73f75b10461d5974851f6eb6dedcdbbebd3c53f48b51"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

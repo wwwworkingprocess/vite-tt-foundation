@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-periphery-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Cartagena Legacy Periphery Network - Lines 14, 24 and 25",
+  "primarySettlementId": "es-cartagena",
+  "settlementIds": [
+    "es-cartagena",
+    "es-fuente-alamo-de-murcia",
+    "es-murcia",
+    "es-torre-pacheco"
+  ],
+  "contentHash": "050bcde4e5e052cc4eaaa553d974cb8dd243ca391671822d7fb4d6bf45e79dd8",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "b276e63c649c8cbcf1a3b1c52670ca48e115aa8e1d39571ba4f2a0e82160306a"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "c861cc4660303b84620a79d754e8b124109357f754763108bd1d526282c95907"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "00f4736d8cf7dafc4be454853a288e2af46d2da3cdced8be9b1da371d231ae3b"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "768484a9a80438236eaaca18e7895a0fc9b430d908c5add770ccd364b802e95c"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "edf0acb0b959fced4d92c96be842d3c292145d390d92a7f3d000763f2360374d"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

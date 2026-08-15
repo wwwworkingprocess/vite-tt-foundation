@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-south-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Murcia Rayo South Network - Lines R12 and R80",
+  "primarySettlementId": "es-murcia",
+  "settlementIds": [
+    "es-murcia"
+  ],
+  "contentHash": "88138b43bb8db13020d88956c266dbce87069b649e062158b17c6c447f5db02b",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "aaa92acfe59b7d5e5524badffce76749f6da85538331f308b6e0b0873ee62bec"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "b9573db25c713099283c1c10ed6c49b7d4f9361af1208d6da87821cbd096ad35"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "5b166f9c44eda242c932a7c7d5a9b082627b4821bc16ff684bc4b40a222e1195"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "d02c814734a4376e9b07dfbd0c0b844e995356c5347e30b7441e30241f3ad5c0"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "0cef867edf16ef0af6a352c4872f48c83d9206f2d816632425af2a20986cbe2c"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

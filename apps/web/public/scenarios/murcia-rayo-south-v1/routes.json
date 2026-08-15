@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-south-v1",
+  "routes": [
+    {
+      "routeId": "murcia-r12",
+      "publicCode": "R12",
+      "name": "R12 - LOS GARRES - PIO BAROJA - GLORIETA - SAN ANDRES",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-r12-s01",
+          "directionLabel": "Camino de los Garres 1 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 44
+          },
+          "stopNodeIds": [
+            "murcia-stop-9218",
+            "murcia-stop-9230",
+            "murcia-stop-9231",
+            "murcia-stop-9219",
+            "murcia-stop-9232",
+            "murcia-stop-9220",
+            "murcia-stop-9244",
+            "murcia-stop-9245",
+            "murcia-stop-9246",
+            "murcia-stop-9177",
+            "murcia-stop-9178",
+            "murcia-stop-9046",
+            "murcia-stop-9133",
+            "murcia-stop-9155",
+            "murcia-stop-9134",
+            "murcia-stop-9135",
+            "murcia-stop-9019",
+            "murcia-stop-9255",
+            "murcia-stop-9021",
+            "murcia-stop-9022",
+            "murcia-stop-9023",
+            "murcia-stop-9024",
+            "murcia-stop-9036",
+            "murcia-stop-9165",
+            "murcia-stop-9037",
+            "murcia-stop-9038",
+            "murcia-stop-9164",
+            "murcia-stop-9257",
+            "murcia-stop-9156",
+            "murcia-stop-9157",
+            "murcia-stop-9158",
+            "murcia-stop-9159",
+            "murcia-stop-9143",
+            "murcia-stop-9179",
+            "murcia-stop-9180",
+            "murcia-stop-9247",
+            "murcia-stop-9248",
+            "murcia-stop-9249",
+            "murcia-stop-9227",
+            "murcia-stop-9235",
+            "murcia-stop-9228",
+            "murcia-stop-9236",
+            "murcia-stop-9237",
+            "murcia-stop-9229"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50120003",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "R12",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-r80",
+      "publicCode": "R80",
+      "name": "R80 - MESA CASTILLO-PIO BAROJA-CIRCULAR (BUS:SPRINTER)",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-r80-s01",
+          "directionLabel": "Paseo Florencia I (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 36
+          },
+          "stopNodeIds": [
+            "murcia-stop-9127",
+            "murcia-stop-9128",
+            "murcia-stop-9129",
+            "murcia-stop-9131",
+            "murcia-stop-9132",
+            "murcia-stop-9012",
+            "murcia-stop-9046",
+            "murcia-stop-9133",
+            "murcia-stop-9155",
+            "murcia-stop-9134",
+            "murcia-stop-9135",
+            "murcia-stop-9136",
+            "murcia-stop-9137",
+            "murcia-stop-9138",
+            "murcia-stop-9139",
+            "murcia-stop-9056",
+            "murcia-stop-9030",
+            "murcia-stop-9029",
+            "murcia-stop-9070",
+            "murcia-stop-9071",
+            "murcia-stop-9072",
+            "murcia-stop-9257",
+            "murcia-stop-9156",
+            "murcia-stop-9157",
+            "murcia-stop-9158",
+            "murcia-stop-9159",
+            "murcia-stop-9143",
+            "murcia-stop-9160",
+            "murcia-stop-9144",
+            "murcia-stop-9161",
+            "murcia-stop-9145",
+            "murcia-stop-9146",
+            "murcia-stop-9147",
+            "murcia-stop-9148",
+            "murcia-stop-9149",
+            "murcia-stop-9162"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50800009",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "R80",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    }
+  ]
+}

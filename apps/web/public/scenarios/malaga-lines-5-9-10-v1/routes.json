@@ -1,0 +1,375 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-5-9-10-v1",
+  "routes": [
+    {
+      "routeId": "malaga-5",
+      "publicCode": "5",
+      "name": "Alameda Principal - Guadalmar - Parque de Ocio",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-5-s01",
+          "directionLabel": "Parque Ocio",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 34
+          },
+          "stopNodeIds": [
+            "malaga-stop-3602",
+            "malaga-stop-305",
+            "malaga-stop-306",
+            "malaga-stop-307",
+            "malaga-stop-308",
+            "malaga-stop-309",
+            "malaga-stop-310",
+            "malaga-stop-312",
+            "malaga-stop-313",
+            "malaga-stop-314",
+            "malaga-stop-315",
+            "malaga-stop-316",
+            "malaga-stop-317",
+            "malaga-stop-1002",
+            "malaga-stop-1003",
+            "malaga-stop-1005",
+            "malaga-stop-1008",
+            "malaga-stop-1009",
+            "malaga-stop-1037",
+            "malaga-stop-1013",
+            "malaga-stop-1014",
+            "malaga-stop-1015",
+            "malaga-stop-1016",
+            "malaga-stop-1017",
+            "malaga-stop-1018",
+            "malaga-stop-1036",
+            "malaga-stop-1019",
+            "malaga-stop-1020",
+            "malaga-stop-1074",
+            "malaga-stop-513",
+            "malaga-stop-1022",
+            "malaga-stop-1023",
+            "malaga-stop-1024",
+            "malaga-stop-1071"
+          ]
+        },
+        {
+          "patternId": "malaga-line-5-s02",
+          "directionLabel": "Alameda Principal ",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 34
+          },
+          "stopNodeIds": [
+            "malaga-stop-1071",
+            "malaga-stop-1072",
+            "malaga-stop-1073",
+            "malaga-stop-565",
+            "malaga-stop-1080",
+            "malaga-stop-1075",
+            "malaga-stop-1076",
+            "malaga-stop-1077",
+            "malaga-stop-1011",
+            "malaga-stop-1012",
+            "malaga-stop-1051",
+            "malaga-stop-1052",
+            "malaga-stop-1053",
+            "malaga-stop-1054",
+            "malaga-stop-1078",
+            "malaga-stop-1055",
+            "malaga-stop-1056",
+            "malaga-stop-1058",
+            "malaga-stop-1059",
+            "malaga-stop-1061",
+            "malaga-stop-1063",
+            "malaga-stop-353",
+            "malaga-stop-354",
+            "malaga-stop-355",
+            "malaga-stop-356",
+            "malaga-stop-357",
+            "malaga-stop-1259",
+            "malaga-stop-360",
+            "malaga-stop-361",
+            "malaga-stop-362",
+            "malaga-stop-368",
+            "malaga-stop-364",
+            "malaga-stop-462",
+            "malaga-stop-3602"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "5",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "5",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "5",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=5"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-9",
+      "publicCode": "9",
+      "name": "Alameda Principal - Churriana por C/Maestro Vert",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-9-s01",
+          "directionLabel": "Alameda Principal",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "malaga-stop-1035",
+            "malaga-stop-1064",
+            "malaga-stop-1065",
+            "malaga-stop-1066",
+            "malaga-stop-1083",
+            "malaga-stop-1084",
+            "malaga-stop-1085",
+            "malaga-stop-1071",
+            "malaga-stop-1072",
+            "malaga-stop-1073",
+            "malaga-stop-1081",
+            "malaga-stop-1086",
+            "malaga-stop-1058",
+            "malaga-stop-1059",
+            "malaga-stop-1061",
+            "malaga-stop-1063",
+            "malaga-stop-353",
+            "malaga-stop-354",
+            "malaga-stop-355",
+            "malaga-stop-356",
+            "malaga-stop-357",
+            "malaga-stop-1259",
+            "malaga-stop-360",
+            "malaga-stop-361",
+            "malaga-stop-362",
+            "malaga-stop-368",
+            "malaga-stop-364",
+            "malaga-stop-462",
+            "malaga-stop-3602"
+          ]
+        },
+        {
+          "patternId": "malaga-line-9-s02",
+          "directionLabel": "Churriana",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "malaga-stop-3602",
+            "malaga-stop-305",
+            "malaga-stop-306",
+            "malaga-stop-307",
+            "malaga-stop-308",
+            "malaga-stop-309",
+            "malaga-stop-310",
+            "malaga-stop-312",
+            "malaga-stop-313",
+            "malaga-stop-314",
+            "malaga-stop-315",
+            "malaga-stop-316",
+            "malaga-stop-317",
+            "malaga-stop-1002",
+            "malaga-stop-1003",
+            "malaga-stop-1005",
+            "malaga-stop-1045",
+            "malaga-stop-1039",
+            "malaga-stop-1022",
+            "malaga-stop-1023",
+            "malaga-stop-1024",
+            "malaga-stop-1044",
+            "malaga-stop-1040",
+            "malaga-stop-1041",
+            "malaga-stop-1028",
+            "malaga-stop-1029",
+            "malaga-stop-1030",
+            "malaga-stop-1031",
+            "malaga-stop-1032",
+            "malaga-stop-1033",
+            "malaga-stop-1034",
+            "malaga-stop-1035"
+          ]
+        },
+        {
+          "patternId": "malaga-line-9-s03",
+          "directionLabel": "Churriana",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "malaga-stop-1041",
+            "malaga-stop-1028",
+            "malaga-stop-1029",
+            "malaga-stop-1030",
+            "malaga-stop-1031",
+            "malaga-stop-1032",
+            "malaga-stop-1033",
+            "malaga-stop-1034",
+            "malaga-stop-1035"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "9",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "9",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "9",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=9"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-10",
+      "publicCode": "10",
+      "name": "Alameda Principal - Churriana por C/ Torremolinos",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-10-s01",
+          "directionLabel": "Alameda Principal",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 30
+          },
+          "stopNodeIds": [
+            "malaga-stop-1035",
+            "malaga-stop-1064",
+            "malaga-stop-1065",
+            "malaga-stop-1066",
+            "malaga-stop-1067",
+            "malaga-stop-1068",
+            "malaga-stop-1069",
+            "malaga-stop-1070",
+            "malaga-stop-1071",
+            "malaga-stop-1072",
+            "malaga-stop-1073",
+            "malaga-stop-1081",
+            "malaga-stop-1086",
+            "malaga-stop-1058",
+            "malaga-stop-1059",
+            "malaga-stop-1061",
+            "malaga-stop-1063",
+            "malaga-stop-353",
+            "malaga-stop-354",
+            "malaga-stop-355",
+            "malaga-stop-356",
+            "malaga-stop-357",
+            "malaga-stop-1259",
+            "malaga-stop-360",
+            "malaga-stop-361",
+            "malaga-stop-362",
+            "malaga-stop-368",
+            "malaga-stop-364",
+            "malaga-stop-462",
+            "malaga-stop-3602"
+          ]
+        },
+        {
+          "patternId": "malaga-line-10-s02",
+          "directionLabel": "Churriana",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "malaga-stop-3602",
+            "malaga-stop-305",
+            "malaga-stop-306",
+            "malaga-stop-307",
+            "malaga-stop-308",
+            "malaga-stop-309",
+            "malaga-stop-310",
+            "malaga-stop-312",
+            "malaga-stop-313",
+            "malaga-stop-314",
+            "malaga-stop-315",
+            "malaga-stop-316",
+            "malaga-stop-317",
+            "malaga-stop-1002",
+            "malaga-stop-1003",
+            "malaga-stop-1005",
+            "malaga-stop-1045",
+            "malaga-stop-1039",
+            "malaga-stop-1022",
+            "malaga-stop-1023",
+            "malaga-stop-1024",
+            "malaga-stop-1025",
+            "malaga-stop-1026",
+            "malaga-stop-1027",
+            "malaga-stop-1028",
+            "malaga-stop-1029",
+            "malaga-stop-1030",
+            "malaga-stop-1031",
+            "malaga-stop-1032",
+            "malaga-stop-1033",
+            "malaga-stop-1034",
+            "malaga-stop-1035"
+          ]
+        },
+        {
+          "patternId": "malaga-line-10-s03",
+          "directionLabel": "Churriana",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 6
+          },
+          "stopNodeIds": [
+            "malaga-stop-1030",
+            "malaga-stop-1031",
+            "malaga-stop-1032",
+            "malaga-stop-1033",
+            "malaga-stop-1034",
+            "malaga-stop-1035"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "10",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "10",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "10",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=10"
+        }
+      ]
+    }
+  ]
+}

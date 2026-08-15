@@ -475,6 +475,498 @@
       "manifestPath": "benidorm-radial-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "2484373f1d891d658660eec93b345ddd9ea2dfa999b2c3b579dd8fba9a5aabc7"
+    },
+	{
+      "scenarioId": "cartagena-legacy-icue-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Legacy Icue Network - Lines 8 and 9",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena"
+      ],
+      "manifestPath": "cartagena-legacy-icue-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "2149e40a9766f8162d9b23c4e85db831e0eccf41bd0d49227f49d93e5ca82be8"
+    },
+    {
+      "scenarioId": "cartagena-legacy-core-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Legacy Core Network - Lines 1 and 2",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena"
+      ],
+      "manifestPath": "cartagena-legacy-core-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "b3be58feddc672b639b15486d139ed741de9cb6dda20c6da178aa2598eaa9434"
+    },
+    {
+      "scenarioId": "cartagena-legacy-west-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Legacy West Network - Lines 3 and 4",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena"
+      ],
+      "manifestPath": "cartagena-legacy-west-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "413eb7f950f09502258b8320b2c5a04f05ac315350d0dc6f1adb51134713460a"
+    },
+    {
+      "scenarioId": "cartagena-legacy-southwest-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Legacy Southwest Network - Lines 5 and 6",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena"
+      ],
+      "manifestPath": "cartagena-legacy-southwest-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "3831ece100a6d581c6dc0d04ef7b8ffed81d37d04d0d73ff3319129c0cf416d8"
+    },
+    {
+      "scenarioId": "cartagena-legacy-north-east-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Legacy North East Network - Lines 7 and 18",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena"
+      ],
+      "manifestPath": "cartagena-legacy-north-east-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "615ba29dbd4507a3f5ba12acba12ad86c9bdd5a5d1230735a0144653e2df88be"
+    },
+    {
+      "scenarioId": "cartagena-legacy-periphery-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Legacy Periphery Network - Lines 14, 24 and 25",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena",
+        "es-fuente-alamo-de-murcia",
+        "es-murcia",
+        "es-torre-pacheco"
+      ],
+      "manifestPath": "cartagena-legacy-periphery-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "050bcde4e5e052cc4eaaa553d974cb8dd243ca391671822d7fb4d6bf45e79dd8"
+    },
+    {
+      "scenarioId": "cartagena-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Legacy All Network - Inner Lines",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena",
+        "es-fuente-alamo-de-murcia",
+        "es-murcia",
+        "es-torre-pacheco"
+      ],
+      "manifestPath": "cartagena-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "228230895bcd66f0868b744a366500e5ac0f482553776e31a41fd217d3e28076"
+    },
+    {
+      "scenarioId": "cartagena-radial-coast-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Radial Coast Network - Lines 12 and 21",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena",
+        "es-la-union"
+      ],
+      "manifestPath": "cartagena-radial-coast-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "2933a69a4bf440b5a443390a4546eae7b53ad6dcd88923d0ee462d991f8421db"
+    },
+    {
+      "scenarioId": "cartagena-radial-manga-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Radial La Manga / Mar Menor Network - Lines 23, 43 and 44",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena",
+        "es-la-union",
+        "es-san-javier",
+        "es-los-alcazares"
+      ],
+      "manifestPath": "cartagena-radial-manga-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "599e355c4e5797544ec3fc80788eaf4950619ba76ba059d10d6c159cf94a19c0"
+    },
+    {
+      "scenarioId": "cartagena-radial-mainland-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Radial Mainland Network - Lines 30, 41 and 42A",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena",
+        "es-la-union",
+        "es-fuente-alamo-de-murcia",
+        "es-mazarron",
+        "es-alhama-de-murcia",
+        "es-totana",
+        "es-lorca"
+      ],
+      "manifestPath": "cartagena-radial-mainland-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "acdc52c083f92ffde9239d1a1b98bf1b23734e39ba379617ba28fe68dbee54d6"
+    },
+    {
+      "scenarioId": "cartagena-radial-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Cartagena Radial Legacy All Network",
+      "primarySettlementId": "es-cartagena",
+      "settlementIds": [
+        "es-cartagena",
+        "es-la-union",
+        "es-san-javier",
+        "es-los-alcazares",
+        "es-mazarron",
+        "es-fuente-alamo-de-murcia",
+        "es-alhama-de-murcia",
+        "es-totana",
+        "es-lorca"
+      ],
+      "manifestPath": "cartagena-radial-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "cc91f352b914cce9cbc01d77f64910fffca591d1660d77a0d8778c2f9ff468d0"
+    },
+    {
+      "scenarioId": "murcia-circular-24-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Murcia Circular Network - Lines C2 and C4",
+      "primarySettlementId": "es-murcia",
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "manifestPath": "murcia-circular-24-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "6a9529131974e93d5fa9bb21701867b3c3e18d181adc254a51fa87351256250d"
+    },
+    {
+      "scenarioId": "murcia-circular-13-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Murcia Circular Network - Lines C1 and C3",
+      "primarySettlementId": "es-murcia",
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "manifestPath": "murcia-circular-13-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "71a499ba7b139c8d284ccb327a2d6635fd8ec70c93109c1f0b334fadd7978c3f"
+    },
+    {
+      "scenarioId": "murcia-central-rail-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Murcia Central/Rail Network - Lines C5 and R17",
+      "primarySettlementId": "es-murcia",
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "manifestPath": "murcia-central-rail-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "b7eb9b8c3fba7ddeffaff66d5d37eda352574ef0399227b239a94423b04e4ba1"
+    },
+    {
+      "scenarioId": "murcia-rayo-south-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Murcia Rayo South Network - Lines R12 and R80",
+      "primarySettlementId": "es-murcia",
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "manifestPath": "murcia-rayo-south-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "88138b43bb8db13020d88956c266dbce87069b649e062158b17c6c447f5db02b"
+    },
+    {
+      "scenarioId": "murcia-rayo-north-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Murcia Rayo North Network - Lines R14 and R20",
+      "primarySettlementId": "es-murcia",
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "manifestPath": "murcia-rayo-north-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "70887cd8c6bf8d4b277cbb7971944aaa44b1718af51d8ae3c617bcc167e505c4"
+    },
+    {
+      "scenarioId": "murcia-circular-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Murcia Circular Legacy All Network",
+      "primarySettlementId": "es-murcia",
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "manifestPath": "murcia-circular-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "b937957c590df87add6d8e3aefa0c567e0f1802888c67a56800257a86354d839"
+    },
+    {
+      "scenarioId": "murcia-rayo-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Murcia Rayo Legacy All Network",
+      "primarySettlementId": "es-murcia",
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "manifestPath": "murcia-rayo-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "a83530201659c197e1b3edfa54f6310c89990828d004943d796917a7ff987e23"
+    },
+    {
+      "scenarioId": "malaga-lines-3-11-n1-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 3, 11 and N1",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-3-11-n1-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "436ba9a634a11161ffdbc444d08a73acfee28edd64727ad90ae965201650bd41"
+    },
+    {
+      "scenarioId": "malaga-lines-22-27-31-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 22, 27 and 31",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-22-27-31-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "ae1a23b2220c8aad382db2e33de1c504e64a075e50ea11cb860e9967c90755bc"
+    },
+    {
+      "scenarioId": "malaga-lines-8-21-23-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 8, 21 and 23",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-8-21-23-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "0c74aef1b2bf1253c728fe53163110e21743138850e2ab388d14ba6c537fcfd5"
+    },
+    {
+      "scenarioId": "malaga-lines-14-n4-c5-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 14, N4 and C5",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-14-n4-c5-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "2b97d423c0f31703e5cd3319801358926783c0b5e2d0fa9f3c6fdaa3bea6c7ac"
+    },
+    {
+      "scenarioId": "malaga-lines-7-15-n2-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 7, 15 and N2",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-7-15-n2-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "aeff32f03e5f21673d516eb506585c1b939f74782221db8d2771f37ad31a2e99"
+    },
+    {
+      "scenarioId": "malaga-lines-1-37-c2-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 1, 37 and C2",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-1-37-c2-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "68a9e075030ad8a3db6add3198ef9c6c33ed0d70fee11656e25e18d5ae74da20"
+    },
+    {
+      "scenarioId": "malaga-lines-17-18-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 17 and 18",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-17-18-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "6d948617dfdf44dac85d6ec74e20f2f31c0894024f60f7aa1d3d751c13e3e75e"
+    },
+    {
+      "scenarioId": "malaga-lines-2-20-30-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 2, 20 and 30",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-2-20-30-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "1bf00e87ce1df7a125335f7d0d795ff1b6fcf7e94e663c2adae57789b207fc14"
+    },
+    {
+      "scenarioId": "malaga-lines-4-19-n3-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 4, 19 and N3",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-4-19-n3-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "7e290c90e16a63db5ce957a31c4fc5b2b8635b40cb99966b73ce394b429d8ee5"
+    },
+    {
+      "scenarioId": "malaga-lines-25-28-e-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 25, 28 and E",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-25-28-e-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "fa986bd54d820e54699b5b0d3be1032d93bd64526ab52def28776af7a2c231a5"
+    },
+    {
+      "scenarioId": "malaga-lines-38-c6-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 38 and C6",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-38-c6-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "d2bec3ad88a18682330ac2a161d79f7fcc94e89c8fb016adcb676934b816e5c0"
+    },
+    {
+      "scenarioId": "malaga-lines-36-c1-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 36 and C1",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-36-c1-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "951eb540310af33944ccccb206d2a3994232a190fa246a2105956e7f9fda594b"
+    },
+    {
+      "scenarioId": "malaga-lines-33-34-35-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 33, 34 and 35",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-33-34-35-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "314f82ccf6f1aea9baf2f6f4bb9a1516117662751247ab771c3f7f12d527db61"
+    },
+    {
+      "scenarioId": "malaga-lines-5-9-10-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 5, 9 and 10",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-5-9-10-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "b5aadc3a288174aa812a2839161465b642bcc6ed6547999deaad8dedcfdea6c6"
+    },
+    {
+      "scenarioId": "malaga-lines-29-a-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 29 and A",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-29-a-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "845606c388defa7b804eb7e03a5687ba1ccb6dee45d560133ba039963d10daa2"
+    },
+    {
+      "scenarioId": "malaga-lines-32-c3-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 32 and C3",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-32-c3-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "e76d1e977a1536d56bf0f11ec13d9624cb127fc4a56194133ee873a56f33e466"
+    },
+    {
+      "scenarioId": "malaga-lines-40-c8-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga EMT - Lines 40 and C8",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-lines-40-c8-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "58f82640edfca1e39e87b30b224da0ce740932b6eb844da5960a61b6daddc6be"
+    },
+    {
+      "scenarioId": "malaga-day-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga Day Legacy All Network",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-day-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "06e3c2da0f57557bae877f3c7d3b6c0da72b0a224b6aaed4bbb7a09f5b58dde9"
+    },
+    {
+      "scenarioId": "malaga-circular-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga Circular Legacy All Network",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-circular-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "1963eada6b56c81c178447489ce8fb440b84dc4d489875d71583898c0be36d6e"
+    },
+    {
+      "scenarioId": "malaga-night-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga Night Legacy All Network",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-night-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "3e1a216be87fa897f654355d07002fa172849adb3d1d7d7947bcaa883b57e813"
+    },
+    {
+      "scenarioId": "malaga-express-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "title": "Málaga Express Legacy All Network",
+      "primarySettlementId": "es-malaga",
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "manifestPath": "malaga-express-legacy-all-v1/scenario.json",
+      "status": "development-seed",
+      "contentHash": "fd66f1b9499a21dfaac806523975ef5a05741229ad752a9fc50dd5cdb100ee54"
     }
   ]
 }

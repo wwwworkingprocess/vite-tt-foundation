@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-circular-24-v1",
+  "settlements": [
+    {
+      "settlementId": "es-murcia",
+      "name": "Murcia",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.984144,
+        "longitude": -1.12736945
+      },
+      "bounds": {
+        "south": 37.97204,
+        "west": -1.1442413999999999,
+        "north": 37.996248,
+        "east": -1.1104975000000001
+      }
+    }
+  ]
+}

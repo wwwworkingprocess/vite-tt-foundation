@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-8-21-23-v1",
+  "generatedAt": "2026-08-14T00:20:00+02:00",
+  "sources": [
+    {
+      "sourceId": "malaga-emt-google-transit-2026-08-13",
+      "name": "Ayuntamiento de Málaga / Empresa Malagueña de Transportes Google Transit dataset",
+      "accessedAt": "2026-08-13",
+      "sourceFile": "google_transit.zip",
+      "sha256": "a98b0221eaecdff559430639bcaf3326cf77dca5530eb96b32c81cc187fbed72",
+      "role": "Official publisher source for route records, exact ordered trip stop sequences, stable stop_code/codParada identities, stop names and structured coordinates."
+    },
+    {
+      "sourceId": "malaga-source-prefetch-2026-08-14",
+      "name": "Frozen Málaga citywide source prefetch",
+      "accessedAt": "2026-08-14",
+      "sourceFile": "malaga-source-prefetch.zip",
+      "sha256": "76c25335ba8f98234a88bc4c2e7d0709bd97acbfca113bd2ab61fb95a938d9d5",
+      "role": "Owner-approved source authority for snapshot choice, stable identity rule, canonical exact sequences, loop decisions, settlement assignment, zero-trip route policy and component architecture."
+    },
+    {
+      "sourceId": "malaga-lineasyparadas-official",
+      "name": "Ayuntamiento de Málaga - Líneas y paradas autobuses EMT",
+      "accessedAt": "2026-08-13",
+      "sourceFile": "lineasyparadas.csv",
+      "sha256": "e74c2b965a9a18cc24db4658ad10c40b0895e804927b5cd262e579b58577e853",
+      "role": "Independent municipal corroboration that GTFS stop_code equals rider-facing codParada."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "malaga-stop-code-identity-v1",
+      "description": "Uses the complete official EMT stop_code/codParada as the stable Málaga StopNode suffix and creates a same-code singleton StopPlace for each new identity."
+    },
+    {
+      "transformationId": "malaga-8-21-23-exact-trip-variants-v1",
+      "description": "Serializes all 7 frozen distinct exact GTFS sequences for routes 8, 21 and 23. Source-supported variants are preserved independently; this component has 1 contiguous short-working variant(s)."
+    },
+    {
+      "transformationId": "malaga-loop-policy-v1",
+      "description": "Applies the frozen loop registry exactly. None of the seven patterns in this component closes a loop, so no last-to-first edge is added."
+    },
+    {
+      "transformationId": "malaga-settlement-reuse-v1",
+      "description": "Reuses the accepted canonical es-malaga identity fields exactly and computes only this package-local center/bounds from the 152 routed StopPlace coordinates with deterministic framing padding."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Adds exactly one catalog descriptor and recomputes asset and aggregate SHA-256 values from final serialized bytes."
+    }
+  ],
+  "warnings": [
+    "The municipal Google Transit ZIP is the frozen topology authority for this snapshot. NAP metadata observed for the same network reports a different trip/calendar snapshot and remains provenance-only because its bytes were not downloaded.",
+    "All 152 component coordinates are either exact accepted Grade A objects (28 reused identities) or Grade B official structured municipal GTFS values (124 new identities); no coordinates are inferred or interpolated.",
+    "StopNode.sourceReferences is empty because no genuine OpenStreetMap platform or stop_position object was reconciled.",
+    "Twenty-eight target stop identities are exact-copied from the accepted Málaga baseline and 124 identities are newly created. Later Málaga components must continue to exact-copy accepted StopNode and StopPlace objects whenever IDs recur.",
+    "Routes CC, L and 20E are preserved in the frozen citywide source registry but excluded from passenger topology because the captured municipal snapshot contains zero trips for them."
+  ]
+}

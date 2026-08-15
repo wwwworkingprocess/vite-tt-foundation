@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-legacy-all-v1",
+  "generatedAt": "2026-08-13T22:32:00+02:00",
+  "sources": [
+    {
+      "sourceId": "murcia-rayo-accepted-components",
+      "name": "Accepted Murcia component scenarios containing R12, R14, R17, R20 and R80",
+      "sourceFile": "scenarios-murcia-circular-legacy-all-v1.zip",
+      "sha256": "4be3676a9f2dd16d827a7381ea191702ed90f48d87a5169fd810cf2825bd3e74",
+      "role": "Authoritative merge sources. Selected route and pattern objects, StopNodes and StopPlaces are exact-copied from already accepted component scenarios without source rediscovery."
+    }
+  ],
+  "mergeContract": {
+    "type": "pure-accepted-component-merge",
+    "components": [
+      {
+        "scenarioId": "murcia-central-rail-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "b7eb9b8c3fba7ddeffaff66d5d37eda352574ef0399227b239a94423b04e4ba1",
+        "selectedRoutes": [
+          "R17"
+        ],
+        "selectedUniqueStopNodes": 48
+      },
+      {
+        "scenarioId": "murcia-rayo-south-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "88138b43bb8db13020d88956c266dbce87069b649e062158b17c6c447f5db02b",
+        "selectedRoutes": [
+          "R12",
+          "R80"
+        ],
+        "selectedUniqueStopNodes": 69
+      },
+      {
+        "scenarioId": "murcia-rayo-north-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "70887cd8c6bf8d4b277cbb7971944aaa44b1718af51d8ae3c617bcc167e505c4",
+        "selectedRoutes": [
+          "R14",
+          "R20"
+        ],
+        "selectedUniqueStopNodes": 72
+      }
+    ],
+    "canonicalRouteOrder": [
+      "R12",
+      "R14",
+      "R17",
+      "R20",
+      "R80"
+    ],
+    "routeRediscovery": false,
+    "topologyReconciliation": false,
+    "coordinateRediscovery": false,
+    "newStopIdentitiesCreated": 0,
+    "sharedObjectConflictPolicy": "hard-fail",
+    "stopNodeOccurrences": 189,
+    "uniqueStopNodes": 164,
+    "collapsedStopNodeDuplicates": 25,
+    "stopPlaceOccurrences": 189,
+    "uniqueStopPlaces": 164,
+    "collapsedStopPlaceDuplicates": 25,
+    "sharedStopNodeExactComparisons": 25,
+    "sharedStopPlaceExactComparisons": 25,
+    "conflicts": 0
+  },
+  "settlementPolicy": {
+    "canonicalFields": "Copied exactly from accepted component settlement es-murcia.",
+    "packageLocalViewports": "Recomputed from all 164 merged routed StopPlace positions with 10 percent extent padding and a 0.003-degree minimum pad per axis.",
+    "settlementIds": [
+      "es-murcia"
+    ]
+  },
+  "warnings": [
+    "The Rayo family is a project packaging classification around public routes R12, R14, R17, R20 and R80; it does not alter operator topology.",
+    "The three source component scenarios remain catalogued and byte-for-byte unchanged.",
+    "murcia-central-rail-v1 is a mixed-family component; this merge copies only R17 and does not copy C5.",
+    "No authoritative application parser or repository test suite was available; Level 7 is not claimed."
+  ]
+}

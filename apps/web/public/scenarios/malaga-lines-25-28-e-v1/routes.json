@@ -1,0 +1,447 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-25-28-e-v1",
+  "routes": [
+    {
+      "routeId": "malaga-25",
+      "publicCode": "25",
+      "name": "Paseo del Parque - Campanillas - Maqueda",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-25-s01",
+          "directionLabel": " Paseo Parque",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 40
+          },
+          "stopNodeIds": [
+            "malaga-stop-2551",
+            "malaga-stop-2552",
+            "malaga-stop-2571",
+            "malaga-stop-2553",
+            "malaga-stop-2554",
+            "malaga-stop-2572",
+            "malaga-stop-2573",
+            "malaga-stop-2574",
+            "malaga-stop-2569",
+            "malaga-stop-2575",
+            "malaga-stop-2556",
+            "malaga-stop-2557",
+            "malaga-stop-2558",
+            "malaga-stop-2559",
+            "malaga-stop-2560",
+            "malaga-stop-2561",
+            "malaga-stop-2562",
+            "malaga-stop-2563",
+            "malaga-stop-2564",
+            "malaga-stop-2570",
+            "malaga-stop-2353",
+            "malaga-stop-2354",
+            "malaga-stop-2585",
+            "malaga-stop-6551",
+            "malaga-stop-562",
+            "malaga-stop-6553",
+            "malaga-stop-6502",
+            "malaga-stop-850",
+            "malaga-stop-2253",
+            "malaga-stop-472",
+            "malaga-stop-476",
+            "malaga-stop-473",
+            "malaga-stop-2055",
+            "malaga-stop-1460",
+            "malaga-stop-1461",
+            "malaga-stop-1462",
+            "malaga-stop-1463",
+            "malaga-stop-470",
+            "malaga-stop-366",
+            "malaga-stop-1601"
+          ]
+        },
+        {
+          "patternId": "malaga-line-25-s02",
+          "directionLabel": "Maqueda",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 40
+          },
+          "stopNodeIds": [
+            "malaga-stop-1601",
+            "malaga-stop-426",
+            "malaga-stop-1803",
+            "malaga-stop-425",
+            "malaga-stop-1402",
+            "malaga-stop-1403",
+            "malaga-stop-1404",
+            "malaga-stop-1405",
+            "malaga-stop-2003",
+            "malaga-stop-420",
+            "malaga-stop-2207",
+            "malaga-stop-421",
+            "malaga-stop-833",
+            "malaga-stop-2011",
+            "malaga-stop-2527",
+            "malaga-stop-6505",
+            "malaga-stop-511",
+            "malaga-stop-6501",
+            "malaga-stop-2580",
+            "malaga-stop-2310",
+            "malaga-stop-2311",
+            "malaga-stop-2530",
+            "malaga-stop-2505",
+            "malaga-stop-2506",
+            "malaga-stop-2507",
+            "malaga-stop-2508",
+            "malaga-stop-2509",
+            "malaga-stop-2510",
+            "malaga-stop-2511",
+            "malaga-stop-2512",
+            "malaga-stop-2513",
+            "malaga-stop-2519",
+            "malaga-stop-2520",
+            "malaga-stop-2522",
+            "malaga-stop-2523",
+            "malaga-stop-2524",
+            "malaga-stop-2515",
+            "malaga-stop-2516",
+            "malaga-stop-2517",
+            "malaga-stop-2551"
+          ]
+        },
+        {
+          "patternId": "malaga-line-25-s03",
+          "directionLabel": " Maqueda(Sin PTA)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 36
+          },
+          "stopNodeIds": [
+            "malaga-stop-1601",
+            "malaga-stop-426",
+            "malaga-stop-1803",
+            "malaga-stop-425",
+            "malaga-stop-1402",
+            "malaga-stop-1403",
+            "malaga-stop-1404",
+            "malaga-stop-1405",
+            "malaga-stop-2003",
+            "malaga-stop-420",
+            "malaga-stop-2207",
+            "malaga-stop-421",
+            "malaga-stop-833",
+            "malaga-stop-2011",
+            "malaga-stop-2527",
+            "malaga-stop-6505",
+            "malaga-stop-511",
+            "malaga-stop-6501",
+            "malaga-stop-2580",
+            "malaga-stop-2310",
+            "malaga-stop-2311",
+            "malaga-stop-2530",
+            "malaga-stop-2505",
+            "malaga-stop-2506",
+            "malaga-stop-2507",
+            "malaga-stop-2508",
+            "malaga-stop-2509",
+            "malaga-stop-2510",
+            "malaga-stop-2511",
+            "malaga-stop-2512",
+            "malaga-stop-2513",
+            "malaga-stop-2514",
+            "malaga-stop-2515",
+            "malaga-stop-2516",
+            "malaga-stop-2517",
+            "malaga-stop-2551"
+          ]
+        },
+        {
+          "patternId": "malaga-line-25-s04",
+          "directionLabel": " P. Parque (Sin PTA)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 36
+          },
+          "stopNodeIds": [
+            "malaga-stop-2551",
+            "malaga-stop-2552",
+            "malaga-stop-2571",
+            "malaga-stop-2553",
+            "malaga-stop-2576",
+            "malaga-stop-2555",
+            "malaga-stop-2556",
+            "malaga-stop-2557",
+            "malaga-stop-2558",
+            "malaga-stop-2559",
+            "malaga-stop-2560",
+            "malaga-stop-2561",
+            "malaga-stop-2562",
+            "malaga-stop-2563",
+            "malaga-stop-2564",
+            "malaga-stop-2570",
+            "malaga-stop-2353",
+            "malaga-stop-2354",
+            "malaga-stop-2585",
+            "malaga-stop-6551",
+            "malaga-stop-562",
+            "malaga-stop-6553",
+            "malaga-stop-6502",
+            "malaga-stop-850",
+            "malaga-stop-2253",
+            "malaga-stop-472",
+            "malaga-stop-476",
+            "malaga-stop-473",
+            "malaga-stop-2055",
+            "malaga-stop-1460",
+            "malaga-stop-1461",
+            "malaga-stop-1462",
+            "malaga-stop-1463",
+            "malaga-stop-470",
+            "malaga-stop-366",
+            "malaga-stop-1601"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "25",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "25",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "25",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=25"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-28",
+      "publicCode": "28",
+      "name": "Santa Águeda - Campanillas - Bda. Los Nuñez",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-28-s01",
+          "directionLabel": "Santa Águeda",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 35
+          },
+          "stopNodeIds": [
+            "malaga-stop-2851",
+            "malaga-stop-2852",
+            "malaga-stop-2866",
+            "malaga-stop-2853",
+            "malaga-stop-2867",
+            "malaga-stop-2868",
+            "malaga-stop-2869",
+            "malaga-stop-2854",
+            "malaga-stop-2870",
+            "malaga-stop-2871",
+            "malaga-stop-2855",
+            "malaga-stop-2872",
+            "malaga-stop-2873",
+            "malaga-stop-2874",
+            "malaga-stop-2856",
+            "malaga-stop-2857",
+            "malaga-stop-2858",
+            "malaga-stop-2859",
+            "malaga-stop-2507",
+            "malaga-stop-2508",
+            "malaga-stop-2509",
+            "malaga-stop-2510",
+            "malaga-stop-2511",
+            "malaga-stop-2512",
+            "malaga-stop-2860",
+            "malaga-stop-2877",
+            "malaga-stop-2876",
+            "malaga-stop-2879",
+            "malaga-stop-2878",
+            "malaga-stop-2861",
+            "malaga-stop-2862",
+            "malaga-stop-2863",
+            "malaga-stop-2864",
+            "malaga-stop-2865",
+            "malaga-stop-2801"
+          ]
+        },
+        {
+          "patternId": "malaga-line-28-s02",
+          "directionLabel": "Los Nuñez",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 35
+          },
+          "stopNodeIds": [
+            "malaga-stop-2801",
+            "malaga-stop-2802",
+            "malaga-stop-2803",
+            "malaga-stop-2804",
+            "malaga-stop-2805",
+            "malaga-stop-2806",
+            "malaga-stop-2828",
+            "malaga-stop-2829",
+            "malaga-stop-2816",
+            "malaga-stop-2807",
+            "malaga-stop-2827",
+            "malaga-stop-2557",
+            "malaga-stop-2558",
+            "malaga-stop-2559",
+            "malaga-stop-2560",
+            "malaga-stop-2561",
+            "malaga-stop-2562",
+            "malaga-stop-2817",
+            "malaga-stop-2809",
+            "malaga-stop-2810",
+            "malaga-stop-2811",
+            "malaga-stop-2818",
+            "malaga-stop-2819",
+            "malaga-stop-2820",
+            "malaga-stop-2812",
+            "malaga-stop-2821",
+            "malaga-stop-2822",
+            "malaga-stop-2813",
+            "malaga-stop-2823",
+            "malaga-stop-2824",
+            "malaga-stop-2825",
+            "malaga-stop-2814",
+            "malaga-stop-2826",
+            "malaga-stop-2815",
+            "malaga-stop-2851"
+          ]
+        },
+        {
+          "patternId": "malaga-line-28-s03",
+          "directionLabel": "Los Nuñez",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "malaga-stop-2562",
+            "malaga-stop-2817",
+            "malaga-stop-2809",
+            "malaga-stop-2810",
+            "malaga-stop-2811",
+            "malaga-stop-2818",
+            "malaga-stop-2819",
+            "malaga-stop-2820",
+            "malaga-stop-2812",
+            "malaga-stop-2821",
+            "malaga-stop-2822",
+            "malaga-stop-2813",
+            "malaga-stop-2823",
+            "malaga-stop-2824",
+            "malaga-stop-2825",
+            "malaga-stop-2814",
+            "malaga-stop-2826",
+            "malaga-stop-2815",
+            "malaga-stop-2851"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "28",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "28",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "28",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=28"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-e",
+      "publicCode": "E",
+      "name": "Paseo del Parque - PTA  (Exprés)",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-e-s01",
+          "directionLabel": "PTA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "malaga-stop-1601",
+            "malaga-stop-426",
+            "malaga-stop-1803",
+            "malaga-stop-425",
+            "malaga-stop-1402",
+            "malaga-stop-1403",
+            "malaga-stop-1404",
+            "malaga-stop-1405",
+            "malaga-stop-2003",
+            "malaga-stop-2519",
+            "malaga-stop-2520",
+            "malaga-stop-2528",
+            "malaga-stop-2529",
+            "malaga-stop-2583"
+          ]
+        },
+        {
+          "patternId": "malaga-line-e-s02",
+          "directionLabel": " Paseo del Parque",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "malaga-stop-2583",
+            "malaga-stop-2584",
+            "malaga-stop-2569",
+            "malaga-stop-2575",
+            "malaga-stop-2055",
+            "malaga-stop-1460",
+            "malaga-stop-1461",
+            "malaga-stop-1462",
+            "malaga-stop-1463",
+            "malaga-stop-470",
+            "malaga-stop-366",
+            "malaga-stop-1601"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "70",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "70",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "70",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=70"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1710 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-core-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5000",
+      "name": "LA BUHARDILLA",
+      "position": {
+        "latitude": 37.6284305313995,
+        "longitude": -0.991599202436984
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5001",
+      "name": "VEREDA SAN FELIX-CALLE JOVELLANOS",
+      "position": {
+        "latitude": 37.6296863558781,
+        "longitude": -0.990726886494669
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5002",
+      "name": "VEREDA SAN FELIX VETERINARIA I",
+      "position": {
+        "latitude": 37.6303259421757,
+        "longitude": -0.992828609651336
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5003",
+      "name": "CENTRO DE SALUD LOS BARREROS",
+      "position": {
+        "latitude": 37.6316366915276,
+        "longitude": -0.995184285046063
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5004",
+      "name": "PARQUE DE LOS BARREROS",
+      "position": {
+        "latitude": 37.6306281202061,
+        "longitude": -0.996820439751636
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5005",
+      "name": "CARRETERA DE LA PALMA 111",
+      "position": {
+        "latitude": 37.6285225266805,
+        "longitude": -0.995947834032299
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5006",
+      "name": "CARRETERA DE LA PALMA-PLAZA HOSPITAL DE CARIDAD I",
+      "position": {
+        "latitude": 37.6251117036414,
+        "longitude": -0.997285803150539
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5007",
+      "name": "RAMÓN Y CAJAL CALLE GUIPÚZCOA",
+      "position": {
+        "latitude": 37.6235508155528,
+        "longitude": -0.996647881563414
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5008",
+      "name": "RAMÓN Y CAJAL CALLE SANTANDER",
+      "position": {
+        "latitude": 37.6218728225101,
+        "longitude": -0.996013130111708
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5009",
+      "name": "RAMÓN Y CAJAL PLAZA OCEANO PACÍFICO",
+      "position": {
+        "latitude": 37.6197409700979,
+        "longitude": -0.995186662671798
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5010",
+      "name": "RAMÓN Y CAJAL COLEGIO ANTONIO ULLOA",
+      "position": {
+        "latitude": 37.6179263122096,
+        "longitude": -0.994465009846602
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5011",
+      "name": "CALLE RAMON Y CAJAL MERCADONA I",
+      "position": {
+        "latitude": 37.6162935404622,
+        "longitude": -0.993840463523004
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5012",
+      "name": "RAMÓN Y CAJAL CALLE TRAFALGAR",
+      "position": {
+        "latitude": 37.6131730769333,
+        "longitude": -0.992644190079172
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5013",
+      "name": "RAMÓN Y CAJAL IGLESIA SAN VICENTE DE PAUL",
+      "position": {
+        "latitude": 37.6116039296587,
+        "longitude": -0.992051992779612
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5014",
+      "name": "RAMÓN Y CAJAL TRECE",
+      "position": {
+        "latitude": 37.6090183830252,
+        "longitude": -0.991045370206606
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5015",
+      "name": "RAMÓN Y CAJAL PASEO ALFONSO TRECE",
+      "position": {
+        "latitude": 37.6071866513774,
+        "longitude": -0.990381008860652
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5016",
+      "name": "PASEO ALFONSO TRECE BINGO CARTAGENA",
+      "position": {
+        "latitude": 37.606658784087,
+        "longitude": -0.986906291642173
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5017",
+      "name": "PASEO ALFONSO TRECE EDIFICIO ONCE",
+      "position": {
+        "latitude": 37.6067711431536,
+        "longitude": -0.983459644467103
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5018",
+      "name": "PASEO ALFONSO TRECE UPCT",
+      "position": {
+        "latitude": 37.6069021724372,
+        "longitude": -0.979004318391238
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5074",
+      "name": "PLAZA PUERTAS DE SAN JOSE SAN DIEGO",
+      "position": {
+        "latitude": 37.6038598481608,
+        "longitude": -0.978169156561924
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5020",
+      "name": "CASAS DE CLARES I",
+      "position": {
+        "latitude": 37.6309947402714,
+        "longitude": -0.979745541278479
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5021",
+      "name": "ROTONDA VEREDA DE SAN FELIX I",
+      "position": {
+        "latitude": 37.6308415509882,
+        "longitude": -0.983432375997309
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5022",
+      "name": "CRUCE SAN FELIX I",
+      "position": {
+        "latitude": 37.6298138333099,
+        "longitude": -0.9865762345991
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5023",
+      "name": "VEREDA SAN FELIX-CALLE SEO I",
+      "position": {
+        "latitude": 37.6296039847387,
+        "longitude": -0.988009624838533
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5024",
+      "name": "RENFE",
+      "position": {
+        "latitude": 37.6051798976396,
+        "longitude": -0.975267572527541
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5025",
+      "name": "PASEO ALFONSO TRECE ROSELL",
+      "position": {
+        "latitude": 37.6071663170141,
+        "longitude": -0.976539049555019
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5026",
+      "name": "PASEO ALFONSO TRECE ASAMBLEA REGIONAL",
+      "position": {
+        "latitude": 37.6070441628415,
+        "longitude": -0.978875870019052
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5027",
+      "name": "PASEO ALFONSO TRECE TIERNO GALVÁN",
+      "position": {
+        "latitude": 37.606900348911,
+        "longitude": -0.983637398116191
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5028",
+      "name": "PASEO ALFONSO TRECE JUAN FERNÁNDEZ",
+      "position": {
+        "latitude": 37.6067756923939,
+        "longitude": -0.986891811843133
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5029",
+      "name": "CALLE JUAN FERNÁNDEZ COLEGIO FRANCISCANOS",
+      "position": {
+        "latitude": 37.6091632916701,
+        "longitude": -0.987914926035391
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5030",
+      "name": "CALLE JUAN FERNÁNDEZ PARQUE DE LOS JUNCOS",
+      "position": {
+        "latitude": 37.6110984949451,
+        "longitude": -0.988304573520234
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5031",
+      "name": "CALLE JUAN FERNÁNDEZ PLAZA DE LAS SALESAS",
+      "position": {
+        "latitude": 37.6128441467523,
+        "longitude": -0.988676689037899
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5032",
+      "name": "CALLE JUAN FERNÁNDEZ CALLE JORGE JUAN",
+      "position": {
+        "latitude": 37.6147162928332,
+        "longitude": -0.989068070026712
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5033",
+      "name": "JORGE JUAN EL CORTE INGLÉS",
+      "position": {
+        "latitude": 37.6148935725218,
+        "longitude": -0.992597921305146
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5034",
+      "name": "RAMÓN Y CAJAL EDIFICIO CERVANTES",
+      "position": {
+        "latitude": 37.6160924790752,
+        "longitude": -0.993675930914601
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5035",
+      "name": "RAMÓN Y CAJAL EDIFICIO EUROPA",
+      "position": {
+        "latitude": 37.6178517463844,
+        "longitude": -0.99431973149054
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5036",
+      "name": "CALLE RAMON Y CAJAL KIOSKO ONCE V",
+      "position": {
+        "latitude": 37.6199567731828,
+        "longitude": -0.995158205916075
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5037",
+      "name": "CALLE RAMON Y CAJAL COCINAS DECOR V",
+      "position": {
+        "latitude": 37.6219161299422,
+        "longitude": -0.995909997003045
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5038",
+      "name": "CALLE RAMON Y CAJAL SAN REMO V",
+      "position": {
+        "latitude": 37.6235763001654,
+        "longitude": -0.996556555242321
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5039",
+      "name": "CARRETERA DE LA PALMA -HOSPITAL DE CARIDAD V",
+      "position": {
+        "latitude": 37.6248270757465,
+        "longitude": -0.996976190033378
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5040",
+      "name": "CRUCE CARRETERA DE LA PALMA-MEDIA SALA",
+      "position": {
+        "latitude": 37.6285646789837,
+        "longitude": -0.99577673641406
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5041",
+      "name": "ROTONDA CARRETERA DE LA PALMA",
+      "position": {
+        "latitude": 37.631121617808,
+        "longitude": -0.994042324141462
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5042",
+      "name": "VEREDA SAN FELIX VETERINARIA V",
+      "position": {
+        "latitude": 37.6303182836205,
+        "longitude": -0.992908134686671
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5043",
+      "name": "VEREDA DE SAN FÉLIX KIOSKO",
+      "position": {
+        "latitude": 37.6295970497188,
+        "longitude": -0.990774616479559
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5044",
+      "name": "VEREDA SAN FELIX-CALLE SEO V",
+      "position": {
+        "latitude": 37.6295334681593,
+        "longitude": -0.988102175883453
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5045",
+      "name": "VEREDA DE SAN FÉLIX SAN FÉLIX",
+      "position": {
+        "latitude": 37.6297413844221,
+        "longitude": -0.986555527564098
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5046",
+      "name": "ROTONDA VEREDA DE SAN FELIX V",
+      "position": {
+        "latitude": 37.630810848027,
+        "longitude": -0.983217910506519
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5047",
+      "name": "VEREDA DE SAN FÉLIX CASAS DE CLARES",
+      "position": {
+        "latitude": 37.6309387536937,
+        "longitude": -0.97963374397158
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5048",
+      "name": "CAMINO DE LA CALERA",
+      "position": {
+        "latitude": 37.6273485612703,
+        "longitude": -0.987866494806954
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5049",
+      "name": "CORREOS BARRIO PERAL",
+      "position": {
+        "latitude": 37.6259720561613,
+        "longitude": -0.989059339714388
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5050",
+      "name": "CALLE SUBMARINO VÍA VERDE",
+      "position": {
+        "latitude": 37.6240201934248,
+        "longitude": -0.988749373811734
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5051",
+      "name": "CALLE SUBMARINO FARMACIA",
+      "position": {
+        "latitude": 37.6231015915051,
+        "longitude": -0.98878546375062
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5052",
+      "name": "CALLE SUBMARINO CALLE ACACIAS",
+      "position": {
+        "latitude": 37.6212885139848,
+        "longitude": -0.988687040662999
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5053",
+      "name": "CALLE SUBMARINO HOGAR DEL PENSIONISTA",
+      "position": {
+        "latitude": 37.6196571368753,
+        "longitude": -0.988674360351057
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5054",
+      "name": "CALLE SUBMARINO CALLE GABRIELA MISTRAL",
+      "position": {
+        "latitude": 37.6177929744509,
+        "longitude": -0.989279738460721
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5055",
+      "name": "JORGE JUAN ASOCIACIÓN DE VECINOS CIUDAD JARDIN",
+      "position": {
+        "latitude": 37.6153061714471,
+        "longitude": -0.990366341249903
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5056",
+      "name": "CALLE ESPARTA I",
+      "position": {
+        "latitude": 37.6079903352196,
+        "longitude": -0.977819420877346
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5057",
+      "name": "APANDA",
+      "position": {
+        "latitude": 37.6101875935841,
+        "longitude": -0.979300539158273
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5058",
+      "name": "AVENIDA DE MURCIA CASAS DEL SINDICATO",
+      "position": {
+        "latitude": 37.6116888070348,
+        "longitude": -0.980132192385954
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5059",
+      "name": "CASAS DEL SINDICATO AVDA.MURCIA",
+      "position": {
+        "latitude": 37.6126654326907,
+        "longitude": -0.98085345242484
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5060",
+      "name": "MUEBLES BLAYA GALLEGO",
+      "position": {
+        "latitude": 37.6138937133045,
+        "longitude": -0.977852091968564
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5061",
+      "name": "COLEGIO LAS 600",
+      "position": {
+        "latitude": 37.614929292683,
+        "longitude": -0.97728024884294
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5062",
+      "name": "BARRIADA VIRGEN DE LA CARIDAD PARQUE CENDRÁ BADÍA",
+      "position": {
+        "latitude": 37.6157458506144,
+        "longitude": -0.978651592243119
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5063",
+      "name": "BARRIADA VIRGEN DE LA CARIDAD MUEBLES EL CINE",
+      "position": {
+        "latitude": 37.6145350429564,
+        "longitude": -0.978990261136038
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5064",
+      "name": "PISTA DE ATLETISMO",
+      "position": {
+        "latitude": 37.6115816832983,
+        "longitude": -0.980191732975239
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5065",
+      "name": "CALLE ESPARTA V",
+      "position": {
+        "latitude": 37.607993634718,
+        "longitude": -0.978011905173231
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5066",
+      "name": "CIUDAD JARDIN",
+      "position": {
+        "latitude": 37.6177638275251,
+        "longitude": -0.989155900672702
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5067",
+      "name": "BAR FRAN CALLE SUBMARINO V",
+      "position": {
+        "latitude": 37.6196465841888,
+        "longitude": -0.988584007538851
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5068",
+      "name": "MUEBLES OLIVA V",
+      "position": {
+        "latitude": 37.6216304240463,
+        "longitude": -0.988655165336271
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5069",
+      "name": "CAM",
+      "position": {
+        "latitude": 37.6231627149047,
+        "longitude": -0.988670514420814
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5070",
+      "name": "PARQUE JOSÉ MARÍA LA PUERTA",
+      "position": {
+        "latitude": 37.6239182458567,
+        "longitude": -0.984888489975058
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5071",
+      "name": "CASAS DE REPESA",
+      "position": {
+        "latitude": 37.6247641252468,
+        "longitude": -0.98323406486145
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5072",
+      "name": "FERNAN NUÑEZ",
+      "position": {
+        "latitude": 37.6268113936834,
+        "longitude": -0.984379783984094
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5073",
+      "name": "UPPER JOSE Mª DE LA PUERTA",
+      "position": {
+        "latitude": 37.6281142956868,
+        "longitude": -0.985738288822845
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "cartagena-stop-5000",
+      "stopPlaceId": "cartagena-place-5000",
+      "settlementId": "es-cartagena",
+      "name": "LA BUHARDILLA",
+      "position": {
+        "latitude": 37.6284305313995,
+        "longitude": -0.991599202436984
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5001",
+      "stopPlaceId": "cartagena-place-5001",
+      "settlementId": "es-cartagena",
+      "name": "VEREDA SAN FELIX-CALLE JOVELLANOS",
+      "position": {
+        "latitude": 37.6296863558781,
+        "longitude": -0.990726886494669
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5002",
+      "stopPlaceId": "cartagena-place-5002",
+      "settlementId": "es-cartagena",
+      "name": "VEREDA SAN FELIX VETERINARIA I",
+      "position": {
+        "latitude": 37.6303259421757,
+        "longitude": -0.992828609651336
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5003",
+      "stopPlaceId": "cartagena-place-5003",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO DE SALUD LOS BARREROS",
+      "position": {
+        "latitude": 37.6316366915276,
+        "longitude": -0.995184285046063
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5004",
+      "stopPlaceId": "cartagena-place-5004",
+      "settlementId": "es-cartagena",
+      "name": "PARQUE DE LOS BARREROS",
+      "position": {
+        "latitude": 37.6306281202061,
+        "longitude": -0.996820439751636
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5005",
+      "stopPlaceId": "cartagena-place-5005",
+      "settlementId": "es-cartagena",
+      "name": "CARRETERA DE LA PALMA 111",
+      "position": {
+        "latitude": 37.6285225266805,
+        "longitude": -0.995947834032299
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5006",
+      "stopPlaceId": "cartagena-place-5006",
+      "settlementId": "es-cartagena",
+      "name": "CARRETERA DE LA PALMA-PLAZA HOSPITAL DE CARIDAD I",
+      "position": {
+        "latitude": 37.6251117036414,
+        "longitude": -0.997285803150539
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5007",
+      "stopPlaceId": "cartagena-place-5007",
+      "settlementId": "es-cartagena",
+      "name": "RAMÓN Y CAJAL CALLE GUIPÚZCOA",
+      "position": {
+        "latitude": 37.6235508155528,
+        "longitude": -0.996647881563414
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5008",
+      "stopPlaceId": "cartagena-place-5008",
+      "settlementId": "es-cartagena",
+      "name": "RAMÓN Y CAJAL CALLE SANTANDER",
+      "position": {
+        "latitude": 37.6218728225101,
+        "longitude": -0.996013130111708
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5009",
+      "stopPlaceId": "cartagena-place-5009",
+      "settlementId": "es-cartagena",
+      "name": "RAMÓN Y CAJAL PLAZA OCEANO PACÍFICO",
+      "position": {
+        "latitude": 37.6197409700979,
+        "longitude": -0.995186662671798
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5010",
+      "stopPlaceId": "cartagena-place-5010",
+      "settlementId": "es-cartagena",
+      "name": "RAMÓN Y CAJAL COLEGIO ANTONIO ULLOA",
+      "position": {
+        "latitude": 37.6179263122096,
+        "longitude": -0.994465009846602
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5011",
+      "stopPlaceId": "cartagena-place-5011",
+      "settlementId": "es-cartagena",
+      "name": "CALLE RAMON Y CAJAL MERCADONA I",
+      "position": {
+        "latitude": 37.6162935404622,
+        "longitude": -0.993840463523004
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5012",
+      "stopPlaceId": "cartagena-place-5012",
+      "settlementId": "es-cartagena",
+      "name": "RAMÓN Y CAJAL CALLE TRAFALGAR",
+      "position": {
+        "latitude": 37.6131730769333,
+        "longitude": -0.992644190079172
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5013",
+      "stopPlaceId": "cartagena-place-5013",
+      "settlementId": "es-cartagena",
+      "name": "RAMÓN Y CAJAL IGLESIA SAN VICENTE DE PAUL",
+      "position": {
+        "latitude": 37.6116039296587,
+        "longitude": -0.992051992779612
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5014",
+      "stopPlaceId": "cartagena-place-5014",
+      "settlementId": "es-cartagena",
+      "name": "RAMÓN Y CAJAL TRECE",
+      "position": {
+        "latitude": 37.6090183830252,
+        "longitude": -0.991045370206606
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5015",
+      "stopPlaceId": "cartagena-place-5015",
+      "settlementId": "es-cartagena",
+      "name": "RAMÓN Y CAJAL PASEO ALFONSO TRECE",
+      "position": {
+        "latitude": 37.6071866513774,
+        "longitude": -0.990381008860652
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5016",
+      "stopPlaceId": "cartagena-place-5016",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE BINGO CARTAGENA",
+      "position": {
+        "latitude": 37.606658784087,
+        "longitude": -0.986906291642173
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5017",
+      "stopPlaceId": "cartagena-place-5017",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE EDIFICIO ONCE",
+      "position": {
+        "latitude": 37.6067711431536,
+        "longitude": -0.983459644467103
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5018",
+      "stopPlaceId": "cartagena-place-5018",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE UPCT",
+      "position": {
+        "latitude": 37.6069021724372,
+        "longitude": -0.979004318391238
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5074",
+      "stopPlaceId": "cartagena-place-5074",
+      "settlementId": "es-cartagena",
+      "name": "PLAZA PUERTAS DE SAN JOSE SAN DIEGO",
+      "position": {
+        "latitude": 37.6038598481608,
+        "longitude": -0.978169156561924
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5020",
+      "stopPlaceId": "cartagena-place-5020",
+      "settlementId": "es-cartagena",
+      "name": "CASAS DE CLARES I",
+      "position": {
+        "latitude": 37.6309947402714,
+        "longitude": -0.979745541278479
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5021",
+      "stopPlaceId": "cartagena-place-5021",
+      "settlementId": "es-cartagena",
+      "name": "ROTONDA VEREDA DE SAN FELIX I",
+      "position": {
+        "latitude": 37.6308415509882,
+        "longitude": -0.983432375997309
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5022",
+      "stopPlaceId": "cartagena-place-5022",
+      "settlementId": "es-cartagena",
+      "name": "CRUCE SAN FELIX I",
+      "position": {
+        "latitude": 37.6298138333099,
+        "longitude": -0.9865762345991
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5023",
+      "stopPlaceId": "cartagena-place-5023",
+      "settlementId": "es-cartagena",
+      "name": "VEREDA SAN FELIX-CALLE SEO I",
+      "position": {
+        "latitude": 37.6296039847387,
+        "longitude": -0.988009624838533
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5024",
+      "stopPlaceId": "cartagena-place-5024",
+      "settlementId": "es-cartagena",
+      "name": "RENFE",
+      "position": {
+        "latitude": 37.6051798976396,
+        "longitude": -0.975267572527541
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5025",
+      "stopPlaceId": "cartagena-place-5025",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE ROSELL",
+      "position": {
+        "latitude": 37.6071663170141,
+        "longitude": -0.976539049555019
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5026",
+      "stopPlaceId": "cartagena-place-5026",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE ASAMBLEA REGIONAL",
+      "position": {
+        "latitude": 37.6070441628415,
+        "longitude": -0.978875870019052
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5027",
+      "stopPlaceId": "cartagena-place-5027",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE TIERNO GALVÁN",
+      "position": {
+        "latitude": 37.606900348911,
+        "longitude": -0.983637398116191
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5028",
+      "stopPlaceId": "cartagena-place-5028",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE JUAN FERNÁNDEZ",
+      "position": {
+        "latitude": 37.6067756923939,
+        "longitude": -0.986891811843133
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5029",
+      "stopPlaceId": "cartagena-place-5029",
+      "settlementId": "es-cartagena",
+      "name": "CALLE JUAN FERNÁNDEZ COLEGIO FRANCISCANOS",
+      "position": {
+        "latitude": 37.6091632916701,
+        "longitude": -0.987914926035391
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5030",
+      "stopPlaceId": "cartagena-place-5030",
+      "settlementId": "es-cartagena",
+      "name": "CALLE JUAN FERNÁNDEZ PARQUE DE LOS JUNCOS",
+      "position": {
+        "latitude": 37.6110984949451,
+        "longitude": -0.988304573520234
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5031",
+      "stopPlaceId": "cartagena-place-5031",
+      "settlementId": "es-cartagena",
+      "name": "CALLE JUAN FERNÁNDEZ PLAZA DE LAS SALESAS",
+      "position": {
+        "latitude": 37.6128441467523,
+        "longitude": -0.988676689037899
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5032",
+      "stopPlaceId": "cartagena-place-5032",
+      "settlementId": "es-cartagena",
+      "name": "CALLE JUAN FERNÁNDEZ CALLE JORGE JUAN",
+      "position": {
+        "latitude": 37.6147162928332,
+        "longitude": -0.989068070026712
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5033",
+      "stopPlaceId": "cartagena-place-5033",
+      "settlementId": "es-cartagena",
+      "name": "JORGE JUAN EL CORTE INGLÉS",
+      "position": {
+        "latitude": 37.6148935725218,
+        "longitude": -0.992597921305146
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5034",
+      "stopPlaceId": "cartagena-place-5034",
+      "settlementId": "es-cartagena",
+      "name": "RAMÓN Y CAJAL EDIFICIO CERVANTES",
+      "position": {
+        "latitude": 37.6160924790752,
+        "longitude": -0.993675930914601
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5035",
+      "stopPlaceId": "cartagena-place-5035",
+      "settlementId": "es-cartagena",
+      "name": "RAMÓN Y CAJAL EDIFICIO EUROPA",
+      "position": {
+        "latitude": 37.6178517463844,
+        "longitude": -0.99431973149054
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5036",
+      "stopPlaceId": "cartagena-place-5036",
+      "settlementId": "es-cartagena",
+      "name": "CALLE RAMON Y CAJAL KIOSKO ONCE V",
+      "position": {
+        "latitude": 37.6199567731828,
+        "longitude": -0.995158205916075
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5037",
+      "stopPlaceId": "cartagena-place-5037",
+      "settlementId": "es-cartagena",
+      "name": "CALLE RAMON Y CAJAL COCINAS DECOR V",
+      "position": {
+        "latitude": 37.6219161299422,
+        "longitude": -0.995909997003045
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5038",
+      "stopPlaceId": "cartagena-place-5038",
+      "settlementId": "es-cartagena",
+      "name": "CALLE RAMON Y CAJAL SAN REMO V",
+      "position": {
+        "latitude": 37.6235763001654,
+        "longitude": -0.996556555242321
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5039",
+      "stopPlaceId": "cartagena-place-5039",
+      "settlementId": "es-cartagena",
+      "name": "CARRETERA DE LA PALMA -HOSPITAL DE CARIDAD V",
+      "position": {
+        "latitude": 37.6248270757465,
+        "longitude": -0.996976190033378
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5040",
+      "stopPlaceId": "cartagena-place-5040",
+      "settlementId": "es-cartagena",
+      "name": "CRUCE CARRETERA DE LA PALMA-MEDIA SALA",
+      "position": {
+        "latitude": 37.6285646789837,
+        "longitude": -0.99577673641406
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5041",
+      "stopPlaceId": "cartagena-place-5041",
+      "settlementId": "es-cartagena",
+      "name": "ROTONDA CARRETERA DE LA PALMA",
+      "position": {
+        "latitude": 37.631121617808,
+        "longitude": -0.994042324141462
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5042",
+      "stopPlaceId": "cartagena-place-5042",
+      "settlementId": "es-cartagena",
+      "name": "VEREDA SAN FELIX VETERINARIA V",
+      "position": {
+        "latitude": 37.6303182836205,
+        "longitude": -0.992908134686671
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5043",
+      "stopPlaceId": "cartagena-place-5043",
+      "settlementId": "es-cartagena",
+      "name": "VEREDA DE SAN FÉLIX KIOSKO",
+      "position": {
+        "latitude": 37.6295970497188,
+        "longitude": -0.990774616479559
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5044",
+      "stopPlaceId": "cartagena-place-5044",
+      "settlementId": "es-cartagena",
+      "name": "VEREDA SAN FELIX-CALLE SEO V",
+      "position": {
+        "latitude": 37.6295334681593,
+        "longitude": -0.988102175883453
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5045",
+      "stopPlaceId": "cartagena-place-5045",
+      "settlementId": "es-cartagena",
+      "name": "VEREDA DE SAN FÉLIX SAN FÉLIX",
+      "position": {
+        "latitude": 37.6297413844221,
+        "longitude": -0.986555527564098
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5046",
+      "stopPlaceId": "cartagena-place-5046",
+      "settlementId": "es-cartagena",
+      "name": "ROTONDA VEREDA DE SAN FELIX V",
+      "position": {
+        "latitude": 37.630810848027,
+        "longitude": -0.983217910506519
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5047",
+      "stopPlaceId": "cartagena-place-5047",
+      "settlementId": "es-cartagena",
+      "name": "VEREDA DE SAN FÉLIX CASAS DE CLARES",
+      "position": {
+        "latitude": 37.6309387536937,
+        "longitude": -0.97963374397158
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5048",
+      "stopPlaceId": "cartagena-place-5048",
+      "settlementId": "es-cartagena",
+      "name": "CAMINO DE LA CALERA",
+      "position": {
+        "latitude": 37.6273485612703,
+        "longitude": -0.987866494806954
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5049",
+      "stopPlaceId": "cartagena-place-5049",
+      "settlementId": "es-cartagena",
+      "name": "CORREOS BARRIO PERAL",
+      "position": {
+        "latitude": 37.6259720561613,
+        "longitude": -0.989059339714388
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5050",
+      "stopPlaceId": "cartagena-place-5050",
+      "settlementId": "es-cartagena",
+      "name": "CALLE SUBMARINO VÍA VERDE",
+      "position": {
+        "latitude": 37.6240201934248,
+        "longitude": -0.988749373811734
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5051",
+      "stopPlaceId": "cartagena-place-5051",
+      "settlementId": "es-cartagena",
+      "name": "CALLE SUBMARINO FARMACIA",
+      "position": {
+        "latitude": 37.6231015915051,
+        "longitude": -0.98878546375062
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5052",
+      "stopPlaceId": "cartagena-place-5052",
+      "settlementId": "es-cartagena",
+      "name": "CALLE SUBMARINO CALLE ACACIAS",
+      "position": {
+        "latitude": 37.6212885139848,
+        "longitude": -0.988687040662999
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5053",
+      "stopPlaceId": "cartagena-place-5053",
+      "settlementId": "es-cartagena",
+      "name": "CALLE SUBMARINO HOGAR DEL PENSIONISTA",
+      "position": {
+        "latitude": 37.6196571368753,
+        "longitude": -0.988674360351057
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5054",
+      "stopPlaceId": "cartagena-place-5054",
+      "settlementId": "es-cartagena",
+      "name": "CALLE SUBMARINO CALLE GABRIELA MISTRAL",
+      "position": {
+        "latitude": 37.6177929744509,
+        "longitude": -0.989279738460721
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5055",
+      "stopPlaceId": "cartagena-place-5055",
+      "settlementId": "es-cartagena",
+      "name": "JORGE JUAN ASOCIACIÓN DE VECINOS CIUDAD JARDIN",
+      "position": {
+        "latitude": 37.6153061714471,
+        "longitude": -0.990366341249903
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5056",
+      "stopPlaceId": "cartagena-place-5056",
+      "settlementId": "es-cartagena",
+      "name": "CALLE ESPARTA I",
+      "position": {
+        "latitude": 37.6079903352196,
+        "longitude": -0.977819420877346
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5057",
+      "stopPlaceId": "cartagena-place-5057",
+      "settlementId": "es-cartagena",
+      "name": "APANDA",
+      "position": {
+        "latitude": 37.6101875935841,
+        "longitude": -0.979300539158273
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5058",
+      "stopPlaceId": "cartagena-place-5058",
+      "settlementId": "es-cartagena",
+      "name": "AVENIDA DE MURCIA CASAS DEL SINDICATO",
+      "position": {
+        "latitude": 37.6116888070348,
+        "longitude": -0.980132192385954
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5059",
+      "stopPlaceId": "cartagena-place-5059",
+      "settlementId": "es-cartagena",
+      "name": "CASAS DEL SINDICATO AVDA.MURCIA",
+      "position": {
+        "latitude": 37.6126654326907,
+        "longitude": -0.98085345242484
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5060",
+      "stopPlaceId": "cartagena-place-5060",
+      "settlementId": "es-cartagena",
+      "name": "MUEBLES BLAYA GALLEGO",
+      "position": {
+        "latitude": 37.6138937133045,
+        "longitude": -0.977852091968564
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5061",
+      "stopPlaceId": "cartagena-place-5061",
+      "settlementId": "es-cartagena",
+      "name": "COLEGIO LAS 600",
+      "position": {
+        "latitude": 37.614929292683,
+        "longitude": -0.97728024884294
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5062",
+      "stopPlaceId": "cartagena-place-5062",
+      "settlementId": "es-cartagena",
+      "name": "BARRIADA VIRGEN DE LA CARIDAD PARQUE CENDRÁ BADÍA",
+      "position": {
+        "latitude": 37.6157458506144,
+        "longitude": -0.978651592243119
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5063",
+      "stopPlaceId": "cartagena-place-5063",
+      "settlementId": "es-cartagena",
+      "name": "BARRIADA VIRGEN DE LA CARIDAD MUEBLES EL CINE",
+      "position": {
+        "latitude": 37.6145350429564,
+        "longitude": -0.978990261136038
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5064",
+      "stopPlaceId": "cartagena-place-5064",
+      "settlementId": "es-cartagena",
+      "name": "PISTA DE ATLETISMO",
+      "position": {
+        "latitude": 37.6115816832983,
+        "longitude": -0.980191732975239
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5065",
+      "stopPlaceId": "cartagena-place-5065",
+      "settlementId": "es-cartagena",
+      "name": "CALLE ESPARTA V",
+      "position": {
+        "latitude": 37.607993634718,
+        "longitude": -0.978011905173231
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5066",
+      "stopPlaceId": "cartagena-place-5066",
+      "settlementId": "es-cartagena",
+      "name": "CIUDAD JARDIN",
+      "position": {
+        "latitude": 37.6177638275251,
+        "longitude": -0.989155900672702
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5067",
+      "stopPlaceId": "cartagena-place-5067",
+      "settlementId": "es-cartagena",
+      "name": "BAR FRAN CALLE SUBMARINO V",
+      "position": {
+        "latitude": 37.6196465841888,
+        "longitude": -0.988584007538851
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5068",
+      "stopPlaceId": "cartagena-place-5068",
+      "settlementId": "es-cartagena",
+      "name": "MUEBLES OLIVA V",
+      "position": {
+        "latitude": 37.6216304240463,
+        "longitude": -0.988655165336271
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5069",
+      "stopPlaceId": "cartagena-place-5069",
+      "settlementId": "es-cartagena",
+      "name": "CAM",
+      "position": {
+        "latitude": 37.6231627149047,
+        "longitude": -0.988670514420814
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5070",
+      "stopPlaceId": "cartagena-place-5070",
+      "settlementId": "es-cartagena",
+      "name": "PARQUE JOSÉ MARÍA LA PUERTA",
+      "position": {
+        "latitude": 37.6239182458567,
+        "longitude": -0.984888489975058
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5071",
+      "stopPlaceId": "cartagena-place-5071",
+      "settlementId": "es-cartagena",
+      "name": "CASAS DE REPESA",
+      "position": {
+        "latitude": 37.6247641252468,
+        "longitude": -0.98323406486145
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5072",
+      "stopPlaceId": "cartagena-place-5072",
+      "settlementId": "es-cartagena",
+      "name": "FERNAN NUÑEZ",
+      "position": {
+        "latitude": 37.6268113936834,
+        "longitude": -0.984379783984094
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5073",
+      "stopPlaceId": "cartagena-place-5073",
+      "settlementId": "es-cartagena",
+      "name": "UPPER JOSE Mª DE LA PUERTA",
+      "position": {
+        "latitude": 37.6281142956868,
+        "longitude": -0.985738288822845
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

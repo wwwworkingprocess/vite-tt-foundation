@@ -1,0 +1,836 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-icue-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5267",
+      "name": "ALAMEDA CRUZ ROJA",
+      "position": {
+        "latitude": 37.6076709246198,
+        "longitude": -0.991829264966147
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5268",
+      "name": "ALAMEDA ALFONSO DÉCIMO EL SABIO",
+      "position": {
+        "latitude": 37.6102791047331,
+        "longitude": -0.993107167943403
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5269",
+      "name": "ALAMEDA TRAFALGAR",
+      "position": {
+        "latitude": 37.6117786882353,
+        "longitude": -0.993848517956828
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5349",
+      "name": "CALLE TRAFALGAR EDIFICIO TRAFALGAR",
+      "position": {
+        "latitude": 37.6124521125716,
+        "longitude": -0.993173363086074
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5350",
+      "name": "IGLESIA SAN FULGENCIO",
+      "position": {
+        "latitude": 37.6133713595022,
+        "longitude": -0.988413252038061
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5351",
+      "name": "PABELLÓN CENTRAL",
+      "position": {
+        "latitude": 37.6131478819216,
+        "longitude": -0.986935219521344
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-7548",
+      "name": "AVDA. REINA VICTORIA ESQ. ANGEL BRUNA",
+      "position": {
+        "latitude": 37.6098456537882,
+        "longitude": -0.985653559715651
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5352",
+      "name": "AVENIDA DE MURCIA CENIT",
+      "position": {
+        "latitude": 37.6119928456455,
+        "longitude": -0.983681107550287
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5353",
+      "name": "CENTRO DE SALUD PARCHÍS",
+      "position": {
+        "latitude": 37.6137014445424,
+        "longitude": -0.977676040946428
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5354",
+      "name": "SAN GINÉS",
+      "position": {
+        "latitude": 37.6111887106211,
+        "longitude": -0.974617490428117
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5355",
+      "name": "CALLE GRECIA",
+      "position": {
+        "latitude": 37.6089788989888,
+        "longitude": -0.974507522110901
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5356",
+      "name": "AVENIDA AMÉRICA",
+      "position": {
+        "latitude": 37.6047954086711,
+        "longitude": -0.975968968226503
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5019",
+      "name": "PLAZA PUERTAS DE SAN JOSE CAPITANES RIPOLL",
+      "position": {
+        "latitude": 37.6040999529306,
+        "longitude": -0.9779814189841
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5357",
+      "name": "EL LAGO",
+      "position": {
+        "latitude": 37.6026758095944,
+        "longitude": -0.981123596205292
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5358",
+      "name": "CALLE GISBERT",
+      "position": {
+        "latitude": 37.6016160872793,
+        "longitude": -0.981865840552723
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5359",
+      "name": "CALLE GISBERT ASCENSOR PANORAMICO",
+      "position": {
+        "latitude": 37.5998091027378,
+        "longitude": -0.98054414998662
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5360",
+      "name": "CASA DEL MAR",
+      "position": {
+        "latitude": 37.5984355528674,
+        "longitude": -0.979799767824526
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5361",
+      "name": "MURALLA DEL MAR",
+      "position": {
+        "latitude": 37.5977806717541,
+        "longitude": -0.984189440736054
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-7549",
+      "name": "CENTRO SALUD MENTAL",
+      "position": {
+        "latitude": 37.5988932736382,
+        "longitude": -0.987070319976554
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5362",
+      "name": "PLAZA DEL REY-PLAZA CASTELLINI",
+      "position": {
+        "latitude": 37.601561531116,
+        "longitude": -0.988697434942647
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5363",
+      "name": "CALLE REAL",
+      "position": {
+        "latitude": 37.6037374788596,
+        "longitude": -0.991051528251773
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5364",
+      "name": "CASA DEL NIÑO",
+      "position": {
+        "latitude": 37.6045703507049,
+        "longitude": -0.992331767676849
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5365",
+      "name": "CALLE SERRETA",
+      "position": {
+        "latitude": 37.6033600921965,
+        "longitude": -0.983721671353066
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6668",
+      "name": "P.PUERTAS S.JOSE",
+      "position": {
+        "latitude": 37.6033330139953,
+        "longitude": -0.977401847540761
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5056",
+      "name": "CALLE ESPARTA I",
+      "position": {
+        "latitude": 37.6079903352196,
+        "longitude": -0.977819420877346
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5075",
+      "name": "AYUNTAMIENTO CT (URBANISMO-CONSUMO-ESTADISTICA) V",
+      "position": {
+        "latitude": 37.6106327132164,
+        "longitude": -0.977929098968527
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5076",
+      "name": "CENTRO RADIOLOGICO IMATEC RONDA UNION V",
+      "position": {
+        "latitude": 37.613116193548,
+        "longitude": -0.979810352888766
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5078",
+      "name": "C.C. MANDARACHE V",
+      "position": {
+        "latitude": 37.6156973757179,
+        "longitude": -0.982663384445562
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5077",
+      "name": "CONSERVATORIO JORGE JUAN V",
+      "position": {
+        "latitude": 37.6157045743993,
+        "longitude": -0.988361700870804
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5055",
+      "name": "JORGE JUAN ASOCIACIÓN DE VECINOS CIUDAD JARDIN",
+      "position": {
+        "latitude": 37.6153061714471,
+        "longitude": -0.990366341249903
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5033",
+      "name": "JORGE JUAN EL CORTE INGLÉS",
+      "position": {
+        "latitude": 37.6148935725218,
+        "longitude": -0.992597921305146
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5229",
+      "name": "ALAMEDA BALTASAR HIDALGO",
+      "position": {
+        "latitude": 37.6137043696443,
+        "longitude": -0.995269503407622
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5230",
+      "name": "ALAMEDA CARLOS QUINTO",
+      "position": {
+        "latitude": 37.6117139425903,
+        "longitude": -0.994280739282657
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5231",
+      "name": "ALAMEDA CORREOS",
+      "position": {
+        "latitude": 37.6097857925227,
+        "longitude": -0.993245039043941
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5232",
+      "name": "ALAMEDA SAN BASILIO",
+      "position": {
+        "latitude": 37.6077790689792,
+        "longitude": -0.992358765387302
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6670",
+      "name": "CALLE DEL SAN JUAN",
+      "position": {
+        "latitude": 37.6052069061251,
+        "longitude": -0.986322425925624
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "cartagena-stop-5267",
+      "stopPlaceId": "cartagena-place-5267",
+      "settlementId": "es-cartagena",
+      "name": "ALAMEDA CRUZ ROJA",
+      "position": {
+        "latitude": 37.6076709246198,
+        "longitude": -0.991829264966147
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5268",
+      "stopPlaceId": "cartagena-place-5268",
+      "settlementId": "es-cartagena",
+      "name": "ALAMEDA ALFONSO DÉCIMO EL SABIO",
+      "position": {
+        "latitude": 37.6102791047331,
+        "longitude": -0.993107167943403
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5269",
+      "stopPlaceId": "cartagena-place-5269",
+      "settlementId": "es-cartagena",
+      "name": "ALAMEDA TRAFALGAR",
+      "position": {
+        "latitude": 37.6117786882353,
+        "longitude": -0.993848517956828
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5349",
+      "stopPlaceId": "cartagena-place-5349",
+      "settlementId": "es-cartagena",
+      "name": "CALLE TRAFALGAR EDIFICIO TRAFALGAR",
+      "position": {
+        "latitude": 37.6124521125716,
+        "longitude": -0.993173363086074
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5350",
+      "stopPlaceId": "cartagena-place-5350",
+      "settlementId": "es-cartagena",
+      "name": "IGLESIA SAN FULGENCIO",
+      "position": {
+        "latitude": 37.6133713595022,
+        "longitude": -0.988413252038061
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5351",
+      "stopPlaceId": "cartagena-place-5351",
+      "settlementId": "es-cartagena",
+      "name": "PABELLÓN CENTRAL",
+      "position": {
+        "latitude": 37.6131478819216,
+        "longitude": -0.986935219521344
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-7548",
+      "stopPlaceId": "cartagena-place-7548",
+      "settlementId": "es-cartagena",
+      "name": "AVDA. REINA VICTORIA ESQ. ANGEL BRUNA",
+      "position": {
+        "latitude": 37.6098456537882,
+        "longitude": -0.985653559715651
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5352",
+      "stopPlaceId": "cartagena-place-5352",
+      "settlementId": "es-cartagena",
+      "name": "AVENIDA DE MURCIA CENIT",
+      "position": {
+        "latitude": 37.6119928456455,
+        "longitude": -0.983681107550287
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5353",
+      "stopPlaceId": "cartagena-place-5353",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO DE SALUD PARCHÍS",
+      "position": {
+        "latitude": 37.6137014445424,
+        "longitude": -0.977676040946428
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5354",
+      "stopPlaceId": "cartagena-place-5354",
+      "settlementId": "es-cartagena",
+      "name": "SAN GINÉS",
+      "position": {
+        "latitude": 37.6111887106211,
+        "longitude": -0.974617490428117
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5355",
+      "stopPlaceId": "cartagena-place-5355",
+      "settlementId": "es-cartagena",
+      "name": "CALLE GRECIA",
+      "position": {
+        "latitude": 37.6089788989888,
+        "longitude": -0.974507522110901
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5356",
+      "stopPlaceId": "cartagena-place-5356",
+      "settlementId": "es-cartagena",
+      "name": "AVENIDA AMÉRICA",
+      "position": {
+        "latitude": 37.6047954086711,
+        "longitude": -0.975968968226503
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5019",
+      "stopPlaceId": "cartagena-place-5019",
+      "settlementId": "es-cartagena",
+      "name": "PLAZA PUERTAS DE SAN JOSE CAPITANES RIPOLL",
+      "position": {
+        "latitude": 37.6040999529306,
+        "longitude": -0.9779814189841
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5357",
+      "stopPlaceId": "cartagena-place-5357",
+      "settlementId": "es-cartagena",
+      "name": "EL LAGO",
+      "position": {
+        "latitude": 37.6026758095944,
+        "longitude": -0.981123596205292
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5358",
+      "stopPlaceId": "cartagena-place-5358",
+      "settlementId": "es-cartagena",
+      "name": "CALLE GISBERT",
+      "position": {
+        "latitude": 37.6016160872793,
+        "longitude": -0.981865840552723
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5359",
+      "stopPlaceId": "cartagena-place-5359",
+      "settlementId": "es-cartagena",
+      "name": "CALLE GISBERT ASCENSOR PANORAMICO",
+      "position": {
+        "latitude": 37.5998091027378,
+        "longitude": -0.98054414998662
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5360",
+      "stopPlaceId": "cartagena-place-5360",
+      "settlementId": "es-cartagena",
+      "name": "CASA DEL MAR",
+      "position": {
+        "latitude": 37.5984355528674,
+        "longitude": -0.979799767824526
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5361",
+      "stopPlaceId": "cartagena-place-5361",
+      "settlementId": "es-cartagena",
+      "name": "MURALLA DEL MAR",
+      "position": {
+        "latitude": 37.5977806717541,
+        "longitude": -0.984189440736054
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-7549",
+      "stopPlaceId": "cartagena-place-7549",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO SALUD MENTAL",
+      "position": {
+        "latitude": 37.5988932736382,
+        "longitude": -0.987070319976554
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5362",
+      "stopPlaceId": "cartagena-place-5362",
+      "settlementId": "es-cartagena",
+      "name": "PLAZA DEL REY-PLAZA CASTELLINI",
+      "position": {
+        "latitude": 37.601561531116,
+        "longitude": -0.988697434942647
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5363",
+      "stopPlaceId": "cartagena-place-5363",
+      "settlementId": "es-cartagena",
+      "name": "CALLE REAL",
+      "position": {
+        "latitude": 37.6037374788596,
+        "longitude": -0.991051528251773
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5364",
+      "stopPlaceId": "cartagena-place-5364",
+      "settlementId": "es-cartagena",
+      "name": "CASA DEL NIÑO",
+      "position": {
+        "latitude": 37.6045703507049,
+        "longitude": -0.992331767676849
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5365",
+      "stopPlaceId": "cartagena-place-5365",
+      "settlementId": "es-cartagena",
+      "name": "CALLE SERRETA",
+      "position": {
+        "latitude": 37.6033600921965,
+        "longitude": -0.983721671353066
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6668",
+      "stopPlaceId": "cartagena-place-6668",
+      "settlementId": "es-cartagena",
+      "name": "P.PUERTAS S.JOSE",
+      "position": {
+        "latitude": 37.6033330139953,
+        "longitude": -0.977401847540761
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5056",
+      "stopPlaceId": "cartagena-place-5056",
+      "settlementId": "es-cartagena",
+      "name": "CALLE ESPARTA I",
+      "position": {
+        "latitude": 37.6079903352196,
+        "longitude": -0.977819420877346
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5075",
+      "stopPlaceId": "cartagena-place-5075",
+      "settlementId": "es-cartagena",
+      "name": "AYUNTAMIENTO CT (URBANISMO-CONSUMO-ESTADISTICA) V",
+      "position": {
+        "latitude": 37.6106327132164,
+        "longitude": -0.977929098968527
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5076",
+      "stopPlaceId": "cartagena-place-5076",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO RADIOLOGICO IMATEC RONDA UNION V",
+      "position": {
+        "latitude": 37.613116193548,
+        "longitude": -0.979810352888766
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5078",
+      "stopPlaceId": "cartagena-place-5078",
+      "settlementId": "es-cartagena",
+      "name": "C.C. MANDARACHE V",
+      "position": {
+        "latitude": 37.6156973757179,
+        "longitude": -0.982663384445562
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5077",
+      "stopPlaceId": "cartagena-place-5077",
+      "settlementId": "es-cartagena",
+      "name": "CONSERVATORIO JORGE JUAN V",
+      "position": {
+        "latitude": 37.6157045743993,
+        "longitude": -0.988361700870804
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5055",
+      "stopPlaceId": "cartagena-place-5055",
+      "settlementId": "es-cartagena",
+      "name": "JORGE JUAN ASOCIACIÓN DE VECINOS CIUDAD JARDIN",
+      "position": {
+        "latitude": 37.6153061714471,
+        "longitude": -0.990366341249903
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5033",
+      "stopPlaceId": "cartagena-place-5033",
+      "settlementId": "es-cartagena",
+      "name": "JORGE JUAN EL CORTE INGLÉS",
+      "position": {
+        "latitude": 37.6148935725218,
+        "longitude": -0.992597921305146
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5229",
+      "stopPlaceId": "cartagena-place-5229",
+      "settlementId": "es-cartagena",
+      "name": "ALAMEDA BALTASAR HIDALGO",
+      "position": {
+        "latitude": 37.6137043696443,
+        "longitude": -0.995269503407622
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5230",
+      "stopPlaceId": "cartagena-place-5230",
+      "settlementId": "es-cartagena",
+      "name": "ALAMEDA CARLOS QUINTO",
+      "position": {
+        "latitude": 37.6117139425903,
+        "longitude": -0.994280739282657
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5231",
+      "stopPlaceId": "cartagena-place-5231",
+      "settlementId": "es-cartagena",
+      "name": "ALAMEDA CORREOS",
+      "position": {
+        "latitude": 37.6097857925227,
+        "longitude": -0.993245039043941
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5232",
+      "stopPlaceId": "cartagena-place-5232",
+      "settlementId": "es-cartagena",
+      "name": "ALAMEDA SAN BASILIO",
+      "position": {
+        "latitude": 37.6077790689792,
+        "longitude": -0.992358765387302
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6670",
+      "stopPlaceId": "cartagena-place-6670",
+      "settlementId": "es-cartagena",
+      "name": "CALLE DEL SAN JUAN",
+      "position": {
+        "latitude": 37.6052069061251,
+        "longitude": -0.986322425925624
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

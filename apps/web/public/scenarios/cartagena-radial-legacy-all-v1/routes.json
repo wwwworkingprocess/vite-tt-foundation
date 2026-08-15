@@ -1,0 +1,2083 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-legacy-all-v1",
+  "routes": [
+    {
+      "routeId": "cartagena-12",
+      "publicCode": "12",
+      "name": "Bus Playa (Del 15 de Junio al 20 de Septiembre)",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-12-s01-cartagena-cala-cortina",
+          "directionLabel": "CARTAGENA-CALA CORTINA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 10
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5229",
+            "cartagena-stop-5230",
+            "cartagena-stop-5231",
+            "cartagena-stop-5232",
+            "cartagena-stop-5233",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-6673",
+            "cartagena-stop-6671"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-12-s02-cartagena-el-portus",
+          "directionLabel": "CARTAGENA- EL PORTUS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 27
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5025",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027",
+            "cartagena-stop-5028",
+            "cartagena-stop-5266",
+            "cartagena-stop-5267",
+            "cartagena-stop-5268",
+            "cartagena-stop-5269",
+            "cartagena-stop-5270",
+            "cartagena-stop-5271",
+            "cartagena-stop-5081",
+            "cartagena-stop-5082",
+            "cartagena-stop-5124",
+            "cartagena-stop-5123",
+            "cartagena-stop-5122",
+            "cartagena-stop-5121",
+            "cartagena-stop-5120",
+            "cartagena-stop-5119",
+            "cartagena-stop-5118",
+            "cartagena-stop-5177",
+            "cartagena-stop-5116",
+            "cartagena-stop-5093",
+            "cartagena-stop-5153",
+            "cartagena-stop-5211",
+            "cartagena-stop-5212",
+            "cartagena-stop-6674",
+            "cartagena-stop-6675"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-12-s03-el-portus-cala-cortina",
+          "directionLabel": "EL PORTUS-CALA CORTINA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 22
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6675",
+            "cartagena-stop-5150",
+            "cartagena-stop-5212",
+            "cartagena-stop-5210",
+            "cartagena-stop-5209",
+            "cartagena-stop-5179",
+            "cartagena-stop-5178",
+            "cartagena-stop-5176",
+            "cartagena-stop-5175",
+            "cartagena-stop-5174",
+            "cartagena-stop-5173",
+            "cartagena-stop-5172",
+            "cartagena-stop-5171",
+            "cartagena-stop-5170",
+            "cartagena-stop-5097",
+            "cartagena-stop-5098",
+            "cartagena-stop-5099",
+            "cartagena-stop-5229",
+            "cartagena-stop-5230",
+            "cartagena-stop-5231",
+            "cartagena-stop-5232",
+            "cartagena-stop-5233"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-12-s04-cala-cortina-cartagena",
+          "directionLabel": "CALA CORTINA- CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 11
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6671",
+            "cartagena-stop-6672",
+            "cartagena-stop-5265",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027",
+            "cartagena-stop-5028",
+            "cartagena-stop-5266",
+            "cartagena-stop-5267",
+            "cartagena-stop-5268",
+            "cartagena-stop-5269",
+            "cartagena-stop-5229"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-12-s05-el-portus-cartagena",
+          "directionLabel": "EL PORTUS- CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 26
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6675",
+            "cartagena-stop-5150",
+            "cartagena-stop-5212",
+            "cartagena-stop-5210",
+            "cartagena-stop-5209",
+            "cartagena-stop-5179",
+            "cartagena-stop-5178",
+            "cartagena-stop-5176",
+            "cartagena-stop-5175",
+            "cartagena-stop-5174",
+            "cartagena-stop-5173",
+            "cartagena-stop-5172",
+            "cartagena-stop-5171",
+            "cartagena-stop-5170",
+            "cartagena-stop-5097",
+            "cartagena-stop-5098",
+            "cartagena-stop-5099",
+            "cartagena-stop-5229",
+            "cartagena-stop-5230",
+            "cartagena-stop-5231",
+            "cartagena-stop-5232",
+            "cartagena-stop-5233",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5807"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-12-s06-cala-cortina-el-portus",
+          "directionLabel": "CALA CORTINA-EL PORTUS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 7
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5233",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5234",
+            "cartagena-stop-6673",
+            "cartagena-stop-6671"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "12",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/12"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "12",
+          "sourceFile": "route-captures/line-12.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-21",
+      "publicCode": "21",
+      "name": "Cartagena - Los Urrutias verano (a partir del 29 de Junio)",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-21-s01-cartagena-playa-honda",
+          "directionLabel": "CARTAGENA-PLAYA HONDA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6912",
+            "cartagena-stop-6868",
+            "cartagena-stop-5400",
+            "cartagena-stop-7137",
+            "cartagena-stop-6775",
+            "cartagena-stop-6774",
+            "cartagena-stop-6773",
+            "cartagena-stop-6772",
+            "cartagena-stop-6776",
+            "cartagena-stop-6789",
+            "cartagena-stop-6790",
+            "cartagena-stop-6791",
+            "cartagena-stop-6801",
+            "cartagena-stop-6792",
+            "cartagena-stop-6793",
+            "cartagena-stop-7306",
+            "cartagena-stop-7304"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s02-cartagena-playa-honda",
+          "directionLabel": "CARTAGENA-PLAYA HONDA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 13
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6912",
+            "cartagena-stop-6868",
+            "cartagena-stop-6873",
+            "cartagena-stop-7137",
+            "cartagena-stop-6775",
+            "cartagena-stop-6789",
+            "cartagena-stop-6791",
+            "cartagena-stop-6801",
+            "cartagena-stop-6792",
+            "cartagena-stop-6793",
+            "cartagena-stop-7306",
+            "cartagena-stop-7304"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s03-cartagena-los-urrutias",
+          "directionLabel": "CARTAGENA- LOS URRUTIAS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6811",
+            "cartagena-stop-6769",
+            "cartagena-stop-7137",
+            "cartagena-stop-6775",
+            "cartagena-stop-6774",
+            "cartagena-stop-6773",
+            "cartagena-stop-6772",
+            "cartagena-stop-6776"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s04-cartagena-playa-honda",
+          "directionLabel": "CARTAGENA-PLAYA HONDA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6811",
+            "cartagena-stop-7137",
+            "cartagena-stop-6775",
+            "cartagena-stop-6789",
+            "cartagena-stop-6790",
+            "cartagena-stop-6791",
+            "cartagena-stop-6801",
+            "cartagena-stop-6792",
+            "cartagena-stop-6793",
+            "cartagena-stop-7306",
+            "cartagena-stop-7304"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s05-cartagena-playa-honda",
+          "directionLabel": "CARTAGENA-PLAYA HONDA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 16
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6912",
+            "cartagena-stop-6868",
+            "cartagena-stop-7137",
+            "cartagena-stop-6775",
+            "cartagena-stop-6774",
+            "cartagena-stop-6773",
+            "cartagena-stop-6772",
+            "cartagena-stop-6776",
+            "cartagena-stop-6789",
+            "cartagena-stop-6790",
+            "cartagena-stop-6791",
+            "cartagena-stop-6801",
+            "cartagena-stop-6792",
+            "cartagena-stop-6793",
+            "cartagena-stop-7306"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s06-playa-honda-cartagena",
+          "directionLabel": "PLAYA HONDA-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "cartagena-stop-7304",
+            "cartagena-stop-6914",
+            "cartagena-stop-7305",
+            "cartagena-stop-7307",
+            "cartagena-stop-6799",
+            "cartagena-stop-6801",
+            "cartagena-stop-6791",
+            "cartagena-stop-6790",
+            "cartagena-stop-6789",
+            "cartagena-stop-6779",
+            "cartagena-stop-6780",
+            "cartagena-stop-6781",
+            "cartagena-stop-6776",
+            "cartagena-stop-5505",
+            "cartagena-stop-6778",
+            "cartagena-stop-6771",
+            "cartagena-stop-6777",
+            "cartagena-stop-6828",
+            "cartagena-stop-5806"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s07-playa-honda-cartagena",
+          "directionLabel": "PLAYA HONDA-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 11
+          },
+          "stopNodeIds": [
+            "cartagena-stop-7304",
+            "cartagena-stop-6914",
+            "cartagena-stop-7305",
+            "cartagena-stop-7307",
+            "cartagena-stop-6799",
+            "cartagena-stop-6801",
+            "cartagena-stop-6916",
+            "cartagena-stop-5400",
+            "cartagena-stop-6921",
+            "cartagena-stop-6922",
+            "cartagena-stop-5806"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s08-playa-honda-cartagena",
+          "directionLabel": "PLAYA HONDA-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "cartagena-stop-7304",
+            "cartagena-stop-6914",
+            "cartagena-stop-7305",
+            "cartagena-stop-7307",
+            "cartagena-stop-6799",
+            "cartagena-stop-6801",
+            "cartagena-stop-6791",
+            "cartagena-stop-6790",
+            "cartagena-stop-6789",
+            "cartagena-stop-6779",
+            "cartagena-stop-6780",
+            "cartagena-stop-6781",
+            "cartagena-stop-6776",
+            "cartagena-stop-5505",
+            "cartagena-stop-6778",
+            "cartagena-stop-6771",
+            "cartagena-stop-6828",
+            "cartagena-stop-5806"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s09-playa-honda-cartagena",
+          "directionLabel": "PLAYA HONDA-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "cartagena-stop-7304",
+            "cartagena-stop-6914",
+            "cartagena-stop-7305",
+            "cartagena-stop-7307",
+            "cartagena-stop-6799",
+            "cartagena-stop-6801",
+            "cartagena-stop-6791",
+            "cartagena-stop-6790",
+            "cartagena-stop-6789",
+            "cartagena-stop-6779",
+            "cartagena-stop-6780",
+            "cartagena-stop-6781",
+            "cartagena-stop-6776",
+            "cartagena-stop-5505",
+            "cartagena-stop-6778",
+            "cartagena-stop-6771",
+            "cartagena-stop-5400",
+            "cartagena-stop-6921",
+            "cartagena-stop-6922",
+            "cartagena-stop-5806"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s10-playa-honda-cartagena",
+          "directionLabel": "PLAYA HONDA-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "cartagena-stop-7304",
+            "cartagena-stop-6914",
+            "cartagena-stop-7305",
+            "cartagena-stop-7307",
+            "cartagena-stop-6799",
+            "cartagena-stop-6801",
+            "cartagena-stop-6791",
+            "cartagena-stop-6790",
+            "cartagena-stop-6789",
+            "cartagena-stop-6779",
+            "cartagena-stop-6780",
+            "cartagena-stop-6781",
+            "cartagena-stop-6776",
+            "cartagena-stop-5505",
+            "cartagena-stop-6778",
+            "cartagena-stop-6771",
+            "cartagena-stop-6920",
+            "cartagena-stop-6921",
+            "cartagena-stop-6922",
+            "cartagena-stop-5806"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s11-playa-honda-cartagena",
+          "directionLabel": "PLAYA HONDA-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "cartagena-stop-7304",
+            "cartagena-stop-6914",
+            "cartagena-stop-7305",
+            "cartagena-stop-7307",
+            "cartagena-stop-6799",
+            "cartagena-stop-6801",
+            "cartagena-stop-6791",
+            "cartagena-stop-6790",
+            "cartagena-stop-5505",
+            "cartagena-stop-6778",
+            "cartagena-stop-6771",
+            "cartagena-stop-6920",
+            "cartagena-stop-6921",
+            "cartagena-stop-6922",
+            "cartagena-stop-5806"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s12-cartagena-playa-honda",
+          "directionLabel": "CARTAGENA-PLAYA HONDA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 16
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6811",
+            "cartagena-stop-7137",
+            "cartagena-stop-6775",
+            "cartagena-stop-6774",
+            "cartagena-stop-6773",
+            "cartagena-stop-6772",
+            "cartagena-stop-6776",
+            "cartagena-stop-6789",
+            "cartagena-stop-6790",
+            "cartagena-stop-6791",
+            "cartagena-stop-6801",
+            "cartagena-stop-6792",
+            "cartagena-stop-6793",
+            "cartagena-stop-7306",
+            "cartagena-stop-7304"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-21-s13-urrutias-cartagena",
+          "directionLabel": "URRUTIAS-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 10
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6776",
+            "cartagena-stop-6781",
+            "cartagena-stop-6780",
+            "cartagena-stop-6779",
+            "cartagena-stop-5505",
+            "cartagena-stop-6778",
+            "cartagena-stop-6771",
+            "cartagena-stop-6777",
+            "cartagena-stop-6828",
+            "cartagena-stop-5806"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "21",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/21"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "21",
+          "sourceFile": "route-captures/line-21.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-23",
+      "publicCode": "23",
+      "name": "Los Urrutias-La Manga Fines de Semana (a partir del 3-Julio)",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-23-s01-santiago-de-la-ribera-la-manga",
+          "directionLabel": "SANTIAGO DE LA RIBERA-LA MANGA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 30
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6783",
+            "cartagena-stop-6784",
+            "cartagena-stop-6785",
+            "cartagena-stop-6786",
+            "cartagena-stop-6787",
+            "cartagena-stop-6788",
+            "cartagena-stop-6780",
+            "cartagena-stop-6779",
+            "cartagena-stop-6789",
+            "cartagena-stop-6790",
+            "cartagena-stop-6791",
+            "cartagena-stop-6792",
+            "cartagena-stop-6793",
+            "cartagena-stop-6796",
+            "cartagena-stop-6795",
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-23-s02-urrutias-la-manga",
+          "directionLabel": "URRUTIAS-LA MANGA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6773",
+            "cartagena-stop-6774",
+            "cartagena-stop-6789",
+            "cartagena-stop-6790",
+            "cartagena-stop-6791",
+            "cartagena-stop-6792",
+            "cartagena-stop-6793",
+            "cartagena-stop-6796",
+            "cartagena-stop-6795",
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-23-s03-la-manga-santiago-de-la-ribera",
+          "directionLabel": "LA MANGA-SANTIAGO DE LA RIBERA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6767",
+            "cartagena-stop-6714",
+            "cartagena-stop-6795",
+            "cartagena-stop-6796",
+            "cartagena-stop-6798",
+            "cartagena-stop-6799",
+            "cartagena-stop-6791",
+            "cartagena-stop-6790",
+            "cartagena-stop-6789",
+            "cartagena-stop-6779",
+            "cartagena-stop-6780",
+            "cartagena-stop-6788",
+            "cartagena-stop-6787",
+            "cartagena-stop-6786",
+            "cartagena-stop-6785",
+            "cartagena-stop-6784",
+            "cartagena-stop-6783"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-23-s04-la-manga-los-urrutias",
+          "directionLabel": "LA MANGA-LOS URRUTIAS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 25
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6767",
+            "cartagena-stop-6714",
+            "cartagena-stop-6795",
+            "cartagena-stop-6798",
+            "cartagena-stop-6799",
+            "cartagena-stop-6791",
+            "cartagena-stop-6790",
+            "cartagena-stop-6789",
+            "cartagena-stop-6779",
+            "cartagena-stop-6780"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-23-s05-la-manga-los-narejos",
+          "directionLabel": "LA MANGA-LOS NAREJOS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 30
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6767",
+            "cartagena-stop-6714",
+            "cartagena-stop-6795",
+            "cartagena-stop-6796",
+            "cartagena-stop-6798",
+            "cartagena-stop-6799",
+            "cartagena-stop-6791",
+            "cartagena-stop-6790",
+            "cartagena-stop-6789",
+            "cartagena-stop-6779",
+            "cartagena-stop-6780",
+            "cartagena-stop-6772",
+            "cartagena-stop-6788",
+            "cartagena-stop-6786",
+            "cartagena-stop-6785"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-23-s06-los-narejos-la-manga",
+          "directionLabel": "LOS NAREJOS-LA MANGA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6785",
+            "cartagena-stop-6786",
+            "cartagena-stop-6787",
+            "cartagena-stop-6788",
+            "cartagena-stop-6772",
+            "cartagena-stop-6773",
+            "cartagena-stop-6774",
+            "cartagena-stop-6789",
+            "cartagena-stop-6790",
+            "cartagena-stop-6791",
+            "cartagena-stop-6792",
+            "cartagena-stop-6793",
+            "cartagena-stop-6796",
+            "cartagena-stop-6795",
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "23",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/23"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "23",
+          "sourceFile": "route-captures/line-23.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-30",
+      "publicCode": "30",
+      "name": "Interurbana Cartagena - Mazarrón",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-30-s01-mazarron-cartagena-por-tallante",
+          "directionLabel": "MAZARRON-CARTAGENA POR TALLANTE",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6995",
+            "cartagena-stop-6981",
+            "cartagena-stop-6996",
+            "cartagena-stop-6980",
+            "cartagena-stop-6997",
+            "cartagena-stop-6978",
+            "cartagena-stop-7012",
+            "cartagena-stop-7013",
+            "cartagena-stop-7011",
+            "cartagena-stop-7007",
+            "cartagena-stop-6963",
+            "cartagena-stop-6924"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-30-s02-mazarron-cartagena-por-tallante-no-por-bolnuevo",
+          "directionLabel": "MAZARRON-CARTAGENA POR TALLANTE NO POR BOLNUEVO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 11
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6995",
+            "cartagena-stop-6980",
+            "cartagena-stop-6997",
+            "cartagena-stop-6998",
+            "cartagena-stop-7012",
+            "cartagena-stop-7013",
+            "cartagena-stop-7011",
+            "cartagena-stop-7007",
+            "cartagena-stop-6963",
+            "cartagena-stop-6964",
+            "cartagena-stop-6924"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-30-s03-mazarron-cartagena-por-azohia-no-bolnuevo",
+          "directionLabel": "MAZARRON-CARTAGENA POR AZOHIA NO BOLNUEVO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6995",
+            "cartagena-stop-6980",
+            "cartagena-stop-6997",
+            "cartagena-stop-6978",
+            "cartagena-stop-6999",
+            "cartagena-stop-7002",
+            "cartagena-stop-7000",
+            "cartagena-stop-7001",
+            "cartagena-stop-6973",
+            "cartagena-stop-6971",
+            "cartagena-stop-7003",
+            "cartagena-stop-7004",
+            "cartagena-stop-7005",
+            "cartagena-stop-7006",
+            "cartagena-stop-7007",
+            "cartagena-stop-6963",
+            "cartagena-stop-6964",
+            "cartagena-stop-6924"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-30-s04-mazarron-cartagena-por-la-azohia",
+          "directionLabel": "MAZARRON-CARTAGENA POR LA AZOHIA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6995",
+            "cartagena-stop-6981",
+            "cartagena-stop-6996",
+            "cartagena-stop-6980",
+            "cartagena-stop-6997",
+            "cartagena-stop-6978",
+            "cartagena-stop-6999",
+            "cartagena-stop-7002",
+            "cartagena-stop-7000",
+            "cartagena-stop-7001",
+            "cartagena-stop-6973",
+            "cartagena-stop-6971",
+            "cartagena-stop-7003",
+            "cartagena-stop-7004",
+            "cartagena-stop-7005",
+            "cartagena-stop-7006",
+            "cartagena-stop-7007",
+            "cartagena-stop-6963",
+            "cartagena-stop-6964",
+            "cartagena-stop-6924"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-30-s05-cartagena-mazarron-por-tallante-no-bolnuevo",
+          "directionLabel": "CARTAGENA-MAZARRON POR TALLANTE NO BOLNUEVO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 10
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6924",
+            "cartagena-stop-5267",
+            "cartagena-stop-5270",
+            "cartagena-stop-7010",
+            "cartagena-stop-7012",
+            "cartagena-stop-7009",
+            "cartagena-stop-6978",
+            "cartagena-stop-6979",
+            "cartagena-stop-6980",
+            "cartagena-stop-6983"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-30-s06-cartagena-mazarron-por-azohia-no-bolnuevo",
+          "directionLabel": "CARTAGENA-MAZARRON POR AZOHIA NO BOLNUEVO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6924",
+            "cartagena-stop-5267",
+            "cartagena-stop-5270",
+            "cartagena-stop-6966",
+            "cartagena-stop-6968",
+            "cartagena-stop-6967",
+            "cartagena-stop-6969",
+            "cartagena-stop-6970",
+            "cartagena-stop-6971",
+            "cartagena-stop-6972",
+            "cartagena-stop-6973",
+            "cartagena-stop-6974",
+            "cartagena-stop-6975",
+            "cartagena-stop-6976",
+            "cartagena-stop-6977",
+            "cartagena-stop-6978",
+            "cartagena-stop-6979",
+            "cartagena-stop-6980",
+            "cartagena-stop-6983"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-30-s07-cartagena-mazarron-por-azohia",
+          "directionLabel": "CARTAGENA-MAZARRON POR AZOHIA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6924",
+            "cartagena-stop-5267",
+            "cartagena-stop-5270",
+            "cartagena-stop-6966",
+            "cartagena-stop-6968",
+            "cartagena-stop-6967",
+            "cartagena-stop-6969",
+            "cartagena-stop-6970",
+            "cartagena-stop-6971",
+            "cartagena-stop-6972",
+            "cartagena-stop-6973",
+            "cartagena-stop-6974",
+            "cartagena-stop-6975",
+            "cartagena-stop-6976",
+            "cartagena-stop-6977",
+            "cartagena-stop-6978",
+            "cartagena-stop-6979",
+            "cartagena-stop-6980",
+            "cartagena-stop-6982",
+            "cartagena-stop-6981",
+            "cartagena-stop-6983"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-30-s08-tallante-cartagena",
+          "directionLabel": "TALLANTE-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 7
+          },
+          "stopNodeIds": [
+            "cartagena-stop-7012",
+            "cartagena-stop-7013",
+            "cartagena-stop-7011",
+            "cartagena-stop-7007",
+            "cartagena-stop-6963",
+            "cartagena-stop-6964",
+            "cartagena-stop-6924"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-30-s09-cartagena-tallante",
+          "directionLabel": "CARTAGENA-TALLANTE",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 6
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6924",
+            "cartagena-stop-5267",
+            "cartagena-stop-5270",
+            "cartagena-stop-7010",
+            "cartagena-stop-7008",
+            "cartagena-stop-7009"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "30",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/30"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "30",
+          "sourceFile": "route-captures/line-30.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-41",
+      "publicCode": "41",
+      "name": "Interurbana Cartagena - Fuente Álamo - Lorca",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-41-s01-los-canovas-cartagena",
+          "directionLabel": "LOS CANOVAS-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 16
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6943",
+            "cartagena-stop-6950",
+            "cartagena-stop-6949",
+            "cartagena-stop-6953",
+            "cartagena-stop-6954",
+            "cartagena-stop-6955",
+            "cartagena-stop-6956",
+            "cartagena-stop-6957",
+            "cartagena-stop-6958",
+            "cartagena-stop-6959",
+            "cartagena-stop-6960",
+            "cartagena-stop-6961",
+            "cartagena-stop-6962",
+            "cartagena-stop-6963",
+            "cartagena-stop-6964",
+            "cartagena-stop-6924"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-41-s02-cartagena-lorca",
+          "directionLabel": "CARTAGENA-LORCA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6924",
+            "cartagena-stop-5026",
+            "cartagena-stop-5267",
+            "cartagena-stop-5332",
+            "cartagena-stop-5335",
+            "cartagena-stop-6928",
+            "cartagena-stop-6929",
+            "cartagena-stop-6930",
+            "cartagena-stop-6931",
+            "cartagena-stop-6932",
+            "cartagena-stop-6933",
+            "cartagena-stop-6934",
+            "cartagena-stop-6935",
+            "cartagena-stop-6936",
+            "cartagena-stop-6937",
+            "cartagena-stop-6938",
+            "cartagena-stop-6949",
+            "cartagena-stop-6950",
+            "cartagena-stop-6944",
+            "cartagena-stop-6988",
+            "cartagena-stop-6946"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-41-s03-la-pinilla-cartagena",
+          "directionLabel": "LA PINILLA- CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6940",
+            "cartagena-stop-6939",
+            "cartagena-stop-6937",
+            "cartagena-stop-6954",
+            "cartagena-stop-6955",
+            "cartagena-stop-6956",
+            "cartagena-stop-6957",
+            "cartagena-stop-6958",
+            "cartagena-stop-6959",
+            "cartagena-stop-6960",
+            "cartagena-stop-6961",
+            "cartagena-stop-6962",
+            "cartagena-stop-6963",
+            "cartagena-stop-6964",
+            "cartagena-stop-6924"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-41-s04-fuente-alamo-cartagena",
+          "directionLabel": "FUENTE ALAMO-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 13
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6953",
+            "cartagena-stop-6954",
+            "cartagena-stop-6955",
+            "cartagena-stop-6956",
+            "cartagena-stop-6957",
+            "cartagena-stop-6958",
+            "cartagena-stop-6959",
+            "cartagena-stop-6960",
+            "cartagena-stop-6961",
+            "cartagena-stop-6962",
+            "cartagena-stop-6963",
+            "cartagena-stop-6964",
+            "cartagena-stop-6924"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-41-s05-lorca-cartagena",
+          "directionLabel": "LORCA-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6946",
+            "cartagena-stop-6988",
+            "cartagena-stop-6944",
+            "cartagena-stop-6950",
+            "cartagena-stop-6949",
+            "cartagena-stop-6953",
+            "cartagena-stop-6954",
+            "cartagena-stop-6955",
+            "cartagena-stop-6956",
+            "cartagena-stop-6957",
+            "cartagena-stop-6958",
+            "cartagena-stop-6959",
+            "cartagena-stop-6960",
+            "cartagena-stop-6961",
+            "cartagena-stop-6962",
+            "cartagena-stop-6963",
+            "cartagena-stop-6964",
+            "cartagena-stop-6924"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-41-s06-cartagena-cuevas-de-reyllo",
+          "directionLabel": "CARTAGENA- CUEVAS DE REYLLO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6924",
+            "cartagena-stop-5026",
+            "cartagena-stop-5267",
+            "cartagena-stop-5332",
+            "cartagena-stop-5335",
+            "cartagena-stop-6928",
+            "cartagena-stop-6929",
+            "cartagena-stop-6930",
+            "cartagena-stop-6931",
+            "cartagena-stop-6932",
+            "cartagena-stop-6933",
+            "cartagena-stop-6934",
+            "cartagena-stop-6935",
+            "cartagena-stop-6936",
+            "cartagena-stop-6937",
+            "cartagena-stop-6938",
+            "cartagena-stop-6949",
+            "cartagena-stop-6950"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-41-s07-cartagena-los-canovas",
+          "directionLabel": "CARTAGENA- LOS CANOVAS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6924",
+            "cartagena-stop-5026",
+            "cartagena-stop-5267",
+            "cartagena-stop-5332",
+            "cartagena-stop-5335",
+            "cartagena-stop-6928",
+            "cartagena-stop-6929",
+            "cartagena-stop-6930",
+            "cartagena-stop-6931",
+            "cartagena-stop-6932",
+            "cartagena-stop-6933",
+            "cartagena-stop-6934",
+            "cartagena-stop-6935",
+            "cartagena-stop-6936",
+            "cartagena-stop-6937",
+            "cartagena-stop-6938",
+            "cartagena-stop-6949",
+            "cartagena-stop-6950",
+            "cartagena-stop-6943"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-41-s08-cartagena-la-pinilla",
+          "directionLabel": "CARTAGENA- LA PINILLA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6924",
+            "cartagena-stop-5026",
+            "cartagena-stop-5267",
+            "cartagena-stop-5332",
+            "cartagena-stop-5335",
+            "cartagena-stop-6928",
+            "cartagena-stop-6929",
+            "cartagena-stop-6930",
+            "cartagena-stop-6931",
+            "cartagena-stop-6932",
+            "cartagena-stop-6933",
+            "cartagena-stop-6934",
+            "cartagena-stop-6935",
+            "cartagena-stop-6936",
+            "cartagena-stop-6937",
+            "cartagena-stop-6938",
+            "cartagena-stop-6939",
+            "cartagena-stop-6940"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-41-s09-cartagena-fte-alamo",
+          "directionLabel": "CARTAGENA-FTE. ALAMO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 16
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6924",
+            "cartagena-stop-5026",
+            "cartagena-stop-5267",
+            "cartagena-stop-5332",
+            "cartagena-stop-5335",
+            "cartagena-stop-6928",
+            "cartagena-stop-6929",
+            "cartagena-stop-6930",
+            "cartagena-stop-6931",
+            "cartagena-stop-6932",
+            "cartagena-stop-6933",
+            "cartagena-stop-6934",
+            "cartagena-stop-6935",
+            "cartagena-stop-6936",
+            "cartagena-stop-6937",
+            "cartagena-stop-6938"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-41-s10-cuevas-de-reyllo-cartagena",
+          "directionLabel": "CUEVAS DE REYLLO- CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6950",
+            "cartagena-stop-6949",
+            "cartagena-stop-6953",
+            "cartagena-stop-6954",
+            "cartagena-stop-6955",
+            "cartagena-stop-6956",
+            "cartagena-stop-6957",
+            "cartagena-stop-6958",
+            "cartagena-stop-6959",
+            "cartagena-stop-6960",
+            "cartagena-stop-6961",
+            "cartagena-stop-6962",
+            "cartagena-stop-6963",
+            "cartagena-stop-6964",
+            "cartagena-stop-6924"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "41",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/41"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "41",
+          "sourceFile": "route-captures/line-41.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-42a",
+      "publicCode": "42A",
+      "name": "Interurbana Cartagena - La Unión",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-42a-s01-cartagena-la-union",
+          "directionLabel": "CARTAGENA-LA UNION",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5074",
+            "cartagena-stop-6858",
+            "cartagena-stop-6859",
+            "cartagena-stop-6899",
+            "cartagena-stop-6863",
+            "cartagena-stop-6864",
+            "cartagena-stop-6847",
+            "cartagena-stop-6865",
+            "cartagena-stop-6844",
+            "cartagena-stop-6842",
+            "cartagena-stop-6843",
+            "cartagena-stop-6869",
+            "cartagena-stop-6868"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-42a-s02-ct-la-union-por-alumbres",
+          "directionLabel": "CT-LA UNION POR ALUMBRES",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5074",
+            "cartagena-stop-6858",
+            "cartagena-stop-6859",
+            "cartagena-stop-6899",
+            "cartagena-stop-6860",
+            "cartagena-stop-6861",
+            "cartagena-stop-6901",
+            "cartagena-stop-6863",
+            "cartagena-stop-6864",
+            "cartagena-stop-6847",
+            "cartagena-stop-6865",
+            "cartagena-stop-6844",
+            "cartagena-stop-6842",
+            "cartagena-stop-6843",
+            "cartagena-stop-6869",
+            "cartagena-stop-6868"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-42a-s03-la-union-cartagena",
+          "directionLabel": "LA UNION-CARTAGENA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 11
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6902",
+            "cartagena-stop-6871",
+            "cartagena-stop-6903",
+            "cartagena-stop-6904",
+            "cartagena-stop-6911",
+            "cartagena-stop-6905",
+            "cartagena-stop-6923",
+            "cartagena-stop-6906",
+            "cartagena-stop-7167",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-42a-s04-la-union-ct-por-alumbres",
+          "directionLabel": "LA UNION-CT POR ALUMBRES",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 13
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6902",
+            "cartagena-stop-6871",
+            "cartagena-stop-6903",
+            "cartagena-stop-6904",
+            "cartagena-stop-6908",
+            "cartagena-stop-6909",
+            "cartagena-stop-6910",
+            "cartagena-stop-6905",
+            "cartagena-stop-6923",
+            "cartagena-stop-6906",
+            "cartagena-stop-7167",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "42A",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/42"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "42A",
+          "sourceFile": "route-captures/line-42a.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-43",
+      "publicCode": "43",
+      "name": "Interurbana Cartagena-La Manga (a partir del 29 de Junio)",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-43-s01-cartagena-la-manga-ruta-llano",
+          "directionLabel": "CARTAGENA- LA MANGA RUTA LLANO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 28
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6859",
+            "cartagena-stop-6912",
+            "cartagena-stop-6897",
+            "cartagena-stop-6873",
+            "cartagena-stop-7137",
+            "cartagena-stop-6885",
+            "cartagena-stop-6918",
+            "cartagena-stop-6894",
+            "cartagena-stop-6895",
+            "cartagena-stop-6893",
+            "cartagena-stop-7304",
+            "cartagena-stop-6884",
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-43-s02-cartagena-la-manga-ruta",
+          "directionLabel": "CARTAGENA-LA MANGA RUTA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 25
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6859",
+            "cartagena-stop-6912",
+            "cartagena-stop-6897",
+            "cartagena-stop-6873",
+            "cartagena-stop-7137",
+            "cartagena-stop-6885",
+            "cartagena-stop-6893",
+            "cartagena-stop-7304",
+            "cartagena-stop-6884",
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-43-s03-cartagena-la-manga-ruta-llano-playa-paraiso",
+          "directionLabel": "CARTAGENA- LA MANGA RUTA LLANO PLAYA PARAISO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 30
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6859",
+            "cartagena-stop-6912",
+            "cartagena-stop-6897",
+            "cartagena-stop-6873",
+            "cartagena-stop-7137",
+            "cartagena-stop-6885",
+            "cartagena-stop-6918",
+            "cartagena-stop-6894",
+            "cartagena-stop-6895",
+            "cartagena-stop-6893",
+            "cartagena-stop-7304",
+            "cartagena-stop-7362",
+            "cartagena-stop-7364",
+            "cartagena-stop-6884",
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-43-s04-cartagena-la-manga-directo",
+          "directionLabel": "CARTAGENA-LA MANGA DIRECTO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6884",
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-43-s05-cartagena-la-manga-playa-paraiso",
+          "directionLabel": "CARTAGENA-LA MANGA PLAYA PARAISO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 27
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5806",
+            "cartagena-stop-6859",
+            "cartagena-stop-6912",
+            "cartagena-stop-6897",
+            "cartagena-stop-6873",
+            "cartagena-stop-7137",
+            "cartagena-stop-6885",
+            "cartagena-stop-6893",
+            "cartagena-stop-7304",
+            "cartagena-stop-7362",
+            "cartagena-stop-7364",
+            "cartagena-stop-6884",
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-43-s06-la-manga-cartagena-ruta-llano",
+          "directionLabel": "LA MANGA- CARTAGENA RUTA LLANO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 30
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6714",
+            "cartagena-stop-6795",
+            "cartagena-stop-7304",
+            "cartagena-stop-6914",
+            "cartagena-stop-6915",
+            "cartagena-stop-6916",
+            "cartagena-stop-5400",
+            "cartagena-stop-6918",
+            "cartagena-stop-6885",
+            "cartagena-stop-7137",
+            "cartagena-stop-6920",
+            "cartagena-stop-6921",
+            "cartagena-stop-6922",
+            "cartagena-stop-6923",
+            "cartagena-stop-5806"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-43-s07-la-manga-cartagena-ruta",
+          "directionLabel": "LA MANGA-CARTAGENA RUTA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 27
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6714",
+            "cartagena-stop-6795",
+            "cartagena-stop-7304",
+            "cartagena-stop-6914",
+            "cartagena-stop-6915",
+            "cartagena-stop-6885",
+            "cartagena-stop-7137",
+            "cartagena-stop-6920",
+            "cartagena-stop-6921",
+            "cartagena-stop-6922",
+            "cartagena-stop-6923",
+            "cartagena-stop-5806"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-43-s08-la-manga-cartagena-ruta-llano-playa-paraiso",
+          "directionLabel": "LA MANGA- CARTAGENA RUTA LLANO PLAYA PARAISO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6714",
+            "cartagena-stop-6795",
+            "cartagena-stop-7365",
+            "cartagena-stop-7363",
+            "cartagena-stop-7304",
+            "cartagena-stop-6914",
+            "cartagena-stop-6915",
+            "cartagena-stop-6916",
+            "cartagena-stop-5400",
+            "cartagena-stop-6918",
+            "cartagena-stop-6885",
+            "cartagena-stop-7137",
+            "cartagena-stop-6920",
+            "cartagena-stop-6921",
+            "cartagena-stop-6922",
+            "cartagena-stop-6923",
+            "cartagena-stop-5806"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-43-s09-la-manga-cartagena-directo",
+          "directionLabel": "LA MANGA-CARTAGENA DIRECTO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6714",
+            "cartagena-stop-6795",
+            "cartagena-stop-5806"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-43-s10-la-manga-cartagena-playa-paraiso",
+          "directionLabel": "LA MANGA-CARTAGENA PLAYA PARAISO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6714",
+            "cartagena-stop-6795",
+            "cartagena-stop-7365",
+            "cartagena-stop-7363",
+            "cartagena-stop-7304",
+            "cartagena-stop-6914",
+            "cartagena-stop-6915",
+            "cartagena-stop-6885",
+            "cartagena-stop-7137",
+            "cartagena-stop-6920",
+            "cartagena-stop-6921",
+            "cartagena-stop-6922",
+            "cartagena-stop-6923",
+            "cartagena-stop-5806"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "43",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/43"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "43",
+          "sourceFile": "route-captures/line-43.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-44",
+      "publicCode": "44",
+      "name": "Interurbana Cabo Palos-Veneziola (a partir del 29 de Junio)",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-44-s01-cabo-de-palos-veneziola",
+          "directionLabel": "CABO DE PALOS- VENEZIOLA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 27
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728",
+            "cartagena-stop-6729",
+            "cartagena-stop-6730",
+            "cartagena-stop-6731",
+            "cartagena-stop-6732",
+            "cartagena-stop-6733",
+            "cartagena-stop-6734",
+            "cartagena-stop-6735",
+            "cartagena-stop-6736",
+            "cartagena-stop-6737",
+            "cartagena-stop-6738",
+            "cartagena-stop-6739",
+            "cartagena-stop-6740"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-44-s02-cabo-de-palos-tomas-maestre",
+          "directionLabel": "CABO DE PALOS- TOMAS MAESTRE",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728",
+            "cartagena-stop-6729",
+            "cartagena-stop-6730",
+            "cartagena-stop-6731",
+            "cartagena-stop-6732",
+            "cartagena-stop-6734"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-44-s03-cabo-de-palos-pedruchillo",
+          "directionLabel": "CABO DE PALOS-PEDRUCHILLO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6714",
+            "cartagena-stop-6715",
+            "cartagena-stop-6716",
+            "cartagena-stop-6717",
+            "cartagena-stop-6718",
+            "cartagena-stop-6719",
+            "cartagena-stop-6720",
+            "cartagena-stop-6721",
+            "cartagena-stop-6722",
+            "cartagena-stop-6723",
+            "cartagena-stop-6724",
+            "cartagena-stop-6725",
+            "cartagena-stop-6726",
+            "cartagena-stop-6727",
+            "cartagena-stop-6728"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-44-s04-veneziola-cabo-de-palos",
+          "directionLabel": "VENEZIOLA- CABO DE PALOS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 28
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6741",
+            "cartagena-stop-6742",
+            "cartagena-stop-6743",
+            "cartagena-stop-6744",
+            "cartagena-stop-6745",
+            "cartagena-stop-6746",
+            "cartagena-stop-6747",
+            "cartagena-stop-6748",
+            "cartagena-stop-6749",
+            "cartagena-stop-6750",
+            "cartagena-stop-6751",
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6767",
+            "cartagena-stop-6714"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-44-s05-tomas-maestre-cabo-de-palos",
+          "directionLabel": "TOMAS MAESTRE-CABO DE PALOS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6746",
+            "cartagena-stop-6747",
+            "cartagena-stop-6748",
+            "cartagena-stop-6749",
+            "cartagena-stop-6750",
+            "cartagena-stop-6751",
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6767",
+            "cartagena-stop-6714"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-44-s06-pedruchillo-cabo-de-palos",
+          "directionLabel": "PEDRUCHILLO-CABO DE PALOS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6752",
+            "cartagena-stop-6753",
+            "cartagena-stop-6754",
+            "cartagena-stop-6755",
+            "cartagena-stop-6756",
+            "cartagena-stop-6757",
+            "cartagena-stop-6758",
+            "cartagena-stop-6759",
+            "cartagena-stop-6760",
+            "cartagena-stop-6761",
+            "cartagena-stop-6762",
+            "cartagena-stop-6763",
+            "cartagena-stop-6764",
+            "cartagena-stop-6765",
+            "cartagena-stop-6766",
+            "cartagena-stop-6767",
+            "cartagena-stop-6714"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "44",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/44"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "44",
+          "sourceFile": "route-captures/line-44.json"
+        }
+      ]
+    }
+  ]
+}

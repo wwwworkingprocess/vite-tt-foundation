@@ -1,0 +1,660 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-2-20-30-v1",
+  "routes": [
+    {
+      "routeId": "malaga-2",
+      "publicCode": "2",
+      "name": "Alameda Principal - Ciudad Jardín",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-2-s01",
+          "directionLabel": "Huerta Nueva",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "malaga-stop-229",
+            "malaga-stop-202",
+            "malaga-stop-230",
+            "malaga-stop-205",
+            "malaga-stop-206",
+            "malaga-stop-207",
+            "malaga-stop-208",
+            "malaga-stop-209",
+            "malaga-stop-210",
+            "malaga-stop-211",
+            "malaga-stop-212",
+            "malaga-stop-2655",
+            "malaga-stop-228",
+            "malaga-stop-2609",
+            "malaga-stop-2610",
+            "malaga-stop-2612",
+            "malaga-stop-2613",
+            "malaga-stop-2614",
+            "malaga-stop-2615",
+            "malaga-stop-2626",
+            "malaga-stop-2621",
+            "malaga-stop-2622",
+            "malaga-stop-2657",
+            "malaga-stop-2617",
+            "malaga-stop-2618",
+            "malaga-stop-2631",
+            "malaga-stop-2619",
+            "malaga-stop-2628",
+            "malaga-stop-2629",
+            "malaga-stop-2620",
+            "malaga-stop-2651",
+            "malaga-stop-2652",
+            "malaga-stop-120"
+          ]
+        },
+        {
+          "patternId": "malaga-line-2-s02",
+          "directionLabel": " Alameda Principal",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 11
+          },
+          "stopNodeIds": [
+            "malaga-stop-120",
+            "malaga-stop-263",
+            "malaga-stop-254",
+            "malaga-stop-255",
+            "malaga-stop-256",
+            "malaga-stop-257",
+            "malaga-stop-258",
+            "malaga-stop-259",
+            "malaga-stop-260",
+            "malaga-stop-261",
+            "malaga-stop-229"
+          ]
+        },
+        {
+          "patternId": "malaga-line-2-s03",
+          "directionLabel": "Huerta Nueva",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "malaga-stop-2609",
+            "malaga-stop-2610",
+            "malaga-stop-2612",
+            "malaga-stop-2613",
+            "malaga-stop-2614",
+            "malaga-stop-2615",
+            "malaga-stop-2626",
+            "malaga-stop-2621",
+            "malaga-stop-2622",
+            "malaga-stop-2657",
+            "malaga-stop-2617",
+            "malaga-stop-2618",
+            "malaga-stop-2631",
+            "malaga-stop-2619",
+            "malaga-stop-2628",
+            "malaga-stop-2629",
+            "malaga-stop-2620",
+            "malaga-stop-2651",
+            "malaga-stop-2652",
+            "malaga-stop-120"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "2",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "2",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "2",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=2"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-20",
+      "publicCode": "20",
+      "name": "Ciudad Jardín - Alameda Principal - Los Prados",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-20-s01",
+          "directionLabel": "Los Prados",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 35
+          },
+          "stopNodeIds": [
+            "malaga-stop-251",
+            "malaga-stop-252",
+            "malaga-stop-264",
+            "malaga-stop-2655",
+            "malaga-stop-228",
+            "malaga-stop-2667",
+            "malaga-stop-2668",
+            "malaga-stop-2669",
+            "malaga-stop-2670",
+            "malaga-stop-153",
+            "malaga-stop-2671",
+            "malaga-stop-259",
+            "malaga-stop-260",
+            "malaga-stop-261",
+            "malaga-stop-253",
+            "malaga-stop-791",
+            "malaga-stop-2401",
+            "malaga-stop-2416",
+            "malaga-stop-402",
+            "malaga-stop-307",
+            "malaga-stop-403",
+            "malaga-stop-2417",
+            "malaga-stop-406",
+            "malaga-stop-407",
+            "malaga-stop-2402",
+            "malaga-stop-2403",
+            "malaga-stop-2404",
+            "malaga-stop-2405",
+            "malaga-stop-2414",
+            "malaga-stop-2415",
+            "malaga-stop-2413",
+            "malaga-stop-2408",
+            "malaga-stop-2409",
+            "malaga-stop-2410",
+            "malaga-stop-2411"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s02",
+          "directionLabel": "Ciudad Jardín",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 38
+          },
+          "stopNodeIds": [
+            "malaga-stop-2411",
+            "malaga-stop-2064",
+            "malaga-stop-2461",
+            "malaga-stop-2452",
+            "malaga-stop-2453",
+            "malaga-stop-2062",
+            "malaga-stop-2454",
+            "malaga-stop-2463",
+            "malaga-stop-2464",
+            "malaga-stop-2465",
+            "malaga-stop-2457",
+            "malaga-stop-2458",
+            "malaga-stop-2459",
+            "malaga-stop-2460",
+            "malaga-stop-458",
+            "malaga-stop-460",
+            "malaga-stop-468",
+            "malaga-stop-501",
+            "malaga-stop-2466",
+            "malaga-stop-462",
+            "malaga-stop-3264",
+            "malaga-stop-2061",
+            "malaga-stop-202",
+            "malaga-stop-230",
+            "malaga-stop-205",
+            "malaga-stop-2603",
+            "malaga-stop-2604",
+            "malaga-stop-2627",
+            "malaga-stop-113",
+            "malaga-stop-2605",
+            "malaga-stop-2606",
+            "malaga-stop-2607",
+            "malaga-stop-2608",
+            "malaga-stop-2630",
+            "malaga-stop-176",
+            "malaga-stop-120",
+            "malaga-stop-214",
+            "malaga-stop-251"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s03",
+          "directionLabel": " S.Rafael-EMT",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "malaga-stop-251",
+            "malaga-stop-252",
+            "malaga-stop-264",
+            "malaga-stop-2655",
+            "malaga-stop-228",
+            "malaga-stop-2667",
+            "malaga-stop-2668",
+            "malaga-stop-2669",
+            "malaga-stop-2670",
+            "malaga-stop-153",
+            "malaga-stop-2671",
+            "malaga-stop-259",
+            "malaga-stop-260",
+            "malaga-stop-261",
+            "malaga-stop-253",
+            "malaga-stop-791",
+            "malaga-stop-2401",
+            "malaga-stop-2416",
+            "malaga-stop-402",
+            "malaga-stop-307",
+            "malaga-stop-403",
+            "malaga-stop-2417",
+            "malaga-stop-406",
+            "malaga-stop-407",
+            "malaga-stop-2402",
+            "malaga-stop-2403",
+            "malaga-stop-2404",
+            "malaga-stop-2405",
+            "malaga-stop-2465"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s04",
+          "directionLabel": "Ciudad Jardín",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "malaga-stop-2411",
+            "malaga-stop-2064",
+            "malaga-stop-2461",
+            "malaga-stop-2452",
+            "malaga-stop-2465",
+            "malaga-stop-2457",
+            "malaga-stop-2458",
+            "malaga-stop-2459",
+            "malaga-stop-2460",
+            "malaga-stop-458",
+            "malaga-stop-460",
+            "malaga-stop-468",
+            "malaga-stop-501",
+            "malaga-stop-2466",
+            "malaga-stop-462",
+            "malaga-stop-3264",
+            "malaga-stop-2061",
+            "malaga-stop-202",
+            "malaga-stop-230",
+            "malaga-stop-205",
+            "malaga-stop-2603",
+            "malaga-stop-2604",
+            "malaga-stop-2627",
+            "malaga-stop-113",
+            "malaga-stop-2605",
+            "malaga-stop-2606",
+            "malaga-stop-2607",
+            "malaga-stop-2608",
+            "malaga-stop-2630",
+            "malaga-stop-176",
+            "malaga-stop-120",
+            "malaga-stop-214",
+            "malaga-stop-251"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s05",
+          "directionLabel": " Los Prados",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 30
+          },
+          "stopNodeIds": [
+            "malaga-stop-251",
+            "malaga-stop-252",
+            "malaga-stop-264",
+            "malaga-stop-2655",
+            "malaga-stop-228",
+            "malaga-stop-2667",
+            "malaga-stop-2668",
+            "malaga-stop-2669",
+            "malaga-stop-2670",
+            "malaga-stop-153",
+            "malaga-stop-2671",
+            "malaga-stop-259",
+            "malaga-stop-260",
+            "malaga-stop-261",
+            "malaga-stop-253",
+            "malaga-stop-791",
+            "malaga-stop-2401",
+            "malaga-stop-2416",
+            "malaga-stop-402",
+            "malaga-stop-307",
+            "malaga-stop-403",
+            "malaga-stop-2417",
+            "malaga-stop-406",
+            "malaga-stop-407",
+            "malaga-stop-2402",
+            "malaga-stop-2403",
+            "malaga-stop-2404",
+            "malaga-stop-2405",
+            "malaga-stop-2414",
+            "malaga-stop-2411"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s06",
+          "directionLabel": " Ciudad Jardín ",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 28
+          },
+          "stopNodeIds": [
+            "malaga-stop-2465",
+            "malaga-stop-2457",
+            "malaga-stop-2458",
+            "malaga-stop-2459",
+            "malaga-stop-2460",
+            "malaga-stop-458",
+            "malaga-stop-460",
+            "malaga-stop-468",
+            "malaga-stop-501",
+            "malaga-stop-2466",
+            "malaga-stop-462",
+            "malaga-stop-3264",
+            "malaga-stop-2061",
+            "malaga-stop-202",
+            "malaga-stop-230",
+            "malaga-stop-205",
+            "malaga-stop-2603",
+            "malaga-stop-2627",
+            "malaga-stop-113",
+            "malaga-stop-2605",
+            "malaga-stop-2606",
+            "malaga-stop-2607",
+            "malaga-stop-2608",
+            "malaga-stop-2630",
+            "malaga-stop-176",
+            "malaga-stop-120",
+            "malaga-stop-214",
+            "malaga-stop-251"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s07",
+          "directionLabel": "Ciudad Jardín",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 2
+          },
+          "stopNodeIds": [
+            "malaga-stop-214",
+            "malaga-stop-251"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s08",
+          "directionLabel": "Alameda Principal - Norte",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "malaga-stop-2411",
+            "malaga-stop-2064",
+            "malaga-stop-2461",
+            "malaga-stop-2452",
+            "malaga-stop-2453",
+            "malaga-stop-2062",
+            "malaga-stop-2454",
+            "malaga-stop-2463",
+            "malaga-stop-2464",
+            "malaga-stop-2465",
+            "malaga-stop-2457",
+            "malaga-stop-2458",
+            "malaga-stop-2459",
+            "malaga-stop-2460",
+            "malaga-stop-458",
+            "malaga-stop-460",
+            "malaga-stop-468",
+            "malaga-stop-501",
+            "malaga-stop-2466",
+            "malaga-stop-462",
+            "malaga-stop-3264"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s09",
+          "directionLabel": "Alameda Principal - Norte",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "malaga-stop-2465",
+            "malaga-stop-2457",
+            "malaga-stop-2458",
+            "malaga-stop-2459",
+            "malaga-stop-2460",
+            "malaga-stop-458",
+            "malaga-stop-460",
+            "malaga-stop-468",
+            "malaga-stop-501",
+            "malaga-stop-2466",
+            "malaga-stop-462",
+            "malaga-stop-3264"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s10",
+          "directionLabel": "Los Prados",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "malaga-stop-791",
+            "malaga-stop-2401",
+            "malaga-stop-2416",
+            "malaga-stop-402",
+            "malaga-stop-307",
+            "malaga-stop-403",
+            "malaga-stop-2417",
+            "malaga-stop-406",
+            "malaga-stop-407",
+            "malaga-stop-2402",
+            "malaga-stop-2403",
+            "malaga-stop-2404",
+            "malaga-stop-2405",
+            "malaga-stop-2414",
+            "malaga-stop-2415",
+            "malaga-stop-2413",
+            "malaga-stop-2408",
+            "malaga-stop-2409",
+            "malaga-stop-2410",
+            "malaga-stop-2411"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s11",
+          "directionLabel": " S.Rafael-EMT",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "malaga-stop-791",
+            "malaga-stop-2401",
+            "malaga-stop-2416",
+            "malaga-stop-402",
+            "malaga-stop-307",
+            "malaga-stop-403",
+            "malaga-stop-2417",
+            "malaga-stop-406",
+            "malaga-stop-407",
+            "malaga-stop-2402",
+            "malaga-stop-2403",
+            "malaga-stop-2404",
+            "malaga-stop-2405",
+            "malaga-stop-2465"
+          ]
+        },
+        {
+          "patternId": "malaga-line-20-s12",
+          "directionLabel": " Los Prados",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "malaga-stop-791",
+            "malaga-stop-2401",
+            "malaga-stop-2416",
+            "malaga-stop-402",
+            "malaga-stop-307",
+            "malaga-stop-403",
+            "malaga-stop-2417",
+            "malaga-stop-406",
+            "malaga-stop-407",
+            "malaga-stop-2402",
+            "malaga-stop-2403",
+            "malaga-stop-2404",
+            "malaga-stop-2405",
+            "malaga-stop-2414",
+            "malaga-stop-2411"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "20",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "20",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "20",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=20"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-30",
+      "publicCode": "30",
+      "name": "Alameda Principal - Mangas Verdes",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-30-s01",
+          "directionLabel": "Mangas Verdes",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "malaga-stop-229",
+            "malaga-stop-202",
+            "malaga-stop-230",
+            "malaga-stop-205",
+            "malaga-stop-2603",
+            "malaga-stop-2604",
+            "malaga-stop-2627",
+            "malaga-stop-113",
+            "malaga-stop-174",
+            "malaga-stop-114",
+            "malaga-stop-3007",
+            "malaga-stop-3008",
+            "malaga-stop-3009",
+            "malaga-stop-3005",
+            "malaga-stop-3003",
+            "malaga-stop-3004",
+            "malaga-stop-3051",
+            "malaga-stop-3006"
+          ]
+        },
+        {
+          "patternId": "malaga-line-30-s02",
+          "directionLabel": " Alameda Principal",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 13
+          },
+          "stopNodeIds": [
+            "malaga-stop-3006",
+            "malaga-stop-3052",
+            "malaga-stop-3053",
+            "malaga-stop-3054",
+            "malaga-stop-3055",
+            "malaga-stop-2669",
+            "malaga-stop-2670",
+            "malaga-stop-153",
+            "malaga-stop-2671",
+            "malaga-stop-259",
+            "malaga-stop-260",
+            "malaga-stop-261",
+            "malaga-stop-229"
+          ]
+        },
+        {
+          "patternId": "malaga-line-30-s03",
+          "directionLabel": "Mangas Verdes",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 9
+          },
+          "stopNodeIds": [
+            "malaga-stop-114",
+            "malaga-stop-3007",
+            "malaga-stop-3008",
+            "malaga-stop-3009",
+            "malaga-stop-3005",
+            "malaga-stop-3003",
+            "malaga-stop-3004",
+            "malaga-stop-3051",
+            "malaga-stop-3006"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "30",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "30",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "30",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=30"
+        }
+      ]
+    }
+  ]
+}

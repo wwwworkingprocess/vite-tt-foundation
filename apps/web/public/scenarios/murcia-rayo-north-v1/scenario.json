@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-north-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Murcia Rayo North Network - Lines R14 and R20",
+  "primarySettlementId": "es-murcia",
+  "settlementIds": [
+    "es-murcia"
+  ],
+  "contentHash": "70887cd8c6bf8d4b277cbb7971944aaa44b1718af51d8ae3c617bcc167e505c4",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "4aefda5b9b748e34e81bf373f138b9a535361def46ae91a9c2044ca866f1e2d5"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "10f89285a9a243dc6db2c01cc8be6bbb203a5ba1ae78ea70551e1e0c1f037988"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "80f8e459703ca6cd06442a21358d874dc3aa1c41451536d0eed130a28c2b067a"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "b519a0ade412c90ffde49e0f12bf27e2b5a60fbb6c4884b7b0a13ad4f7b90f56"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "6ff862effafc93263869798a2e145a662183bee34e06d9070bcbe414abdbfe73"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-legacy-all-v1",
+  "routes": [
+    {
+      "routeId": "murcia-r12",
+      "publicCode": "R12",
+      "name": "R12 - LOS GARRES - PIO BAROJA - GLORIETA - SAN ANDRES",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-r12-s01",
+          "directionLabel": "Camino de los Garres 1 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 44
+          },
+          "stopNodeIds": [
+            "murcia-stop-9218",
+            "murcia-stop-9230",
+            "murcia-stop-9231",
+            "murcia-stop-9219",
+            "murcia-stop-9232",
+            "murcia-stop-9220",
+            "murcia-stop-9244",
+            "murcia-stop-9245",
+            "murcia-stop-9246",
+            "murcia-stop-9177",
+            "murcia-stop-9178",
+            "murcia-stop-9046",
+            "murcia-stop-9133",
+            "murcia-stop-9155",
+            "murcia-stop-9134",
+            "murcia-stop-9135",
+            "murcia-stop-9019",
+            "murcia-stop-9255",
+            "murcia-stop-9021",
+            "murcia-stop-9022",
+            "murcia-stop-9023",
+            "murcia-stop-9024",
+            "murcia-stop-9036",
+            "murcia-stop-9165",
+            "murcia-stop-9037",
+            "murcia-stop-9038",
+            "murcia-stop-9164",
+            "murcia-stop-9257",
+            "murcia-stop-9156",
+            "murcia-stop-9157",
+            "murcia-stop-9158",
+            "murcia-stop-9159",
+            "murcia-stop-9143",
+            "murcia-stop-9179",
+            "murcia-stop-9180",
+            "murcia-stop-9247",
+            "murcia-stop-9248",
+            "murcia-stop-9249",
+            "murcia-stop-9227",
+            "murcia-stop-9235",
+            "murcia-stop-9228",
+            "murcia-stop-9236",
+            "murcia-stop-9237",
+            "murcia-stop-9229"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50120003",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "R12",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-r14",
+      "publicCode": "R14",
+      "name": "R14 - CIRCUL.- J.FUTURA- R.NORTE-G.VIA-S.ANDRES-C.FAMA",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-r14-s01",
+          "directionLabel": "Plz. Circular 14 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 49
+          },
+          "stopNodeIds": [
+            "murcia-stop-9030",
+            "murcia-stop-9058",
+            "murcia-stop-9059",
+            "murcia-stop-9060",
+            "murcia-stop-9061",
+            "murcia-stop-9214",
+            "murcia-stop-9215",
+            "murcia-stop-9191",
+            "murcia-stop-9192",
+            "murcia-stop-9193",
+            "murcia-stop-9194",
+            "murcia-stop-9195",
+            "murcia-stop-9196",
+            "murcia-stop-9063",
+            "murcia-stop-9064",
+            "murcia-stop-9065",
+            "murcia-stop-9066",
+            "murcia-stop-9067",
+            "murcia-stop-9068",
+            "murcia-stop-9069",
+            "murcia-stop-9025",
+            "murcia-stop-9026",
+            "murcia-stop-9027",
+            "murcia-stop-9028",
+            "murcia-stop-9029",
+            "murcia-stop-9070",
+            "murcia-stop-9071",
+            "murcia-stop-9072",
+            "murcia-stop-9074",
+            "murcia-stop-9075",
+            "murcia-stop-9076",
+            "murcia-stop-9022",
+            "murcia-stop-9077",
+            "murcia-stop-9150",
+            "murcia-stop-9166",
+            "murcia-stop-9078",
+            "murcia-stop-9079",
+            "murcia-stop-9080",
+            "murcia-stop-9206",
+            "murcia-stop-9257",
+            "murcia-stop-9136",
+            "murcia-stop-9137",
+            "murcia-stop-9138",
+            "murcia-stop-9139",
+            "murcia-stop-9140",
+            "murcia-stop-9197",
+            "murcia-stop-9082",
+            "murcia-stop-9000",
+            "murcia-stop-9153"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50140002",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "R14",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-r17",
+      "publicCode": "R17",
+      "name": "R17 - FFCC -H.R.SOFIA -LA FAMA - CIRCUL.- UMU- GLORIETA",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-r17-s01",
+          "directionLabel": "Estación Ferrocarril (impar) (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 48
+          },
+          "stopNodeIds": [
+            "murcia-stop-9043",
+            "murcia-stop-9044",
+            "murcia-stop-9045",
+            "murcia-stop-9012",
+            "murcia-stop-9046",
+            "murcia-stop-9083",
+            "murcia-stop-9198",
+            "murcia-stop-9199",
+            "murcia-stop-9200",
+            "murcia-stop-9201",
+            "murcia-stop-9086",
+            "murcia-stop-9087",
+            "murcia-stop-9088",
+            "murcia-stop-9089",
+            "murcia-stop-9090",
+            "murcia-stop-9258",
+            "murcia-stop-9092",
+            "murcia-stop-9093",
+            "murcia-stop-9094",
+            "murcia-stop-9095",
+            "murcia-stop-9096",
+            "murcia-stop-9173",
+            "murcia-stop-9140",
+            "murcia-stop-9197",
+            "murcia-stop-9082",
+            "murcia-stop-9000",
+            "murcia-stop-9001",
+            "murcia-stop-9002",
+            "murcia-stop-9097",
+            "murcia-stop-9098",
+            "murcia-stop-9099",
+            "murcia-stop-9100",
+            "murcia-stop-9101",
+            "murcia-stop-9102",
+            "murcia-stop-9103",
+            "murcia-stop-9104",
+            "murcia-stop-9105",
+            "murcia-stop-9106",
+            "murcia-stop-9107",
+            "murcia-stop-9134",
+            "murcia-stop-9135",
+            "murcia-stop-9019",
+            "murcia-stop-9039",
+            "murcia-stop-9040",
+            "murcia-stop-9041",
+            "murcia-stop-9256",
+            "murcia-stop-9042",
+            "murcia-stop-9154"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50170002",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "R17",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-r20",
+      "publicCode": "R20",
+      "name": "R20 - CIRCULAR - P.ASTURIAS- G.VIA - R.SOFIA- ATALAYAS",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-r20-s01",
+          "directionLabel": "Plz. Circular 14 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 36
+          },
+          "stopNodeIds": [
+            "murcia-stop-9030",
+            "murcia-stop-9058",
+            "murcia-stop-9059",
+            "murcia-stop-9060",
+            "murcia-stop-9123",
+            "murcia-stop-9124",
+            "murcia-stop-9125",
+            "murcia-stop-9126",
+            "murcia-stop-9026",
+            "murcia-stop-9027",
+            "murcia-stop-9028",
+            "murcia-stop-9029",
+            "murcia-stop-9070",
+            "murcia-stop-9071",
+            "murcia-stop-9072",
+            "murcia-stop-9257",
+            "murcia-stop-9156",
+            "murcia-stop-9157",
+            "murcia-stop-9088",
+            "murcia-stop-9258",
+            "murcia-stop-9259",
+            "murcia-stop-9260",
+            "murcia-stop-9005",
+            "murcia-stop-9111",
+            "murcia-stop-9112",
+            "murcia-stop-9174",
+            "murcia-stop-9175",
+            "murcia-stop-9113",
+            "murcia-stop-9204",
+            "murcia-stop-9205",
+            "murcia-stop-9207",
+            "murcia-stop-9208",
+            "murcia-stop-9110",
+            "murcia-stop-9151",
+            "murcia-stop-9056",
+            "murcia-stop-9153"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50200002",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "R20",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-r80",
+      "publicCode": "R80",
+      "name": "R80 - MESA CASTILLO-PIO BAROJA-CIRCULAR (BUS:SPRINTER)",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-r80-s01",
+          "directionLabel": "Paseo Florencia I (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 36
+          },
+          "stopNodeIds": [
+            "murcia-stop-9127",
+            "murcia-stop-9128",
+            "murcia-stop-9129",
+            "murcia-stop-9131",
+            "murcia-stop-9132",
+            "murcia-stop-9012",
+            "murcia-stop-9046",
+            "murcia-stop-9133",
+            "murcia-stop-9155",
+            "murcia-stop-9134",
+            "murcia-stop-9135",
+            "murcia-stop-9136",
+            "murcia-stop-9137",
+            "murcia-stop-9138",
+            "murcia-stop-9139",
+            "murcia-stop-9056",
+            "murcia-stop-9030",
+            "murcia-stop-9029",
+            "murcia-stop-9070",
+            "murcia-stop-9071",
+            "murcia-stop-9072",
+            "murcia-stop-9257",
+            "murcia-stop-9156",
+            "murcia-stop-9157",
+            "murcia-stop-9158",
+            "murcia-stop-9159",
+            "murcia-stop-9143",
+            "murcia-stop-9160",
+            "murcia-stop-9144",
+            "murcia-stop-9161",
+            "murcia-stop-9145",
+            "murcia-stop-9146",
+            "murcia-stop-9147",
+            "murcia-stop-9148",
+            "murcia-stop-9149",
+            "murcia-stop-9162"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50800009",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "R80",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    }
+  ]
+}

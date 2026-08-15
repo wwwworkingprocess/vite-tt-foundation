@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-coast-v1",
+  "settlements": [
+    {
+      "settlementId": "es-cartagena",
+      "name": "Cartagena",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.64995983496835,
+        "longitude": -0.904006502651697
+      },
+      "bounds": {
+        "south": 37.56860105919413,
+        "west": -1.1057018641951086,
+        "north": 37.73131861074257,
+        "east": -0.7023111411082854
+      }
+    },
+    {
+      "settlementId": "es-la-union",
+      "name": "La Unión",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.62141838736605,
+        "longitude": -0.881671731844563
+      },
+      "bounds": {
+        "south": 37.620349045187346,
+        "west": -0.8869753330537926,
+        "north": 37.62248772954475,
+        "east": -0.8763681306353334
+      }
+    }
+  ]
+}

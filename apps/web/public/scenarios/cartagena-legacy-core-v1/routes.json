@@ -1,0 +1,243 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-core-v1",
+  "routes": [
+    {
+      "routeId": "cartagena-1",
+      "publicCode": "1",
+      "name": "Plaza Puerta de San José - San Félix",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-1-s01-la-buhardilla-capitanes-ripoll",
+          "directionLabel": "LA BUHARDILLA - CAPITANES RIPOLL",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5000",
+            "cartagena-stop-5001",
+            "cartagena-stop-5002",
+            "cartagena-stop-5003",
+            "cartagena-stop-5004",
+            "cartagena-stop-5005",
+            "cartagena-stop-5006",
+            "cartagena-stop-5007",
+            "cartagena-stop-5008",
+            "cartagena-stop-5009",
+            "cartagena-stop-5010",
+            "cartagena-stop-5011",
+            "cartagena-stop-5012",
+            "cartagena-stop-5013",
+            "cartagena-stop-5014",
+            "cartagena-stop-5015",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5074"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-1-s02-casas-de-clares-capitanes-ripoll",
+          "directionLabel": "CASAS DE CLARES-CAPITANES RIPOLL",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5020",
+            "cartagena-stop-5021",
+            "cartagena-stop-5022",
+            "cartagena-stop-5023",
+            "cartagena-stop-5001",
+            "cartagena-stop-5002",
+            "cartagena-stop-5003",
+            "cartagena-stop-5004",
+            "cartagena-stop-5005",
+            "cartagena-stop-5006",
+            "cartagena-stop-5007",
+            "cartagena-stop-5008",
+            "cartagena-stop-5009",
+            "cartagena-stop-5010",
+            "cartagena-stop-5011",
+            "cartagena-stop-5012",
+            "cartagena-stop-5013",
+            "cartagena-stop-5014",
+            "cartagena-stop-5015",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5074"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-1-s03-capitanes-ripoll-la-buhardilla",
+          "directionLabel": "CAPITANES RIPOLL-LA BUHARDILLA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5074",
+            "cartagena-stop-5024",
+            "cartagena-stop-5025",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027",
+            "cartagena-stop-5028",
+            "cartagena-stop-5029",
+            "cartagena-stop-5030",
+            "cartagena-stop-5031",
+            "cartagena-stop-5032",
+            "cartagena-stop-5033",
+            "cartagena-stop-5034",
+            "cartagena-stop-5035",
+            "cartagena-stop-5036",
+            "cartagena-stop-5037",
+            "cartagena-stop-5038",
+            "cartagena-stop-5039",
+            "cartagena-stop-5040",
+            "cartagena-stop-5041",
+            "cartagena-stop-5042",
+            "cartagena-stop-5000"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-1-s04-capitanes-ripoll-casas-de-clares",
+          "directionLabel": "CAPITANES RIPOLL-CASAS DE CLARES",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 25
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5074",
+            "cartagena-stop-5024",
+            "cartagena-stop-5025",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027",
+            "cartagena-stop-5028",
+            "cartagena-stop-5029",
+            "cartagena-stop-5030",
+            "cartagena-stop-5031",
+            "cartagena-stop-5032",
+            "cartagena-stop-5033",
+            "cartagena-stop-5034",
+            "cartagena-stop-5035",
+            "cartagena-stop-5036",
+            "cartagena-stop-5037",
+            "cartagena-stop-5038",
+            "cartagena-stop-5039",
+            "cartagena-stop-5040",
+            "cartagena-stop-5041",
+            "cartagena-stop-5042",
+            "cartagena-stop-5043",
+            "cartagena-stop-5044",
+            "cartagena-stop-5045",
+            "cartagena-stop-5046",
+            "cartagena-stop-5047"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "1",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/1"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "1",
+          "sourceFile": "route-captures/line-1.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-2",
+      "publicCode": "2",
+      "name": "Bº Virgen Caridad - Bº Peral",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-2-s01-barrio-peral-barrio-virgen-de-la-caridad",
+          "directionLabel": "BARRIO PERAL-BARRIO VIRGEN DE LA CARIDAD",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 22
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5048",
+            "cartagena-stop-5049",
+            "cartagena-stop-5050",
+            "cartagena-stop-5051",
+            "cartagena-stop-5052",
+            "cartagena-stop-5053",
+            "cartagena-stop-5054",
+            "cartagena-stop-5055",
+            "cartagena-stop-5012",
+            "cartagena-stop-5013",
+            "cartagena-stop-5014",
+            "cartagena-stop-5015",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5056",
+            "cartagena-stop-5057",
+            "cartagena-stop-5058",
+            "cartagena-stop-5059",
+            "cartagena-stop-5060",
+            "cartagena-stop-5061",
+            "cartagena-stop-5062"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-2-s02-barrio-virgen-de-la-caridad-barrio-peral",
+          "directionLabel": "BARRIO VIRGEN DE LA CARIDAD - BARRIO PERAL",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5062",
+            "cartagena-stop-5063",
+            "cartagena-stop-5064",
+            "cartagena-stop-5065",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027",
+            "cartagena-stop-5028",
+            "cartagena-stop-5029",
+            "cartagena-stop-5030",
+            "cartagena-stop-5031",
+            "cartagena-stop-5032",
+            "cartagena-stop-5066",
+            "cartagena-stop-5067",
+            "cartagena-stop-5068",
+            "cartagena-stop-5069",
+            "cartagena-stop-5070",
+            "cartagena-stop-5071",
+            "cartagena-stop-5072",
+            "cartagena-stop-5073",
+            "cartagena-stop-5048"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "2",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/2"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "2",
+          "sourceFile": "route-captures/line-2.json"
+        }
+      ]
+    }
+  ]
+}

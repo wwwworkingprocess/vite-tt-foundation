@@ -1,0 +1,2285 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-manga-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6783",
+      "name": "SANTIAGO DE LA RIBERA",
+      "position": {
+        "latitude": 37.7989975200767,
+        "longitude": -0.810615758581405
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6784",
+      "name": "AEROPUERTO SAN JAVIER",
+      "position": {
+        "latitude": 37.7760290647399,
+        "longitude": -0.818480209575918
+      }
+    },
+    {
+      "settlementId": "es-los-alcazares",
+      "stopPlaceId": "cartagena-place-6785",
+      "name": "LOS NAREJOS PARADA DE TAXIS",
+      "position": {
+        "latitude": 37.7581609757462,
+        "longitude": -0.839107003730949
+      }
+    },
+    {
+      "settlementId": "es-los-alcazares",
+      "stopPlaceId": "cartagena-place-6786",
+      "name": "LOS ALCAZARES LA ABUELA",
+      "position": {
+        "latitude": 37.7460615148105,
+        "longitude": -0.848628743657829
+      }
+    },
+    {
+      "settlementId": "es-los-alcazares",
+      "stopPlaceId": "cartagena-place-6787",
+      "name": "LOS ALCAZARES AYUNTAMIENTO",
+      "position": {
+        "latitude": 37.7394221101751,
+        "longitude": -0.852202602188322
+      }
+    },
+    {
+      "settlementId": "es-los-alcazares",
+      "stopPlaceId": "cartagena-place-6788",
+      "name": "CAMPING LOS ALCAZARES",
+      "position": {
+        "latitude": 37.7186059190703,
+        "longitude": -0.861153558953653
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6780",
+      "name": "URRUTIAS BAR POVEDA",
+      "position": {
+        "latitude": 37.6902783700089,
+        "longitude": -0.837722560508082
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6779",
+      "name": "URRUTIAS AULA DE LA NATURALEZA",
+      "position": {
+        "latitude": 37.6856264812355,
+        "longitude": -0.834183710573916
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6789",
+      "name": "URRUTIAS IGLESIA",
+      "position": {
+        "latitude": 37.680480865548,
+        "longitude": -0.829775263483698
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6790",
+      "name": "URRUTIAS ESTRELLA DEL MAR",
+      "position": {
+        "latitude": 37.6716962947863,
+        "longitude": -0.826936169164068
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6791",
+      "name": "LOS NIETOS",
+      "position": {
+        "latitude": 37.6500009340135,
+        "longitude": -0.787934031413273
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6792",
+      "name": "MAR DE CRISTAL BUZON",
+      "position": {
+        "latitude": 37.6408074539918,
+        "longitude": -0.768714935757348
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6793",
+      "name": "MAR DE CRISTAL-ISLAS MENORES",
+      "position": {
+        "latitude": 37.640155104488,
+        "longitude": -0.764722803018571
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6796",
+      "name": "PLAYA HONDA",
+      "position": {
+        "latitude": 37.625432034336,
+        "longitude": -0.734595438526231
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6795",
+      "name": "CABO DE PALOS GASOLINERA",
+      "position": {
+        "latitude": 37.6280762079242,
+        "longitude": -0.709134985244249
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6714",
+      "name": "CABO DE PALOS I",
+      "position": {
+        "latitude": 37.6330905877938,
+        "longitude": -0.703779972720928
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6715",
+      "name": "LOS GERANIOS I",
+      "position": {
+        "latitude": 37.6335623611457,
+        "longitude": -0.706258317949668
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6716",
+      "name": "MERCADONA I",
+      "position": {
+        "latitude": 37.6354827119809,
+        "longitude": -0.707695016471766
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6717",
+      "name": "HOTEL ENTREMARES I",
+      "position": {
+        "latitude": 37.6426791621578,
+        "longitude": -0.71400136874499
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6718",
+      "name": "LAS SIRENAS-LOS DELFINES I",
+      "position": {
+        "latitude": 37.6480213153324,
+        "longitude": -0.715775571550376
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6719",
+      "name": "LA GOLA-NUEVAS SIRENAS I",
+      "position": {
+        "latitude": 37.6523494213803,
+        "longitude": -0.719167840232041
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6720",
+      "name": "PLAZA CAVANNA I",
+      "position": {
+        "latitude": 37.6572359165863,
+        "longitude": -0.721149238579017
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6721",
+      "name": "PLAZA BOHEMIA I",
+      "position": {
+        "latitude": 37.663424842965,
+        "longitude": -0.724780114059166
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6722",
+      "name": "ZOCO I",
+      "position": {
+        "latitude": 37.671330785211,
+        "longitude": -0.730071094448534
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6723",
+      "name": "CASTILLO DEL MAR-CENTRO MEDICO I",
+      "position": {
+        "latitude": 37.6771748316478,
+        "longitude": -0.732183221749515
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6724",
+      "name": "EUROVOSA I",
+      "position": {
+        "latitude": 37.6796229267875,
+        "longitude": -0.733900112502778
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6725",
+      "name": "HOTEL MANGALAN I",
+      "position": {
+        "latitude": 37.6869159618067,
+        "longitude": -0.73638823391039
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6726",
+      "name": "PIRAMIDE I",
+      "position": {
+        "latitude": 37.6903517298543,
+        "longitude": -0.73745176117439
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6727",
+      "name": "HOTEL DOBLEMAR I",
+      "position": {
+        "latitude": 37.6980185196676,
+        "longitude": -0.740167349162446
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6728",
+      "name": "PEDRUCHILLO I",
+      "position": {
+        "latitude": 37.705544619658,
+        "longitude": -0.742127794757434
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6773",
+      "name": "URRUTIAS BAR POVEDA",
+      "position": {
+        "latitude": 37.6904084159004,
+        "longitude": -0.83793424552315
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6774",
+      "name": "URRUTIAS AULA DE LA NATURALEZA",
+      "position": {
+        "latitude": 37.6855579666685,
+        "longitude": -0.834378473682338
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6752",
+      "name": "PEDRUCHILLO V",
+      "position": {
+        "latitude": 37.7051590895829,
+        "longitude": -0.742230234061439
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6753",
+      "name": "HOTEL DOBLEMAR V",
+      "position": {
+        "latitude": 37.6985574928341,
+        "longitude": -0.740547922279606
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6754",
+      "name": "BOMBEROS",
+      "position": {
+        "latitude": 37.6951540778911,
+        "longitude": -0.739290378961084
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6755",
+      "name": "PIRAMIDE V",
+      "position": {
+        "latitude": 37.6912571374227,
+        "longitude": -0.737673719434902
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6756",
+      "name": "HOTEL MANGALAN V",
+      "position": {
+        "latitude": 37.6869023020598,
+        "longitude": -0.736615437639811
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6757",
+      "name": "EUROVOSA V",
+      "position": {
+        "latitude": 37.6802912713011,
+        "longitude": -0.734446691740068
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6758",
+      "name": "CASTILLO DEL MAR-CENTRO MEDICO V",
+      "position": {
+        "latitude": 37.6769044275894,
+        "longitude": -0.7321801189023
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6759",
+      "name": "ZOCO GASOLINERA",
+      "position": {
+        "latitude": 37.6740532128567,
+        "longitude": -0.730589002815265
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6760",
+      "name": "ZOCO V",
+      "position": {
+        "latitude": 37.670427329103,
+        "longitude": -0.729951248602858
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6761",
+      "name": "PLAZA BOHEMIA V",
+      "position": {
+        "latitude": 37.6616822675372,
+        "longitude": -0.728812107601148
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6762",
+      "name": "PLAZA CAVANNA V",
+      "position": {
+        "latitude": 37.6586509183576,
+        "longitude": -0.722092116898156
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6763",
+      "name": "LA GOLA-NUEVAS SIRENAS V",
+      "position": {
+        "latitude": 37.6512816747658,
+        "longitude": -0.718475141803531
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6764",
+      "name": "LAS SIRENAS-LOS DELFINES V",
+      "position": {
+        "latitude": 37.6479435514229,
+        "longitude": -0.715947956043342
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6765",
+      "name": "HOTEL ENTREMARES V",
+      "position": {
+        "latitude": 37.6416808009846,
+        "longitude": -0.713635341785715
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6766",
+      "name": "MERCADONA V",
+      "position": {
+        "latitude": 37.6352955649076,
+        "longitude": -0.707802752360307
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6767",
+      "name": "LOS GERANIOS V",
+      "position": {
+        "latitude": 37.6334553892427,
+        "longitude": -0.706318263899416
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6798",
+      "name": "MAR DE CRISTAL",
+      "position": {
+        "latitude": 37.6400165723203,
+        "longitude": -0.764545638533974
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6799",
+      "name": "MAR DE CRISTAL BUZON",
+      "position": {
+        "latitude": 37.6409768625964,
+        "longitude": -0.768619206442588
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6772",
+      "name": "URRUTIAS PUNTA BRAVA",
+      "position": {
+        "latitude": 37.6946088227974,
+        "longitude": -0.841429936219736
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5806",
+      "name": "ESTACION AUTOBUSES CARTAGENA (Cartagena)",
+      "position": {
+        "latitude": 37.602907707958,
+        "longitude": -0.977300096480006
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6859",
+      "name": "V.ALEGRE I",
+      "position": {
+        "latitude": 37.6093385424076,
+        "longitude": -0.944761675798606
+      }
+    },
+    {
+      "settlementId": "es-la-union",
+      "stopPlaceId": "cartagena-place-6912",
+      "name": "DON POLLO I",
+      "position": {
+        "latitude": 37.6216808675112,
+        "longitude": -0.885903228928528
+      }
+    },
+    {
+      "settlementId": "es-la-union",
+      "stopPlaceId": "cartagena-place-6897",
+      "name": "LA UNIàN I",
+      "position": {
+        "latitude": 37.6205800894062,
+        "longitude": -0.877799762839617
+      }
+    },
+    {
+      "settlementId": "es-la-union",
+      "stopPlaceId": "cartagena-place-6873",
+      "name": "C.NUEVAS I",
+      "position": {
+        "latitude": 37.6223095058483,
+        "longitude": -0.877252064170205
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-7137",
+      "name": "Plaza del Hondo",
+      "position": {
+        "latitude": 37.6478181577286,
+        "longitude": -0.868059637314946
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6885",
+      "name": "C.SAURA I",
+      "position": {
+        "latitude": 37.6423425666467,
+        "longitude": -0.863773717912112
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6918",
+      "name": "EL BEAL V",
+      "position": {
+        "latitude": 37.6353336453157,
+        "longitude": -0.843101331726129
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6894",
+      "name": "LLANO BEAL",
+      "position": {
+        "latitude": 37.6269545418954,
+        "longitude": -0.835820160603742
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6895",
+      "name": "ESTRECHO G I",
+      "position": {
+        "latitude": 37.6292808212799,
+        "longitude": -0.828534936926629
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6893",
+      "name": "BELONES I",
+      "position": {
+        "latitude": 37.6227504739509,
+        "longitude": -0.77933848776582
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-7304",
+      "name": "PLAYA HONDA",
+      "position": {
+        "latitude": 37.6293415835055,
+        "longitude": -0.735927034698854
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6884",
+      "name": "CALA FLORE",
+      "position": {
+        "latitude": 37.6277535658182,
+        "longitude": -0.711546928714724
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-7362",
+      "name": "PLAYA PARAISO PASEO MARITIMO I",
+      "position": {
+        "latitude": 37.6324329356293,
+        "longitude": -0.729385796817419
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-7364",
+      "name": "PLAYA PARAISO I",
+      "position": {
+        "latitude": 37.6307948619066,
+        "longitude": -0.728087291015674
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6914",
+      "name": "CARAVANING V",
+      "position": {
+        "latitude": 37.624382352883,
+        "longitude": -0.74377054114075
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6915",
+      "name": "BELONES V",
+      "position": {
+        "latitude": 37.6228405397106,
+        "longitude": -0.779335807207187
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6916",
+      "name": "ESTRECHO DE SAN GINES V",
+      "position": {
+        "latitude": 37.6294353975738,
+        "longitude": -0.82860975324719
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5400",
+      "name": "EL LLANO (Cartagena)",
+      "position": {
+        "latitude": 37.6270081677359,
+        "longitude": -0.835795943999431
+      }
+    },
+    {
+      "settlementId": "es-la-union",
+      "stopPlaceId": "cartagena-place-6920",
+      "name": "C.NUEVAS V",
+      "position": {
+        "latitude": 37.6222317022266,
+        "longitude": -0.877435555001528
+      }
+    },
+    {
+      "settlementId": "es-la-union",
+      "stopPlaceId": "cartagena-place-6921",
+      "name": "LA UNIÓN V",
+      "position": {
+        "latitude": 37.6206255327457,
+        "longitude": -0.877821129667812
+      }
+    },
+    {
+      "settlementId": "es-la-union",
+      "stopPlaceId": "cartagena-place-6922",
+      "name": "DON POLLO V",
+      "position": {
+        "latitude": 37.6218374406316,
+        "longitude": -0.886091399518921
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6923",
+      "name": "V.ALEGRE V",
+      "position": {
+        "latitude": 37.609420005085,
+        "longitude": -0.944782089186473
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-7365",
+      "name": "PLAYA PARAISO V",
+      "position": {
+        "latitude": 37.6307783765592,
+        "longitude": -0.728167109092656
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-7363",
+      "name": "PLAYA PARAISO PASEO MARITIMO V",
+      "position": {
+        "latitude": 37.6323865960423,
+        "longitude": -0.729319220945379
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6729",
+      "name": "DOMINIQUE I",
+      "position": {
+        "latitude": 37.7142266245972,
+        "longitude": -0.742805738648802
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6730",
+      "name": "MARTINIQUE I",
+      "position": {
+        "latitude": 37.7168945182888,
+        "longitude": -0.742361747426355
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6731",
+      "name": "PUEBLO CALIDO I",
+      "position": {
+        "latitude": 37.7224038976733,
+        "longitude": -0.741128035568365
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6732",
+      "name": "LAS BRISAS I",
+      "position": {
+        "latitude": 37.7263716753225,
+        "longitude": -0.739861575245857
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6733",
+      "name": "PLAYA PRINCIPE I",
+      "position": {
+        "latitude": 37.7321838294699,
+        "longitude": -0.740320222640424
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6734",
+      "name": "PUERTO TOMAS MAESTRE I",
+      "position": {
+        "latitude": 37.7388986233224,
+        "longitude": -0.738039451894094
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6735",
+      "name": "PUENTE DEL ESTACIO I",
+      "position": {
+        "latitude": 37.748268195107,
+        "longitude": -0.735575170389116
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6736",
+      "name": "OASIS I",
+      "position": {
+        "latitude": 37.7493150830949,
+        "longitude": -0.73847128283863
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6737",
+      "name": "RESIDENCIAL DOS MARES I",
+      "position": {
+        "latitude": 37.7572057133431,
+        "longitude": -0.746289591720179
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6738",
+      "name": "URB.LIBERTAD DOS PLAYAS I",
+      "position": {
+        "latitude": 37.7647079462423,
+        "longitude": -0.748422911736236
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6739",
+      "name": "URB.LAS GONDOLAS MESON MURCIANO I",
+      "position": {
+        "latitude": 37.7693442820979,
+        "longitude": -0.746772443034812
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6740",
+      "name": "VENEZIOLA I",
+      "position": {
+        "latitude": 37.7716320612002,
+        "longitude": -0.746714335193265
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6741",
+      "name": "VENEZIOLA V",
+      "position": {
+        "latitude": 37.7717354699014,
+        "longitude": -0.746938243518519
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6742",
+      "name": "URB.LAS GONDOLAS MESON MURCIANO V",
+      "position": {
+        "latitude": 37.7692051754404,
+        "longitude": -0.747037762696514
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6743",
+      "name": "URB.LIBERTAD DOS PLAYAS V",
+      "position": {
+        "latitude": 37.7647199884272,
+        "longitude": -0.748581465162785
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6744",
+      "name": "RESIDENCIAL DOS MARES V",
+      "position": {
+        "latitude": 37.7571542806733,
+        "longitude": -0.746427354920832
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6745",
+      "name": "OASIS-PUENTE DEL ESTACIO",
+      "position": {
+        "latitude": 37.74858465092,
+        "longitude": -0.737506174317636
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6746",
+      "name": "PUERTO TOMAS MAESTRE V",
+      "position": {
+        "latitude": 37.7389374784258,
+        "longitude": -0.738185784787762
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6747",
+      "name": "PLAYA PRINCIPE V",
+      "position": {
+        "latitude": 37.7321956628856,
+        "longitude": -0.740467365289234
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6748",
+      "name": "LAS BRISAS V",
+      "position": {
+        "latitude": 37.7265417050968,
+        "longitude": -0.739799677977626
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6749",
+      "name": "PUEBLO CALIDO V",
+      "position": {
+        "latitude": 37.7223621270374,
+        "longitude": -0.741299477351029
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6750",
+      "name": "MARTINIQUE V",
+      "position": {
+        "latitude": 37.7170678082977,
+        "longitude": -0.742469926397435
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "stopPlaceId": "cartagena-place-6751",
+      "name": "DOMINIQUE V",
+      "position": {
+        "latitude": 37.7136354718435,
+        "longitude": -0.742993834094521
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "cartagena-stop-6783",
+      "stopPlaceId": "cartagena-place-6783",
+      "settlementId": "es-san-javier",
+      "name": "SANTIAGO DE LA RIBERA",
+      "position": {
+        "latitude": 37.7989975200767,
+        "longitude": -0.810615758581405
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6784",
+      "stopPlaceId": "cartagena-place-6784",
+      "settlementId": "es-san-javier",
+      "name": "AEROPUERTO SAN JAVIER",
+      "position": {
+        "latitude": 37.7760290647399,
+        "longitude": -0.818480209575918
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6785",
+      "stopPlaceId": "cartagena-place-6785",
+      "settlementId": "es-los-alcazares",
+      "name": "LOS NAREJOS PARADA DE TAXIS",
+      "position": {
+        "latitude": 37.7581609757462,
+        "longitude": -0.839107003730949
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6786",
+      "stopPlaceId": "cartagena-place-6786",
+      "settlementId": "es-los-alcazares",
+      "name": "LOS ALCAZARES LA ABUELA",
+      "position": {
+        "latitude": 37.7460615148105,
+        "longitude": -0.848628743657829
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6787",
+      "stopPlaceId": "cartagena-place-6787",
+      "settlementId": "es-los-alcazares",
+      "name": "LOS ALCAZARES AYUNTAMIENTO",
+      "position": {
+        "latitude": 37.7394221101751,
+        "longitude": -0.852202602188322
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6788",
+      "stopPlaceId": "cartagena-place-6788",
+      "settlementId": "es-los-alcazares",
+      "name": "CAMPING LOS ALCAZARES",
+      "position": {
+        "latitude": 37.7186059190703,
+        "longitude": -0.861153558953653
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6780",
+      "stopPlaceId": "cartagena-place-6780",
+      "settlementId": "es-cartagena",
+      "name": "URRUTIAS BAR POVEDA",
+      "position": {
+        "latitude": 37.6902783700089,
+        "longitude": -0.837722560508082
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6779",
+      "stopPlaceId": "cartagena-place-6779",
+      "settlementId": "es-cartagena",
+      "name": "URRUTIAS AULA DE LA NATURALEZA",
+      "position": {
+        "latitude": 37.6856264812355,
+        "longitude": -0.834183710573916
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6789",
+      "stopPlaceId": "cartagena-place-6789",
+      "settlementId": "es-cartagena",
+      "name": "URRUTIAS IGLESIA",
+      "position": {
+        "latitude": 37.680480865548,
+        "longitude": -0.829775263483698
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6790",
+      "stopPlaceId": "cartagena-place-6790",
+      "settlementId": "es-cartagena",
+      "name": "URRUTIAS ESTRELLA DEL MAR",
+      "position": {
+        "latitude": 37.6716962947863,
+        "longitude": -0.826936169164068
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6791",
+      "stopPlaceId": "cartagena-place-6791",
+      "settlementId": "es-cartagena",
+      "name": "LOS NIETOS",
+      "position": {
+        "latitude": 37.6500009340135,
+        "longitude": -0.787934031413273
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6792",
+      "stopPlaceId": "cartagena-place-6792",
+      "settlementId": "es-cartagena",
+      "name": "MAR DE CRISTAL BUZON",
+      "position": {
+        "latitude": 37.6408074539918,
+        "longitude": -0.768714935757348
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6793",
+      "stopPlaceId": "cartagena-place-6793",
+      "settlementId": "es-cartagena",
+      "name": "MAR DE CRISTAL-ISLAS MENORES",
+      "position": {
+        "latitude": 37.640155104488,
+        "longitude": -0.764722803018571
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6796",
+      "stopPlaceId": "cartagena-place-6796",
+      "settlementId": "es-cartagena",
+      "name": "PLAYA HONDA",
+      "position": {
+        "latitude": 37.625432034336,
+        "longitude": -0.734595438526231
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6795",
+      "stopPlaceId": "cartagena-place-6795",
+      "settlementId": "es-cartagena",
+      "name": "CABO DE PALOS GASOLINERA",
+      "position": {
+        "latitude": 37.6280762079242,
+        "longitude": -0.709134985244249
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6714",
+      "stopPlaceId": "cartagena-place-6714",
+      "settlementId": "es-cartagena",
+      "name": "CABO DE PALOS I",
+      "position": {
+        "latitude": 37.6330905877938,
+        "longitude": -0.703779972720928
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6715",
+      "stopPlaceId": "cartagena-place-6715",
+      "settlementId": "es-cartagena",
+      "name": "LOS GERANIOS I",
+      "position": {
+        "latitude": 37.6335623611457,
+        "longitude": -0.706258317949668
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6716",
+      "stopPlaceId": "cartagena-place-6716",
+      "settlementId": "es-cartagena",
+      "name": "MERCADONA I",
+      "position": {
+        "latitude": 37.6354827119809,
+        "longitude": -0.707695016471766
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6717",
+      "stopPlaceId": "cartagena-place-6717",
+      "settlementId": "es-cartagena",
+      "name": "HOTEL ENTREMARES I",
+      "position": {
+        "latitude": 37.6426791621578,
+        "longitude": -0.71400136874499
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6718",
+      "stopPlaceId": "cartagena-place-6718",
+      "settlementId": "es-cartagena",
+      "name": "LAS SIRENAS-LOS DELFINES I",
+      "position": {
+        "latitude": 37.6480213153324,
+        "longitude": -0.715775571550376
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6719",
+      "stopPlaceId": "cartagena-place-6719",
+      "settlementId": "es-cartagena",
+      "name": "LA GOLA-NUEVAS SIRENAS I",
+      "position": {
+        "latitude": 37.6523494213803,
+        "longitude": -0.719167840232041
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6720",
+      "stopPlaceId": "cartagena-place-6720",
+      "settlementId": "es-cartagena",
+      "name": "PLAZA CAVANNA I",
+      "position": {
+        "latitude": 37.6572359165863,
+        "longitude": -0.721149238579017
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6721",
+      "stopPlaceId": "cartagena-place-6721",
+      "settlementId": "es-cartagena",
+      "name": "PLAZA BOHEMIA I",
+      "position": {
+        "latitude": 37.663424842965,
+        "longitude": -0.724780114059166
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6722",
+      "stopPlaceId": "cartagena-place-6722",
+      "settlementId": "es-san-javier",
+      "name": "ZOCO I",
+      "position": {
+        "latitude": 37.671330785211,
+        "longitude": -0.730071094448534
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6723",
+      "stopPlaceId": "cartagena-place-6723",
+      "settlementId": "es-san-javier",
+      "name": "CASTILLO DEL MAR-CENTRO MEDICO I",
+      "position": {
+        "latitude": 37.6771748316478,
+        "longitude": -0.732183221749515
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6724",
+      "stopPlaceId": "cartagena-place-6724",
+      "settlementId": "es-san-javier",
+      "name": "EUROVOSA I",
+      "position": {
+        "latitude": 37.6796229267875,
+        "longitude": -0.733900112502778
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6725",
+      "stopPlaceId": "cartagena-place-6725",
+      "settlementId": "es-san-javier",
+      "name": "HOTEL MANGALAN I",
+      "position": {
+        "latitude": 37.6869159618067,
+        "longitude": -0.73638823391039
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6726",
+      "stopPlaceId": "cartagena-place-6726",
+      "settlementId": "es-san-javier",
+      "name": "PIRAMIDE I",
+      "position": {
+        "latitude": 37.6903517298543,
+        "longitude": -0.73745176117439
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6727",
+      "stopPlaceId": "cartagena-place-6727",
+      "settlementId": "es-san-javier",
+      "name": "HOTEL DOBLEMAR I",
+      "position": {
+        "latitude": 37.6980185196676,
+        "longitude": -0.740167349162446
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6728",
+      "stopPlaceId": "cartagena-place-6728",
+      "settlementId": "es-san-javier",
+      "name": "PEDRUCHILLO I",
+      "position": {
+        "latitude": 37.705544619658,
+        "longitude": -0.742127794757434
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6773",
+      "stopPlaceId": "cartagena-place-6773",
+      "settlementId": "es-cartagena",
+      "name": "URRUTIAS BAR POVEDA",
+      "position": {
+        "latitude": 37.6904084159004,
+        "longitude": -0.83793424552315
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6774",
+      "stopPlaceId": "cartagena-place-6774",
+      "settlementId": "es-cartagena",
+      "name": "URRUTIAS AULA DE LA NATURALEZA",
+      "position": {
+        "latitude": 37.6855579666685,
+        "longitude": -0.834378473682338
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6752",
+      "stopPlaceId": "cartagena-place-6752",
+      "settlementId": "es-san-javier",
+      "name": "PEDRUCHILLO V",
+      "position": {
+        "latitude": 37.7051590895829,
+        "longitude": -0.742230234061439
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6753",
+      "stopPlaceId": "cartagena-place-6753",
+      "settlementId": "es-san-javier",
+      "name": "HOTEL DOBLEMAR V",
+      "position": {
+        "latitude": 37.6985574928341,
+        "longitude": -0.740547922279606
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6754",
+      "stopPlaceId": "cartagena-place-6754",
+      "settlementId": "es-san-javier",
+      "name": "BOMBEROS",
+      "position": {
+        "latitude": 37.6951540778911,
+        "longitude": -0.739290378961084
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6755",
+      "stopPlaceId": "cartagena-place-6755",
+      "settlementId": "es-san-javier",
+      "name": "PIRAMIDE V",
+      "position": {
+        "latitude": 37.6912571374227,
+        "longitude": -0.737673719434902
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6756",
+      "stopPlaceId": "cartagena-place-6756",
+      "settlementId": "es-san-javier",
+      "name": "HOTEL MANGALAN V",
+      "position": {
+        "latitude": 37.6869023020598,
+        "longitude": -0.736615437639811
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6757",
+      "stopPlaceId": "cartagena-place-6757",
+      "settlementId": "es-san-javier",
+      "name": "EUROVOSA V",
+      "position": {
+        "latitude": 37.6802912713011,
+        "longitude": -0.734446691740068
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6758",
+      "stopPlaceId": "cartagena-place-6758",
+      "settlementId": "es-san-javier",
+      "name": "CASTILLO DEL MAR-CENTRO MEDICO V",
+      "position": {
+        "latitude": 37.6769044275894,
+        "longitude": -0.7321801189023
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6759",
+      "stopPlaceId": "cartagena-place-6759",
+      "settlementId": "es-san-javier",
+      "name": "ZOCO GASOLINERA",
+      "position": {
+        "latitude": 37.6740532128567,
+        "longitude": -0.730589002815265
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6760",
+      "stopPlaceId": "cartagena-place-6760",
+      "settlementId": "es-san-javier",
+      "name": "ZOCO V",
+      "position": {
+        "latitude": 37.670427329103,
+        "longitude": -0.729951248602858
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6761",
+      "stopPlaceId": "cartagena-place-6761",
+      "settlementId": "es-cartagena",
+      "name": "PLAZA BOHEMIA V",
+      "position": {
+        "latitude": 37.6616822675372,
+        "longitude": -0.728812107601148
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6762",
+      "stopPlaceId": "cartagena-place-6762",
+      "settlementId": "es-cartagena",
+      "name": "PLAZA CAVANNA V",
+      "position": {
+        "latitude": 37.6586509183576,
+        "longitude": -0.722092116898156
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6763",
+      "stopPlaceId": "cartagena-place-6763",
+      "settlementId": "es-cartagena",
+      "name": "LA GOLA-NUEVAS SIRENAS V",
+      "position": {
+        "latitude": 37.6512816747658,
+        "longitude": -0.718475141803531
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6764",
+      "stopPlaceId": "cartagena-place-6764",
+      "settlementId": "es-cartagena",
+      "name": "LAS SIRENAS-LOS DELFINES V",
+      "position": {
+        "latitude": 37.6479435514229,
+        "longitude": -0.715947956043342
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6765",
+      "stopPlaceId": "cartagena-place-6765",
+      "settlementId": "es-cartagena",
+      "name": "HOTEL ENTREMARES V",
+      "position": {
+        "latitude": 37.6416808009846,
+        "longitude": -0.713635341785715
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6766",
+      "stopPlaceId": "cartagena-place-6766",
+      "settlementId": "es-cartagena",
+      "name": "MERCADONA V",
+      "position": {
+        "latitude": 37.6352955649076,
+        "longitude": -0.707802752360307
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6767",
+      "stopPlaceId": "cartagena-place-6767",
+      "settlementId": "es-cartagena",
+      "name": "LOS GERANIOS V",
+      "position": {
+        "latitude": 37.6334553892427,
+        "longitude": -0.706318263899416
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6798",
+      "stopPlaceId": "cartagena-place-6798",
+      "settlementId": "es-cartagena",
+      "name": "MAR DE CRISTAL",
+      "position": {
+        "latitude": 37.6400165723203,
+        "longitude": -0.764545638533974
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6799",
+      "stopPlaceId": "cartagena-place-6799",
+      "settlementId": "es-cartagena",
+      "name": "MAR DE CRISTAL BUZON",
+      "position": {
+        "latitude": 37.6409768625964,
+        "longitude": -0.768619206442588
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6772",
+      "stopPlaceId": "cartagena-place-6772",
+      "settlementId": "es-cartagena",
+      "name": "URRUTIAS PUNTA BRAVA",
+      "position": {
+        "latitude": 37.6946088227974,
+        "longitude": -0.841429936219736
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5806",
+      "stopPlaceId": "cartagena-place-5806",
+      "settlementId": "es-cartagena",
+      "name": "ESTACION AUTOBUSES CARTAGENA (Cartagena)",
+      "position": {
+        "latitude": 37.602907707958,
+        "longitude": -0.977300096480006
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6859",
+      "stopPlaceId": "cartagena-place-6859",
+      "settlementId": "es-cartagena",
+      "name": "V.ALEGRE I",
+      "position": {
+        "latitude": 37.6093385424076,
+        "longitude": -0.944761675798606
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6912",
+      "stopPlaceId": "cartagena-place-6912",
+      "settlementId": "es-la-union",
+      "name": "DON POLLO I",
+      "position": {
+        "latitude": 37.6216808675112,
+        "longitude": -0.885903228928528
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6897",
+      "stopPlaceId": "cartagena-place-6897",
+      "settlementId": "es-la-union",
+      "name": "LA UNIàN I",
+      "position": {
+        "latitude": 37.6205800894062,
+        "longitude": -0.877799762839617
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6873",
+      "stopPlaceId": "cartagena-place-6873",
+      "settlementId": "es-la-union",
+      "name": "C.NUEVAS I",
+      "position": {
+        "latitude": 37.6223095058483,
+        "longitude": -0.877252064170205
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-7137",
+      "stopPlaceId": "cartagena-place-7137",
+      "settlementId": "es-cartagena",
+      "name": "Plaza del Hondo",
+      "position": {
+        "latitude": 37.6478181577286,
+        "longitude": -0.868059637314946
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6885",
+      "stopPlaceId": "cartagena-place-6885",
+      "settlementId": "es-cartagena",
+      "name": "C.SAURA I",
+      "position": {
+        "latitude": 37.6423425666467,
+        "longitude": -0.863773717912112
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6918",
+      "stopPlaceId": "cartagena-place-6918",
+      "settlementId": "es-cartagena",
+      "name": "EL BEAL V",
+      "position": {
+        "latitude": 37.6353336453157,
+        "longitude": -0.843101331726129
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6894",
+      "stopPlaceId": "cartagena-place-6894",
+      "settlementId": "es-cartagena",
+      "name": "LLANO BEAL",
+      "position": {
+        "latitude": 37.6269545418954,
+        "longitude": -0.835820160603742
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6895",
+      "stopPlaceId": "cartagena-place-6895",
+      "settlementId": "es-cartagena",
+      "name": "ESTRECHO G I",
+      "position": {
+        "latitude": 37.6292808212799,
+        "longitude": -0.828534936926629
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6893",
+      "stopPlaceId": "cartagena-place-6893",
+      "settlementId": "es-cartagena",
+      "name": "BELONES I",
+      "position": {
+        "latitude": 37.6227504739509,
+        "longitude": -0.77933848776582
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-7304",
+      "stopPlaceId": "cartagena-place-7304",
+      "settlementId": "es-cartagena",
+      "name": "PLAYA HONDA",
+      "position": {
+        "latitude": 37.6293415835055,
+        "longitude": -0.735927034698854
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6884",
+      "stopPlaceId": "cartagena-place-6884",
+      "settlementId": "es-cartagena",
+      "name": "CALA FLORE",
+      "position": {
+        "latitude": 37.6277535658182,
+        "longitude": -0.711546928714724
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-7362",
+      "stopPlaceId": "cartagena-place-7362",
+      "settlementId": "es-cartagena",
+      "name": "PLAYA PARAISO PASEO MARITIMO I",
+      "position": {
+        "latitude": 37.6324329356293,
+        "longitude": -0.729385796817419
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-7364",
+      "stopPlaceId": "cartagena-place-7364",
+      "settlementId": "es-cartagena",
+      "name": "PLAYA PARAISO I",
+      "position": {
+        "latitude": 37.6307948619066,
+        "longitude": -0.728087291015674
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6914",
+      "stopPlaceId": "cartagena-place-6914",
+      "settlementId": "es-cartagena",
+      "name": "CARAVANING V",
+      "position": {
+        "latitude": 37.624382352883,
+        "longitude": -0.74377054114075
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6915",
+      "stopPlaceId": "cartagena-place-6915",
+      "settlementId": "es-cartagena",
+      "name": "BELONES V",
+      "position": {
+        "latitude": 37.6228405397106,
+        "longitude": -0.779335807207187
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6916",
+      "stopPlaceId": "cartagena-place-6916",
+      "settlementId": "es-cartagena",
+      "name": "ESTRECHO DE SAN GINES V",
+      "position": {
+        "latitude": 37.6294353975738,
+        "longitude": -0.82860975324719
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5400",
+      "stopPlaceId": "cartagena-place-5400",
+      "settlementId": "es-cartagena",
+      "name": "EL LLANO (Cartagena)",
+      "position": {
+        "latitude": 37.6270081677359,
+        "longitude": -0.835795943999431
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6920",
+      "stopPlaceId": "cartagena-place-6920",
+      "settlementId": "es-la-union",
+      "name": "C.NUEVAS V",
+      "position": {
+        "latitude": 37.6222317022266,
+        "longitude": -0.877435555001528
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6921",
+      "stopPlaceId": "cartagena-place-6921",
+      "settlementId": "es-la-union",
+      "name": "LA UNIÓN V",
+      "position": {
+        "latitude": 37.6206255327457,
+        "longitude": -0.877821129667812
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6922",
+      "stopPlaceId": "cartagena-place-6922",
+      "settlementId": "es-la-union",
+      "name": "DON POLLO V",
+      "position": {
+        "latitude": 37.6218374406316,
+        "longitude": -0.886091399518921
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6923",
+      "stopPlaceId": "cartagena-place-6923",
+      "settlementId": "es-cartagena",
+      "name": "V.ALEGRE V",
+      "position": {
+        "latitude": 37.609420005085,
+        "longitude": -0.944782089186473
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-7365",
+      "stopPlaceId": "cartagena-place-7365",
+      "settlementId": "es-cartagena",
+      "name": "PLAYA PARAISO V",
+      "position": {
+        "latitude": 37.6307783765592,
+        "longitude": -0.728167109092656
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-7363",
+      "stopPlaceId": "cartagena-place-7363",
+      "settlementId": "es-cartagena",
+      "name": "PLAYA PARAISO PASEO MARITIMO V",
+      "position": {
+        "latitude": 37.6323865960423,
+        "longitude": -0.729319220945379
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6729",
+      "stopPlaceId": "cartagena-place-6729",
+      "settlementId": "es-san-javier",
+      "name": "DOMINIQUE I",
+      "position": {
+        "latitude": 37.7142266245972,
+        "longitude": -0.742805738648802
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6730",
+      "stopPlaceId": "cartagena-place-6730",
+      "settlementId": "es-san-javier",
+      "name": "MARTINIQUE I",
+      "position": {
+        "latitude": 37.7168945182888,
+        "longitude": -0.742361747426355
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6731",
+      "stopPlaceId": "cartagena-place-6731",
+      "settlementId": "es-san-javier",
+      "name": "PUEBLO CALIDO I",
+      "position": {
+        "latitude": 37.7224038976733,
+        "longitude": -0.741128035568365
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6732",
+      "stopPlaceId": "cartagena-place-6732",
+      "settlementId": "es-san-javier",
+      "name": "LAS BRISAS I",
+      "position": {
+        "latitude": 37.7263716753225,
+        "longitude": -0.739861575245857
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6733",
+      "stopPlaceId": "cartagena-place-6733",
+      "settlementId": "es-san-javier",
+      "name": "PLAYA PRINCIPE I",
+      "position": {
+        "latitude": 37.7321838294699,
+        "longitude": -0.740320222640424
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6734",
+      "stopPlaceId": "cartagena-place-6734",
+      "settlementId": "es-san-javier",
+      "name": "PUERTO TOMAS MAESTRE I",
+      "position": {
+        "latitude": 37.7388986233224,
+        "longitude": -0.738039451894094
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6735",
+      "stopPlaceId": "cartagena-place-6735",
+      "settlementId": "es-san-javier",
+      "name": "PUENTE DEL ESTACIO I",
+      "position": {
+        "latitude": 37.748268195107,
+        "longitude": -0.735575170389116
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6736",
+      "stopPlaceId": "cartagena-place-6736",
+      "settlementId": "es-san-javier",
+      "name": "OASIS I",
+      "position": {
+        "latitude": 37.7493150830949,
+        "longitude": -0.73847128283863
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6737",
+      "stopPlaceId": "cartagena-place-6737",
+      "settlementId": "es-san-javier",
+      "name": "RESIDENCIAL DOS MARES I",
+      "position": {
+        "latitude": 37.7572057133431,
+        "longitude": -0.746289591720179
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6738",
+      "stopPlaceId": "cartagena-place-6738",
+      "settlementId": "es-san-javier",
+      "name": "URB.LIBERTAD DOS PLAYAS I",
+      "position": {
+        "latitude": 37.7647079462423,
+        "longitude": -0.748422911736236
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6739",
+      "stopPlaceId": "cartagena-place-6739",
+      "settlementId": "es-san-javier",
+      "name": "URB.LAS GONDOLAS MESON MURCIANO I",
+      "position": {
+        "latitude": 37.7693442820979,
+        "longitude": -0.746772443034812
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6740",
+      "stopPlaceId": "cartagena-place-6740",
+      "settlementId": "es-san-javier",
+      "name": "VENEZIOLA I",
+      "position": {
+        "latitude": 37.7716320612002,
+        "longitude": -0.746714335193265
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6741",
+      "stopPlaceId": "cartagena-place-6741",
+      "settlementId": "es-san-javier",
+      "name": "VENEZIOLA V",
+      "position": {
+        "latitude": 37.7717354699014,
+        "longitude": -0.746938243518519
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6742",
+      "stopPlaceId": "cartagena-place-6742",
+      "settlementId": "es-san-javier",
+      "name": "URB.LAS GONDOLAS MESON MURCIANO V",
+      "position": {
+        "latitude": 37.7692051754404,
+        "longitude": -0.747037762696514
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6743",
+      "stopPlaceId": "cartagena-place-6743",
+      "settlementId": "es-san-javier",
+      "name": "URB.LIBERTAD DOS PLAYAS V",
+      "position": {
+        "latitude": 37.7647199884272,
+        "longitude": -0.748581465162785
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6744",
+      "stopPlaceId": "cartagena-place-6744",
+      "settlementId": "es-san-javier",
+      "name": "RESIDENCIAL DOS MARES V",
+      "position": {
+        "latitude": 37.7571542806733,
+        "longitude": -0.746427354920832
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6745",
+      "stopPlaceId": "cartagena-place-6745",
+      "settlementId": "es-san-javier",
+      "name": "OASIS-PUENTE DEL ESTACIO",
+      "position": {
+        "latitude": 37.74858465092,
+        "longitude": -0.737506174317636
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6746",
+      "stopPlaceId": "cartagena-place-6746",
+      "settlementId": "es-san-javier",
+      "name": "PUERTO TOMAS MAESTRE V",
+      "position": {
+        "latitude": 37.7389374784258,
+        "longitude": -0.738185784787762
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6747",
+      "stopPlaceId": "cartagena-place-6747",
+      "settlementId": "es-san-javier",
+      "name": "PLAYA PRINCIPE V",
+      "position": {
+        "latitude": 37.7321956628856,
+        "longitude": -0.740467365289234
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6748",
+      "stopPlaceId": "cartagena-place-6748",
+      "settlementId": "es-san-javier",
+      "name": "LAS BRISAS V",
+      "position": {
+        "latitude": 37.7265417050968,
+        "longitude": -0.739799677977626
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6749",
+      "stopPlaceId": "cartagena-place-6749",
+      "settlementId": "es-san-javier",
+      "name": "PUEBLO CALIDO V",
+      "position": {
+        "latitude": 37.7223621270374,
+        "longitude": -0.741299477351029
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6750",
+      "stopPlaceId": "cartagena-place-6750",
+      "settlementId": "es-san-javier",
+      "name": "MARTINIQUE V",
+      "position": {
+        "latitude": 37.7170678082977,
+        "longitude": -0.742469926397435
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-6751",
+      "stopPlaceId": "cartagena-place-6751",
+      "settlementId": "es-san-javier",
+      "name": "DOMINIQUE V",
+      "position": {
+        "latitude": 37.7136354718435,
+        "longitude": -0.742993834094521
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-circular-legacy-all-v1",
+  "generatedAt": "2026-08-13T22:20:00+02:00",
+  "sources": [
+    {
+      "sourceId": "murcia-circular-accepted-components",
+      "name": "Accepted Murcia component scenarios containing C1-C5",
+      "sourceFile": "scenarios-murcia-rayo-north-v1.zip",
+      "sha256": "bd743aae18c6b5c1b173d84facd5efdef54ec6c61299f36c7776a3fe00b4f76c",
+      "role": "Authoritative merge sources. Selected route and pattern objects, StopNodes and StopPlaces are exact-copied from already accepted component scenarios without source rediscovery."
+    }
+  ],
+  "mergeContract": {
+    "type": "pure-accepted-component-merge",
+    "components": [
+      {
+        "scenarioId": "murcia-circular-13-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "71a499ba7b139c8d284ccb327a2d6635fd8ec70c93109c1f0b334fadd7978c3f",
+        "selectedRoutes": [
+          "C1",
+          "C3"
+        ],
+        "selectedUniqueStopNodes": 37
+      },
+      {
+        "scenarioId": "murcia-circular-24-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "6a9529131974e93d5fa9bb21701867b3c3e18d181adc254a51fa87351256250d",
+        "selectedRoutes": [
+          "C2",
+          "C4"
+        ],
+        "selectedUniqueStopNodes": 38
+      },
+      {
+        "scenarioId": "murcia-central-rail-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "b7eb9b8c3fba7ddeffaff66d5d37eda352574ef0399227b239a94423b04e4ba1",
+        "selectedRoutes": [
+          "C5"
+        ],
+        "selectedUniqueStopNodes": 28
+      }
+    ],
+    "canonicalRouteOrder": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "routeRediscovery": false,
+    "topologyReconciliation": false,
+    "coordinateRediscovery": false,
+    "newStopIdentitiesCreated": 0,
+    "sharedObjectConflictPolicy": "hard-fail",
+    "stopNodeOccurrences": 103,
+    "uniqueStopNodes": 88,
+    "collapsedStopNodeDuplicates": 15,
+    "stopPlaceOccurrences": 103,
+    "uniqueStopPlaces": 88,
+    "collapsedStopPlaceDuplicates": 15,
+    "sharedStopNodeExactComparisons": 15,
+    "sharedStopPlaceExactComparisons": 15,
+    "conflicts": 0
+  },
+  "settlementPolicy": {
+    "canonicalFields": "Copied exactly from accepted component settlement es-murcia.",
+    "packageLocalViewports": "Recomputed from all 88 merged routed StopPlace positions with 10 percent extent padding and a 0.003-degree minimum pad per axis.",
+    "settlementIds": [
+      "es-murcia"
+    ]
+  },
+  "warnings": [
+    "The Circular family is a project packaging classification around public routes C1-C5; it does not alter operator topology.",
+    "The three source component scenarios remain catalogued and byte-for-byte unchanged.",
+    "murcia-central-rail-v1 is a mixed-family component; this merge copies only C5 and does not copy R17.",
+    "No authoritative application parser or repository test suite was available; Level 7 is not claimed."
+  ]
+}

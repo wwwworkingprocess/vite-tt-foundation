@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-3-11-n1-v1",
+  "title": "Málaga EMT - Lines 3, 11 and N1",
+  "initialView": {
+    "center": {
+      "latitude": 36.706844690359105,
+      "longitude": -4.4114027718553
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-3": {
+      "label": "3",
+      "color": "#CC207D"
+    },
+    "malaga-11": {
+      "label": "11",
+      "color": "#F57B91"
+    },
+    "malaga-n1": {
+      "label": "N1",
+      "color": "#F4EA06"
+    }
+  },
+  "notes": [
+    "First accepted Málaga component; freezes the initial Málaga StopNode/StopPlace identity registry for routes 3, 11 and N1.",
+    "All eight source-supported exact GTFS trip sequences are retained as independent directed patterns, including short workings.",
+    "No reverse edge, reverse pattern or loop closure is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

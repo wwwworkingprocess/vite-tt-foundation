@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-29-a-v1",
+  "title": "Málaga EMT - Lines 29 and A",
+  "initialView": {
+    "center": {
+      "latitude": 36.703725939891655,
+      "longitude": -4.413264504570735
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-29": {
+      "label": "29",
+      "color": "#000000"
+    },
+    "malaga-a": {
+      "label": "A",
+      "color": "#ECE53E"
+    }
+  },
+  "notes": [
+    "Fifteenth accepted Málaga component; extends the frozen Málaga identity registry for routes 29 and A while exact-copying accepted shared identities.",
+    "All four source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "Route 29 retains one full source-supported loop and one contiguous short working; route A has two full source-distinct directional patterns.",
+    "Route 29 principal pattern is a source-supported closed loop and adds exactly one last-to-first edge; the other three patterns remain open. No reverse edge or reverse pattern is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

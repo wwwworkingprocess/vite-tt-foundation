@@ -1,0 +1,205 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-29-a-v1",
+  "routes": [
+    {
+      "routeId": "malaga-29",
+      "publicCode": "29",
+      "name": "Jarazmín - El Palo - Jarazmín",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-29-s01",
+          "directionLabel": "Jarazmin",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 62
+          },
+          "stopNodeIds": [
+            "malaga-stop-2901",
+            "malaga-stop-2902",
+            "malaga-stop-2903",
+            "malaga-stop-2904",
+            "malaga-stop-2905",
+            "malaga-stop-2906",
+            "malaga-stop-2921",
+            "malaga-stop-2907",
+            "malaga-stop-2909",
+            "malaga-stop-2910",
+            "malaga-stop-2937",
+            "malaga-stop-2926",
+            "malaga-stop-2927",
+            "malaga-stop-2928",
+            "malaga-stop-2929",
+            "malaga-stop-1153",
+            "malaga-stop-1154",
+            "malaga-stop-2930",
+            "malaga-stop-2913",
+            "malaga-stop-2914",
+            "malaga-stop-2915",
+            "malaga-stop-2969",
+            "malaga-stop-2970",
+            "malaga-stop-2971",
+            "malaga-stop-2972",
+            "malaga-stop-2973",
+            "malaga-stop-2974",
+            "malaga-stop-2975",
+            "malaga-stop-2976",
+            "malaga-stop-2977",
+            "malaga-stop-2917",
+            "malaga-stop-2925",
+            "malaga-stop-3415",
+            "malaga-stop-3408",
+            "malaga-stop-3409",
+            "malaga-stop-2939",
+            "malaga-stop-2931",
+            "malaga-stop-2932",
+            "malaga-stop-2938",
+            "malaga-stop-2933",
+            "malaga-stop-2934",
+            "malaga-stop-2935",
+            "malaga-stop-2978",
+            "malaga-stop-2936",
+            "malaga-stop-2923",
+            "malaga-stop-2924",
+            "malaga-stop-1113",
+            "malaga-stop-1114",
+            "malaga-stop-1115",
+            "malaga-stop-1116",
+            "malaga-stop-1117",
+            "malaga-stop-1118",
+            "malaga-stop-1119",
+            "malaga-stop-1120",
+            "malaga-stop-1121",
+            "malaga-stop-1151",
+            "malaga-stop-2964",
+            "malaga-stop-2968",
+            "malaga-stop-2965",
+            "malaga-stop-2966",
+            "malaga-stop-2967"
+          ]
+        },
+        {
+          "patternId": "malaga-line-29-s02",
+          "directionLabel": "Jarazmin",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 16
+          },
+          "stopNodeIds": [
+            "malaga-stop-1113",
+            "malaga-stop-1114",
+            "malaga-stop-1115",
+            "malaga-stop-1116",
+            "malaga-stop-1117",
+            "malaga-stop-1118",
+            "malaga-stop-1119",
+            "malaga-stop-1120",
+            "malaga-stop-1121",
+            "malaga-stop-1151",
+            "malaga-stop-2964",
+            "malaga-stop-2968",
+            "malaga-stop-2965",
+            "malaga-stop-2966",
+            "malaga-stop-2967",
+            "malaga-stop-2901"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "29",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "29",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "29",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=29"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-a",
+      "publicCode": "A",
+      "name": "Paseo del Parque -  Aeropuerto (Exprés)",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-a-s01",
+          "directionLabel": " P. Parque",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "malaga-stop-7502",
+            "malaga-stop-1957",
+            "malaga-stop-1953",
+            "malaga-stop-1058",
+            "malaga-stop-1061",
+            "malaga-stop-1063",
+            "malaga-stop-354",
+            "malaga-stop-357",
+            "malaga-stop-1259",
+            "malaga-stop-362",
+            "malaga-stop-1959",
+            "malaga-stop-662",
+            "malaga-stop-171",
+            "malaga-stop-366",
+            "malaga-stop-1901"
+          ]
+        },
+        {
+          "patternId": "malaga-line-a-s02",
+          "directionLabel": "Aeropuerto",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 13
+          },
+          "stopNodeIds": [
+            "malaga-stop-1901",
+            "malaga-stop-427",
+            "malaga-stop-7501",
+            "malaga-stop-416",
+            "malaga-stop-1905",
+            "malaga-stop-1606",
+            "malaga-stop-312",
+            "malaga-stop-313",
+            "malaga-stop-316",
+            "malaga-stop-1002",
+            "malaga-stop-1003",
+            "malaga-stop-1005",
+            "malaga-stop-7502"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "75",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "75",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "75",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=75"
+        }
+      ]
+    }
+  ]
+}

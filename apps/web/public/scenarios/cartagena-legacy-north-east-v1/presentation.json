@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-north-east-v1",
+  "title": "Cartagena Legacy North East Network - Lines 7 and 18",
+  "initialView": {
+    "center": {
+      "latitude": 37.6259648930464,
+      "longitude": -0.98983375818758
+    },
+    "zoom": 11
+  },
+  "routeStyles": {
+    "cartagena-7": {
+      "label": "7",
+      "color": "#5d4037"
+    },
+    "cartagena-18": {
+      "label": "18",
+      "color": "#00838f"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Fifth Cartagena legacy component, containing Lines 7 and 18.",
+    "Line 7 preserves six separately published Polígono Santa Ana / Los Mateos / Puerto workings.",
+    "Line 18 preserves two independently published Hospital Santa Lucía directions.",
+    "No reverse pattern, branch concatenation, loop closure or synthetic handoff edge is inferred.",
+    "Route style colors are presentation-only and are not claimed as operator livery."
+  ]
+}

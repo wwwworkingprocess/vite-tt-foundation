@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-central-rail-v1",
+  "routes": [
+    {
+      "routeId": "murcia-c5",
+      "publicCode": "C5",
+      "name": "C5 - ABENARABI - GRAN VIA - FFCC - GLORIETA - CIRCULAR",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-c5-s01",
+          "directionLabel": "Residencia Issorm (Frente V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 28
+          },
+          "stopNodeIds": [
+            "murcia-stop-9120",
+            "murcia-stop-9121",
+            "murcia-stop-9182",
+            "murcia-stop-9029",
+            "murcia-stop-9070",
+            "murcia-stop-9071",
+            "murcia-stop-9072",
+            "murcia-stop-9039",
+            "murcia-stop-9040",
+            "murcia-stop-9041",
+            "murcia-stop-9256",
+            "murcia-stop-9042",
+            "murcia-stop-9043",
+            "murcia-stop-9183",
+            "murcia-stop-9017",
+            "murcia-stop-9254",
+            "murcia-stop-9019",
+            "murcia-stop-9185",
+            "murcia-stop-9186",
+            "murcia-stop-9081",
+            "murcia-stop-9082",
+            "murcia-stop-9000",
+            "murcia-stop-9030",
+            "murcia-stop-9058",
+            "murcia-stop-9187",
+            "murcia-stop-9188",
+            "murcia-stop-9210",
+            "murcia-stop-9189"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50050002",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "C5",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-r17",
+      "publicCode": "R17",
+      "name": "R17 - FFCC -H.R.SOFIA -LA FAMA - CIRCUL.- UMU- GLORIETA",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-r17-s01",
+          "directionLabel": "Estación Ferrocarril (impar) (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 48
+          },
+          "stopNodeIds": [
+            "murcia-stop-9043",
+            "murcia-stop-9044",
+            "murcia-stop-9045",
+            "murcia-stop-9012",
+            "murcia-stop-9046",
+            "murcia-stop-9083",
+            "murcia-stop-9198",
+            "murcia-stop-9199",
+            "murcia-stop-9200",
+            "murcia-stop-9201",
+            "murcia-stop-9086",
+            "murcia-stop-9087",
+            "murcia-stop-9088",
+            "murcia-stop-9089",
+            "murcia-stop-9090",
+            "murcia-stop-9258",
+            "murcia-stop-9092",
+            "murcia-stop-9093",
+            "murcia-stop-9094",
+            "murcia-stop-9095",
+            "murcia-stop-9096",
+            "murcia-stop-9173",
+            "murcia-stop-9140",
+            "murcia-stop-9197",
+            "murcia-stop-9082",
+            "murcia-stop-9000",
+            "murcia-stop-9001",
+            "murcia-stop-9002",
+            "murcia-stop-9097",
+            "murcia-stop-9098",
+            "murcia-stop-9099",
+            "murcia-stop-9100",
+            "murcia-stop-9101",
+            "murcia-stop-9102",
+            "murcia-stop-9103",
+            "murcia-stop-9104",
+            "murcia-stop-9105",
+            "murcia-stop-9106",
+            "murcia-stop-9107",
+            "murcia-stop-9134",
+            "murcia-stop-9135",
+            "murcia-stop-9019",
+            "murcia-stop-9039",
+            "murcia-stop-9040",
+            "murcia-stop-9041",
+            "murcia-stop-9256",
+            "murcia-stop-9042",
+            "murcia-stop-9154"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50170002",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "R17",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-central-rail-v1",
+  "title": "Murcia Central/Rail Network - Lines C5 and R17",
+  "initialView": {
+    "center": {
+      "latitude": 37.986507,
+      "longitude": -1.1249305
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "murcia-c5": {
+      "label": "C5",
+      "color": "#0000FF"
+    },
+    "murcia-r17": {
+      "label": "R17",
+      "color": "#FF6FFF"
+    }
+  },
+  "notes": [
+    "Third accepted Murcia component; extends the frozen Murcia identity registry for routes C5 and R17 while exact-copying accepted shared identities.",
+    "Exact GTFS trip sequences are stored as independent directed patterns; no reverse or closing edge is inferred.",
+    "The 18 Cocheras/Cabecera depot-working route records are preserved in the citywide prefetch but excluded from passenger topology by frozen architecture decision.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

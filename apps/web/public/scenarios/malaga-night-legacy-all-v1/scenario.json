@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-night-legacy-all-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Málaga Night Legacy All Network",
+  "primarySettlementId": "es-malaga",
+  "settlementIds": [
+    "es-malaga"
+  ],
+  "contentHash": "3e1a216be87fa897f654355d07002fa172849adb3d1d7d7947bcaa883b57e813",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "e4f1da3ba1fddeb99163946c974762097f75f91bb27a1b2c049db757d6ca91e8"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "20a3555c437ac0f86ca39a57629502f24a0eee7ca7b95753796ee3b8156b804b"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "c4d0d1efb378533bb4771a4ef264bec0adecb9d8003556ce1bbc68abda737fcf"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "35e998fc19a04a1d32f01564257d650703113ddc01074b2c570818e429c04a7d"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "41b763ed86c560f1bad0f7ce0098e3cf21913435dc16a42006aeb66752252523"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

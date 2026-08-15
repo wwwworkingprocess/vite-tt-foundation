@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-5-9-10-v1",
+  "title": "Málaga EMT - Lines 5, 9 and 10",
+  "initialView": {
+    "center": {
+      "latitude": 36.685153385629,
+      "longitude": -4.467464527025615
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-5": {
+      "label": "5",
+      "color": "#22F4CE"
+    },
+    "malaga-9": {
+      "label": "9",
+      "color": "#DA5ED5"
+    },
+    "malaga-10": {
+      "label": "10",
+      "color": "#319E16"
+    }
+  },
+  "notes": [
+    "Fourteenth accepted Málaga component; extends the frozen Málaga identity registry for routes 5, 9 and 10 while exact-copying accepted shared identities.",
+    "All eight source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "Routes 9 and 10 each retain one contiguous short working; route 5 has two full source-distinct directional patterns.",
+    "All eight patterns are open. No reverse edge, reverse pattern, or loop-closing edge is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

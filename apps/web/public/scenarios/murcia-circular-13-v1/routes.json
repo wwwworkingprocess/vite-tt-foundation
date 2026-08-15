@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-circular-13-v1",
+  "routes": [
+    {
+      "routeId": "murcia-c1",
+      "publicCode": "C1",
+      "name": "C1 - PLZ CIRCUL - EROSKI - GLORIETA - RONDA NORTE",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-c1-s01",
+          "directionLabel": "Plz. Circular 2 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "murcia-stop-9000",
+            "murcia-stop-9001",
+            "murcia-stop-9002",
+            "murcia-stop-9003",
+            "murcia-stop-9004",
+            "murcia-stop-9005",
+            "murcia-stop-9006",
+            "murcia-stop-9007",
+            "murcia-stop-9008",
+            "murcia-stop-9009",
+            "murcia-stop-9167",
+            "murcia-stop-9010",
+            "murcia-stop-9171",
+            "murcia-stop-9143",
+            "murcia-stop-9160",
+            "murcia-stop-9252",
+            "murcia-stop-9253",
+            "murcia-stop-9183",
+            "murcia-stop-9017",
+            "murcia-stop-9254",
+            "murcia-stop-9019",
+            "murcia-stop-9255",
+            "murcia-stop-9021",
+            "murcia-stop-9022",
+            "murcia-stop-9023",
+            "murcia-stop-9024",
+            "murcia-stop-9025",
+            "murcia-stop-9026",
+            "murcia-stop-9027",
+            "murcia-stop-9028",
+            "murcia-stop-9029",
+            "murcia-stop-9152"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50010002",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "C1",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-c3",
+      "publicCode": "C3",
+      "name": "C3 - CIRCUL- EROSKI- CIUDAD JUSTICIA-GLORIETA - R.NORTE",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-c3-s01",
+          "directionLabel": "Plz. Circular 2 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "murcia-stop-9000",
+            "murcia-stop-9001",
+            "murcia-stop-9002",
+            "murcia-stop-9003",
+            "murcia-stop-9004",
+            "murcia-stop-9005",
+            "murcia-stop-9006",
+            "murcia-stop-9007",
+            "murcia-stop-9008",
+            "murcia-stop-9009",
+            "murcia-stop-9169",
+            "murcia-stop-9262",
+            "murcia-stop-9176",
+            "murcia-stop-9177",
+            "murcia-stop-9178",
+            "murcia-stop-9160",
+            "murcia-stop-9252",
+            "murcia-stop-9253",
+            "murcia-stop-9183",
+            "murcia-stop-9017",
+            "murcia-stop-9254",
+            "murcia-stop-9019",
+            "murcia-stop-9255",
+            "murcia-stop-9021",
+            "murcia-stop-9022",
+            "murcia-stop-9023",
+            "murcia-stop-9024",
+            "murcia-stop-9025",
+            "murcia-stop-9026",
+            "murcia-stop-9027",
+            "murcia-stop-9028",
+            "murcia-stop-9029",
+            "murcia-stop-9152"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50030003",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "C3",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    }
+  ]
+}

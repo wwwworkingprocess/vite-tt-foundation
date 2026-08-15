@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-circular-legacy-all-v1",
+  "title": "Málaga Circular Legacy All Network",
+  "initialView": {
+    "center": {
+      "latitude": 36.697625771268704,
+      "longitude": -4.449236699049925
+    },
+    "zoom": 11
+  },
+  "routeStyles": {
+    "malaga-c1": {
+      "label": "C1",
+      "color": "#B0E1F1"
+    },
+    "malaga-c2": {
+      "label": "C2",
+      "color": "#5597E4"
+    },
+    "malaga-c3": {
+      "label": "C3",
+      "color": "#718AC9"
+    },
+    "malaga-c5": {
+      "label": "C5",
+      "color": "#B92323"
+    },
+    "malaga-c6": {
+      "label": "C6",
+      "color": "#D927C7"
+    },
+    "malaga-c8": {
+      "label": "C8",
+      "color": "#C62F2F"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Pure exact-copy merge of the six accepted Málaga circular route objects in frozen canonical public-code order.",
+    "All route and pattern objects are copied exactly from accepted construction components; shared StopNode and StopPlace identities are collapsed only after deep exact-object equality.",
+    "No source discovery, coordinate discovery, topology reconciliation, route creation, pattern creation or identity creation occurs during this merge.",
+    "Mixed-family construction components contribute only their circular routes; numbered daytime, night and express routes remain in accepted packages for their own family merges."
+  ]
+}

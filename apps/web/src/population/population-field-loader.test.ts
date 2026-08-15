@@ -47,6 +47,9 @@ describe('population field loader', () => {
     ['elche-urban-abc-v1', 'Q10509'],
     ['alicante-legacy-core-v1', 'Q11959'],
     ['benidorm-legacy-core-v1', 'Q487981'],
+    ['cartagena-legacy-core-v1', 'Q162615'],
+    ['murcia-circular-24-v1', 'Q12225'],
+    ['malaga-lines-3-11-n1-v1', 'Q8851'],
   ])('loads the exact operational view for %s', async (scenarioId, cityId) => {
     const loader = createPopulationFieldLoader({
       baseUrl: '/',
@@ -376,10 +379,7 @@ describe('population field loader', () => {
         ),
       ]),
     );
-    const itineraryIndex = initial.passengerDirectItineraryIndex;
-    const exclusiveOrigin = (
-      routeId: (typeof canonical.routes.routes)[number]['routeId'],
-    ) =>
+    const exclusiveOrigin = (routeId: string) =>
       [...placesByRoute.get(routeId)!]
         .filter((stopPlaceId) =>
           [...placesByRoute].every(
@@ -388,81 +388,76 @@ describe('population field loader', () => {
           ),
         )
         .sort()[0]!;
-    const metrics = canonical.routes.routes
-      .filter(({ routeId }) =>
-        ['legacy-A', 'legacy-B', 'legacy-C'].includes(routeId),
-      )
-      .map(({ routeId }) => {
-        const originStopPlaceId = exclusiveOrigin(routeId);
-        const candidates = listPassengerDestinationCandidates(
-          plan,
-          originStopPlaceId,
+    const metrics = ['legacy-A', 'legacy-B', 'legacy-C'].map((routeId) => {
+      const originStopPlaceId = exclusiveOrigin(routeId);
+      const candidates = listPassengerDestinationCandidates(
+        plan,
+        originStopPlaceId,
+      );
+      const allocations = allocatePassengerDestinations(
+        candidates,
+        0,
+        80,
+        plan.demandModelContentHash,
+        originStopPlaceId,
+      ).allocations.filter(({ count }) => count > 0);
+      let remainingBaseline = 80;
+      const baselineByPlace = new Map<string, number>();
+      let baselineAvailable = 0;
+      for (const candidate of candidates) {
+        const count = Math.min(remainingBaseline, candidate.weight);
+        if (count === 0) break;
+        baselineByPlace.set(
+          candidate.destinationStopPlaceId,
+          (baselineByPlace.get(candidate.destinationStopPlaceId) ?? 0) + count,
         );
-        const allocations = allocatePassengerDestinations(
-          candidates,
-          0,
-          80,
-          plan.demandModelContentHash,
-          originStopPlaceId,
-        ).allocations.filter(({ count }) => count > 0);
-        let remainingBaseline = 80;
-        const baselineByPlace = new Map<string, number>();
-        let baselineAvailable = 0;
-        for (const candidate of candidates) {
-          const count = Math.min(remainingBaseline, candidate.weight);
-          if (count === 0) break;
-          baselineByPlace.set(
+        if (
+          initial.passengerDirectItineraryIndex.find(
+            originStopPlaceId,
             candidate.destinationStopPlaceId,
-            (baselineByPlace.get(candidate.destinationStopPlaceId) ?? 0) +
-              count,
-          );
-          if (
-            itineraryIndex.find(
-              originStopPlaceId,
-              candidate.destinationStopPlaceId,
-            ).status === 'direct'
-          )
-            baselineAvailable += count;
-          remainingBaseline -= count;
-        }
-        const byPlace = new Map<string, number>();
-        let available = 0;
-        for (const allocation of allocations) {
-          byPlace.set(
+          ).status === 'direct'
+        )
+          baselineAvailable += count;
+        remainingBaseline -= count;
+      }
+      const byPlace = new Map<string, number>();
+      let available = 0;
+      for (const allocation of allocations) {
+        byPlace.set(
+          allocation.destinationStopPlaceId,
+          (byPlace.get(allocation.destinationStopPlaceId) ?? 0) +
+            allocation.count,
+        );
+        if (
+          initial.passengerDirectItineraryIndex.find(
+            originStopPlaceId,
             allocation.destinationStopPlaceId,
-            (byPlace.get(allocation.destinationStopPlaceId) ?? 0) +
-              allocation.count,
-          );
-          if (
-            itineraryIndex.find(
-              originStopPlaceId,
-              allocation.destinationStopPlaceId,
-            ).status === 'direct'
-          )
-            available += allocation.count;
-        }
-        return {
-          routeId,
-          originStopPlaceId,
-          distinctCells: allocations.length,
-          distinctStopPlaces: byPlace.size,
-          largestStopPlaceCount: Math.max(...byPlace.values()),
-          available,
-          unavailable: 80 - available,
+          ).status === 'direct'
+        )
+          available += allocation.count;
+      }
+      return {
+        routeId,
+        originStopPlaceId,
+        distinctCells: allocations.length,
+        distinctStopPlaces: byPlace.size,
+        largestStopPlaceCount: Math.max(...byPlace.values()),
+        available,
+        unavailable: 80 - available,
+        observedPrefixCount:
+          (byPlace.get('tv-place-0067') ?? 0) +
+          (byPlace.get('tv-place-0093') ?? 0),
+        baseline: {
+          distinctStopPlaces: baselineByPlace.size,
+          largestStopPlaceCount: Math.max(...baselineByPlace.values()),
+          available: baselineAvailable,
+          unavailable: 80 - baselineAvailable,
           observedPrefixCount:
-            (byPlace.get('tv-place-0067') ?? 0) +
-            (byPlace.get('tv-place-0093') ?? 0),
-          baseline: {
-            distinctStopPlaces: baselineByPlace.size,
-            largestStopPlaceCount: Math.max(...baselineByPlace.values()),
-            available: baselineAvailable,
-            unavailable: 80 - baselineAvailable,
-            observedPrefixCount:
-              (baselineByPlace.get('tv-place-0067') ?? 0) +
-              (baselineByPlace.get('tv-place-0093') ?? 0),
-          },
-        };
-      });
+            (baselineByPlace.get('tv-place-0067') ?? 0) +
+            (baselineByPlace.get('tv-place-0093') ?? 0),
+        },
+      };
+    });
     expect(metrics).toEqual([
       {
         routeId: 'legacy-A',

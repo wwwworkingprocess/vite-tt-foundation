@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-north-v1",
+  "title": "Murcia Rayo North Network - Lines R14 and R20",
+  "initialView": {
+    "center": {
+      "latitude": 37.9940035,
+      "longitude": -1.13572155
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "murcia-r14": {
+      "label": "R14",
+      "color": "#24B80A"
+    },
+    "murcia-r20": {
+      "label": "R20",
+      "color": "#0080C0"
+    }
+  },
+  "notes": [
+    "Fifth accepted Murcia component; completes the frozen Murcia passenger identity registry for routes R14 and R20 while exact-copying accepted shared identities.",
+    "Exact GTFS trip sequences are stored as independent directed patterns; no reverse or closing edge is inferred.",
+    "The 18 Cocheras/Cabecera depot-working route records are preserved in the citywide prefetch but excluded from passenger topology by frozen architecture decision.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

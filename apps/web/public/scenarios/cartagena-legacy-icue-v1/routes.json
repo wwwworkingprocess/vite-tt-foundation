@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-icue-v1",
+  "routes": [
+    {
+      "routeId": "cartagena-8",
+      "publicCode": "8",
+      "name": "Icue Bus (Alameda)",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-8-cycle",
+          "directionLabel": "ICUE BUS 1",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 22
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5267",
+            "cartagena-stop-5268",
+            "cartagena-stop-5269",
+            "cartagena-stop-5349",
+            "cartagena-stop-5350",
+            "cartagena-stop-5351",
+            "cartagena-stop-7548",
+            "cartagena-stop-5352",
+            "cartagena-stop-5353",
+            "cartagena-stop-5354",
+            "cartagena-stop-5355",
+            "cartagena-stop-5356",
+            "cartagena-stop-5019",
+            "cartagena-stop-5357",
+            "cartagena-stop-5358",
+            "cartagena-stop-5359",
+            "cartagena-stop-5360",
+            "cartagena-stop-5361",
+            "cartagena-stop-7549",
+            "cartagena-stop-5362",
+            "cartagena-stop-5363",
+            "cartagena-stop-5364"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "8",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/8"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "8",
+          "sourceFile": "route-captures/line-8.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-9",
+      "publicCode": "9",
+      "name": "Icue Bus 2 (C/ Serreta)",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-9-cycle",
+          "directionLabel": "ICUE BUS 2",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5365",
+            "cartagena-stop-5358",
+            "cartagena-stop-5359",
+            "cartagena-stop-5360",
+            "cartagena-stop-6668",
+            "cartagena-stop-5056",
+            "cartagena-stop-5075",
+            "cartagena-stop-5076",
+            "cartagena-stop-5078",
+            "cartagena-stop-5077",
+            "cartagena-stop-5055",
+            "cartagena-stop-5033",
+            "cartagena-stop-5229",
+            "cartagena-stop-5230",
+            "cartagena-stop-5231",
+            "cartagena-stop-5232",
+            "cartagena-stop-6670"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "9",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/9"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "9",
+          "sourceFile": "route-captures/line-9.json"
+        }
+      ]
+    }
+  ]
+}

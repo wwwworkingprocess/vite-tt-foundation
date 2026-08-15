@@ -1,0 +1,1474 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-west-v1",
+  "generatedAt": "2026-08-13T16:57:00+02:00",
+  "sources": [
+    {
+      "sourceId": "alsa-cartagena-line-3-ordered-2026-08-13",
+      "name": "ALSA Cartagena official ordered-stop page for Line 3",
+      "url": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/3",
+      "accessedAt": "2026-08-13",
+      "role": "Two independently published Line 3 patterns and stop identities/names."
+    },
+    {
+      "sourceId": "alsa-cartagena-line-4-ordered-2026-08-13",
+      "name": "ALSA Cartagena official ordered-stop page for Line 4",
+      "url": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/4",
+      "accessedAt": "2026-08-13",
+      "role": "Four independently published Line 4 patterns and stop identities/names."
+    },
+    {
+      "sourceId": "alsa-cartagena-stop-pages-2026-08-13",
+      "name": "ALSA Cartagena official stop pages",
+      "url": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/paradas",
+      "accessedAt": "2026-08-13",
+      "role": "Official numeric stop identity and Grade C map/directions coordinates for newly created identities."
+    },
+    {
+      "sourceId": "cartagena-citywide-source-prefetch-2026-08-13",
+      "name": "Approved Cartagena citywide source prefetch",
+      "sourceFile": "cartagena-source-prefetch.zip",
+      "sha256": "3676aa8929bf08f4db01fed0de869924e4379df23bd2750808cee79a8e27a991",
+      "role": "Frozen citywide route topology and operator-code identity registry."
+    },
+    {
+      "sourceId": "cartagena-latest-accepted-baseline",
+      "name": "Latest accepted Cartagena scenarios archive",
+      "sourceFile": "scenarios-cartagena-legacy-core-v1.zip",
+      "sha256": "09f649f8d0f8fcf1090c46b1623abb4f58cc8a72d84ae4d3c26fc78c0cf82c48",
+      "role": "Exact identity authority for reused Cartagena StopNodes, StopPlaces and settlement canonical fields."
+    }
+  ],
+  "identityContract": {
+    "stableKey": "official Alsa Cartagena numeric stop code",
+    "stopNodePattern": "cartagena-stop-<number>",
+    "stopPlacePattern": "cartagena-place-<number>",
+    "physicalGroupingPolicy": "singleton StopPlace per StopNode unless separately approved",
+    "reusedExactCodes": [
+      "5016",
+      "5017",
+      "5018",
+      "5025",
+      "5026",
+      "5027",
+      "5028",
+      "5033",
+      "5055",
+      "5056",
+      "5065",
+      "5075",
+      "5076",
+      "5077",
+      "5078"
+    ],
+    "newCodes": [
+      "5080",
+      "5081",
+      "5082",
+      "5083",
+      "5084",
+      "5086",
+      "5087",
+      "5088",
+      "5089",
+      "5090",
+      "5091",
+      "5092",
+      "5093",
+      "5094",
+      "5096",
+      "5097",
+      "5098",
+      "5099",
+      "5100",
+      "5101",
+      "5102",
+      "5103",
+      "5104",
+      "5105",
+      "5106",
+      "5107",
+      "5108",
+      "5109",
+      "5110",
+      "5111",
+      "5112",
+      "5113",
+      "5114",
+      "5115",
+      "5116",
+      "5117",
+      "5118",
+      "5119",
+      "5120",
+      "5121",
+      "5122",
+      "5123",
+      "5124",
+      "5125",
+      "5126",
+      "5127",
+      "5128",
+      "5130",
+      "5131",
+      "5132",
+      "5138",
+      "5139",
+      "5140",
+      "5141",
+      "5142",
+      "5143",
+      "5144",
+      "5145",
+      "5146",
+      "5147",
+      "5148",
+      "5149",
+      "5150",
+      "5151",
+      "5152",
+      "5153",
+      "5154",
+      "5155",
+      "5156",
+      "5157",
+      "5158",
+      "5159",
+      "5160",
+      "5161",
+      "5164",
+      "5165",
+      "5166",
+      "5167",
+      "5168",
+      "5169",
+      "5170",
+      "5171",
+      "5172",
+      "5173",
+      "5174",
+      "5175",
+      "5176",
+      "5177",
+      "5178",
+      "5179",
+      "5209",
+      "5210",
+      "5211",
+      "5212",
+      "5214",
+      "5215",
+      "5233",
+      "5266",
+      "5270",
+      "5807",
+      "6900"
+    ]
+  },
+  "settlementDecision": {
+    "settlementId": "es-cartagena",
+    "status": "reused-accepted-settlement-identity",
+    "canonicalFieldsCopiedExactly": [
+      "settlementId",
+      "name",
+      "countryCode",
+      "adminArea"
+    ],
+    "viewportMethod": "Package-local bounds from this component's positioned StopPlace extent with deterministic 10 percent padding per axis."
+  },
+  "coordinateSummary": {
+    "A": 15,
+    "B": 0,
+    "C": 101,
+    "D": 0,
+    "E": 0,
+    "coordinates": [
+      {
+        "operatorStopCode": "6900",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/6900",
+        "position": {
+          "latitude": 37.604484569729,
+          "longitude": -0.977812421137424
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5065",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-core-v1",
+        "position": {
+          "latitude": 37.607993634718,
+          "longitude": -0.978011905173231
+        }
+      },
+      {
+        "operatorStopCode": "5075",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-icue-v1",
+        "position": {
+          "latitude": 37.6106327132164,
+          "longitude": -0.977929098968527
+        }
+      },
+      {
+        "operatorStopCode": "5076",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-icue-v1",
+        "position": {
+          "latitude": 37.613116193548,
+          "longitude": -0.979810352888766
+        }
+      },
+      {
+        "operatorStopCode": "5078",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-icue-v1",
+        "position": {
+          "latitude": 37.6156973757179,
+          "longitude": -0.982663384445562
+        }
+      },
+      {
+        "operatorStopCode": "5077",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-icue-v1",
+        "position": {
+          "latitude": 37.6157045743993,
+          "longitude": -0.988361700870804
+        }
+      },
+      {
+        "operatorStopCode": "5055",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-icue-v1",
+        "position": {
+          "latitude": 37.6153061714471,
+          "longitude": -0.990366341249903
+        }
+      },
+      {
+        "operatorStopCode": "5033",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-icue-v1",
+        "position": {
+          "latitude": 37.6148935725218,
+          "longitude": -0.992597921305146
+        }
+      },
+      {
+        "operatorStopCode": "5270",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5270",
+        "position": {
+          "latitude": 37.6141509845957,
+          "longitude": -0.996095841995602
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5080",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5080",
+        "position": {
+          "latitude": 37.6142768000392,
+          "longitude": -0.997667174604281
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5081",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5081",
+        "position": {
+          "latitude": 37.6150813192906,
+          "longitude": -1.00525866819325
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5082",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5082",
+        "position": {
+          "latitude": 37.6127298934548,
+          "longitude": -1.01010218871117
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5083",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5083",
+        "position": {
+          "latitude": 37.6110409434537,
+          "longitude": -1.0136250237502
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5084",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5084",
+        "position": {
+          "latitude": 37.6083729756491,
+          "longitude": -1.01949593922499
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5086",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5086",
+        "position": {
+          "latitude": 37.6051814852265,
+          "longitude": -1.02425885608427
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5087",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5087",
+        "position": {
+          "latitude": 37.6042319282222,
+          "longitude": -1.03106908110973
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5088",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5088",
+        "position": {
+          "latitude": 37.605935842195,
+          "longitude": -1.03868164262159
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5089",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5089",
+        "position": {
+          "latitude": 37.6058061043439,
+          "longitude": -1.04226458501723
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5090",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5090",
+        "position": {
+          "latitude": 37.6088187696365,
+          "longitude": -1.04296722821735
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5091",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5091",
+        "position": {
+          "latitude": 37.6116597133635,
+          "longitude": -1.04364043737628
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5092",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5092",
+        "position": {
+          "latitude": 37.6116298753231,
+          "longitude": -1.04619013929744
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5093",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5093",
+        "position": {
+          "latitude": 37.6113085525655,
+          "longitude": -1.04801110706408
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5094",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5094",
+        "position": {
+          "latitude": 37.6114855635353,
+          "longitude": -1.05163160498716
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5107",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5107",
+        "position": {
+          "latitude": 37.611339900348,
+          "longitude": -1.04772707504081
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5108",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5108",
+        "position": {
+          "latitude": 37.6115578103147,
+          "longitude": -1.04619202539342
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5109",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5109",
+        "position": {
+          "latitude": 37.6111629525819,
+          "longitude": -1.043574156309
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5110",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5110",
+        "position": {
+          "latitude": 37.6088018804913,
+          "longitude": -1.04303563952964
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5111",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5111",
+        "position": {
+          "latitude": 37.6057526193696,
+          "longitude": -1.04229997026117
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5112",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5112",
+        "position": {
+          "latitude": 37.6060310054846,
+          "longitude": -1.03898499006954
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5113",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5113",
+        "position": {
+          "latitude": 37.6039105107417,
+          "longitude": -1.03341098789412
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5114",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5114",
+        "position": {
+          "latitude": 37.6052269045704,
+          "longitude": -1.02428030933507
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5115",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5115",
+        "position": {
+          "latitude": 37.6081305203957,
+          "longitude": -1.01954768260937
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5096",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5096",
+        "position": {
+          "latitude": 37.6109853703194,
+          "longitude": -1.01353587540532
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5097",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5097",
+        "position": {
+          "latitude": 37.6125846204619,
+          "longitude": -1.01003808954435
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5098",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5098",
+        "position": {
+          "latitude": 37.6140904157325,
+          "longitude": -1.00688251501756
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5099",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5099",
+        "position": {
+          "latitude": 37.6142187423822,
+          "longitude": -0.997963281954831
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5100",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5100",
+        "position": {
+          "latitude": 37.6140888569976,
+          "longitude": -0.995621699418116
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5101",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5101",
+        "position": {
+          "latitude": 37.6147479055565,
+          "longitude": -0.992511207517263
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5102",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5102",
+        "position": {
+          "latitude": 37.6150605113687,
+          "longitude": -0.990758140004904
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5103",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5103",
+        "position": {
+          "latitude": 37.6156983223793,
+          "longitude": -0.987466874339979
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5104",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5104",
+        "position": {
+          "latitude": 37.6159004801838,
+          "longitude": -0.983473588204772
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5105",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5105",
+        "position": {
+          "latitude": 37.6130288308268,
+          "longitude": -0.979971318065556
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5106",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5106",
+        "position": {
+          "latitude": 37.6109162235283,
+          "longitude": -0.978170642402113
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5056",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-icue-v1",
+        "position": {
+          "latitude": 37.6079903352196,
+          "longitude": -0.977819420877346
+        }
+      },
+      {
+        "operatorStopCode": "5116",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5116",
+        "position": {
+          "latitude": 37.6115747012329,
+          "longitude": -1.04612361216049
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5117",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5117",
+        "position": {
+          "latitude": 37.6118865992843,
+          "longitude": -1.04319267726406
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5118",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5118",
+        "position": {
+          "latitude": 37.6117886524267,
+          "longitude": -1.0383806108805
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5119",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5119",
+        "position": {
+          "latitude": 37.611257985279,
+          "longitude": -1.03411239655232
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5120",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5120",
+        "position": {
+          "latitude": 37.6113912484236,
+          "longitude": -1.03075565855255
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5121",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5121",
+        "position": {
+          "latitude": 37.6116398157424,
+          "longitude": -1.02729390693887
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5122",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5122",
+        "position": {
+          "latitude": 37.6122851086981,
+          "longitude": -1.02438806159025
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5123",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5123",
+        "position": {
+          "latitude": 37.6124125289294,
+          "longitude": -1.02231155293877
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5124",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5124",
+        "position": {
+          "latitude": 37.6128316622711,
+          "longitude": -1.01293164018385
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5125",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5125",
+        "position": {
+          "latitude": 37.6120736517213,
+          "longitude": -1.01019898167947
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5126",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5126",
+        "position": {
+          "latitude": 37.6109133411834,
+          "longitude": -1.00552863982907
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5127",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5127",
+        "position": {
+          "latitude": 37.6092850395623,
+          "longitude": -1.003034645088
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5128",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5128",
+        "position": {
+          "latitude": 37.6085810670158,
+          "longitude": -1.00137693166929
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5130",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5130",
+        "position": {
+          "latitude": 37.6058624682613,
+          "longitude": -0.997303810446065
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5131",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5131",
+        "position": {
+          "latitude": 37.6038344207324,
+          "longitude": -0.995160714809314
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5132",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5132",
+        "position": {
+          "latitude": 37.6045517569436,
+          "longitude": -0.992298285517205
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5233",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5233",
+        "position": {
+          "latitude": 37.6065806906348,
+          "longitude": -0.989196585755396
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5016",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-core-v1",
+        "position": {
+          "latitude": 37.606658784087,
+          "longitude": -0.986906291642173
+        }
+      },
+      {
+        "operatorStopCode": "5017",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-core-v1",
+        "position": {
+          "latitude": 37.6067711431536,
+          "longitude": -0.983459644467103
+        }
+      },
+      {
+        "operatorStopCode": "5018",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-core-v1",
+        "position": {
+          "latitude": 37.6069021724372,
+          "longitude": -0.979004318391238
+        }
+      },
+      {
+        "operatorStopCode": "5807",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5807",
+        "position": {
+          "latitude": 37.6069787810122,
+          "longitude": -0.97611367924404
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5138",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5138",
+        "position": {
+          "latitude": 37.6080786390498,
+          "longitude": -0.973512437997903
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5139",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5139",
+        "position": {
+          "latitude": 37.6095401473246,
+          "longitude": -0.972555191571294
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5140",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5140",
+        "position": {
+          "latitude": 37.6114563156604,
+          "longitude": -0.971834776766878
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5141",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5141",
+        "position": {
+          "latitude": 37.6160555435418,
+          "longitude": -0.96939867553956
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5142",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5142",
+        "position": {
+          "latitude": 37.6172246330327,
+          "longitude": -0.968732430341696
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5143",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5143",
+        "position": {
+          "latitude": 37.6266643266287,
+          "longitude": -0.963229353992923
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5144",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5144",
+        "position": {
+          "latitude": 37.6236946186354,
+          "longitude": -0.954620144463239
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5145",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5145",
+        "position": {
+          "latitude": 37.6238485308662,
+          "longitude": -0.951545433882713
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5146",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5146",
+        "position": {
+          "latitude": 37.6091658097246,
+          "longitude": -1.07998997615161
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5147",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5147",
+        "position": {
+          "latitude": 37.6064828862906,
+          "longitude": -1.07794066725129
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5148",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5148",
+        "position": {
+          "latitude": 37.6035198600008,
+          "longitude": -1.07750720403926
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5149",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5149",
+        "position": {
+          "latitude": 37.6017519071523,
+          "longitude": -1.0757517107053
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5150",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5150",
+        "position": {
+          "latitude": 37.5994009516492,
+          "longitude": -1.07196119665464
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5151",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5151",
+        "position": {
+          "latitude": 37.6070820386069,
+          "longitude": -1.06992775174946
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5152",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5152",
+        "position": {
+          "latitude": 37.609047786022,
+          "longitude": -1.06339721716916
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5153",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5153",
+        "position": {
+          "latitude": 37.6116984479029,
+          "longitude": -1.05579495852676
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5154",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5154",
+        "position": {
+          "latitude": 37.6238485308662,
+          "longitude": -0.951545433882713
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5155",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5155",
+        "position": {
+          "latitude": 37.6188697260699,
+          "longitude": -0.95597597094316
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5156",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5156",
+        "position": {
+          "latitude": 37.6227978280945,
+          "longitude": -0.965295001648383
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5157",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5157",
+        "position": {
+          "latitude": 37.6174235823033,
+          "longitude": -0.968772332797336
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5158",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5158",
+        "position": {
+          "latitude": 37.6152113114017,
+          "longitude": -0.970090051015294
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5159",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5159",
+        "position": {
+          "latitude": 37.6114678542158,
+          "longitude": -0.971981732211444
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5160",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5160",
+        "position": {
+          "latitude": 37.6096237466912,
+          "longitude": -0.972700186540039
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5161",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5161",
+        "position": {
+          "latitude": 37.6079656229896,
+          "longitude": -0.973753390453764
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5025",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-core-v1",
+        "position": {
+          "latitude": 37.6071663170141,
+          "longitude": -0.976539049555019
+        }
+      },
+      {
+        "operatorStopCode": "5026",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-core-v1",
+        "position": {
+          "latitude": 37.6070441628415,
+          "longitude": -0.978875870019052
+        }
+      },
+      {
+        "operatorStopCode": "5027",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-core-v1",
+        "position": {
+          "latitude": 37.606900348911,
+          "longitude": -0.983637398116191
+        }
+      },
+      {
+        "operatorStopCode": "5028",
+        "grade": "A",
+        "method": "accepted-exact-object-reuse",
+        "acceptedFromScenario": "cartagena-legacy-core-v1",
+        "position": {
+          "latitude": 37.6067756923939,
+          "longitude": -0.986891811843133
+        }
+      },
+      {
+        "operatorStopCode": "5266",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5266",
+        "position": {
+          "latitude": 37.6067378763952,
+          "longitude": -0.98943023405123
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5164",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5164",
+        "position": {
+          "latitude": 37.6040285526514,
+          "longitude": -0.994917629478621
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5165",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5165",
+        "position": {
+          "latitude": 37.6059331856485,
+          "longitude": -0.997222620573359
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5166",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5166",
+        "position": {
+          "latitude": 37.6085009552152,
+          "longitude": -1.00143571616711
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5167",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5167",
+        "position": {
+          "latitude": 37.6093843180895,
+          "longitude": -1.00304331765066
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5168",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5168",
+        "position": {
+          "latitude": 37.6111314454011,
+          "longitude": -1.00563609667565
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5169",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5169",
+        "position": {
+          "latitude": 37.6121831135802,
+          "longitude": -1.00974292170831
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5170",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5170",
+        "position": {
+          "latitude": 37.6129014367457,
+          "longitude": -1.01279383879449
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5171",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5171",
+        "position": {
+          "latitude": 37.6125970329047,
+          "longitude": -1.02149100276251
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5172",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5172",
+        "position": {
+          "latitude": 37.6123147876819,
+          "longitude": -1.02454587655472
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5173",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5173",
+        "position": {
+          "latitude": 37.611704386806,
+          "longitude": -1.02738282872287
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5174",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5174",
+        "position": {
+          "latitude": 37.6114855504841,
+          "longitude": -1.03154616507626
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5175",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5175",
+        "position": {
+          "latitude": 37.6113238722447,
+          "longitude": -1.03428058851952
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5176",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5176",
+        "position": {
+          "latitude": 37.6118327513157,
+          "longitude": -1.03832280932786
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5177",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5177",
+        "position": {
+          "latitude": 37.6125088374564,
+          "longitude": -1.04050280242673
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5178",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5178",
+        "position": {
+          "latitude": 37.6119413992996,
+          "longitude": -1.04323655512042
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5179",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5179",
+        "position": {
+          "latitude": 37.6116394461027,
+          "longitude": -1.04622387441982
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5209",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5209",
+        "position": {
+          "latitude": 37.6113898131681,
+          "longitude": -1.04802031080213
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5210",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5210",
+        "position": {
+          "latitude": 37.6117812011426,
+          "longitude": -1.0558947605146
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5211",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5211",
+        "position": {
+          "latitude": 37.608515195686,
+          "longitude": -1.06444188835374
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5212",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5212",
+        "position": {
+          "latitude": 37.6071493570366,
+          "longitude": -1.07018655319242
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5214",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5214",
+        "position": {
+          "latitude": 37.6069314479698,
+          "longitude": -1.07505184038091
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      },
+      {
+        "operatorStopCode": "5215",
+        "grade": "C",
+        "method": "official-operator-stop-page-directions-coordinate",
+        "source": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/parada/5215",
+        "position": {
+          "latitude": 37.6065080662969,
+          "longitude": -1.07782674095326
+        },
+        "claim": "Official operator-linked map/directions coordinate; not surveyed platform geometry."
+      }
+    ]
+  },
+  "transformations": [
+    {
+      "transformationId": "cartagena-west-pattern-preservation-v1",
+      "description": "Copies the six published Line 3/4 ordered sections independently. No reverse pattern, branch concatenation or cross-pattern handoff edge is generated."
+    },
+    {
+      "transformationId": "cartagena-accepted-identity-reuse-v1",
+      "description": "Copies 15 accepted Cartagena StopNode/StopPlace identities exactly from prior accepted scenarios."
+    },
+    {
+      "transformationId": "cartagena-official-stop-coordinate-v1",
+      "description": "Uses official operator-linked map/directions coordinates for 101 newly created identities; these are Grade C, not surveyed platform geometry."
+    },
+    {
+      "transformationId": "cartagena-west-package-viewport-v1",
+      "description": "Derives only package-local center/bounds while preserving the accepted es-cartagena settlement canonical fields exactly."
+    }
+  ],
+  "warnings": [
+    "The project label 'legacy' is a scenario-family label; this package models the current published snapshot captured on 2026-08-13.",
+    "Line 4's public title 'P. Mediterráneo - Canteras' and its detailed source-section terminology use Pol. Cabezo Beaza/Galifa termini; both source forms are preserved rather than reconciled by renaming.",
+    "StopNode.sourceReferences are empty for all new identities because no genuine OpenStreetMap node/way was reconciled.",
+    "Operator spellings such as 'LOS CANALES AVDA.DEL PROTUS I' are preserved from the official stop source rather than silently corrected.",
+    "Later Cartagena components must reuse every shared accepted StopNode/StopPlace object from this scenario exactly."
+  ]
+}

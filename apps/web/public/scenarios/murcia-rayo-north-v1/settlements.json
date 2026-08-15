@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-north-v1",
+  "settlements": [
+    {
+      "settlementId": "es-murcia",
+      "name": "Murcia",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.9940035,
+        "longitude": -1.13572155
+      },
+      "bounds": {
+        "south": 37.97864,
+        "west": -1.16187777,
+        "north": 38.009367,
+        "east": -1.1095653300000001
+      }
+    }
+  ]
+}

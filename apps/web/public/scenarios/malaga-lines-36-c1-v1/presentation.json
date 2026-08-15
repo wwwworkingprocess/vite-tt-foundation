@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-36-c1-v1",
+  "title": "Málaga EMT - Lines 36 and C1",
+  "initialView": {
+    "center": {
+      "latitude": 36.72252327233055,
+      "longitude": -4.426858582665945
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-36": {
+      "label": "36",
+      "color": "#A9A66B"
+    },
+    "malaga-c1": {
+      "label": "C1",
+      "color": "#B0E1F1"
+    }
+  },
+  "notes": [
+    "Twelfth accepted Málaga component; extends the frozen Málaga identity registry for routes 36 and C1 while exact-copying accepted shared identities.",
+    "All nine source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "Route 36 retains one contiguous short working; C1 retains five contiguous partial workings and one source-supported complete loop.",
+    "The principal C1 pattern is a source-supported complete loop; the other eight patterns are open. No reverse edge or reverse pattern is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

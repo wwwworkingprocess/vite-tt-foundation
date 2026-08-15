@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-40-c8-v1",
+  "title": "Málaga EMT - Lines 40 and C8",
+  "initialView": {
+    "center": {
+      "latitude": 36.682626747474956,
+      "longitude": -4.461170686920665
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-40": {
+      "label": "40",
+      "color": "#A66868"
+    },
+    "malaga-c8": {
+      "label": "C8",
+      "color": "#C62F2F"
+    }
+  },
+  "notes": [
+    "Seventeenth and final accepted Málaga component; extends the frozen Málaga identity registry for routes 40 and C8 while exact-copying accepted shared identities.",
+    "All four source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "Routes 40 and C8 each retain their two full source-distinct directional patterns; there are no short workings in this component.",
+    "All four patterns remain open. No loop-closing edge, reverse edge, or reverse pattern is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

@@ -1,4 +1,4 @@
-86cc9adc7bba3297a8919b8a085a5cc8a9bc3583126f016297658ce983713b11  catalog.json
+19404d385c0da1b5d0d9543573eb03bd6f262f6d182f9a1a80ac59f0e6b740ee  catalog.json
 c507d7f3a11bde457118ccba329285d49550a0c8959c6865c15b3ec7e12ddd3c  torrevieja-v1/torrevieja-city-population-grid-v1.round2.json
 a331f90a017496529f4453fac886be3b5eec9a62069c4bc9c4f637e10786eab4  torrevieja-v1/torrevieja-population-grid-round3-crops.json
 b125ee476aff0d27fdfc8a422466b47a87f6e9626a5ff1ffc04a1a0fe8ded3fb  elche-v1/elche-city-population-grid-v1.round2.json
@@ -7,3 +7,9 @@ cbe2068d3bf4a97bcf062b995ad5cd4d2c23bbf1957abf96d07db72419cfa3fb  alicante-v1/al
 34f681562a8c721871ef3fe571d35dc24a7473dfc984b23054ad6977ec40e8ee  alicante-v1/alicante-population-grid-round3-crops.json
 712deed4b637ce07f2fec16728e8406dd93e53828348627246a4896653fe048f  benidorm-v1/benidorm-city-population-grid-v1.round2.json
 2380bc5e9b0e63c0da4c116efc675f991864fcffb6bfbd0a4e01aa65a4220132  benidorm-v1/benidorm-population-grid-round3-crops.json
+a471e2011c8d9379d9f8df8965c5c256a9d57707a196e0e7cb160152685a315d  cartagena-v1/cartagena-city-population-grid-v1.round2.json
+c067f695c77d365665509fadb04c6f1277b71432d12b9254c4fe9bba77383e43  cartagena-v1/cartagena-population-grid-round3-crops.json
+362f8a046979585724a3cfd79093911b03248be9ba5860d935fa1c87216747bf  murcia-v1/murcia-city-population-grid-v1.round2.json
+8b68f10806657781f124d33606e4cb82f3055429ca1ee98cf2baaf1afac09e23  murcia-v1/murcia-population-grid-round3-crops.json
+23e6ff1c758823c36e23865f39ac7f18f5a3dd2e990eb5fe8af1639c180b487b  malaga-v1/malaga-city-population-grid-v1.round2.json
+522ddf3fb637eebe1a888160fb158c5ee3bc5773c0b40ee9924a519de826b83e  malaga-v1/malaga-population-grid-round3-crops.json

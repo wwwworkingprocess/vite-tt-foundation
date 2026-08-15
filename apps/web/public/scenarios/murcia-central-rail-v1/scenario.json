@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-central-rail-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Murcia Central/Rail Network - Lines C5 and R17",
+  "primarySettlementId": "es-murcia",
+  "settlementIds": [
+    "es-murcia"
+  ],
+  "contentHash": "b7eb9b8c3fba7ddeffaff66d5d37eda352574ef0399227b239a94423b04e4ba1",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "08fcb36abb0867d8b5c5aa1f3e857bb4bf8477be358d11dd96ab8db0682c044f"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "7bd20cb5cf10ac2188dd309a3b21decf2ff665233e9e1d59e2b86eb479b9d220"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "abd4ffcd91d6ad576058a90360322d492951757b4dfc0084d6f20a3194fc9435"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "2188cd7b2aea348115dc8d488f1a5df62db4a6fc2fecab4b3e037f83baee2d03"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "6b9abb8408ad4c1fb16b24729db186d076314b7861ebef9f40d539681bb28677"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

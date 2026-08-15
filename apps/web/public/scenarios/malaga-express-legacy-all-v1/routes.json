@@ -1,0 +1,154 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-express-legacy-all-v1",
+  "routes": [
+    {
+      "routeId": "malaga-a",
+      "publicCode": "A",
+      "name": "Paseo del Parque -  Aeropuerto (Exprés)",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-a-s01",
+          "directionLabel": " P. Parque",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "malaga-stop-7502",
+            "malaga-stop-1957",
+            "malaga-stop-1953",
+            "malaga-stop-1058",
+            "malaga-stop-1061",
+            "malaga-stop-1063",
+            "malaga-stop-354",
+            "malaga-stop-357",
+            "malaga-stop-1259",
+            "malaga-stop-362",
+            "malaga-stop-1959",
+            "malaga-stop-662",
+            "malaga-stop-171",
+            "malaga-stop-366",
+            "malaga-stop-1901"
+          ]
+        },
+        {
+          "patternId": "malaga-line-a-s02",
+          "directionLabel": "Aeropuerto",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 13
+          },
+          "stopNodeIds": [
+            "malaga-stop-1901",
+            "malaga-stop-427",
+            "malaga-stop-7501",
+            "malaga-stop-416",
+            "malaga-stop-1905",
+            "malaga-stop-1606",
+            "malaga-stop-312",
+            "malaga-stop-313",
+            "malaga-stop-316",
+            "malaga-stop-1002",
+            "malaga-stop-1003",
+            "malaga-stop-1005",
+            "malaga-stop-7502"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "75",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "75",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "75",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=75"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-e",
+      "publicCode": "E",
+      "name": "Paseo del Parque - PTA  (Exprés)",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-e-s01",
+          "directionLabel": "PTA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "malaga-stop-1601",
+            "malaga-stop-426",
+            "malaga-stop-1803",
+            "malaga-stop-425",
+            "malaga-stop-1402",
+            "malaga-stop-1403",
+            "malaga-stop-1404",
+            "malaga-stop-1405",
+            "malaga-stop-2003",
+            "malaga-stop-2519",
+            "malaga-stop-2520",
+            "malaga-stop-2528",
+            "malaga-stop-2529",
+            "malaga-stop-2583"
+          ]
+        },
+        {
+          "patternId": "malaga-line-e-s02",
+          "directionLabel": " Paseo del Parque",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "malaga-stop-2583",
+            "malaga-stop-2584",
+            "malaga-stop-2569",
+            "malaga-stop-2575",
+            "malaga-stop-2055",
+            "malaga-stop-1460",
+            "malaga-stop-1461",
+            "malaga-stop-1462",
+            "malaga-stop-1463",
+            "malaga-stop-470",
+            "malaga-stop-366",
+            "malaga-stop-1601"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "70",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "70",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "70",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=70"
+        }
+      ]
+    }
+  ]
+}

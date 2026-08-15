@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-periphery-v1",
+  "title": "Cartagena Legacy Periphery Network - Lines 14, 24 and 25",
+  "initialView": {
+    "center": {
+      "latitude": 37.69481839265545,
+      "longitude": -1.0454692241466779
+    },
+    "zoom": 9
+  },
+  "routeStyles": {
+    "cartagena-14": {
+      "label": "14",
+      "color": "#6a1b9a"
+    },
+    "cartagena-24": {
+      "label": "24",
+      "color": "#0277bd"
+    },
+    "cartagena-25": {
+      "label": "25",
+      "color": "#558b2f"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Sixth and final inner Cartagena component, containing Lines 14, 24 and 25.",
+    "Line 14 preserves fifteen separately published workings without flattening Fuente Álamo, La Aljorra, El Albujón, Los Mateos or Lomas variants.",
+    "Line 24 preserves four independently published Cartagena/Pozo Estrecho/Roldán workings.",
+    "Line 25 is a source-supported Zona Oeste cycle: the raw terminal repeat of stop 5311 is omitted from stopNodeIds and represented once by closesLoop=true.",
+    "Route style colors are presentation-only and are not claimed as operator livery."
+  ]
+}

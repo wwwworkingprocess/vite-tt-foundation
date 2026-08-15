@@ -1,0 +1,136 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-circular-24-v1",
+  "routes": [
+    {
+      "routeId": "murcia-c2",
+      "publicCode": "C2",
+      "name": "C2 - PLZ CIRCULAR - R.NORTE - FFCC - EROSKI - R.LEVANTE",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-c2-s01",
+          "directionLabel": "Plz. Circular 14 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 35
+          },
+          "stopNodeIds": [
+            "murcia-stop-9030",
+            "murcia-stop-9057",
+            "murcia-stop-9032",
+            "murcia-stop-9033",
+            "murcia-stop-9034",
+            "murcia-stop-9035",
+            "murcia-stop-9036",
+            "murcia-stop-9165",
+            "murcia-stop-9037",
+            "murcia-stop-9038",
+            "murcia-stop-9164",
+            "murcia-stop-9039",
+            "murcia-stop-9040",
+            "murcia-stop-9041",
+            "murcia-stop-9256",
+            "murcia-stop-9042",
+            "murcia-stop-9043",
+            "murcia-stop-9044",
+            "murcia-stop-9045",
+            "murcia-stop-9012",
+            "murcia-stop-9046",
+            "murcia-stop-9170",
+            "murcia-stop-9048",
+            "murcia-stop-9172",
+            "murcia-stop-9049",
+            "murcia-stop-9169",
+            "murcia-stop-9050",
+            "murcia-stop-9051",
+            "murcia-stop-9052",
+            "murcia-stop-9053",
+            "murcia-stop-9054",
+            "murcia-stop-9110",
+            "murcia-stop-9151",
+            "murcia-stop-9056",
+            "murcia-stop-9153"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50020002",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "C2",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    },
+    {
+      "routeId": "murcia-c4",
+      "publicCode": "C4",
+      "name": "C4 - CIRCUL- R.NORTE- FFCC - CIUDAD JUSTICIA- R.LEVANTE",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "murcia-line-c4-s01",
+          "directionLabel": "Plz. Circular 14 (V)",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "murcia-stop-9030",
+            "murcia-stop-9057",
+            "murcia-stop-9032",
+            "murcia-stop-9033",
+            "murcia-stop-9034",
+            "murcia-stop-9035",
+            "murcia-stop-9036",
+            "murcia-stop-9165",
+            "murcia-stop-9037",
+            "murcia-stop-9038",
+            "murcia-stop-9164",
+            "murcia-stop-9039",
+            "murcia-stop-9040",
+            "murcia-stop-9041",
+            "murcia-stop-9256",
+            "murcia-stop-9042",
+            "murcia-stop-9043",
+            "murcia-stop-9044",
+            "murcia-stop-9045",
+            "murcia-stop-9012",
+            "murcia-stop-9179",
+            "murcia-stop-9180",
+            "murcia-stop-9176",
+            "murcia-stop-9169",
+            "murcia-stop-9050",
+            "murcia-stop-9051",
+            "murcia-stop-9052",
+            "murcia-stop-9053",
+            "murcia-stop-9054",
+            "murcia-stop-9110",
+            "murcia-stop-9151",
+            "murcia-stop-9056",
+            "murcia-stop-9153"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "transportes-de-murcia-gtfs-transitous-mirror",
+          "sourceRouteId": "50040003",
+          "sourceFile": "source/raw/es_Transportes-de-Murcia.gtfs.zip"
+        },
+        {
+          "source": "murcia-citywide-prefetch",
+          "sourceRouteId": "C4",
+          "sourceFile": "route-captures/main-route-patterns.json"
+        }
+      ]
+    }
+  ]
+}

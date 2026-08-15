@@ -1,0 +1,544 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "es-murcia current deterministic operational population crop metadata",
+  "indexSemantics": "half-open [start, end)",
+  "boundarySemantics": "smallest aligned rectangle containing viewport; exact viewport-on-grid-edge does not include the exterior zero-area-touch cell",
+  "canonicalGrid": {
+    "cityId": "Q12225",
+    "gridVersion": "1.0.0",
+    "sourceFile": "murcia-city-population-grid-v1.round2.json",
+    "sha256": "362f8a046979585724a3cfd79093911b03248be9ba5860d935fa1c87216747bf",
+    "rows": 61,
+    "columns": 80,
+    "cellCount": 4880,
+    "resolutionDegrees": 0.001,
+    "outerBounds": {
+      "south": 37.9515,
+      "west": -1.1655,
+      "north": 38.0125,
+      "east": -1.0855
+    },
+    "cityTotalWeight": 255028,
+    "cityNonzeroCellCount": 4620
+  },
+  "scenarioEvidence": {
+    "sourceArchive": "scenarios-murcia-rayo-legacy-all-v1(1).zip",
+    "sourceArchiveSha256": "4be6956f2bc8482aeef9544ab8c26989181b81fd8b8d0e8624d3ebc34afcc13e",
+    "catalogSha256": "1eb92b966ab881e6908b73cdedf9047066e5e442210fe4e144cf49d6e021e5e4",
+    "circularAggregateParity": {
+      "routeSources": {
+        "C1": "murcia-circular-13-v1",
+        "C2": "murcia-circular-24-v1",
+        "C3": "murcia-circular-13-v1",
+        "C4": "murcia-circular-24-v1",
+        "C5": "murcia-central-rail-v1"
+      },
+      "routePublicCodes": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "routeCount": 5,
+      "routeObjectsMatchSources": true,
+      "componentRouteUsedStopPlaceUnionCount": 88,
+      "aggregateRouteUsedStopPlaceCount": 88,
+      "stopPlaceUnionMatches": true
+    },
+    "rayoAggregateParity": {
+      "routeSources": {
+        "R12": "murcia-rayo-south-v1",
+        "R14": "murcia-rayo-north-v1",
+        "R17": "murcia-central-rail-v1",
+        "R20": "murcia-rayo-north-v1",
+        "R80": "murcia-rayo-south-v1"
+      },
+      "routePublicCodes": [
+        "R12",
+        "R14",
+        "R17",
+        "R20",
+        "R80"
+      ],
+      "routeCount": 5,
+      "routeObjectsMatchSources": true,
+      "componentRouteUsedStopPlaceUnionCount": 164,
+      "aggregateRouteUsedStopPlaceCount": 164,
+      "stopPlaceUnionMatches": true
+    },
+    "bridgeScenario": {
+      "scenarioId": "murcia-central-rail-v1",
+      "circularRoutePublicCode": "C5",
+      "rayoRoutePublicCode": "R17",
+      "sharedAggregateStopPlaceCount": 46,
+      "completeFamilyUnionStopPlaceCount": 206
+    },
+    "routeUsedStopPlacePolicy": "StopPlaces referenced by route-pattern-used StopNodes, requiring valid positions"
+  },
+  "referenceCrops": {
+    "circularAll": {
+      "scenarioId": "murcia-circular-legacy-all-v1",
+      "cropCellCount": 1170,
+      "canonicalCellPercent": 23.975409836065573,
+      "includedWeight": 154020,
+      "includedNonzeroCellCount": 1088,
+      "cityWeightPercent": 60.39336857129413
+    },
+    "rayoAll": {
+      "scenarioId": "murcia-rayo-legacy-all-v1",
+      "cropCellCount": 4602,
+      "canonicalCellPercent": 94.30327868852459,
+      "includedWeight": 251347,
+      "includedNonzeroCellCount": 4370,
+      "cityWeightPercent": 98.55662907602303
+    }
+  },
+  "scenarios": [
+    {
+      "scenarioId": "murcia-circular-24-v1",
+      "family": "circular",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "C2",
+        "C4"
+      ],
+      "routeCount": 2,
+      "patternCount": 2,
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.97204,
+        "west": -1.1442413999999999,
+        "north": 37.996248,
+        "east": -1.1104975000000001
+      },
+      "crop": {
+        "rowStart": 14,
+        "rowEnd": 42,
+        "columnStart": 19,
+        "columnEnd": 57,
+        "dimensions": {
+          "rows": 28,
+          "columns": 38
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9705,
+          "west": -1.1465,
+          "north": 37.9985,
+          "east": -1.1085
+        }
+      },
+      "totalIncludedWeight": 147327,
+      "nonzeroCellCount": 983,
+      "cityWeightPercent": 57.76895086029769,
+      "canonicalCellPercent": 17.93032786885246,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "6a9529131974e93d5fa9bb21701867b3c3e18d181adc254a51fa87351256250d",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 38,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "murcia-circular-13-v1",
+      "family": "circular",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "C1",
+        "C3"
+      ],
+      "routeCount": 2,
+      "patternCount": 2,
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.97206,
+        "west": -1.1439131599999999,
+        "north": 37.99552,
+        "east": -1.10595044
+      },
+      "crop": {
+        "rowStart": 15,
+        "rowEnd": 42,
+        "columnStart": 20,
+        "columnEnd": 61,
+        "dimensions": {
+          "rows": 27,
+          "columns": 41
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9705,
+          "west": -1.1455,
+          "north": 37.9975,
+          "east": -1.1045
+        }
+      },
+      "totalIncludedWeight": 146704,
+      "nonzeroCellCount": 1024,
+      "cityWeightPercent": 57.5246639584673,
+      "canonicalCellPercent": 19.979508196721312,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "71a499ba7b139c8d284ccb327a2d6635fd8ec70c93109c1f0b334fadd7978c3f",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 37,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "murcia-central-rail-v1",
+      "family": "bridge",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "C5",
+        "R17"
+      ],
+      "routeCount": 2,
+      "patternCount": 2,
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.97204,
+        "west": -1.1363305,
+        "north": 38.000974,
+        "east": -1.1135305000000002
+      },
+      "crop": {
+        "rowStart": 10,
+        "rowEnd": 42,
+        "columnStart": 27,
+        "columnEnd": 54,
+        "dimensions": {
+          "rows": 32,
+          "columns": 27
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9705,
+          "west": -1.1385,
+          "north": 38.0025,
+          "east": -1.1115
+        }
+      },
+      "totalIncludedWeight": 134854,
+      "nonzeroCellCount": 807,
+      "cityWeightPercent": 52.8781153441975,
+      "canonicalCellPercent": 14.139344262295081,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "b7eb9b8c3fba7ddeffaff66d5d37eda352574ef0399227b239a94423b04e4ba1",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 67,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "murcia-rayo-south-v1",
+      "family": "rayo",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "R12",
+        "R80"
+      ],
+      "routeCount": 2,
+      "patternCount": 2,
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.9545528,
+        "west": -1.145751,
+        "north": 37.9959672,
+        "east": -1.0886334
+      },
+      "crop": {
+        "rowStart": 15,
+        "rowEnd": 59,
+        "columnStart": 19,
+        "columnEnd": 77,
+        "dimensions": {
+          "rows": 44,
+          "columns": 58
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9535,
+          "west": -1.1465,
+          "north": 37.9975,
+          "east": -1.0885
+        }
+      },
+      "totalIncludedWeight": 184040,
+      "nonzeroCellCount": 2415,
+      "cityWeightPercent": 72.16462506077764,
+      "canonicalCellPercent": 49.91803278688525,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "88138b43bb8db13020d88956c266dbce87069b649e062158b17c6c447f5db02b",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 69,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "murcia-rayo-north-v1",
+      "family": "rayo",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "R14",
+        "R20"
+      ],
+      "routeCount": 2,
+      "patternCount": 2,
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.97864,
+        "west": -1.16187777,
+        "north": 38.009367,
+        "east": -1.1095653300000001
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 36,
+        "columnStart": 3,
+        "columnEnd": 57,
+        "dimensions": {
+          "rows": 35,
+          "columns": 54
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9765,
+          "west": -1.1625,
+          "north": 38.0115,
+          "east": -1.1085
+        }
+      },
+      "totalIncludedWeight": 168601,
+      "nonzeroCellCount": 1750,
+      "cityWeightPercent": 66.11077999278511,
+      "canonicalCellPercent": 33.66803278688525,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "70887cd8c6bf8d4b277cbb7971944aaa44b1718af51d8ae3c617bcc167e505c4",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 72,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "murcia-circular-legacy-all-v1",
+      "family": "circular",
+      "aggregation": "aggregate-package",
+      "routePublicCodes": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "routeCount": 5,
+      "patternCount": 5,
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.97204,
+        "west": -1.14445414,
+        "north": 38.000974,
+        "east": -1.10590126
+      },
+      "crop": {
+        "rowStart": 10,
+        "rowEnd": 42,
+        "columnStart": 19,
+        "columnEnd": 61,
+        "dimensions": {
+          "rows": 32,
+          "columns": 42
+        },
+        "alignedGeographicBounds": {
+          "south": 37.9705,
+          "west": -1.1465,
+          "north": 38.0025,
+          "east": -1.1045
+        }
+      },
+      "totalIncludedWeight": 165442,
+      "nonzeroCellCount": 1248,
+      "cityWeightPercent": 64.87209247612027,
+      "canonicalCellPercent": 23.975409836065573,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "b937957c590df87add6d8e3aefa0c567e0f1802888c67a56800257a86354d839",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 88,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "murcia-rayo-legacy-all-v1",
+      "family": "rayo",
+      "aggregation": "aggregate-package",
+      "routePublicCodes": [
+        "R12",
+        "R14",
+        "R17",
+        "R20",
+        "R80"
+      ],
+      "routeCount": 5,
+      "patternCount": 5,
+      "settlementIds": [
+        "es-murcia"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.9531677,
+        "west": -1.16393092,
+        "north": 38.0112033,
+        "east": -1.08698068
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 60,
+        "columnStart": 1,
+        "columnEnd": 79,
+        "dimensions": {
+          "rows": 59,
+          "columns": 78
+        },
+        "cellCount": 4602,
+        "alignedGeographicBounds": {
+          "south": 37.9525,
+          "west": -1.1645,
+          "north": 38.0115,
+          "east": -1.0865
+        }
+      },
+      "totalIncludedWeight": 251347,
+      "nonzeroCellCount": 4370,
+      "cityWeightPercent": 98.55662907602303,
+      "canonicalCellPercent": 94.30327868852459,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "a83530201659c197e1b3edfa54f6310c89990828d004943d796917a7ff987e23",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 164,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    }
+  ],
+  "historicalPreparation": {
+    "status": "historical-round-3-round-4-preparation-evidence",
+    "purpose": "scenario-crop-metadata"
+  },
+  "operationalCropPolicy": {
+    "maxAccessDistanceCells": 5
+  },
+  "operationalStatus": {
+    "allSupportedScenarioCropsSufficient": true,
+    "scenarioViewportsUnchanged": true
+  }
+}

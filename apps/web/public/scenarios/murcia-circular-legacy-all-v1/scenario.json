@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-circular-legacy-all-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Murcia Circular Legacy All Network",
+  "primarySettlementId": "es-murcia",
+  "settlementIds": [
+    "es-murcia"
+  ],
+  "contentHash": "b937957c590df87add6d8e3aefa0c567e0f1802888c67a56800257a86354d839",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "82ad61bb6efb343558021a9e8a7901e04c0ce456beb958bc7160cc555241c6a8"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "4133cc2d079514aca6cb993224f288e074b02d86460cf9cac8e225e48d5eb7bf"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "71dc942da1923980febe1f470b1cbe1d736e9f997e6a90a0be9c22263cdddbbe"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "b4f265dbf9d39066f08569b5b18ab0c96b37134c8aea03e0a335a4650369f486"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "1e28bda1e49c4fafc438056e94915779cc5ff131a03fbbf5eb6c762ac31de5e5"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

@@ -1,0 +1,513 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-1-37-c2-v1",
+  "routes": [
+    {
+      "routeId": "malaga-1",
+      "publicCode": "1",
+      "name": "Parque del Sur - Alameda Principal - San Andrés",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-1-s01",
+          "directionLabel": "San Andrés",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "malaga-stop-152",
+            "malaga-stop-153",
+            "malaga-stop-154",
+            "malaga-stop-155",
+            "malaga-stop-1354",
+            "malaga-stop-156",
+            "malaga-stop-157",
+            "malaga-stop-158",
+            "malaga-stop-159",
+            "malaga-stop-160",
+            "malaga-stop-161",
+            "malaga-stop-170",
+            "malaga-stop-301",
+            "malaga-stop-164",
+            "malaga-stop-1803",
+            "malaga-stop-119",
+            "malaga-stop-305",
+            "malaga-stop-306",
+            "malaga-stop-307",
+            "malaga-stop-308",
+            "malaga-stop-309",
+            "malaga-stop-310",
+            "malaga-stop-312",
+            "malaga-stop-1518",
+            "malaga-stop-1202",
+            "malaga-stop-1203",
+            "malaga-stop-1204",
+            "malaga-stop-1205",
+            "malaga-stop-1206",
+            "malaga-stop-1207",
+            "malaga-stop-1209",
+            "malaga-stop-1211",
+            "malaga-stop-172"
+          ]
+        },
+        {
+          "patternId": "malaga-line-1-s02",
+          "directionLabel": "Parque del Sur",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 33
+          },
+          "stopNodeIds": [
+            "malaga-stop-172",
+            "malaga-stop-1261",
+            "malaga-stop-1252",
+            "malaga-stop-1253",
+            "malaga-stop-1254",
+            "malaga-stop-1255",
+            "malaga-stop-1256",
+            "malaga-stop-1519",
+            "malaga-stop-357",
+            "malaga-stop-1259",
+            "malaga-stop-360",
+            "malaga-stop-361",
+            "malaga-stop-362",
+            "malaga-stop-368",
+            "malaga-stop-364",
+            "malaga-stop-253",
+            "malaga-stop-171",
+            "malaga-stop-116",
+            "malaga-stop-117",
+            "malaga-stop-1201",
+            "malaga-stop-103",
+            "malaga-stop-508",
+            "malaga-stop-104",
+            "malaga-stop-105",
+            "malaga-stop-106",
+            "malaga-stop-107",
+            "malaga-stop-109",
+            "malaga-stop-110",
+            "malaga-stop-111",
+            "malaga-stop-112",
+            "malaga-stop-113",
+            "malaga-stop-174",
+            "malaga-stop-152"
+          ]
+        },
+        {
+          "patternId": "malaga-line-1-s03",
+          "directionLabel": "Alameda Principal - Sur",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 17
+          },
+          "stopNodeIds": [
+            "malaga-stop-172",
+            "malaga-stop-1261",
+            "malaga-stop-1252",
+            "malaga-stop-1253",
+            "malaga-stop-1254",
+            "malaga-stop-1255",
+            "malaga-stop-1256",
+            "malaga-stop-1519",
+            "malaga-stop-357",
+            "malaga-stop-1259",
+            "malaga-stop-360",
+            "malaga-stop-361",
+            "malaga-stop-362",
+            "malaga-stop-368",
+            "malaga-stop-364",
+            "malaga-stop-253",
+            "malaga-stop-171"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "1",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "1",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "1",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=1"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-37",
+      "publicCode": "37",
+      "name": "Av. Andalucía - Altamira - Monte Dorado",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-37-s01",
+          "directionLabel": "Monte Dorado",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 26
+          },
+          "stopNodeIds": [
+            "malaga-stop-3722",
+            "malaga-stop-171",
+            "malaga-stop-116",
+            "malaga-stop-117",
+            "malaga-stop-1201",
+            "malaga-stop-103",
+            "malaga-stop-508",
+            "malaga-stop-104",
+            "malaga-stop-105",
+            "malaga-stop-3715",
+            "malaga-stop-157",
+            "malaga-stop-158",
+            "malaga-stop-3714",
+            "malaga-stop-3721",
+            "malaga-stop-3703",
+            "malaga-stop-3704",
+            "malaga-stop-3705",
+            "malaga-stop-3716",
+            "malaga-stop-3707",
+            "malaga-stop-3709",
+            "malaga-stop-3764",
+            "malaga-stop-3765",
+            "malaga-stop-3766",
+            "malaga-stop-3712",
+            "malaga-stop-3713",
+            "malaga-stop-3751"
+          ]
+        },
+        {
+          "patternId": "malaga-line-37-s02",
+          "directionLabel": "Av. Andalucía",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "malaga-stop-3751",
+            "malaga-stop-3752",
+            "malaga-stop-3753",
+            "malaga-stop-3755",
+            "malaga-stop-3756",
+            "malaga-stop-3757",
+            "malaga-stop-3758",
+            "malaga-stop-3759",
+            "malaga-stop-159",
+            "malaga-stop-3762",
+            "malaga-stop-3763",
+            "malaga-stop-161",
+            "malaga-stop-170",
+            "malaga-stop-301",
+            "malaga-stop-164",
+            "malaga-stop-1803",
+            "malaga-stop-119",
+            "malaga-stop-3722"
+          ]
+        },
+        {
+          "patternId": "malaga-line-37-s03",
+          "directionLabel": "Av. Andalucía",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "malaga-stop-3720",
+            "malaga-stop-3767",
+            "malaga-stop-3751",
+            "malaga-stop-3752",
+            "malaga-stop-3753",
+            "malaga-stop-3755",
+            "malaga-stop-3756",
+            "malaga-stop-3757",
+            "malaga-stop-3758",
+            "malaga-stop-3759",
+            "malaga-stop-159",
+            "malaga-stop-3762",
+            "malaga-stop-3763",
+            "malaga-stop-161",
+            "malaga-stop-170",
+            "malaga-stop-301",
+            "malaga-stop-164",
+            "malaga-stop-1803",
+            "malaga-stop-119",
+            "malaga-stop-3722"
+          ]
+        },
+        {
+          "patternId": "malaga-line-37-s04",
+          "directionLabel": "Santa Clara",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 28
+          },
+          "stopNodeIds": [
+            "malaga-stop-3722",
+            "malaga-stop-171",
+            "malaga-stop-116",
+            "malaga-stop-117",
+            "malaga-stop-1201",
+            "malaga-stop-103",
+            "malaga-stop-508",
+            "malaga-stop-104",
+            "malaga-stop-105",
+            "malaga-stop-3715",
+            "malaga-stop-157",
+            "malaga-stop-158",
+            "malaga-stop-3714",
+            "malaga-stop-3721",
+            "malaga-stop-3703",
+            "malaga-stop-3704",
+            "malaga-stop-3705",
+            "malaga-stop-3716",
+            "malaga-stop-3707",
+            "malaga-stop-3709",
+            "malaga-stop-3764",
+            "malaga-stop-3765",
+            "malaga-stop-3766",
+            "malaga-stop-3712",
+            "malaga-stop-3713",
+            "malaga-stop-3717",
+            "malaga-stop-3723",
+            "malaga-stop-3720"
+          ]
+        },
+        {
+          "patternId": "malaga-line-37-s05",
+          "directionLabel": "Santa Clara",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "malaga-stop-3703",
+            "malaga-stop-3704",
+            "malaga-stop-3705",
+            "malaga-stop-3716",
+            "malaga-stop-3707",
+            "malaga-stop-3709",
+            "malaga-stop-3764",
+            "malaga-stop-3765",
+            "malaga-stop-3766",
+            "malaga-stop-3712",
+            "malaga-stop-3713",
+            "malaga-stop-3717",
+            "malaga-stop-3723",
+            "malaga-stop-3720"
+          ]
+        },
+        {
+          "patternId": "malaga-line-37-s06",
+          "directionLabel": "Monte Dorado",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "malaga-stop-3703",
+            "malaga-stop-3704",
+            "malaga-stop-3705",
+            "malaga-stop-3716",
+            "malaga-stop-3707",
+            "malaga-stop-3709",
+            "malaga-stop-3764",
+            "malaga-stop-3765",
+            "malaga-stop-3766",
+            "malaga-stop-3712",
+            "malaga-stop-3713",
+            "malaga-stop-3751"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "37",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "37",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "37",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=37"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-c2",
+      "publicCode": "C2",
+      "name": "CIRCULAR 2",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-c2-s01",
+          "directionLabel": "Camino de Suarez",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 35
+          },
+          "stopNodeIds": [
+            "malaga-stop-605",
+            "malaga-stop-606",
+            "malaga-stop-607",
+            "malaga-stop-964",
+            "malaga-stop-951",
+            "malaga-stop-952",
+            "malaga-stop-953",
+            "malaga-stop-965",
+            "malaga-stop-966",
+            "malaga-stop-967",
+            "malaga-stop-1805",
+            "malaga-stop-1862",
+            "malaga-stop-501",
+            "malaga-stop-368",
+            "malaga-stop-364",
+            "malaga-stop-7201",
+            "malaga-stop-3722",
+            "malaga-stop-171",
+            "malaga-stop-116",
+            "malaga-stop-117",
+            "malaga-stop-1201",
+            "malaga-stop-103",
+            "malaga-stop-508",
+            "malaga-stop-104",
+            "malaga-stop-105",
+            "malaga-stop-106",
+            "malaga-stop-107",
+            "malaga-stop-109",
+            "malaga-stop-110",
+            "malaga-stop-1305",
+            "malaga-stop-2671",
+            "malaga-stop-1506",
+            "malaga-stop-556",
+            "malaga-stop-963"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c2-s02",
+          "directionLabel": "Parque - Torrijos",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "malaga-stop-605",
+            "malaga-stop-606",
+            "malaga-stop-607",
+            "malaga-stop-964",
+            "malaga-stop-951",
+            "malaga-stop-952",
+            "malaga-stop-953",
+            "malaga-stop-965",
+            "malaga-stop-966",
+            "malaga-stop-967",
+            "malaga-stop-1805",
+            "malaga-stop-1862",
+            "malaga-stop-501",
+            "malaga-stop-368",
+            "malaga-stop-364",
+            "malaga-stop-7201",
+            "malaga-stop-3722",
+            "malaga-stop-171",
+            "malaga-stop-116",
+            "malaga-stop-117",
+            "malaga-stop-1201"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c2-s03",
+          "directionLabel": "Camino de Suarez",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "malaga-stop-171",
+            "malaga-stop-116",
+            "malaga-stop-117",
+            "malaga-stop-1201",
+            "malaga-stop-103",
+            "malaga-stop-508",
+            "malaga-stop-104",
+            "malaga-stop-105",
+            "malaga-stop-106",
+            "malaga-stop-107",
+            "malaga-stop-109",
+            "malaga-stop-110",
+            "malaga-stop-1305",
+            "malaga-stop-2671",
+            "malaga-stop-1506",
+            "malaga-stop-556",
+            "malaga-stop-963",
+            "malaga-stop-605"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c2-s04",
+          "directionLabel": "Camino de Suarez",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "malaga-stop-1201",
+            "malaga-stop-103",
+            "malaga-stop-508",
+            "malaga-stop-104",
+            "malaga-stop-105",
+            "malaga-stop-106",
+            "malaga-stop-107",
+            "malaga-stop-109",
+            "malaga-stop-110",
+            "malaga-stop-1305",
+            "malaga-stop-2671",
+            "malaga-stop-1506",
+            "malaga-stop-556",
+            "malaga-stop-963",
+            "malaga-stop-605"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "72",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "C2",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "72",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=72"
+        }
+      ]
+    }
+  ]
+}

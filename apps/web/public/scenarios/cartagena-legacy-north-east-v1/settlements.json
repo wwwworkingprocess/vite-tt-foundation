@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-north-east-v1",
+  "settlements": [
+    {
+      "settlementId": "es-cartagena",
+      "name": "Cartagena",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.6259648930464,
+        "longitude": -0.98983375818758
+      },
+      "bounds": {
+        "south": 37.591732190054195,
+        "west": -1.02384979820948,
+        "north": 37.6601975960386,
+        "east": -0.95581771816568
+      }
+    }
+  ]
+}

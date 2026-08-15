@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-manga-v1",
+  "title": "Cartagena Radial La Manga / Mar Menor Network - Lines 23, 43 and 44",
+  "initialView": {
+    "center": {
+      "latitude": 37.6487582653777,
+      "longitude": -0.840540034600467
+    },
+    "zoom": 9
+  },
+  "routeStyles": {
+    "cartagena-23": {
+      "label": "23",
+      "color": "#00897b"
+    },
+    "cartagena-43": {
+      "label": "43",
+      "color": "#5e35b1"
+    },
+    "cartagena-44": {
+      "label": "44",
+      "color": "#ef6c00"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Second Cartagena radial-family component, covering the La Manga / Mar Menor seasonal services.",
+    "All 22 published route sections remain independent open patterns.",
+    "No reverse pattern, loop closure, branch concatenation or synthetic handoff edge is inferred.",
+    "Route style colors are presentation-only and are not claimed as operator livery."
+  ]
+}

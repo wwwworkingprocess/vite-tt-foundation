@@ -1,0 +1,211 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-38-c6-v1",
+  "routes": [
+    {
+      "routeId": "malaga-38",
+      "publicCode": "38",
+      "name": "Paseo del Parque - Granja Suárez - San Alberto",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-38-s01",
+          "directionLabel": "San Alberto",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 21
+          },
+          "stopNodeIds": [
+            "malaga-stop-163",
+            "malaga-stop-2168",
+            "malaga-stop-2118",
+            "malaga-stop-621",
+            "malaga-stop-602",
+            "malaga-stop-821",
+            "malaga-stop-802",
+            "malaga-stop-803",
+            "malaga-stop-804",
+            "malaga-stop-805",
+            "malaga-stop-806",
+            "malaga-stop-861",
+            "malaga-stop-862",
+            "malaga-stop-863",
+            "malaga-stop-864",
+            "malaga-stop-886",
+            "malaga-stop-711",
+            "malaga-stop-713",
+            "malaga-stop-714",
+            "malaga-stop-715",
+            "malaga-stop-751"
+          ]
+        },
+        {
+          "patternId": "malaga-line-38-s02",
+          "directionLabel": "Paseo del Parque",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "malaga-stop-751",
+            "malaga-stop-887",
+            "malaga-stop-882",
+            "malaga-stop-883",
+            "malaga-stop-884",
+            "malaga-stop-885",
+            "malaga-stop-843",
+            "malaga-stop-844",
+            "malaga-stop-845",
+            "malaga-stop-846",
+            "malaga-stop-847",
+            "malaga-stop-848",
+            "malaga-stop-559",
+            "malaga-stop-560",
+            "malaga-stop-662",
+            "malaga-stop-2119",
+            "malaga-stop-367",
+            "malaga-stop-163"
+          ]
+        },
+        {
+          "patternId": "malaga-line-38-s03",
+          "directionLabel": "San Alberto",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 4
+          },
+          "stopNodeIds": [
+            "malaga-stop-713",
+            "malaga-stop-714",
+            "malaga-stop-715",
+            "malaga-stop-751"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "38",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "38",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "38",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=38"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-c6",
+      "publicCode": "C6",
+      "name": "CIRCULAR 6 - La Milagrosa",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-c6-s01",
+          "directionLabel": "R. Suarez",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "malaga-stop-628",
+            "malaga-stop-629",
+            "malaga-stop-609",
+            "malaga-stop-630",
+            "malaga-stop-631",
+            "malaga-stop-611",
+            "malaga-stop-612",
+            "malaga-stop-624",
+            "malaga-stop-613",
+            "malaga-stop-625",
+            "malaga-stop-626",
+            "malaga-stop-627",
+            "malaga-stop-713",
+            "malaga-stop-714",
+            "malaga-stop-715",
+            "malaga-stop-751",
+            "malaga-stop-754",
+            "malaga-stop-755",
+            "malaga-stop-663",
+            "malaga-stop-657",
+            "malaga-stop-756",
+            "malaga-stop-709"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c6-s02",
+          "directionLabel": "R. Suarez",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 6
+          },
+          "stopNodeIds": [
+            "malaga-stop-755",
+            "malaga-stop-663",
+            "malaga-stop-657",
+            "malaga-stop-756",
+            "malaga-stop-709",
+            "malaga-stop-628"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c6-s03",
+          "directionLabel": "Galeno - Carlinda",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "malaga-stop-628",
+            "malaga-stop-629",
+            "malaga-stop-609",
+            "malaga-stop-630",
+            "malaga-stop-631",
+            "malaga-stop-611",
+            "malaga-stop-612",
+            "malaga-stop-624",
+            "malaga-stop-613",
+            "malaga-stop-625",
+            "malaga-stop-626",
+            "malaga-stop-627",
+            "malaga-stop-713",
+            "malaga-stop-714",
+            "malaga-stop-715",
+            "malaga-stop-751",
+            "malaga-stop-754",
+            "malaga-stop-755"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "76",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "76",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "76",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=76"
+        }
+      ]
+    }
+  ]
+}

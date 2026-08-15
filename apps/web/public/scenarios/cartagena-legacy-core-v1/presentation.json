@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-core-v1",
+  "title": "Cartagena Legacy Core Network - Lines 1 and 2",
+  "initialView": {
+    "center": {
+      "latitude": 37.6177482698442,
+      "longitude": -0.9862766878390401
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "cartagena-1": {
+      "label": "1",
+      "color": "#d32f2f"
+    },
+    "cartagena-2": {
+      "label": "2",
+      "color": "#0288d1"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Second Cartagena legacy component, containing Lines 1 and 2.",
+    "Line 1 preserves four separately published La Buhardilla/Casas de Clares directional variants.",
+    "Line 2 preserves two independently published Barrio Peral / Barrio Virgen de la Caridad directions.",
+    "No reverse pattern or branch concatenation is inferred.",
+    "Route style colors are presentation-only and are not claimed as operator livery."
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-7-15-n2-v1",
+  "routes": [
+    {
+      "routeId": "malaga-7",
+      "publicCode": "7",
+      "name": "Parque Litoral - Alameda Principal - Carlinda",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-7-s01",
+          "directionLabel": " Carlinda",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 35
+          },
+          "stopNodeIds": [
+            "malaga-stop-1659",
+            "malaga-stop-1660",
+            "malaga-stop-1652",
+            "malaga-stop-1658",
+            "malaga-stop-1654",
+            "malaga-stop-1552",
+            "malaga-stop-1553",
+            "malaga-stop-1554",
+            "malaga-stop-1555",
+            "malaga-stop-1556",
+            "malaga-stop-1557",
+            "malaga-stop-1259",
+            "malaga-stop-360",
+            "malaga-stop-361",
+            "malaga-stop-362",
+            "malaga-stop-368",
+            "malaga-stop-364",
+            "malaga-stop-462",
+            "malaga-stop-718",
+            "malaga-stop-823",
+            "malaga-stop-621",
+            "malaga-stop-602",
+            "malaga-stop-603",
+            "malaga-stop-604",
+            "malaga-stop-702",
+            "malaga-stop-556",
+            "malaga-stop-703",
+            "malaga-stop-704",
+            "malaga-stop-705",
+            "malaga-stop-706",
+            "malaga-stop-707",
+            "malaga-stop-709",
+            "malaga-stop-608",
+            "malaga-stop-710",
+            "malaga-stop-755"
+          ]
+        },
+        {
+          "patternId": "malaga-line-7-s02",
+          "directionLabel": "Parque Litoral",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 37
+          },
+          "stopNodeIds": [
+            "malaga-stop-755",
+            "malaga-stop-663",
+            "malaga-stop-657",
+            "malaga-stop-756",
+            "malaga-stop-758",
+            "malaga-stop-759",
+            "malaga-stop-760",
+            "malaga-stop-761",
+            "malaga-stop-762",
+            "malaga-stop-557",
+            "malaga-stop-558",
+            "malaga-stop-559",
+            "malaga-stop-560",
+            "malaga-stop-662",
+            "malaga-stop-791",
+            "malaga-stop-2701",
+            "malaga-stop-2416",
+            "malaga-stop-402",
+            "malaga-stop-307",
+            "malaga-stop-1606",
+            "malaga-stop-309",
+            "malaga-stop-310",
+            "malaga-stop-312",
+            "malaga-stop-1534",
+            "malaga-stop-1526",
+            "malaga-stop-1530",
+            "malaga-stop-1521",
+            "malaga-stop-1522",
+            "malaga-stop-1523",
+            "malaga-stop-1524",
+            "malaga-stop-1525",
+            "malaga-stop-1602",
+            "malaga-stop-1603",
+            "malaga-stop-1607",
+            "malaga-stop-1608",
+            "malaga-stop-1609",
+            "malaga-stop-1659"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "7",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "7",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "7",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=7"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-15",
+      "publicCode": "15",
+      "name": "Virreina - Carlos Haya - Santa Paula",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-15-s01",
+          "directionLabel": "Santa Paula",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 34
+          },
+          "stopNodeIds": [
+            "malaga-stop-1761",
+            "malaga-stop-1762",
+            "malaga-stop-1763",
+            "malaga-stop-1527",
+            "malaga-stop-1502",
+            "malaga-stop-1503",
+            "malaga-stop-1504",
+            "malaga-stop-1505",
+            "malaga-stop-1506",
+            "malaga-stop-556",
+            "malaga-stop-703",
+            "malaga-stop-4202",
+            "malaga-stop-1533",
+            "malaga-stop-965",
+            "malaga-stop-966",
+            "malaga-stop-804",
+            "malaga-stop-805",
+            "malaga-stop-806",
+            "malaga-stop-1512",
+            "malaga-stop-1513",
+            "malaga-stop-1514",
+            "malaga-stop-1515",
+            "malaga-stop-1516",
+            "malaga-stop-1517",
+            "malaga-stop-1518",
+            "malaga-stop-1534",
+            "malaga-stop-1526",
+            "malaga-stop-1530",
+            "malaga-stop-1521",
+            "malaga-stop-1522",
+            "malaga-stop-1523",
+            "malaga-stop-1524",
+            "malaga-stop-1525",
+            "malaga-stop-1551"
+          ]
+        },
+        {
+          "patternId": "malaga-line-15-s02",
+          "directionLabel": " Virreina",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 31
+          },
+          "stopNodeIds": [
+            "malaga-stop-1551",
+            "malaga-stop-1552",
+            "malaga-stop-1553",
+            "malaga-stop-1554",
+            "malaga-stop-1555",
+            "malaga-stop-1556",
+            "malaga-stop-1557",
+            "malaga-stop-1558",
+            "malaga-stop-1559",
+            "malaga-stop-1560",
+            "malaga-stop-1561",
+            "malaga-stop-1409",
+            "malaga-stop-1563",
+            "malaga-stop-844",
+            "malaga-stop-845",
+            "malaga-stop-846",
+            "malaga-stop-927",
+            "malaga-stop-660",
+            "malaga-stop-1567",
+            "malaga-stop-761",
+            "malaga-stop-762",
+            "malaga-stop-702",
+            "malaga-stop-1569",
+            "malaga-stop-1570",
+            "malaga-stop-1571",
+            "malaga-stop-1572",
+            "malaga-stop-1573",
+            "malaga-stop-1702",
+            "malaga-stop-1712",
+            "malaga-stop-1713",
+            "malaga-stop-1761"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "15",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "15",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "15",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=15"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-n2",
+      "publicCode": "N2",
+      "name": "Plaza de la Marina - Circular (Nocturno 2)",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-n2-s01",
+          "directionLabel": " Plaza de la Marina",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 51
+          },
+          "stopNodeIds": [
+            "malaga-stop-171",
+            "malaga-stop-116",
+            "malaga-stop-117",
+            "malaga-stop-1201",
+            "malaga-stop-103",
+            "malaga-stop-508",
+            "malaga-stop-104",
+            "malaga-stop-105",
+            "malaga-stop-106",
+            "malaga-stop-107",
+            "malaga-stop-109",
+            "malaga-stop-110",
+            "malaga-stop-111",
+            "malaga-stop-112",
+            "malaga-stop-113",
+            "malaga-stop-208",
+            "malaga-stop-209",
+            "malaga-stop-210",
+            "malaga-stop-211",
+            "malaga-stop-212",
+            "malaga-stop-1761",
+            "malaga-stop-1762",
+            "malaga-stop-1763",
+            "malaga-stop-1527",
+            "malaga-stop-1502",
+            "malaga-stop-1503",
+            "malaga-stop-1758",
+            "malaga-stop-4203",
+            "malaga-stop-1759",
+            "malaga-stop-1760",
+            "malaga-stop-1506",
+            "malaga-stop-556",
+            "malaga-stop-703",
+            "malaga-stop-4202",
+            "malaga-stop-1533",
+            "malaga-stop-965",
+            "malaga-stop-966",
+            "malaga-stop-804",
+            "malaga-stop-805",
+            "malaga-stop-806",
+            "malaga-stop-1512",
+            "malaga-stop-1513",
+            "malaga-stop-1514",
+            "malaga-stop-1515",
+            "malaga-stop-456",
+            "malaga-stop-457",
+            "malaga-stop-1858",
+            "malaga-stop-1859",
+            "malaga-stop-1860",
+            "malaga-stop-662"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "42",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "N2",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "42",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=42"
+        }
+      ]
+    }
+  ]
+}

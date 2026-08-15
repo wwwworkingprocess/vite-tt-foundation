@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-day-legacy-all-v1",
+  "title": "Málaga Day Legacy All Network",
+  "initialView": {
+    "center": {
+      "latitude": 36.71669933257215,
+      "longitude": -4.455939394452114
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "malaga-1": {
+      "label": "1",
+      "color": "#12A96A"
+    },
+    "malaga-2": {
+      "label": "2",
+      "color": "#6EE6D7"
+    },
+    "malaga-3": {
+      "label": "3",
+      "color": "#CC207D"
+    },
+    "malaga-4": {
+      "label": "4",
+      "color": "#319E16"
+    },
+    "malaga-5": {
+      "label": "5",
+      "color": "#22F4CE"
+    },
+    "malaga-7": {
+      "label": "7",
+      "color": "#D91010"
+    },
+    "malaga-8": {
+      "label": "8",
+      "color": "#93BE4D"
+    },
+    "malaga-9": {
+      "label": "9",
+      "color": "#DA5ED5"
+    },
+    "malaga-10": {
+      "label": "10",
+      "color": "#319E16"
+    },
+    "malaga-11": {
+      "label": "11",
+      "color": "#F57B91"
+    },
+    "malaga-14": {
+      "label": "14",
+      "color": "#7D8FED"
+    },
+    "malaga-15": {
+      "label": "15",
+      "color": "#F57B91"
+    },
+    "malaga-17": {
+      "label": "17",
+      "color": "#B413CE"
+    },
+    "malaga-18": {
+      "label": "18",
+      "color": "#EA6868"
+    },
+    "malaga-19": {
+      "label": "19",
+      "color": "#ACC9DF"
+    },
+    "malaga-20": {
+      "label": "20",
+      "color": "#D184E4"
+    },
+    "malaga-21": {
+      "label": "21",
+      "color": "#D184E4"
+    },
+    "malaga-22": {
+      "label": "22",
+      "color": "#AEA812"
+    },
+    "malaga-23": {
+      "label": "23",
+      "color": "#CC725E"
+    },
+    "malaga-25": {
+      "label": "25",
+      "color": "#000000"
+    },
+    "malaga-27": {
+      "label": "27",
+      "color": "#DEBB07"
+    },
+    "malaga-28": {
+      "label": "28",
+      "color": "#000000"
+    },
+    "malaga-29": {
+      "label": "29",
+      "color": "#000000"
+    },
+    "malaga-30": {
+      "label": "30",
+      "color": "#000000"
+    },
+    "malaga-31": {
+      "label": "31",
+      "color": "#800000"
+    },
+    "malaga-32": {
+      "label": "32",
+      "color": "#D74355"
+    },
+    "malaga-33": {
+      "label": "33",
+      "color": "#12B3BE"
+    },
+    "malaga-34": {
+      "label": "34",
+      "color": "#559C1C"
+    },
+    "malaga-35": {
+      "label": "35",
+      "color": "#361FBF"
+    },
+    "malaga-36": {
+      "label": "36",
+      "color": "#A9A66B"
+    },
+    "malaga-37": {
+      "label": "37",
+      "color": "#ED0D28"
+    },
+    "malaga-38": {
+      "label": "38",
+      "color": "#3CDCAC"
+    },
+    "malaga-40": {
+      "label": "40",
+      "color": "#A66868"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Pure exact-copy merge of the 33 accepted Málaga numbered daytime route objects in frozen canonical public-code order.",
+    "All route and pattern objects are copied exactly from accepted construction components; shared StopNode and StopPlace identities are collapsed only after deep exact-object equality.",
+    "No source discovery, coordinate discovery, topology reconciliation, route creation, pattern creation or identity creation occurs during this merge.",
+    "Mixed-family construction components contribute only their numbered daytime routes; circular, night and express routes remain in their accepted components for their own family merges."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-legacy-all-v1",
+  "title": "Murcia Rayo Legacy All Network",
+  "initialView": {
+    "center": {
+      "latitude": 37.9821855,
+      "longitude": -1.1254558000000001
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "murcia-r12": {
+      "label": "R12",
+      "color": "#FF8040"
+    },
+    "murcia-r14": {
+      "label": "R14",
+      "color": "#24B80A"
+    },
+    "murcia-r17": {
+      "label": "R17",
+      "color": "#FF6FFF"
+    },
+    "murcia-r20": {
+      "label": "R20",
+      "color": "#0080C0"
+    },
+    "murcia-r80": {
+      "label": "R80",
+      "color": "#F9F900"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Pure exact-copy merge of accepted Murcia component route objects for the R12, R14, R17, R20 and R80 Rayo family.",
+    "Route and pattern objects are copied exactly in canonical public-code order R12, R14, R17, R20, R80.",
+    "Shared StopNode and StopPlace identities are collapsed only by exact stable ID and deep exact-object equality.",
+    "No route discovery, coordinate discovery, topology reconciliation or identity creation occurs during this merge.",
+    "The accepted murcia-central-rail-v1 component contributes only route R17 to this family; its C5 route remains catalogued in the component and is already represented in the accepted Circular family merge."
+  ]
+}

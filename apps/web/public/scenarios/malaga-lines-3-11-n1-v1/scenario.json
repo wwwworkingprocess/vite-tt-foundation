@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-3-11-n1-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Málaga EMT - Lines 3, 11 and N1",
+  "primarySettlementId": "es-malaga",
+  "settlementIds": [
+    "es-malaga"
+  ],
+  "contentHash": "436ba9a634a11161ffdbc444d08a73acfee28edd64727ad90ae965201650bd41",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "7e7c3ffb280b49074f4b58c675e9eb1163e4e17f3a552bd718d09df9c4a2906c"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "f8583d6bef6a1a3048128caede7adfc77e9636c2399e90944c7f4623f7e0b33c"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "9a5337420b8eeca0954bc6e5b92c76df440120b4ea74d4c61ab7464f0a023000"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "071ea387195271b444132baec33d29dac268e1e908ae088316c816c982899a09"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "0d8f7073ddddc5af86ba1ddacc77a0b468f55a056c480577cc958cfaf3244605"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

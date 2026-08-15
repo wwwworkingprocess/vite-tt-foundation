@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-express-legacy-all-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Málaga Express Legacy All Network",
+  "primarySettlementId": "es-malaga",
+  "settlementIds": [
+    "es-malaga"
+  ],
+  "contentHash": "fd66f1b9499a21dfaac806523975ef5a05741229ad752a9fc50dd5cdb100ee54",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "4e7b6aa12ad35cef0d3fd4dddd611ca86a2aa7b93d2a0e9f5522c466c93f1894"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "baad9fcd03d07fac1039e25e7ed1c1c051872010f2cd9aa0730c49b08705b4a5"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "fe71feeb0ab22178c0f4d636d62348a357dd81bb131b70035858b071be9b9807"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "54214a4fa163c0e5acbbc2a552b3c49aab40623f3df7cb35110eb312bcbe4223"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "8c0401e2222369467f611adda691eb1f3a37913cdd8c772d088cfccb133dd44e"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

@@ -1,0 +1,362 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-14-n4-c5-v1",
+  "routes": [
+    {
+      "routeId": "malaga-14",
+      "publicCode": "14",
+      "name": "Paseo de la Farola - Carranque - Teatinos",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-14-s01",
+          "directionLabel": "Pso. Farola",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 22
+          },
+          "stopNodeIds": [
+            "malaga-stop-564",
+            "malaga-stop-4445",
+            "malaga-stop-4455",
+            "malaga-stop-1472",
+            "malaga-stop-4452",
+            "malaga-stop-1419",
+            "malaga-stop-1466",
+            "malaga-stop-1454",
+            "malaga-stop-1455",
+            "malaga-stop-1457",
+            "malaga-stop-1853",
+            "malaga-stop-1809",
+            "malaga-stop-1468",
+            "malaga-stop-1858",
+            "malaga-stop-1859",
+            "malaga-stop-1860",
+            "malaga-stop-662",
+            "malaga-stop-1471",
+            "malaga-stop-366",
+            "malaga-stop-1201",
+            "malaga-stop-1359",
+            "malaga-stop-1421"
+          ]
+        },
+        {
+          "patternId": "malaga-line-14-s02",
+          "directionLabel": "Teatinos",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "malaga-stop-1421",
+            "malaga-stop-1301",
+            "malaga-stop-1802",
+            "malaga-stop-301",
+            "malaga-stop-426",
+            "malaga-stop-1803",
+            "malaga-stop-425",
+            "malaga-stop-416",
+            "malaga-stop-1810",
+            "malaga-stop-1811",
+            "malaga-stop-1416",
+            "malaga-stop-1417",
+            "malaga-stop-1812",
+            "malaga-stop-1406",
+            "malaga-stop-1852",
+            "malaga-stop-3111",
+            "malaga-stop-1410",
+            "malaga-stop-1412",
+            "malaga-stop-1423",
+            "malaga-stop-1814",
+            "malaga-stop-1422",
+            "malaga-stop-4407",
+            "malaga-stop-853",
+            "malaga-stop-564"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "14",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "14",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "14",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=14"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-n4",
+      "publicCode": "N4",
+      "name": "Paseo del Parque - Teatinos - Pto. de la Torre (Nocturno 4)",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-n4-s01",
+          "directionLabel": "Puerto de la Torre",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 38
+          },
+          "stopNodeIds": [
+            "malaga-stop-163",
+            "malaga-stop-1172",
+            "malaga-stop-1173",
+            "malaga-stop-2168",
+            "malaga-stop-1402",
+            "malaga-stop-1403",
+            "malaga-stop-1404",
+            "malaga-stop-1405",
+            "malaga-stop-1409",
+            "malaga-stop-1410",
+            "malaga-stop-1412",
+            "malaga-stop-1423",
+            "malaga-stop-1814",
+            "malaga-stop-423",
+            "malaga-stop-476",
+            "malaga-stop-473",
+            "malaga-stop-4406",
+            "malaga-stop-1422",
+            "malaga-stop-4407",
+            "malaga-stop-853",
+            "malaga-stop-854",
+            "malaga-stop-6252",
+            "malaga-stop-2358",
+            "malaga-stop-2359",
+            "malaga-stop-2362",
+            "malaga-stop-2360",
+            "malaga-stop-2363",
+            "malaga-stop-2361",
+            "malaga-stop-2103",
+            "malaga-stop-2104",
+            "malaga-stop-2117",
+            "malaga-stop-2105",
+            "malaga-stop-2106",
+            "malaga-stop-2107",
+            "malaga-stop-2108",
+            "malaga-stop-2109",
+            "malaga-stop-2110",
+            "malaga-stop-2156"
+          ]
+        },
+        {
+          "patternId": "malaga-line-n4-s02",
+          "directionLabel": "Paseo del Parque",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 40
+          },
+          "stopNodeIds": [
+            "malaga-stop-2156",
+            "malaga-stop-2157",
+            "malaga-stop-2158",
+            "malaga-stop-2159",
+            "malaga-stop-2160",
+            "malaga-stop-2161",
+            "malaga-stop-2162",
+            "malaga-stop-2167",
+            "malaga-stop-2163",
+            "malaga-stop-2164",
+            "malaga-stop-2302",
+            "malaga-stop-2303",
+            "malaga-stop-813",
+            "malaga-stop-814",
+            "malaga-stop-2304",
+            "malaga-stop-2313",
+            "malaga-stop-2305",
+            "malaga-stop-2306",
+            "malaga-stop-6202",
+            "malaga-stop-564",
+            "malaga-stop-4445",
+            "malaga-stop-4455",
+            "malaga-stop-1472",
+            "malaga-stop-4454",
+            "malaga-stop-420",
+            "malaga-stop-2207",
+            "malaga-stop-4452",
+            "malaga-stop-1419",
+            "malaga-stop-1466",
+            "malaga-stop-1454",
+            "malaga-stop-1455",
+            "malaga-stop-1457",
+            "malaga-stop-1460",
+            "malaga-stop-1461",
+            "malaga-stop-1462",
+            "malaga-stop-1463",
+            "malaga-stop-2119",
+            "malaga-stop-3324",
+            "malaga-stop-117",
+            "malaga-stop-163"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "44",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "N4",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "44",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=44"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-c5",
+      "publicCode": "C5",
+      "name": "CIRCULAR 5 - Puerto de la Torre",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-c5-s01",
+          "directionLabel": " Puerto de la Torre",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 40
+          },
+          "stopNodeIds": [
+            "malaga-stop-2154",
+            "malaga-stop-2155",
+            "malaga-stop-6205",
+            "malaga-stop-6206",
+            "malaga-stop-6207",
+            "malaga-stop-6208",
+            "malaga-stop-6209",
+            "malaga-stop-6210",
+            "malaga-stop-2357",
+            "malaga-stop-6202",
+            "malaga-stop-564",
+            "malaga-stop-4445",
+            "malaga-stop-4455",
+            "malaga-stop-833",
+            "malaga-stop-820",
+            "malaga-stop-2251",
+            "malaga-stop-831",
+            "malaga-stop-2360",
+            "malaga-stop-6254",
+            "malaga-stop-2103",
+            "malaga-stop-2104",
+            "malaga-stop-2105",
+            "malaga-stop-2106",
+            "malaga-stop-2107",
+            "malaga-stop-2108",
+            "malaga-stop-6255",
+            "malaga-stop-6256",
+            "malaga-stop-6257",
+            "malaga-stop-6258",
+            "malaga-stop-6259",
+            "malaga-stop-6260",
+            "malaga-stop-6261",
+            "malaga-stop-6262",
+            "malaga-stop-6263",
+            "malaga-stop-2109",
+            "malaga-stop-2110",
+            "malaga-stop-2111",
+            "malaga-stop-2112",
+            "malaga-stop-2113"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c5-s02",
+          "directionLabel": " Puerto de la Torre",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 26
+          },
+          "stopNodeIds": [
+            "malaga-stop-820",
+            "malaga-stop-2251",
+            "malaga-stop-831",
+            "malaga-stop-2360",
+            "malaga-stop-6254",
+            "malaga-stop-2103",
+            "malaga-stop-2104",
+            "malaga-stop-2105",
+            "malaga-stop-2106",
+            "malaga-stop-2107",
+            "malaga-stop-2108",
+            "malaga-stop-6255",
+            "malaga-stop-6256",
+            "malaga-stop-6257",
+            "malaga-stop-6258",
+            "malaga-stop-6259",
+            "malaga-stop-6260",
+            "malaga-stop-6261",
+            "malaga-stop-6262",
+            "malaga-stop-6263",
+            "malaga-stop-2109",
+            "malaga-stop-2110",
+            "malaga-stop-2111",
+            "malaga-stop-2112",
+            "malaga-stop-2113",
+            "malaga-stop-2154"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c5-s03",
+          "directionLabel": "Pasteur - Jimenez Fraud",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "malaga-stop-2154",
+            "malaga-stop-2155",
+            "malaga-stop-6205",
+            "malaga-stop-6206",
+            "malaga-stop-6207",
+            "malaga-stop-6208",
+            "malaga-stop-6209",
+            "malaga-stop-6210",
+            "malaga-stop-2357",
+            "malaga-stop-6202",
+            "malaga-stop-564",
+            "malaga-stop-4445",
+            "malaga-stop-4455",
+            "malaga-stop-833",
+            "malaga-stop-820"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "62",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "C5",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "62",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=62"
+        }
+      ]
+    }
+  ]
+}

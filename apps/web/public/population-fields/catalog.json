@@ -70,6 +70,54 @@
       "scenarioCount": 12,
       "cropAnomalyScenarioIds": [],
       "sourceRound4ArchiveSha256": "b3dfd424fa45c8406d9d7c875e282ab8581e221cbd64fec231b56d90cf9325db"
+    },
+    {
+      "cityName": "Cartagena",
+      "primarySettlementId": "es-cartagena",
+      "externalCityId": "Q162615",
+      "gridVersion": "1.0.0",
+      "gridPath": "cartagena-v1/cartagena-city-population-grid-v1.round2.json",
+      "cropPath": "cartagena-v1/cartagena-population-grid-round3-crops.json",
+      "gridSha256": "a471e2011c8d9379d9f8df8965c5c256a9d57707a196e0e7cb160152685a315d",
+      "cropSha256": "c067f695c77d365665509fadb04c6f1277b71432d12b9254c4fe9bba77383e43",
+      "rows": 323,
+      "columns": 1052,
+      "resolutionDegrees": 0.001,
+      "scenarioCount": 11,
+      "cropAnomalyScenarioIds": [],
+      "sourceRound4ArchiveSha256": "2d356e53c9e1aeeeee57ad54ecd5b4c7bb9febfce7283668c905c937e44a7bf7"
+    },
+    {
+      "cityName": "Murcia",
+      "primarySettlementId": "es-murcia",
+      "externalCityId": "Q12225",
+      "gridVersion": "1.0.0",
+      "gridPath": "murcia-v1/murcia-city-population-grid-v1.round2.json",
+      "cropPath": "murcia-v1/murcia-population-grid-round3-crops.json",
+      "gridSha256": "362f8a046979585724a3cfd79093911b03248be9ba5860d935fa1c87216747bf",
+      "cropSha256": "8b68f10806657781f124d33606e4cb82f3055429ca1ee98cf2baaf1afac09e23",
+      "rows": 61,
+      "columns": 80,
+      "resolutionDegrees": 0.001,
+      "scenarioCount": 7,
+      "cropAnomalyScenarioIds": [],
+      "sourceRound4ArchiveSha256": "94bc93459d442b06cba26ec60e0ea5e831e61b8a92baf3399eccbd8bad6dcab0"
+    },
+    {
+      "cityName": "Málaga",
+      "primarySettlementId": "es-malaga",
+      "externalCityId": "Q8851",
+      "gridVersion": "1.0.0",
+      "gridPath": "malaga-v1/malaga-city-population-grid-v1.round2.json",
+      "cropPath": "malaga-v1/malaga-population-grid-round3-crops.json",
+      "gridSha256": "23e6ff1c758823c36e23865f39ac7f18f5a3dd2e990eb5fe8af1639c180b487b",
+      "cropSha256": "522ddf3fb637eebe1a888160fb158c5ee3bc5773c0b40ee9924a519de826b83e",
+      "rows": 160,
+      "columns": 291,
+      "resolutionDegrees": 0.001,
+      "scenarioCount": 21,
+      "cropAnomalyScenarioIds": [],
+      "sourceRound4ArchiveSha256": "5f08c015422e41363ac4112b02f353169303cf08efe7fecedc099b2f8ec49fa2"
     }
   ]
 }

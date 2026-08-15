@@ -1,0 +1,2009 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-29-a-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2901",
+      "name": "Jarazmín Alto",
+      "position": {
+        "latitude": 36.7274011194126,
+        "longitude": -4.33577227570503
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2902",
+      "name": "Jarazmín - Sardina",
+      "position": {
+        "latitude": 36.7246546468331,
+        "longitude": -4.3365854493066
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2903",
+      "name": "Jarazmín - Palometa",
+      "position": {
+        "latitude": 36.7239978737978,
+        "longitude": -4.33667395937487
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2904",
+      "name": "Cam. Viejo de Vélez - Jarazmín",
+      "position": {
+        "latitude": 36.7215802886713,
+        "longitude": -4.34010380882893
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2905",
+      "name": "Cam. Viejo de Vélez - Golf",
+      "position": {
+        "latitude": 36.7220264713463,
+        "longitude": -4.34203561369159
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2906",
+      "name": "Cam. Viejo de Vélez - Instituto",
+      "position": {
+        "latitude": 36.7224901490662,
+        "longitude": -4.34510570401812
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2921",
+      "name": "Cam. Viejo de Vélez - Olías",
+      "position": {
+        "latitude": 36.722127589899,
+        "longitude": -4.3473211738292
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2907",
+      "name": "Ctra. de Olías - Fuente",
+      "position": {
+        "latitude": 36.7238455707612,
+        "longitude": -4.34567004786011
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2909",
+      "name": "Ctra. de Olías - Podadera",
+      "position": {
+        "latitude": 36.7272628905753,
+        "longitude": -4.34307364711363
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2910",
+      "name": "Ctra. de Olías - Ventas",
+      "position": {
+        "latitude": 36.7302196858991,
+        "longitude": -4.33986886528185
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2937",
+      "name": "Ctra. de Olías - El Palo",
+      "position": {
+        "latitude": 36.7219734482493,
+        "longitude": -4.3482786900543
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2926",
+      "name": "Algarrobo",
+      "position": {
+        "latitude": 36.721492190513,
+        "longitude": -4.35087581396037
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2927",
+      "name": "Algarrobo - Potosi",
+      "position": {
+        "latitude": 36.7225947101598,
+        "longitude": -4.35065730535809
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2928",
+      "name": "Carmen Amaya",
+      "position": {
+        "latitude": 36.7251649893934,
+        "longitude": -4.3515473983234
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2929",
+      "name": "Idumea",
+      "position": {
+        "latitude": 36.7221321521441,
+        "longitude": -4.35293789122639
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1153",
+      "name": "Ctra. Almería - Chanquete",
+      "position": {
+        "latitude": 36.7204093581031,
+        "longitude": -4.35458657495867
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1154",
+      "name": "Ctra. Almería - Edif. Bahía",
+      "position": {
+        "latitude": 36.7207433412292,
+        "longitude": -4.35655787272458
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2930",
+      "name": "Villafuerte - Elcano",
+      "position": {
+        "latitude": 36.7216849616967,
+        "longitude": -4.35995524475072
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2913",
+      "name": "Villafuerte - El Drago",
+      "position": {
+        "latitude": 36.7243236087447,
+        "longitude": -4.35899592406532
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2914",
+      "name": "Reina Fabiola - Colegio",
+      "position": {
+        "latitude": 36.7277378900013,
+        "longitude": -4.35635820033547
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2915",
+      "name": "Reina Fabiola - Subestación",
+      "position": {
+        "latitude": 36.7275639498771,
+        "longitude": -4.35761148198996
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2969",
+      "name": "José María Alonso - Sarasate",
+      "position": {
+        "latitude": 36.7301117027917,
+        "longitude": -4.35811122820667
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2970",
+      "name": "José María Alonso - Residencia",
+      "position": {
+        "latitude": 36.7313085327858,
+        "longitude": -4.35943122421651
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2971",
+      "name": "José María Alonso - Rabal",
+      "position": {
+        "latitude": 36.7322486696233,
+        "longitude": -4.35695281424174
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2972",
+      "name": "Leoni Banabu - Andrades",
+      "position": {
+        "latitude": 36.733438461318,
+        "longitude": -4.35607419073691
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2973",
+      "name": "Leoni Banabu - Camilo José Cela",
+      "position": {
+        "latitude": 36.734139346464,
+        "longitude": -4.35742433826041
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2974",
+      "name": "Magnolios - Adolfo Marsillach",
+      "position": {
+        "latitude": 36.7333377230982,
+        "longitude": -4.36002467277317
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2975",
+      "name": "Magnolios - Tulipanes",
+      "position": {
+        "latitude": 36.7338665593548,
+        "longitude": -4.36133276519865
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2976",
+      "name": "San Antón - Cedros",
+      "position": {
+        "latitude": 36.7350507247215,
+        "longitude": -4.36141070366724
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2977",
+      "name": "San Antón - Almendros",
+      "position": {
+        "latitude": 36.7314184094199,
+        "longitude": -4.3616108894871
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2917",
+      "name": "San Isidro",
+      "position": {
+        "latitude": 36.7270925050662,
+        "longitude": -4.36459007275766
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2925",
+      "name": "Manuel del Palacio - Jaboneros",
+      "position": {
+        "latitude": 36.725504065255,
+        "longitude": -4.36659557715905
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-3415",
+      "name": "Manuel del Palacio - Picón",
+      "position": {
+        "latitude": 36.7254975368658,
+        "longitude": -4.36817968886993
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-3408",
+      "name": "Amador Ríos - San Federico",
+      "position": {
+        "latitude": 36.7267726377509,
+        "longitude": -4.36947733339338
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-3409",
+      "name": "Amador Ríos - Eucaliptus",
+      "position": {
+        "latitude": 36.7274621969242,
+        "longitude": -4.37053687620337
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2939",
+      "name": "Fernández Shaw - Castañer",
+      "position": {
+        "latitude": 36.7281759477214,
+        "longitude": -4.37201138605358
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2931",
+      "name": "Laurel",
+      "position": {
+        "latitude": 36.7281536930758,
+        "longitude": -4.3743364616131
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2932",
+      "name": "José Fernández Pertierra",
+      "position": {
+        "latitude": 36.7311277404022,
+        "longitude": -4.37537258923383
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2938",
+      "name": "La Mosca - C. Conservación",
+      "position": {
+        "latitude": 36.7334828558446,
+        "longitude": -4.37613630763808
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2933",
+      "name": "Pintor Sánchez Cotán",
+      "position": {
+        "latitude": 36.7325294967504,
+        "longitude": -4.37647707796304
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2934",
+      "name": "Juan García León",
+      "position": {
+        "latitude": 36.729806531175,
+        "longitude": -4.37694673413174
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2935",
+      "name": "Laurel",
+      "position": {
+        "latitude": 36.7280752667094,
+        "longitude": -4.37443746658873
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2978",
+      "name": "Arquitecto Alonso Carrbonell",
+      "position": {
+        "latitude": 36.7268872618719,
+        "longitude": -4.37419165997084
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2936",
+      "name": "Arquitecto Francisco de Mora",
+      "position": {
+        "latitude": 36.7258640411215,
+        "longitude": -4.37484203650603
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2923",
+      "name": "Fernandez Shaw - Elcano",
+      "position": {
+        "latitude": 36.7225798783191,
+        "longitude": -4.37383126436447
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2924",
+      "name": "Cesar Riario",
+      "position": {
+        "latitude": 36.7219414544838,
+        "longitude": -4.3769690387484
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1113",
+      "name": "Bolivia - Pedregalejo",
+      "position": {
+        "latitude": 36.7214969528378,
+        "longitude": -4.37523043421788
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1114",
+      "name": "Bolivia - Las Acacias",
+      "position": {
+        "latitude": 36.7207674496441,
+        "longitude": -4.370848862682
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1115",
+      "name": "Allende - Arroyo Jaboneros",
+      "position": {
+        "latitude": 36.7198081347624,
+        "longitude": -4.36535487652888
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1116",
+      "name": "Allende - Estación",
+      "position": {
+        "latitude": 36.7195451771252,
+        "longitude": -4.36182456152463
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1117",
+      "name": "Allende - Santarén",
+      "position": {
+        "latitude": 36.7190397036573,
+        "longitude": -4.35754554760072
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1118",
+      "name": "Allende - Cementerio",
+      "position": {
+        "latitude": 36.718505442577,
+        "longitude": -4.35509376935294
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1119",
+      "name": "Gutiérrez Mata - Playa Virginia",
+      "position": {
+        "latitude": 36.7186167569159,
+        "longitude": -4.3521654258338
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1120",
+      "name": "Ctra. de Olías - Olivo",
+      "position": {
+        "latitude": 36.7204746340313,
+        "longitude": -4.35312895648545
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1121",
+      "name": "Ctra. de Olías - Colegio",
+      "position": {
+        "latitude": 36.720913455642,
+        "longitude": -4.35140227054132
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1151",
+      "name": "Ctra. de Olías - El Palo",
+      "position": {
+        "latitude": 36.7217973354135,
+        "longitude": -4.34849064543209
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2964",
+      "name": "Cam. Viejo de Vélez - Instituto",
+      "position": {
+        "latitude": 36.722491199795,
+        "longitude": -4.34488671107518
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2968",
+      "name": "Cam. Viejo de Vélez - Golf",
+      "position": {
+        "latitude": 36.7219214096788,
+        "longitude": -4.3418567080059
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2965",
+      "name": "Cam. Viejo de Vélez - Jarazmín",
+      "position": {
+        "latitude": 36.7214882795762,
+        "longitude": -4.34013838440507
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2966",
+      "name": "Jarazmín - Palometa",
+      "position": {
+        "latitude": 36.7238469479208,
+        "longitude": -4.33655054343785
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2967",
+      "name": "Jarazmín - Sardina",
+      "position": {
+        "latitude": 36.724986459296,
+        "longitude": -4.33654595514655
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-7502",
+      "name": "Aeropuerto - Llegadas",
+      "position": {
+        "latitude": 36.6771571776561,
+        "longitude": -4.49075673343644
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1957",
+      "name": "Aeropuerto - AENA",
+      "position": {
+        "latitude": 36.6730015743857,
+        "longitude": -4.48735975250546
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1953",
+      "name": "Aeroclub",
+      "position": {
+        "latitude": 36.6724011550618,
+        "longitude": -4.48441475632531
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1058",
+      "name": "Velázquez - Villa Rosa",
+      "position": {
+        "latitude": 36.6742801979803,
+        "longitude": -4.4763539696209
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1061",
+      "name": "Velázquez - Azucarera",
+      "position": {
+        "latitude": 36.682810144614,
+        "longitude": -4.46713264590135
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1063",
+      "name": "Velázquez - Puerta Blanca",
+      "position": {
+        "latitude": 36.6917762316626,
+        "longitude": -4.45573710347989
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-354",
+      "name": "Velázquez - La Luz/La Paz",
+      "position": {
+        "latitude": 36.6959886246524,
+        "longitude": -4.45039820963596
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-357",
+      "name": "Paloma - Girón",
+      "position": {
+        "latitude": 36.7009386177801,
+        "longitude": -4.44267686424414
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1259",
+      "name": "La Hoz - Mercado de Huelin",
+      "position": {
+        "latitude": 36.7025898257025,
+        "longitude": -4.43831831219003
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-362",
+      "name": "Ayala - Los Arcos",
+      "position": {
+        "latitude": 36.7097161753084,
+        "longitude": -4.43152442244947
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1959",
+      "name": "Estación Autobuses",
+      "position": {
+        "latitude": 36.7124605560287,
+        "longitude": -4.43380869074259
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-662",
+      "name": "Av. Andalucía - Guadalmedina",
+      "position": {
+        "latitude": 36.716594107658,
+        "longitude": -4.4278941295928
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-171",
+      "name": "Alameda Principal - Sur",
+      "position": {
+        "latitude": 36.7178772522127,
+        "longitude": -4.42141040505447
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-366",
+      "name": "Parque - Pl. Marina",
+      "position": {
+        "latitude": 36.7186072868437,
+        "longitude": -4.41878118218512
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1901",
+      "name": "Parque - Torrijos",
+      "position": {
+        "latitude": 36.7201247830395,
+        "longitude": -4.41311663015976
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-427",
+      "name": "Parque - Pl. Marina",
+      "position": {
+        "latitude": 36.7188143892157,
+        "longitude": -4.41881328823176
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-7501",
+      "name": "Alameda Principal - Norte",
+      "position": {
+        "latitude": 36.7179126264428,
+        "longitude": -4.4218697085048
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-416",
+      "name": "Av. Andalucía - Guadalmedina",
+      "position": {
+        "latitude": 36.7169379513597,
+        "longitude": -4.42882223593654
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1905",
+      "name": "Estación de Autobuses",
+      "position": {
+        "latitude": 36.7124763568783,
+        "longitude": -4.43374590194051
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1606",
+      "name": "Héroe de Sostoa - Estación",
+      "position": {
+        "latitude": 36.7111893366649,
+        "longitude": -4.43139679254205
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-312",
+      "name": "Héroe de Sostoa - Obras Públicas",
+      "position": {
+        "latitude": 36.7048440485861,
+        "longitude": -4.43942840725514
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-313",
+      "name": "Héroe de Sostoa - Girón",
+      "position": {
+        "latitude": 36.7022938618319,
+        "longitude": -4.44270378337385
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-316",
+      "name": "Velázquez - La Luz/La Paz",
+      "position": {
+        "latitude": 36.6959381731414,
+        "longitude": -4.4508402049774
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1002",
+      "name": "Velázquez - Puerta Blanca",
+      "position": {
+        "latitude": 36.6922853318834,
+        "longitude": -4.45552371141748
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1003",
+      "name": "Velázquez - Azucarera",
+      "position": {
+        "latitude": 36.6826821719037,
+        "longitude": -4.4677842507271
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-1005",
+      "name": "Velázquez - Villa Rosa",
+      "position": {
+        "latitude": 36.6741289500974,
+        "longitude": -4.4769543978487
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "malaga-stop-2901",
+      "stopPlaceId": "malaga-place-2901",
+      "settlementId": "es-malaga",
+      "name": "Jarazmín Alto",
+      "position": {
+        "latitude": 36.7274011194126,
+        "longitude": -4.33577227570503
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2902",
+      "stopPlaceId": "malaga-place-2902",
+      "settlementId": "es-malaga",
+      "name": "Jarazmín - Sardina",
+      "position": {
+        "latitude": 36.7246546468331,
+        "longitude": -4.3365854493066
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2903",
+      "stopPlaceId": "malaga-place-2903",
+      "settlementId": "es-malaga",
+      "name": "Jarazmín - Palometa",
+      "position": {
+        "latitude": 36.7239978737978,
+        "longitude": -4.33667395937487
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2904",
+      "stopPlaceId": "malaga-place-2904",
+      "settlementId": "es-malaga",
+      "name": "Cam. Viejo de Vélez - Jarazmín",
+      "position": {
+        "latitude": 36.7215802886713,
+        "longitude": -4.34010380882893
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2905",
+      "stopPlaceId": "malaga-place-2905",
+      "settlementId": "es-malaga",
+      "name": "Cam. Viejo de Vélez - Golf",
+      "position": {
+        "latitude": 36.7220264713463,
+        "longitude": -4.34203561369159
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2906",
+      "stopPlaceId": "malaga-place-2906",
+      "settlementId": "es-malaga",
+      "name": "Cam. Viejo de Vélez - Instituto",
+      "position": {
+        "latitude": 36.7224901490662,
+        "longitude": -4.34510570401812
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2921",
+      "stopPlaceId": "malaga-place-2921",
+      "settlementId": "es-malaga",
+      "name": "Cam. Viejo de Vélez - Olías",
+      "position": {
+        "latitude": 36.722127589899,
+        "longitude": -4.3473211738292
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2907",
+      "stopPlaceId": "malaga-place-2907",
+      "settlementId": "es-malaga",
+      "name": "Ctra. de Olías - Fuente",
+      "position": {
+        "latitude": 36.7238455707612,
+        "longitude": -4.34567004786011
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2909",
+      "stopPlaceId": "malaga-place-2909",
+      "settlementId": "es-malaga",
+      "name": "Ctra. de Olías - Podadera",
+      "position": {
+        "latitude": 36.7272628905753,
+        "longitude": -4.34307364711363
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2910",
+      "stopPlaceId": "malaga-place-2910",
+      "settlementId": "es-malaga",
+      "name": "Ctra. de Olías - Ventas",
+      "position": {
+        "latitude": 36.7302196858991,
+        "longitude": -4.33986886528185
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2937",
+      "stopPlaceId": "malaga-place-2937",
+      "settlementId": "es-malaga",
+      "name": "Ctra. de Olías - El Palo",
+      "position": {
+        "latitude": 36.7219734482493,
+        "longitude": -4.3482786900543
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2926",
+      "stopPlaceId": "malaga-place-2926",
+      "settlementId": "es-malaga",
+      "name": "Algarrobo",
+      "position": {
+        "latitude": 36.721492190513,
+        "longitude": -4.35087581396037
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2927",
+      "stopPlaceId": "malaga-place-2927",
+      "settlementId": "es-malaga",
+      "name": "Algarrobo - Potosi",
+      "position": {
+        "latitude": 36.7225947101598,
+        "longitude": -4.35065730535809
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2928",
+      "stopPlaceId": "malaga-place-2928",
+      "settlementId": "es-malaga",
+      "name": "Carmen Amaya",
+      "position": {
+        "latitude": 36.7251649893934,
+        "longitude": -4.3515473983234
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2929",
+      "stopPlaceId": "malaga-place-2929",
+      "settlementId": "es-malaga",
+      "name": "Idumea",
+      "position": {
+        "latitude": 36.7221321521441,
+        "longitude": -4.35293789122639
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1153",
+      "stopPlaceId": "malaga-place-1153",
+      "settlementId": "es-malaga",
+      "name": "Ctra. Almería - Chanquete",
+      "position": {
+        "latitude": 36.7204093581031,
+        "longitude": -4.35458657495867
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1154",
+      "stopPlaceId": "malaga-place-1154",
+      "settlementId": "es-malaga",
+      "name": "Ctra. Almería - Edif. Bahía",
+      "position": {
+        "latitude": 36.7207433412292,
+        "longitude": -4.35655787272458
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2930",
+      "stopPlaceId": "malaga-place-2930",
+      "settlementId": "es-malaga",
+      "name": "Villafuerte - Elcano",
+      "position": {
+        "latitude": 36.7216849616967,
+        "longitude": -4.35995524475072
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2913",
+      "stopPlaceId": "malaga-place-2913",
+      "settlementId": "es-malaga",
+      "name": "Villafuerte - El Drago",
+      "position": {
+        "latitude": 36.7243236087447,
+        "longitude": -4.35899592406532
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2914",
+      "stopPlaceId": "malaga-place-2914",
+      "settlementId": "es-malaga",
+      "name": "Reina Fabiola - Colegio",
+      "position": {
+        "latitude": 36.7277378900013,
+        "longitude": -4.35635820033547
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2915",
+      "stopPlaceId": "malaga-place-2915",
+      "settlementId": "es-malaga",
+      "name": "Reina Fabiola - Subestación",
+      "position": {
+        "latitude": 36.7275639498771,
+        "longitude": -4.35761148198996
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2969",
+      "stopPlaceId": "malaga-place-2969",
+      "settlementId": "es-malaga",
+      "name": "José María Alonso - Sarasate",
+      "position": {
+        "latitude": 36.7301117027917,
+        "longitude": -4.35811122820667
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2970",
+      "stopPlaceId": "malaga-place-2970",
+      "settlementId": "es-malaga",
+      "name": "José María Alonso - Residencia",
+      "position": {
+        "latitude": 36.7313085327858,
+        "longitude": -4.35943122421651
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2971",
+      "stopPlaceId": "malaga-place-2971",
+      "settlementId": "es-malaga",
+      "name": "José María Alonso - Rabal",
+      "position": {
+        "latitude": 36.7322486696233,
+        "longitude": -4.35695281424174
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2972",
+      "stopPlaceId": "malaga-place-2972",
+      "settlementId": "es-malaga",
+      "name": "Leoni Banabu - Andrades",
+      "position": {
+        "latitude": 36.733438461318,
+        "longitude": -4.35607419073691
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2973",
+      "stopPlaceId": "malaga-place-2973",
+      "settlementId": "es-malaga",
+      "name": "Leoni Banabu - Camilo José Cela",
+      "position": {
+        "latitude": 36.734139346464,
+        "longitude": -4.35742433826041
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2974",
+      "stopPlaceId": "malaga-place-2974",
+      "settlementId": "es-malaga",
+      "name": "Magnolios - Adolfo Marsillach",
+      "position": {
+        "latitude": 36.7333377230982,
+        "longitude": -4.36002467277317
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2975",
+      "stopPlaceId": "malaga-place-2975",
+      "settlementId": "es-malaga",
+      "name": "Magnolios - Tulipanes",
+      "position": {
+        "latitude": 36.7338665593548,
+        "longitude": -4.36133276519865
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2976",
+      "stopPlaceId": "malaga-place-2976",
+      "settlementId": "es-malaga",
+      "name": "San Antón - Cedros",
+      "position": {
+        "latitude": 36.7350507247215,
+        "longitude": -4.36141070366724
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2977",
+      "stopPlaceId": "malaga-place-2977",
+      "settlementId": "es-malaga",
+      "name": "San Antón - Almendros",
+      "position": {
+        "latitude": 36.7314184094199,
+        "longitude": -4.3616108894871
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2917",
+      "stopPlaceId": "malaga-place-2917",
+      "settlementId": "es-malaga",
+      "name": "San Isidro",
+      "position": {
+        "latitude": 36.7270925050662,
+        "longitude": -4.36459007275766
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2925",
+      "stopPlaceId": "malaga-place-2925",
+      "settlementId": "es-malaga",
+      "name": "Manuel del Palacio - Jaboneros",
+      "position": {
+        "latitude": 36.725504065255,
+        "longitude": -4.36659557715905
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-3415",
+      "stopPlaceId": "malaga-place-3415",
+      "settlementId": "es-malaga",
+      "name": "Manuel del Palacio - Picón",
+      "position": {
+        "latitude": 36.7254975368658,
+        "longitude": -4.36817968886993
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-3408",
+      "stopPlaceId": "malaga-place-3408",
+      "settlementId": "es-malaga",
+      "name": "Amador Ríos - San Federico",
+      "position": {
+        "latitude": 36.7267726377509,
+        "longitude": -4.36947733339338
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-3409",
+      "stopPlaceId": "malaga-place-3409",
+      "settlementId": "es-malaga",
+      "name": "Amador Ríos - Eucaliptus",
+      "position": {
+        "latitude": 36.7274621969242,
+        "longitude": -4.37053687620337
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2939",
+      "stopPlaceId": "malaga-place-2939",
+      "settlementId": "es-malaga",
+      "name": "Fernández Shaw - Castañer",
+      "position": {
+        "latitude": 36.7281759477214,
+        "longitude": -4.37201138605358
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2931",
+      "stopPlaceId": "malaga-place-2931",
+      "settlementId": "es-malaga",
+      "name": "Laurel",
+      "position": {
+        "latitude": 36.7281536930758,
+        "longitude": -4.3743364616131
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2932",
+      "stopPlaceId": "malaga-place-2932",
+      "settlementId": "es-malaga",
+      "name": "José Fernández Pertierra",
+      "position": {
+        "latitude": 36.7311277404022,
+        "longitude": -4.37537258923383
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2938",
+      "stopPlaceId": "malaga-place-2938",
+      "settlementId": "es-malaga",
+      "name": "La Mosca - C. Conservación",
+      "position": {
+        "latitude": 36.7334828558446,
+        "longitude": -4.37613630763808
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2933",
+      "stopPlaceId": "malaga-place-2933",
+      "settlementId": "es-malaga",
+      "name": "Pintor Sánchez Cotán",
+      "position": {
+        "latitude": 36.7325294967504,
+        "longitude": -4.37647707796304
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2934",
+      "stopPlaceId": "malaga-place-2934",
+      "settlementId": "es-malaga",
+      "name": "Juan García León",
+      "position": {
+        "latitude": 36.729806531175,
+        "longitude": -4.37694673413174
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2935",
+      "stopPlaceId": "malaga-place-2935",
+      "settlementId": "es-malaga",
+      "name": "Laurel",
+      "position": {
+        "latitude": 36.7280752667094,
+        "longitude": -4.37443746658873
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2978",
+      "stopPlaceId": "malaga-place-2978",
+      "settlementId": "es-malaga",
+      "name": "Arquitecto Alonso Carrbonell",
+      "position": {
+        "latitude": 36.7268872618719,
+        "longitude": -4.37419165997084
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2936",
+      "stopPlaceId": "malaga-place-2936",
+      "settlementId": "es-malaga",
+      "name": "Arquitecto Francisco de Mora",
+      "position": {
+        "latitude": 36.7258640411215,
+        "longitude": -4.37484203650603
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2923",
+      "stopPlaceId": "malaga-place-2923",
+      "settlementId": "es-malaga",
+      "name": "Fernandez Shaw - Elcano",
+      "position": {
+        "latitude": 36.7225798783191,
+        "longitude": -4.37383126436447
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2924",
+      "stopPlaceId": "malaga-place-2924",
+      "settlementId": "es-malaga",
+      "name": "Cesar Riario",
+      "position": {
+        "latitude": 36.7219414544838,
+        "longitude": -4.3769690387484
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1113",
+      "stopPlaceId": "malaga-place-1113",
+      "settlementId": "es-malaga",
+      "name": "Bolivia - Pedregalejo",
+      "position": {
+        "latitude": 36.7214969528378,
+        "longitude": -4.37523043421788
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1114",
+      "stopPlaceId": "malaga-place-1114",
+      "settlementId": "es-malaga",
+      "name": "Bolivia - Las Acacias",
+      "position": {
+        "latitude": 36.7207674496441,
+        "longitude": -4.370848862682
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1115",
+      "stopPlaceId": "malaga-place-1115",
+      "settlementId": "es-malaga",
+      "name": "Allende - Arroyo Jaboneros",
+      "position": {
+        "latitude": 36.7198081347624,
+        "longitude": -4.36535487652888
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1116",
+      "stopPlaceId": "malaga-place-1116",
+      "settlementId": "es-malaga",
+      "name": "Allende - Estación",
+      "position": {
+        "latitude": 36.7195451771252,
+        "longitude": -4.36182456152463
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1117",
+      "stopPlaceId": "malaga-place-1117",
+      "settlementId": "es-malaga",
+      "name": "Allende - Santarén",
+      "position": {
+        "latitude": 36.7190397036573,
+        "longitude": -4.35754554760072
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1118",
+      "stopPlaceId": "malaga-place-1118",
+      "settlementId": "es-malaga",
+      "name": "Allende - Cementerio",
+      "position": {
+        "latitude": 36.718505442577,
+        "longitude": -4.35509376935294
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1119",
+      "stopPlaceId": "malaga-place-1119",
+      "settlementId": "es-malaga",
+      "name": "Gutiérrez Mata - Playa Virginia",
+      "position": {
+        "latitude": 36.7186167569159,
+        "longitude": -4.3521654258338
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1120",
+      "stopPlaceId": "malaga-place-1120",
+      "settlementId": "es-malaga",
+      "name": "Ctra. de Olías - Olivo",
+      "position": {
+        "latitude": 36.7204746340313,
+        "longitude": -4.35312895648545
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1121",
+      "stopPlaceId": "malaga-place-1121",
+      "settlementId": "es-malaga",
+      "name": "Ctra. de Olías - Colegio",
+      "position": {
+        "latitude": 36.720913455642,
+        "longitude": -4.35140227054132
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1151",
+      "stopPlaceId": "malaga-place-1151",
+      "settlementId": "es-malaga",
+      "name": "Ctra. de Olías - El Palo",
+      "position": {
+        "latitude": 36.7217973354135,
+        "longitude": -4.34849064543209
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2964",
+      "stopPlaceId": "malaga-place-2964",
+      "settlementId": "es-malaga",
+      "name": "Cam. Viejo de Vélez - Instituto",
+      "position": {
+        "latitude": 36.722491199795,
+        "longitude": -4.34488671107518
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2968",
+      "stopPlaceId": "malaga-place-2968",
+      "settlementId": "es-malaga",
+      "name": "Cam. Viejo de Vélez - Golf",
+      "position": {
+        "latitude": 36.7219214096788,
+        "longitude": -4.3418567080059
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2965",
+      "stopPlaceId": "malaga-place-2965",
+      "settlementId": "es-malaga",
+      "name": "Cam. Viejo de Vélez - Jarazmín",
+      "position": {
+        "latitude": 36.7214882795762,
+        "longitude": -4.34013838440507
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2966",
+      "stopPlaceId": "malaga-place-2966",
+      "settlementId": "es-malaga",
+      "name": "Jarazmín - Palometa",
+      "position": {
+        "latitude": 36.7238469479208,
+        "longitude": -4.33655054343785
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2967",
+      "stopPlaceId": "malaga-place-2967",
+      "settlementId": "es-malaga",
+      "name": "Jarazmín - Sardina",
+      "position": {
+        "latitude": 36.724986459296,
+        "longitude": -4.33654595514655
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-7502",
+      "stopPlaceId": "malaga-place-7502",
+      "settlementId": "es-malaga",
+      "name": "Aeropuerto - Llegadas",
+      "position": {
+        "latitude": 36.6771571776561,
+        "longitude": -4.49075673343644
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1957",
+      "stopPlaceId": "malaga-place-1957",
+      "settlementId": "es-malaga",
+      "name": "Aeropuerto - AENA",
+      "position": {
+        "latitude": 36.6730015743857,
+        "longitude": -4.48735975250546
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1953",
+      "stopPlaceId": "malaga-place-1953",
+      "settlementId": "es-malaga",
+      "name": "Aeroclub",
+      "position": {
+        "latitude": 36.6724011550618,
+        "longitude": -4.48441475632531
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1058",
+      "stopPlaceId": "malaga-place-1058",
+      "settlementId": "es-malaga",
+      "name": "Velázquez - Villa Rosa",
+      "position": {
+        "latitude": 36.6742801979803,
+        "longitude": -4.4763539696209
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1061",
+      "stopPlaceId": "malaga-place-1061",
+      "settlementId": "es-malaga",
+      "name": "Velázquez - Azucarera",
+      "position": {
+        "latitude": 36.682810144614,
+        "longitude": -4.46713264590135
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1063",
+      "stopPlaceId": "malaga-place-1063",
+      "settlementId": "es-malaga",
+      "name": "Velázquez - Puerta Blanca",
+      "position": {
+        "latitude": 36.6917762316626,
+        "longitude": -4.45573710347989
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-354",
+      "stopPlaceId": "malaga-place-354",
+      "settlementId": "es-malaga",
+      "name": "Velázquez - La Luz/La Paz",
+      "position": {
+        "latitude": 36.6959886246524,
+        "longitude": -4.45039820963596
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-357",
+      "stopPlaceId": "malaga-place-357",
+      "settlementId": "es-malaga",
+      "name": "Paloma - Girón",
+      "position": {
+        "latitude": 36.7009386177801,
+        "longitude": -4.44267686424414
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1259",
+      "stopPlaceId": "malaga-place-1259",
+      "settlementId": "es-malaga",
+      "name": "La Hoz - Mercado de Huelin",
+      "position": {
+        "latitude": 36.7025898257025,
+        "longitude": -4.43831831219003
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-362",
+      "stopPlaceId": "malaga-place-362",
+      "settlementId": "es-malaga",
+      "name": "Ayala - Los Arcos",
+      "position": {
+        "latitude": 36.7097161753084,
+        "longitude": -4.43152442244947
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1959",
+      "stopPlaceId": "malaga-place-1959",
+      "settlementId": "es-malaga",
+      "name": "Estación Autobuses",
+      "position": {
+        "latitude": 36.7124605560287,
+        "longitude": -4.43380869074259
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-662",
+      "stopPlaceId": "malaga-place-662",
+      "settlementId": "es-malaga",
+      "name": "Av. Andalucía - Guadalmedina",
+      "position": {
+        "latitude": 36.716594107658,
+        "longitude": -4.4278941295928
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-171",
+      "stopPlaceId": "malaga-place-171",
+      "settlementId": "es-malaga",
+      "name": "Alameda Principal - Sur",
+      "position": {
+        "latitude": 36.7178772522127,
+        "longitude": -4.42141040505447
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-366",
+      "stopPlaceId": "malaga-place-366",
+      "settlementId": "es-malaga",
+      "name": "Parque - Pl. Marina",
+      "position": {
+        "latitude": 36.7186072868437,
+        "longitude": -4.41878118218512
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1901",
+      "stopPlaceId": "malaga-place-1901",
+      "settlementId": "es-malaga",
+      "name": "Parque - Torrijos",
+      "position": {
+        "latitude": 36.7201247830395,
+        "longitude": -4.41311663015976
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-427",
+      "stopPlaceId": "malaga-place-427",
+      "settlementId": "es-malaga",
+      "name": "Parque - Pl. Marina",
+      "position": {
+        "latitude": 36.7188143892157,
+        "longitude": -4.41881328823176
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-7501",
+      "stopPlaceId": "malaga-place-7501",
+      "settlementId": "es-malaga",
+      "name": "Alameda Principal - Norte",
+      "position": {
+        "latitude": 36.7179126264428,
+        "longitude": -4.4218697085048
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-416",
+      "stopPlaceId": "malaga-place-416",
+      "settlementId": "es-malaga",
+      "name": "Av. Andalucía - Guadalmedina",
+      "position": {
+        "latitude": 36.7169379513597,
+        "longitude": -4.42882223593654
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1905",
+      "stopPlaceId": "malaga-place-1905",
+      "settlementId": "es-malaga",
+      "name": "Estación de Autobuses",
+      "position": {
+        "latitude": 36.7124763568783,
+        "longitude": -4.43374590194051
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1606",
+      "stopPlaceId": "malaga-place-1606",
+      "settlementId": "es-malaga",
+      "name": "Héroe de Sostoa - Estación",
+      "position": {
+        "latitude": 36.7111893366649,
+        "longitude": -4.43139679254205
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-312",
+      "stopPlaceId": "malaga-place-312",
+      "settlementId": "es-malaga",
+      "name": "Héroe de Sostoa - Obras Públicas",
+      "position": {
+        "latitude": 36.7048440485861,
+        "longitude": -4.43942840725514
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-313",
+      "stopPlaceId": "malaga-place-313",
+      "settlementId": "es-malaga",
+      "name": "Héroe de Sostoa - Girón",
+      "position": {
+        "latitude": 36.7022938618319,
+        "longitude": -4.44270378337385
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-316",
+      "stopPlaceId": "malaga-place-316",
+      "settlementId": "es-malaga",
+      "name": "Velázquez - La Luz/La Paz",
+      "position": {
+        "latitude": 36.6959381731414,
+        "longitude": -4.4508402049774
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1002",
+      "stopPlaceId": "malaga-place-1002",
+      "settlementId": "es-malaga",
+      "name": "Velázquez - Puerta Blanca",
+      "position": {
+        "latitude": 36.6922853318834,
+        "longitude": -4.45552371141748
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1003",
+      "stopPlaceId": "malaga-place-1003",
+      "settlementId": "es-malaga",
+      "name": "Velázquez - Azucarera",
+      "position": {
+        "latitude": 36.6826821719037,
+        "longitude": -4.4677842507271
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-1005",
+      "stopPlaceId": "malaga-place-1005",
+      "settlementId": "es-malaga",
+      "name": "Velázquez - Villa Rosa",
+      "position": {
+        "latitude": 36.6741289500974,
+        "longitude": -4.4769543978487
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

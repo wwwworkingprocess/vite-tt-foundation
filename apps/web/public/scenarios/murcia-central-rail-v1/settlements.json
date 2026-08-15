@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-central-rail-v1",
+  "settlements": [
+    {
+      "settlementId": "es-murcia",
+      "name": "Murcia",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.986507,
+        "longitude": -1.1249305
+      },
+      "bounds": {
+        "south": 37.97204,
+        "west": -1.1363305,
+        "north": 38.000974,
+        "east": -1.1135305000000002
+      }
+    }
+  ]
+}

@@ -1,0 +1,258 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-day-legacy-all-v1",
+  "generatedAt": "2026-08-14T16:24:00+02:00",
+  "sources": [
+    {
+      "sourceId": "malaga-day-accepted-components",
+      "name": "Accepted Málaga construction components containing the 33 numbered daytime routes",
+      "sourceFile": "scenarios-malaga-lines-40-c8-v1.zip",
+      "sha256": "4efaafffe7053b9df31e3d88f0641733c124a38603344fae8eb5b5ba3615b204",
+      "role": "Authoritative merge sources. Selected route/pattern objects and their referenced StopNodes/StopPlaces are exact-copied from accepted component scenarios without source rediscovery."
+    },
+    {
+      "sourceId": "malaga-frozen-family-plan",
+      "name": "Frozen Málaga citywide family architecture",
+      "sourceFile": "malaga-source-prefetch.zip",
+      "sha256": "76c25335ba8f98234a88bc4c2e7d0709bd97acbfca113bd2ab61fb95a938d9d5",
+      "role": "Provides only the owner-approved Day family membership and canonical route order; it is not used to reconstruct route topology or accepted identities."
+    }
+  ],
+  "mergeContract": {
+    "type": "pure-accepted-component-merge",
+    "components": [
+      {
+        "scenarioId": "malaga-lines-3-11-n1-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "436ba9a634a11161ffdbc444d08a73acfee28edd64727ad90ae965201650bd41",
+        "selectedRoutes": [
+          "3",
+          "11"
+        ],
+        "selectedUniqueStopNodes": 99
+      },
+      {
+        "scenarioId": "malaga-lines-22-27-31-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "ae1a23b2220c8aad382db2e33de1c504e64a075e50ea11cb860e9967c90755bc",
+        "selectedRoutes": [
+          "22",
+          "27",
+          "31"
+        ],
+        "selectedUniqueStopNodes": 113
+      },
+      {
+        "scenarioId": "malaga-lines-8-21-23-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "0c74aef1b2bf1253c728fe53163110e21743138850e2ab388d14ba6c537fcfd5",
+        "selectedRoutes": [
+          "8",
+          "21",
+          "23"
+        ],
+        "selectedUniqueStopNodes": 152
+      },
+      {
+        "scenarioId": "malaga-lines-14-n4-c5-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "2b97d423c0f31703e5cd3319801358926783c0b5e2d0fa9f3c6fdaa3bea6c7ac",
+        "selectedRoutes": [
+          "14"
+        ],
+        "selectedUniqueStopNodes": 44
+      },
+      {
+        "scenarioId": "malaga-lines-7-15-n2-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "aeff32f03e5f21673d516eb506585c1b939f74782221db8d2771f37ad31a2e99",
+        "selectedRoutes": [
+          "7",
+          "15"
+        ],
+        "selectedUniqueStopNodes": 114
+      },
+      {
+        "scenarioId": "malaga-lines-1-37-c2-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "68a9e075030ad8a3db6add3198ef9c6c33ed0d70fee11656e25e18d5ae74da20",
+        "selectedRoutes": [
+          "1",
+          "37"
+        ],
+        "selectedUniqueStopNodes": 93
+      },
+      {
+        "scenarioId": "malaga-lines-17-18-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "6d948617dfdf44dac85d6ec74e20f2f31c0894024f60f7aa1d3d751c13e3e75e",
+        "selectedRoutes": [
+          "17",
+          "18"
+        ],
+        "selectedUniqueStopNodes": 69
+      },
+      {
+        "scenarioId": "malaga-lines-2-20-30-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "1bf00e87ce1df7a125335f7d0d795ff1b6fcf7e94e663c2adae57789b207fc14",
+        "selectedRoutes": [
+          "2",
+          "20",
+          "30"
+        ],
+        "selectedUniqueStopNodes": 118
+      },
+      {
+        "scenarioId": "malaga-lines-4-19-n3-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "7e290c90e16a63db5ce957a31c4fc5b2b8635b40cb99966b73ce394b429d8ee5",
+        "selectedRoutes": [
+          "4",
+          "19"
+        ],
+        "selectedUniqueStopNodes": 98
+      },
+      {
+        "scenarioId": "malaga-lines-25-28-e-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "fa986bd54d820e54699b5b0d3be1032d93bd64526ab52def28776af7a2c231a5",
+        "selectedRoutes": [
+          "25",
+          "28"
+        ],
+        "selectedUniqueStopNodes": 137
+      },
+      {
+        "scenarioId": "malaga-lines-38-c6-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "d2bec3ad88a18682330ac2a161d79f7fcc94e89c8fb016adcb676934b816e5c0",
+        "selectedRoutes": [
+          "38"
+        ],
+        "selectedUniqueStopNodes": 37
+      },
+      {
+        "scenarioId": "malaga-lines-36-c1-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "951eb540310af33944ccccb206d2a3994232a190fa246a2105956e7f9fda594b",
+        "selectedRoutes": [
+          "36"
+        ],
+        "selectedUniqueStopNodes": 30
+      },
+      {
+        "scenarioId": "malaga-lines-33-34-35-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "314f82ccf6f1aea9baf2f6f4bb9a1516117662751247ab771c3f7f12d527db61",
+        "selectedRoutes": [
+          "33",
+          "34",
+          "35"
+        ],
+        "selectedUniqueStopNodes": 94
+      },
+      {
+        "scenarioId": "malaga-lines-5-9-10-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "b5aadc3a288174aa812a2839161465b642bcc6ed6547999deaad8dedcfdea6c6",
+        "selectedRoutes": [
+          "5",
+          "9",
+          "10"
+        ],
+        "selectedUniqueStopNodes": 94
+      },
+      {
+        "scenarioId": "malaga-lines-29-a-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "845606c388defa7b804eb7e03a5687ba1ccb6dee45d560133ba039963d10daa2",
+        "selectedRoutes": [
+          "29"
+        ],
+        "selectedUniqueStopNodes": 61
+      },
+      {
+        "scenarioId": "malaga-lines-32-c3-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "e76d1e977a1536d56bf0f11ec13d9624cb127fc4a56194133ee873a56f33e466",
+        "selectedRoutes": [
+          "32"
+        ],
+        "selectedUniqueStopNodes": 38
+      },
+      {
+        "scenarioId": "malaga-lines-40-c8-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "58f82640edfca1e39e87b30b224da0ce740932b6eb844da5960a61b6daddc6be",
+        "selectedRoutes": [
+          "40"
+        ],
+        "selectedUniqueStopNodes": 23
+      }
+    ],
+    "canonicalRouteOrder": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "14",
+      "15",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "23",
+      "25",
+      "27",
+      "28",
+      "29",
+      "30",
+      "31",
+      "32",
+      "33",
+      "34",
+      "35",
+      "36",
+      "37",
+      "38",
+      "40"
+    ],
+    "routeRediscovery": false,
+    "topologyReconciliation": false,
+    "coordinateRediscovery": false,
+    "newStopIdentitiesCreated": 0,
+    "sharedObjectConflictPolicy": "hard-fail",
+    "stopNodeOccurrences": 1414,
+    "uniqueStopNodes": 1032,
+    "collapsedStopNodeDuplicates": 382,
+    "stopPlaceOccurrences": 1414,
+    "uniqueStopPlaces": 1032,
+    "collapsedStopPlaceDuplicates": 382,
+    "sharedStopNodeExactComparisons": 382,
+    "sharedStopPlaceExactComparisons": 382,
+    "conflicts": 0
+  },
+  "settlementPolicy": {
+    "canonicalFields": "Copied exactly from accepted component settlement es-malaga.",
+    "packageLocalViewports": "Recomputed from all 1032 merged routed StopPlace positions with 10 percent extent padding and a 0.003-degree minimum pad per axis.",
+    "settlementIds": [
+      "es-malaga"
+    ]
+  },
+  "warnings": [
+    "The Day family is the frozen project packaging classification of the 33 numbered active daytime EMT routes; it does not alter operator topology.",
+    "All 17 source construction components remain catalogued and byte-for-byte unchanged.",
+    "Mixed-family components contribute only their selected numbered daytime routes to this merge; C*, N*, A and E route objects are excluded.",
+    "Zero-trip records CC, L and 20E remain preserved only in the frozen citywide source evidence and are not active passenger topology.",
+    "No authoritative application parser or repository test suite was available; Level 7 is not claimed."
+  ]
+}

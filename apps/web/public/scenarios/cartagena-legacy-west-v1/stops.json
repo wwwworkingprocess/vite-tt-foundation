@@ -1,0 +1,2676 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-west-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-6900",
+      "name": "CAPITANES RIPOLL CABECERA",
+      "position": {
+        "latitude": 37.604484569729,
+        "longitude": -0.977812421137424
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5065",
+      "name": "CALLE ESPARTA V",
+      "position": {
+        "latitude": 37.607993634718,
+        "longitude": -0.978011905173231
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5075",
+      "name": "AYUNTAMIENTO CT (URBANISMO-CONSUMO-ESTADISTICA) V",
+      "position": {
+        "latitude": 37.6106327132164,
+        "longitude": -0.977929098968527
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5076",
+      "name": "CENTRO RADIOLOGICO IMATEC RONDA UNION V",
+      "position": {
+        "latitude": 37.613116193548,
+        "longitude": -0.979810352888766
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5078",
+      "name": "C.C. MANDARACHE V",
+      "position": {
+        "latitude": 37.6156973757179,
+        "longitude": -0.982663384445562
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5077",
+      "name": "CONSERVATORIO JORGE JUAN V",
+      "position": {
+        "latitude": 37.6157045743993,
+        "longitude": -0.988361700870804
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5055",
+      "name": "JORGE JUAN ASOCIACIÓN DE VECINOS CIUDAD JARDIN",
+      "position": {
+        "latitude": 37.6153061714471,
+        "longitude": -0.990366341249903
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5033",
+      "name": "JORGE JUAN EL CORTE INGLÉS",
+      "position": {
+        "latitude": 37.6148935725218,
+        "longitude": -0.992597921305146
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5270",
+      "name": "PERPETUO SOCORRO",
+      "position": {
+        "latitude": 37.6141509845957,
+        "longitude": -0.996095841995602
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5080",
+      "name": "SEBASTIAN FERINGAN V",
+      "position": {
+        "latitude": 37.6142768000392,
+        "longitude": -0.997667174604281
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5081",
+      "name": "C.C RAMBLA",
+      "position": {
+        "latitude": 37.6150813192906,
+        "longitude": -1.00525866819325
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5082",
+      "name": "CUATRO CAMINOS V",
+      "position": {
+        "latitude": 37.6127298934548,
+        "longitude": -1.01010218871117
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5083",
+      "name": "HOSPITAL NAVAL V",
+      "position": {
+        "latitude": 37.6110409434537,
+        "longitude": -1.0136250237502
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5084",
+      "name": "ELCANO V",
+      "position": {
+        "latitude": 37.6083729756491,
+        "longitude": -1.01949593922499
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5086",
+      "name": "ACUARTELAMIENTO TENTEGORRA V",
+      "position": {
+        "latitude": 37.6051814852265,
+        "longitude": -1.02425885608427
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5087",
+      "name": "AVENIDA DEL PORTÚS LOS CANALES",
+      "position": {
+        "latitude": 37.6042319282222,
+        "longitude": -1.03106908110973
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5088",
+      "name": "EL LIMONAR AVDA.DEL PORTUS V",
+      "position": {
+        "latitude": 37.605935842195,
+        "longitude": -1.03868164262159
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5089",
+      "name": "C.E.E.P SORDOS AVDA. DEL PORTUS 74 V",
+      "position": {
+        "latitude": 37.6058061043439,
+        "longitude": -1.04226458501723
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5090",
+      "name": "RESTAURANTE EL SECRETO V",
+      "position": {
+        "latitude": 37.6088187696365,
+        "longitude": -1.04296722821735
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5091",
+      "name": "PUENTE DE CANTERAS V",
+      "position": {
+        "latitude": 37.6116597133635,
+        "longitude": -1.04364043737628
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5092",
+      "name": "FERRETERIA CANTERAS V",
+      "position": {
+        "latitude": 37.6116298753231,
+        "longitude": -1.04619013929744
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5093",
+      "name": "CENTRO JUVENIL DE CANTERAS",
+      "position": {
+        "latitude": 37.6113085525655,
+        "longitude": -1.04801110706408
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5094",
+      "name": "CRUCE CTRA.MAZARRON-GALIFA I",
+      "position": {
+        "latitude": 37.6114855635353,
+        "longitude": -1.05163160498716
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5107",
+      "name": "CENTRO RECURSOS JUVENILES CANTERAS I",
+      "position": {
+        "latitude": 37.611339900348,
+        "longitude": -1.04772707504081
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5108",
+      "name": "FERRETERIA CANTERAS I",
+      "position": {
+        "latitude": 37.6115578103147,
+        "longitude": -1.04619202539342
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5109",
+      "name": "PUENTE DE CANTERAS I",
+      "position": {
+        "latitude": 37.6111629525819,
+        "longitude": -1.043574156309
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5110",
+      "name": "RESTAURANTE EL SECRETO I",
+      "position": {
+        "latitude": 37.6088018804913,
+        "longitude": -1.04303563952964
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5111",
+      "name": "C.E.E.P SORDOS AVDA. DEL PORTUS 74 I",
+      "position": {
+        "latitude": 37.6057526193696,
+        "longitude": -1.04229997026117
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5112",
+      "name": "EL LIMONAR AVDA.DEL PORTUS I",
+      "position": {
+        "latitude": 37.6060310054846,
+        "longitude": -1.03898499006954
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5113",
+      "name": "LOS CANALES AVDA.DEL PROTUS I",
+      "position": {
+        "latitude": 37.6039105107417,
+        "longitude": -1.03341098789412
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5114",
+      "name": "ACUARTELAMIENTO TENTEGORRA I",
+      "position": {
+        "latitude": 37.6052269045704,
+        "longitude": -1.02428030933507
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5115",
+      "name": "ELCANO I",
+      "position": {
+        "latitude": 37.6081305203957,
+        "longitude": -1.01954768260937
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5096",
+      "name": "HOSPITAL NAVAL",
+      "position": {
+        "latitude": 37.6109853703194,
+        "longitude": -1.01353587540532
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5097",
+      "name": "CUATRO CAMINOS I",
+      "position": {
+        "latitude": 37.6125846204619,
+        "longitude": -1.01003808954435
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5098",
+      "name": "C.C RAMBLA",
+      "position": {
+        "latitude": 37.6140904157325,
+        "longitude": -1.00688251501756
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5099",
+      "name": "SEBASTIAN FERINGAN I",
+      "position": {
+        "latitude": 37.6142187423822,
+        "longitude": -0.997963281954831
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5100",
+      "name": "ESCUDO I",
+      "position": {
+        "latitude": 37.6140888569976,
+        "longitude": -0.995621699418116
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5101",
+      "name": "JORGE JUAN EL CORTE INGLES I",
+      "position": {
+        "latitude": 37.6147479055565,
+        "longitude": -0.992511207517263
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5102",
+      "name": "JORGE JUAN PIRIPIPAO",
+      "position": {
+        "latitude": 37.6150605113687,
+        "longitude": -0.990758140004904
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5103",
+      "name": "JORGE JUAN VIRGEN DE LA CARIDAD",
+      "position": {
+        "latitude": 37.6156983223793,
+        "longitude": -0.987466874339979
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5104",
+      "name": "C.C. MANDARACHE I",
+      "position": {
+        "latitude": 37.6159004801838,
+        "longitude": -0.983473588204772
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5105",
+      "name": "CENTRO RADIOLOGICO IMATEC RONDA UNION I",
+      "position": {
+        "latitude": 37.6130288308268,
+        "longitude": -0.979971318065556
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5106",
+      "name": "URBANISMO-CONSUMO-ESTADISTICA I",
+      "position": {
+        "latitude": 37.6109162235283,
+        "longitude": -0.978170642402113
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5056",
+      "name": "CALLE ESPARTA I",
+      "position": {
+        "latitude": 37.6079903352196,
+        "longitude": -0.977819420877346
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5116",
+      "name": "FERRETERIA CANTERAS V",
+      "position": {
+        "latitude": 37.6115747012329,
+        "longitude": -1.04612361216049
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5117",
+      "name": "ESTANCO CANTERAS V",
+      "position": {
+        "latitude": 37.6118865992843,
+        "longitude": -1.04319267726406
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5118",
+      "name": "CALLE MAYOR LOS POPOS",
+      "position": {
+        "latitude": 37.6117886524267,
+        "longitude": -1.0383806108805
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5119",
+      "name": "GASOLINERA CANTERAS V",
+      "position": {
+        "latitude": 37.611257985279,
+        "longitude": -1.03411239655232
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5120",
+      "name": "AVENIDA JOSÉ LUIS MESEGUER AVENIDA PASADERA",
+      "position": {
+        "latitude": 37.6113912484236,
+        "longitude": -1.03075565855255
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5121",
+      "name": "AVENIDA JOSÉLUIS MESEGUER MONTE SAN LEANDRO",
+      "position": {
+        "latitude": 37.6116398157424,
+        "longitude": -1.02729390693887
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5122",
+      "name": "AVENIDA JOSÉ LUIS MESEGUER SACROMONTE",
+      "position": {
+        "latitude": 37.6122851086981,
+        "longitude": -1.02438806159025
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5123",
+      "name": "AVENIDA JOSÉ LUIS MESEGUER LOS POPOS",
+      "position": {
+        "latitude": 37.6124125289294,
+        "longitude": -1.02231155293877
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5124",
+      "name": "EL ROSALAR-HOSPITAL NAVAL V",
+      "position": {
+        "latitude": 37.6128316622711,
+        "longitude": -1.01293164018385
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5125",
+      "name": "BARRIADA VILLALBA",
+      "position": {
+        "latitude": 37.6120736517213,
+        "longitude": -1.01019898167947
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5126",
+      "name": "CEIP ATALAYA",
+      "position": {
+        "latitude": 37.6109133411834,
+        "longitude": -1.00552863982907
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5127",
+      "name": "COTO DORDA",
+      "position": {
+        "latitude": 37.6092850395623,
+        "longitude": -1.003034645088
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5128",
+      "name": "CALLE PERONIÑO COLEGIO INFANTIL MUNICIPAL V",
+      "position": {
+        "latitude": 37.6085810670158,
+        "longitude": -1.00137693166929
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5130",
+      "name": "BARRIO CONCEPCION",
+      "position": {
+        "latitude": 37.6058624682613,
+        "longitude": -0.997303810446065
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5131",
+      "name": "HERMANITAS DE LOS POBRES",
+      "position": {
+        "latitude": 37.6038344207324,
+        "longitude": -0.995160714809314
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5132",
+      "name": "CASA DEL NIÑO",
+      "position": {
+        "latitude": 37.6045517569436,
+        "longitude": -0.992298285517205
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5233",
+      "name": "PASEO ALFONSO TRECE JIMÉNEZ DE LA ESPADA",
+      "position": {
+        "latitude": 37.6065806906348,
+        "longitude": -0.989196585755396
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5016",
+      "name": "PASEO ALFONSO TRECE BINGO CARTAGENA",
+      "position": {
+        "latitude": 37.606658784087,
+        "longitude": -0.986906291642173
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5017",
+      "name": "PASEO ALFONSO TRECE EDIFICIO ONCE",
+      "position": {
+        "latitude": 37.6067711431536,
+        "longitude": -0.983459644467103
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5018",
+      "name": "PASEO ALFONSO TRECE UPCT",
+      "position": {
+        "latitude": 37.6069021724372,
+        "longitude": -0.979004318391238
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5807",
+      "name": "PASEO ALFONSO TRECE TIRSO DE MOLINA",
+      "position": {
+        "latitude": 37.6069787810122,
+        "longitude": -0.97611367924404
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5138",
+      "name": "PINTOR PORTELA PEUGEOT V",
+      "position": {
+        "latitude": 37.6080786390498,
+        "longitude": -0.973512437997903
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5139",
+      "name": "PINTOR PORTELA PARQUE V",
+      "position": {
+        "latitude": 37.6095401473246,
+        "longitude": -0.972555191571294
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5140",
+      "name": "PINTOR PORTELA DANDY MOTOS V",
+      "position": {
+        "latitude": 37.6114563156604,
+        "longitude": -0.971834776766878
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5141",
+      "name": "TORRECIEGA",
+      "position": {
+        "latitude": 37.6160555435418,
+        "longitude": -0.96939867553956
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5142",
+      "name": "TORRECIEGA MOTOS RICARDO V",
+      "position": {
+        "latitude": 37.6172246330327,
+        "longitude": -0.968732430341696
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5143",
+      "name": "POL.IND.CABEZO BEAZA MECANICAS BOLEA",
+      "position": {
+        "latitude": 37.6266643266287,
+        "longitude": -0.963229353992923
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5144",
+      "name": "POL.IND.CABEZO BEAZA JR MESON CABEZO BEAZA",
+      "position": {
+        "latitude": 37.6236946186354,
+        "longitude": -0.954620144463239
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5145",
+      "name": "POL.IND.CABEZO BEAZA ESPACIO MEDITERRANEO",
+      "position": {
+        "latitude": 37.6238485308662,
+        "longitude": -0.951545433882713
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5146",
+      "name": "GALIFA",
+      "position": {
+        "latitude": 37.6091658097246,
+        "longitude": -1.07998997615161
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5147",
+      "name": "CENTRO CIVICO GALIFA V",
+      "position": {
+        "latitude": 37.6064828862906,
+        "longitude": -1.07794066725129
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5148",
+      "name": "CALLE EL PULGA 1",
+      "position": {
+        "latitude": 37.6035198600008,
+        "longitude": -1.07750720403926
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5149",
+      "name": "CALLE EL PULGA 2",
+      "position": {
+        "latitude": 37.6017519071523,
+        "longitude": -1.0757517107053
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5150",
+      "name": "VENTA RAMIREZ",
+      "position": {
+        "latitude": 37.5994009516492,
+        "longitude": -1.07196119665464
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5151",
+      "name": "GALIFA ESTANCO V",
+      "position": {
+        "latitude": 37.6070820386069,
+        "longitude": -1.06992775174946
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5152",
+      "name": "CUESTA DE GALIFA",
+      "position": {
+        "latitude": 37.609047786022,
+        "longitude": -1.06339721716916
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5153",
+      "name": "CRUCE CTRA.MAZARRON-GALIFA V",
+      "position": {
+        "latitude": 37.6116984479029,
+        "longitude": -1.05579495852676
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5154",
+      "name": "POL.IND.CABEZO BEAZA ESPACIO MEDITERRANEO",
+      "position": {
+        "latitude": 37.6238485308662,
+        "longitude": -0.951545433882713
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5155",
+      "name": "POL.IND.CABEZO BEAZA POSADAS DE ESPAÑA",
+      "position": {
+        "latitude": 37.6188697260699,
+        "longitude": -0.95597597094316
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5156",
+      "name": "AVENIDA LUXEMBURGO",
+      "position": {
+        "latitude": 37.6227978280945,
+        "longitude": -0.965295001648383
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5157",
+      "name": "TORRECIEGA MOTOS RICARDO I",
+      "position": {
+        "latitude": 37.6174235823033,
+        "longitude": -0.968772332797336
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5158",
+      "name": "TORRECIEGA I",
+      "position": {
+        "latitude": 37.6152113114017,
+        "longitude": -0.970090051015294
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5159",
+      "name": "PINTOR PORTELA DANDY MOTOS I",
+      "position": {
+        "latitude": 37.6114678542158,
+        "longitude": -0.971981732211444
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5160",
+      "name": "PINTOR PORTELA PARQUE I",
+      "position": {
+        "latitude": 37.6096237466912,
+        "longitude": -0.972700186540039
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5161",
+      "name": "PINTOR PORTELA PEUGEOT I",
+      "position": {
+        "latitude": 37.6079656229896,
+        "longitude": -0.973753390453764
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5025",
+      "name": "PASEO ALFONSO TRECE ROSELL",
+      "position": {
+        "latitude": 37.6071663170141,
+        "longitude": -0.976539049555019
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5026",
+      "name": "PASEO ALFONSO TRECE ASAMBLEA REGIONAL",
+      "position": {
+        "latitude": 37.6070441628415,
+        "longitude": -0.978875870019052
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5027",
+      "name": "PASEO ALFONSO TRECE TIERNO GALVÁN",
+      "position": {
+        "latitude": 37.606900348911,
+        "longitude": -0.983637398116191
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5028",
+      "name": "PASEO ALFONSO TRECE JUAN FERNÁNDEZ",
+      "position": {
+        "latitude": 37.6067756923939,
+        "longitude": -0.986891811843133
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5266",
+      "name": "PASEO ALFONSO TRECE ADORATRICES",
+      "position": {
+        "latitude": 37.6067378763952,
+        "longitude": -0.98943023405123
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5164",
+      "name": "CALLE PÍO DOCE",
+      "position": {
+        "latitude": 37.6040285526514,
+        "longitude": -0.994917629478621
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5165",
+      "name": "CAJAMURCIA Bº CONCEPCION I",
+      "position": {
+        "latitude": 37.6059331856485,
+        "longitude": -0.997222620573359
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5166",
+      "name": "CALLE PERONIÑO COLEGIO INFANTIL MUNICIPAL I",
+      "position": {
+        "latitude": 37.6085009552152,
+        "longitude": -1.00143571616711
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5167",
+      "name": "CALLE PERONIÑO BUDABLU I",
+      "position": {
+        "latitude": 37.6093843180895,
+        "longitude": -1.00304331765066
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5168",
+      "name": "CALLE PERONIÑO EROSKI I",
+      "position": {
+        "latitude": 37.6111314454011,
+        "longitude": -1.00563609667565
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5169",
+      "name": "VILLALBA I",
+      "position": {
+        "latitude": 37.6121831135802,
+        "longitude": -1.00974292170831
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5170",
+      "name": "EL ROSALAR-HOSPITAL NAVAL I",
+      "position": {
+        "latitude": 37.6129014367457,
+        "longitude": -1.01279383879449
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5171",
+      "name": "VAGUADA-CTRA.CANTERAS I",
+      "position": {
+        "latitude": 37.6125970329047,
+        "longitude": -1.02149100276251
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5172",
+      "name": "RTE.SACROMONTE I",
+      "position": {
+        "latitude": 37.6123147876819,
+        "longitude": -1.02454587655472
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5173",
+      "name": "CARRETERA DE CANTERAS-C.MONTE PEÑAS BLANCAS I",
+      "position": {
+        "latitude": 37.611704386806,
+        "longitude": -1.02738282872287
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5174",
+      "name": "CARRETERA DE CANTERAS-URB.LA LOMA I",
+      "position": {
+        "latitude": 37.6114855504841,
+        "longitude": -1.03154616507626
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5175",
+      "name": "GASOLINERA CANTERAS I",
+      "position": {
+        "latitude": 37.6113238722447,
+        "longitude": -1.03428058851952
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5176",
+      "name": "BAR POPO CANTERAS I",
+      "position": {
+        "latitude": 37.6118327513157,
+        "longitude": -1.03832280932786
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5177",
+      "name": "UPPER CANTERAS",
+      "position": {
+        "latitude": 37.6125088374564,
+        "longitude": -1.04050280242673
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5178",
+      "name": "ESTANCO CANTERAS I",
+      "position": {
+        "latitude": 37.6119413992996,
+        "longitude": -1.04323655512042
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5179",
+      "name": "FERRETERIA CANTERAS I",
+      "position": {
+        "latitude": 37.6116394461027,
+        "longitude": -1.04622387441982
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5209",
+      "name": "CENTRO RECURSOS JUVENILES CANTERAS I",
+      "position": {
+        "latitude": 37.6113898131681,
+        "longitude": -1.04802031080213
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5210",
+      "name": "CRUCE CTRA.MAZARRON-GALIFA I",
+      "position": {
+        "latitude": 37.6117812011426,
+        "longitude": -1.0558947605146
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5211",
+      "name": "CUESTA DE GALIFA 2",
+      "position": {
+        "latitude": 37.608515195686,
+        "longitude": -1.06444188835374
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5212",
+      "name": "GALIFA ESTANCO I",
+      "position": {
+        "latitude": 37.6071493570366,
+        "longitude": -1.07018655319242
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5214",
+      "name": "GALIFA CASAS",
+      "position": {
+        "latitude": 37.6069314479698,
+        "longitude": -1.07505184038091
+      }
+    },
+    {
+      "settlementId": "es-cartagena",
+      "stopPlaceId": "cartagena-place-5215",
+      "name": "CENTRO CIVICO GALIFA I",
+      "position": {
+        "latitude": 37.6065080662969,
+        "longitude": -1.07782674095326
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "cartagena-stop-6900",
+      "stopPlaceId": "cartagena-place-6900",
+      "settlementId": "es-cartagena",
+      "name": "CAPITANES RIPOLL CABECERA",
+      "position": {
+        "latitude": 37.604484569729,
+        "longitude": -0.977812421137424
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5065",
+      "stopPlaceId": "cartagena-place-5065",
+      "settlementId": "es-cartagena",
+      "name": "CALLE ESPARTA V",
+      "position": {
+        "latitude": 37.607993634718,
+        "longitude": -0.978011905173231
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5075",
+      "stopPlaceId": "cartagena-place-5075",
+      "settlementId": "es-cartagena",
+      "name": "AYUNTAMIENTO CT (URBANISMO-CONSUMO-ESTADISTICA) V",
+      "position": {
+        "latitude": 37.6106327132164,
+        "longitude": -0.977929098968527
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5076",
+      "stopPlaceId": "cartagena-place-5076",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO RADIOLOGICO IMATEC RONDA UNION V",
+      "position": {
+        "latitude": 37.613116193548,
+        "longitude": -0.979810352888766
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5078",
+      "stopPlaceId": "cartagena-place-5078",
+      "settlementId": "es-cartagena",
+      "name": "C.C. MANDARACHE V",
+      "position": {
+        "latitude": 37.6156973757179,
+        "longitude": -0.982663384445562
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5077",
+      "stopPlaceId": "cartagena-place-5077",
+      "settlementId": "es-cartagena",
+      "name": "CONSERVATORIO JORGE JUAN V",
+      "position": {
+        "latitude": 37.6157045743993,
+        "longitude": -0.988361700870804
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5055",
+      "stopPlaceId": "cartagena-place-5055",
+      "settlementId": "es-cartagena",
+      "name": "JORGE JUAN ASOCIACIÓN DE VECINOS CIUDAD JARDIN",
+      "position": {
+        "latitude": 37.6153061714471,
+        "longitude": -0.990366341249903
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5033",
+      "stopPlaceId": "cartagena-place-5033",
+      "settlementId": "es-cartagena",
+      "name": "JORGE JUAN EL CORTE INGLÉS",
+      "position": {
+        "latitude": 37.6148935725218,
+        "longitude": -0.992597921305146
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5270",
+      "stopPlaceId": "cartagena-place-5270",
+      "settlementId": "es-cartagena",
+      "name": "PERPETUO SOCORRO",
+      "position": {
+        "latitude": 37.6141509845957,
+        "longitude": -0.996095841995602
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5080",
+      "stopPlaceId": "cartagena-place-5080",
+      "settlementId": "es-cartagena",
+      "name": "SEBASTIAN FERINGAN V",
+      "position": {
+        "latitude": 37.6142768000392,
+        "longitude": -0.997667174604281
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5081",
+      "stopPlaceId": "cartagena-place-5081",
+      "settlementId": "es-cartagena",
+      "name": "C.C RAMBLA",
+      "position": {
+        "latitude": 37.6150813192906,
+        "longitude": -1.00525866819325
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5082",
+      "stopPlaceId": "cartagena-place-5082",
+      "settlementId": "es-cartagena",
+      "name": "CUATRO CAMINOS V",
+      "position": {
+        "latitude": 37.6127298934548,
+        "longitude": -1.01010218871117
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5083",
+      "stopPlaceId": "cartagena-place-5083",
+      "settlementId": "es-cartagena",
+      "name": "HOSPITAL NAVAL V",
+      "position": {
+        "latitude": 37.6110409434537,
+        "longitude": -1.0136250237502
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5084",
+      "stopPlaceId": "cartagena-place-5084",
+      "settlementId": "es-cartagena",
+      "name": "ELCANO V",
+      "position": {
+        "latitude": 37.6083729756491,
+        "longitude": -1.01949593922499
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5086",
+      "stopPlaceId": "cartagena-place-5086",
+      "settlementId": "es-cartagena",
+      "name": "ACUARTELAMIENTO TENTEGORRA V",
+      "position": {
+        "latitude": 37.6051814852265,
+        "longitude": -1.02425885608427
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5087",
+      "stopPlaceId": "cartagena-place-5087",
+      "settlementId": "es-cartagena",
+      "name": "AVENIDA DEL PORTÚS LOS CANALES",
+      "position": {
+        "latitude": 37.6042319282222,
+        "longitude": -1.03106908110973
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5088",
+      "stopPlaceId": "cartagena-place-5088",
+      "settlementId": "es-cartagena",
+      "name": "EL LIMONAR AVDA.DEL PORTUS V",
+      "position": {
+        "latitude": 37.605935842195,
+        "longitude": -1.03868164262159
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5089",
+      "stopPlaceId": "cartagena-place-5089",
+      "settlementId": "es-cartagena",
+      "name": "C.E.E.P SORDOS AVDA. DEL PORTUS 74 V",
+      "position": {
+        "latitude": 37.6058061043439,
+        "longitude": -1.04226458501723
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5090",
+      "stopPlaceId": "cartagena-place-5090",
+      "settlementId": "es-cartagena",
+      "name": "RESTAURANTE EL SECRETO V",
+      "position": {
+        "latitude": 37.6088187696365,
+        "longitude": -1.04296722821735
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5091",
+      "stopPlaceId": "cartagena-place-5091",
+      "settlementId": "es-cartagena",
+      "name": "PUENTE DE CANTERAS V",
+      "position": {
+        "latitude": 37.6116597133635,
+        "longitude": -1.04364043737628
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5092",
+      "stopPlaceId": "cartagena-place-5092",
+      "settlementId": "es-cartagena",
+      "name": "FERRETERIA CANTERAS V",
+      "position": {
+        "latitude": 37.6116298753231,
+        "longitude": -1.04619013929744
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5093",
+      "stopPlaceId": "cartagena-place-5093",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO JUVENIL DE CANTERAS",
+      "position": {
+        "latitude": 37.6113085525655,
+        "longitude": -1.04801110706408
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5094",
+      "stopPlaceId": "cartagena-place-5094",
+      "settlementId": "es-cartagena",
+      "name": "CRUCE CTRA.MAZARRON-GALIFA I",
+      "position": {
+        "latitude": 37.6114855635353,
+        "longitude": -1.05163160498716
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5107",
+      "stopPlaceId": "cartagena-place-5107",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO RECURSOS JUVENILES CANTERAS I",
+      "position": {
+        "latitude": 37.611339900348,
+        "longitude": -1.04772707504081
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5108",
+      "stopPlaceId": "cartagena-place-5108",
+      "settlementId": "es-cartagena",
+      "name": "FERRETERIA CANTERAS I",
+      "position": {
+        "latitude": 37.6115578103147,
+        "longitude": -1.04619202539342
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5109",
+      "stopPlaceId": "cartagena-place-5109",
+      "settlementId": "es-cartagena",
+      "name": "PUENTE DE CANTERAS I",
+      "position": {
+        "latitude": 37.6111629525819,
+        "longitude": -1.043574156309
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5110",
+      "stopPlaceId": "cartagena-place-5110",
+      "settlementId": "es-cartagena",
+      "name": "RESTAURANTE EL SECRETO I",
+      "position": {
+        "latitude": 37.6088018804913,
+        "longitude": -1.04303563952964
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5111",
+      "stopPlaceId": "cartagena-place-5111",
+      "settlementId": "es-cartagena",
+      "name": "C.E.E.P SORDOS AVDA. DEL PORTUS 74 I",
+      "position": {
+        "latitude": 37.6057526193696,
+        "longitude": -1.04229997026117
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5112",
+      "stopPlaceId": "cartagena-place-5112",
+      "settlementId": "es-cartagena",
+      "name": "EL LIMONAR AVDA.DEL PORTUS I",
+      "position": {
+        "latitude": 37.6060310054846,
+        "longitude": -1.03898499006954
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5113",
+      "stopPlaceId": "cartagena-place-5113",
+      "settlementId": "es-cartagena",
+      "name": "LOS CANALES AVDA.DEL PROTUS I",
+      "position": {
+        "latitude": 37.6039105107417,
+        "longitude": -1.03341098789412
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5114",
+      "stopPlaceId": "cartagena-place-5114",
+      "settlementId": "es-cartagena",
+      "name": "ACUARTELAMIENTO TENTEGORRA I",
+      "position": {
+        "latitude": 37.6052269045704,
+        "longitude": -1.02428030933507
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5115",
+      "stopPlaceId": "cartagena-place-5115",
+      "settlementId": "es-cartagena",
+      "name": "ELCANO I",
+      "position": {
+        "latitude": 37.6081305203957,
+        "longitude": -1.01954768260937
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5096",
+      "stopPlaceId": "cartagena-place-5096",
+      "settlementId": "es-cartagena",
+      "name": "HOSPITAL NAVAL",
+      "position": {
+        "latitude": 37.6109853703194,
+        "longitude": -1.01353587540532
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5097",
+      "stopPlaceId": "cartagena-place-5097",
+      "settlementId": "es-cartagena",
+      "name": "CUATRO CAMINOS I",
+      "position": {
+        "latitude": 37.6125846204619,
+        "longitude": -1.01003808954435
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5098",
+      "stopPlaceId": "cartagena-place-5098",
+      "settlementId": "es-cartagena",
+      "name": "C.C RAMBLA",
+      "position": {
+        "latitude": 37.6140904157325,
+        "longitude": -1.00688251501756
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5099",
+      "stopPlaceId": "cartagena-place-5099",
+      "settlementId": "es-cartagena",
+      "name": "SEBASTIAN FERINGAN I",
+      "position": {
+        "latitude": 37.6142187423822,
+        "longitude": -0.997963281954831
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5100",
+      "stopPlaceId": "cartagena-place-5100",
+      "settlementId": "es-cartagena",
+      "name": "ESCUDO I",
+      "position": {
+        "latitude": 37.6140888569976,
+        "longitude": -0.995621699418116
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5101",
+      "stopPlaceId": "cartagena-place-5101",
+      "settlementId": "es-cartagena",
+      "name": "JORGE JUAN EL CORTE INGLES I",
+      "position": {
+        "latitude": 37.6147479055565,
+        "longitude": -0.992511207517263
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5102",
+      "stopPlaceId": "cartagena-place-5102",
+      "settlementId": "es-cartagena",
+      "name": "JORGE JUAN PIRIPIPAO",
+      "position": {
+        "latitude": 37.6150605113687,
+        "longitude": -0.990758140004904
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5103",
+      "stopPlaceId": "cartagena-place-5103",
+      "settlementId": "es-cartagena",
+      "name": "JORGE JUAN VIRGEN DE LA CARIDAD",
+      "position": {
+        "latitude": 37.6156983223793,
+        "longitude": -0.987466874339979
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5104",
+      "stopPlaceId": "cartagena-place-5104",
+      "settlementId": "es-cartagena",
+      "name": "C.C. MANDARACHE I",
+      "position": {
+        "latitude": 37.6159004801838,
+        "longitude": -0.983473588204772
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5105",
+      "stopPlaceId": "cartagena-place-5105",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO RADIOLOGICO IMATEC RONDA UNION I",
+      "position": {
+        "latitude": 37.6130288308268,
+        "longitude": -0.979971318065556
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5106",
+      "stopPlaceId": "cartagena-place-5106",
+      "settlementId": "es-cartagena",
+      "name": "URBANISMO-CONSUMO-ESTADISTICA I",
+      "position": {
+        "latitude": 37.6109162235283,
+        "longitude": -0.978170642402113
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5056",
+      "stopPlaceId": "cartagena-place-5056",
+      "settlementId": "es-cartagena",
+      "name": "CALLE ESPARTA I",
+      "position": {
+        "latitude": 37.6079903352196,
+        "longitude": -0.977819420877346
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5116",
+      "stopPlaceId": "cartagena-place-5116",
+      "settlementId": "es-cartagena",
+      "name": "FERRETERIA CANTERAS V",
+      "position": {
+        "latitude": 37.6115747012329,
+        "longitude": -1.04612361216049
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5117",
+      "stopPlaceId": "cartagena-place-5117",
+      "settlementId": "es-cartagena",
+      "name": "ESTANCO CANTERAS V",
+      "position": {
+        "latitude": 37.6118865992843,
+        "longitude": -1.04319267726406
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5118",
+      "stopPlaceId": "cartagena-place-5118",
+      "settlementId": "es-cartagena",
+      "name": "CALLE MAYOR LOS POPOS",
+      "position": {
+        "latitude": 37.6117886524267,
+        "longitude": -1.0383806108805
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5119",
+      "stopPlaceId": "cartagena-place-5119",
+      "settlementId": "es-cartagena",
+      "name": "GASOLINERA CANTERAS V",
+      "position": {
+        "latitude": 37.611257985279,
+        "longitude": -1.03411239655232
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5120",
+      "stopPlaceId": "cartagena-place-5120",
+      "settlementId": "es-cartagena",
+      "name": "AVENIDA JOSÉ LUIS MESEGUER AVENIDA PASADERA",
+      "position": {
+        "latitude": 37.6113912484236,
+        "longitude": -1.03075565855255
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5121",
+      "stopPlaceId": "cartagena-place-5121",
+      "settlementId": "es-cartagena",
+      "name": "AVENIDA JOSÉLUIS MESEGUER MONTE SAN LEANDRO",
+      "position": {
+        "latitude": 37.6116398157424,
+        "longitude": -1.02729390693887
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5122",
+      "stopPlaceId": "cartagena-place-5122",
+      "settlementId": "es-cartagena",
+      "name": "AVENIDA JOSÉ LUIS MESEGUER SACROMONTE",
+      "position": {
+        "latitude": 37.6122851086981,
+        "longitude": -1.02438806159025
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5123",
+      "stopPlaceId": "cartagena-place-5123",
+      "settlementId": "es-cartagena",
+      "name": "AVENIDA JOSÉ LUIS MESEGUER LOS POPOS",
+      "position": {
+        "latitude": 37.6124125289294,
+        "longitude": -1.02231155293877
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5124",
+      "stopPlaceId": "cartagena-place-5124",
+      "settlementId": "es-cartagena",
+      "name": "EL ROSALAR-HOSPITAL NAVAL V",
+      "position": {
+        "latitude": 37.6128316622711,
+        "longitude": -1.01293164018385
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5125",
+      "stopPlaceId": "cartagena-place-5125",
+      "settlementId": "es-cartagena",
+      "name": "BARRIADA VILLALBA",
+      "position": {
+        "latitude": 37.6120736517213,
+        "longitude": -1.01019898167947
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5126",
+      "stopPlaceId": "cartagena-place-5126",
+      "settlementId": "es-cartagena",
+      "name": "CEIP ATALAYA",
+      "position": {
+        "latitude": 37.6109133411834,
+        "longitude": -1.00552863982907
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5127",
+      "stopPlaceId": "cartagena-place-5127",
+      "settlementId": "es-cartagena",
+      "name": "COTO DORDA",
+      "position": {
+        "latitude": 37.6092850395623,
+        "longitude": -1.003034645088
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5128",
+      "stopPlaceId": "cartagena-place-5128",
+      "settlementId": "es-cartagena",
+      "name": "CALLE PERONIÑO COLEGIO INFANTIL MUNICIPAL V",
+      "position": {
+        "latitude": 37.6085810670158,
+        "longitude": -1.00137693166929
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5130",
+      "stopPlaceId": "cartagena-place-5130",
+      "settlementId": "es-cartagena",
+      "name": "BARRIO CONCEPCION",
+      "position": {
+        "latitude": 37.6058624682613,
+        "longitude": -0.997303810446065
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5131",
+      "stopPlaceId": "cartagena-place-5131",
+      "settlementId": "es-cartagena",
+      "name": "HERMANITAS DE LOS POBRES",
+      "position": {
+        "latitude": 37.6038344207324,
+        "longitude": -0.995160714809314
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5132",
+      "stopPlaceId": "cartagena-place-5132",
+      "settlementId": "es-cartagena",
+      "name": "CASA DEL NIÑO",
+      "position": {
+        "latitude": 37.6045517569436,
+        "longitude": -0.992298285517205
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5233",
+      "stopPlaceId": "cartagena-place-5233",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE JIMÉNEZ DE LA ESPADA",
+      "position": {
+        "latitude": 37.6065806906348,
+        "longitude": -0.989196585755396
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5016",
+      "stopPlaceId": "cartagena-place-5016",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE BINGO CARTAGENA",
+      "position": {
+        "latitude": 37.606658784087,
+        "longitude": -0.986906291642173
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5017",
+      "stopPlaceId": "cartagena-place-5017",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE EDIFICIO ONCE",
+      "position": {
+        "latitude": 37.6067711431536,
+        "longitude": -0.983459644467103
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5018",
+      "stopPlaceId": "cartagena-place-5018",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE UPCT",
+      "position": {
+        "latitude": 37.6069021724372,
+        "longitude": -0.979004318391238
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5807",
+      "stopPlaceId": "cartagena-place-5807",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE TIRSO DE MOLINA",
+      "position": {
+        "latitude": 37.6069787810122,
+        "longitude": -0.97611367924404
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5138",
+      "stopPlaceId": "cartagena-place-5138",
+      "settlementId": "es-cartagena",
+      "name": "PINTOR PORTELA PEUGEOT V",
+      "position": {
+        "latitude": 37.6080786390498,
+        "longitude": -0.973512437997903
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5139",
+      "stopPlaceId": "cartagena-place-5139",
+      "settlementId": "es-cartagena",
+      "name": "PINTOR PORTELA PARQUE V",
+      "position": {
+        "latitude": 37.6095401473246,
+        "longitude": -0.972555191571294
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5140",
+      "stopPlaceId": "cartagena-place-5140",
+      "settlementId": "es-cartagena",
+      "name": "PINTOR PORTELA DANDY MOTOS V",
+      "position": {
+        "latitude": 37.6114563156604,
+        "longitude": -0.971834776766878
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5141",
+      "stopPlaceId": "cartagena-place-5141",
+      "settlementId": "es-cartagena",
+      "name": "TORRECIEGA",
+      "position": {
+        "latitude": 37.6160555435418,
+        "longitude": -0.96939867553956
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5142",
+      "stopPlaceId": "cartagena-place-5142",
+      "settlementId": "es-cartagena",
+      "name": "TORRECIEGA MOTOS RICARDO V",
+      "position": {
+        "latitude": 37.6172246330327,
+        "longitude": -0.968732430341696
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5143",
+      "stopPlaceId": "cartagena-place-5143",
+      "settlementId": "es-cartagena",
+      "name": "POL.IND.CABEZO BEAZA MECANICAS BOLEA",
+      "position": {
+        "latitude": 37.6266643266287,
+        "longitude": -0.963229353992923
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5144",
+      "stopPlaceId": "cartagena-place-5144",
+      "settlementId": "es-cartagena",
+      "name": "POL.IND.CABEZO BEAZA JR MESON CABEZO BEAZA",
+      "position": {
+        "latitude": 37.6236946186354,
+        "longitude": -0.954620144463239
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5145",
+      "stopPlaceId": "cartagena-place-5145",
+      "settlementId": "es-cartagena",
+      "name": "POL.IND.CABEZO BEAZA ESPACIO MEDITERRANEO",
+      "position": {
+        "latitude": 37.6238485308662,
+        "longitude": -0.951545433882713
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5146",
+      "stopPlaceId": "cartagena-place-5146",
+      "settlementId": "es-cartagena",
+      "name": "GALIFA",
+      "position": {
+        "latitude": 37.6091658097246,
+        "longitude": -1.07998997615161
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5147",
+      "stopPlaceId": "cartagena-place-5147",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO CIVICO GALIFA V",
+      "position": {
+        "latitude": 37.6064828862906,
+        "longitude": -1.07794066725129
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5148",
+      "stopPlaceId": "cartagena-place-5148",
+      "settlementId": "es-cartagena",
+      "name": "CALLE EL PULGA 1",
+      "position": {
+        "latitude": 37.6035198600008,
+        "longitude": -1.07750720403926
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5149",
+      "stopPlaceId": "cartagena-place-5149",
+      "settlementId": "es-cartagena",
+      "name": "CALLE EL PULGA 2",
+      "position": {
+        "latitude": 37.6017519071523,
+        "longitude": -1.0757517107053
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5150",
+      "stopPlaceId": "cartagena-place-5150",
+      "settlementId": "es-cartagena",
+      "name": "VENTA RAMIREZ",
+      "position": {
+        "latitude": 37.5994009516492,
+        "longitude": -1.07196119665464
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5151",
+      "stopPlaceId": "cartagena-place-5151",
+      "settlementId": "es-cartagena",
+      "name": "GALIFA ESTANCO V",
+      "position": {
+        "latitude": 37.6070820386069,
+        "longitude": -1.06992775174946
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5152",
+      "stopPlaceId": "cartagena-place-5152",
+      "settlementId": "es-cartagena",
+      "name": "CUESTA DE GALIFA",
+      "position": {
+        "latitude": 37.609047786022,
+        "longitude": -1.06339721716916
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5153",
+      "stopPlaceId": "cartagena-place-5153",
+      "settlementId": "es-cartagena",
+      "name": "CRUCE CTRA.MAZARRON-GALIFA V",
+      "position": {
+        "latitude": 37.6116984479029,
+        "longitude": -1.05579495852676
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5154",
+      "stopPlaceId": "cartagena-place-5154",
+      "settlementId": "es-cartagena",
+      "name": "POL.IND.CABEZO BEAZA ESPACIO MEDITERRANEO",
+      "position": {
+        "latitude": 37.6238485308662,
+        "longitude": -0.951545433882713
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5155",
+      "stopPlaceId": "cartagena-place-5155",
+      "settlementId": "es-cartagena",
+      "name": "POL.IND.CABEZO BEAZA POSADAS DE ESPAÑA",
+      "position": {
+        "latitude": 37.6188697260699,
+        "longitude": -0.95597597094316
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5156",
+      "stopPlaceId": "cartagena-place-5156",
+      "settlementId": "es-cartagena",
+      "name": "AVENIDA LUXEMBURGO",
+      "position": {
+        "latitude": 37.6227978280945,
+        "longitude": -0.965295001648383
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5157",
+      "stopPlaceId": "cartagena-place-5157",
+      "settlementId": "es-cartagena",
+      "name": "TORRECIEGA MOTOS RICARDO I",
+      "position": {
+        "latitude": 37.6174235823033,
+        "longitude": -0.968772332797336
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5158",
+      "stopPlaceId": "cartagena-place-5158",
+      "settlementId": "es-cartagena",
+      "name": "TORRECIEGA I",
+      "position": {
+        "latitude": 37.6152113114017,
+        "longitude": -0.970090051015294
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5159",
+      "stopPlaceId": "cartagena-place-5159",
+      "settlementId": "es-cartagena",
+      "name": "PINTOR PORTELA DANDY MOTOS I",
+      "position": {
+        "latitude": 37.6114678542158,
+        "longitude": -0.971981732211444
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5160",
+      "stopPlaceId": "cartagena-place-5160",
+      "settlementId": "es-cartagena",
+      "name": "PINTOR PORTELA PARQUE I",
+      "position": {
+        "latitude": 37.6096237466912,
+        "longitude": -0.972700186540039
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5161",
+      "stopPlaceId": "cartagena-place-5161",
+      "settlementId": "es-cartagena",
+      "name": "PINTOR PORTELA PEUGEOT I",
+      "position": {
+        "latitude": 37.6079656229896,
+        "longitude": -0.973753390453764
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5025",
+      "stopPlaceId": "cartagena-place-5025",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE ROSELL",
+      "position": {
+        "latitude": 37.6071663170141,
+        "longitude": -0.976539049555019
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5026",
+      "stopPlaceId": "cartagena-place-5026",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE ASAMBLEA REGIONAL",
+      "position": {
+        "latitude": 37.6070441628415,
+        "longitude": -0.978875870019052
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5027",
+      "stopPlaceId": "cartagena-place-5027",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE TIERNO GALVÁN",
+      "position": {
+        "latitude": 37.606900348911,
+        "longitude": -0.983637398116191
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5028",
+      "stopPlaceId": "cartagena-place-5028",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE JUAN FERNÁNDEZ",
+      "position": {
+        "latitude": 37.6067756923939,
+        "longitude": -0.986891811843133
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5266",
+      "stopPlaceId": "cartagena-place-5266",
+      "settlementId": "es-cartagena",
+      "name": "PASEO ALFONSO TRECE ADORATRICES",
+      "position": {
+        "latitude": 37.6067378763952,
+        "longitude": -0.98943023405123
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5164",
+      "stopPlaceId": "cartagena-place-5164",
+      "settlementId": "es-cartagena",
+      "name": "CALLE PÍO DOCE",
+      "position": {
+        "latitude": 37.6040285526514,
+        "longitude": -0.994917629478621
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5165",
+      "stopPlaceId": "cartagena-place-5165",
+      "settlementId": "es-cartagena",
+      "name": "CAJAMURCIA Bº CONCEPCION I",
+      "position": {
+        "latitude": 37.6059331856485,
+        "longitude": -0.997222620573359
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5166",
+      "stopPlaceId": "cartagena-place-5166",
+      "settlementId": "es-cartagena",
+      "name": "CALLE PERONIÑO COLEGIO INFANTIL MUNICIPAL I",
+      "position": {
+        "latitude": 37.6085009552152,
+        "longitude": -1.00143571616711
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5167",
+      "stopPlaceId": "cartagena-place-5167",
+      "settlementId": "es-cartagena",
+      "name": "CALLE PERONIÑO BUDABLU I",
+      "position": {
+        "latitude": 37.6093843180895,
+        "longitude": -1.00304331765066
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5168",
+      "stopPlaceId": "cartagena-place-5168",
+      "settlementId": "es-cartagena",
+      "name": "CALLE PERONIÑO EROSKI I",
+      "position": {
+        "latitude": 37.6111314454011,
+        "longitude": -1.00563609667565
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5169",
+      "stopPlaceId": "cartagena-place-5169",
+      "settlementId": "es-cartagena",
+      "name": "VILLALBA I",
+      "position": {
+        "latitude": 37.6121831135802,
+        "longitude": -1.00974292170831
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5170",
+      "stopPlaceId": "cartagena-place-5170",
+      "settlementId": "es-cartagena",
+      "name": "EL ROSALAR-HOSPITAL NAVAL I",
+      "position": {
+        "latitude": 37.6129014367457,
+        "longitude": -1.01279383879449
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5171",
+      "stopPlaceId": "cartagena-place-5171",
+      "settlementId": "es-cartagena",
+      "name": "VAGUADA-CTRA.CANTERAS I",
+      "position": {
+        "latitude": 37.6125970329047,
+        "longitude": -1.02149100276251
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5172",
+      "stopPlaceId": "cartagena-place-5172",
+      "settlementId": "es-cartagena",
+      "name": "RTE.SACROMONTE I",
+      "position": {
+        "latitude": 37.6123147876819,
+        "longitude": -1.02454587655472
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5173",
+      "stopPlaceId": "cartagena-place-5173",
+      "settlementId": "es-cartagena",
+      "name": "CARRETERA DE CANTERAS-C.MONTE PEÑAS BLANCAS I",
+      "position": {
+        "latitude": 37.611704386806,
+        "longitude": -1.02738282872287
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5174",
+      "stopPlaceId": "cartagena-place-5174",
+      "settlementId": "es-cartagena",
+      "name": "CARRETERA DE CANTERAS-URB.LA LOMA I",
+      "position": {
+        "latitude": 37.6114855504841,
+        "longitude": -1.03154616507626
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5175",
+      "stopPlaceId": "cartagena-place-5175",
+      "settlementId": "es-cartagena",
+      "name": "GASOLINERA CANTERAS I",
+      "position": {
+        "latitude": 37.6113238722447,
+        "longitude": -1.03428058851952
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5176",
+      "stopPlaceId": "cartagena-place-5176",
+      "settlementId": "es-cartagena",
+      "name": "BAR POPO CANTERAS I",
+      "position": {
+        "latitude": 37.6118327513157,
+        "longitude": -1.03832280932786
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5177",
+      "stopPlaceId": "cartagena-place-5177",
+      "settlementId": "es-cartagena",
+      "name": "UPPER CANTERAS",
+      "position": {
+        "latitude": 37.6125088374564,
+        "longitude": -1.04050280242673
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5178",
+      "stopPlaceId": "cartagena-place-5178",
+      "settlementId": "es-cartagena",
+      "name": "ESTANCO CANTERAS I",
+      "position": {
+        "latitude": 37.6119413992996,
+        "longitude": -1.04323655512042
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5179",
+      "stopPlaceId": "cartagena-place-5179",
+      "settlementId": "es-cartagena",
+      "name": "FERRETERIA CANTERAS I",
+      "position": {
+        "latitude": 37.6116394461027,
+        "longitude": -1.04622387441982
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5209",
+      "stopPlaceId": "cartagena-place-5209",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO RECURSOS JUVENILES CANTERAS I",
+      "position": {
+        "latitude": 37.6113898131681,
+        "longitude": -1.04802031080213
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5210",
+      "stopPlaceId": "cartagena-place-5210",
+      "settlementId": "es-cartagena",
+      "name": "CRUCE CTRA.MAZARRON-GALIFA I",
+      "position": {
+        "latitude": 37.6117812011426,
+        "longitude": -1.0558947605146
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5211",
+      "stopPlaceId": "cartagena-place-5211",
+      "settlementId": "es-cartagena",
+      "name": "CUESTA DE GALIFA 2",
+      "position": {
+        "latitude": 37.608515195686,
+        "longitude": -1.06444188835374
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5212",
+      "stopPlaceId": "cartagena-place-5212",
+      "settlementId": "es-cartagena",
+      "name": "GALIFA ESTANCO I",
+      "position": {
+        "latitude": 37.6071493570366,
+        "longitude": -1.07018655319242
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5214",
+      "stopPlaceId": "cartagena-place-5214",
+      "settlementId": "es-cartagena",
+      "name": "GALIFA CASAS",
+      "position": {
+        "latitude": 37.6069314479698,
+        "longitude": -1.07505184038091
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "cartagena-stop-5215",
+      "stopPlaceId": "cartagena-place-5215",
+      "settlementId": "es-cartagena",
+      "name": "CENTRO CIVICO GALIFA I",
+      "position": {
+        "latitude": 37.6065080662969,
+        "longitude": -1.07782674095326
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

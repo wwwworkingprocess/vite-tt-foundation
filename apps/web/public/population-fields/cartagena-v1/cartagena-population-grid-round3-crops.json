@@ -1,0 +1,821 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "es-cartagena current deterministic operational population crop metadata",
+  "indexSemantics": "half-open [start, end)",
+  "boundarySemantics": "smallest aligned rectangle containing viewport; exact viewport-on-grid-edge does not include the exterior zero-area-touch cell",
+  "canonicalGrid": {
+    "cityId": "Q162615",
+    "gridVersion": "1.0.0",
+    "sourceFile": "cartagena-city-population-grid-v1.round2.json",
+    "sha256": "a471e2011c8d9379d9f8df8965c5c256a9d57707a196e0e7cb160152685a315d",
+    "rows": 323,
+    "columns": 1052,
+    "cellCount": 339796,
+    "resolutionDegrees": 0.001,
+    "outerBounds": {
+      "south": 37.5345,
+      "west": -1.7035,
+      "north": 37.8575,
+      "east": -0.6515
+    },
+    "cityTotalWeight": 537530,
+    "cityNonzeroCellCount": 34897
+  },
+  "scenarioEvidence": {
+    "sourceArchive": "scenarios-cartagena-radial-legacy-all-v1(1).zip",
+    "sourceArchiveSha256": "09c19ce630078fccdbfdd60cdea081299fee5247637746470e87dfedfc713ba1",
+    "catalogSha256": "32814dd067ddb0fa3e735b5dcd033d2f1a0ce4197fa56cfb1d4a63a7f5d61a71",
+    "legacyAggregateParity": {
+      "componentScenarioIds": [
+        "cartagena-legacy-icue-v1",
+        "cartagena-legacy-core-v1",
+        "cartagena-legacy-west-v1",
+        "cartagena-legacy-southwest-v1",
+        "cartagena-legacy-north-east-v1",
+        "cartagena-legacy-periphery-v1"
+      ],
+      "routePublicCodes": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "14",
+        "18",
+        "24",
+        "25"
+      ],
+      "routeCount": 13,
+      "routeObjectsMatchComponents": true
+    },
+    "radialAggregateParity": {
+      "componentScenarioIds": [
+        "cartagena-radial-coast-v1",
+        "cartagena-radial-manga-v1",
+        "cartagena-radial-mainland-v1"
+      ],
+      "routePublicCodes": [
+        "12",
+        "21",
+        "23",
+        "30",
+        "41",
+        "42A",
+        "43",
+        "44"
+      ],
+      "routeCount": 8,
+      "routeObjectsMatchComponents": true
+    },
+    "routeUsedStopPlacePolicy": "StopPlaces referenced by route-pattern-used StopNodes, requiring valid positions"
+  },
+  "stressTestReference": {
+    "scenarioId": "cartagena-radial-legacy-all-v1",
+    "cropCellCount": 337050,
+    "canonicalCellCount": 339796,
+    "canonicalCellPercent": 99.19186806201368,
+    "includedWeight": 534291,
+    "includedNonzeroCellCount": 34711,
+    "cityWeightPercent": 99.39742898070806
+  },
+  "scenarios": [
+    {
+      "scenarioId": "cartagena-legacy-icue-v1",
+      "family": "legacy",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "8",
+        "9"
+      ],
+      "routeCount": 2,
+      "patternCount": 2,
+      "settlementIds": [
+        "es-cartagena"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.59598828148958,
+        "west": -0.9973457015372941,
+        "north": 37.61749696466382,
+        "east": -0.9724313239812289
+      },
+      "crop": {
+        "rowStart": 237,
+        "rowEnd": 263,
+        "columnStart": 703,
+        "columnEnd": 734,
+        "dimensions": {
+          "rows": 26,
+          "columns": 31
+        },
+        "alignedGeographicBounds": {
+          "south": 37.5945,
+          "west": -1.0005,
+          "north": 37.6205,
+          "east": -0.9695
+        }
+      },
+      "totalIncludedWeight": 78375,
+      "nonzeroCellCount": 653,
+      "cityWeightPercent": 14.580581548936802,
+      "canonicalCellPercent": 0.16833629589518417,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "2149e40a9766f8162d9b23c4e85db831e0eccf41bd0d49227f49d93e5ca82be8",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 36,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "cartagena-legacy-core-v1",
+      "family": "legacy",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "1",
+        "2"
+      ],
+      "routeCount": 2,
+      "patternCount": 6,
+      "settlementIds": [
+        "es-cartagena"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.601082163824124,
+        "west": -0.9994876262128388,
+        "north": 37.63441437586428,
+        "east": -0.9730657494652413
+      },
+      "crop": {
+        "rowStart": 221,
+        "rowEnd": 259,
+        "columnStart": 701,
+        "columnEnd": 733,
+        "dimensions": {
+          "rows": 38,
+          "columns": 32
+        },
+        "alignedGeographicBounds": {
+          "south": 37.5985,
+          "west": -1.0025,
+          "north": 37.6365,
+          "east": -0.9705
+        }
+      },
+      "totalIncludedWeight": 108000,
+      "nonzeroCellCount": 983,
+      "cityWeightPercent": 20.091901847338754,
+      "canonicalCellPercent": 0.270162097258355,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "b3be58feddc672b639b15486d139ed741de9cb6dda20c6da178aa2598eaa9434",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 74,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "cartagena-legacy-west-v1",
+      "family": "legacy",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "3",
+        "4"
+      ],
+      "routeCount": 2,
+      "patternCount": 6,
+      "settlementIds": [
+        "es-cartagena"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.596674614151254,
+        "west": -1.0928344303784998,
+        "north": 37.629390664126646,
+        "east": -0.9387009796558232
+      },
+      "crop": {
+        "rowStart": 228,
+        "rowEnd": 262,
+        "columnStart": 610,
+        "columnEnd": 765,
+        "dimensions": {
+          "rows": 34,
+          "columns": 155
+        },
+        "alignedGeographicBounds": {
+          "south": 37.5955,
+          "west": -1.0935,
+          "north": 37.6295,
+          "east": -0.9385
+        }
+      },
+      "totalIncludedWeight": 128207,
+      "nonzeroCellCount": 2105,
+      "cityWeightPercent": 23.851133890201474,
+      "canonicalCellPercent": 1.5053149536780892,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "413eb7f950f09502258b8320b2c5a04f05ac315350d0dc6f1adb51134713460a",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 116,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "cartagena-legacy-southwest-v1",
+      "family": "legacy",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "5",
+        "6"
+      ],
+      "routeCount": 2,
+      "patternCount": 12,
+      "settlementIds": [
+        "es-cartagena"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.584066965649605,
+        "west": -1.0774030568893072,
+        "north": 37.6542746097072,
+        "east": -0.9462710529104597
+      },
+      "crop": {
+        "rowStart": 203,
+        "rowEnd": 274,
+        "columnStart": 626,
+        "columnEnd": 758,
+        "dimensions": {
+          "rows": 71,
+          "columns": 132
+        },
+        "cellCount": 9372,
+        "alignedGeographicBounds": {
+          "south": 37.5835,
+          "west": -1.0775,
+          "north": 37.6545,
+          "east": -0.9455
+        }
+      },
+      "totalIncludedWeight": 160104,
+      "nonzeroCellCount": 3153,
+      "cityWeightPercent": 29.785128271910406,
+      "canonicalCellPercent": 2.758125463513402,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "3831ece100a6d581c6dc0d04ef7b8ffed81d37d04d0d73ff3319129c0cf416d8",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 106,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "cartagena-legacy-north-east-v1",
+      "family": "legacy",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "7",
+        "18"
+      ],
+      "routeCount": 2,
+      "patternCount": 8,
+      "settlementIds": [
+        "es-cartagena"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.591732190054195,
+        "west": -1.02384979820948,
+        "north": 37.6601975960386,
+        "east": -0.95581771816568
+      },
+      "crop": {
+        "rowStart": 197,
+        "rowEnd": 266,
+        "columnStart": 679,
+        "columnEnd": 748,
+        "dimensions": {
+          "rows": 69,
+          "columns": 69
+        },
+        "cellCount": 4761,
+        "alignedGeographicBounds": {
+          "south": 37.5915,
+          "west": -1.0245,
+          "north": 37.6605,
+          "east": -0.9555
+        }
+      },
+      "totalIncludedWeight": 151332,
+      "nonzeroCellCount": 2313,
+      "cityWeightPercent": 28.15321935519878,
+      "canonicalCellPercent": 1.4011347985261746,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "615ba29dbd4507a3f5ba12acba12ad86c9bdd5a5d1230735a0144653e2df88be",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 61,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "cartagena-legacy-periphery-v1",
+      "family": "legacy",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "14",
+        "24",
+        "25"
+      ],
+      "routeCount": 3,
+      "patternCount": 20,
+      "settlementIds": [
+        "es-cartagena",
+        "es-fuente-alamo-de-murcia",
+        "es-murcia",
+        "es-torre-pacheco"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.59059315930192,
+        "west": -1.1824627295043193,
+        "north": 37.792411920713704,
+        "east": -0.8967571887566066
+      },
+      "crop": {
+        "rowStart": 65,
+        "rowEnd": 267,
+        "columnStart": 521,
+        "columnEnd": 807,
+        "dimensions": {
+          "rows": 202,
+          "columns": 286
+        },
+        "cellCount": 57772,
+        "alignedGeographicBounds": {
+          "south": 37.5905,
+          "west": -1.1825,
+          "north": 37.7925,
+          "east": -0.8965
+        }
+      },
+      "totalIncludedWeight": 229821,
+      "nonzeroCellCount": 10361,
+      "cityWeightPercent": 42.75500902275222,
+      "canonicalCellPercent": 17.0019658854136,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "050bcde4e5e052cc4eaaa553d974cb8dd243ca391671822d7fb4d6bf45e79dd8",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 124,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "cartagena-legacy-all-v1",
+      "family": "legacy",
+      "aggregation": "aggregate-package",
+      "routePublicCodes": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "14",
+        "18",
+        "24",
+        "25"
+      ],
+      "routeCount": 13,
+      "patternCount": 54,
+      "settlementIds": [
+        "es-cartagena",
+        "es-fuente-alamo-de-murcia",
+        "es-murcia",
+        "es-torre-pacheco"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.577055171164844,
+        "west": -1.1824627295043193,
+        "north": 37.79200475487721,
+        "east": -0.8967571887566066
+      },
+      "crop": {
+        "rowStart": 65,
+        "rowEnd": 281,
+        "columnStart": 521,
+        "columnEnd": 807,
+        "dimensions": {
+          "rows": 216,
+          "columns": 286
+        },
+        "cellCount": 61776,
+        "alignedGeographicBounds": {
+          "south": 37.5765,
+          "west": -1.1825,
+          "north": 37.7925,
+          "east": -0.8965
+        }
+      },
+      "totalIncludedWeight": 229993,
+      "nonzeroCellCount": 10407,
+      "cityWeightPercent": 42.78700723680539,
+      "canonicalCellPercent": 18.18031995667989,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "228230895bcd66f0868b744a366500e5ac0f482553776e31a41fd217d3e28076",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 411,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "cartagena-radial-coast-v1",
+      "family": "radial",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "12",
+        "21"
+      ],
+      "routeCount": 2,
+      "patternCount": 19,
+      "settlementIds": [
+        "es-cartagena",
+        "es-la-union"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.56860105919413,
+        "west": -1.1057018641951086,
+        "north": 37.73131861074257,
+        "east": -0.7023111411082854
+      },
+      "crop": {
+        "rowStart": 126,
+        "rowEnd": 289,
+        "columnStart": 597,
+        "columnEnd": 1002,
+        "dimensions": {
+          "rows": 163,
+          "columns": 405
+        },
+        "cellCount": 66015,
+        "alignedGeographicBounds": {
+          "south": 37.5685,
+          "west": -1.1065,
+          "north": 37.7315,
+          "east": -0.7015
+        }
+      },
+      "totalIncludedWeight": 236975,
+      "nonzeroCellCount": 9756,
+      "cityWeightPercent": 44.0859114840102,
+      "canonicalCellPercent": 19.42783317049053,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "2933a69a4bf440b5a443390a4546eae7b53ad6dcd88923d0ee462d991f8421db",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 93,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "cartagena-radial-manga-v1",
+      "family": "radial",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "23",
+        "43",
+        "44"
+      ],
+      "routeCount": 3,
+      "patternCount": 22,
+      "settlementIds": [
+        "es-cartagena",
+        "es-la-union",
+        "es-san-javier",
+        "es-los-alcazares"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.593737596474064,
+        "west": -1.004652108855914,
+        "north": 37.81185453917407,
+        "east": -0.6764279603450202
+      },
+      "crop": {
+        "rowStart": 45,
+        "rowEnd": 264,
+        "columnStart": 698,
+        "columnEnd": 1028,
+        "dimensions": {
+          "rows": 219,
+          "columns": 330
+        },
+        "cellCount": 72270,
+        "alignedGeographicBounds": {
+          "south": 37.5935,
+          "west": -1.0055,
+          "north": 37.8125,
+          "east": -0.6755
+        }
+      },
+      "totalIncludedWeight": 257669,
+      "nonzeroCellCount": 9973,
+      "cityWeightPercent": 47.93574312131416,
+      "canonicalCellPercent": 21.268643539064616,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "599e355c4e5797544ec3fc80788eaf4950619ba76ba059d10d6c159cf94a19c0",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 99,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "cartagena-radial-mainland-v1",
+      "family": "radial",
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "30",
+        "41",
+        "42A"
+      ],
+      "routeCount": 3,
+      "patternCount": 23,
+      "settlementIds": [
+        "es-cartagena",
+        "es-la-union",
+        "es-fuente-alamo-de-murcia",
+        "es-mazarron",
+        "es-alhama-de-murcia",
+        "es-totana",
+        "es-lorca"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.537046032163055,
+        "west": -1.7022121501610898,
+        "north": 37.8559032475845,
+        "east": -0.8636438949372467
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 321,
+        "columnStart": 1,
+        "columnEnd": 840,
+        "dimensions": {
+          "rows": 320,
+          "columns": 839
+        },
+        "cellCount": 268480,
+        "alignedGeographicBounds": {
+          "south": 37.5365,
+          "west": -1.7025,
+          "north": 37.8565,
+          "east": -0.8635
+        }
+      },
+      "totalIncludedWeight": 438934,
+      "nonzeroCellCount": 29157,
+      "cityWeightPercent": 81.65758190240545,
+      "canonicalCellPercent": 79.01211315024308,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "acdc52c083f92ffde9239d1a1b98bf1b23734e39ba379617ba28fe68dbee54d6",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 105,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "cartagena-radial-legacy-all-v1",
+      "family": "radial",
+      "aggregation": "aggregate-package",
+      "routePublicCodes": [
+        "12",
+        "21",
+        "23",
+        "30",
+        "41",
+        "42A",
+        "43",
+        "44"
+      ],
+      "routeCount": 8,
+      "patternCount": 64,
+      "settlementIds": [
+        "es-cartagena",
+        "es-la-union",
+        "es-san-javier",
+        "es-los-alcazares",
+        "es-mazarron",
+        "es-fuente-alamo-de-murcia",
+        "es-alhama-de-murcia",
+        "es-totana",
+        "es-lorca"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 37.53625086152974,
+        "west": -1.7022121501610898,
+        "north": 37.8559032475845,
+        "east": -0.6525397399510078
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 322,
+        "columnStart": 1,
+        "columnEnd": 1051,
+        "dimensions": {
+          "rows": 321,
+          "columns": 1050
+        },
+        "cellCount": 337050,
+        "alignedGeographicBounds": {
+          "south": 37.5355,
+          "west": -1.7025,
+          "north": 37.8565,
+          "east": -0.6525
+        }
+      },
+      "totalIncludedWeight": 534291,
+      "nonzeroCellCount": 34711,
+      "cityWeightPercent": 99.39742898070806,
+      "canonicalCellPercent": 99.19186806201368,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "cc91f352b914cce9cbc01d77f64910fffca591d1660d77a0d8778c2f9ff468d0",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 266,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    }
+  ],
+  "historicalPreparation": {
+    "status": "historical-round-3-round-4-preparation-evidence",
+    "purpose": "scenario-crop-metadata"
+  },
+  "operationalCropPolicy": {
+    "maxAccessDistanceCells": 5
+  },
+  "operationalStatus": {
+    "allSupportedScenarioCropsSufficient": true,
+    "scenarioViewportsUnchanged": true
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-38-c6-v1",
+  "title": "Málaga EMT - Lines 38 and C6",
+  "initialView": {
+    "center": {
+      "latitude": 36.72646056815235,
+      "longitude": -4.433579547044315
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-38": {
+      "label": "38",
+      "color": "#3CDCAC"
+    },
+    "malaga-c6": {
+      "label": "C6",
+      "color": "#D927C7"
+    }
+  },
+  "notes": [
+    "Eleventh accepted Málaga component; extends the frozen Málaga identity registry for routes 38 and C6 while exact-copying accepted shared identities.",
+    "All six source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "Route 38 retains one contiguous short working; C6 retains two contiguous partial workings and one source-supported complete loop.",
+    "The principal C6 pattern is a source-supported complete loop; the other five patterns are open. No reverse edge or reverse pattern is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

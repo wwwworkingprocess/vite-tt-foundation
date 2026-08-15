@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-4-19-n3-v1",
+  "title": "Málaga EMT - Lines 4, 19 and N3",
+  "initialView": {
+    "center": {
+      "latitude": 36.72148313994895,
+      "longitude": -4.494620592827725
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-4": {
+      "label": "4",
+      "color": "#319E16"
+    },
+    "malaga-19": {
+      "label": "19",
+      "color": "#ACC9DF"
+    },
+    "malaga-n3": {
+      "label": "N3",
+      "color": "#4ED6DF"
+    }
+  },
+  "notes": [
+    "Ninth accepted Málaga component; extends the frozen Málaga identity registry for routes 4, 19 and N3 while exact-copying accepted shared identities.",
+    "All eight source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "All eight patterns are open; no reverse edge, reverse pattern or loop closure is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

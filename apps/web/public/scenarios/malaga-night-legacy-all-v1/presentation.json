@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-night-legacy-all-v1",
+  "title": "Málaga Night Legacy All Network",
+  "initialView": {
+    "center": {
+      "latitude": 36.72011156069115,
+      "longitude": -4.4641359695165
+    },
+    "zoom": 10
+  },
+  "routeStyles": {
+    "malaga-n1": {
+      "label": "N1",
+      "color": "#F4EA06"
+    },
+    "malaga-n2": {
+      "label": "N2",
+      "color": "#000000"
+    },
+    "malaga-n3": {
+      "label": "N3",
+      "color": "#4ED6DF"
+    },
+    "malaga-n4": {
+      "label": "N4",
+      "color": "#0F7614"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Pure exact-copy merge of the four accepted Málaga night route objects in frozen canonical public-code order.",
+    "All route and pattern objects are copied exactly from accepted construction components; shared StopNode and StopPlace identities are collapsed only after deep exact-object equality.",
+    "No source discovery, coordinate discovery, topology reconciliation, route creation, pattern creation or identity creation occurs during this merge.",
+    "Mixed-family construction components contribute only N1, N2, N3 and N4; daytime, circular and express routes remain in their accepted/final families."
+  ]
+}

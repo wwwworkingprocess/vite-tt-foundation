@@ -1,0 +1,294 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-west-v1",
+  "routes": [
+    {
+      "routeId": "cartagena-3",
+      "publicCode": "3",
+      "name": "Cartagena - Canteras (por Tentegorra)",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-3-s01-capitanes-ripoll-canteras",
+          "directionLabel": "CAPITANES RIPOLL-CANTERAS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6900",
+            "cartagena-stop-5065",
+            "cartagena-stop-5075",
+            "cartagena-stop-5076",
+            "cartagena-stop-5078",
+            "cartagena-stop-5077",
+            "cartagena-stop-5055",
+            "cartagena-stop-5033",
+            "cartagena-stop-5270",
+            "cartagena-stop-5080",
+            "cartagena-stop-5081",
+            "cartagena-stop-5082",
+            "cartagena-stop-5083",
+            "cartagena-stop-5084",
+            "cartagena-stop-5086",
+            "cartagena-stop-5087",
+            "cartagena-stop-5088",
+            "cartagena-stop-5089",
+            "cartagena-stop-5090",
+            "cartagena-stop-5091",
+            "cartagena-stop-5092",
+            "cartagena-stop-5093",
+            "cartagena-stop-5094"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-3-s02-canteras-capitanes-ripoll",
+          "directionLabel": "CANTERAS-CAPITANES RIPOLL",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 23
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5094",
+            "cartagena-stop-5107",
+            "cartagena-stop-5108",
+            "cartagena-stop-5109",
+            "cartagena-stop-5110",
+            "cartagena-stop-5111",
+            "cartagena-stop-5112",
+            "cartagena-stop-5113",
+            "cartagena-stop-5114",
+            "cartagena-stop-5115",
+            "cartagena-stop-5096",
+            "cartagena-stop-5097",
+            "cartagena-stop-5098",
+            "cartagena-stop-5099",
+            "cartagena-stop-5100",
+            "cartagena-stop-5101",
+            "cartagena-stop-5102",
+            "cartagena-stop-5103",
+            "cartagena-stop-5104",
+            "cartagena-stop-5105",
+            "cartagena-stop-5106",
+            "cartagena-stop-5056",
+            "cartagena-stop-6900"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "3",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/3"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "3",
+          "sourceFile": "route-captures/line-3.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-4",
+      "publicCode": "4",
+      "name": "P. Mediterráneo - Canteras",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-4-s01-canteras-pol-cabezo-beaza",
+          "directionLabel": "CANTERAS-POL.CABEZO BEAZA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 31
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5094",
+            "cartagena-stop-5093",
+            "cartagena-stop-5116",
+            "cartagena-stop-5117",
+            "cartagena-stop-5118",
+            "cartagena-stop-5119",
+            "cartagena-stop-5120",
+            "cartagena-stop-5121",
+            "cartagena-stop-5122",
+            "cartagena-stop-5123",
+            "cartagena-stop-5124",
+            "cartagena-stop-5125",
+            "cartagena-stop-5126",
+            "cartagena-stop-5127",
+            "cartagena-stop-5128",
+            "cartagena-stop-5130",
+            "cartagena-stop-5131",
+            "cartagena-stop-5132",
+            "cartagena-stop-5233",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5807",
+            "cartagena-stop-5138",
+            "cartagena-stop-5139",
+            "cartagena-stop-5140",
+            "cartagena-stop-5141",
+            "cartagena-stop-5142",
+            "cartagena-stop-5143",
+            "cartagena-stop-5144",
+            "cartagena-stop-5145"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-4-s02-galifa-pol-cabezo-beaza",
+          "directionLabel": "GALIFA-POL.CABEZO BEAZA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 38
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5146",
+            "cartagena-stop-5147",
+            "cartagena-stop-5148",
+            "cartagena-stop-5149",
+            "cartagena-stop-5150",
+            "cartagena-stop-5151",
+            "cartagena-stop-5152",
+            "cartagena-stop-5153",
+            "cartagena-stop-5093",
+            "cartagena-stop-5116",
+            "cartagena-stop-5117",
+            "cartagena-stop-5118",
+            "cartagena-stop-5119",
+            "cartagena-stop-5120",
+            "cartagena-stop-5121",
+            "cartagena-stop-5122",
+            "cartagena-stop-5123",
+            "cartagena-stop-5124",
+            "cartagena-stop-5125",
+            "cartagena-stop-5126",
+            "cartagena-stop-5127",
+            "cartagena-stop-5128",
+            "cartagena-stop-5130",
+            "cartagena-stop-5131",
+            "cartagena-stop-5132",
+            "cartagena-stop-5233",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5807",
+            "cartagena-stop-5138",
+            "cartagena-stop-5139",
+            "cartagena-stop-5140",
+            "cartagena-stop-5141",
+            "cartagena-stop-5142",
+            "cartagena-stop-5143",
+            "cartagena-stop-5144",
+            "cartagena-stop-5145"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-4-s03-pol-cabezo-beaza-canteras",
+          "directionLabel": "POL.CABEZO BEAZA-CANTERAS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 31
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5154",
+            "cartagena-stop-5155",
+            "cartagena-stop-5156",
+            "cartagena-stop-5157",
+            "cartagena-stop-5158",
+            "cartagena-stop-5159",
+            "cartagena-stop-5160",
+            "cartagena-stop-5161",
+            "cartagena-stop-5025",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027",
+            "cartagena-stop-5028",
+            "cartagena-stop-5266",
+            "cartagena-stop-5164",
+            "cartagena-stop-5165",
+            "cartagena-stop-5166",
+            "cartagena-stop-5167",
+            "cartagena-stop-5168",
+            "cartagena-stop-5169",
+            "cartagena-stop-5170",
+            "cartagena-stop-5171",
+            "cartagena-stop-5172",
+            "cartagena-stop-5173",
+            "cartagena-stop-5174",
+            "cartagena-stop-5175",
+            "cartagena-stop-5176",
+            "cartagena-stop-5177",
+            "cartagena-stop-5178",
+            "cartagena-stop-5179",
+            "cartagena-stop-5209",
+            "cartagena-stop-5094"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-4-s04-pol-cabezo-beaza-galifa",
+          "directionLabel": "POL.CABEZO BEAZA-GALIFA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 36
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5154",
+            "cartagena-stop-5155",
+            "cartagena-stop-5156",
+            "cartagena-stop-5157",
+            "cartagena-stop-5158",
+            "cartagena-stop-5159",
+            "cartagena-stop-5160",
+            "cartagena-stop-5161",
+            "cartagena-stop-5025",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027",
+            "cartagena-stop-5028",
+            "cartagena-stop-5266",
+            "cartagena-stop-5164",
+            "cartagena-stop-5165",
+            "cartagena-stop-5166",
+            "cartagena-stop-5167",
+            "cartagena-stop-5168",
+            "cartagena-stop-5169",
+            "cartagena-stop-5170",
+            "cartagena-stop-5171",
+            "cartagena-stop-5172",
+            "cartagena-stop-5173",
+            "cartagena-stop-5174",
+            "cartagena-stop-5175",
+            "cartagena-stop-5176",
+            "cartagena-stop-5177",
+            "cartagena-stop-5178",
+            "cartagena-stop-5179",
+            "cartagena-stop-5209",
+            "cartagena-stop-5210",
+            "cartagena-stop-5211",
+            "cartagena-stop-5212",
+            "cartagena-stop-5214",
+            "cartagena-stop-5215",
+            "cartagena-stop-5146"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "4",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/4"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "4",
+          "sourceFile": "route-captures/line-4.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-west-v1",
+  "title": "Cartagena Legacy West Network - Lines 3 and 4",
+  "initialView": {
+    "center": {
+      "latitude": 37.61303263913895,
+      "longitude": -1.0157677050171614
+    },
+    "zoom": 11
+  },
+  "routeStyles": {
+    "cartagena-3": {
+      "label": "3",
+      "color": "#7b1fa2"
+    },
+    "cartagena-4": {
+      "label": "4",
+      "color": "#388e3c"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Third Cartagena legacy component, containing Lines 3 and 4.",
+    "Line 3 preserves the two independently published Canteras ↔ Capitanes Ripoll directions.",
+    "Line 4 preserves four independently published Canteras/Galifa ↔ Polígono Cabezo Beaza variants.",
+    "No reverse pattern, branch concatenation or synthetic handoff edge is inferred.",
+    "Route style colors are presentation-only and are not claimed as operator livery."
+  ]
+}

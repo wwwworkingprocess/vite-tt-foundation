@@ -1,0 +1,310 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-north-east-v1",
+  "routes": [
+    {
+      "routeId": "cartagena-7",
+      "publicCode": "7",
+      "name": "Cartagena - Polígono Santa Ana",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-7-s01-poligono-santa-ana-plaza-puertas-d",
+          "directionLabel": "POLIGONO SANTA ANA - PLAZA PUERTAS D",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 25
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5312",
+            "cartagena-stop-5313",
+            "cartagena-stop-5314",
+            "cartagena-stop-5315",
+            "cartagena-stop-5316",
+            "cartagena-stop-5317",
+            "cartagena-stop-5318",
+            "cartagena-stop-5319",
+            "cartagena-stop-5320",
+            "cartagena-stop-5321",
+            "cartagena-stop-5322",
+            "cartagena-stop-5323",
+            "cartagena-stop-5324",
+            "cartagena-stop-5325",
+            "cartagena-stop-5334",
+            "cartagena-stop-5333",
+            "cartagena-stop-5229",
+            "cartagena-stop-5230",
+            "cartagena-stop-5231",
+            "cartagena-stop-5232",
+            "cartagena-stop-5233",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5019"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-7-s02-pol-sta-ana-los-mateos",
+          "directionLabel": "POL.STA.ANA-LOS MATEOS",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5312",
+            "cartagena-stop-5313",
+            "cartagena-stop-5314",
+            "cartagena-stop-5315",
+            "cartagena-stop-5316",
+            "cartagena-stop-5317",
+            "cartagena-stop-5318",
+            "cartagena-stop-5319",
+            "cartagena-stop-5320",
+            "cartagena-stop-5321",
+            "cartagena-stop-5322",
+            "cartagena-stop-5323",
+            "cartagena-stop-5324",
+            "cartagena-stop-5325",
+            "cartagena-stop-5334",
+            "cartagena-stop-5333",
+            "cartagena-stop-5229",
+            "cartagena-stop-5230",
+            "cartagena-stop-5231",
+            "cartagena-stop-5232",
+            "cartagena-stop-5233",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5019",
+            "cartagena-stop-5328",
+            "cartagena-stop-5329",
+            "cartagena-stop-5330",
+            "cartagena-stop-5331"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-7-s03-p-puertas-s-jose-pol-sta-ana",
+          "directionLabel": "P.PUERTAS S.JOSE-POL.STA.ANA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 28
+          },
+          "stopNodeIds": [
+            "cartagena-stop-7462",
+            "cartagena-stop-5024",
+            "cartagena-stop-5025",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027",
+            "cartagena-stop-5028",
+            "cartagena-stop-5266",
+            "cartagena-stop-5267",
+            "cartagena-stop-5268",
+            "cartagena-stop-5269",
+            "cartagena-stop-5332",
+            "cartagena-stop-5327",
+            "cartagena-stop-5326",
+            "cartagena-stop-5335",
+            "cartagena-stop-5336",
+            "cartagena-stop-5337",
+            "cartagena-stop-5322",
+            "cartagena-stop-5338",
+            "cartagena-stop-5339",
+            "cartagena-stop-5340",
+            "cartagena-stop-5341",
+            "cartagena-stop-5342",
+            "cartagena-stop-5343",
+            "cartagena-stop-5344",
+            "cartagena-stop-5346",
+            "cartagena-stop-5347",
+            "cartagena-stop-5348",
+            "cartagena-stop-5312"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-7-s04-los-mateos-pol-sta-ana",
+          "directionLabel": "LOS MATEOS-POL.STA.ANA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5331",
+            "cartagena-stop-7462",
+            "cartagena-stop-5024",
+            "cartagena-stop-5025",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027",
+            "cartagena-stop-5028",
+            "cartagena-stop-5266",
+            "cartagena-stop-5267",
+            "cartagena-stop-5268",
+            "cartagena-stop-5269",
+            "cartagena-stop-5332",
+            "cartagena-stop-5327",
+            "cartagena-stop-5326",
+            "cartagena-stop-5335",
+            "cartagena-stop-5336",
+            "cartagena-stop-5337",
+            "cartagena-stop-5322",
+            "cartagena-stop-5338",
+            "cartagena-stop-5339",
+            "cartagena-stop-5340",
+            "cartagena-stop-5341",
+            "cartagena-stop-5342",
+            "cartagena-stop-5343",
+            "cartagena-stop-5344",
+            "cartagena-stop-5346",
+            "cartagena-stop-5347",
+            "cartagena-stop-5348",
+            "cartagena-stop-5312"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-7-s05-pol-sta-ana-puerto",
+          "directionLabel": "POL. STA ANA-PUERTO",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 26
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5312",
+            "cartagena-stop-5313",
+            "cartagena-stop-5314",
+            "cartagena-stop-5315",
+            "cartagena-stop-5316",
+            "cartagena-stop-5317",
+            "cartagena-stop-5318",
+            "cartagena-stop-5319",
+            "cartagena-stop-5320",
+            "cartagena-stop-5321",
+            "cartagena-stop-5322",
+            "cartagena-stop-5323",
+            "cartagena-stop-5324",
+            "cartagena-stop-5325",
+            "cartagena-stop-5334",
+            "cartagena-stop-5333",
+            "cartagena-stop-5229",
+            "cartagena-stop-5230",
+            "cartagena-stop-5231",
+            "cartagena-stop-5232",
+            "cartagena-stop-5233",
+            "cartagena-stop-5016",
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5019",
+            "cartagena-stop-7463"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-7-s06-puerto-pol-sta-ana",
+          "directionLabel": "PUERTO- POL. STA. ANA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 29
+          },
+          "stopNodeIds": [
+            "cartagena-stop-7463",
+            "cartagena-stop-7462",
+            "cartagena-stop-5024",
+            "cartagena-stop-5025",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027",
+            "cartagena-stop-5028",
+            "cartagena-stop-5266",
+            "cartagena-stop-5267",
+            "cartagena-stop-5268",
+            "cartagena-stop-5269",
+            "cartagena-stop-5332",
+            "cartagena-stop-5327",
+            "cartagena-stop-5326",
+            "cartagena-stop-5335",
+            "cartagena-stop-5336",
+            "cartagena-stop-5337",
+            "cartagena-stop-5322",
+            "cartagena-stop-5338",
+            "cartagena-stop-5339",
+            "cartagena-stop-5340",
+            "cartagena-stop-5341",
+            "cartagena-stop-5342",
+            "cartagena-stop-5343",
+            "cartagena-stop-5344",
+            "cartagena-stop-5346",
+            "cartagena-stop-5347",
+            "cartagena-stop-5348",
+            "cartagena-stop-5312"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "7",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/7"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "7",
+          "sourceFile": "route-captures/line-7.json"
+        }
+      ]
+    },
+    {
+      "routeId": "cartagena-18",
+      "publicCode": "18",
+      "name": "Cartagena - Hospital Santa Lucía",
+      "dataStatus": "complete-textual-order-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "cartagena-line-18-s01-paseo-alfonso-xiii-hospital-santa-lucia",
+          "directionLabel": "PASEO ALFONSO XIII-HOSPITAL SANTA LUCIA",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 5
+          },
+          "stopNodeIds": [
+            "cartagena-stop-5017",
+            "cartagena-stop-5018",
+            "cartagena-stop-5234",
+            "cartagena-stop-6851",
+            "cartagena-stop-6850"
+          ]
+        },
+        {
+          "patternId": "cartagena-line-18-s02-hospital-santa-lucia-paseo-alfonso-xiii",
+          "directionLabel": "HOSPITAL SANTA LUCIA-PASEO ALFONSO XIII",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 5
+          },
+          "stopNodeIds": [
+            "cartagena-stop-6850",
+            "cartagena-stop-6852",
+            "cartagena-stop-5265",
+            "cartagena-stop-5026",
+            "cartagena-stop-5027"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "alsa-cartagena-official-ordered-route",
+          "sourceRouteId": "18",
+          "sourceFile": "https://www.transportesurbanoscartagena.es/tiempos-de-espera/linea/18"
+        },
+        {
+          "source": "cartagena-citywide-prefetch",
+          "sourceRouteId": "18",
+          "sourceFile": "route-captures/line-18.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1595 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-south-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9218",
+      "name": "Camino de los Garres 1",
+      "position": {
+        "latitude": 37.958168,
+        "longitude": -1.0934687
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9230",
+      "name": "Esquina Carril de Los Valeras",
+      "position": {
+        "latitude": 37.959503,
+        "longitude": -1.0941852
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9231",
+      "name": "Cerveceria",
+      "position": {
+        "latitude": 37.96127,
+        "longitude": -1.0974177
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9219",
+      "name": "Carril de los Garres",
+      "position": {
+        "latitude": 37.963173,
+        "longitude": -1.1014892
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9232",
+      "name": "Duplex",
+      "position": {
+        "latitude": 37.965405,
+        "longitude": -1.1042204
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9220",
+      "name": "Centro Social Cordillera",
+      "position": {
+        "latitude": 37.967773,
+        "longitude": -1.1068347
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9244",
+      "name": "Carril Huerto Alix Nº 59",
+      "position": {
+        "latitude": 37.970505,
+        "longitude": -1.1097811
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9245",
+      "name": "Carril Huerto Alix nº 27",
+      "position": {
+        "latitude": 37.970425,
+        "longitude": -1.1147352
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9246",
+      "name": "Carril Huerto Alix nº 3",
+      "position": {
+        "latitude": 37.970078,
+        "longitude": -1.1205953
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9177",
+      "name": "Esquina Centro Social Infante",
+      "position": {
+        "latitude": 37.97567,
+        "longitude": -1.1171852
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9178",
+      "name": "Centro Salud Infante",
+      "position": {
+        "latitude": 37.975628,
+        "longitude": -1.1194746
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9046",
+      "name": "Pio Baroja",
+      "position": {
+        "latitude": 37.97627,
+        "longitude": -1.120813
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9133",
+      "name": "San Carlos nº 5",
+      "position": {
+        "latitude": 37.97868,
+        "longitude": -1.1209338
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9155",
+      "name": "Pio Baroja (Parraga)",
+      "position": {
+        "latitude": 37.980534,
+        "longitude": -1.121342
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9134",
+      "name": "Palacio de Justicia",
+      "position": {
+        "latitude": 37.981747,
+        "longitude": -1.1234059
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9135",
+      "name": "Plz. Cruz Roja",
+      "position": {
+        "latitude": 37.982067,
+        "longitude": -1.1260619
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9019",
+      "name": "Glorieta de España",
+      "position": {
+        "latitude": 37.983063,
+        "longitude": -1.1308073
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9255",
+      "name": "Plano de San Francisco",
+      "position": {
+        "latitude": 37.983295,
+        "longitude": -1.1353215
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9021",
+      "name": "C/ Juan de la Cierva Nº 5",
+      "position": {
+        "latitude": 37.98395,
+        "longitude": -1.1373771
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9022",
+      "name": "Pz. San Agustín",
+      "position": {
+        "latitude": 37.98634,
+        "longitude": -1.1380569
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9023",
+      "name": "Jardín de la Seda (Frente)",
+      "position": {
+        "latitude": 37.98906,
+        "longitude": -1.1389219
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9024",
+      "name": "San Antón 24",
+      "position": {
+        "latitude": 37.991077,
+        "longitude": -1.1407496
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9036",
+      "name": "San Antón 29",
+      "position": {
+        "latitude": 37.991432,
+        "longitude": -1.1409912
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9165",
+      "name": "Jardín de la Seda",
+      "position": {
+        "latitude": 37.989006,
+        "longitude": -1.1389802
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9037",
+      "name": "San Andrés (Farmacia)",
+      "position": {
+        "latitude": 37.985806,
+        "longitude": -1.1378995
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9038",
+      "name": "Juan de la Cierva nº 6",
+      "position": {
+        "latitude": 37.98395,
+        "longitude": -1.1373203
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9164",
+      "name": "Malecón",
+      "position": {
+        "latitude": 37.983257,
+        "longitude": -1.1346052
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9257",
+      "name": "Teniente Flomesta Nº 3",
+      "position": {
+        "latitude": 37.982635,
+        "longitude": -1.1283246
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9156",
+      "name": "Plz. Cruz Roja (Jardin)",
+      "position": {
+        "latitude": 37.982018,
+        "longitude": -1.126234
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9157",
+      "name": "Palacio de Justicia (Frente)",
+      "position": {
+        "latitude": 37.98164,
+        "longitude": -1.12342
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9158",
+      "name": "Pio Baroja (Frente Parraga)",
+      "position": {
+        "latitude": 37.980507,
+        "longitude": -1.1214792
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9159",
+      "name": "San Carlos (Frente nº 5)",
+      "position": {
+        "latitude": 37.97848,
+        "longitude": -1.1208819
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9143",
+      "name": "Pabellón Infante",
+      "position": {
+        "latitude": 37.976315,
+        "longitude": -1.1208233
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9179",
+      "name": "Centro Salud Infante Frente",
+      "position": {
+        "latitude": 37.97552,
+        "longitude": -1.1195685
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9180",
+      "name": "Esquina Centro Social Infante Frente",
+      "position": {
+        "latitude": 37.975555,
+        "longitude": -1.1171769
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9247",
+      "name": "Carril Huerto Alix nº 6",
+      "position": {
+        "latitude": 37.970196,
+        "longitude": -1.1202394
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9248",
+      "name": "Carril Huerto Alix nº 78",
+      "position": {
+        "latitude": 37.970413,
+        "longitude": -1.1147013
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9249",
+      "name": "Carril Huerto Alix nº 112",
+      "position": {
+        "latitude": 37.97053,
+        "longitude": -1.1095642
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9227",
+      "name": "Farmacia",
+      "position": {
+        "latitude": 37.967323,
+        "longitude": -1.106334
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9235",
+      "name": "Duplex Frente",
+      "position": {
+        "latitude": 37.965755,
+        "longitude": -1.1045189
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9228",
+      "name": "Carril de los Garres 1 (Direccion los Garres)",
+      "position": {
+        "latitude": 37.96313,
+        "longitude": -1.1018202
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9236",
+      "name": "Carpinteria Metalica",
+      "position": {
+        "latitude": 37.962067,
+        "longitude": -1.0983305
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9237",
+      "name": "Esquina Carril de Los Valeras Frente",
+      "position": {
+        "latitude": 37.95955,
+        "longitude": -1.0941727
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9229",
+      "name": "Camino de los Garres 1 (V)",
+      "position": {
+        "latitude": 37.958004,
+        "longitude": -1.0933932
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9127",
+      "name": "Paseo Florencia I",
+      "position": {
+        "latitude": 37.968758,
+        "longitude": -1.1328207
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9128",
+      "name": "Paseo Florencia II",
+      "position": {
+        "latitude": 37.969257,
+        "longitude": -1.1303834
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9129",
+      "name": "Mesa del Castillo",
+      "position": {
+        "latitude": 37.9699,
+        "longitude": -1.1275439
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9131",
+      "name": "Santiago el Mayor 13",
+      "position": {
+        "latitude": 37.971523,
+        "longitude": -1.1221635
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9132",
+      "name": "La Vía (impar)",
+      "position": {
+        "latitude": 37.974155,
+        "longitude": -1.123178
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9012",
+      "name": "Pintor Almela Costa (Par)",
+      "position": {
+        "latitude": 37.975468,
+        "longitude": -1.122416
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9136",
+      "name": "Arco de San Juan",
+      "position": {
+        "latitude": 37.983532,
+        "longitude": -1.1268559
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9137",
+      "name": "Plz. Cetina",
+      "position": {
+        "latitude": 37.984764,
+        "longitude": -1.1273255
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9138",
+      "name": "La Merced",
+      "position": {
+        "latitude": 37.987534,
+        "longitude": -1.127517
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9139",
+      "name": "Puerta Nueva",
+      "position": {
+        "latitude": 37.989223,
+        "longitude": -1.1272576
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9056",
+      "name": "Ronda de levante 5",
+      "position": {
+        "latitude": 37.99226,
+        "longitude": -1.128934
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9030",
+      "name": "Pza. Circular 14",
+      "position": {
+        "latitude": 37.992516,
+        "longitude": -1.1297474
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9029",
+      "name": "Cajamurcia",
+      "position": {
+        "latitude": 37.99172,
+        "longitude": -1.1310431
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9070",
+      "name": "Avda. Constitución 5",
+      "position": {
+        "latitude": 37.990604,
+        "longitude": -1.1313218
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9071",
+      "name": "Cortefiel",
+      "position": {
+        "latitude": 37.988255,
+        "longitude": -1.132019
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9072",
+      "name": "Santa Isabel",
+      "position": {
+        "latitude": 37.98596,
+        "longitude": -1.1322025
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9160",
+      "name": "Pintor Almela Costa (Impar)",
+      "position": {
+        "latitude": 37.97553,
+        "longitude": -1.1229836
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9144",
+      "name": "La Vía (par)",
+      "position": {
+        "latitude": 37.974144,
+        "longitude": -1.1231441
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9161",
+      "name": "Santiago el Mayor 50",
+      "position": {
+        "latitude": 37.971397,
+        "longitude": -1.1221895
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9145",
+      "name": "C/ Morera (Impar)",
+      "position": {
+        "latitude": 37.970757,
+        "longitude": -1.1248127
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9146",
+      "name": "Cruce Ctra. Patiño",
+      "position": {
+        "latitude": 37.97139,
+        "longitude": -1.128394
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9147",
+      "name": "Polideportivo Santiago el Mayor",
+      "position": {
+        "latitude": 37.97189,
+        "longitude": -1.1313753
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9148",
+      "name": "Carril de la Condesa (Rotonda)",
+      "position": {
+        "latitude": 37.9726,
+        "longitude": -1.134727
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9149",
+      "name": "Carril de la Condesa II",
+      "position": {
+        "latitude": 37.970432,
+        "longitude": -1.1344745
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "stopPlaceId": "murcia-place-9162",
+      "name": "Paseo Florencia I (V)",
+      "position": {
+        "latitude": 37.96848,
+        "longitude": -1.133397
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "murcia-stop-9218",
+      "stopPlaceId": "murcia-place-9218",
+      "settlementId": "es-murcia",
+      "name": "Camino de los Garres 1",
+      "position": {
+        "latitude": 37.958168,
+        "longitude": -1.0934687
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9230",
+      "stopPlaceId": "murcia-place-9230",
+      "settlementId": "es-murcia",
+      "name": "Esquina Carril de Los Valeras",
+      "position": {
+        "latitude": 37.959503,
+        "longitude": -1.0941852
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9231",
+      "stopPlaceId": "murcia-place-9231",
+      "settlementId": "es-murcia",
+      "name": "Cerveceria",
+      "position": {
+        "latitude": 37.96127,
+        "longitude": -1.0974177
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9219",
+      "stopPlaceId": "murcia-place-9219",
+      "settlementId": "es-murcia",
+      "name": "Carril de los Garres",
+      "position": {
+        "latitude": 37.963173,
+        "longitude": -1.1014892
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9232",
+      "stopPlaceId": "murcia-place-9232",
+      "settlementId": "es-murcia",
+      "name": "Duplex",
+      "position": {
+        "latitude": 37.965405,
+        "longitude": -1.1042204
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9220",
+      "stopPlaceId": "murcia-place-9220",
+      "settlementId": "es-murcia",
+      "name": "Centro Social Cordillera",
+      "position": {
+        "latitude": 37.967773,
+        "longitude": -1.1068347
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9244",
+      "stopPlaceId": "murcia-place-9244",
+      "settlementId": "es-murcia",
+      "name": "Carril Huerto Alix Nº 59",
+      "position": {
+        "latitude": 37.970505,
+        "longitude": -1.1097811
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9245",
+      "stopPlaceId": "murcia-place-9245",
+      "settlementId": "es-murcia",
+      "name": "Carril Huerto Alix nº 27",
+      "position": {
+        "latitude": 37.970425,
+        "longitude": -1.1147352
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9246",
+      "stopPlaceId": "murcia-place-9246",
+      "settlementId": "es-murcia",
+      "name": "Carril Huerto Alix nº 3",
+      "position": {
+        "latitude": 37.970078,
+        "longitude": -1.1205953
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9177",
+      "stopPlaceId": "murcia-place-9177",
+      "settlementId": "es-murcia",
+      "name": "Esquina Centro Social Infante",
+      "position": {
+        "latitude": 37.97567,
+        "longitude": -1.1171852
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9178",
+      "stopPlaceId": "murcia-place-9178",
+      "settlementId": "es-murcia",
+      "name": "Centro Salud Infante",
+      "position": {
+        "latitude": 37.975628,
+        "longitude": -1.1194746
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9046",
+      "stopPlaceId": "murcia-place-9046",
+      "settlementId": "es-murcia",
+      "name": "Pio Baroja",
+      "position": {
+        "latitude": 37.97627,
+        "longitude": -1.120813
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9133",
+      "stopPlaceId": "murcia-place-9133",
+      "settlementId": "es-murcia",
+      "name": "San Carlos nº 5",
+      "position": {
+        "latitude": 37.97868,
+        "longitude": -1.1209338
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9155",
+      "stopPlaceId": "murcia-place-9155",
+      "settlementId": "es-murcia",
+      "name": "Pio Baroja (Parraga)",
+      "position": {
+        "latitude": 37.980534,
+        "longitude": -1.121342
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9134",
+      "stopPlaceId": "murcia-place-9134",
+      "settlementId": "es-murcia",
+      "name": "Palacio de Justicia",
+      "position": {
+        "latitude": 37.981747,
+        "longitude": -1.1234059
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9135",
+      "stopPlaceId": "murcia-place-9135",
+      "settlementId": "es-murcia",
+      "name": "Plz. Cruz Roja",
+      "position": {
+        "latitude": 37.982067,
+        "longitude": -1.1260619
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9019",
+      "stopPlaceId": "murcia-place-9019",
+      "settlementId": "es-murcia",
+      "name": "Glorieta de España",
+      "position": {
+        "latitude": 37.983063,
+        "longitude": -1.1308073
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9255",
+      "stopPlaceId": "murcia-place-9255",
+      "settlementId": "es-murcia",
+      "name": "Plano de San Francisco",
+      "position": {
+        "latitude": 37.983295,
+        "longitude": -1.1353215
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9021",
+      "stopPlaceId": "murcia-place-9021",
+      "settlementId": "es-murcia",
+      "name": "C/ Juan de la Cierva Nº 5",
+      "position": {
+        "latitude": 37.98395,
+        "longitude": -1.1373771
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9022",
+      "stopPlaceId": "murcia-place-9022",
+      "settlementId": "es-murcia",
+      "name": "Pz. San Agustín",
+      "position": {
+        "latitude": 37.98634,
+        "longitude": -1.1380569
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9023",
+      "stopPlaceId": "murcia-place-9023",
+      "settlementId": "es-murcia",
+      "name": "Jardín de la Seda (Frente)",
+      "position": {
+        "latitude": 37.98906,
+        "longitude": -1.1389219
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9024",
+      "stopPlaceId": "murcia-place-9024",
+      "settlementId": "es-murcia",
+      "name": "San Antón 24",
+      "position": {
+        "latitude": 37.991077,
+        "longitude": -1.1407496
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9036",
+      "stopPlaceId": "murcia-place-9036",
+      "settlementId": "es-murcia",
+      "name": "San Antón 29",
+      "position": {
+        "latitude": 37.991432,
+        "longitude": -1.1409912
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9165",
+      "stopPlaceId": "murcia-place-9165",
+      "settlementId": "es-murcia",
+      "name": "Jardín de la Seda",
+      "position": {
+        "latitude": 37.989006,
+        "longitude": -1.1389802
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9037",
+      "stopPlaceId": "murcia-place-9037",
+      "settlementId": "es-murcia",
+      "name": "San Andrés (Farmacia)",
+      "position": {
+        "latitude": 37.985806,
+        "longitude": -1.1378995
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9038",
+      "stopPlaceId": "murcia-place-9038",
+      "settlementId": "es-murcia",
+      "name": "Juan de la Cierva nº 6",
+      "position": {
+        "latitude": 37.98395,
+        "longitude": -1.1373203
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9164",
+      "stopPlaceId": "murcia-place-9164",
+      "settlementId": "es-murcia",
+      "name": "Malecón",
+      "position": {
+        "latitude": 37.983257,
+        "longitude": -1.1346052
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9257",
+      "stopPlaceId": "murcia-place-9257",
+      "settlementId": "es-murcia",
+      "name": "Teniente Flomesta Nº 3",
+      "position": {
+        "latitude": 37.982635,
+        "longitude": -1.1283246
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9156",
+      "stopPlaceId": "murcia-place-9156",
+      "settlementId": "es-murcia",
+      "name": "Plz. Cruz Roja (Jardin)",
+      "position": {
+        "latitude": 37.982018,
+        "longitude": -1.126234
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9157",
+      "stopPlaceId": "murcia-place-9157",
+      "settlementId": "es-murcia",
+      "name": "Palacio de Justicia (Frente)",
+      "position": {
+        "latitude": 37.98164,
+        "longitude": -1.12342
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9158",
+      "stopPlaceId": "murcia-place-9158",
+      "settlementId": "es-murcia",
+      "name": "Pio Baroja (Frente Parraga)",
+      "position": {
+        "latitude": 37.980507,
+        "longitude": -1.1214792
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9159",
+      "stopPlaceId": "murcia-place-9159",
+      "settlementId": "es-murcia",
+      "name": "San Carlos (Frente nº 5)",
+      "position": {
+        "latitude": 37.97848,
+        "longitude": -1.1208819
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9143",
+      "stopPlaceId": "murcia-place-9143",
+      "settlementId": "es-murcia",
+      "name": "Pabellón Infante",
+      "position": {
+        "latitude": 37.976315,
+        "longitude": -1.1208233
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9179",
+      "stopPlaceId": "murcia-place-9179",
+      "settlementId": "es-murcia",
+      "name": "Centro Salud Infante Frente",
+      "position": {
+        "latitude": 37.97552,
+        "longitude": -1.1195685
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9180",
+      "stopPlaceId": "murcia-place-9180",
+      "settlementId": "es-murcia",
+      "name": "Esquina Centro Social Infante Frente",
+      "position": {
+        "latitude": 37.975555,
+        "longitude": -1.1171769
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9247",
+      "stopPlaceId": "murcia-place-9247",
+      "settlementId": "es-murcia",
+      "name": "Carril Huerto Alix nº 6",
+      "position": {
+        "latitude": 37.970196,
+        "longitude": -1.1202394
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9248",
+      "stopPlaceId": "murcia-place-9248",
+      "settlementId": "es-murcia",
+      "name": "Carril Huerto Alix nº 78",
+      "position": {
+        "latitude": 37.970413,
+        "longitude": -1.1147013
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9249",
+      "stopPlaceId": "murcia-place-9249",
+      "settlementId": "es-murcia",
+      "name": "Carril Huerto Alix nº 112",
+      "position": {
+        "latitude": 37.97053,
+        "longitude": -1.1095642
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9227",
+      "stopPlaceId": "murcia-place-9227",
+      "settlementId": "es-murcia",
+      "name": "Farmacia",
+      "position": {
+        "latitude": 37.967323,
+        "longitude": -1.106334
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9235",
+      "stopPlaceId": "murcia-place-9235",
+      "settlementId": "es-murcia",
+      "name": "Duplex Frente",
+      "position": {
+        "latitude": 37.965755,
+        "longitude": -1.1045189
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9228",
+      "stopPlaceId": "murcia-place-9228",
+      "settlementId": "es-murcia",
+      "name": "Carril de los Garres 1 (Direccion los Garres)",
+      "position": {
+        "latitude": 37.96313,
+        "longitude": -1.1018202
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9236",
+      "stopPlaceId": "murcia-place-9236",
+      "settlementId": "es-murcia",
+      "name": "Carpinteria Metalica",
+      "position": {
+        "latitude": 37.962067,
+        "longitude": -1.0983305
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9237",
+      "stopPlaceId": "murcia-place-9237",
+      "settlementId": "es-murcia",
+      "name": "Esquina Carril de Los Valeras Frente",
+      "position": {
+        "latitude": 37.95955,
+        "longitude": -1.0941727
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9229",
+      "stopPlaceId": "murcia-place-9229",
+      "settlementId": "es-murcia",
+      "name": "Camino de los Garres 1 (V)",
+      "position": {
+        "latitude": 37.958004,
+        "longitude": -1.0933932
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9127",
+      "stopPlaceId": "murcia-place-9127",
+      "settlementId": "es-murcia",
+      "name": "Paseo Florencia I",
+      "position": {
+        "latitude": 37.968758,
+        "longitude": -1.1328207
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9128",
+      "stopPlaceId": "murcia-place-9128",
+      "settlementId": "es-murcia",
+      "name": "Paseo Florencia II",
+      "position": {
+        "latitude": 37.969257,
+        "longitude": -1.1303834
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9129",
+      "stopPlaceId": "murcia-place-9129",
+      "settlementId": "es-murcia",
+      "name": "Mesa del Castillo",
+      "position": {
+        "latitude": 37.9699,
+        "longitude": -1.1275439
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9131",
+      "stopPlaceId": "murcia-place-9131",
+      "settlementId": "es-murcia",
+      "name": "Santiago el Mayor 13",
+      "position": {
+        "latitude": 37.971523,
+        "longitude": -1.1221635
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9132",
+      "stopPlaceId": "murcia-place-9132",
+      "settlementId": "es-murcia",
+      "name": "La Vía (impar)",
+      "position": {
+        "latitude": 37.974155,
+        "longitude": -1.123178
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9012",
+      "stopPlaceId": "murcia-place-9012",
+      "settlementId": "es-murcia",
+      "name": "Pintor Almela Costa (Par)",
+      "position": {
+        "latitude": 37.975468,
+        "longitude": -1.122416
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9136",
+      "stopPlaceId": "murcia-place-9136",
+      "settlementId": "es-murcia",
+      "name": "Arco de San Juan",
+      "position": {
+        "latitude": 37.983532,
+        "longitude": -1.1268559
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9137",
+      "stopPlaceId": "murcia-place-9137",
+      "settlementId": "es-murcia",
+      "name": "Plz. Cetina",
+      "position": {
+        "latitude": 37.984764,
+        "longitude": -1.1273255
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9138",
+      "stopPlaceId": "murcia-place-9138",
+      "settlementId": "es-murcia",
+      "name": "La Merced",
+      "position": {
+        "latitude": 37.987534,
+        "longitude": -1.127517
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9139",
+      "stopPlaceId": "murcia-place-9139",
+      "settlementId": "es-murcia",
+      "name": "Puerta Nueva",
+      "position": {
+        "latitude": 37.989223,
+        "longitude": -1.1272576
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9056",
+      "stopPlaceId": "murcia-place-9056",
+      "settlementId": "es-murcia",
+      "name": "Ronda de levante 5",
+      "position": {
+        "latitude": 37.99226,
+        "longitude": -1.128934
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9030",
+      "stopPlaceId": "murcia-place-9030",
+      "settlementId": "es-murcia",
+      "name": "Pza. Circular 14",
+      "position": {
+        "latitude": 37.992516,
+        "longitude": -1.1297474
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9029",
+      "stopPlaceId": "murcia-place-9029",
+      "settlementId": "es-murcia",
+      "name": "Cajamurcia",
+      "position": {
+        "latitude": 37.99172,
+        "longitude": -1.1310431
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9070",
+      "stopPlaceId": "murcia-place-9070",
+      "settlementId": "es-murcia",
+      "name": "Avda. Constitución 5",
+      "position": {
+        "latitude": 37.990604,
+        "longitude": -1.1313218
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9071",
+      "stopPlaceId": "murcia-place-9071",
+      "settlementId": "es-murcia",
+      "name": "Cortefiel",
+      "position": {
+        "latitude": 37.988255,
+        "longitude": -1.132019
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9072",
+      "stopPlaceId": "murcia-place-9072",
+      "settlementId": "es-murcia",
+      "name": "Santa Isabel",
+      "position": {
+        "latitude": 37.98596,
+        "longitude": -1.1322025
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9160",
+      "stopPlaceId": "murcia-place-9160",
+      "settlementId": "es-murcia",
+      "name": "Pintor Almela Costa (Impar)",
+      "position": {
+        "latitude": 37.97553,
+        "longitude": -1.1229836
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9144",
+      "stopPlaceId": "murcia-place-9144",
+      "settlementId": "es-murcia",
+      "name": "La Vía (par)",
+      "position": {
+        "latitude": 37.974144,
+        "longitude": -1.1231441
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9161",
+      "stopPlaceId": "murcia-place-9161",
+      "settlementId": "es-murcia",
+      "name": "Santiago el Mayor 50",
+      "position": {
+        "latitude": 37.971397,
+        "longitude": -1.1221895
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9145",
+      "stopPlaceId": "murcia-place-9145",
+      "settlementId": "es-murcia",
+      "name": "C/ Morera (Impar)",
+      "position": {
+        "latitude": 37.970757,
+        "longitude": -1.1248127
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9146",
+      "stopPlaceId": "murcia-place-9146",
+      "settlementId": "es-murcia",
+      "name": "Cruce Ctra. Patiño",
+      "position": {
+        "latitude": 37.97139,
+        "longitude": -1.128394
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9147",
+      "stopPlaceId": "murcia-place-9147",
+      "settlementId": "es-murcia",
+      "name": "Polideportivo Santiago el Mayor",
+      "position": {
+        "latitude": 37.97189,
+        "longitude": -1.1313753
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9148",
+      "stopPlaceId": "murcia-place-9148",
+      "settlementId": "es-murcia",
+      "name": "Carril de la Condesa (Rotonda)",
+      "position": {
+        "latitude": 37.9726,
+        "longitude": -1.134727
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9149",
+      "stopPlaceId": "murcia-place-9149",
+      "settlementId": "es-murcia",
+      "name": "Carril de la Condesa II",
+      "position": {
+        "latitude": 37.970432,
+        "longitude": -1.1344745
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "murcia-stop-9162",
+      "stopPlaceId": "murcia-place-9162",
+      "settlementId": "es-murcia",
+      "name": "Paseo Florencia I (V)",
+      "position": {
+        "latitude": 37.96848,
+        "longitude": -1.133397
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

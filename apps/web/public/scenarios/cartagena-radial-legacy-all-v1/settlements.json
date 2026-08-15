@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-legacy-all-v1",
+  "settlements": [
+    {
+      "settlementId": "es-cartagena",
+      "name": "Cartagena",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.635255199666354,
+        "longitude": -0.959981136570529
+      },
+      "bounds": {
+        "south": 37.53625086152974,
+        "west": -1.2674225331900502,
+        "north": 37.73425953780297,
+        "east": -0.6525397399510078
+      }
+    },
+    {
+      "settlementId": "es-la-union",
+      "name": "La Unión",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.61822855752545,
+        "longitude": -0.8818961566850265
+      },
+      "bounds": {
+        "south": 37.61333141953803,
+        "west": -0.8921809439970172,
+        "north": 37.62312569551287,
+        "east": -0.8716113693730358
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "name": "San Javier",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.73471242458985,
+        "longitude": -0.7742157290893881
+      },
+      "bounds": {
+        "south": 37.65757031000563,
+        "west": -0.827333105673224,
+        "north": 37.81185453917407,
+        "east": -0.721098352505552
+      }
+    },
+    {
+      "settlementId": "es-los-alcazares",
+      "name": "Los Alcázares",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.73838344740825,
+        "longitude": -0.850130281342301
+      },
+      "bounds": {
+        "south": 37.71465041340271,
+        "west": -0.8633582144759233,
+        "north": 37.76211648141379,
+        "east": -0.8369023482086786
+      }
+    },
+    {
+      "settlementId": "es-mazarron",
+      "name": "Mazarrón",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.57914025161105,
+        "longitude": -1.270527421793205
+      },
+      "bounds": {
+        "south": 37.557381489707794,
+        "west": -1.320802313272875,
+        "north": 37.60089901351431,
+        "east": -1.220252530313535
+      }
+    },
+    {
+      "settlementId": "es-fuente-alamo-de-murcia",
+      "name": "Fuente Álamo de Murcia",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.6991571459111,
+        "longitude": -1.21902411256975
+      },
+      "bounds": {
+        "south": 37.65601058218818,
+        "west": -1.290477643270918,
+        "north": 37.74230370963402,
+        "east": -1.147570581868582
+      }
+    },
+    {
+      "settlementId": "es-alhama-de-murcia",
+      "name": "Alhama de Murcia",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.8509032475845,
+        "longitude": -1.42492734162122
+      },
+      "bounds": {
+        "south": 37.845903247584495,
+        "west": -1.42992734162122,
+        "north": 37.8559032475845,
+        "east": -1.4199273416212201
+      }
+    },
+    {
+      "settlementId": "es-totana",
+      "name": "Totana",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.7660136705684,
+        "longitude": -1.49640151922718
+      },
+      "bounds": {
+        "south": 37.761013670568396,
+        "west": -1.50140151922718,
+        "north": 37.7710136705684,
+        "east": -1.4914015192271801
+      }
+    },
+    {
+      "settlementId": "es-lorca",
+      "name": "Lorca",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.6707444675521,
+        "longitude": -1.69721215016109
+      },
+      "bounds": {
+        "south": 37.665744467552095,
+        "west": -1.7022121501610898,
+        "north": 37.6757444675521,
+        "east": -1.69221215016109
+      }
+    }
+  ]
+}

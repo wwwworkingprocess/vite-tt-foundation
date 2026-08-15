@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-all-v1",
+  "generatedAt": "2026-08-13T17:56:00+02:00",
+  "sources": [
+    {
+      "sourceId": "cartagena-inner-accepted-components",
+      "name": "Six accepted Cartagena inner component scenarios",
+      "sourceFile": "scenarios-cartagena-legacy-periphery-v1.zip",
+      "sha256": "cb81304889392964227f77a20f3cdbcc2434ca570bfc0be77c6c7029cd7fdae3",
+      "role": "Authoritative merge sources. Routes, patterns, StopNodes and StopPlaces are copied from these accepted scenarios without rediscovery."
+    }
+  ],
+  "mergeContract": {
+    "type": "pure-accepted-component-merge",
+    "components": [
+      {
+        "scenarioId": "cartagena-legacy-icue-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "2149e40a9766f8162d9b23c4e85db831e0eccf41bd0d49227f49d93e5ca82be8",
+        "routes": [
+          "8",
+          "9"
+        ]
+      },
+      {
+        "scenarioId": "cartagena-legacy-core-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "b3be58feddc672b639b15486d139ed741de9cb6dda20c6da178aa2598eaa9434",
+        "routes": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "scenarioId": "cartagena-legacy-west-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "413eb7f950f09502258b8320b2c5a04f05ac315350d0dc6f1adb51134713460a",
+        "routes": [
+          "3",
+          "4"
+        ]
+      },
+      {
+        "scenarioId": "cartagena-legacy-southwest-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "3831ece100a6d581c6dc0d04ef7b8ffed81d37d04d0d73ff3319129c0cf416d8",
+        "routes": [
+          "5",
+          "6"
+        ]
+      },
+      {
+        "scenarioId": "cartagena-legacy-north-east-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "615ba29dbd4507a3f5ba12acba12ad86c9bdd5a5d1230735a0144653e2df88be",
+        "routes": [
+          "7",
+          "18"
+        ]
+      },
+      {
+        "scenarioId": "cartagena-legacy-periphery-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "050bcde4e5e052cc4eaaa553d974cb8dd243ca391671822d7fb4d6bf45e79dd8",
+        "routes": [
+          "14",
+          "24",
+          "25"
+        ]
+      }
+    ],
+    "canonicalRouteOrder": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "14",
+      "18",
+      "24",
+      "25"
+    ],
+    "routeRediscovery": false,
+    "newStopIdentitiesCreated": 0,
+    "sharedObjectConflictPolicy": "hard-fail",
+    "stopNodeOccurrences": 517,
+    "uniqueStopNodes": 411,
+    "collapsedStopNodeDuplicates": 106,
+    "stopPlaceOccurrences": 517,
+    "uniqueStopPlaces": 411,
+    "collapsedStopPlaceDuplicates": 106,
+    "sharedStopNodeExactComparisons": 106,
+    "sharedStopPlaceExactComparisons": 106,
+    "conflicts": 0
+  },
+  "settlementPolicy": {
+    "canonicalFields": "Copied exactly from accepted component settlements.",
+    "packageLocalViewports": "Recomputed from all merged routed StopPlace positions assigned to each settlement, with 10 percent extent padding; singleton extents receive a 0.005-degree minimum pad.",
+    "settlementIds": [
+      "es-cartagena",
+      "es-fuente-alamo-de-murcia",
+      "es-murcia",
+      "es-torre-pacheco"
+    ]
+  },
+  "warnings": [
+    "The project label 'legacy' is a scenario-family label; this merge preserves the accepted component snapshots rather than claiming historical exactness.",
+    "The component scenarios remain catalogued and unchanged.",
+    "No authoritative application parser or repository test suite was available in the supplied workspace; Level 7 is not claimed."
+  ]
+}

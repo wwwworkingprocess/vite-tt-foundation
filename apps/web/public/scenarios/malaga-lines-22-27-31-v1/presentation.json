@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-22-27-31-v1",
+  "title": "Málaga EMT - Lines 22, 27 and 31",
+  "initialView": {
+    "center": {
+      "latitude": 36.70245533821365,
+      "longitude": -4.454904921982545
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-22": {
+      "label": "22",
+      "color": "#AEA812"
+    },
+    "malaga-27": {
+      "label": "27",
+      "color": "#DEBB07"
+    },
+    "malaga-31": {
+      "label": "31",
+      "color": "#800000"
+    }
+  },
+  "notes": [
+    "Second accepted Málaga component; extends the frozen Málaga identity registry for routes 22, 27 and 31 while exact-copying accepted shared identities.",
+    "All six source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "No reverse edge, reverse pattern or loop closure is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

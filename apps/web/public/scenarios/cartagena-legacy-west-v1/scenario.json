@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-west-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Cartagena Legacy West Network - Lines 3 and 4",
+  "primarySettlementId": "es-cartagena",
+  "settlementIds": [
+    "es-cartagena"
+  ],
+  "contentHash": "413eb7f950f09502258b8320b2c5a04f05ac315350d0dc6f1adb51134713460a",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "09850b8dd079075db18a488c020f05c431cae99f58131013894e22f9010e7679"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "d30244b62e0b96ba6013033d2f5ff73d3abb5f538e0535b1ecbc669106ff1699"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "5d5984e98c681ecb0bacb046aa58252fd30f426a814ca3e8785e92984521a248"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "82666e2020bc8fb8739b9868e5dddcac522178f14e4db13cd8d8c3f57aa6a6b3"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "f43b87da6431900c7b501d72f93644cdd6aec485b53e6480f758bc88cf28184f"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

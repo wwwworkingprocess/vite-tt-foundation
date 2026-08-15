@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-40-c8-v1",
+  "routes": [
+    {
+      "routeId": "malaga-40",
+      "publicCode": "40",
+      "name": "Paseo de la Farola - Sacaba Beach",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-40-s01",
+          "directionLabel": "Sacaba Beach",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 13
+          },
+          "stopNodeIds": [
+            "malaga-stop-1301",
+            "malaga-stop-1802",
+            "malaga-stop-3901",
+            "malaga-stop-9904",
+            "malaga-stop-2701",
+            "malaga-stop-2416",
+            "malaga-stop-3902",
+            "malaga-stop-3903",
+            "malaga-stop-3904",
+            "malaga-stop-3905",
+            "malaga-stop-3906",
+            "malaga-stop-3907",
+            "malaga-stop-3951"
+          ]
+        },
+        {
+          "patternId": "malaga-line-40-s02",
+          "directionLabel": "Pso. Farola",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "malaga-stop-3951",
+            "malaga-stop-3952",
+            "malaga-stop-3953",
+            "malaga-stop-3954",
+            "malaga-stop-3955",
+            "malaga-stop-3956",
+            "malaga-stop-3957",
+            "malaga-stop-462",
+            "malaga-stop-9905",
+            "malaga-stop-9903",
+            "malaga-stop-1359",
+            "malaga-stop-1301"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "40",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "40",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "40",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=40"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-c8",
+      "publicCode": "C8",
+      "name": "CIRCULAR 8 -Churriana",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-c8-s01",
+          "directionLabel": "Cortijo Maza",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "malaga-stop-1066",
+            "malaga-stop-1067",
+            "malaga-stop-1068",
+            "malaga-stop-1069",
+            "malaga-stop-7808",
+            "malaga-stop-7809",
+            "malaga-stop-7810",
+            "malaga-stop-7811",
+            "malaga-stop-7812",
+            "malaga-stop-7813",
+            "malaga-stop-7814",
+            "malaga-stop-7815",
+            "malaga-stop-7816",
+            "malaga-stop-7801"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c8-s02",
+          "directionLabel": "Churriana",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "malaga-stop-7801",
+            "malaga-stop-7802",
+            "malaga-stop-7803",
+            "malaga-stop-7804",
+            "malaga-stop-7805",
+            "malaga-stop-7806",
+            "malaga-stop-7807",
+            "malaga-stop-1044",
+            "malaga-stop-1040",
+            "malaga-stop-1041",
+            "malaga-stop-1028",
+            "malaga-stop-1066"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "78",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "78",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "78",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=78"
+        }
+      ]
+    }
+  ]
+}

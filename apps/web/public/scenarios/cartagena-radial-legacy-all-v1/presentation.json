@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-legacy-all-v1",
+  "title": "Cartagena Radial Legacy All Network",
+  "initialView": {
+    "center": {
+      "latitude": 37.635255199666354,
+      "longitude": -0.959981136570529
+    },
+    "zoom": 8
+  },
+  "routeStyles": {
+    "cartagena-12": {
+      "label": "12",
+      "color": "#039be5"
+    },
+    "cartagena-21": {
+      "label": "21",
+      "color": "#00897b"
+    },
+    "cartagena-23": {
+      "label": "23",
+      "color": "#00897b"
+    },
+    "cartagena-30": {
+      "label": "30",
+      "color": "#3949ab"
+    },
+    "cartagena-41": {
+      "label": "41",
+      "color": "#6d4c41"
+    },
+    "cartagena-42a": {
+      "label": "42A",
+      "color": "#00897b"
+    },
+    "cartagena-43": {
+      "label": "43",
+      "color": "#5e35b1"
+    },
+    "cartagena-44": {
+      "label": "44",
+      "color": "#ef6c00"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Pure exact-copy merge of the three accepted Cartagena radial-family component scenarios.",
+    "Route and pattern objects are copied exactly in canonical public-code order.",
+    "Shared StopNode and StopPlace identities are collapsed only by exact stable ID and deep exact-object equality.",
+    "No route discovery, coordinate discovery, topology reconciliation or identity creation occurs during this merge."
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-night-legacy-all-v1",
+  "generatedAt": "2026-08-14T16:33:00+02:00",
+  "sources": [
+    {
+      "sourceId": "malaga-night-accepted-components",
+      "name": "Accepted Málaga construction components containing the four night routes",
+      "sourceFile": "scenarios-malaga-circular-legacy-all-v1.zip",
+      "sha256": "f279079779e1094d1a440732d2fd1c60c7418b9b28d0799b6848a5af0969516d",
+      "role": "Authoritative merge sources. Selected route/pattern objects and referenced StopNodes/StopPlaces are exact-copied without source rediscovery."
+    },
+    {
+      "sourceId": "malaga-frozen-family-plan",
+      "name": "Frozen Málaga citywide family architecture",
+      "sourceFile": "malaga-source-prefetch.zip",
+      "sha256": "76c25335ba8f98234a88bc4c2e7d0709bd97acbfca113bd2ab61fb95a938d9d5",
+      "role": "Provides only the owner-approved Night family membership and canonical route order; it is not used to reconstruct topology or accepted identities."
+    }
+  ],
+  "mergeContract": {
+    "type": "pure-accepted-component-merge",
+    "components": [
+      {
+        "scenarioId": "malaga-lines-3-11-n1-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "436ba9a634a11161ffdbc444d08a73acfee28edd64727ad90ae965201650bd41",
+        "selectedRoutes": [
+          "N1"
+        ],
+        "selectedUniqueStopNodes": 72
+      },
+      {
+        "scenarioId": "malaga-lines-14-n4-c5-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "2b97d423c0f31703e5cd3319801358926783c0b5e2d0fa9f3c6fdaa3bea6c7ac",
+        "selectedRoutes": [
+          "N4"
+        ],
+        "selectedUniqueStopNodes": 76
+      },
+      {
+        "scenarioId": "malaga-lines-7-15-n2-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "aeff32f03e5f21673d516eb506585c1b939f74782221db8d2771f37ad31a2e99",
+        "selectedRoutes": [
+          "N2"
+        ],
+        "selectedUniqueStopNodes": 50
+      },
+      {
+        "scenarioId": "malaga-lines-4-19-n3-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "7e290c90e16a63db5ce957a31c4fc5b2b8635b40cb99966b73ce394b429d8ee5",
+        "selectedRoutes": [
+          "N3"
+        ],
+        "selectedUniqueStopNodes": 78
+      }
+    ],
+    "canonicalRouteOrder": [
+      "N1",
+      "N2",
+      "N3",
+      "N4"
+    ],
+    "routeRediscovery": false,
+    "topologyReconciliation": false,
+    "coordinateRediscovery": false,
+    "newStopIdentitiesCreated": 0,
+    "sharedObjectConflictPolicy": "hard-fail",
+    "stopNodeOccurrences": 276,
+    "uniqueStopNodes": 272,
+    "collapsedStopNodeDuplicates": 4,
+    "stopPlaceOccurrences": 276,
+    "uniqueStopPlaces": 272,
+    "collapsedStopPlaceDuplicates": 4,
+    "sharedStopNodeExactComparisons": 4,
+    "sharedStopPlaceExactComparisons": 4,
+    "conflicts": 0
+  },
+  "settlementPolicy": {
+    "canonicalFields": "Copied exactly from accepted component settlement es-malaga.",
+    "packageLocalViewports": "Recomputed from all 272 merged routed StopPlace positions with 10 percent extent padding and a 0.003-degree minimum pad per axis.",
+    "settlementIds": [
+      "es-malaga"
+    ]
+  },
+  "warnings": [
+    "The Night family is the frozen project packaging classification of N1, N2, N3 and N4; it does not alter operator topology.",
+    "All 17 source construction components and the already accepted Day/Circular finals remain catalogued and byte-for-byte unchanged.",
+    "Mixed-family components contribute only their selected night routes to this merge.",
+    "Zero-trip records CC, L and 20E remain preserved only in frozen citywide source evidence and are not active passenger topology.",
+    "No authoritative application parser or repository test suite was available; Level 7 is not claimed."
+  ]
+}

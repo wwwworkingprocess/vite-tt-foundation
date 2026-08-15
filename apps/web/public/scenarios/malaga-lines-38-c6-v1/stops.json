@@ -1,0 +1,1273 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-38-c6-v1",
+  "stopPlaces": [
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-163",
+      "name": "Parque - Ayuntamiento",
+      "position": {
+        "latitude": 36.7200926989695,
+        "longitude": -4.41429535163391
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2168",
+      "name": "Alameda Principal - Norte",
+      "position": {
+        "latitude": 36.7173012644852,
+        "longitude": -4.4241036369194
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2118",
+      "name": "Hilera - Armengual de la Mota",
+      "position": {
+        "latitude": 36.7179563542971,
+        "longitude": -4.42807837648224
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-621",
+      "name": "Armengual de la Mota",
+      "position": {
+        "latitude": 36.7191048982015,
+        "longitude": -4.42921069935913
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-602",
+      "name": "Mármoles",
+      "position": {
+        "latitude": 36.7215817606559,
+        "longitude": -4.43013509217178
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-821",
+      "name": "Martínez Maldonado - Pelayo",
+      "position": {
+        "latitude": 36.7215349094485,
+        "longitude": -4.43299729093901
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-802",
+      "name": "Martínez Maldonado - Eugenio Gross",
+      "position": {
+        "latitude": 36.7215918060027,
+        "longitude": -4.43631648721241
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-803",
+      "name": "Martínez Maldonado - Las Chapas",
+      "position": {
+        "latitude": 36.7215916785969,
+        "longitude": -4.43899460254834
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-804",
+      "name": "Arroyo del Cuarto",
+      "position": {
+        "latitude": 36.7215625374957,
+        "longitude": -4.441303626948
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-805",
+      "name": "Carlos Haya - Parque del Norte",
+      "position": {
+        "latitude": 36.7216521087615,
+        "longitude": -4.44405271440421
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-806",
+      "name": "Carlos Haya - Remedios",
+      "position": {
+        "latitude": 36.7221281818385,
+        "longitude": -4.44651566321902
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-861",
+      "name": "Carril del Ciprés - Carlos Haya",
+      "position": {
+        "latitude": 36.7227935021161,
+        "longitude": -4.4482185004774
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-862",
+      "name": "Carril del Ciprés - Los Cipreses",
+      "position": {
+        "latitude": 36.7241935231709,
+        "longitude": -4.44819189991599
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-863",
+      "name": "Carril del Ciprés - San Martín",
+      "position": {
+        "latitude": 36.7260388473922,
+        "longitude": -4.44888716307401
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-864",
+      "name": "Padre Martín",
+      "position": {
+        "latitude": 36.7277611002863,
+        "longitude": -4.44954230759872
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-886",
+      "name": "Granja Suárez - Padre Martín",
+      "position": {
+        "latitude": 36.7291470173915,
+        "longitude": -4.45060130055712
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-711",
+      "name": "San Alberto - Carlinda",
+      "position": {
+        "latitude": 36.7310563183108,
+        "longitude": -4.4496213460426
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-713",
+      "name": "Diego de Baena",
+      "position": {
+        "latitude": 36.7326059851176,
+        "longitude": -4.45218468816958
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-714",
+      "name": "Platero - San Alberto",
+      "position": {
+        "latitude": 36.7338079882327,
+        "longitude": -4.45286374245472
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-715",
+      "name": "Tambre",
+      "position": {
+        "latitude": 36.7328952590372,
+        "longitude": -4.45148164279366
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-751",
+      "name": "San Alberto - Vertical Baja",
+      "position": {
+        "latitude": 36.7318535039195,
+        "longitude": -4.45064984169438
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-887",
+      "name": "Granja Suárez - Padre Martín",
+      "position": {
+        "latitude": 36.729576860869,
+        "longitude": -4.45053537740637
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-882",
+      "name": "Padre Martín",
+      "position": {
+        "latitude": 36.7277390447815,
+        "longitude": -4.44965093713896
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-883",
+      "name": "Núñez Vela - San Martín",
+      "position": {
+        "latitude": 36.7263141876391,
+        "longitude": -4.4498664720745
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-884",
+      "name": "Núñez Vela - Oscar Wilde",
+      "position": {
+        "latitude": 36.725622190793,
+        "longitude": -4.45137423341803
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-885",
+      "name": "Nuñez Vela - Carlos Haya",
+      "position": {
+        "latitude": 36.7232680058437,
+        "longitude": -4.4514594837999
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-843",
+      "name": "Hospital Regional",
+      "position": {
+        "latitude": 36.7224672763233,
+        "longitude": -4.44936092209547
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-844",
+      "name": "Carlos Haya - Remedios",
+      "position": {
+        "latitude": 36.7220625187652,
+        "longitude": -4.44708698324387
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-845",
+      "name": "Carlos Haya - Parque del Norte",
+      "position": {
+        "latitude": 36.7214821167444,
+        "longitude": -4.44395213005581
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-846",
+      "name": "Arroyo del Cuarto",
+      "position": {
+        "latitude": 36.7213933391765,
+        "longitude": -4.44086334957606
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-847",
+      "name": "Martínez Maldonado - Las Chapas",
+      "position": {
+        "latitude": 36.7213986592147,
+        "longitude": -4.43853024601938
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-848",
+      "name": "Martínez Maldonado - Eugenio Gross",
+      "position": {
+        "latitude": 36.721406194465,
+        "longitude": -4.43670434836798
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-559",
+      "name": "Alonso de Palencia",
+      "position": {
+        "latitude": 36.7206137124556,
+        "longitude": -4.43278000177751
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-560",
+      "name": "Hilera - Esperanto",
+      "position": {
+        "latitude": 36.718385741462,
+        "longitude": -4.43089763903431
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-662",
+      "name": "Av. Andalucía - Guadalmedina",
+      "position": {
+        "latitude": 36.716594107658,
+        "longitude": -4.4278941295928
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-2119",
+      "name": "Alameda Principal - Sur",
+      "position": {
+        "latitude": 36.7171559614835,
+        "longitude": -4.42404080819971
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-367",
+      "name": "Parque - Rectorado",
+      "position": {
+        "latitude": 36.7193659431963,
+        "longitude": -4.41605299742225
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-628",
+      "name": "Camino Suárez - Rotonda",
+      "position": {
+        "latitude": 36.7289653938017,
+        "longitude": -4.44282880049871
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-629",
+      "name": "Alcalde José Luis Estrada",
+      "position": {
+        "latitude": 36.7302059885869,
+        "longitude": -4.44535315331827
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-609",
+      "name": "Miguel Hernández",
+      "position": {
+        "latitude": 36.7312529959131,
+        "longitude": -4.4458612168015
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-630",
+      "name": "José Carrión de Mula",
+      "position": {
+        "latitude": 36.7326509396219,
+        "longitude": -4.44542092032624
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-631",
+      "name": "Juan Rejano",
+      "position": {
+        "latitude": 36.7329039547558,
+        "longitude": -4.44598683974463
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-611",
+      "name": "La Corta - VPO",
+      "position": {
+        "latitude": 36.7344406264705,
+        "longitude": -4.44686855302462
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-612",
+      "name": "La Corta - La Milagrosa",
+      "position": {
+        "latitude": 36.7356171107343,
+        "longitude": -4.44892323499759
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-624",
+      "name": "La Corta - Capitán Eliseo",
+      "position": {
+        "latitude": 36.7359319198897,
+        "longitude": -4.45029246645809
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-613",
+      "name": "La Corta - Plaza",
+      "position": {
+        "latitude": 36.7363270286467,
+        "longitude": -4.45100390524976
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-625",
+      "name": "San Alberto - Tormes",
+      "position": {
+        "latitude": 36.7360511080973,
+        "longitude": -4.45280141116325
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-626",
+      "name": "San Alberto - Fandango",
+      "position": {
+        "latitude": 36.7349789741756,
+        "longitude": -4.4520732603041
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-627",
+      "name": "San Alberto - Riotinto",
+      "position": {
+        "latitude": 36.7337062773866,
+        "longitude": -4.4512361753496
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-754",
+      "name": "San Alberto - Carlinda",
+      "position": {
+        "latitude": 36.7311212080895,
+        "longitude": -4.44991746092109
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-755",
+      "name": "Galeno - Carlinda",
+      "position": {
+        "latitude": 36.7300750062069,
+        "longitude": -4.4481735255552
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-663",
+      "name": "Galeno - Valle-Inclán",
+      "position": {
+        "latitude": 36.7293974488636,
+        "longitude": -4.44564333943322
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-657",
+      "name": "Martínez la Rosa - Albacete",
+      "position": {
+        "latitude": 36.7280850611826,
+        "longitude": -4.44377904794543
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-756",
+      "name": "Barón de Les",
+      "position": {
+        "latitude": 36.7277164208536,
+        "longitude": -4.44089893493566
+      }
+    },
+    {
+      "settlementId": "es-malaga",
+      "stopPlaceId": "malaga-place-709",
+      "name": "Camino Suárez - Cabas Galván",
+      "position": {
+        "latitude": 36.728334940993,
+        "longitude": -4.44113673490661
+      }
+    }
+  ],
+  "stopNodes": [
+    {
+      "stopNodeId": "malaga-stop-163",
+      "stopPlaceId": "malaga-place-163",
+      "settlementId": "es-malaga",
+      "name": "Parque - Ayuntamiento",
+      "position": {
+        "latitude": 36.7200926989695,
+        "longitude": -4.41429535163391
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2168",
+      "stopPlaceId": "malaga-place-2168",
+      "settlementId": "es-malaga",
+      "name": "Alameda Principal - Norte",
+      "position": {
+        "latitude": 36.7173012644852,
+        "longitude": -4.4241036369194
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2118",
+      "stopPlaceId": "malaga-place-2118",
+      "settlementId": "es-malaga",
+      "name": "Hilera - Armengual de la Mota",
+      "position": {
+        "latitude": 36.7179563542971,
+        "longitude": -4.42807837648224
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-621",
+      "stopPlaceId": "malaga-place-621",
+      "settlementId": "es-malaga",
+      "name": "Armengual de la Mota",
+      "position": {
+        "latitude": 36.7191048982015,
+        "longitude": -4.42921069935913
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-602",
+      "stopPlaceId": "malaga-place-602",
+      "settlementId": "es-malaga",
+      "name": "Mármoles",
+      "position": {
+        "latitude": 36.7215817606559,
+        "longitude": -4.43013509217178
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-821",
+      "stopPlaceId": "malaga-place-821",
+      "settlementId": "es-malaga",
+      "name": "Martínez Maldonado - Pelayo",
+      "position": {
+        "latitude": 36.7215349094485,
+        "longitude": -4.43299729093901
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-802",
+      "stopPlaceId": "malaga-place-802",
+      "settlementId": "es-malaga",
+      "name": "Martínez Maldonado - Eugenio Gross",
+      "position": {
+        "latitude": 36.7215918060027,
+        "longitude": -4.43631648721241
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-803",
+      "stopPlaceId": "malaga-place-803",
+      "settlementId": "es-malaga",
+      "name": "Martínez Maldonado - Las Chapas",
+      "position": {
+        "latitude": 36.7215916785969,
+        "longitude": -4.43899460254834
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-804",
+      "stopPlaceId": "malaga-place-804",
+      "settlementId": "es-malaga",
+      "name": "Arroyo del Cuarto",
+      "position": {
+        "latitude": 36.7215625374957,
+        "longitude": -4.441303626948
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-805",
+      "stopPlaceId": "malaga-place-805",
+      "settlementId": "es-malaga",
+      "name": "Carlos Haya - Parque del Norte",
+      "position": {
+        "latitude": 36.7216521087615,
+        "longitude": -4.44405271440421
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-806",
+      "stopPlaceId": "malaga-place-806",
+      "settlementId": "es-malaga",
+      "name": "Carlos Haya - Remedios",
+      "position": {
+        "latitude": 36.7221281818385,
+        "longitude": -4.44651566321902
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-861",
+      "stopPlaceId": "malaga-place-861",
+      "settlementId": "es-malaga",
+      "name": "Carril del Ciprés - Carlos Haya",
+      "position": {
+        "latitude": 36.7227935021161,
+        "longitude": -4.4482185004774
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-862",
+      "stopPlaceId": "malaga-place-862",
+      "settlementId": "es-malaga",
+      "name": "Carril del Ciprés - Los Cipreses",
+      "position": {
+        "latitude": 36.7241935231709,
+        "longitude": -4.44819189991599
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-863",
+      "stopPlaceId": "malaga-place-863",
+      "settlementId": "es-malaga",
+      "name": "Carril del Ciprés - San Martín",
+      "position": {
+        "latitude": 36.7260388473922,
+        "longitude": -4.44888716307401
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-864",
+      "stopPlaceId": "malaga-place-864",
+      "settlementId": "es-malaga",
+      "name": "Padre Martín",
+      "position": {
+        "latitude": 36.7277611002863,
+        "longitude": -4.44954230759872
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-886",
+      "stopPlaceId": "malaga-place-886",
+      "settlementId": "es-malaga",
+      "name": "Granja Suárez - Padre Martín",
+      "position": {
+        "latitude": 36.7291470173915,
+        "longitude": -4.45060130055712
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-711",
+      "stopPlaceId": "malaga-place-711",
+      "settlementId": "es-malaga",
+      "name": "San Alberto - Carlinda",
+      "position": {
+        "latitude": 36.7310563183108,
+        "longitude": -4.4496213460426
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-713",
+      "stopPlaceId": "malaga-place-713",
+      "settlementId": "es-malaga",
+      "name": "Diego de Baena",
+      "position": {
+        "latitude": 36.7326059851176,
+        "longitude": -4.45218468816958
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-714",
+      "stopPlaceId": "malaga-place-714",
+      "settlementId": "es-malaga",
+      "name": "Platero - San Alberto",
+      "position": {
+        "latitude": 36.7338079882327,
+        "longitude": -4.45286374245472
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-715",
+      "stopPlaceId": "malaga-place-715",
+      "settlementId": "es-malaga",
+      "name": "Tambre",
+      "position": {
+        "latitude": 36.7328952590372,
+        "longitude": -4.45148164279366
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-751",
+      "stopPlaceId": "malaga-place-751",
+      "settlementId": "es-malaga",
+      "name": "San Alberto - Vertical Baja",
+      "position": {
+        "latitude": 36.7318535039195,
+        "longitude": -4.45064984169438
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-887",
+      "stopPlaceId": "malaga-place-887",
+      "settlementId": "es-malaga",
+      "name": "Granja Suárez - Padre Martín",
+      "position": {
+        "latitude": 36.729576860869,
+        "longitude": -4.45053537740637
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-882",
+      "stopPlaceId": "malaga-place-882",
+      "settlementId": "es-malaga",
+      "name": "Padre Martín",
+      "position": {
+        "latitude": 36.7277390447815,
+        "longitude": -4.44965093713896
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-883",
+      "stopPlaceId": "malaga-place-883",
+      "settlementId": "es-malaga",
+      "name": "Núñez Vela - San Martín",
+      "position": {
+        "latitude": 36.7263141876391,
+        "longitude": -4.4498664720745
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-884",
+      "stopPlaceId": "malaga-place-884",
+      "settlementId": "es-malaga",
+      "name": "Núñez Vela - Oscar Wilde",
+      "position": {
+        "latitude": 36.725622190793,
+        "longitude": -4.45137423341803
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-885",
+      "stopPlaceId": "malaga-place-885",
+      "settlementId": "es-malaga",
+      "name": "Nuñez Vela - Carlos Haya",
+      "position": {
+        "latitude": 36.7232680058437,
+        "longitude": -4.4514594837999
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-843",
+      "stopPlaceId": "malaga-place-843",
+      "settlementId": "es-malaga",
+      "name": "Hospital Regional",
+      "position": {
+        "latitude": 36.7224672763233,
+        "longitude": -4.44936092209547
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-844",
+      "stopPlaceId": "malaga-place-844",
+      "settlementId": "es-malaga",
+      "name": "Carlos Haya - Remedios",
+      "position": {
+        "latitude": 36.7220625187652,
+        "longitude": -4.44708698324387
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-845",
+      "stopPlaceId": "malaga-place-845",
+      "settlementId": "es-malaga",
+      "name": "Carlos Haya - Parque del Norte",
+      "position": {
+        "latitude": 36.7214821167444,
+        "longitude": -4.44395213005581
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-846",
+      "stopPlaceId": "malaga-place-846",
+      "settlementId": "es-malaga",
+      "name": "Arroyo del Cuarto",
+      "position": {
+        "latitude": 36.7213933391765,
+        "longitude": -4.44086334957606
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-847",
+      "stopPlaceId": "malaga-place-847",
+      "settlementId": "es-malaga",
+      "name": "Martínez Maldonado - Las Chapas",
+      "position": {
+        "latitude": 36.7213986592147,
+        "longitude": -4.43853024601938
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-848",
+      "stopPlaceId": "malaga-place-848",
+      "settlementId": "es-malaga",
+      "name": "Martínez Maldonado - Eugenio Gross",
+      "position": {
+        "latitude": 36.721406194465,
+        "longitude": -4.43670434836798
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-559",
+      "stopPlaceId": "malaga-place-559",
+      "settlementId": "es-malaga",
+      "name": "Alonso de Palencia",
+      "position": {
+        "latitude": 36.7206137124556,
+        "longitude": -4.43278000177751
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-560",
+      "stopPlaceId": "malaga-place-560",
+      "settlementId": "es-malaga",
+      "name": "Hilera - Esperanto",
+      "position": {
+        "latitude": 36.718385741462,
+        "longitude": -4.43089763903431
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-662",
+      "stopPlaceId": "malaga-place-662",
+      "settlementId": "es-malaga",
+      "name": "Av. Andalucía - Guadalmedina",
+      "position": {
+        "latitude": 36.716594107658,
+        "longitude": -4.4278941295928
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-2119",
+      "stopPlaceId": "malaga-place-2119",
+      "settlementId": "es-malaga",
+      "name": "Alameda Principal - Sur",
+      "position": {
+        "latitude": 36.7171559614835,
+        "longitude": -4.42404080819971
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-367",
+      "stopPlaceId": "malaga-place-367",
+      "settlementId": "es-malaga",
+      "name": "Parque - Rectorado",
+      "position": {
+        "latitude": 36.7193659431963,
+        "longitude": -4.41605299742225
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-628",
+      "stopPlaceId": "malaga-place-628",
+      "settlementId": "es-malaga",
+      "name": "Camino Suárez - Rotonda",
+      "position": {
+        "latitude": 36.7289653938017,
+        "longitude": -4.44282880049871
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-629",
+      "stopPlaceId": "malaga-place-629",
+      "settlementId": "es-malaga",
+      "name": "Alcalde José Luis Estrada",
+      "position": {
+        "latitude": 36.7302059885869,
+        "longitude": -4.44535315331827
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-609",
+      "stopPlaceId": "malaga-place-609",
+      "settlementId": "es-malaga",
+      "name": "Miguel Hernández",
+      "position": {
+        "latitude": 36.7312529959131,
+        "longitude": -4.4458612168015
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-630",
+      "stopPlaceId": "malaga-place-630",
+      "settlementId": "es-malaga",
+      "name": "José Carrión de Mula",
+      "position": {
+        "latitude": 36.7326509396219,
+        "longitude": -4.44542092032624
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-631",
+      "stopPlaceId": "malaga-place-631",
+      "settlementId": "es-malaga",
+      "name": "Juan Rejano",
+      "position": {
+        "latitude": 36.7329039547558,
+        "longitude": -4.44598683974463
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-611",
+      "stopPlaceId": "malaga-place-611",
+      "settlementId": "es-malaga",
+      "name": "La Corta - VPO",
+      "position": {
+        "latitude": 36.7344406264705,
+        "longitude": -4.44686855302462
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-612",
+      "stopPlaceId": "malaga-place-612",
+      "settlementId": "es-malaga",
+      "name": "La Corta - La Milagrosa",
+      "position": {
+        "latitude": 36.7356171107343,
+        "longitude": -4.44892323499759
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-624",
+      "stopPlaceId": "malaga-place-624",
+      "settlementId": "es-malaga",
+      "name": "La Corta - Capitán Eliseo",
+      "position": {
+        "latitude": 36.7359319198897,
+        "longitude": -4.45029246645809
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-613",
+      "stopPlaceId": "malaga-place-613",
+      "settlementId": "es-malaga",
+      "name": "La Corta - Plaza",
+      "position": {
+        "latitude": 36.7363270286467,
+        "longitude": -4.45100390524976
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-625",
+      "stopPlaceId": "malaga-place-625",
+      "settlementId": "es-malaga",
+      "name": "San Alberto - Tormes",
+      "position": {
+        "latitude": 36.7360511080973,
+        "longitude": -4.45280141116325
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-626",
+      "stopPlaceId": "malaga-place-626",
+      "settlementId": "es-malaga",
+      "name": "San Alberto - Fandango",
+      "position": {
+        "latitude": 36.7349789741756,
+        "longitude": -4.4520732603041
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-627",
+      "stopPlaceId": "malaga-place-627",
+      "settlementId": "es-malaga",
+      "name": "San Alberto - Riotinto",
+      "position": {
+        "latitude": 36.7337062773866,
+        "longitude": -4.4512361753496
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-754",
+      "stopPlaceId": "malaga-place-754",
+      "settlementId": "es-malaga",
+      "name": "San Alberto - Carlinda",
+      "position": {
+        "latitude": 36.7311212080895,
+        "longitude": -4.44991746092109
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-755",
+      "stopPlaceId": "malaga-place-755",
+      "settlementId": "es-malaga",
+      "name": "Galeno - Carlinda",
+      "position": {
+        "latitude": 36.7300750062069,
+        "longitude": -4.4481735255552
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-663",
+      "stopPlaceId": "malaga-place-663",
+      "settlementId": "es-malaga",
+      "name": "Galeno - Valle-Inclán",
+      "position": {
+        "latitude": 36.7293974488636,
+        "longitude": -4.44564333943322
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-657",
+      "stopPlaceId": "malaga-place-657",
+      "settlementId": "es-malaga",
+      "name": "Martínez la Rosa - Albacete",
+      "position": {
+        "latitude": 36.7280850611826,
+        "longitude": -4.44377904794543
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-756",
+      "stopPlaceId": "malaga-place-756",
+      "settlementId": "es-malaga",
+      "name": "Barón de Les",
+      "position": {
+        "latitude": 36.7277164208536,
+        "longitude": -4.44089893493566
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    },
+    {
+      "stopNodeId": "malaga-stop-709",
+      "stopPlaceId": "malaga-place-709",
+      "settlementId": "es-malaga",
+      "name": "Camino Suárez - Cabas Galván",
+      "position": {
+        "latitude": 36.728334940993,
+        "longitude": -4.44113673490661
+      },
+      "sourceReferences": [],
+      "resolution": {
+        "status": "automatic-medium"
+      }
+    }
+  ]
+}

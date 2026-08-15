@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-mainland-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Cartagena Radial Mainland Network - Lines 30, 41 and 42A",
+  "primarySettlementId": "es-cartagena",
+  "settlementIds": [
+    "es-cartagena",
+    "es-la-union",
+    "es-fuente-alamo-de-murcia",
+    "es-mazarron",
+    "es-alhama-de-murcia",
+    "es-totana",
+    "es-lorca"
+  ],
+  "contentHash": "acdc52c083f92ffde9239d1a1b98bf1b23734e39ba379617ba28fe68dbee54d6",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "37689775069a6f3e9095f6738351dd5a0bbd7ba6ecd0acda36d5be15ae1d5799"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "2e9c18aa33132595046c1af0586d70329f534e268c5349bef52102ce80f3358e"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "838ad44d303dce750c746058e030e40c68b1d7ba1ec515230d0dc04f5a1510d7"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "9eb695b7e361fe9dcc5f68a73bb64f743f49a96899b6364648c158aaca5faa9a"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "2f3ef8b93bb363eda6cdd0a36b40223480296d63f513b27ed0a7a649e2207aa8"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

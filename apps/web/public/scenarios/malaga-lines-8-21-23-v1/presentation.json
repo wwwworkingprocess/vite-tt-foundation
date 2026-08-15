@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-8-21-23-v1",
+  "title": "Málaga EMT - Lines 8, 21 and 23",
+  "initialView": {
+    "center": {
+      "latitude": 36.73812354539745,
+      "longitude": -4.4340945939025005
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-8": {
+      "label": "8",
+      "color": "#93BE4D"
+    },
+    "malaga-21": {
+      "label": "21",
+      "color": "#D184E4"
+    },
+    "malaga-23": {
+      "label": "23",
+      "color": "#CC725E"
+    }
+  },
+  "notes": [
+    "Third accepted Málaga component; extends the frozen Málaga identity registry for routes 8, 21 and 23 while exact-copying accepted shared identities.",
+    "All seven source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "No reverse edge, reverse pattern or loop closure is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

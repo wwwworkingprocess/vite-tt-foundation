@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-rayo-legacy-all-v1",
+  "scenarioVersion": "1.0.0",
+  "status": "development-seed",
+  "title": "Murcia Rayo Legacy All Network",
+  "primarySettlementId": "es-murcia",
+  "settlementIds": [
+    "es-murcia"
+  ],
+  "contentHash": "a83530201659c197e1b3edfa54f6310c89990828d004943d796917a7ff987e23",
+  "assets": {
+    "settlements": {
+      "path": "settlements.json",
+      "required": true,
+      "sha256": "7e6e3a7edb32940442266e755aa040d4079813e9e9e30464317b5a53314abd86"
+    },
+    "stops": {
+      "path": "stops.json",
+      "required": true,
+      "sha256": "b70f623c85fbac035fb58a529b65a9251ce4d0c9d3f7d625b5afe8d721ea7ae8"
+    },
+    "routes": {
+      "path": "routes.json",
+      "required": true,
+      "sha256": "12c6d733814c79b4275a017c51ab4430f1f55c3ac70d37deabc696f4a4a6b266"
+    },
+    "presentation": {
+      "path": "presentation.json",
+      "required": false,
+      "sha256": "b9b4fa40dd6c0be6ae9044cf954cfd0d58c8dade2362963e20a6b7b0ceac5cd2"
+    },
+    "provenance": {
+      "path": "provenance.json",
+      "required": false,
+      "sha256": "0e24860894170ceff415047d4851b0fb2ebacd432c04f1c194d1e309b8709ab3"
+    }
+  },
+  "graphContract": {
+    "vertexSource": "stops.stopNodes",
+    "edgeDerivation": "consecutive-stopNodeIds",
+    "closeLoopPolicy": "add-last-to-first-only-when-closesLoop-is-true",
+    "reverseEdgePolicy": "never-infer"
+  }
+}

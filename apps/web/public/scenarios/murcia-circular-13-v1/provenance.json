@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-circular-13-v1",
+  "generatedAt": "2026-08-13T21:49:00+02:00",
+  "sources": [
+    {
+      "sourceId": "murcia-transitous-gtfs-2026-08-13",
+      "name": "Transportes de Murcia GTFS - Transitous processed mirror of official NAP feed",
+      "accessedAt": "2026-08-13",
+      "sourceFile": "es_Transportes-de-Murcia.gtfs.zip",
+      "sha256": "99508aba778a01d25213fef41c0562ea869092f8ff4294b120e8ba490c11f25f",
+      "role": "Machine-readable source for route records, exact ordered trip stop sequences, stable numeric stop IDs, stop names and structured coordinates."
+    },
+    {
+      "sourceId": "murcia-source-prefetch-2026-08-13",
+      "name": "Frozen Murcia citywide source prefetch",
+      "accessedAt": "2026-08-13",
+      "sourceFile": "murcia-source-prefetch.zip",
+      "sha256": "ed991f8416d0a78d8caf464dc7511e809d5c877b7d47608528097df1c7b91411",
+      "role": "Owner-approved source authority for route taxonomy, canonical sequence hashes, identity rules, loop decisions, depot-working policy and component architecture."
+    },
+    {
+      "sourceId": "tmurcia-lines-current",
+      "name": "Transportes de Murcia - Información de líneas",
+      "accessedAt": "2026-08-13",
+      "sourceFile": "https://tmurcia.com/informacion-de-lineas/lineas/",
+      "role": "Official rider-facing corroboration of the C1 and C3 public line-family scope."
+    }
+  ],
+  "transformations": [
+    {
+      "transformationId": "murcia-gtfs-stop-id-identity-v1",
+      "description": "Uses the complete numeric GTFS stop_id/operator idparada as the stable Murcia StopNode suffix and creates a same-code singleton StopPlace for each new identity."
+    },
+    {
+      "transformationId": "murcia-c1-c3-exact-trip-sequences-v1",
+      "description": "Serializes the frozen unique ordered GTFS stop sequence for main public routes C1 (32 stops) and C3 (33 stops) exactly; both patterns have closesLoop false and no reverse pattern is inferred."
+    },
+    {
+      "transformationId": "murcia-depot-workings-excluded-v1",
+      "description": "Excludes Cocheras/Cabecera route records from passenger topology under the owner-approved frozen citywide architecture while preserving them in source/provenance artifacts."
+    },
+    {
+      "transformationId": "murcia-settlement-reuse-local-viewport-v1",
+      "description": "Reuses the already accepted canonical es-murcia identity fields exactly and computes only this package local center/bounds from the 37 routed StopPlace coordinates with deterministic framing padding."
+    },
+    {
+      "transformationId": "catalog-scenario-projection-v1",
+      "description": "Adds exactly one catalog descriptor and recomputes asset and aggregate SHA-256 values from final serialized bytes."
+    }
+  ],
+  "warnings": [
+    "The archived GTFS is a Transitous processed mirror of the official NAP Transportes de Murcia feed; byte identity with the original NAP ZIP is not claimed.",
+    "All 37 component coordinates are either exact accepted Grade A objects (2 reused identities) or Grade B structured GTFS values (35 new identities); no coordinates are inferred or interpolated.",
+    "StopNode.sourceReferences is empty because no genuine OpenStreetMap platform or stop_position object was reconciled.",
+    "Two target stop identities are exact-copied from the accepted C2+C4 component and 35 identities are newly created. Later Murcia components must reuse all accepted Murcia StopNode and StopPlace objects exactly when IDs recur.",
+    "All 37 target stops are assigned to the already accepted es-murcia settlement; no cross-municipal evidence occurs in the C1/C3 component.",
+    "A later original NAP download is a provenance/source-custody upgrade only; accepted identities must not be silently reconstructed unless an explicit migration is authorized."
+  ]
+}

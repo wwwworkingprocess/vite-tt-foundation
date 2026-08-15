@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-32-c3-v1",
+  "title": "Málaga EMT - Lines 32 and C3",
+  "initialView": {
+    "center": {
+      "latitude": 36.726830468401246,
+      "longitude": -4.407345985280245
+    },
+    "zoom": 12
+  },
+  "routeStyles": {
+    "malaga-32": {
+      "label": "32",
+      "color": "#D74355"
+    },
+    "malaga-c3": {
+      "label": "C3",
+      "color": "#718AC9"
+    }
+  },
+  "notes": [
+    "Sixteenth accepted Málaga component; extends the frozen Málaga identity registry for routes 32 and C3 while exact-copying accepted shared identities.",
+    "All seven source-supported exact GTFS trip sequences are retained as independent directed patterns.",
+    "Route 32 retains two contiguous short workings; C3 retains one full source-supported loop plus two contiguous partial workings.",
+    "C3 principal pattern is a source-supported closed loop and adds exactly one last-to-first edge; the other six patterns remain open. No reverse edge or reverse pattern is inferred.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

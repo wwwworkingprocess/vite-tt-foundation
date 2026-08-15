@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-day-legacy-all-v1",
+  "settlements": [
+    {
+      "settlementId": "es-malaga",
+      "name": "Málaga",
+      "countryCode": "ES",
+      "adminArea": "Málaga",
+      "center": {
+        "latitude": 36.71669933257215,
+        "longitude": -4.455939394452114
+      },
+      "bounds": {
+        "south": 36.640702466300375,
+        "west": -4.600139936948617,
+        "north": 36.79269619884393,
+        "east": -4.311738851955613
+      }
+    }
+  ]
+}

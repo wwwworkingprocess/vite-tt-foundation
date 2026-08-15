@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-all-v1",
+  "settlements": [
+    {
+      "settlementId": "es-cartagena",
+      "name": "Cartagena",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.6542297601022,
+        "longitude": -1.039609959130463
+      },
+      "bounds": {
+        "south": 37.577055171164844,
+        "west": -1.1824627295043193,
+        "north": 37.73140434903956,
+        "east": -0.8967571887566066
+      }
+    },
+    {
+      "settlementId": "es-fuente-alamo-de-murcia",
+      "name": "Fuente Álamo de Murcia",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.727812162397996,
+        "longitude": -1.14113120168787
+      },
+      "bounds": {
+        "south": 37.72201761379728,
+        "west": -1.176220717031754,
+        "north": 37.73360671099872,
+        "east": -1.106041686343986
+      }
+    },
+    {
+      "settlementId": "es-murcia",
+      "name": "Murcia",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.7297271323791,
+        "longitude": -1.0843462873148
+      },
+      "bounds": {
+        "south": 37.724727132379094,
+        "west": -1.0893462873147999,
+        "north": 37.7347271323791,
+        "east": -1.0793462873148
+      }
+    },
+    {
+      "settlementId": "es-torre-pacheco",
+      "name": "Torre-Pacheco",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.76444774989615,
+        "longitude": -0.9794686576724345
+      },
+      "bounds": {
+        "south": 37.73689074491509,
+        "west": -1.0027279378678486,
+        "north": 37.79200475487721,
+        "east": -0.9562093774770204
+      }
+    }
+  ]
+}

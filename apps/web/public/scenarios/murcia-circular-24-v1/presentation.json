@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "murcia-circular-24-v1",
+  "title": "Murcia Circular Network - Lines C2 and C4",
+  "initialView": {
+    "center": {
+      "latitude": 37.984144,
+      "longitude": -1.12736945
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "murcia-c2": {
+      "label": "C2",
+      "color": "#800000"
+    },
+    "murcia-c4": {
+      "label": "C4",
+      "color": "#6B6B6B"
+    }
+  },
+  "notes": [
+    "First accepted Murcia component; freezes the initial Murcia stop identity registry for routes C2 and C4.",
+    "Exact GTFS trip sequences are stored as independent directed patterns; no reverse or closing edge is inferred.",
+    "The 18 Cocheras/Cabecera depot-working route records are preserved in the citywide prefetch but excluded from passenger topology by frozen architecture decision.",
+    "Optional representation metadata. It is not authoritative simulation state."
+  ]
+}

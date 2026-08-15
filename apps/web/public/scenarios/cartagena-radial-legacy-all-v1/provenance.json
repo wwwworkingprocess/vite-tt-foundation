@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-legacy-all-v1",
+  "generatedAt": "2026-08-13T18:51:00+02:00",
+  "sources": [
+    {
+      "sourceId": "cartagena-radial-accepted-components",
+      "name": "Three accepted Cartagena radial-family component scenarios",
+      "sourceFile": "scenarios-cartagena-radial-mainland-v1.zip",
+      "sha256": "65478a12f2ebae89c6df68144a11c331b2aca9863eef30c773297228c1067ecf",
+      "role": "Authoritative merge sources. Routes, patterns, StopNodes and StopPlaces are copied from these accepted scenarios without rediscovery."
+    }
+  ],
+  "mergeContract": {
+    "type": "pure-accepted-component-merge",
+    "components": [
+      {
+        "scenarioId": "cartagena-radial-coast-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "2933a69a4bf440b5a443390a4546eae7b53ad6dcd88923d0ee462d991f8421db",
+        "routes": [
+          "12",
+          "21"
+        ]
+      },
+      {
+        "scenarioId": "cartagena-radial-manga-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "599e355c4e5797544ec3fc80788eaf4950619ba76ba059d10d6c159cf94a19c0",
+        "routes": [
+          "23",
+          "43",
+          "44"
+        ]
+      },
+      {
+        "scenarioId": "cartagena-radial-mainland-v1",
+        "scenarioVersion": "1.0.0",
+        "contentHash": "acdc52c083f92ffde9239d1a1b98bf1b23734e39ba379617ba28fe68dbee54d6",
+        "routes": [
+          "30",
+          "41",
+          "42A"
+        ]
+      }
+    ],
+    "canonicalRouteOrder": [
+      "12",
+      "21",
+      "23",
+      "30",
+      "41",
+      "42A",
+      "43",
+      "44"
+    ],
+    "routeRediscovery": false,
+    "topologyReconciliation": false,
+    "coordinateRediscovery": false,
+    "newStopIdentitiesCreated": 0,
+    "sharedObjectConflictPolicy": "hard-fail",
+    "stopNodeOccurrences": 297,
+    "uniqueStopNodes": 266,
+    "collapsedStopNodeDuplicates": 31,
+    "stopPlaceOccurrences": 297,
+    "uniqueStopPlaces": 266,
+    "collapsedStopPlaceDuplicates": 31,
+    "sharedStopNodeExactComparisons": 31,
+    "sharedStopPlaceExactComparisons": 31,
+    "conflicts": 0
+  },
+  "settlementPolicy": {
+    "canonicalFields": "Copied exactly from accepted component settlements.",
+    "packageLocalViewports": "Recomputed from all merged routed StopPlace positions assigned to each settlement, with 10 percent extent padding; singleton extents receive a 0.005-degree minimum pad.",
+    "settlementIds": [
+      "es-cartagena",
+      "es-la-union",
+      "es-san-javier",
+      "es-los-alcazares",
+      "es-mazarron",
+      "es-fuente-alamo-de-murcia",
+      "es-alhama-de-murcia",
+      "es-totana",
+      "es-lorca"
+    ]
+  },
+  "warnings": [
+    "The project radial family is a packaging classification; it is not a claim that every included route is geographically radial.",
+    "The component scenarios remain catalogued and unchanged.",
+    "No authoritative application parser or repository test suite was available; Level 7 is not claimed."
+  ]
+}

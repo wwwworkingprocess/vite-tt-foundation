@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-southwest-v1",
+  "title": "Cartagena Legacy Southwest Network - Lines 5 and 6",
+  "initialView": {
+    "center": {
+      "latitude": 37.6191707876784,
+      "longitude": -1.0118370548998834
+    },
+    "zoom": 11
+  },
+  "routeStyles": {
+    "cartagena-5": {
+      "label": "5",
+      "color": "#f57c00"
+    },
+    "cartagena-6": {
+      "label": "6",
+      "color": "#455a64"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "Fourth Cartagena legacy component, containing Lines 5 and 6.",
+    "Line 5 preserves eight separately published La Vaguada/Los Gabatos/El Plan/UCAM workings.",
+    "Line 6 preserves four separately published Molinos Marfagones/Urbanización Buenos Aires workings.",
+    "No reverse pattern, branch concatenation, loop closure or synthetic handoff edge is inferred.",
+    "Route style colors are presentation-only and are not claimed as operator livery."
+  ]
+}

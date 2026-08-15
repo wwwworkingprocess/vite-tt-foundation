@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-legacy-icue-v1",
+  "title": "Cartagena Legacy Icue Network - Lines 8 and 9",
+  "initialView": {
+    "center": {
+      "latitude": 37.6067426230767,
+      "longitude": -0.9848885127592615
+    },
+    "zoom": 13
+  },
+  "routeStyles": {
+    "cartagena-8": {
+      "label": "8",
+      "color": "#d32f2f"
+    },
+    "cartagena-9": {
+      "label": "9",
+      "color": "#1976d2"
+    }
+  },
+  "notes": [
+    "Optional representation metadata. It is not authoritative simulation state.",
+    "First Cartagena legacy component, containing the two current Icue urban circulation services.",
+    "Both route patterns are source-supported complete cycles. The published repeated terminal first stop is omitted from stopNodeIds and represented once by closesLoop=true.",
+    "Route style colors are presentation-only and are not claimed as operator livery."
+  ]
+}

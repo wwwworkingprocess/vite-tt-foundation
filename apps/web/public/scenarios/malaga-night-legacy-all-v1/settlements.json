@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-night-legacy-all-v1",
+  "settlements": [
+    {
+      "settlementId": "es-malaga",
+      "name": "Málaga",
+      "countryCode": "ES",
+      "adminArea": "Málaga",
+      "center": {
+        "latitude": 36.72011156069115,
+        "longitude": -4.4641359695165
+      },
+      "bounds": {
+        "south": 36.68548101870345,
+        "west": -4.59850062193574,
+        "north": 36.754742102678854,
+        "east": -4.32977131709726
+      }
+    }
+  ]
+}

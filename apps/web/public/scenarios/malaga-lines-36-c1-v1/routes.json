@@ -1,0 +1,302 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-36-c1-v1",
+  "routes": [
+    {
+      "routeId": "malaga-36",
+      "publicCode": "36",
+      "name": "Av. Andalucía - Conde Ureña",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-36-s01",
+          "directionLabel": "Av. Andalucía",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "malaga-stop-3651",
+            "malaga-stop-3652",
+            "malaga-stop-3653",
+            "malaga-stop-3654",
+            "malaga-stop-3655",
+            "malaga-stop-161",
+            "malaga-stop-170",
+            "malaga-stop-301",
+            "malaga-stop-164",
+            "malaga-stop-1803",
+            "malaga-stop-2012",
+            "malaga-stop-3722"
+          ]
+        },
+        {
+          "patternId": "malaga-line-36-s02",
+          "directionLabel": "Conde Ureña",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 20
+          },
+          "stopNodeIds": [
+            "malaga-stop-3722",
+            "malaga-stop-9913",
+            "malaga-stop-3602",
+            "malaga-stop-502",
+            "malaga-stop-202",
+            "malaga-stop-503",
+            "malaga-stop-505",
+            "malaga-stop-506",
+            "malaga-stop-103",
+            "malaga-stop-508",
+            "malaga-stop-509",
+            "malaga-stop-3615",
+            "malaga-stop-3616",
+            "malaga-stop-3617",
+            "malaga-stop-3618",
+            "malaga-stop-3619",
+            "malaga-stop-3608",
+            "malaga-stop-3609",
+            "malaga-stop-3610",
+            "malaga-stop-3651"
+          ]
+        },
+        {
+          "patternId": "malaga-line-36-s03",
+          "directionLabel": "Conde Ureña",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 10
+          },
+          "stopNodeIds": [
+            "malaga-stop-509",
+            "malaga-stop-3615",
+            "malaga-stop-3616",
+            "malaga-stop-3617",
+            "malaga-stop-3618",
+            "malaga-stop-3619",
+            "malaga-stop-3608",
+            "malaga-stop-3609",
+            "malaga-stop-3610",
+            "malaga-stop-3651"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "36",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "36",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "36",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=36"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-c1",
+      "publicCode": "C1",
+      "name": "CIRCULAR 1",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-c1-s01",
+          "directionLabel": "Martínez de la Rosa",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 32
+          },
+          "stopNodeIds": [
+            "malaga-stop-661",
+            "malaga-stop-957",
+            "malaga-stop-702",
+            "malaga-stop-959",
+            "malaga-stop-1352",
+            "malaga-stop-1304",
+            "malaga-stop-156",
+            "malaga-stop-157",
+            "malaga-stop-158",
+            "malaga-stop-159",
+            "malaga-stop-160",
+            "malaga-stop-161",
+            "malaga-stop-170",
+            "malaga-stop-301",
+            "malaga-stop-1172",
+            "malaga-stop-303",
+            "malaga-stop-119",
+            "malaga-stop-416",
+            "malaga-stop-7101",
+            "malaga-stop-306",
+            "malaga-stop-307",
+            "malaga-stop-403",
+            "malaga-stop-1813",
+            "malaga-stop-922",
+            "malaga-stop-927",
+            "malaga-stop-906",
+            "malaga-stop-907",
+            "malaga-stop-923",
+            "malaga-stop-657",
+            "malaga-stop-659",
+            "malaga-stop-660"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c1-s02",
+          "directionLabel": "Av. Aurora - Enrique Navarro",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "malaga-stop-661",
+            "malaga-stop-957",
+            "malaga-stop-702",
+            "malaga-stop-959",
+            "malaga-stop-1352",
+            "malaga-stop-1304",
+            "malaga-stop-156",
+            "malaga-stop-157",
+            "malaga-stop-158",
+            "malaga-stop-159",
+            "malaga-stop-160",
+            "malaga-stop-161",
+            "malaga-stop-170",
+            "malaga-stop-301",
+            "malaga-stop-1172",
+            "malaga-stop-303",
+            "malaga-stop-119",
+            "malaga-stop-416",
+            "malaga-stop-7101"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c1-s03",
+          "directionLabel": "Parque - Torrijos",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "malaga-stop-661",
+            "malaga-stop-957",
+            "malaga-stop-702",
+            "malaga-stop-959",
+            "malaga-stop-1352",
+            "malaga-stop-1304",
+            "malaga-stop-156",
+            "malaga-stop-157",
+            "malaga-stop-158",
+            "malaga-stop-159",
+            "malaga-stop-160",
+            "malaga-stop-161",
+            "malaga-stop-170",
+            "malaga-stop-301"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c1-s04",
+          "directionLabel": "Martínez de la Rosa",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 19
+          },
+          "stopNodeIds": [
+            "malaga-stop-301",
+            "malaga-stop-1172",
+            "malaga-stop-303",
+            "malaga-stop-119",
+            "malaga-stop-416",
+            "malaga-stop-7101",
+            "malaga-stop-306",
+            "malaga-stop-307",
+            "malaga-stop-403",
+            "malaga-stop-1813",
+            "malaga-stop-922",
+            "malaga-stop-927",
+            "malaga-stop-906",
+            "malaga-stop-907",
+            "malaga-stop-923",
+            "malaga-stop-657",
+            "malaga-stop-659",
+            "malaga-stop-660",
+            "malaga-stop-661"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c1-s05",
+          "directionLabel": "Martínez de la Rosa",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 8
+          },
+          "stopNodeIds": [
+            "malaga-stop-927",
+            "malaga-stop-906",
+            "malaga-stop-907",
+            "malaga-stop-923",
+            "malaga-stop-657",
+            "malaga-stop-659",
+            "malaga-stop-660",
+            "malaga-stop-661"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c1-s06",
+          "directionLabel": "Martínez de la Rosa",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 14
+          },
+          "stopNodeIds": [
+            "malaga-stop-7101",
+            "malaga-stop-306",
+            "malaga-stop-307",
+            "malaga-stop-403",
+            "malaga-stop-1813",
+            "malaga-stop-922",
+            "malaga-stop-927",
+            "malaga-stop-906",
+            "malaga-stop-907",
+            "malaga-stop-923",
+            "malaga-stop-657",
+            "malaga-stop-659",
+            "malaga-stop-660",
+            "malaga-stop-661"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "71",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "71",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "71",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=71"
+        }
+      ]
+    }
+  ]
+}

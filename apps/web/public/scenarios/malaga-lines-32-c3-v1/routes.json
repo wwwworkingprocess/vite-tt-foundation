@@ -1,0 +1,230 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "malaga-lines-32-c3-v1",
+  "routes": [
+    {
+      "routeId": "malaga-32",
+      "publicCode": "32",
+      "name": "Av. Andalucía - Limonar - Mayorazgo",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-32-s01",
+          "directionLabel": "Mayorazgo",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 16
+          },
+          "stopNodeIds": [
+            "malaga-stop-3208",
+            "malaga-stop-1471",
+            "malaga-stop-3324",
+            "malaga-stop-1123",
+            "malaga-stop-1103",
+            "malaga-stop-1104",
+            "malaga-stop-1105",
+            "malaga-stop-1106",
+            "malaga-stop-1107",
+            "malaga-stop-3207",
+            "malaga-stop-3202",
+            "malaga-stop-3203",
+            "malaga-stop-3204",
+            "malaga-stop-3205",
+            "malaga-stop-3206",
+            "malaga-stop-3251"
+          ]
+        },
+        {
+          "patternId": "malaga-line-32-s02",
+          "directionLabel": " Av. Andalucía",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 24
+          },
+          "stopNodeIds": [
+            "malaga-stop-3251",
+            "malaga-stop-3252",
+            "malaga-stop-3253",
+            "malaga-stop-3266",
+            "malaga-stop-3254",
+            "malaga-stop-3210",
+            "malaga-stop-3265",
+            "malaga-stop-3211",
+            "malaga-stop-3212",
+            "malaga-stop-3213",
+            "malaga-stop-3256",
+            "malaga-stop-3257",
+            "malaga-stop-3258",
+            "malaga-stop-3259",
+            "malaga-stop-3261",
+            "malaga-stop-3262",
+            "malaga-stop-1167",
+            "malaga-stop-1168",
+            "malaga-stop-1169",
+            "malaga-stop-1170",
+            "malaga-stop-302",
+            "malaga-stop-1173",
+            "malaga-stop-2012",
+            "malaga-stop-3208"
+          ]
+        },
+        {
+          "patternId": "malaga-line-32-s03",
+          "directionLabel": "Limonar - Colegio",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 15
+          },
+          "stopNodeIds": [
+            "malaga-stop-3251",
+            "malaga-stop-3252",
+            "malaga-stop-3253",
+            "malaga-stop-3266",
+            "malaga-stop-3254",
+            "malaga-stop-3210",
+            "malaga-stop-3265",
+            "malaga-stop-3211",
+            "malaga-stop-3212",
+            "malaga-stop-3213",
+            "malaga-stop-3256",
+            "malaga-stop-3257",
+            "malaga-stop-3258",
+            "malaga-stop-3259",
+            "malaga-stop-3261"
+          ]
+        },
+        {
+          "patternId": "malaga-line-32-s04",
+          "directionLabel": "Mayorazgo",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 6
+          },
+          "stopNodeIds": [
+            "malaga-stop-3202",
+            "malaga-stop-3203",
+            "malaga-stop-3204",
+            "malaga-stop-3205",
+            "malaga-stop-3206",
+            "malaga-stop-3251"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "32",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "32",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "32",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=32"
+        }
+      ]
+    },
+    {
+      "routeId": "malaga-c3",
+      "publicCode": "C3",
+      "name": "CIRCULAR 3 - Parque Clavero",
+      "dataStatus": "complete-gtfs-exact-trip-variants-current-stop-geography",
+      "patterns": [
+        {
+          "patternId": "malaga-line-c3-s01",
+          "directionLabel": "P.Sorolla - Limonar",
+          "closesLoop": true,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 18
+          },
+          "stopNodeIds": [
+            "malaga-stop-3251",
+            "malaga-stop-3252",
+            "malaga-stop-7307",
+            "malaga-stop-7308",
+            "malaga-stop-3261",
+            "malaga-stop-3262",
+            "malaga-stop-1107",
+            "malaga-stop-3207",
+            "malaga-stop-7301",
+            "malaga-stop-7302",
+            "malaga-stop-7303",
+            "malaga-stop-7310",
+            "malaga-stop-7311",
+            "malaga-stop-7312",
+            "malaga-stop-7305",
+            "malaga-stop-7313",
+            "malaga-stop-7306"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c3-s02",
+          "directionLabel": "Paseo de Sancha - Limonar",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 7
+          },
+          "stopNodeIds": [
+            "malaga-stop-3251",
+            "malaga-stop-3252",
+            "malaga-stop-7307",
+            "malaga-stop-7308",
+            "malaga-stop-3261",
+            "malaga-stop-3262",
+            "malaga-stop-1107"
+          ]
+        },
+        {
+          "patternId": "malaga-line-c3-s03",
+          "directionLabel": "P.Sorolla - Limonar",
+          "closesLoop": false,
+          "sourceSequenceRange": {
+            "from": 1,
+            "to": 12
+          },
+          "stopNodeIds": [
+            "malaga-stop-1107",
+            "malaga-stop-3207",
+            "malaga-stop-7301",
+            "malaga-stop-7302",
+            "malaga-stop-7303",
+            "malaga-stop-7310",
+            "malaga-stop-7311",
+            "malaga-stop-7312",
+            "malaga-stop-7305",
+            "malaga-stop-7313",
+            "malaga-stop-7306",
+            "malaga-stop-3251"
+          ]
+        }
+      ],
+      "sourceReferences": [
+        {
+          "source": "malaga-emt-official-gtfs",
+          "sourceRouteId": "73",
+          "sourceFile": "source/raw/google_transit.zip"
+        },
+        {
+          "source": "malaga-citywide-prefetch",
+          "sourceRouteId": "73",
+          "sourceFile": "topology/canonical-sequence-registry.json"
+        },
+        {
+          "source": "malaga-emt-official-route-page",
+          "sourceRouteId": "73",
+          "sourceFile": "http://www.emtmalaga.es/emt-mobile/informacionLinea.html?codLinea=73"
+        }
+      ]
+    }
+  ]
+}

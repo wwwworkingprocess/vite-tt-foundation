@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cartagena-radial-manga-v1",
+  "settlements": [
+    {
+      "settlementId": "es-cartagena",
+      "name": "Cartagena",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.6487582653777,
+        "longitude": -0.840540034600467
+      },
+      "bounds": {
+        "south": 37.593737596474064,
+        "west": -1.004652108855914,
+        "north": 37.70377893428134,
+        "east": -0.6764279603450202
+      }
+    },
+    {
+      "settlementId": "es-la-union",
+      "name": "La Unión",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.62144479762725,
+        "longitude": -0.881671731844563
+      },
+      "bounds": {
+        "south": 37.62040714776199,
+        "west": -0.8869753330537926,
+        "north": 37.62248244749251,
+        "east": -0.8763681306353334
+      }
+    },
+    {
+      "settlementId": "es-san-javier",
+      "name": "San Javier",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.73471242458985,
+        "longitude": -0.7742157290893881
+      },
+      "bounds": {
+        "south": 37.65757031000563,
+        "west": -0.827333105673224,
+        "north": 37.81185453917407,
+        "east": -0.721098352505552
+      }
+    },
+    {
+      "settlementId": "es-los-alcazares",
+      "name": "Los Alcázares",
+      "countryCode": "ES",
+      "adminArea": "Murcia",
+      "center": {
+        "latitude": 37.73838344740825,
+        "longitude": -0.850130281342301
+      },
+      "bounds": {
+        "south": 37.71465041340271,
+        "west": -0.8633582144759233,
+        "north": 37.76211648141379,
+        "east": -0.8369023482086786
+      }
+    }
+  ]
+}

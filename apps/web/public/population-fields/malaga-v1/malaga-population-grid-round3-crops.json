@@ -1,0 +1,1627 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "es-malaga current deterministic operational population crop metadata",
+  "indexSemantics": "half-open [start, end)",
+  "boundarySemantics": "smallest aligned rectangle containing viewport; exact viewport-on-grid-edge does not include the exterior zero-area-touch cell",
+  "canonicalGrid": {
+    "cityId": "Q8851",
+    "gridVersion": "1.0.0",
+    "sourceFile": "malaga-city-population-grid-v1.round2.json",
+    "sha256": "23e6ff1c758823c36e23865f39ac7f18f5a3dd2e990eb5fe8af1639c180b487b",
+    "rows": 160,
+    "columns": 291,
+    "cellCount": 46560,
+    "resolutionDegrees": 0.001,
+    "outerBounds": {
+      "south": 36.6345,
+      "west": -4.6015,
+      "north": 36.7945,
+      "east": -4.310499999999999
+    },
+    "cityTotalWeight": 634149,
+    "cityNonzeroCellCount": 11444
+  },
+  "scenarioEvidence": {
+    "sourceArchive": "scenarios-malaga-express-legacy-all-v1(2).zip",
+    "sourceArchiveSha256": "18297ad9d15514e32747c456415e13925156d286563ec052c1bd83447684ca30",
+    "catalogSha256": "a086733ea187491adbefa263b778cfe2528cda10f9c016058992789c449d8b29",
+    "scenarioCount": 21,
+    "componentScenarioCount": 17,
+    "aggregateScenarioCount": 4,
+    "aggregateFamilies": {
+      "day": {
+        "routePublicCodes": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "14",
+          "15",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23",
+          "25",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "32",
+          "33",
+          "34",
+          "35",
+          "36",
+          "37",
+          "38",
+          "40"
+        ],
+        "routeCount": 33,
+        "routeSources": {
+          "1": "malaga-lines-1-37-c2-v1",
+          "2": "malaga-lines-2-20-30-v1",
+          "3": "malaga-lines-3-11-n1-v1",
+          "4": "malaga-lines-4-19-n3-v1",
+          "5": "malaga-lines-5-9-10-v1",
+          "7": "malaga-lines-7-15-n2-v1",
+          "8": "malaga-lines-8-21-23-v1",
+          "9": "malaga-lines-5-9-10-v1",
+          "10": "malaga-lines-5-9-10-v1",
+          "11": "malaga-lines-3-11-n1-v1",
+          "14": "malaga-lines-14-n4-c5-v1",
+          "15": "malaga-lines-7-15-n2-v1",
+          "17": "malaga-lines-17-18-v1",
+          "18": "malaga-lines-17-18-v1",
+          "19": "malaga-lines-4-19-n3-v1",
+          "20": "malaga-lines-2-20-30-v1",
+          "21": "malaga-lines-8-21-23-v1",
+          "22": "malaga-lines-22-27-31-v1",
+          "23": "malaga-lines-8-21-23-v1",
+          "25": "malaga-lines-25-28-e-v1",
+          "27": "malaga-lines-22-27-31-v1",
+          "28": "malaga-lines-25-28-e-v1",
+          "29": "malaga-lines-29-a-v1",
+          "30": "malaga-lines-2-20-30-v1",
+          "31": "malaga-lines-22-27-31-v1",
+          "32": "malaga-lines-32-c3-v1",
+          "33": "malaga-lines-33-34-35-v1",
+          "34": "malaga-lines-33-34-35-v1",
+          "35": "malaga-lines-33-34-35-v1",
+          "36": "malaga-lines-36-c1-v1",
+          "37": "malaga-lines-1-37-c2-v1",
+          "38": "malaga-lines-38-c6-v1",
+          "40": "malaga-lines-40-c8-v1"
+        },
+        "routeObjectsMatchSources": true,
+        "componentRouteUsedStopPlaceUnionCount": 1032,
+        "aggregateRouteUsedStopPlaceCount": 1032,
+        "stopPlaceUnionMatches": true,
+        "scenarioId": "malaga-day-legacy-all-v1"
+      },
+      "circular": {
+        "routePublicCodes": [
+          "C1",
+          "C2",
+          "C3",
+          "C5",
+          "C6",
+          "C8"
+        ],
+        "routeCount": 6,
+        "routeSources": {
+          "C1": "malaga-lines-36-c1-v1",
+          "C2": "malaga-lines-1-37-c2-v1",
+          "C3": "malaga-lines-32-c3-v1",
+          "C5": "malaga-lines-14-n4-c5-v1",
+          "C6": "malaga-lines-38-c6-v1",
+          "C8": "malaga-lines-40-c8-v1"
+        },
+        "routeObjectsMatchSources": true,
+        "componentRouteUsedStopPlaceUnionCount": 166,
+        "aggregateRouteUsedStopPlaceCount": 166,
+        "stopPlaceUnionMatches": true,
+        "scenarioId": "malaga-circular-legacy-all-v1"
+      },
+      "night": {
+        "routePublicCodes": [
+          "N1",
+          "N2",
+          "N3",
+          "N4"
+        ],
+        "routeCount": 4,
+        "routeSources": {
+          "N1": "malaga-lines-3-11-n1-v1",
+          "N2": "malaga-lines-7-15-n2-v1",
+          "N3": "malaga-lines-4-19-n3-v1",
+          "N4": "malaga-lines-14-n4-c5-v1"
+        },
+        "routeObjectsMatchSources": true,
+        "componentRouteUsedStopPlaceUnionCount": 272,
+        "aggregateRouteUsedStopPlaceCount": 272,
+        "stopPlaceUnionMatches": true,
+        "scenarioId": "malaga-night-legacy-all-v1"
+      },
+      "express": {
+        "routePublicCodes": [
+          "A",
+          "E"
+        ],
+        "routeCount": 2,
+        "routeSources": {
+          "A": "malaga-lines-29-a-v1",
+          "E": "malaga-lines-25-28-e-v1"
+        },
+        "routeObjectsMatchSources": true,
+        "componentRouteUsedStopPlaceUnionCount": 49,
+        "aggregateRouteUsedStopPlaceCount": 49,
+        "stopPlaceUnionMatches": true,
+        "scenarioId": "malaga-express-legacy-all-v1"
+      }
+    },
+    "aggregateRouteSetsMutuallyDisjoint": true,
+    "completeAggregateRouteUnionCount": 45,
+    "completeAggregateStopPlaceUnionCount": 1127,
+    "sharedAggregateStopPlaceCounts": {
+      "day__circular": 86,
+      "day__night": 267,
+      "day__express": 37,
+      "circular__night": 38,
+      "circular__express": 2,
+      "night__express": 25
+    },
+    "routeUsedStopPlacePolicy": "StopPlaces referenced by route-pattern-used StopNodes, requiring valid positions"
+  },
+  "referenceCrops": {
+    "dayAll": {
+      "scenarioId": "malaga-day-legacy-all-v1",
+      "cropCellCount": 44217,
+      "canonicalCellPercent": 94.96778350515464,
+      "includedWeight": 627640,
+      "includedNonzeroCellCount": 11218,
+      "cityWeightPercent": 98.97358507227797
+    },
+    "circularAll": {
+      "scenarioId": "malaga-circular-legacy-all-v1",
+      "cropCellCount": 18848,
+      "canonicalCellPercent": 40.48109965635739,
+      "includedWeight": 533281,
+      "includedNonzeroCellCount": 5893,
+      "cityWeightPercent": 84.09395899071039
+    },
+    "nightAll": {
+      "scenarioId": "malaga-night-legacy-all-v1",
+      "cropCellCount": 19170,
+      "canonicalCellPercent": 41.172680412371136,
+      "includedWeight": 550851,
+      "includedNonzeroCellCount": 7200,
+      "cityWeightPercent": 86.86460122147949
+    },
+    "expressAll": {
+      "scenarioId": "malaga-express-legacy-all-v1",
+      "cropCellCount": 14450,
+      "canonicalCellPercent": 31.035223367697593,
+      "includedWeight": 509028,
+      "includedNonzeroCellCount": 5710,
+      "cityWeightPercent": 80.26946348571077
+    }
+  },
+  "scenarios": [
+    {
+      "scenarioId": "malaga-lines-3-11-n1-v1",
+      "familyMemberships": [
+        "day",
+        "night"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "3",
+        "11",
+        "N1"
+      ],
+      "routeCount": 3,
+      "patternCount": 8,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.686754387985104,
+        "west": -4.486897323563152,
+        "north": 36.7269349927331,
+        "east": -4.335908220147448
+      },
+      "crop": {
+        "rowStart": 66,
+        "rowEnd": 109,
+        "columnStart": 114,
+        "columnEnd": 266,
+        "dimensions": {
+          "rows": 43,
+          "columns": 152
+        },
+        "alignedGeographicBounds": {
+          "south": 36.6855,
+          "west": -4.4875,
+          "north": 36.7285,
+          "east": -4.3355
+        }
+      },
+      "totalIncludedWeight": 367567,
+      "nonzeroCellCount": 2560,
+      "cityWeightPercent": 57.96224546597093,
+      "canonicalCellPercent": 13.384879725085911,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "436ba9a634a11161ffdbc444d08a73acfee28edd64727ad90ae965201650bd41",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 102,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-22-27-31-v1",
+      "familyMemberships": [
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "22",
+        "27",
+        "31"
+      ],
+      "routeCount": 3,
+      "patternCount": 6,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.68142150142431,
+        "west": -4.503109831088824,
+        "north": 36.72348917500299,
+        "east": -4.406700012876267
+      },
+      "crop": {
+        "rowStart": 70,
+        "rowEnd": 115,
+        "columnStart": 98,
+        "columnEnd": 195,
+        "dimensions": {
+          "rows": 45,
+          "columns": 97
+        },
+        "alignedGeographicBounds": {
+          "south": 36.6795,
+          "west": -4.5035,
+          "north": 36.7245,
+          "east": -4.4065
+        }
+      },
+      "totalIncludedWeight": 286430,
+      "nonzeroCellCount": 1908,
+      "cityWeightPercent": 45.1676183357539,
+      "canonicalCellPercent": 8.958333333333334,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "ae1a23b2220c8aad382db2e33de1c504e64a075e50ea11cb860e9967c90755bc",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 113,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-8-21-23-v1",
+      "familyMemberships": [
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "8",
+        "21",
+        "23"
+      ],
+      "routeCount": 3,
+      "patternCount": 7,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.7122882201101,
+        "west": -4.532849180063188,
+        "north": 36.763958870684796,
+        "east": -4.335340007741812
+      },
+      "crop": {
+        "rowStart": 30,
+        "rowEnd": 83,
+        "columnStart": 68,
+        "columnEnd": 267,
+        "dimensions": {
+          "rows": 53,
+          "columns": 199
+        },
+        "cellCount": 10547,
+        "alignedGeographicBounds": {
+          "south": 36.7115,
+          "west": -4.5335,
+          "north": 36.7645,
+          "east": -4.3345
+        }
+      },
+      "totalIncludedWeight": 385017,
+      "nonzeroCellCount": 4633,
+      "cityWeightPercent": 60.71396469914799,
+      "canonicalCellPercent": 22.652491408934708,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "0c74aef1b2bf1253c728fe53163110e21743138850e2ab388d14ba6c537fcfd5",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 152,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-14-n4-c5-v1",
+      "familyMemberships": [
+        "circular",
+        "day",
+        "night"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "14",
+        "N4",
+        "C5"
+      ],
+      "routeCount": 3,
+      "patternCount": 7,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.70828684765508,
+        "west": -4.50153763145545,
+        "north": 36.75257896574852,
+        "east": -4.40205081067033
+      },
+      "crop": {
+        "rowStart": 41,
+        "rowEnd": 88,
+        "columnStart": 99,
+        "columnEnd": 200,
+        "dimensions": {
+          "rows": 47,
+          "columns": 101
+        },
+        "alignedGeographicBounds": {
+          "south": 36.7065,
+          "west": -4.5025,
+          "north": 36.7535,
+          "east": -4.4015
+        }
+      },
+      "totalIncludedWeight": 370177,
+      "nonzeroCellCount": 3052,
+      "cityWeightPercent": 58.37382066359799,
+      "canonicalCellPercent": 9.978522336769759,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "2b97d423c0f31703e5cd3319801358926783c0b5e2d0fa9f3c6fdaa3bea6c7ac",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 129,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-7-15-n2-v1",
+      "familyMemberships": [
+        "day",
+        "night"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "7",
+        "15",
+        "N2"
+      ],
+      "routeCount": 3,
+      "patternCount": 5,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.67456953850537,
+        "west": -4.462193560336099,
+        "north": 36.755734055424135,
+        "east": -4.409113690266631
+      },
+      "crop": {
+        "rowStart": 38,
+        "rowEnd": 120,
+        "columnStart": 139,
+        "columnEnd": 193,
+        "dimensions": {
+          "rows": 82,
+          "columns": 54
+        },
+        "cellCount": 4428,
+        "alignedGeographicBounds": {
+          "south": 36.6745,
+          "west": -4.4625,
+          "north": 36.7565,
+          "east": -4.4085
+        }
+      },
+      "totalIncludedWeight": 403595,
+      "nonzeroCellCount": 2369,
+      "cityWeightPercent": 63.64356010969031,
+      "canonicalCellPercent": 9.510309278350515,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "aeff32f03e5f21673d516eb506585c1b939f74782221db8d2771f37ad31a2e99",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 143,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-1-37-c2-v1",
+      "familyMemberships": [
+        "circular",
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "1",
+        "37",
+        "C2"
+      ],
+      "routeCount": 3,
+      "patternCount": 13,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.68740708125528,
+        "west": -4.469484201794518,
+        "north": 36.75411235389432,
+        "east": -4.400580473876062
+      },
+      "crop": {
+        "rowStart": 40,
+        "rowEnd": 108,
+        "columnStart": 132,
+        "columnEnd": 201,
+        "dimensions": {
+          "rows": 68,
+          "columns": 69
+        },
+        "cellCount": 4692,
+        "alignedGeographicBounds": {
+          "south": 36.6865,
+          "west": -4.4695,
+          "north": 36.7545,
+          "east": -4.4005
+        }
+      },
+      "totalIncludedWeight": 418615,
+      "nonzeroCellCount": 2647,
+      "cityWeightPercent": 66.01208864162838,
+      "canonicalCellPercent": 10.077319587628866,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "68a9e075030ad8a3db6add3198ef9c6c33ed0d70fee11656e25e18d5ae74da20",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 112,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-17-18-v1",
+      "familyMemberships": [
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "17",
+        "18"
+      ],
+      "routeCount": 2,
+      "patternCount": 7,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.71251664256634,
+        "west": -4.479705928757204,
+        "north": 36.75663816789947,
+        "east": -4.416583868513767
+      },
+      "crop": {
+        "rowStart": 37,
+        "rowEnd": 82,
+        "columnStart": 121,
+        "columnEnd": 185,
+        "dimensions": {
+          "rows": 45,
+          "columns": 64
+        },
+        "cellCount": 2880,
+        "alignedGeographicBounds": {
+          "south": 36.7125,
+          "west": -4.4805,
+          "north": 36.7575,
+          "east": -4.4165
+        }
+      },
+      "totalIncludedWeight": 265036,
+      "nonzeroCellCount": 1897,
+      "cityWeightPercent": 41.79396324838484,
+      "canonicalCellPercent": 6.185567010309279,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "6d948617dfdf44dac85d6ec74e20f2f31c0894024f60f7aa1d3d751c13e3e75e",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 69,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-2-20-30-v1",
+      "familyMemberships": [
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "2",
+        "20",
+        "30"
+      ],
+      "routeCount": 3,
+      "patternCount": 18,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.69317750341177,
+        "west": -4.484852536666297,
+        "north": 36.76108408503253,
+        "east": -4.408193404171213
+      },
+      "crop": {
+        "rowStart": 33,
+        "rowEnd": 102,
+        "columnStart": 116,
+        "columnEnd": 194,
+        "dimensions": {
+          "rows": 69,
+          "columns": 78
+        },
+        "cellCount": 5382,
+        "alignedGeographicBounds": {
+          "south": 36.6925,
+          "west": -4.4855,
+          "north": 36.7615,
+          "east": -4.4075
+        }
+      },
+      "totalIncludedWeight": 434403,
+      "nonzeroCellCount": 3042,
+      "cityWeightPercent": 68.50172435815557,
+      "canonicalCellPercent": 11.559278350515465,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "1bf00e87ce1df7a125335f7d0d795ff1b6fcf7e94e663c2adae57789b207fc14",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 118,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-4-19-n3-v1",
+      "familyMemberships": [
+        "day",
+        "night"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "4",
+        "19",
+        "N3"
+      ],
+      "routeCount": 3,
+      "patternCount": 8,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.70089826496233,
+        "west": -4.592403697273495,
+        "north": 36.74206801493557,
+        "east": -4.396837488381955
+      },
+      "crop": {
+        "rowStart": 52,
+        "rowEnd": 95,
+        "columnStart": 9,
+        "columnEnd": 205,
+        "dimensions": {
+          "rows": 43,
+          "columns": 196
+        },
+        "alignedGeographicBounds": {
+          "south": 36.6995,
+          "west": -4.5925,
+          "north": 36.7425,
+          "east": -4.3965
+        }
+      },
+      "totalIncludedWeight": 392284,
+      "nonzeroCellCount": 4153,
+      "cityWeightPercent": 61.85990989499314,
+      "canonicalCellPercent": 17.68041237113402,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "7e290c90e16a63db5ce957a31c4fc5b2b8635b40cb99966b73ce394b429d8ee5",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 100,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-25-28-e-v1",
+      "familyMemberships": [
+        "day",
+        "express"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "25",
+        "28",
+        "E"
+      ],
+      "routeCount": 3,
+      "patternCount": 9,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.69640676038064,
+        "west": -4.592179031364016,
+        "north": 36.78763217210936,
+        "east": -4.396857912555544
+      },
+      "crop": {
+        "rowStart": 6,
+        "rowEnd": 99,
+        "columnStart": 9,
+        "columnEnd": 205,
+        "dimensions": {
+          "rows": 93,
+          "columns": 196
+        },
+        "cellCount": 18228,
+        "alignedGeographicBounds": {
+          "south": 36.6955,
+          "west": -4.5925,
+          "north": 36.7885,
+          "east": -4.3965
+        }
+      },
+      "totalIncludedWeight": 467324,
+      "nonzeroCellCount": 6098,
+      "cityWeightPercent": 73.69309105588749,
+      "canonicalCellPercent": 39.149484536082475,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "fa986bd54d820e54699b5b0d3be1032d93bd64526ab52def28776af7a2c231a5",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 141,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-38-c6-v1",
+      "familyMemberships": [
+        "circular",
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "38",
+        "C6"
+      ],
+      "routeCount": 2,
+      "patternCount": 6,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.713594107658,
+        "west": -4.456720581536801,
+        "north": 36.7393270286467,
+        "east": -4.410438512551829
+      },
+      "crop": {
+        "rowStart": 53,
+        "rowEnd": 83,
+        "columnStart": 144,
+        "columnEnd": 192,
+        "dimensions": {
+          "rows": 30,
+          "columns": 48
+        },
+        "alignedGeographicBounds": {
+          "south": 36.7115,
+          "west": -4.4575,
+          "north": 36.7415,
+          "east": -4.4095
+        }
+      },
+      "totalIncludedWeight": 216515,
+      "nonzeroCellCount": 1246,
+      "cityWeightPercent": 34.14260686368661,
+      "canonicalCellPercent": 2.6804123711340204,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "d2bec3ad88a18682330ac2a161d79f7fcc94e89c8fb016adcb676934b816e5c0",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 55,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-36-c1-v1",
+      "familyMemberships": [
+        "circular",
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "36",
+        "C1"
+      ],
+      "routeCount": 2,
+      "patternCount": 9,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.7095307152924,
+        "west": -4.447765238948667,
+        "north": 36.7355158293687,
+        "east": -4.405951926383223
+      },
+      "crop": {
+        "rowStart": 57,
+        "rowEnd": 87,
+        "columnStart": 152,
+        "columnEnd": 197,
+        "dimensions": {
+          "rows": 30,
+          "columns": 45
+        },
+        "alignedGeographicBounds": {
+          "south": 36.7075,
+          "west": -4.4495,
+          "north": 36.7375,
+          "east": -4.4045
+        }
+      },
+      "totalIncludedWeight": 209304,
+      "nonzeroCellCount": 1107,
+      "cityWeightPercent": 33.00549240005109,
+      "canonicalCellPercent": 2.493556701030928,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "951eb540310af33944ccccb206d2a3994232a190fa246a2105956e7f9fda594b",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 58,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-33-34-35-v1",
+      "familyMemberships": [
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "33",
+        "34",
+        "35"
+      ],
+      "routeCount": 3,
+      "patternCount": 8,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.713605935227,
+        "west": -4.435153716693576,
+        "north": 36.7427020055734,
+        "east": -4.355890225532784
+      },
+      "crop": {
+        "rowStart": 51,
+        "rowEnd": 83,
+        "columnStart": 166,
+        "columnEnd": 246,
+        "dimensions": {
+          "rows": 32,
+          "columns": 80
+        },
+        "alignedGeographicBounds": {
+          "south": 36.7115,
+          "west": -4.4355,
+          "north": 36.7435,
+          "east": -4.3555
+        }
+      },
+      "totalIncludedWeight": 179439,
+      "nonzeroCellCount": 1753,
+      "cityWeightPercent": 28.296031374330006,
+      "canonicalCellPercent": 5.154639175257732,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "314f82ccf6f1aea9baf2f6f4bb9a1516117662751247ab771c3f7f12d527db61",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 94,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-5-9-10-v1",
+      "familyMemberships": [
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "5",
+        "9",
+        "10"
+      ],
+      "routeCount": 3,
+      "patternCount": 8,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.647011655689006,
+        "west": -4.521982555341677,
+        "north": 36.723295115568995,
+        "east": -4.412946498709553
+      },
+      "crop": {
+        "rowStart": 71,
+        "rowEnd": 148,
+        "columnStart": 79,
+        "columnEnd": 189,
+        "dimensions": {
+          "rows": 77,
+          "columns": 110
+        },
+        "cellCount": 8470,
+        "alignedGeographicBounds": {
+          "south": 36.6465,
+          "west": -4.5225,
+          "north": 36.7235,
+          "east": -4.4125
+        }
+      },
+      "totalIncludedWeight": 290635,
+      "nonzeroCellCount": 2838,
+      "cityWeightPercent": 45.8307117097086,
+      "canonicalCellPercent": 18.191580756013746,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "b5aadc3a288174aa812a2839161465b642bcc6ed6547999deaad8dedcfdea6c6",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 94,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-29-a-v1",
+      "familyMemberships": [
+        "day",
+        "express"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "29",
+        "A"
+      ],
+      "routeCount": 2,
+      "patternCount": 4,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.66613619809583,
+        "west": -4.506255179209581,
+        "north": 36.741315681687475,
+        "east": -4.320273829931889
+      },
+      "crop": {
+        "rowStart": 53,
+        "rowEnd": 129,
+        "columnStart": 95,
+        "columnEnd": 282,
+        "dimensions": {
+          "rows": 76,
+          "columns": 187
+        },
+        "cellCount": 14212,
+        "alignedGeographicBounds": {
+          "south": 36.6655,
+          "west": -4.5065,
+          "north": 36.7415,
+          "east": -4.3195
+        }
+      },
+      "totalIncludedWeight": 494774,
+      "nonzeroCellCount": 4694,
+      "cityWeightPercent": 78.0217267550686,
+      "canonicalCellPercent": 30.52405498281787,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "845606c388defa7b804eb7e03a5687ba1ccb6dee45d560133ba039963d10daa2",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 87,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-32-c3-v1",
+      "familyMemberships": [
+        "circular",
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "32",
+        "C3"
+      ],
+      "routeCount": 2,
+      "patternCount": 7,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.713605935227,
+        "west": -4.432393083623407,
+        "north": 36.7400550015755,
+        "east": -4.382298886937083
+      },
+      "crop": {
+        "rowStart": 53,
+        "rowEnd": 83,
+        "columnStart": 168,
+        "columnEnd": 220,
+        "dimensions": {
+          "rows": 30,
+          "columns": 52
+        },
+        "alignedGeographicBounds": {
+          "south": 36.7115,
+          "west": -4.4335,
+          "north": 36.7415,
+          "east": -4.3815
+        }
+      },
+      "totalIncludedWeight": 127847,
+      "nonzeroCellCount": 1106,
+      "cityWeightPercent": 20.16040394292193,
+      "canonicalCellPercent": 2.957474226804124,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "e76d1e977a1536d56bf0f11ec13d9624cb127fc4a56194133ee873a56f33e466",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 49,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-lines-40-c8-v1",
+      "familyMemberships": [
+        "circular",
+        "day"
+      ],
+      "aggregation": "component-package",
+      "routePublicCodes": [
+        "40",
+        "C8"
+      ],
+      "routeCount": 2,
+      "patternCount": 4,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.63911095446101,
+        "west": -4.522165856342555,
+        "north": 36.726142540488894,
+        "east": -4.4001755174987744
+      },
+      "crop": {
+        "rowStart": 68,
+        "rowEnd": 156,
+        "columnStart": 79,
+        "columnEnd": 202,
+        "dimensions": {
+          "rows": 88,
+          "columns": 123
+        },
+        "cellCount": 10824,
+        "alignedGeographicBounds": {
+          "south": 36.6385,
+          "west": -4.5225,
+          "north": 36.7265,
+          "east": -4.3995
+        }
+      },
+      "totalIncludedWeight": 348816,
+      "nonzeroCellCount": 3369,
+      "cityWeightPercent": 55.00536940056674,
+      "canonicalCellPercent": 23.24742268041237,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "58f82640edfca1e39e87b30b224da0ce740932b6eb844da5960a61b6daddc6be",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 47,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-day-legacy-all-v1",
+      "familyMemberships": [
+        "day"
+      ],
+      "aggregation": "aggregate-package",
+      "routePublicCodes": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "14",
+        "15",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "25",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "40"
+      ],
+      "routeCount": 33,
+      "patternCount": 102,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.640702466300375,
+        "west": -4.600139936948617,
+        "north": 36.79269619884393,
+        "east": -4.311738851955613
+      },
+      "crop": {
+        "rowStart": 1,
+        "rowEnd": 154,
+        "columnStart": 1,
+        "columnEnd": 290,
+        "dimensions": {
+          "rows": 153,
+          "columns": 289
+        },
+        "cellCount": 44217,
+        "alignedGeographicBounds": {
+          "south": 36.6405,
+          "west": -4.6005,
+          "north": 36.7935,
+          "east": -4.3115
+        }
+      },
+      "totalIncludedWeight": 627640,
+      "nonzeroCellCount": 11218,
+      "cityWeightPercent": 98.97358507227797,
+      "canonicalCellPercent": 94.96778350515464,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "06e3c2da0f57557bae877f3c7d3b6c0da72b0a224b6aaed4bbb7a09f5b58dde9",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 1032,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-circular-legacy-all-v1",
+      "familyMemberships": [
+        "circular"
+      ],
+      "aggregation": "aggregate-package",
+      "routePublicCodes": [
+        "C1",
+        "C2",
+        "C3",
+        "C5",
+        "C6",
+        "C8"
+      ],
+      "routeCount": 6,
+      "patternCount": 21,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.63611114970226,
+        "west": -4.524552653916703,
+        "north": 36.759140392835135,
+        "east": -4.373920744183147
+      },
+      "crop": {
+        "rowStart": 35,
+        "rowEnd": 159,
+        "columnStart": 76,
+        "columnEnd": 228,
+        "dimensions": {
+          "rows": 124,
+          "columns": 152
+        },
+        "cellCount": 18848,
+        "alignedGeographicBounds": {
+          "south": 36.6355,
+          "west": -4.5255,
+          "north": 36.7595,
+          "east": -4.3735
+        }
+      },
+      "totalIncludedWeight": 533281,
+      "nonzeroCellCount": 5893,
+      "cityWeightPercent": 84.09395899071039,
+      "canonicalCellPercent": 40.48109965635739,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "1963eada6b56c81c178447489ce8fb440b84dc4d489875d71583898c0be36d6e",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 166,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-night-legacy-all-v1",
+      "familyMemberships": [
+        "night"
+      ],
+      "aggregation": "aggregate-package",
+      "routePublicCodes": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "routeCount": 4,
+      "patternCount": 7,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.68548101870345,
+        "west": -4.59850062193574,
+        "north": 36.754742102678854,
+        "east": -4.32977131709726
+      },
+      "crop": {
+        "rowStart": 39,
+        "rowEnd": 110,
+        "columnStart": 2,
+        "columnEnd": 272,
+        "dimensions": {
+          "rows": 71,
+          "columns": 270
+        },
+        "cellCount": 19170,
+        "alignedGeographicBounds": {
+          "south": 36.6845,
+          "west": -4.5995,
+          "north": 36.7555,
+          "east": -4.3295
+        }
+      },
+      "totalIncludedWeight": 550851,
+      "nonzeroCellCount": 7200,
+      "cityWeightPercent": 86.86460122147949,
+      "canonicalCellPercent": 41.172680412371136,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "3e1a216be87fa897f654355d07002fa172849adb3d1d7d7947bcaa883b57e813",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 272,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    },
+    {
+      "scenarioId": "malaga-express-legacy-all-v1",
+      "familyMemberships": [
+        "express"
+      ],
+      "aggregation": "aggregate-package",
+      "routePublicCodes": [
+        "A",
+        "E"
+      ],
+      "routeCount": 2,
+      "patternCount": 4,
+      "settlementIds": [
+        "es-malaga"
+      ],
+      "scenarioViewportSemantics": "union-of-declared-settlement-bounds",
+      "scenarioViewportBounds": {
+        "south": 36.665417115336126,
+        "west": -4.567602226552559,
+        "north": 36.74922559204417,
+        "east": -4.399072485033143
+      },
+      "crop": {
+        "rowStart": 45,
+        "rowEnd": 130,
+        "columnStart": 33,
+        "columnEnd": 203,
+        "dimensions": {
+          "rows": 85,
+          "columns": 170
+        },
+        "cellCount": 14450,
+        "alignedGeographicBounds": {
+          "south": 36.6645,
+          "west": -4.5685,
+          "north": 36.7495,
+          "east": -4.3985
+        }
+      },
+      "totalIncludedWeight": 509028,
+      "nonzeroCellCount": 5710,
+      "cityWeightPercent": 80.26946348571077,
+      "canonicalCellPercent": 31.035223367697593,
+      "everyEligiblePositionedStopPlaceInsideAssignedSettlementBounds": true,
+      "outsideAssignedSettlementBounds": [],
+      "outsideViewport": [],
+      "outsideCrop": [],
+      "recommendedMinimumExtension": null,
+      "catalogContentHash": "fd66f1b9499a21dfaac806523975ef5a05741229ad752a9fc50dd5cdb100ee54",
+      "historicalPreparationEvidence": {
+        "status": "historical-round-3-round-4-preparation-evidence",
+        "eligiblePositionedStopPlaceCount": 49,
+        "everyEligiblePositionedStopPlaceInsideViewport": true,
+        "everyEligiblePositionedStopPlaceInsideCrop": true,
+        "anomalies": []
+      },
+      "operationalCropStatus": {
+        "differsFromAcceptedPreparationCrop": true,
+        "everyRouteUsedEligibleStopPlaceAnchorRepresented": true,
+        "everyRequiredProductionCatchmentCellRepresented": true,
+        "furtherExtensionRequired": false,
+        "maxAccessDistanceCells": 5
+      }
+    }
+  ],
+  "historicalPreparation": {
+    "status": "historical-round-3-round-4-preparation-evidence",
+    "purpose": "scenario-crop-metadata"
+  },
+  "operationalCropPolicy": {
+    "maxAccessDistanceCells": 5
+  },
+  "operationalStatus": {
+    "allSupportedScenarioCropsSufficient": true,
+    "scenarioViewportsUnchanged": true
+  }
+}

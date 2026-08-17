@@ -41,6 +41,22 @@ const renderShell = (
       }
       primaryVisualization={<div data-testid="svg-identity">SVG</div>}
       secondaryVisualization={<div data-testid="r3f-identity">R3F</div>}
+      inspector={
+        <dl data-testid="passenger-summary">
+          {[
+            'Waiting',
+            'Onboard',
+            'Destination access',
+            'Completed',
+            'Vehicles',
+          ].map((label) => (
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd>1</dd>
+            </div>
+          ))}
+        </dl>
+      }
       onPauseResume={vi.fn()}
       onSave={save}
       onRestart={restart}
@@ -72,6 +88,43 @@ it('renders a viewport shell with compact navigation and paired stable views', (
   );
   expect(screen.getByTestId('svg-identity')).toBeInTheDocument();
   expect(screen.getByTestId('r3f-identity')).toBeInTheDocument();
+});
+
+it('collapses the information dock without changing its presentation content', () => {
+  renderShell();
+  const collapse = screen.getByRole('button', {
+    name: 'Collapse information',
+  });
+  expect(collapse).toHaveAttribute('aria-expanded', 'true');
+  expect(screen.getByTestId('passenger-summary').children).toHaveLength(5);
+  fireEvent.click(collapse);
+  expect(
+    screen.getByRole('button', { name: 'Expand information' }),
+  ).toHaveAttribute('aria-expanded', 'false');
+  expect(screen.queryByTestId('passenger-summary')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Expand information' }));
+  expect(screen.getByTestId('passenger-summary')).toHaveTextContent('Waiting');
+});
+
+it('labels both representations with the shared mini and normal modes', () => {
+  renderShell();
+  expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
+    'data-representation-mode',
+    'normal',
+  );
+  expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
+    'data-representation-mode',
+    'mini',
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
+  expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
+    'data-representation-mode',
+    'normal',
+  );
+  expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
+    'data-representation-mode',
+    'mini',
+  );
 });
 
 it.each([

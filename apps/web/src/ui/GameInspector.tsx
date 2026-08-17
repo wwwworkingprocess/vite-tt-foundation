@@ -70,9 +70,9 @@ export default function GameInspector(props: GameInspectorProps) {
       aria-label="Game object inspector"
       data-testid="unavailable-inspector"
     >
+      {global}
       <button onClick={props.onClear}>Clear selection</button>
       <p>The selected game object is no longer available.</p>
-      {global}
     </aside>
   );
 
@@ -99,6 +99,7 @@ export default function GameInspector(props: GameInspectorProps) {
       ) ?? [];
     return (
       <aside aria-label="Game object inspector" data-testid="route-inspector">
+        {global}
         <button onClick={props.onClear}>Clear selection</button>
         <h2>Route {route.publicCode}</h2>
         <p>{route.name}</p>
@@ -121,7 +122,6 @@ export default function GameInspector(props: GameInspectorProps) {
         </p>
         <p>Waiting passengers: {sum(waiting.map(({ count }) => count))}</p>
         <p>Onboard passengers: {sum(onboard.map(({ count }) => count))}</p>
-        {global}
       </aside>
     );
   }
@@ -159,6 +159,7 @@ export default function GameInspector(props: GameInspectorProps) {
       ) ?? [];
     return (
       <aside aria-label="Game object inspector" data-testid="stop-inspector">
+        {global}
         <button onClick={props.onClear}>Clear selection</button>
         <h2>Stop {place.name}</h2>
         <p>{place.stopPlaceId}</p>
@@ -200,7 +201,6 @@ export default function GameInspector(props: GameInspectorProps) {
           )}
         </p>
         <p>Destination access: {sum(access.map(({ count }) => count))}</p>
-        {global}
       </aside>
     );
   }
@@ -229,6 +229,7 @@ export default function GameInspector(props: GameInspectorProps) {
     ) ?? [];
   return (
     <aside aria-label="Game object inspector" data-testid="vehicle-inspector">
+      {global}
       <button onClick={props.onClear}>Clear selection</button>
       <h2>Vehicle {vehicle.vehicleId}</h2>
       <p>Route {vehicle.routeId ?? 'standalone'}</p>
@@ -273,7 +274,6 @@ export default function GameInspector(props: GameInspectorProps) {
       ) ? (
         <p>Journey completion occurred this tick.</p>
       ) : null}
-      {global}
     </aside>
   );
 }

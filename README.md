@@ -77,15 +77,23 @@ exact vehicle calls, boarding/capacity, alighting, destination access, lineage,
 and completed journeys.
 
 Current aggregate contracts are Transport Snapshot V9, Transport Save V7,
-transport client V4, and transport Worker V4. The public catalogue contains
-multiple Torrevieja, Elche, Elche-radial, Alicante, Benidorm, and
-Benidorm-radial development-seed packages. Application/session lifecycle, object selection, inspector
+transport client V4, and transport Worker V4. The 76-entry public catalogue
+contains grouped Torrevieja, Elche, Alicante, Benidorm, Cartagena, Murcia, and
+Málaga development-seed packages. Application/session lifecycle, object selection, inspector
 diagnostics, and deterministic population-backed passenger demand are active.
 The next planned product layer is Phase 4F economics and objectives. Transfers,
 advanced services, and richer operational realism remain deferred.
 
 See [`docs/current-state.md`](docs/current-state.md) for the current contract and
 [`docs/development/roadmap.md`](docs/development/roadmap.md) for sequencing.
+
+Run the diagnostic startup benchmark without introducing a timing gate:
+
+```sh
+yarn benchmark:scenario-startup --scenario torrevieja-legacy-abc-v1
+yarn benchmark:scenario-startup --city malaga-v1 --runs 5
+yarn benchmark:scenario-startup --all --runs 1 --json
+```
 
 ## Foundation Template reference
 

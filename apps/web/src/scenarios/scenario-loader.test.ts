@@ -81,7 +81,13 @@ describe('browser scenario loader', () => {
       ) as { scenarios: Array<Record<string, unknown>> };
       const sourceManifest = JSON.parse(
         readFileSync(
-          join(publicRoot, 'scenarios', 'torrevieja-mini-v1', 'scenario.json'),
+          join(
+            publicRoot,
+            'scenarios',
+            'torrevieja-v1',
+            'torrevieja-mini-v1',
+            'scenario.json',
+          ),
           'utf8',
         ),
       ) as Record<string, unknown>;
@@ -132,7 +138,13 @@ describe('browser scenario loader', () => {
         try {
           const value = JSON.parse(
             readFileSync(
-              join(publicRoot, 'scenarios', 'torrevieja-mini-v1', filename),
+              join(
+                publicRoot,
+                'scenarios',
+                'torrevieja-v1',
+                'torrevieja-mini-v1',
+                filename,
+              ),
               'utf8',
             ),
           ) as Record<string, unknown>;
@@ -322,7 +334,7 @@ describe('browser scenario loader', () => {
       graph: { summary: { nodes: 161, edges: 244, routes: 8, patterns: 16 } },
     });
     expect(fetchText).toHaveBeenCalledWith(
-      '/vite-tt-foundation/scenarios/torrevieja-legacy-all-v1/stops.json',
+      '/vite-tt-foundation/scenarios/torrevieja-v1/torrevieja-legacy-all-v1/stops.json',
     );
     const selectedState = loader.projection.getState();
     const resolved = await loader.resolveScenario(

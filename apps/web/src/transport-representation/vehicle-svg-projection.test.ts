@@ -192,4 +192,16 @@ describe('vehicle SVG projection', () => {
       projectVehicleMovementSvg(scenario, mismatched as never),
     ).toThrow('endpoints do not match');
   });
+
+  it('uses the neutral vehicle colour when no route presentation owns the pattern', () => {
+    const unowned = structuredClone(createFleet().fleet) as unknown as Array<{
+      routeId: null;
+      patternId: string;
+    }>;
+    unowned[0]!.routeId = null;
+    unowned[0]!.patternId = 'unowned-pattern';
+    expect(
+      projectVehicleMovementSvg(scenario, unowned as never).vehicles[0]!.color,
+    ).toBe('currentColor');
+  });
 });

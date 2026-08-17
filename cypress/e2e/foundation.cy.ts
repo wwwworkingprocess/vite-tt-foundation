@@ -12,7 +12,31 @@ const vehicleSvgState = (): Cypress.Chainable<VehicleSvgState> =>
     })),
   );
 const expectVehicleSvg = (expected: VehicleSvgState) =>
-  vehicleSvgState().should('deep.equal', expected);
+  cy.get('[data-testid="vehicle-position"]').should(($vehicles) => {
+    const current = [...$vehicles].map((vehicle) => ({
+      vehicleId: vehicle.getAttribute('data-vehicle-id'),
+      movementKind: vehicle.getAttribute('data-movement-kind'),
+      edgeId: vehicle.getAttribute('data-edge-id'),
+      progressNumerator: vehicle.getAttribute('data-progress-numerator'),
+      progressDenominator: vehicle.getAttribute('data-progress-denominator'),
+      cx: vehicle.getAttribute('cx'),
+      cy: vehicle.getAttribute('cy'),
+    }));
+    expect(current).to.deep.equal(expected);
+  });
+const expectVehicleSvgToChange = (expected: VehicleSvgState) =>
+  cy.get('[data-testid="vehicle-position"]').should(($vehicles) => {
+    const current = [...$vehicles].map((vehicle) => ({
+      vehicleId: vehicle.getAttribute('data-vehicle-id'),
+      movementKind: vehicle.getAttribute('data-movement-kind'),
+      edgeId: vehicle.getAttribute('data-edge-id'),
+      progressNumerator: vehicle.getAttribute('data-progress-numerator'),
+      progressDenominator: vehicle.getAttribute('data-progress-denominator'),
+      cx: vehicle.getAttribute('cx'),
+      cy: vehicle.getAttribute('cy'),
+    }));
+    expect(current).not.to.deep.equal(expected);
+  });
 const restoreScenario = (scenarioId: string) =>
   cy
     .contains('[data-save-id]', scenarioId)
@@ -28,6 +52,7 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
 const openSimulationControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
 const restoreReadyTimeoutMs = 15_000;
+const representationSettleMs = 250;
 const expectRestoredAuthority = (scenarioId: string) => {
   cy.get('[data-testid="worker-timeline"]', {
     timeout: restoreReadyTimeoutMs,
@@ -216,6 +241,7 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-timeline"]').then(($timeline) => {
       fullTimeline = $timeline.text();
     });
+    cy.wait(representationSettleMs);
     vehicleSvgState().then((snapshot) => {
       fullSvg = snapshot;
       cy.wait(350);
@@ -297,6 +323,7 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-tick"]').then(($tick) => {
       secondaryTick = Number($tick.text().split(': ')[1]);
     });
+    cy.wait(representationSettleMs);
     vehicleSvgState().then((snapshot) => {
       secondarySvg = snapshot;
       cy.wait(350);
@@ -347,13 +374,10 @@ describe('foundation screen', () => {
         secondaryTick,
       ),
     );
-    cy.then(() =>
-      vehicleSvgState().should((current) =>
-        expect(current).not.to.deep.equal(secondarySvg),
-      ),
-    );
+    expectVehicleSvgToChange(secondarySvg);
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
+    cy.wait(representationSettleMs);
     vehicleSvgState().then((snapshot) => {
       cy.wait(350);
       expectVehicleSvg(snapshot);

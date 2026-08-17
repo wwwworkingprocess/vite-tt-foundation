@@ -20,8 +20,14 @@ const publicRoot = join(
   'public',
   'scenarios',
 );
+const catalogue = JSON.parse(
+  readFileSync(join(publicRoot, 'catalog.json'), 'utf8'),
+) as { scenarios: Array<{ scenarioId: string; manifestPath: string }> };
 const scenario = (scenarioId: string) => {
-  const root = join(publicRoot, scenarioId);
+  const descriptor = catalogue.scenarios.find(
+    (candidate) => candidate.scenarioId === scenarioId,
+  )!;
+  const root = join(publicRoot, descriptor.manifestPath, '..');
   const json = (name: string) =>
     JSON.parse(readFileSync(join(root, name), 'utf8')) as unknown;
   return parseScenarioPackage({

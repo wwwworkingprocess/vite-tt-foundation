@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react';
 import type { FoundationSaveOutcome } from '../foundation-session-composition.js';
+import { RepresentationModeProvider } from '../representation/RepresentationModeContext.js';
 
 type DialogName = 'project' | 'simulation' | 'session';
 
@@ -48,6 +49,7 @@ export function GameShell({
 }: GameShellProps) {
   const [openDialog, setOpenDialog] = useState<DialogName>();
   const [threePrimary, setThreePrimary] = useState(false);
+  const [dockExpanded, setDockExpanded] = useState(true);
   const [saveFeedback, setSaveFeedback] = useState<string>();
   const trigger = useRef<HTMLElement | undefined>(undefined);
   const open =
@@ -121,8 +123,11 @@ export function GameShell({
             threePrimary ? 'secondary-minimap' : 'primary-visualization'
           }
           data-view="transport"
+          data-representation-mode={threePrimary ? 'mini' : 'normal'}
         >
-          {primaryVisualization}
+          <RepresentationModeProvider mode={threePrimary ? 'mini' : 'normal'}>
+            {primaryVisualization}
+          </RepresentationModeProvider>
         </div>
         <div
           className={`visualization-surface ${
@@ -132,8 +137,11 @@ export function GameShell({
             threePrimary ? 'primary-visualization' : 'secondary-minimap'
           }
           data-view="three"
+          data-representation-mode={threePrimary ? 'normal' : 'mini'}
         >
-          {secondaryVisualization}
+          <RepresentationModeProvider mode={threePrimary ? 'normal' : 'mini'}>
+            {secondaryVisualization}
+          </RepresentationModeProvider>
         </div>
         <button
           type="button"
@@ -144,7 +152,25 @@ export function GameShell({
         </button>
       </section>
       {inspector ? (
-        <section className="game-inspector-panel">{inspector}</section>
+        <section
+          className="game-inspector-panel"
+          data-expanded={dockExpanded}
+          data-testid="game-information-dock"
+        >
+          <div className="game-inspector-heading">
+            <span>Game information and current selection</span>
+            <button
+              type="button"
+              aria-expanded={dockExpanded}
+              onClick={() => setDockExpanded((current) => !current)}
+            >
+              {dockExpanded ? 'Collapse information' : 'Expand information'}
+            </button>
+          </div>
+          {dockExpanded ? (
+            <div className="game-inspector-content">{inspector}</div>
+          ) : null}
+        </section>
       ) : null}
       {openDialog === 'project' ? (
         <Suspense fallback={null}>

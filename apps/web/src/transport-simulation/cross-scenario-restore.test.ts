@@ -25,11 +25,20 @@ import { parseTransportSaveRecord } from './transport-save-record.js';
 import { createInMemoryTransportSaveRepository } from './transport-save-repository.js';
 
 const publicRoot = join(import.meta.dirname, '..', '..', 'public', 'scenarios');
+const catalogue = JSON.parse(
+  readFileSync(join(publicRoot, 'catalog.json'), 'utf8'),
+) as { scenarios: Array<{ scenarioId: string; manifestPath: string }> };
 const load = (directory: string): CanonicalScenario => {
+  const manifestPath =
+    catalogue.scenarios.find(({ scenarioId }) => scenarioId === directory)
+      ?.manifestPath ??
+    (directory === 'torrevieja-mini-v1'
+      ? 'torrevieja-v1/torrevieja-mini-v1/scenario.json'
+      : undefined);
+  if (!manifestPath) throw new Error(`Unknown test scenario ${directory}.`);
+  const root = join(publicRoot, manifestPath, '..');
   const read = (name: string) =>
-    JSON.parse(
-      readFileSync(join(publicRoot, directory, name), 'utf8'),
-    ) as unknown;
+    JSON.parse(readFileSync(join(root, name), 'utf8')) as unknown;
   return parseScenarioPackage({
     manifest: read('scenario.json'),
     settlements: read('settlements.json'),

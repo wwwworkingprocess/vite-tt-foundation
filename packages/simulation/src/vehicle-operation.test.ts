@@ -641,6 +641,7 @@ describe('light vehicle pattern runs and StopNode calls', () => {
       'web',
       'public',
       'scenarios',
+      'torrevieja-v1',
       'torrevieja-legacy-abc-v1',
     );
     const publicJson = (name: string) =>

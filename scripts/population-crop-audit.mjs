@@ -38,7 +38,16 @@ const checkedAdd = (left, right, context) => {
   return result;
 };
 const scenarioPackage = async (scenarioId) => {
-  const directory = join(publicRoot, 'scenarios', scenarioId);
+  const descriptor = scenarioCatalogue.scenarios.find(
+    (candidate) => candidate.scenarioId === scenarioId,
+  );
+  if (!descriptor) throw new Error(`Unknown public scenario ${scenarioId}.`);
+  const directory = join(
+    publicRoot,
+    'scenarios',
+    descriptor.manifestPath,
+    '..',
+  );
   const asset = (name) => json(join(directory, name));
   return parseScenarioPackage({
     manifest: await asset('scenario.json'),

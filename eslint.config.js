@@ -117,7 +117,7 @@ export default tseslint.config(
     rules: { '@typescript-eslint/no-unsafe-call': 'off' },
   },
   {
-    files: ['**/*.config.ts', '*.js', 'scripts/**/*.mjs'],
+    files: ['**/*.config.ts', '*.js', 'scripts/**/*.{mjs,d.mts}'],
     languageOptions: { globals: globals.node },
     extends: [tseslint.configs.disableTypeChecked],
   },

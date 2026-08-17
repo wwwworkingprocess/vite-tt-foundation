@@ -506,6 +506,7 @@ describe('directional passenger waiting cohorts', () => {
       'web',
       'public',
       'scenarios',
+      'torrevieja-v1',
       'torrevieja-legacy-all-v1',
     );
     const read = (name: string) =>

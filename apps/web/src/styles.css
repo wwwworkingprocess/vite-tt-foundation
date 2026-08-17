@@ -40,11 +40,57 @@ summary {
 
 .game-shell {
   display: grid;
-  grid-template-rows: var(--navigation-height) minmax(0, 1fr);
+  grid-template-rows: var(--navigation-height) minmax(0, 1fr) auto;
   width: 100%;
   height: 100dvh;
   min-height: 0;
   overflow: hidden;
+}
+
+.game-inspector-panel {
+  z-index: 3;
+  min-width: 0;
+  max-height: min(32dvh, 18rem);
+  overflow: hidden;
+  border-top: 1px solid #b9aea0;
+  background: rgb(248 244 236 / 98%);
+}
+
+.game-inspector-panel[data-expanded='false'] {
+  max-height: none;
+}
+
+.game-inspector-heading {
+  display: flex;
+  min-height: 2.6rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0.75rem;
+}
+
+.game-inspector-content {
+  max-height: calc(min(32dvh, 18rem) - 2.6rem);
+  overflow: auto;
+  padding: 0 0.75rem 0.5rem;
+}
+
+.game-inspector-content aside > p:first-child {
+  margin-block: 0 0.35rem;
+}
+
+.game-inspector-content [data-testid='passenger-summary'] {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(7rem, 1fr));
+  gap: 0.45rem;
+  min-width: 38rem;
+  margin: 0;
+}
+
+.game-inspector-content [data-testid='passenger-summary'] > div {
+  padding: 0.4rem 0.55rem;
+  border: 1px solid #b8afa1;
+  border-radius: 0.45rem;
 }
 
 .top-navigation {

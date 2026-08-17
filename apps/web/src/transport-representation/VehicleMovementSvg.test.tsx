@@ -1,4 +1,11 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+} from '@testing-library/react';
+import { StrictMode } from 'react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -13,7 +20,10 @@ import {
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import { VehicleMovementSvg } from './VehicleMovementSvg.js';
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 const root = join(
   import.meta.dirname,
   '..',
@@ -41,6 +51,7 @@ const selectionRoot = join(
   '..',
   'public',
   'scenarios',
+  'torrevieja-v1',
   'torrevieja-legacy-abc-v1',
 );
 const selectionJson = (name: string) =>
@@ -54,7 +65,7 @@ const selectionScenario = parseScenarioPackage({
   provenance: selectionJson('provenance.json'),
 });
 
-it('renders authoritative stop, edge, and changing vehicle projections accessibly', () => {
+it('renders authoritative stop, edge, and changing vehicle projections accessibly', async () => {
   const pattern = scenario.routes.routes[0]!.patterns[0]!;
   let state = createTransportSimulationState(scenario, 0);
   state = applyTransportVehicleCommand(state, {
@@ -78,10 +89,13 @@ it('renders authoritative stop, edge, and changing vehicle projections accessibl
   const initial = `${before.getAttribute('cx')}:${before.getAttribute('cy')}`;
   state = advanceTransportTicks(state, parseTickAdvancement(5));
   view.rerender(<VehicleMovementSvg scenario={scenario} fleet={state.fleet} />);
+  await vi.waitFor(() => {
+    const current = screen.getByTestId('vehicle-position');
+    expect(
+      `${current.getAttribute('cx')}:${current.getAttribute('cy')}`,
+    ).not.toBe(initial);
+  });
   const after = screen.getByTestId('vehicle-position');
-  expect(`${after.getAttribute('cx')}:${after.getAttribute('cy')}`).not.toBe(
-    initial,
-  );
   expect(after).toHaveAttribute('data-movement-kind', 'running-on-edge');
   expect(after).toHaveAttribute('data-progress-numerator', '5');
   expect(screen.getByTestId('vehicle-movement-svg')).toHaveAccessibleName(
@@ -107,6 +121,75 @@ it('renders authoritative stop, edge, and changing vehicle projections accessibl
     'data-directed-edge-count',
     String(state.graph.summary.edges),
   );
+});
+
+it('publishes live fleet and passenger authority after StrictMode effect replay', () => {
+  vi.useFakeTimers();
+  const initial = createTransportSimulationState(selectionScenario, 0);
+  const pattern = selectionScenario.routes.routes[0]!.patterns[0]!;
+  const active = applyTransportVehicleCommand(initial, {
+    kind: 'transport.vehicle.create',
+    vehicleId: parseVehicleId('strict-svg-bus'),
+    label: 'Strict SVG bus',
+    patternId: pattern.patternId,
+    movementPlan: {
+      kind: 'vehicle-movement-plan-v1',
+      edgeTravelTicks: Array.from(
+        { length: pattern.stopNodeIds.length - 1 },
+        () => 10,
+      ),
+    },
+  });
+  const place = selectionScenario.stops.stopNodes.find(
+    ({ stopPlaceId }) => stopPlaceId !== null,
+  )!.stopPlaceId!;
+  const demand = {
+    status: 'active',
+    waitingCohorts: [{ originStopPlaceId: place, count: 9 }],
+  } as unknown as PassengerDemandProjection;
+  const view = render(
+    <StrictMode>
+      <VehicleMovementSvg scenario={selectionScenario} fleet={initial.fleet} />
+    </StrictMode>,
+  );
+  expect(screen.queryByTestId('vehicle-position')).toBeNull();
+  expect(screen.queryByTestId('stop-waiting-passenger-count')).toBeNull();
+  expect(screen.getAllByTestId('edge-direction').length).toBeGreaterThan(0);
+
+  view.rerender(
+    <StrictMode>
+      <VehicleMovementSvg
+        scenario={selectionScenario}
+        fleet={active.fleet}
+        passengerDemand={demand}
+        vehiclePassengerLoads={[
+          {
+            vehicleId: parseVehicleId('strict-svg-bus'),
+            passengerCapacity: 80,
+            onboardPassengerCount: 4,
+            remainingPassengerCapacity: 76,
+            currentAlightedPassengerCount: 0,
+            currentBoardedPassengerCount: 0,
+          },
+        ]}
+      />
+    </StrictMode>,
+  );
+  act(() => vi.advanceTimersByTime(1000 / 60));
+
+  expect(screen.getByTestId('vehicle-position')).toHaveAttribute(
+    'data-vehicle-id',
+    'strict-svg-bus',
+  );
+  expect(screen.getByTestId('stop-waiting-passenger-count')).toHaveAttribute(
+    'data-waiting-passenger-count',
+    '9',
+  );
+  expect(screen.getByTestId('vehicle-onboard-passenger-count')).toHaveAttribute(
+    'data-onboard-passenger-count',
+    '4',
+  );
+  expect(screen.getAllByTestId('edge-direction').length).toBeGreaterThan(0);
 });
 
 it('renders arrowheads to show edge orientation', () => {
@@ -342,6 +425,7 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
         { tick: 10 as never, stopPlaceId: place, arrivedPassengerCount: 5 },
       ]}
       simulationTick={10}
+      showPassengerArrivalPulse
     />,
   );
   expect(screen.getByRole('button', { name: 'Hide passengers' })).toBeVisible();
@@ -350,8 +434,25 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
   );
   expect(screen.getAllByTestId('stop-waiting-passenger-count')).toHaveLength(1);
   expect(
+    screen
+      .getAllByTestId('passenger-stop-status')
+      .filter((element) => element.getAttribute('data-stop-place-id') === place)
+      .every(
+        (element) =>
+          element.getAttribute('fill') === 'black' &&
+          element.getAttribute('data-has-waiting-passengers') === 'true',
+      ),
+  ).toBe(true);
+  expect(
     screen.getByTestId('vehicle-onboard-passenger-count'),
   ).toHaveTextContent('14');
+  const vehicleMarker = screen.getByTestId('vehicle-position');
+  const onboardCount = screen.getByTestId('vehicle-onboard-passenger-count');
+  expect(vehicleMarker).toHaveAttribute('fill', '#2c7fb8');
+  expect(onboardCount).toHaveAttribute('x', vehicleMarker.getAttribute('cx'));
+  expect(onboardCount).toHaveAttribute('y', vehicleMarker.getAttribute('cy'));
+  expect(onboardCount).toHaveAttribute('text-anchor', 'middle');
+  expect(onboardCount).toHaveAttribute('pointer-events', 'none');
   expect(screen.getByTestId('passenger-arrival-pulse')).toBeVisible();
   view.rerender(
     <VehicleMovementSvg
@@ -363,6 +464,7 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
         { tick: 9 as never, stopPlaceId: place, arrivedPassengerCount: 1 },
       ]}
       simulationTick={11}
+      showPassengerArrivalPulse
     />,
   );
   expect(screen.getByTestId('passenger-arrival-pulse')).toHaveAttribute(
@@ -379,6 +481,7 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
         { tick: 12 as never, stopPlaceId: place, arrivedPassengerCount: 1 },
       ]}
       simulationTick={12}
+      showPassengerArrivalPulse
     />,
   );
   expect(screen.getByTestId('passenger-arrival-pulse')).toHaveAttribute(
@@ -395,6 +498,7 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
         { tick: 12 as never, stopPlaceId: place, arrivedPassengerCount: 1 },
       ]}
       simulationTick={17}
+      showPassengerArrivalPulse
     />,
   );
   expect(screen.queryByTestId('passenger-arrival-pulse')).toBeNull();
@@ -421,3 +525,26 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
     ),
   ).toThrow(/safe range/i);
 }, 15_000);
+
+it('keeps arrival pulse authority dormant by default and renders it when enabled', () => {
+  const place = selectionScenario.stops.stopNodes.find(
+    ({ stopPlaceId }) => stopPlaceId !== null,
+  )!.stopPlaceId!;
+  const props = {
+    scenario: selectionScenario,
+    fleet: [],
+    passengerOriginStopArrivalEvents: [
+      { tick: 4 as never, stopPlaceId: place, arrivedPassengerCount: 2 },
+    ],
+    simulationTick: 4,
+  };
+  const view = render(<VehicleMovementSvg {...props} />);
+  expect(screen.queryByTestId('passenger-arrival-pulse')).toBeNull();
+  view.rerender(<VehicleMovementSvg {...props} showPassengerArrivalPulse />);
+  return vi.waitFor(() =>
+    expect(screen.getByTestId('passenger-arrival-pulse')).toHaveAttribute(
+      'data-last-arrival-tick',
+      '4',
+    ),
+  );
+});

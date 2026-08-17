@@ -1,7 +1,10 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
+import {
+  parseScenarioPackage,
+  type RouteId,
+} from '@torrevieja-tycoon/transport-domain';
 import {
   allocatePassengerDestinations,
   advanceTransportTicks,
@@ -28,7 +31,13 @@ const digestSha256 = async (text: string) => {
   return createHash('sha256').update(text).digest('hex');
 };
 const scenario = async (scenarioId: string) => {
-  const directory = join(root, 'scenarios', scenarioId);
+  const catalogue = JSON.parse(
+    await readFile(join(root, 'scenarios', 'catalog.json'), 'utf8'),
+  ) as { scenarios: Array<{ scenarioId: string; manifestPath: string }> };
+  const descriptor = catalogue.scenarios.find(
+    (candidate) => candidate.scenarioId === scenarioId,
+  )!;
+  const directory = join(root, 'scenarios', descriptor.manifestPath, '..');
   const json = async (name: string) =>
     JSON.parse(await readFile(join(directory, name), 'utf8')) as unknown;
   return parseScenarioPackage({
@@ -358,6 +367,7 @@ describe('population field loader', () => {
       !initial.passengerDirectItineraryIndex
     )
       throw new Error('Expected active passenger authority.');
+    const itineraryIndex = initial.passengerDirectItineraryIndex;
     const stopNodePlaces = new Map(
       canonical.stops.stopNodes.map((node) => [
         node.stopNodeId,
@@ -379,7 +389,7 @@ describe('population field loader', () => {
         ),
       ]),
     );
-    const exclusiveOrigin = (routeId: string) =>
+    const exclusiveOrigin = (routeId: RouteId) =>
       [...placesByRoute.get(routeId)!]
         .filter((stopPlaceId) =>
           [...placesByRoute].every(
@@ -388,7 +398,7 @@ describe('population field loader', () => {
           ),
         )
         .sort()[0]!;
-    const metrics = ['legacy-A', 'legacy-B', 'legacy-C'].map((routeId) => {
+    const metrics = canonical.routes.routes.map(({ routeId }) => {
       const originStopPlaceId = exclusiveOrigin(routeId);
       const candidates = listPassengerDestinationCandidates(
         plan,
@@ -412,7 +422,7 @@ describe('population field loader', () => {
           (baselineByPlace.get(candidate.destinationStopPlaceId) ?? 0) + count,
         );
         if (
-          initial.passengerDirectItineraryIndex.find(
+          itineraryIndex.find(
             originStopPlaceId,
             candidate.destinationStopPlaceId,
           ).status === 'direct'
@@ -429,7 +439,7 @@ describe('population field loader', () => {
             allocation.count,
         );
         if (
-          initial.passengerDirectItineraryIndex.find(
+          itineraryIndex.find(
             originStopPlaceId,
             allocation.destinationStopPlaceId,
           ).status === 'direct'

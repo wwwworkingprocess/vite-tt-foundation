@@ -53,8 +53,19 @@ const scenario = () =>
   });
 
 const publicRoot = join(import.meta.dirname, '..', '..', 'public');
+const publicCatalogue = JSON.parse(
+  readFileSync(join(publicRoot, 'scenarios', 'catalog.json'), 'utf8'),
+) as { scenarios: Array<{ scenarioId: string; manifestPath: string }> };
 const productionScenario = (scenarioId: string) => {
-  const directory = join(publicRoot, 'scenarios', scenarioId);
+  const descriptor = publicCatalogue.scenarios.find(
+    (candidate) => candidate.scenarioId === scenarioId,
+  )!;
+  const directory = join(
+    publicRoot,
+    'scenarios',
+    descriptor.manifestPath,
+    '..',
+  );
   const asset = (name: string) =>
     JSON.parse(readFileSync(join(directory, name), 'utf8')) as unknown;
   return parseScenarioPackage({

@@ -139,8 +139,10 @@ Current aggregate contract values are listed in
 **Status:** Integrated as development-seed data; semantic cleanup remains for
 known alternative-route variants.
 
-The public catalogue contains Torrevieja, Elche, Elche-radial, Alicante,
-Benidorm, and Benidorm-radial families plus aggregate packages. Package hashing, parsing, graph construction,
+The 76-entry public catalogue contains Torrevieja, Elche, Alicante, Benidorm,
+Cartagena, Murcia, and Málaga families plus aggregate packages. Packages are
+stored beneath city directories while catalogue manifest paths remain runtime
+path authority. Package hashing, parsing, graph construction,
 root/subpath/PWA delivery, route creation, and circular-route operation are
 covered. All entries remain `development-seed`, and known R10/R11/Alicante-27
 variant modeling debt is recorded in the current-state ledger.
@@ -162,6 +164,10 @@ Completed:
 - settlement-metadata-driven city/scenario entry;
 - renderer-independent Route, StopPlace, and Vehicle selection;
 - exact route, stop, vehicle, and passenger authority inspectors.
+- shared mini (5 fps) and normal (60 fps) presentation cadence with latest-state
+  coalescing;
+- compact collapsible information dock and route-coloured vehicle diagnostics;
+- reusable per-scenario startup timing diagnostics.
 
 Remaining product visualization work:
 

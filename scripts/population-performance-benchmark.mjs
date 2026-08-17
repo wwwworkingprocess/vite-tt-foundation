@@ -25,11 +25,24 @@ const root = new URL('../', import.meta.url).pathname.replace(/^\/(.:)/, '$1');
 const publicRoot = join(root, 'apps/web/public');
 const json = async (path) => JSON.parse(await readFile(path, 'utf8'));
 const arguments_ = process.argv.slice(2);
+const BENCHMARK_VEHICLE_EDGE_TRAVEL_TICKS = 120;
 const scenarioId =
   arguments_.find((value) => !value.startsWith('--') && !/^\d+$/.test(value)) ??
   'torrevieja-legacy-abc-v1';
 const ticks = Number(arguments_.find((value) => /^\d+$/.test(value)) ?? 300);
-const scenarioRoot = join(publicRoot, 'scenarios', scenarioId);
+const scenarioCatalogue = await json(
+  join(publicRoot, 'scenarios', 'catalog.json'),
+);
+const scenarioDescriptor = scenarioCatalogue.scenarios.find(
+  (candidate) => candidate.scenarioId === scenarioId,
+);
+if (!scenarioDescriptor) throw new Error(`Unknown scenario ${scenarioId}.`);
+const scenarioRoot = join(
+  publicRoot,
+  'scenarios',
+  scenarioDescriptor.manifestPath,
+  '..',
+);
 const scenario = parseScenarioPackage({
   manifest: await json(join(scenarioRoot, 'scenario.json')),
   settlements: await json(join(scenarioRoot, 'settlements.json')),
@@ -143,7 +156,9 @@ const command = {
     patternId: pattern.patternId,
     movementPlan: {
       kind: 'vehicle-movement-plan-v1',
-      edgeTravelTicks: graph.patternEdges(pattern.patternId).map(() => 120),
+      edgeTravelTicks: graph
+        .patternEdges(pattern.patternId)
+        .map(() => BENCHMARK_VEHICLE_EDGE_TRAVEL_TICKS),
     },
   })),
 };

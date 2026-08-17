@@ -25,6 +25,7 @@ const fixtureRoot = join(
   '..',
   'public',
   'scenarios',
+  'torrevieja-v1',
   'torrevieja-legacy-abc-v1',
 );
 const json = (name: string) =>
@@ -207,6 +208,17 @@ it('shows exact route authority and attributable passenger totals', () => {
   expect(screen.getByTestId('route-inspector')).toHaveTextContent(
     'Onboard passengers: 2',
   );
+  const inspector = screen.getByTestId('route-inspector');
+  expect(
+    inspector.compareDocumentPosition(screen.getByTestId('passenger-summary')) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+  ).not.toBe(0);
+  expect(
+    screen
+      .getByTestId('passenger-summary')
+      .compareDocumentPosition(screen.getByText(route.routeId)) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+  ).not.toBe(0);
 
   const withPlatformOnlyNode = structuredClone(scenario) as typeof scenario;
   const platformOnlyNode = withPlatformOnlyNode.stops.stopNodes.find(

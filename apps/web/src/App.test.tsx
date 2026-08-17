@@ -59,6 +59,7 @@ const legacyFixture = join(
   '..',
   'public',
   'scenarios',
+  'torrevieja-v1',
   'torrevieja-legacy-abc-v1',
 );
 const legacyJson = (name: string) =>
@@ -943,6 +944,7 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByTestId('pacing-status')).toHaveTextContent('paused'),
     );
+    await new Promise((resolve) => setTimeout(resolve, 25));
     const position = screen
       .getAllByTestId('vehicle-position')
       .find(

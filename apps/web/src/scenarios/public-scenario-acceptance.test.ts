@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
@@ -29,7 +29,14 @@ const torreviejaScenarioIds = [
 async function loadCanonicalScenario(
   scenarioId: string,
 ): Promise<CanonicalScenario> {
-  const root = join(publicRoot, 'scenarios', scenarioId);
+  const catalog = JSON.parse(
+    await readFile(join(publicRoot, 'scenarios', 'catalog.json'), 'utf8'),
+  ) as { scenarios: Array<{ scenarioId: string; manifestPath: string }> };
+  const descriptor = catalog.scenarios.find(
+    (candidate) => candidate.scenarioId === scenarioId,
+  );
+  if (!descriptor) throw new Error(`Unknown public scenario ${scenarioId}.`);
+  const root = join(publicRoot, 'scenarios', descriptor.manifestPath, '..');
   const json = async (name: string) =>
     JSON.parse(await readFile(join(root, name), 'utf8')) as unknown;
   return parseScenarioPackage({
@@ -43,6 +50,69 @@ async function loadCanonicalScenario(
 }
 
 describe('public multi-scenario catalogue', () => {
+  it('uses grouped city manifest paths and leaves no flat scenario packages', async () => {
+    const scenarioRoot = join(publicRoot, 'scenarios');
+    const catalog = JSON.parse(
+      await readFile(join(scenarioRoot, 'catalog.json'), 'utf8'),
+    ) as { scenarios: Array<{ scenarioId: string; manifestPath: string }> };
+    expect(catalog.scenarios).toHaveLength(76);
+    expect(
+      new Set(catalog.scenarios.map(({ scenarioId }) => scenarioId)).size,
+    ).toBe(76);
+    for (const descriptor of catalog.scenarios) {
+      expect(descriptor.manifestPath.split('/')).toHaveLength(3);
+      expect(descriptor.manifestPath).toMatch(
+        /^[a-z_]+-v1\/[a-z0-9-]+-v1\/scenario\.json$/,
+      );
+      await expect(
+        readFile(join(scenarioRoot, descriptor.manifestPath), 'utf8'),
+      ).resolves.toContain(descriptor.scenarioId);
+    }
+    await expect(
+      readFile(
+        join(
+          scenarioRoot,
+          'torrevieja-v1',
+          'torrevieja-mini-v1',
+          'scenario.json',
+        ),
+        'utf8',
+      ),
+    ).resolves.toContain('torrevieja-mini-v1');
+    expect(
+      catalog.scenarios.some(
+        ({ scenarioId }) => scenarioId === 'torrevieja-mini-v1',
+      ),
+    ).toBe(false);
+    const rootEntries = await readdir(scenarioRoot, { withFileTypes: true });
+    expect(
+      rootEntries
+        .filter((entry) => entry.isFile())
+        .map(({ name }) => name)
+        .sort(),
+    ).toEqual(['catalog.json']);
+    expect(
+      rootEntries
+        .filter((entry) => entry.isDirectory())
+        .map(({ name }) => name)
+        .sort(),
+    ).toEqual([
+      'alicante-v1',
+      'benidorm-v1',
+      'cartagena-v1',
+      'elche-v1',
+      'malaga-v1',
+      'murcia-v1',
+      'torrevieja-v1',
+    ]);
+    const auditSource = await readFile(
+      join(publicRoot, '..', '..', '..', 'scripts', 'foundation-audit.mjs'),
+      'utf8',
+    );
+    expect(auditSource).not.toContain(
+      'apps/web/public/population-fields/catalog.json',
+    );
+  });
   it.each(['/', '/vite-tt-foundation/'])(
     'loads and verifies every catalogue package under base %s',
     async (baseUrl) => {
@@ -220,7 +290,7 @@ describe('public multi-scenario catalogue', () => {
       }
     }
     expect(routeCount).toBeGreaterThan(0);
-  }, 30_000);
+  }, 60_000);
 
   it('accepts the physical Torrevieja StopPlace projection consistently', async () => {
     const scenarios = await Promise.all(

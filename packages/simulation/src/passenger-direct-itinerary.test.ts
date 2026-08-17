@@ -932,6 +932,7 @@ describe('Passenger Direct Itinerary Plan V1', () => {
         'web',
         'public',
         'scenarios',
+        'torrevieja-v1',
         'torrevieja-legacy-abc-v1',
       ),
     ],

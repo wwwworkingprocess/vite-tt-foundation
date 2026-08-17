@@ -31,8 +31,9 @@ development-seed Production Passenger Demand Policy V1 for both new games and
 restore preflight. The SVG exposes the active nonzero population cells as a
 presentation-only diagnostic overlay, visible by default. Passenger map
 diagnostics are also visible by default: physical StopPlace waiting totals,
-vehicle onboard totals, and a five-authoritative-tick pulse driven by explicit
-origin-StopPlace arrival transition evidence. Arrival evidence is aggregated by
+vehicle onboard totals, and retained five-authoritative-tick pulse capability
+driven by explicit origin-StopPlace arrival transition evidence. The pulse is
+currently disabled by presentation policy. Arrival evidence is aggregated by
 tick and StopPlace, survives batched advancement, and is published rather than
 persisted; it cannot be inferred from the net queue delta.
 Destination assignment uses an origin-keyed deterministic affine permutation
@@ -81,10 +82,16 @@ before current authority is replaced. Failed restore is non-destructive.
 ## Scenario catalogue and distribution
 
 - Default scenario: `torrevieja-legacy-abc-v1`.
-- Public catalogue: 37 ordered entries, all currently marked
+- Public catalogue: 76 ordered entries, all currently marked
   `development-seed`.
-- Scenario directories: 38. `torrevieja-mini-v1` is not a public catalogue
-  entry.
+- Scenario storage uses seven `<normalized-city-name>-v1` directories containing
+  77 packages. The audit derives the directory from the package's primary
+  settlement name by Unicode decomposition, removal of combining diacritics,
+  lowercasing, and replacing spaces with underscores; unsupported punctuation
+  requires an explicit future naming decision. `torrevieja-mini-v1` is the sole
+  non-public fixture.
+- `catalog.manifestPath` is the sole runtime scenario path authority. Directory
+  grouping never becomes settlement or scenario identity.
 - Current PWA build includes `scenarios/**/*.json` and
   `population-fields/**/*` in generated assets. The
   earlier catalogue/default-plus-runtime-cache proposal is not implemented.
@@ -134,6 +141,31 @@ full-workspace SVG diagnostic, an R3F representation boundary, swappable
 primary/minimap shell roles, and an authority-derived inspector. Route, physical
 StopPlace, and Vehicle selections are browser-owned canonical identities; the SVG
 is only one input adapter and never owns selection or simulation authority.
+
+Both renderers consume one `RepresentationMode`: `mini` targets 5 fps and
+`normal` targets 60 fps. Replaceable render projection is sampled with
+latest-state coalescing at that presentation cadence; reliable publication and
+authoritative tick advancement remain unthrottled. SVG uses the shared latest
+projection throttle; R3F uses `frameloop="never"` and advances frames through
+the same cadence policy rather than browser display refresh. The expanded information dock
+uses one compact five-metric row and can collapse to its accessible heading row.
+
+Passenger StopPlace diagnostics use silver for empty and black for waiting;
+vehicle markers use canonical route presentation colours with a separate
+selection outline and centered onboard counts. The diagnostic command
+`yarn benchmark:scenario-startup` separates production startup-path work from
+standalone diagnostic decomposition without machine-dependent timing thresholds.
+StopPlace catchments and the passenger-demand plan are application preparation;
+the passenger-demand runtime index is lazy first-passenger-advance work. Direct
+itinerary plan/index diagnostics explain their pairwise cost without inflating
+the startup total. Worker startup performs passenger-aware itinerary authority
+construction once during browser-client semantic preflight and again when the
+Worker creates its authority, and the benchmark exposes both passes.
+
+Browser-created demo vehicles currently assign a named uniform default of 120
+authoritative ticks per edge. The movement model already accepts non-uniform
+per-edge durations. Geographic edge length and authoritative travel duration are
+distinct; no metres, speeds, traffic, or distance-derived timing model exists.
 
 A production passenger-aware visualization is not complete. The inspector exposes
 exact waiting, onboard, capacity, alighting, destination-access, completion, and

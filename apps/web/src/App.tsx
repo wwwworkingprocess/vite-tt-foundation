@@ -925,6 +925,7 @@ export function App() {
                   transportApplication?.passengerOriginStopArrivalEvents
                 }
                 simulationTick={application?.authoritative?.simulationTick}
+                showPassengerArrivalPulse={false}
               />
             </div>
           ) : (

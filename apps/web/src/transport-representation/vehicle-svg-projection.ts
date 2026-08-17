@@ -37,6 +37,7 @@ export interface VehicleSvgProjection {
       movementKind: VehicleState['movement']['kind'];
       routeId?: RouteId;
       patternId: RoutePatternId;
+      color?: string;
       routeLegIndex?: number;
       completedRouteCycles?: number;
       edgeId?: string;
@@ -183,6 +184,17 @@ export function projectVehicleMovementSvg(
     staticScenarioProjections.set(scenario, staticProjection);
   }
   const vehicles = fleet.map((vehicle) => {
+    const presentation = scenario.presentation as
+      { routeStyles?: Record<string, { color?: unknown }> } | undefined;
+    const presentationRouteId =
+      vehicle.routeId ??
+      scenario.routes.routes.find((route) =>
+        route.patterns.some(({ patternId }) => patternId === vehicle.patternId),
+      )?.routeId;
+    const routeColor = presentationRouteId
+      ? presentation?.routeStyles?.[presentationRouteId]?.color
+      : undefined;
+    const color = typeof routeColor === 'string' ? routeColor : 'currentColor';
     const movement = vehicle.movement;
     if (movement.kind !== 'running-on-edge') {
       const position = mapPosition(requireStop(movement.stopNodeId).position);
@@ -192,6 +204,7 @@ export function projectVehicleMovementSvg(
         movementKind: movement.kind,
         ...(vehicle.routeId ? { routeId: vehicle.routeId } : {}),
         patternId: vehicle.patternId,
+        color,
         ...(vehicle.routeLegIndex === undefined
           ? {}
           : { routeLegIndex: vehicle.routeLegIndex }),
@@ -225,6 +238,7 @@ export function projectVehicleMovementSvg(
       movementKind: movement.kind,
       ...(vehicle.routeId ? { routeId: vehicle.routeId } : {}),
       patternId: vehicle.patternId,
+      color,
       ...(vehicle.routeLegIndex === undefined
         ? {}
         : { routeLegIndex: vehicle.routeLegIndex }),

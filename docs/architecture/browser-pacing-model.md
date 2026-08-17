@@ -307,6 +307,21 @@ Cypress with the real Worker verifies:
 - no fatal page/Worker error;
 - cleanup stops pacing and terminates resources.
 
+## Current representation-cadence addendum
+
+Browser simulation pacing and representation pacing remain separate. Both SVG
+and R3F consume the shared `mini | normal` representation mode: mini targets 5
+fps (200 ms) and normal targets 60 fps (1000/60 ms). The browser retains only
+the latest pending replaceable projection, so intermediate visual states may be
+coalesced but an older state cannot render after a newer one. Reliable
+publication, commands, save/restore, and authoritative whole-tick advancement
+are never throttled by this policy. This explicit boundary enables later
+simulation-versus-representation profiling; it does not claim a 12x CPU change.
+SVG samples latest projections through that shared throttle. R3F uses a
+`frameloop="never"` Canvas and a representation-only manual frame driver using
+the same policy, so neither mini nor normal cadence follows arbitrary display
+refresh or invalidation frequency.
+
 ## Deferred work
 
 - bonus persistence;

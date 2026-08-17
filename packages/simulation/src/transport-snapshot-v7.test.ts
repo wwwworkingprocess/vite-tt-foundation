@@ -26,6 +26,7 @@ const root = join(
   'web',
   'public',
   'scenarios',
+  'torrevieja-v1',
   'torrevieja-mini-v1',
 );
 const json = (name: string) =>

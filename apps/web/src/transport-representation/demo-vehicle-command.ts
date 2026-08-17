@@ -10,7 +10,7 @@ import {
   type CanonicalScenario,
 } from '@torrevieja-tycoon/transport-domain';
 
-const demoEdgeTravelTicks = 120;
+export const DEFAULT_DEMO_EDGE_TRAVEL_TICKS = 120;
 
 export function createDemoVehicleCommandForAuthority(
   coordinate: ScenarioCoordinate,
@@ -52,7 +52,10 @@ export function createDemoVehicleCommandForAuthority(
       movementPlan: Object.freeze({
         kind: 'vehicle-movement-plan-v1' as const,
         edgeTravelTicks: Object.freeze(
-          Array.from({ length: edgeCount }, () => demoEdgeTravelTicks),
+          Array.from(
+            { length: edgeCount },
+            () => DEFAULT_DEMO_EDGE_TRAVEL_TICKS,
+          ),
         ),
       }),
     });

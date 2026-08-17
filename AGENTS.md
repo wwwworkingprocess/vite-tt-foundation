@@ -114,7 +114,7 @@ depend on `apps/web`.
 
 ## Current pre-release persistence policy
 
-The current transport contracts are Snapshot V9 and Transport Save V7 with V3
+The current transport contracts are Snapshot V9 and Transport Save V7 with V4
 client and Worker contracts. Earlier transport/foundation save records are
 pre-release data and are classified as obsolete unless current source and tests
 explicitly support them. Do not invent migrations or compatibility from an old

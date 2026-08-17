@@ -60,6 +60,19 @@ const vehicleSvgState = (): Cypress.Chainable<VehicleSvgState> =>
   );
 const expectVehicleSvg = (expected: VehicleSvgState) =>
   vehicleSvgState().should('deep.equal', expected);
+const expectVehicleSvgToChange = (expected: VehicleSvgState) =>
+  cy.get('[data-testid="vehicle-position"]').should(($vehicles) => {
+    const current = [...$vehicles].map((vehicle) => ({
+      vehicleId: vehicle.getAttribute('data-vehicle-id'),
+      movementKind: vehicle.getAttribute('data-movement-kind'),
+      edgeId: vehicle.getAttribute('data-edge-id'),
+      progressNumerator: vehicle.getAttribute('data-progress-numerator'),
+      progressDenominator: vehicle.getAttribute('data-progress-denominator'),
+      cx: vehicle.getAttribute('cx'),
+      cy: vehicle.getAttribute('cy'),
+    }));
+    expect(current).not.to.deep.equal(expected);
+  });
 const restoreScenario = (scenarioId: string) => {
   openSessionControls();
   cy.contains('[data-save-id]', scenarioId)
@@ -78,6 +91,13 @@ const openControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
 const workerReadyTimeoutMs = 15_000;
 const restoreReadyTimeoutMs = 15_000;
+const serviceWorkerReadyTimeoutMs = 30_000;
+const expectServiceWorkerReady = () =>
+  cy.window().then((win) =>
+    cy.wrap(win.navigator.serviceWorker.ready, {
+      timeout: serviceWorkerReadyTimeoutMs,
+    }),
+  );
 const expectWorkerReady = () =>
   cy
     .get('[data-testid="worker-status"]', { timeout: workerReadyTimeoutMs })
@@ -116,9 +136,7 @@ describe('built foundation PWA offline lifecycle', () => {
       'contain.text',
       '1.0.0:torrevieja-legacy-abc-v1@1.0.0#',
     );
-    cy.window().then(async (win) => {
-      await win.navigator.serviceWorker.ready;
-    });
+    expectServiceWorkerReady();
     cy.reload();
     startDefaultGame();
     openControls();
@@ -431,11 +449,7 @@ describe('built foundation PWA offline lifecycle', () => {
         secondarySavedTick,
       ),
     );
-    cy.then(() =>
-      vehicleSvgState().should((current) =>
-        expect(current).not.to.deep.equal(secondarySavedSvg),
-      ),
-    );
+    expectVehicleSvgToChange(secondarySavedSvg);
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
     vehicleSvgState().then((snapshot) => {

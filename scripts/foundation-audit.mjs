@@ -1,7 +1,8 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { builtinModules } from 'node:module';
-import { extname, join } from 'node:path';
+import { dirname, extname, join } from 'node:path';
 import ts from 'typescript';
+import { validateScenarioCityDirectory } from './scenario-city-directory.mjs';
 const root = new URL('../', import.meta.url);
 const walk = async (directory) => {
   const entries = await readdir(new URL(directory, root), {
@@ -456,6 +457,85 @@ const protocol = await walk('packages/protocol/src');
 const transport = await walk('packages/transport-domain/src');
 const web = await walk('apps/web/src');
 const publicScenarios = await walk('apps/web/public/scenarios');
+const scenarioRootEntries = await readdir(
+  new URL('apps/web/public/scenarios', root),
+  { withFileTypes: true },
+);
+const scenarioCatalogue = JSON.parse(
+  await source('apps/web/public/scenarios/catalog.json'),
+);
+for (const entry of scenarioRootEntries) {
+  if (!entry.isDirectory() && entry.name !== 'catalog.json')
+    fail(`unexpected flat scenario-root file ${entry.name}.`);
+}
+const scenarioIds = new Set();
+const cityDirectoryBySettlement = new Map();
+const settlementByCityDirectory = new Map();
+const referencedCityDirectories = new Set();
+for (const descriptor of scenarioCatalogue.scenarios) {
+  if (scenarioIds.has(descriptor.scenarioId))
+    fail(`duplicate public scenario ${descriptor.scenarioId}.`);
+  scenarioIds.add(descriptor.scenarioId);
+  const parts = descriptor.manifestPath.split('/');
+  if (
+    parts.length !== 3 ||
+    !/^[a-z_]+-v1$/.test(parts[0]) ||
+    parts[1] !== descriptor.scenarioId ||
+    parts[2] !== 'scenario.json'
+  )
+    fail(
+      `${descriptor.scenarioId} has invalid grouped manifest path ${descriptor.manifestPath}.`,
+    );
+  const cityDirectory = parts[0];
+  const priorCity = cityDirectoryBySettlement.get(
+    descriptor.primarySettlementId,
+  );
+  if (priorCity && priorCity !== cityDirectory)
+    fail(`${descriptor.primarySettlementId} spans scenario city directories.`);
+  const priorSettlement = settlementByCityDirectory.get(cityDirectory);
+  if (priorSettlement && priorSettlement !== descriptor.primarySettlementId)
+    fail(`${cityDirectory} contains multiple primary settlements.`);
+  cityDirectoryBySettlement.set(descriptor.primarySettlementId, cityDirectory);
+  settlementByCityDirectory.set(cityDirectory, descriptor.primarySettlementId);
+  referencedCityDirectories.add(cityDirectory);
+  const manifest = JSON.parse(
+    await source(`apps/web/public/scenarios/${descriptor.manifestPath}`),
+  );
+  if (
+    manifest.scenarioId !== descriptor.scenarioId ||
+    manifest.primarySettlementId !== descriptor.primarySettlementId
+  )
+    fail(`${descriptor.scenarioId} descriptor and manifest do not agree.`);
+  const settlements = JSON.parse(
+    await source(
+      `apps/web/public/scenarios/${dirname(descriptor.manifestPath)}/settlements.json`,
+    ),
+  );
+  const primarySettlements = settlements.settlements.filter(
+    ({ settlementId }) => settlementId === descriptor.primarySettlementId,
+  );
+  if (primarySettlements.length !== 1)
+    fail(
+      `${descriptor.scenarioId} must contain exactly one primary settlement ${descriptor.primarySettlementId}.`,
+    );
+  try {
+    validateScenarioCityDirectory({
+      scenarioId: descriptor.scenarioId,
+      primarySettlementName: primarySettlements[0].name,
+      manifestPath: descriptor.manifestPath,
+    });
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error));
+  }
+}
+for (const entry of scenarioRootEntries)
+  if (entry.isDirectory() && !referencedCityDirectories.has(entry.name))
+    fail(`unexpected flat scenario package directory ${entry.name}.`);
+if (scenarioIds.has('torrevieja-mini-v1'))
+  fail('torrevieja-mini-v1 must remain outside the public catalogue.');
+await source(
+  'apps/web/public/scenarios/torrevieja-v1/torrevieja-mini-v1/scenario.json',
+);
 for (const file of [...simulation, ...protocol, ...transport]) {
   const text = await source(file);
   if (

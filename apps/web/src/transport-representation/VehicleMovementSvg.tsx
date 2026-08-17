@@ -7,6 +7,7 @@ import type {
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import { useEffect, useMemo, useState, type KeyboardEvent } from 'react';
 import { selectVehicle, type GameSelection } from '../ui/game-selection.js';
+import { useLatestRepresentationValue } from '../representation/RepresentationModeContext.js';
 import { projectVehicleMovementSvg } from './vehicle-svg-projection.js';
 import StaticScenarioSvgLayer from './StaticScenarioSvgLayer.js';
 
@@ -17,26 +18,32 @@ const noArrivalEvents = Object.freeze(
   [],
 ) as readonly PassengerOriginStopArrivalEvent[];
 
-export function VehicleMovementSvg({
-  scenario,
-  fleet,
-  selection = null,
-  onSelectionChange,
-  passengerDemand,
-  vehiclePassengerLoads = noPassengerLoads,
-  passengerOriginStopArrivalEvents = noArrivalEvents,
-  simulationTick = 0,
-}: Readonly<{
-  scenario: CanonicalScenario;
-  fleet: readonly VehicleState[];
-  selection?: GameSelection;
-  onSelectionChange?: (selection: GameSelection) => void;
-  passengerDemand?: PassengerDemandProjection | undefined;
-  vehiclePassengerLoads?: readonly VehiclePassengerLoadProjection[] | undefined;
-  passengerOriginStopArrivalEvents?:
-    readonly PassengerOriginStopArrivalEvent[] | undefined;
-  simulationTick?: number | undefined;
-}>) {
+export function VehicleMovementSvg(
+  props: Readonly<{
+    scenario: CanonicalScenario;
+    fleet: readonly VehicleState[];
+    selection?: GameSelection;
+    onSelectionChange?: (selection: GameSelection) => void;
+    passengerDemand?: PassengerDemandProjection | undefined;
+    vehiclePassengerLoads?:
+      readonly VehiclePassengerLoadProjection[] | undefined;
+    passengerOriginStopArrivalEvents?:
+      readonly PassengerOriginStopArrivalEvent[] | undefined;
+    simulationTick?: number | undefined;
+    showPassengerArrivalPulse?: boolean | undefined;
+  }>,
+) {
+  const {
+    scenario,
+    fleet,
+    selection = null,
+    onSelectionChange,
+    passengerDemand,
+    vehiclePassengerLoads = noPassengerLoads,
+    passengerOriginStopArrivalEvents = noArrivalEvents,
+    simulationTick = 0,
+    showPassengerArrivalPulse = false,
+  } = useLatestRepresentationValue(props);
   const [passengersVisible, setPassengersVisible] = useState(true);
   const [lastArrivalTicks, setLastArrivalTicks] = useState<
     ReadonlyMap<string, number>
@@ -124,17 +131,17 @@ export function VehicleMovementSvg({
               const waiting = node.stopPlaceId
                 ? (waitingByStopPlace.get(node.stopPlaceId) ?? 0)
                 : 0;
-              return waiting > 0 ? (
+              return node.stopPlaceId ? (
                 <circle
-                  key={`waiting-${node.stopNodeId}`}
-                  data-testid="stop-has-waiting-passengers"
+                  key={`passenger-stop-${node.stopNodeId}`}
+                  data-testid="passenger-stop-status"
                   data-stop-place-id={node.stopPlaceId}
                   data-stop-node-id={node.stopNodeId}
+                  data-has-waiting-passengers={waiting > 0}
                   cx={node.cx}
                   cy={node.cy}
-                  r="2.1"
-                  fill="none"
-                  stroke="darkorange"
+                  r="1.15"
+                  fill={waiting > 0 ? 'black' : 'silver'}
                 />
               ) : null;
             })}
@@ -145,7 +152,7 @@ export function VehicleMovementSvg({
                 arrivalTick !== undefined && simulationTick - arrivalTick < 5;
               return (
                 <g key={stopPlaceId} data-stop-place-id={stopPlaceId}>
-                  {pulsing ? (
+                  {showPassengerArrivalPulse && pulsing ? (
                     <circle
                       data-testid="passenger-arrival-pulse"
                       data-last-arrival-tick={arrivalTick}
@@ -188,8 +195,20 @@ export function VehicleMovementSvg({
                 aria-label={`${vehicle.label}: ${vehicle.movementKind}`}
                 cx={vehicle.cx}
                 cy={vehicle.cy}
-                r="1.8"
-                fill="crimson"
+                r="2.7"
+                fill={vehicle.color}
+                stroke={
+                  selection?.kind === 'vehicle' &&
+                  selection.vehicleId === vehicle.vehicleId
+                    ? '#ffd400'
+                    : '#102e3c'
+                }
+                strokeWidth={
+                  selection?.kind === 'vehicle' &&
+                  selection.vehicleId === vehicle.vehicleId
+                    ? '0.8'
+                    : '0.3'
+                }
                 role="button"
                 tabIndex={0}
                 data-selected={
@@ -210,8 +229,10 @@ export function VehicleMovementSvg({
                   data-onboard-passenger-count={
                     loads.get(vehicle.vehicleId)?.onboardPassengerCount ?? 0
                   }
-                  x={vehicle.cx + 2}
-                  y={vehicle.cy - 2}
+                  x={vehicle.cx}
+                  y={vehicle.cy}
+                  textAnchor="middle"
+                  dominantBaseline="central"
                   pointerEvents="none"
                 >
                   {loads.get(vehicle.vehicleId)?.onboardPassengerCount ?? 0}

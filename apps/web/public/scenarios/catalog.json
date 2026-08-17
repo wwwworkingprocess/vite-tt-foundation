@@ -10,7 +10,7 @@
       "settlementIds": [
         "es-torrevieja"
       ],
-      "manifestPath": "torrevieja-legacy-abc-v1/scenario.json",
+      "manifestPath": "torrevieja-v1/torrevieja-legacy-abc-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "7fc35b5842bb98d23a42508174482f2c7528ed856d32415878b6f6b7dd5d0b73"
     },
@@ -22,7 +22,7 @@
       "settlementIds": [
         "es-torrevieja"
       ],
-      "manifestPath": "torrevieja-legacy-east-v1/scenario.json",
+      "manifestPath": "torrevieja-v1/torrevieja-legacy-east-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "c6edb4f60d455814226aba5cddcca013b81e153104104062e552474eec500d85"
     },
@@ -34,7 +34,7 @@
       "settlementIds": [
         "es-torrevieja"
       ],
-      "manifestPath": "torrevieja-legacy-south-v1/scenario.json",
+      "manifestPath": "torrevieja-v1/torrevieja-legacy-south-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "3b96d22230923120792fd4dbda3dfe11447445cae199a8dd7b882bb0f0722de9"
     },
@@ -46,7 +46,7 @@
       "settlementIds": [
         "es-torrevieja"
       ],
-      "manifestPath": "torrevieja-legacy-north-v1/scenario.json",
+      "manifestPath": "torrevieja-v1/torrevieja-legacy-north-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "0caf5913afc603a56e6a37270a6caac3c858a9b63aed7d60d92da351a10a1b06"
     },
@@ -58,7 +58,7 @@
       "settlementIds": [
         "es-torrevieja"
       ],
-      "manifestPath": "torrevieja-legacy-all-v1/scenario.json",
+      "manifestPath": "torrevieja-v1/torrevieja-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "b6891aeb3bff38dcc037d21314f3d623fba83e86150dbd5a6564e7aaf8310c3f"
     },
@@ -70,7 +70,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-urban-abc-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-urban-abc-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "1513c8715ccfc38031fc9fd2fc5e2c1c0970fac85f4a29019f9b12f1dd0be011"
     },
@@ -82,7 +82,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-legacy-east-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-legacy-east-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "5d99e42f89190c525895a232ee3cb3017232784853f788d143899939bae5761f"
     },
@@ -94,7 +94,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-legacy-hospital-general-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-legacy-hospital-general-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "9bc3b71068d525aa9b8457d7be808809774ab6beebb9cdddbbe9823af252753c"
     },
@@ -106,7 +106,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-legacy-vinalopo-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-legacy-vinalopo-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "c56966b3998612881bf71fa0d6d055b89dee3dbf1b3a2f60095321260e543127"
     },
@@ -118,7 +118,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-legacy-crosscity-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-legacy-crosscity-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "f80cd56404e036c3911ff5d5ed734cdd092d7d9dc5c6e82668786bc7fe895119"
     },
@@ -130,7 +130,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-legacy-night-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-legacy-night-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "cdbd92fed950de54f421f7d6cf0c307580e1ffcdd0fdaae5dde50c6eec30c07f"
     },
@@ -142,7 +142,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-legacy-all-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "088a8464d6f9bb6c3d8097360a016a1f29039e5fd610d30942c8f9f4bb99eda4"
     },
@@ -154,7 +154,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-radial-inner-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-radial-inner-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "08a9861ea10b581d893274b14a0c9eab5a4e9fcae5103268dd2be28c4a3f9376"
     },
@@ -166,7 +166,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-radial-west-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-radial-west-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "c3dc2161bdbc6dc3d19f6e745e2efb00fafd50fc791634191976e01c5c4d4a67"
     },
@@ -178,7 +178,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-radial-south-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-radial-south-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "6e8c8d115dff28b6d7fc66115410239a5d2dcb2228f1f55b6e3ff63bb56a8f7a"
     },
@@ -190,7 +190,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-radial-airport-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-radial-airport-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "ce2e5371dbeeca43179cc6b6a6b7323d567d5508131ddabf06d72e39ac397e62"
     },
@@ -202,7 +202,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-radial-coast-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-radial-coast-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "5f8580092b7457b0b5f1bbf76f789c2de27a4ad0dc0ec0fda60863bca9ea149e"
     },
@@ -214,7 +214,7 @@
       "settlementIds": [
         "es-elche"
       ],
-      "manifestPath": "elche-radial-legacy-all-v1/scenario.json",
+      "manifestPath": "elche-v1/elche-radial-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "175f908ba34b9e40193986067a8de1163e9f9e17745911667c5acd0d37d1263a"
     },
@@ -226,7 +226,7 @@
       "settlementIds": [
         "es-alicante"
       ],
-      "manifestPath": "alicante-legacy-core-v1/scenario.json",
+      "manifestPath": "alicante-v1/alicante-legacy-core-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "adb4b67cb1065eac0d886324a29b7561ad4e0046ec4717e3f6f162733ed04f33"
     },
@@ -238,7 +238,7 @@
       "settlementIds": [
         "es-alicante"
       ],
-      "manifestPath": "alicante-legacy-west-v1/scenario.json",
+      "manifestPath": "alicante-v1/alicante-legacy-west-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "2b75e1fb28e656096930475d849dd3bb1e6538d70307c9541a2a2976278c5133"
     },
@@ -251,7 +251,7 @@
         "es-alicante",
         "es-sant-joan-dalacant"
       ],
-      "manifestPath": "alicante-legacy-north-v1/scenario.json",
+      "manifestPath": "alicante-v1/alicante-legacy-north-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "9f61315ad59bf07229076b5f623b3f778fd2ae4c73b098202674d060f55822f5"
     },
@@ -263,7 +263,7 @@
       "settlementIds": [
         "es-alicante"
       ],
-      "manifestPath": "alicante-legacy-coast-v1/scenario.json",
+      "manifestPath": "alicante-v1/alicante-legacy-coast-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "e4eb7d746bb0fe4b7d18ad606728b24863b2b5e056dab3abbfc4d3b8ef2391c2"
     },
@@ -275,7 +275,7 @@
       "settlementIds": [
         "es-alicante"
       ],
-      "manifestPath": "alicante-legacy-periphery-v1/scenario.json",
+      "manifestPath": "alicante-v1/alicante-legacy-periphery-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "5271c7ca389a89659ba0d8cebfcd5e5a35335077bea4f400ae0de806db0cf495"
     },
@@ -287,7 +287,7 @@
       "settlementIds": [
         "es-alicante"
       ],
-      "manifestPath": "alicante-legacy-circular-v1/scenario.json",
+      "manifestPath": "alicante-v1/alicante-legacy-circular-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "ce130ad819fee62bda1a85740a2e900baa5636b3424fe7dd9521521b4160fb13"
     },
@@ -300,7 +300,7 @@
         "es-alicante",
         "es-sant-joan-dalacant"
       ],
-      "manifestPath": "alicante-legacy-all-v1/scenario.json",
+      "manifestPath": "alicante-v1/alicante-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "896da0ffb37686fe226dda529af78919d86b1cf8c960f7df95743471540b46a1"
     },
@@ -312,7 +312,7 @@
       "settlementIds": [
         "es-benidorm"
       ],
-      "manifestPath": "benidorm-legacy-core-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-legacy-core-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "2112c66ed052f79512489f64602c4db6dc289a9832905cc8854a66349ffd96ec"
     },
@@ -324,7 +324,7 @@
       "settlementIds": [
         "es-benidorm"
       ],
-      "manifestPath": "benidorm-legacy-core-inland-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-legacy-core-inland-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "8146a3f4f61713749f45f89091b98a26fc3f97a8f23714b258be986e81b5bdb3"
     },
@@ -336,7 +336,7 @@
       "settlementIds": [
         "es-benidorm"
       ],
-      "manifestPath": "benidorm-legacy-local-special-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-legacy-local-special-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "96d0fbd4d21c972a94914488bf5acd7b96294604458c09bcb1666c8250c2b210"
     },
@@ -348,7 +348,7 @@
       "settlementIds": [
         "es-benidorm"
       ],
-      "manifestPath": "benidorm-legacy-attractions-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-legacy-attractions-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "527349ea9764a9170f474d0c775741ae612a0806298af7eade71d8f6958acf1c"
     },
@@ -360,7 +360,7 @@
       "settlementIds": [
         "es-benidorm"
       ],
-      "manifestPath": "benidorm-legacy-all-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "e5e643fcdc8777cfc20229222fefc43600cdf94badf0f375e25de79307f1403e"
     },
@@ -374,7 +374,7 @@
         "es-finestrat",
         "es-la-vila-joiosa"
       ],
-      "manifestPath": "benidorm-radial-core-west-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-radial-core-west-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "f5167b4a2bbbbf09a957d48097bfe226df32d9b0756f35b297d92948e7c26754"
     },
@@ -388,7 +388,7 @@
         "es-lalfas-del-pi",
         "es-altea"
       ],
-      "manifestPath": "benidorm-radial-east-corridor-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-radial-east-corridor-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "53bac7c91fb480f92bc294bff8748019fce59bb8e099dd7bee7efec77d55a488"
     },
@@ -404,7 +404,7 @@
         "es-finestrat",
         "es-la-vila-joiosa"
       ],
-      "manifestPath": "benidorm-radial-coast-crosscity-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-radial-coast-crosscity-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "cedb86d11e5d10c5b176027cb26ea519c58ee1d885da75e8ffa2bdc233b94ddf"
     },
@@ -418,7 +418,7 @@
         "es-finestrat",
         "es-la-vila-joiosa"
       ],
-      "manifestPath": "benidorm-radial-finestrat-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-radial-finestrat-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "0099f5751d89436e30702f1e769d8f4f4893f034c295bf30e97113b475211a71"
     },
@@ -436,7 +436,7 @@
         "es-callosa-den-sarria",
         "es-el-castell-de-guadalest"
       ],
-      "manifestPath": "benidorm-radial-north-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-radial-north-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "5a3f16596763493f02b6df900e50d630ce276d908166e20b3dd098a796fe43ff"
     },
@@ -452,7 +452,7 @@
         "es-lalfas-del-pi",
         "es-altea"
       ],
-      "manifestPath": "benidorm-radial-panoramic-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-radial-panoramic-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "7146023bd0ccabaea13126b20d3834b6ae0b68047b56589d024e3314a5e59181"
     },
@@ -472,11 +472,11 @@
         "es-callosa-den-sarria",
         "es-el-castell-de-guadalest"
       ],
-      "manifestPath": "benidorm-radial-legacy-all-v1/scenario.json",
+      "manifestPath": "benidorm-v1/benidorm-radial-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "2484373f1d891d658660eec93b345ddd9ea2dfa999b2c3b579dd8fba9a5aabc7"
     },
-	{
+    {
       "scenarioId": "cartagena-legacy-icue-v1",
       "scenarioVersion": "1.0.0",
       "title": "Cartagena Legacy Icue Network - Lines 8 and 9",
@@ -484,7 +484,7 @@
       "settlementIds": [
         "es-cartagena"
       ],
-      "manifestPath": "cartagena-legacy-icue-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-legacy-icue-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "2149e40a9766f8162d9b23c4e85db831e0eccf41bd0d49227f49d93e5ca82be8"
     },
@@ -496,7 +496,7 @@
       "settlementIds": [
         "es-cartagena"
       ],
-      "manifestPath": "cartagena-legacy-core-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-legacy-core-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "b3be58feddc672b639b15486d139ed741de9cb6dda20c6da178aa2598eaa9434"
     },
@@ -508,7 +508,7 @@
       "settlementIds": [
         "es-cartagena"
       ],
-      "manifestPath": "cartagena-legacy-west-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-legacy-west-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "413eb7f950f09502258b8320b2c5a04f05ac315350d0dc6f1adb51134713460a"
     },
@@ -520,7 +520,7 @@
       "settlementIds": [
         "es-cartagena"
       ],
-      "manifestPath": "cartagena-legacy-southwest-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-legacy-southwest-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "3831ece100a6d581c6dc0d04ef7b8ffed81d37d04d0d73ff3319129c0cf416d8"
     },
@@ -532,7 +532,7 @@
       "settlementIds": [
         "es-cartagena"
       ],
-      "manifestPath": "cartagena-legacy-north-east-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-legacy-north-east-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "615ba29dbd4507a3f5ba12acba12ad86c9bdd5a5d1230735a0144653e2df88be"
     },
@@ -547,7 +547,7 @@
         "es-murcia",
         "es-torre-pacheco"
       ],
-      "manifestPath": "cartagena-legacy-periphery-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-legacy-periphery-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "050bcde4e5e052cc4eaaa553d974cb8dd243ca391671822d7fb4d6bf45e79dd8"
     },
@@ -562,7 +562,7 @@
         "es-murcia",
         "es-torre-pacheco"
       ],
-      "manifestPath": "cartagena-legacy-all-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "228230895bcd66f0868b744a366500e5ac0f482553776e31a41fd217d3e28076"
     },
@@ -575,7 +575,7 @@
         "es-cartagena",
         "es-la-union"
       ],
-      "manifestPath": "cartagena-radial-coast-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-radial-coast-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "2933a69a4bf440b5a443390a4546eae7b53ad6dcd88923d0ee462d991f8421db"
     },
@@ -590,7 +590,7 @@
         "es-san-javier",
         "es-los-alcazares"
       ],
-      "manifestPath": "cartagena-radial-manga-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-radial-manga-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "599e355c4e5797544ec3fc80788eaf4950619ba76ba059d10d6c159cf94a19c0"
     },
@@ -608,7 +608,7 @@
         "es-totana",
         "es-lorca"
       ],
-      "manifestPath": "cartagena-radial-mainland-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-radial-mainland-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "acdc52c083f92ffde9239d1a1b98bf1b23734e39ba379617ba28fe68dbee54d6"
     },
@@ -628,7 +628,7 @@
         "es-totana",
         "es-lorca"
       ],
-      "manifestPath": "cartagena-radial-legacy-all-v1/scenario.json",
+      "manifestPath": "cartagena-v1/cartagena-radial-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "cc91f352b914cce9cbc01d77f64910fffca591d1660d77a0d8778c2f9ff468d0"
     },
@@ -640,7 +640,7 @@
       "settlementIds": [
         "es-murcia"
       ],
-      "manifestPath": "murcia-circular-24-v1/scenario.json",
+      "manifestPath": "murcia-v1/murcia-circular-24-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "6a9529131974e93d5fa9bb21701867b3c3e18d181adc254a51fa87351256250d"
     },
@@ -652,7 +652,7 @@
       "settlementIds": [
         "es-murcia"
       ],
-      "manifestPath": "murcia-circular-13-v1/scenario.json",
+      "manifestPath": "murcia-v1/murcia-circular-13-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "71a499ba7b139c8d284ccb327a2d6635fd8ec70c93109c1f0b334fadd7978c3f"
     },
@@ -664,7 +664,7 @@
       "settlementIds": [
         "es-murcia"
       ],
-      "manifestPath": "murcia-central-rail-v1/scenario.json",
+      "manifestPath": "murcia-v1/murcia-central-rail-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "b7eb9b8c3fba7ddeffaff66d5d37eda352574ef0399227b239a94423b04e4ba1"
     },
@@ -676,7 +676,7 @@
       "settlementIds": [
         "es-murcia"
       ],
-      "manifestPath": "murcia-rayo-south-v1/scenario.json",
+      "manifestPath": "murcia-v1/murcia-rayo-south-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "88138b43bb8db13020d88956c266dbce87069b649e062158b17c6c447f5db02b"
     },
@@ -688,7 +688,7 @@
       "settlementIds": [
         "es-murcia"
       ],
-      "manifestPath": "murcia-rayo-north-v1/scenario.json",
+      "manifestPath": "murcia-v1/murcia-rayo-north-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "70887cd8c6bf8d4b277cbb7971944aaa44b1718af51d8ae3c617bcc167e505c4"
     },
@@ -700,7 +700,7 @@
       "settlementIds": [
         "es-murcia"
       ],
-      "manifestPath": "murcia-circular-legacy-all-v1/scenario.json",
+      "manifestPath": "murcia-v1/murcia-circular-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "b937957c590df87add6d8e3aefa0c567e0f1802888c67a56800257a86354d839"
     },
@@ -712,7 +712,7 @@
       "settlementIds": [
         "es-murcia"
       ],
-      "manifestPath": "murcia-rayo-legacy-all-v1/scenario.json",
+      "manifestPath": "murcia-v1/murcia-rayo-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "a83530201659c197e1b3edfa54f6310c89990828d004943d796917a7ff987e23"
     },
@@ -724,7 +724,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-3-11-n1-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-3-11-n1-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "436ba9a634a11161ffdbc444d08a73acfee28edd64727ad90ae965201650bd41"
     },
@@ -736,7 +736,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-22-27-31-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-22-27-31-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "ae1a23b2220c8aad382db2e33de1c504e64a075e50ea11cb860e9967c90755bc"
     },
@@ -748,7 +748,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-8-21-23-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-8-21-23-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "0c74aef1b2bf1253c728fe53163110e21743138850e2ab388d14ba6c537fcfd5"
     },
@@ -760,7 +760,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-14-n4-c5-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-14-n4-c5-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "2b97d423c0f31703e5cd3319801358926783c0b5e2d0fa9f3c6fdaa3bea6c7ac"
     },
@@ -772,7 +772,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-7-15-n2-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-7-15-n2-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "aeff32f03e5f21673d516eb506585c1b939f74782221db8d2771f37ad31a2e99"
     },
@@ -784,7 +784,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-1-37-c2-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-1-37-c2-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "68a9e075030ad8a3db6add3198ef9c6c33ed0d70fee11656e25e18d5ae74da20"
     },
@@ -796,7 +796,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-17-18-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-17-18-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "6d948617dfdf44dac85d6ec74e20f2f31c0894024f60f7aa1d3d751c13e3e75e"
     },
@@ -808,7 +808,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-2-20-30-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-2-20-30-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "1bf00e87ce1df7a125335f7d0d795ff1b6fcf7e94e663c2adae57789b207fc14"
     },
@@ -820,7 +820,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-4-19-n3-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-4-19-n3-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "7e290c90e16a63db5ce957a31c4fc5b2b8635b40cb99966b73ce394b429d8ee5"
     },
@@ -832,7 +832,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-25-28-e-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-25-28-e-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "fa986bd54d820e54699b5b0d3be1032d93bd64526ab52def28776af7a2c231a5"
     },
@@ -844,7 +844,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-38-c6-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-38-c6-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "d2bec3ad88a18682330ac2a161d79f7fcc94e89c8fb016adcb676934b816e5c0"
     },
@@ -856,7 +856,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-36-c1-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-36-c1-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "951eb540310af33944ccccb206d2a3994232a190fa246a2105956e7f9fda594b"
     },
@@ -868,7 +868,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-33-34-35-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-33-34-35-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "314f82ccf6f1aea9baf2f6f4bb9a1516117662751247ab771c3f7f12d527db61"
     },
@@ -880,7 +880,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-5-9-10-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-5-9-10-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "b5aadc3a288174aa812a2839161465b642bcc6ed6547999deaad8dedcfdea6c6"
     },
@@ -892,7 +892,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-29-a-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-29-a-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "845606c388defa7b804eb7e03a5687ba1ccb6dee45d560133ba039963d10daa2"
     },
@@ -904,7 +904,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-32-c3-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-32-c3-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "e76d1e977a1536d56bf0f11ec13d9624cb127fc4a56194133ee873a56f33e466"
     },
@@ -916,7 +916,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-lines-40-c8-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-lines-40-c8-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "58f82640edfca1e39e87b30b224da0ce740932b6eb844da5960a61b6daddc6be"
     },
@@ -928,7 +928,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-day-legacy-all-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-day-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "06e3c2da0f57557bae877f3c7d3b6c0da72b0a224b6aaed4bbb7a09f5b58dde9"
     },
@@ -940,7 +940,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-circular-legacy-all-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-circular-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "1963eada6b56c81c178447489ce8fb440b84dc4d489875d71583898c0be36d6e"
     },
@@ -952,7 +952,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-night-legacy-all-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-night-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "3e1a216be87fa897f654355d07002fa172849adb3d1d7d7947bcaa883b57e813"
     },
@@ -964,7 +964,7 @@
       "settlementIds": [
         "es-malaga"
       ],
-      "manifestPath": "malaga-express-legacy-all-v1/scenario.json",
+      "manifestPath": "malaga-v1/malaga-express-legacy-all-v1/scenario.json",
       "status": "development-seed",
       "contentHash": "fd66f1b9499a21dfaac806523975ef5a05741229ad752a9fc50dd5cdb100ee54"
     }

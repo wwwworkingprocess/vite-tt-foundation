@@ -381,6 +381,8 @@ const stopPlaceId = (element: Element) =>
   element.getAttribute('data-stop-place-id')!;
 
 it('renders bounded physical-stop and vehicle passenger diagnostics with tick pulses', () => {
+  vi.useFakeTimers();
+  const normalRepresentationFrameMs = 1000 / 60;
   const pattern = selectionScenario.routes.routes[0]!.patterns[0]!;
   let state = createTransportSimulationState(selectionScenario, 0);
   state = applyTransportVehicleCommand(state, {
@@ -467,6 +469,7 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
       showPassengerArrivalPulse
     />,
   );
+  act(() => vi.advanceTimersByTime(normalRepresentationFrameMs));
   expect(screen.getByTestId('passenger-arrival-pulse')).toHaveAttribute(
     'data-last-arrival-tick',
     '10',
@@ -484,6 +487,7 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
       showPassengerArrivalPulse
     />,
   );
+  act(() => vi.advanceTimersByTime(normalRepresentationFrameMs));
   expect(screen.getByTestId('passenger-arrival-pulse')).toHaveAttribute(
     'data-last-arrival-tick',
     '12',
@@ -501,6 +505,7 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
       showPassengerArrivalPulse
     />,
   );
+  act(() => vi.advanceTimersByTime(normalRepresentationFrameMs));
   expect(screen.queryByTestId('passenger-arrival-pulse')).toBeNull();
   fireEvent.click(screen.getByRole('button', { name: 'Hide passengers' }));
   expect(screen.queryByTestId('stop-waiting-passenger-count')).toBeNull();

@@ -665,7 +665,17 @@ export function createInitialPassengerDemandState(
   plan: PassengerDemandPlanV1,
   initialTick: number,
 ): ActivePassengerDemandState {
-  const parsedPlan = parsePassengerDemandPlan(plan);
+  return createInitialTrustedPassengerDemandState(
+    parsePassengerDemandPlan(plan),
+    initialTick,
+  );
+}
+
+/** Internal composition boundary. The caller must already own parsed authority. */
+export function createInitialTrustedPassengerDemandState(
+  parsedPlan: PassengerDemandPlanV1,
+  initialTick: number,
+): ActivePassengerDemandState {
   return deepFreeze({
     status: 'active',
     demandPlanCoordinate: planCoordinate(parsedPlan),
@@ -756,7 +766,19 @@ export function validatePassengerDemandState(
   itineraryIndex: PassengerDirectItineraryRuntimeIndex,
   value: unknown,
 ): ActivePassengerDemandState {
-  const parsedPlan = parsePassengerDemandPlan(plan);
+  return validateTrustedPassengerDemandState(
+    parsePassengerDemandPlan(plan),
+    itineraryIndex,
+    value,
+  );
+}
+
+/** Internal composition boundary. The caller must already own parsed authority. */
+export function validateTrustedPassengerDemandState(
+  parsedPlan: PassengerDemandPlanV1,
+  itineraryIndex: PassengerDirectItineraryRuntimeIndex,
+  value: unknown,
+): ActivePassengerDemandState {
   const parsed = stateSchema.parse(value);
   if (parsed.status !== 'active')
     throw new Error('Expected active passenger demand state.');
@@ -899,7 +921,7 @@ export function validatePassengerDemandState(
         cohort.destinationStopPlaceId,
       );
       return (
-        itinerary.status === 'direct' &&
+        itinerary !== undefined &&
         passengerWaitingCohortMatchesItinerary(cohort, itinerary)
       );
     },

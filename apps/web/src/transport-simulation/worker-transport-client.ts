@@ -1,7 +1,6 @@
 import {
   createScenarioCoordinate,
   createTransportSimulationState,
-  parsePassengerDemandPlan,
   parseSimulationTick,
   restoreTransportSimulationState,
   type TransportSimulationState,
@@ -287,6 +286,8 @@ export function createWorkerTransportSimulationClient(input: {
   let worker: TransportWorkerLike | undefined;
   let requestSequence = 0;
   let authority: TransportSimulationState | undefined;
+  let authorityRequest: TransportClientConnectRequest | undefined;
+  let latestReliableUpdate: TransportStateUpdate | undefined;
   let lifecycle: TransportClientLifecycle = freeze({ state: 'idle' });
   let closed = false;
   let closePromise: Promise<void> | undefined;
@@ -343,6 +344,8 @@ export function createWorkerTransportSimulationClient(input: {
     for (const entry of pending.values()) entry.reject(pendingError);
     pending.clear();
     authority = undefined;
+    authorityRequest = undefined;
+    latestReliableUpdate = undefined;
     reliable.clear();
     render.clear();
     return errors;
@@ -392,6 +395,11 @@ export function createWorkerTransportSimulationClient(input: {
       if (closed) return;
       if (message.channel === 'reliable') {
         const update = freeze(message.payload as TransportStateUpdate);
+        if (
+          !latestReliableUpdate ||
+          update.simulationTick >= latestReliableUpdate.simulationTick
+        )
+          latestReliableUpdate = update;
         if (authority && update.simulationTick >= authority.tick)
           authority = freeze({
             ...authority,
@@ -471,36 +479,21 @@ export function createWorkerTransportSimulationClient(input: {
         (request.mode !== 'new' && request.mode !== 'restore')
       )
         throw new Error('Unsupported transport client connect request.');
-      const passengerDemandPlan =
-        request.passengerDemandPlan === undefined
-          ? undefined
-          : parsePassengerDemandPlan(request.passengerDemandPlan);
-      const nextAuthority =
-        request.mode === 'new'
-          ? createTransportSimulationState(
-              request.scenario,
-              request.initialSimulationTick,
-              passengerDemandPlan,
-            )
-          : restoreTransportSimulationState(
-              request.snapshot,
-              request.scenario,
-              passengerDemandPlan,
-            );
       publishLifecycle({ state: 'connecting' });
       try {
         worker = input.workerFactory();
         worker.addEventListener('error', onError);
         worker.addEventListener('messageerror', onMessageError);
         worker.addEventListener('message', onMessage);
-        authority = nextAuthority;
-        await post('connect', structuredClone(request));
+        const isolatedRequest = structuredClone(request);
+        authorityRequest = isolatedRequest;
+        await post('connect', isolatedRequest);
         if (render.size > 0) await post('set-render-subscription', true);
         publishLifecycle({
           state: 'ready',
-          gameId: request.gameId,
-          timelineId: request.timelineId,
-          scenario: createScenarioCoordinate(authority.scenario),
+          gameId: isolatedRequest.gameId,
+          timelineId: isolatedRequest.timelineId,
+          scenario: createScenarioCoordinate(isolatedRequest.scenario),
         });
       } catch (error) {
         cleanupWorker(
@@ -521,13 +514,15 @@ export function createWorkerTransportSimulationClient(input: {
       ) as FoundationCommandResult;
     },
     async synchronize(request) {
-      if (!authority) throw new Error('Transport client is not ready.');
+      if (lifecycle.state !== 'ready')
+        throw new Error('Transport client is not ready.');
       return parseTransportSynchronizationResult(
         await post('synchronize', request),
       );
     },
     async exportSnapshot() {
-      if (!authority) throw new Error('Transport client is not ready.');
+      if (lifecycle.state !== 'ready')
+        throw new Error('Transport client is not ready.');
       return parseTransportSnapshotExportResult(
         await post('export-snapshot', null),
       );
@@ -537,6 +532,29 @@ export function createWorkerTransportSimulationClient(input: {
     getLifecycle: () => lifecycle,
     subscribeLifecycle: (listener) => subscribe(lifecycleListeners, listener),
     getAuthoritativeState() {
+      if (!authority && authorityRequest) {
+        authority =
+          authorityRequest.mode === 'new'
+            ? createTransportSimulationState(
+                authorityRequest.scenario,
+                authorityRequest.initialSimulationTick,
+                authorityRequest.passengerDemandPlan,
+              )
+            : restoreTransportSimulationState(
+                authorityRequest.snapshot,
+                authorityRequest.scenario,
+                authorityRequest.passengerDemandPlan,
+              );
+        if (
+          latestReliableUpdate &&
+          latestReliableUpdate.simulationTick >= authority.tick
+        )
+          authority = freeze({
+            ...authority,
+            tick: parseSimulationTick(latestReliableUpdate.simulationTick),
+            fleet: latestReliableUpdate.fleet,
+          });
+      }
       if (!authority) throw new Error('Transport client is not ready.');
       return authority;
     },

@@ -157,10 +157,23 @@ selection outline and centered onboard counts. The diagnostic command
 standalone diagnostic decomposition without machine-dependent timing thresholds.
 StopPlace catchments and the passenger-demand plan are application preparation;
 the passenger-demand runtime index is lazy first-passenger-advance work. Direct
-itinerary plan/index diagnostics explain their pairwise cost without inflating
-the startup total. Worker startup performs passenger-aware itinerary authority
-construction once during browser-client semantic preflight and again when the
-Worker creates its authority, and the benchmark exposes both passes.
+itinerary diagnostics explain their pattern-local construction cost without
+inflating the startup total. Passenger Direct Itinerary Plan V2 retains only
+canonical direct pairs; unavailable distinct pairs are implicit and the runtime
+uses sparse nested maps. Worker startup constructs passenger-aware itinerary
+authority once inside the Worker. Restore validates a candidate while prior
+authority remains live and swaps only after synchronization/export succeeds.
+Simulation create/restore parses Passenger Demand Plan authority once at its
+public boundary, then reuses that canonical value through trusted itinerary and
+passenger-state composition. Public helpers and both Worker wire boundaries
+remain strict.
+
+`yarn benchmark:simulation-runtime` measures deterministic headless repeated
+single-tick advancement after an explicit untimed warmup. It is the simulation
+denominator for later 5 fps versus 60 fps representation-resource profiling.
+Repeated runs compare complete Snapshot V9 authority outside the timed region,
+publish a final snapshot SHA-256, and report population-cell and itinerary
+structure alongside aggregate passenger metrics.
 
 Browser-created demo vehicles currently assign a named uniform default of 120
 authoritative ticks per edge. The movement model already accepts non-uniform

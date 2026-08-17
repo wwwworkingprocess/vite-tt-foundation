@@ -2,7 +2,7 @@
 
 **Decision status:** Accepted
 **Accepted in:** Phase 4E3A
-**Current applicability:** Active.
+**Current applicability:** Routing semantics remain active; the dense Plan V1 representation is superseded by ADR 0020.
 **Current contract:** [`docs/current-state.md`](../../current-state.md)
 
 ## Decision

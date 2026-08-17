@@ -283,11 +283,11 @@ const mutable = (value: unknown) =>
     directPairCount: number;
     unavailablePairCount: number;
     stopPlaceIds?: string[];
-    entries: Array<Record<string, unknown>>;
+    directEntries: Array<Record<string, unknown>>;
     extra?: boolean;
   };
 
-describe('Passenger Direct Itinerary Plan V1', () => {
+describe('Passenger Direct Itinerary Plan V2', () => {
   it('builds every ordered physical StopPlace pair with exact identities', () => {
     const canonical = scenario();
     const plan = buildPassengerDirectItineraryPlan({
@@ -295,7 +295,7 @@ describe('Passenger Direct Itinerary Plan V1', () => {
       demandPlan: demandPlan(canonical),
     });
     expect(plan).toMatchObject({
-      schemaVersion: '1.0.0',
+      schemaVersion: '2.0.0',
       routingPolicy: { kind: 'single-pattern-direct', version: '1.0.0' },
       scenario: {
         scenarioId: 'itinerary-fixture',
@@ -311,17 +311,17 @@ describe('Passenger Direct Itinerary Plan V1', () => {
       pairCount: 72,
     });
     expect(plan.stopPlaceIds).toEqual(stopPlaceIds);
-    expect(plan.entries).toHaveLength(9 * 8);
+    expect(plan.directEntries).toHaveLength(plan.directPairCount);
     expect(
       new Set(
-        plan.entries.map(
+        plan.directEntries.map(
           (entry) =>
             `${entry.originStopPlaceId}->${entry.destinationStopPlaceId}`,
         ),
       ).size,
-    ).toBe(plan.pairCount);
+    ).toBe(plan.directPairCount);
     expect(
-      plan.entries.some(
+      plan.directEntries.some(
         (entry) => entry.originStopPlaceId === entry.destinationStopPlaceId,
       ),
     ).toBe(false);
@@ -337,12 +337,12 @@ describe('Passenger Direct Itinerary Plan V1', () => {
       demandPlan: demandPlan(canonical, ['A', 'B', 'C']),
     });
     const concealed = mutable(complete);
-    concealed.entries = concealed.entries.filter(
+    concealed.directEntries = concealed.directEntries.filter(
       (entry) =>
         entry.originStopPlaceId !== 'C' && entry.destinationStopPlaceId !== 'C',
     );
-    concealed.pairCount = concealed.entries.length;
-    concealed.directPairCount = concealed.entries.filter(
+    concealed.pairCount = concealed.directEntries.length;
+    concealed.directPairCount = concealed.directEntries.filter(
       (entry) => entry.status === 'direct',
     ).length;
     concealed.unavailablePairCount =
@@ -367,12 +367,12 @@ describe('Passenger Direct Itinerary Plan V1', () => {
     expect(empty).toMatchObject({
       stopPlaceIds: [],
       pairCount: 0,
-      entries: [],
+      directEntries: [],
     });
     expect(singleton).toMatchObject({
       stopPlaceIds: ['A'],
       pairCount: 0,
-      entries: [],
+      directEntries: [],
     });
     expect(() =>
       findPassengerDirectItinerary(singleton, 'A', 'missing'),
@@ -407,7 +407,7 @@ describe('Passenger Direct Itinerary Plan V1', () => {
     [
       'an entry endpoint outside the normative StopPlace domain',
       (plan: ReturnType<typeof mutable>) => {
-        plan.entries[0]!.destinationStopPlaceId = 'Z';
+        plan.directEntries[0]!.destinationStopPlaceId = 'Z';
       },
     ],
   ])('rejects %s in standalone lookup', (_name, mutatePlan) => {
@@ -459,7 +459,6 @@ describe('Passenger Direct Itinerary Plan V1', () => {
         destinationOccurrenceIndex: 3,
         wrapsPatternEnd: false,
         edgeCount: 3,
-        stopNodeIds: ['a-out', 'b-out', 'c-out', 'd-out'],
       }),
     );
     expect(findPassengerDirectItinerary(plan, 'D', 'A')).toEqual(
@@ -488,14 +487,12 @@ describe('Passenger Direct Itinerary Plan V1', () => {
       patternId: 'loop',
       wrapsPatternEnd: false,
       edgeCount: 2,
-      stopNodeIds: ['e', 'f', 'g'],
     });
     expect(findPassengerDirectItinerary(plan, 'H', 'F')).toMatchObject({
       status: 'direct',
       patternId: 'loop',
       wrapsPatternEnd: true,
       edgeCount: 2,
-      stopNodeIds: ['h', 'e', 'f'],
     });
   });
 
@@ -516,7 +513,6 @@ describe('Passenger Direct Itinerary Plan V1', () => {
       originOccurrenceIndex: 2,
       destinationOccurrenceIndex: 3,
       edgeCount: 1,
-      stopNodeIds: ['a-repeat', 'c-out'],
     });
   });
 
@@ -565,24 +561,9 @@ describe('Passenger Direct Itinerary Plan V1', () => {
       scenario: scenario(),
       demandPlan: demandPlan(),
     });
-    expect(findPassengerDirectItinerary(plan, 'A', 'U')).toEqual({
-      status: 'unavailable',
-      originStopPlaceId: 'A',
-      destinationStopPlaceId: 'U',
-      reason: 'no-direct-pattern',
-    });
-    expect(findPassengerDirectItinerary(plan, 'A', 'E')).toMatchObject({
-      status: 'unavailable',
-      reason: 'no-direct-pattern',
-    });
-    expect(findPassengerDirectItinerary(plan, 'A', 'U')).toMatchObject({
-      status: 'unavailable',
-      reason: 'no-direct-pattern',
-    });
-    expect(findPassengerDirectItinerary(plan, 'U', 'E')).toMatchObject({
-      status: 'unavailable',
-      reason: 'no-direct-pattern',
-    });
+    expect(findPassengerDirectItinerary(plan, 'A', 'U')).toBeUndefined();
+    expect(findPassengerDirectItinerary(plan, 'A', 'E')).toBeUndefined();
+    expect(findPassengerDirectItinerary(plan, 'U', 'E')).toBeUndefined();
   });
 
   it('is source-order independent without reordering pattern nodes', () => {
@@ -618,10 +599,10 @@ describe('Passenger Direct Itinerary Plan V1', () => {
     });
     expect(validated).toEqual(plan);
     expect(Object.isFrozen(validated)).toBe(true);
-    expect(Object.isFrozen(validated.entries)).toBe(true);
-    expect(Object.isFrozen(validated.entries[0])).toBe(true);
+    expect(Object.isFrozen(validated.directEntries)).toBe(true);
+    expect(Object.isFrozen(validated.directEntries[0])).toBe(true);
     expect(
-      Reflect.set(validated.entries[0]!, 'originStopPlaceId', 'changed'),
+      Reflect.set(validated.directEntries[0]!, 'originStopPlaceId', 'changed'),
     ).toBe(false);
     expect(
       buildPassengerDirectItineraryPlan({
@@ -665,27 +646,27 @@ describe('Passenger Direct Itinerary Plan V1', () => {
     [
       'missing pair',
       (plan: ReturnType<typeof mutable>) => {
-        plan.entries.pop();
+        plan.directEntries.pop();
         plan.pairCount -= 1;
       },
     ],
     [
       'duplicate pair',
       (plan: ReturnType<typeof mutable>) => {
-        plan.entries[1] = structuredClone(plan.entries[0]!);
+        plan.directEntries[1] = structuredClone(plan.directEntries[0]!);
       },
     ],
     [
       'same-origin pair',
       (plan: ReturnType<typeof mutable>) => {
-        plan.entries[0]!.destinationStopPlaceId =
-          plan.entries[0]!.originStopPlaceId;
+        plan.directEntries[0]!.destinationStopPlaceId =
+          plan.directEntries[0]!.originStopPlaceId;
       },
     ],
     [
       'extra pair',
       (plan: ReturnType<typeof mutable>) => {
-        plan.entries.push({
+        plan.directEntries.push({
           status: 'unavailable',
           originStopPlaceId: 'A',
           destinationStopPlaceId: 'extra',
@@ -698,97 +679,85 @@ describe('Passenger Direct Itinerary Plan V1', () => {
     [
       'noncanonical order',
       (plan: ReturnType<typeof mutable>) => {
-        plan.entries.reverse();
+        plan.directEntries.reverse();
       },
     ],
     [
       'wrong route',
       (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
+        const direct = plan.directEntries.find(
+          (entry) => entry.status === 'direct',
+        )!;
         direct.routeId = 'wrong';
       },
     ],
     [
       'wrong pattern',
       (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
+        const direct = plan.directEntries.find(
+          (entry) => entry.status === 'direct',
+        )!;
         direct.patternId = 'wrong';
       },
     ],
     [
       'wrong occurrence',
       (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
+        const direct = plan.directEntries.find(
+          (entry) => entry.status === 'direct',
+        )!;
         direct.originOccurrenceIndex = 99;
       },
     ],
     [
       'wrong wrap',
       (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
+        const direct = plan.directEntries.find(
+          (entry) => entry.status === 'direct',
+        )!;
         direct.wrapsPatternEnd = !direct.wrapsPatternEnd;
       },
     ],
     [
       'wrong edge count',
       (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
+        const direct = plan.directEntries.find(
+          (entry) => entry.status === 'direct',
+        )!;
         direct.edgeCount = 99;
-      },
-    ],
-    [
-      'invented segment',
-      (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
-        direct.stopNodeIds = ['invented', 'also-invented'];
       },
     ],
     [
       'unknown origin node',
       (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
+        const direct = plan.directEntries.find(
+          (entry) => entry.status === 'direct',
+        )!;
         direct.originStopNodeId = 'missing';
       },
     ],
     [
       'unknown destination node',
       (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
+        const direct = plan.directEntries.find(
+          (entry) => entry.status === 'direct',
+        )!;
         direct.destinationStopNodeId = 'missing';
       },
     ],
     [
       'wrong StopNode mapping',
       (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
+        const direct = plan.directEntries.find(
+          (entry) => entry.status === 'direct',
+        )!;
         direct.originStopNodeId = 'b-out';
-      },
-    ],
-    [
-      'missing segment node',
-      (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
-        (direct.stopNodeIds as unknown[]).pop();
-      },
-    ],
-    [
-      'extra segment node',
-      (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
-        (direct.stopNodeIds as unknown[]).push('a-out');
-      },
-    ],
-    [
-      'reversed segment',
-      (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find((entry) => entry.status === 'direct')!;
-        (direct.stopNodeIds as unknown[]).reverse();
       },
     ],
     [
       'non-ranked valid candidate',
       (plan: ReturnType<typeof mutable>) => {
-        const direct = plan.entries.find(
+        const direct = plan.directEntries.find(
           (entry) =>
             entry.status === 'direct' &&
             entry.originStopPlaceId === 'A' &&
@@ -803,45 +772,21 @@ describe('Passenger Direct Itinerary Plan V1', () => {
           destinationOccurrenceIndex: 2,
           wrapsPatternEnd: false,
           edgeCount: 2,
-          stopNodeIds: ['a-out', 'b-out', 'c-out'],
         });
       },
     ],
     [
       'wrong classification',
       (plan: ReturnType<typeof mutable>) => {
-        const directIndex = plan.entries.findIndex(
+        const directIndex = plan.directEntries.findIndex(
           (entry) => entry.status === 'direct',
         );
-        const direct = plan.entries[directIndex]!;
-        plan.entries[directIndex] = {
+        const direct = plan.directEntries[directIndex]!;
+        plan.directEntries[directIndex] = {
           status: 'unavailable',
           originStopPlaceId: direct.originStopPlaceId,
           destinationStopPlaceId: direct.destinationStopPlaceId,
           reason: 'no-direct-pattern',
-        };
-      },
-    ],
-    [
-      'invented direct classification',
-      (plan: ReturnType<typeof mutable>) => {
-        const unavailableIndex = plan.entries.findIndex(
-          (entry) => entry.status === 'unavailable',
-        );
-        const unavailable = plan.entries[unavailableIndex]!;
-        plan.entries[unavailableIndex] = {
-          status: 'direct',
-          originStopPlaceId: unavailable.originStopPlaceId,
-          destinationStopPlaceId: unavailable.destinationStopPlaceId,
-          routeId: 'route-main',
-          patternId: 'main-out',
-          originStopNodeId: 'a-out',
-          destinationStopNodeId: 'b-out',
-          originOccurrenceIndex: 0,
-          destinationOccurrenceIndex: 1,
-          wrapsPatternEnd: false,
-          edgeCount: 1,
-          stopNodeIds: ['a-out', 'b-out'],
         };
       },
     ],
@@ -882,16 +827,16 @@ describe('Passenger Direct Itinerary Plan V1', () => {
     expect(() => findPassengerDirectItinerary(plan, 'missing', 'A')).toThrow();
     expect(() => findPassengerDirectItinerary(plan, 'A', 'missing')).toThrow();
     const incomplete = structuredClone(plan);
-    const target = incomplete.entries.findIndex(
+    const target = incomplete.directEntries.findIndex(
       (entry) =>
         entry.originStopPlaceId === 'A' && entry.destinationStopPlaceId === 'B',
     );
-    incomplete.entries.splice(target, 1);
+    incomplete.directEntries.splice(target, 1);
     expect(() => findPassengerDirectItinerary(incomplete, 'A', 'B')).toThrow(
       /pair counts/i,
     );
     const unrelatedMissing = structuredClone(plan);
-    unrelatedMissing.entries.pop();
+    unrelatedMissing.directEntries.pop();
     expect(() =>
       findPassengerDirectItinerary(unrelatedMissing, 'A', 'B'),
     ).toThrow(/pair counts/i);
@@ -955,20 +900,30 @@ describe('Passenger Direct Itinerary Plan V1', () => {
         scenario: canonical,
         demandPlan: demand,
       });
-      const direct = first.entries.find((entry) => entry.status === 'direct')!;
-      const unavailable = first.entries.find(
-        (entry) => entry.status === 'unavailable',
+      const direct = first.directEntries.find(
+        (entry) => entry.status === 'direct',
       )!;
-      for (const entry of [direct, unavailable])
-        expect(
-          runtime.find(entry.originStopPlaceId, entry.destinationStopPlaceId),
-        ).toEqual(
-          findPassengerDirectItinerary(
-            first,
-            entry.originStopPlaceId,
-            entry.destinationStopPlaceId,
+      expect(
+        runtime.find(direct.originStopPlaceId, direct.destinationStopPlaceId),
+      ).toEqual(
+        findPassengerDirectItinerary(
+          first,
+          direct.originStopPlaceId,
+          direct.destinationStopPlaceId,
+        ),
+      );
+      const unavailablePair = first.stopPlaceIds
+        .flatMap((origin) =>
+          first.stopPlaceIds.map(
+            (destination) => [origin, destination] as const,
           ),
-        );
+        )
+        .find(
+          ([origin, destination]) =>
+            origin !== destination &&
+            runtime.find(origin, destination) === undefined,
+        )!;
+      expect(runtime.find(...unavailablePair)).toBeUndefined();
     }
     expect(second).toEqual(first);
     expect(
@@ -983,19 +938,20 @@ describe('Passenger Direct Itinerary Plan V1', () => {
         route.patterns.map((pattern) => [pattern.patternId, pattern]),
       ),
     );
-    for (const entry of first.entries) {
-      if (entry.status !== 'direct') continue;
+    for (const entry of first.directEntries) {
       const pattern = patterns.get(entry.patternId)!;
-      expect(entry.stopNodeIds[0]).toBe(entry.originStopNodeId);
-      expect(entry.stopNodeIds.at(-1)).toBe(entry.destinationStopNodeId);
-      for (let index = 0; index < entry.edgeCount; index += 1) {
-        const occurrence =
-          (entry.originOccurrenceIndex + index) % pattern.stopNodeIds.length;
-        expect(entry.stopNodeIds[index]).toBe(pattern.stopNodeIds[occurrence]);
-        expect(entry.stopNodeIds[index + 1]).toBe(
-          pattern.stopNodeIds[(occurrence + 1) % pattern.stopNodeIds.length],
-        );
-      }
+      expect(pattern.stopNodeIds[entry.originOccurrenceIndex]).toBe(
+        entry.originStopNodeId,
+      );
+      expect(pattern.stopNodeIds[entry.destinationOccurrenceIndex]).toBe(
+        entry.destinationStopNodeId,
+      );
+      expect(
+        (entry.destinationOccurrenceIndex -
+          entry.originOccurrenceIndex +
+          pattern.stopNodeIds.length) %
+          pattern.stopNodeIds.length,
+      ).toBe(entry.edgeCount % pattern.stopNodeIds.length);
     }
   });
 
@@ -1018,10 +974,22 @@ describe('Passenger Direct Itinerary Plan V1', () => {
           findPassengerDirectItinerary(plan, origin, destination),
         );
       }
-    expect(runtime.find('A', 'B')).toEqual(plan.entries[0]);
-    expect(runtime.find('A', 'U')).toEqual(plan.entries[7]);
-    expect(runtime.find('B', 'A')).toEqual(plan.entries[8]);
-    expect(runtime.find('U', 'H')).toEqual(plan.entries.at(-1));
+    expect(runtime.find('A', 'B')).toEqual(
+      plan.directEntries.find(
+        (entry) =>
+          entry.originStopPlaceId === 'A' &&
+          entry.destinationStopPlaceId === 'B',
+      ),
+    );
+    expect(runtime.find('A', 'U')).toBeUndefined();
+    expect(runtime.find('B', 'A')).toEqual(
+      plan.directEntries.find(
+        (entry) =>
+          entry.originStopPlaceId === 'B' &&
+          entry.destinationStopPlaceId === 'A',
+      ),
+    );
+    expect(runtime.find('U', 'H')).toBeUndefined();
   });
 
   it('rejects a runtime index whose scenario or demand identity mismatches', () => {

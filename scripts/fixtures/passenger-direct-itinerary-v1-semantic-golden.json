@@ -1,0 +1,387 @@
+{
+  "baselineCommit": "1ae260290ccf92f9c43d59c3a622b32442505633",
+  "algorithm": "sha256(JSON.stringify(ordered direct-entry identity fields))",
+  "globalSha256": "1168c8b229b553e929545dd9f7ef5a7643c5f3ac6fd46cfb0daa15d95dabb82b",
+  "scenarios": [
+    {
+      "scenarioId": "torrevieja-legacy-abc-v1",
+      "directPairCount": 1112,
+      "semanticSha256": "30c05ab37f52d6f93b17e9c5fc605ac08886a691398473af8cc6c457f1026034"
+    },
+    {
+      "scenarioId": "torrevieja-legacy-east-v1",
+      "directPairCount": 974,
+      "semanticSha256": "0cc671e621b733a1847c0a635384785f90c04217b31aa564fcf7022d738b1709"
+    },
+    {
+      "scenarioId": "torrevieja-legacy-south-v1",
+      "directPairCount": 540,
+      "semanticSha256": "ce54ba32eb8cd6ce028357d3e04eace7e288a5b880f378b421190fb5542fa4a3"
+    },
+    {
+      "scenarioId": "torrevieja-legacy-north-v1",
+      "directPairCount": 563,
+      "semanticSha256": "4d9403d584bf6f20288e5efbf82fe4ebaad5cd52f935c6411cee3e8e8b750564"
+    },
+    {
+      "scenarioId": "torrevieja-legacy-all-v1",
+      "directPairCount": 2050,
+      "semanticSha256": "ad719b73ab2f408e65ba78dd3b8a524f5b00f0a39f833d3cc2ce0294dcbf744d"
+    },
+    {
+      "scenarioId": "elche-urban-abc-v1",
+      "directPairCount": 1967,
+      "semanticSha256": "b09c29ef16575074328822fecb88904fcbda4dc123d63d68d02a31209144a89c"
+    },
+    {
+      "scenarioId": "elche-legacy-east-v1",
+      "directPairCount": 3986,
+      "semanticSha256": "44274172accbb3c7adf50af5c11366a85a85620feca4861142de5794f9428dd3"
+    },
+    {
+      "scenarioId": "elche-legacy-hospital-general-v1",
+      "directPairCount": 1756,
+      "semanticSha256": "fd8e7b52a7670f28e181262121a26d1fdcb410b7a19a14cd714c9eb5aceb6239"
+    },
+    {
+      "scenarioId": "elche-legacy-vinalopo-v1",
+      "directPairCount": 902,
+      "semanticSha256": "897d010d38da69e944007cdaa8bb5ccda93fc7779da8425494e8a9afbfc088fa"
+    },
+    {
+      "scenarioId": "elche-legacy-crosscity-v1",
+      "directPairCount": 3346,
+      "semanticSha256": "4f86f78600b82fd1d165f14c1684bede0471abfa7c3a2593425ebec326ce8259"
+    },
+    {
+      "scenarioId": "elche-legacy-night-v1",
+      "directPairCount": 1332,
+      "semanticSha256": "cdb0dc141b084f90f0d86d0dc9c8c942d8ff8f0a33baf4ea8a402e4fce3cc0e4"
+    },
+    {
+      "scenarioId": "elche-legacy-all-v1",
+      "directPairCount": 12427,
+      "semanticSha256": "d803f487c969078f8fc5583aa015d12c06a94e71c3fc9ab3ec63616fd9320933"
+    },
+    {
+      "scenarioId": "elche-radial-inner-v1",
+      "directPairCount": 3606,
+      "semanticSha256": "0a578dd5a7415f1acf5c3e7b96caab6b5a6a933dd53c3a24605426dec40f2f78"
+    },
+    {
+      "scenarioId": "elche-radial-west-v1",
+      "directPairCount": 7336,
+      "semanticSha256": "18c1f9f9a6d519acfa23d2f82364d35d8b9867d4961ecfd3a1162c24ff60c696"
+    },
+    {
+      "scenarioId": "elche-radial-south-v1",
+      "directPairCount": 5502,
+      "semanticSha256": "a021630fe8106f136a1ccf0f6a59099a8761224d65268bb30eb6067331f9428c"
+    },
+    {
+      "scenarioId": "elche-radial-airport-v1",
+      "directPairCount": 7752,
+      "semanticSha256": "cdac9b196f56bcb17de4bd13afb1035372fb05be90db7514077e34acef06385a"
+    },
+    {
+      "scenarioId": "elche-radial-coast-v1",
+      "directPairCount": 15184,
+      "semanticSha256": "3ac68637a5abf0fd23c12528d8751b2234ab34e7f9a9163c22526942d655b6b1"
+    },
+    {
+      "scenarioId": "elche-radial-legacy-all-v1",
+      "directPairCount": 37730,
+      "semanticSha256": "2f0b5eee0714e90e72c4bc634bc8c3f0d6fe0a22b1209be1bf8e050484dfb8fc"
+    },
+    {
+      "scenarioId": "alicante-legacy-core-v1",
+      "directPairCount": 3125,
+      "semanticSha256": "65b7fffdf9b8329c3500616e9b809d089860d1fd8a4d1b0c32eb31feda486b9b"
+    },
+    {
+      "scenarioId": "alicante-legacy-west-v1",
+      "directPairCount": 3581,
+      "semanticSha256": "e75cfb081c427e103b7cb88b7454c881a9b8c7852b766b50ae715da213070902"
+    },
+    {
+      "scenarioId": "alicante-legacy-north-v1",
+      "directPairCount": 1448,
+      "semanticSha256": "1903df88829c436a79a9d0db4d957f51a753e66438d9e8a46071eb02a5ff3f06"
+    },
+    {
+      "scenarioId": "alicante-legacy-coast-v1",
+      "directPairCount": 2221,
+      "semanticSha256": "0dd4ff5a124431f1d9f926636167f389f73fcfc32dc259969abf82fadd6bf5ba"
+    },
+    {
+      "scenarioId": "alicante-legacy-periphery-v1",
+      "directPairCount": 920,
+      "semanticSha256": "2a850d15a59684fb9a42563f0d5057ba6ad8b685cce4130563b17d732fa19beb"
+    },
+    {
+      "scenarioId": "alicante-legacy-circular-v1",
+      "directPairCount": 1090,
+      "semanticSha256": "93dc8baaa69a04ed68cf1f0535dba68cebda11a30081d8888ea4162d8b677b70"
+    },
+    {
+      "scenarioId": "alicante-legacy-all-v1",
+      "directPairCount": 12130,
+      "semanticSha256": "90877f116dbe00dc69d15b0d95682b7b689e2e18f26adce69761acf481f37064"
+    },
+    {
+      "scenarioId": "benidorm-legacy-core-v1",
+      "directPairCount": 1311,
+      "semanticSha256": "d68610f4a99063560ab4f99f293f0dbf2702d2723cd7eba958bfa918cf11af97"
+    },
+    {
+      "scenarioId": "benidorm-legacy-core-inland-v1",
+      "directPairCount": 200,
+      "semanticSha256": "0d903a65e93b5e5d61163287e4cafa62fada2c8d363c5856a90ee6b7e89dcd61"
+    },
+    {
+      "scenarioId": "benidorm-legacy-local-special-v1",
+      "directPairCount": 520,
+      "semanticSha256": "43960aa6dab5a46a9beee5a9415927dfc0652834ae0946b744b0ae2c01669ca3"
+    },
+    {
+      "scenarioId": "benidorm-legacy-attractions-v1",
+      "directPairCount": 715,
+      "semanticSha256": "3417cf0dd421c0bb77982fab0cfff419a4ab2463668172150b13eadb751c2dee"
+    },
+    {
+      "scenarioId": "benidorm-legacy-all-v1",
+      "directPairCount": 2369,
+      "semanticSha256": "396e9418935c9ae3230894b06b8fb5bacba29004336f44091d1a67f5a30dd556"
+    },
+    {
+      "scenarioId": "benidorm-radial-core-west-v1",
+      "directPairCount": 2479,
+      "semanticSha256": "58467045813219cd810082cf823ab1924799faae419608e0ee91ecd2963b00cf"
+    },
+    {
+      "scenarioId": "benidorm-radial-east-corridor-v1",
+      "directPairCount": 1416,
+      "semanticSha256": "f982010634f9dcb5ca79174ab3606105f20c09948156bae1952784304cc4cbfc"
+    },
+    {
+      "scenarioId": "benidorm-radial-coast-crosscity-v1",
+      "directPairCount": 4437,
+      "semanticSha256": "835fc5520447b983f7f9ec34a8ec55afac25ffd3855b51439ff537e2f9c23413"
+    },
+    {
+      "scenarioId": "benidorm-radial-finestrat-v1",
+      "directPairCount": 2107,
+      "semanticSha256": "5072af7269982ac185a6a092ae81f9da396b44d71a9233450e0acef54031eede"
+    },
+    {
+      "scenarioId": "benidorm-radial-north-v1",
+      "directPairCount": 4413,
+      "semanticSha256": "e45051df21fcee8da8106df845babebd4f8b1e5ea8de4930623a4012573bd2f2"
+    },
+    {
+      "scenarioId": "benidorm-radial-panoramic-v1",
+      "directPairCount": 1314,
+      "semanticSha256": "1a09c33677099a2a7d17e95cad2a45f2d7e4f7b5135ac32f7b52ee37be93ff13"
+    },
+    {
+      "scenarioId": "benidorm-radial-legacy-all-v1",
+      "directPairCount": 12784,
+      "semanticSha256": "3b9773f6df8de9d0861c90121f4035c243d72c4f963369dcefe23810ec1279e6"
+    },
+    {
+      "scenarioId": "cartagena-legacy-icue-v1",
+      "directPairCount": 728,
+      "semanticSha256": "a9384b5f0942f2bf4bb6aba323240d9ec2b9bed759f0fac5d8fba349f18ba0c3"
+    },
+    {
+      "scenarioId": "cartagena-legacy-core-v1",
+      "directPairCount": 971,
+      "semanticSha256": "e871cd646748a15d39911b6800c3798fa846bcee5bfb4857e200d2f65631ab85"
+    },
+    {
+      "scenarioId": "cartagena-legacy-west-v1",
+      "directPairCount": 1899,
+      "semanticSha256": "6e73df12eaa03766c129c7a28ae9bb95bd9d7114a0f2cd0daee34e2df7075e66"
+    },
+    {
+      "scenarioId": "cartagena-legacy-southwest-v1",
+      "directPairCount": 2245,
+      "semanticSha256": "ede5fc9185f3f1a7a47642fa6b2c0bba50b5984123cccbd1acda9be0e1fe0b40"
+    },
+    {
+      "scenarioId": "cartagena-legacy-north-east-v1",
+      "directPairCount": 883,
+      "semanticSha256": "e729efe1c8330dac996d70c732b14134316ef5e0f1495c1056191f3a827e2458"
+    },
+    {
+      "scenarioId": "cartagena-legacy-periphery-v1",
+      "directPairCount": 2578,
+      "semanticSha256": "a98c18a9a333205d69d84598ed23bef2564b60e9dff166748fe88e83905bfba3"
+    },
+    {
+      "scenarioId": "cartagena-legacy-all-v1",
+      "directPairCount": 8785,
+      "semanticSha256": "92f4fa93eb5405c0bba66158821933f7373a9c6558e739a97f46b5e63a1083c8"
+    },
+    {
+      "scenarioId": "cartagena-radial-coast-v1",
+      "directPairCount": 1181,
+      "semanticSha256": "7850691002dc7aba4b5718dce3fa9d2568afdf33bf8bc0cedb30bf00a5b46d0f"
+    },
+    {
+      "scenarioId": "cartagena-radial-manga-v1",
+      "directPairCount": 2219,
+      "semanticSha256": "f14d6c3ce5b561ea942b4757420762a958aec574a0287b3a59846e4e23f42df5"
+    },
+    {
+      "scenarioId": "cartagena-radial-mainland-v1",
+      "directPairCount": 1177,
+      "semanticSha256": "ddcf2c473b17d83d4d0eaf5bf468398f0ad9928a4a4e6251fcd937a4ddcbd97f"
+    },
+    {
+      "scenarioId": "cartagena-radial-legacy-all-v1",
+      "directPairCount": 4495,
+      "semanticSha256": "21cc28c755cbe6fc53690fead8bb30146765598ee003b0146af56272a3dba607"
+    },
+    {
+      "scenarioId": "murcia-circular-24-v1",
+      "directPairCount": 688,
+      "semanticSha256": "0288f4034f914a46705c7de7e49b20f7dcee8d0e507f2a568b3e5afe19802a23"
+    },
+    {
+      "scenarioId": "murcia-circular-13-v1",
+      "directPairCount": 646,
+      "semanticSha256": "ac16680bce111bc1f6f20e24937a88da4c89fa4f76c4617993a26a34fbc83501"
+    },
+    {
+      "scenarioId": "murcia-central-rail-v1",
+      "directPairCount": 1492,
+      "semanticSha256": "7e0b1cc0710f29a0a74217628f333f332cfa707099bae50f1b23df36c5d9990f"
+    },
+    {
+      "scenarioId": "murcia-rayo-south-v1",
+      "directPairCount": 1521,
+      "semanticSha256": "594e670d88886b92a56ab70bf0ce4876de6bc79b4570b83a5b515170faa75eeb"
+    },
+    {
+      "scenarioId": "murcia-rayo-north-v1",
+      "directPairCount": 1728,
+      "semanticSha256": "be5cd302c9bb8b94cec31dbb5542c097c964dbf7ae8d90959abecc0e2088f6e7"
+    },
+    {
+      "scenarioId": "murcia-circular-legacy-all-v1",
+      "directPairCount": 1691,
+      "semanticSha256": "5174acc581de26f1cc3f1e864ac32c43d8a04e68c17cb4bbed4b163aab6bf035"
+    },
+    {
+      "scenarioId": "murcia-rayo-legacy-all-v1",
+      "directPairCount": 4326,
+      "semanticSha256": "e61c66d9609db596994bfa623c0bf3db65bc8365e5d96d65684dc14ddd676527"
+    },
+    {
+      "scenarioId": "malaga-lines-3-11-n1-v1",
+      "directPairCount": 2323,
+      "semanticSha256": "220a7f61824b25113d12f04cc0c9a6850ca033564eb0d7fd1c9f3895899b8317"
+    },
+    {
+      "scenarioId": "malaga-lines-22-27-31-v1",
+      "directPairCount": 1584,
+      "semanticSha256": "f0c934aac90c067e56f98d62200c41f0fd74a62f7e297cce5a43d20d4f2446ad"
+    },
+    {
+      "scenarioId": "malaga-lines-8-21-23-v1",
+      "directPairCount": 3500,
+      "semanticSha256": "2ebb2571bb9bcb1107fd61c1bacaa4f6caedd3de01aa443da9fb4cdcecaac7a0"
+    },
+    {
+      "scenarioId": "malaga-lines-14-n4-c5-v1",
+      "directPairCount": 3364,
+      "semanticSha256": "7a4b977fc3916114f187218a0a3ce9905f82ba6d13ffd90105c68e1d0b2d199f"
+    },
+    {
+      "scenarioId": "malaga-lines-7-15-n2-v1",
+      "directPairCount": 4496,
+      "semanticSha256": "6ae990d09941b06ea179d67f1cd4a46415a49bba7118bf66b3bbb4352452c6d6"
+    },
+    {
+      "scenarioId": "malaga-lines-1-37-c2-v1",
+      "directPairCount": 2622,
+      "semanticSha256": "5cdbb41902b9301bd905dcda9afba0dc2c1d997a2da1353ad63ca7c78853836f"
+    },
+    {
+      "scenarioId": "malaga-lines-17-18-v1",
+      "directPairCount": 771,
+      "semanticSha256": "c9876a0e7a7ba2881a00288e39cee55f663234b815a08e1a950c88b6c6fc82b4"
+    },
+    {
+      "scenarioId": "malaga-lines-2-20-30-v1",
+      "directPairCount": 2082,
+      "semanticSha256": "ba16ad91d8d98fa56fa33d23220b03f59cbd05276153f520198dca14ee607c52"
+    },
+    {
+      "scenarioId": "malaga-lines-4-19-n3-v1",
+      "directPairCount": 2285,
+      "semanticSha256": "528066fae14458b3234c39077eac46f53eea790ea3a6a442feb45b7a5d510c26"
+    },
+    {
+      "scenarioId": "malaga-lines-25-28-e-v1",
+      "directPairCount": 2881,
+      "semanticSha256": "9b8a1d4ae2c83bc5e88b5f97a4f448c5dca8679c27e657bb4daaabfcf6925850"
+    },
+    {
+      "scenarioId": "malaga-lines-38-c6-v1",
+      "directPairCount": 819,
+      "semanticSha256": "19edb750e28bc6feb8280ee97f7f1cb952047e9d5c7074e5f7815869fdce5cd2"
+    },
+    {
+      "scenarioId": "malaga-lines-36-c1-v1",
+      "directPairCount": 1183,
+      "semanticSha256": "c89a388c6014e20c8441ab45b18f395ed53c1526042f1c80f0c142423e9684d6"
+    },
+    {
+      "scenarioId": "malaga-lines-33-34-35-v1",
+      "directPairCount": 1462,
+      "semanticSha256": "cbe89b38818ed0be5d09071a2e2c8c326c1dc2b056fbb5604f95bb14a8aca4c7"
+    },
+    {
+      "scenarioId": "malaga-lines-5-9-10-v1",
+      "directPairCount": 1863,
+      "semanticSha256": "9be9c9e8a1c86e01b63a7dbb5822eb6ea49f1b6fd6a21462dfa3e080e130d2fd"
+    },
+    {
+      "scenarioId": "malaga-lines-29-a-v1",
+      "directPairCount": 3843,
+      "semanticSha256": "3b75911326c206d3a89c5bef346d8d2ad9e49da07f418b31b4eabe9d856890c6"
+    },
+    {
+      "scenarioId": "malaga-lines-32-c3-v1",
+      "directPairCount": 659,
+      "semanticSha256": "e930ba1956e4833a7c456e8be876dd2874948fa9b5707dacbd245c63906cb85c"
+    },
+    {
+      "scenarioId": "malaga-lines-40-c8-v1",
+      "directPairCount": 301,
+      "semanticSha256": "9c4e8ef1f9e7b1433b3e78b87ebaec456039f531d9166b9dad44b299f3a3cff9"
+    },
+    {
+      "scenarioId": "malaga-day-legacy-all-v1",
+      "directPairCount": 26113,
+      "semanticSha256": "7fecfa1796e0433811617ae0f520edbb4e8cb3b9dbfcf73b4f9cb1c646378a9b"
+    },
+    {
+      "scenarioId": "malaga-circular-legacy-all-v1",
+      "directPairCount": 4425,
+      "semanticSha256": "31604bbbe5f3ccb241c3f0c053455ad7578f7e523c3ed6edd2708f1a4f7ec330"
+    },
+    {
+      "scenarioId": "malaga-night-legacy-all-v1",
+      "directPairCount": 6823,
+      "semanticSha256": "ae32bfaf55efb109f188027536cc871a8a8b14a9afa6b74dabe7a39f87152ed1"
+    },
+    {
+      "scenarioId": "malaga-express-legacy-all-v1",
+      "directPairCount": 340,
+      "semanticSha256": "fd8a1d7428daa5419a9117ae40b0377df8b26e4d482acf957af12d561f13201d"
+    }
+  ]
+}

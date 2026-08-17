@@ -24,6 +24,7 @@
     "audit:critical-coverage": "node scripts/critical-coverage-audit.mjs",
     "benchmark:population": "yarn build:libraries && node scripts/population-performance-benchmark.mjs 300 --post-only",
     "benchmark:scenario-startup": "yarn build:libraries && node scripts/scenario-startup-benchmark.mjs",
+    "benchmark:simulation-runtime": "yarn build:libraries && node scripts/simulation-runtime-benchmark.mjs",
     "audit:population-fields": "yarn workspace @torrevieja-tycoon/transport-domain build && node scripts/population-crop-audit.mjs",
     "typecheck": "tsc --build",
     "test:e2e": "yarn build:libraries && start-server-and-test 'yarn workspace @torrevieja-tycoon/web dev --host 127.0.0.1' http://127.0.0.1:4173 'cypress run'",

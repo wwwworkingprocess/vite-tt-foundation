@@ -28,18 +28,17 @@ import {
   advanceTrustedPassengerDemandToTick,
   advanceTrustedPassengerDemandToTickWithEvents,
   createDisabledPassengerDemandState,
-  createInitialPassengerDemandState,
+  createInitialTrustedPassengerDemandState,
   parsePassengerDemandState,
   parsePassengerDemandPlan,
-  validatePassengerDemandState,
+  validateTrustedPassengerDemandState,
   type PassengerDemandPlanV1,
   type PassengerDemandState,
   type PassengerOriginStopArrivalEvent,
 } from './passenger-demand.js';
 import {
-  buildPassengerDirectItineraryPlan,
-  createPassengerDirectItineraryRuntimeIndex,
-  type PassengerDirectItineraryPlanV1,
+  buildTrustedPassengerDirectItineraryAuthority,
+  type PassengerDirectItineraryPlanV2,
   type PassengerDirectItineraryRuntimeIndex,
 } from './passenger-direct-itinerary.js';
 import {
@@ -93,7 +92,7 @@ function passengerWaitingCohortMatchesRuntimeItinerary(
     cohort.destinationStopPlaceId,
   );
   return (
-    itinerary.status === 'direct' &&
+    itinerary !== undefined &&
     passengerWaitingCohortMatchesItinerary(cohort, itinerary)
   );
 }
@@ -122,7 +121,7 @@ export interface TransportSimulationState {
   readonly graph: DirectedScenarioGraph;
   readonly fleet: readonly VehicleState[];
   readonly passengerDemandPlan: PassengerDemandPlanV1 | null;
-  readonly passengerDirectItineraryPlan: PassengerDirectItineraryPlanV1 | null;
+  readonly passengerDirectItineraryPlan: PassengerDirectItineraryPlanV2 | null;
   readonly passengerDirectItineraryIndex: PassengerDirectItineraryRuntimeIndex | null;
   readonly passengerDemand: PassengerDemandState;
   readonly vehicleOperations: readonly VehiclePatternRunState[];
@@ -232,21 +231,15 @@ export function createTransportSimulationState(
       'scenario-id-mismatch',
       'passenger demand plan scenario',
     );
-  const itineraryPlan =
+  const itineraryAuthority =
     parsedPlan === undefined
       ? undefined
-      : buildPassengerDirectItineraryPlan({
+      : buildTrustedPassengerDirectItineraryAuthority({
           scenario,
           demandPlan: parsedPlan,
         });
-  const itineraryIndex =
-    itineraryPlan === undefined
-      ? undefined
-      : createPassengerDirectItineraryRuntimeIndex({
-          plan: itineraryPlan,
-          scenario,
-          demandPlan: parsedPlan!,
-        });
+  const itineraryPlan = itineraryAuthority?.plan;
+  const itineraryIndex = itineraryAuthority?.index;
   return freeze({
     tick: parseSimulationTick(tick),
     scenario,
@@ -258,7 +251,7 @@ export function createTransportSimulationState(
     passengerDemand:
       parsedPlan === undefined
         ? createDisabledPassengerDemandState()
-        : createInitialPassengerDemandState(parsedPlan, tick),
+        : createInitialTrustedPassengerDemandState(parsedPlan, tick),
     vehicleOperations: [],
     currentStopCalls: [],
     vehicleCapacities: [],
@@ -692,21 +685,15 @@ export function restoreTransportSimulationState(
     !scenarioCoordinatesEqual(parsedPlan.scenario, snapshot.scenario)
   )
     throw new Error('Passenger demand plan scenario mismatch.');
-  const itineraryPlan =
+  const itineraryAuthority =
     parsedPlan === undefined
       ? undefined
-      : buildPassengerDirectItineraryPlan({
+      : buildTrustedPassengerDirectItineraryAuthority({
           scenario,
           demandPlan: parsedPlan,
         });
-  const itineraryIndex =
-    itineraryPlan === undefined
-      ? undefined
-      : createPassengerDirectItineraryRuntimeIndex({
-          plan: itineraryPlan,
-          scenario,
-          demandPlan: parsedPlan!,
-        });
+  const itineraryPlan = itineraryAuthority?.plan;
+  const itineraryIndex = itineraryAuthority?.index;
   let passengerDemand: PassengerDemandState;
   if (snapshot.state.passengerDemand.status === 'disabled') {
     if (
@@ -719,7 +706,7 @@ export function restoreTransportSimulationState(
   } else {
     if (parsedPlan === undefined)
       throw new Error('Exact passenger demand plan is required.');
-    passengerDemand = validatePassengerDemandState(
+    passengerDemand = validateTrustedPassengerDemandState(
       parsedPlan,
       itineraryIndex!,
       snapshot.state.passengerDemand,
@@ -753,7 +740,7 @@ export function restoreTransportSimulationState(
         group.destinationStopPlaceId,
       );
       return (
-        itinerary.status === 'direct' &&
+        itinerary !== undefined &&
         passengerWaitingCohortMatchesItinerary(group, itinerary)
       );
     };

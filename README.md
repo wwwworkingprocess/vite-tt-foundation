@@ -95,6 +95,20 @@ yarn benchmark:scenario-startup --city malaga-v1 --runs 5
 yarn benchmark:scenario-startup --all --runs 1 --json
 ```
 
+Measure headless steady-state authoritative single-tick cost after an untimed
+deterministic warmup:
+
+```sh
+yarn benchmark:simulation-runtime --scenario torrevieja-legacy-abc-v1 --warmup 200 --ticks 100 --runs 3
+yarn benchmark:simulation-runtime --scenario malaga-day-legacy-all-v1 --warmup 200 --ticks 100 --runs 1 --json
+```
+
+These timings are local diagnostics, not CI thresholds. Passenger Direct
+Itinerary Plan V2 retains only direct pairs; missing valid pairs are implicitly
+unavailable. Same-origin and unknown-StopPlace lookups reject rather than
+reporting unavailable. Runtime benchmark determinism compares complete Snapshot
+V9 authority outside the timed region and reports its SHA-256 fingerprint.
+
 ## Foundation Template reference
 
 The repository retains the reusable **Foundation Template v1.0.0** contract and

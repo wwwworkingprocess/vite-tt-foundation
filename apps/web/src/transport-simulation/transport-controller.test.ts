@@ -299,7 +299,7 @@ describe('transport application controller', () => {
       message: expect.stringMatching(/demand plan/i),
     });
     expect(currentClose).not.toHaveBeenCalled();
-    expect(clientCreations).toBe(1);
+    expect(clientCreations).toBe(2);
 
     resolved = {};
     await expect(
@@ -316,7 +316,7 @@ describe('transport application controller', () => {
       passengerDemand: expected.passengerDemand,
     });
     expect(currentClose).not.toHaveBeenCalled();
-    expect(clientCreations).toBe(1);
+    expect(clientCreations).toBe(3);
 
     resolved = plan;
     const backlog = structuredClone(activeRecord);
@@ -345,7 +345,7 @@ describe('transport application controller', () => {
       simulationTick: expected.simulationTick,
     });
     expect(currentClose).not.toHaveBeenCalled();
-    expect(clientCreations).toBe(1);
+    expect(clientCreations).toBe(4);
 
     storedRecord = activeRecord;
     const inconsistent = structuredClone(plan);
@@ -360,7 +360,7 @@ describe('transport application controller', () => {
       }),
     ).rejects.toThrow(/demand plan/i);
     expect(currentClose).not.toHaveBeenCalled();
-    expect(clientCreations).toBe(1);
+    expect(clientCreations).toBe(5);
 
     resolved = plan;
     await controller.restore({
@@ -374,7 +374,7 @@ describe('transport application controller', () => {
       passengerDemand: { status: 'active', processedThroughTick: 2 },
     });
     expect(currentClose).toHaveBeenCalledTimes(1);
-    expect(clientCreations).toBe(2);
+    expect(clientCreations).toBe(6);
     await controller.close();
   });
 
@@ -479,7 +479,7 @@ describe('transport application controller', () => {
         message: expect.any(String),
       });
       expect(currentClose).not.toHaveBeenCalled();
-      expect(clientCreations).toBe(1);
+      expect(clientCreations).toBe(index + 2);
     }
 
     stored = validRecord;
@@ -496,7 +496,7 @@ describe('transport application controller', () => {
       currentStopCalls: savedState.currentStopCalls,
     });
     expect(currentClose).toHaveBeenCalledTimes(1);
-    expect(clientCreations).toBe(2);
+    expect(clientCreations).toBe(corruptions.length + 2);
     await controller.close();
   });
 
@@ -643,7 +643,7 @@ describe('transport application controller', () => {
         message: expect.any(String),
       });
       expect(currentClose).not.toHaveBeenCalled();
-      expect(clientCreations).toBe(1);
+      expect(clientCreations).toBe(index + 2);
     }
     const generationState = advanceTransportTicks(boarded, 2);
     const generationRecord = parseTransportSaveRecord({
@@ -693,7 +693,7 @@ describe('transport application controller', () => {
       message: expect.any(String),
     });
     expect(currentClose).not.toHaveBeenCalled();
-    expect(clientCreations).toBe(1);
+    expect(clientCreations).toBe(corruptions.length + 2);
 
     stored = generationRecord;
     await controller.restore({
@@ -708,7 +708,7 @@ describe('transport application controller', () => {
       currentBoardingEvents: generationState.currentBoardingEvents,
     });
     expect(currentClose).toHaveBeenCalledTimes(1);
-    expect(clientCreations).toBe(2);
+    expect(clientCreations).toBe(corruptions.length + 3);
     await controller.close();
   });
 
@@ -975,7 +975,7 @@ describe('transport application controller', () => {
         message: expect.any(String),
       });
       expect(currentClose).not.toHaveBeenCalled();
-      expect(clientCreations).toBe(1);
+      expect(clientCreations).toBe(index + 2);
     }
 
     stored = validRecord;
@@ -1004,7 +1004,7 @@ describe('transport application controller', () => {
       currentJourneyCompletionEvents: ordered.currentJourneyCompletionEvents,
     });
     expect(currentClose).toHaveBeenCalledTimes(1);
-    expect(clientCreations).toBe(2);
+    expect(clientCreations).toBe(corruptions.length + 2);
     await controller.close();
   });
 
@@ -1092,7 +1092,7 @@ describe('transport application controller', () => {
         message: expect.any(String),
       });
       expect(currentClose).not.toHaveBeenCalled();
-      expect(clientCreations).toBe(1);
+      expect(clientCreations).toBe(index + 2);
     }
     await controller.close();
   });

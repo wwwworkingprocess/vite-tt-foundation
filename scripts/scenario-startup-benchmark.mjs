@@ -1,30 +1,16 @@
-import { createHash } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
-import { readFile } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
-import {
-  buildDirectedScenarioGraph,
-  buildStopCatchments,
-  listActivePopulationCells,
-  parseCityPopulationGrid,
-  parseScenarioPackage,
-} from '../packages/transport-domain/dist/index.js';
-import {
-  buildPassengerDirectItineraryPlan,
-  createPassengerDirectItineraryRuntimeIndex,
-} from '../packages/simulation/dist/passenger-direct-itinerary.js';
+import { buildDirectedScenarioGraph } from '../packages/transport-domain/dist/index.js';
+import { buildPassengerDirectItineraryAuthority } from '../packages/simulation/dist/passenger-direct-itinerary.js';
 import { passengerDemandRuntimeIndex } from '../packages/simulation/dist/passenger-demand-runtime.js';
+import { createTransportSimulationState } from '../packages/simulation/dist/index.js';
 import {
-  createPassengerDemandPlan,
-  createTransportSimulationState,
-} from '../packages/simulation/dist/index.js';
-
-const root = process.cwd().replaceAll('\\', '/').endsWith('/apps/web')
-  ? resolve(process.cwd(), '..', '..')
-  : process.cwd();
-const publicRoot = join(root, 'apps/web/public');
-const json = (text) => JSON.parse(text);
-const digest = (value) => createHash('sha256').update(value).digest('hex');
+  buildBenchmarkCatchment,
+  createBenchmarkPassengerDemandPlan,
+  loadBenchmarkAssets,
+  loadBenchmarkCatalogues,
+  parseBenchmarkScenario,
+  prepareBenchmarkPopulationView,
+} from './scenario-benchmark-support.mjs';
 
 export function parseScenarioStartupBenchmarkArguments(values) {
   const result = { runs: 5, json: false };
@@ -70,24 +56,6 @@ const stats = (values) => {
   });
 };
 
-const cropGrid = (canonical, crop) =>
-  parseCityPopulationGrid({
-    ...canonical,
-    originCellCenter: {
-      latitude:
-        canonical.originCellCenter.latitude -
-        crop.rowStart * canonical.resolutionDegrees,
-      longitude:
-        canonical.originCellCenter.longitude +
-        crop.columnStart * canonical.resolutionDegrees,
-    },
-    rows: crop.rowEnd - crop.rowStart,
-    columns: crop.columnEnd - crop.columnStart,
-    populationWeights: canonical.populationWeights
-      .slice(crop.rowStart, crop.rowEnd)
-      .map((row) => row.slice(crop.columnStart, crop.columnEnd)),
-  });
-
 async function measureScenario(descriptor, populationCatalogue) {
   const startupTimings = {};
   const diagnosticTimings = {};
@@ -97,105 +65,43 @@ async function measureScenario(descriptor, populationCatalogue) {
     timings[name] = performance.now() - start;
     return value;
   };
-  const scenarioDirectory = join(
-    publicRoot,
-    'scenarios',
-    dirname(descriptor.manifestPath),
+  const assets = await time(startupTimings, 'assetLoading', () =>
+    loadBenchmarkAssets(descriptor, populationCatalogue),
   );
-  const populationEntry = populationCatalogue.cities.find(
-    (entry) => entry.primarySettlementId === descriptor.primarySettlementId,
-  );
-  if (!populationEntry)
-    throw new Error(`No population field for ${descriptor.scenarioId}.`);
-  const assets = await time(startupTimings, 'assetLoading', async () => {
-    const scenarioNames = [
-      'scenario.json',
-      'settlements.json',
-      'stops.json',
-      'routes.json',
-      'presentation.json',
-      'provenance.json',
-    ];
-    const [scenarioTexts, gridText, cropText] = await Promise.all([
-      Promise.all(
-        scenarioNames.map((name) =>
-          readFile(join(scenarioDirectory, name), 'utf8'),
-        ),
-      ),
-      readFile(
-        join(publicRoot, 'population-fields', populationEntry.gridPath),
-        'utf8',
-      ),
-      readFile(
-        join(publicRoot, 'population-fields', populationEntry.cropPath),
-        'utf8',
-      ),
-    ]);
-    return { scenarioTexts, gridText, cropText };
-  });
   const scenario = await time(
     startupTimings,
     'scenarioParsingAndGraph',
     async () => {
-      const values = assets.scenarioTexts.map(json);
-      const parsed = parseScenarioPackage({
-        manifest: values[0],
-        settlements: values[1],
-        stops: values[2],
-        routes: values[3],
-        presentation: values[4],
-        provenance: values[5],
-      });
+      const parsed = parseBenchmarkScenario(assets.scenarioTexts);
       buildDirectedScenarioGraph(parsed);
       return parsed;
     },
   );
   let canonicalGrid;
   let grid;
-  let crop;
+  let populationView;
   let activeCells;
   await time(startupTimings, 'populationView', async () => {
-    canonicalGrid = parseCityPopulationGrid(json(assets.gridText));
-    const cropDocument = json(assets.cropText);
-    crop = cropDocument.scenarios.find(
-      (entry) => entry.scenarioId === descriptor.scenarioId,
-    )?.crop;
-    if (!crop) throw new Error(`Missing crop for ${descriptor.scenarioId}.`);
-    grid = cropGrid(canonicalGrid, crop);
-    activeCells = listActivePopulationCells(grid);
+    populationView = prepareBenchmarkPopulationView(descriptor, assets);
+    ({ canonicalGrid, grid, activeCells } = populationView);
   });
   let demandPlan;
   let catchment;
   let itinerary;
   await time(startupTimings, 'stopCatchmentConstruction', async () => {
-    catchment = buildStopCatchments({
-      grid,
+    catchment = buildBenchmarkCatchment(
       scenario,
-      maxAccessDistanceCells:
-        populationCatalogue.operationalCropPolicy.maxAccessDistanceCells,
-    });
+      populationView,
+      populationCatalogue,
+    );
   });
   await time(startupTimings, 'passengerDemandPlanCreation', async () => {
-    demandPlan = createPassengerDemandPlan({
+    demandPlan = createBenchmarkPassengerDemandPlan(
       catchment,
-      demandModelContentHash: digest(
-        JSON.stringify({
-          kind: 'population-demand-model-v1',
-          gridSha256: populationEntry.gridSha256,
-          rowStart: crop.rowStart,
-          rowEnd: crop.rowEnd,
-          columnStart: crop.columnStart,
-          columnEnd: crop.columnEnd,
-          maxAccessDistanceCells:
-            populationCatalogue.operationalCropPolicy.maxAccessDistanceCells,
-        }),
-      ),
-      emissionPolicy: {
-        emissionCreditsPerWeightPerTick: 1,
-        creditsPerPassenger: 50_000,
-      },
-      accessPolicy: { accessTicksPerCell: 1 },
-    });
+      populationView,
+      assets.populationEntry,
+      populationCatalogue,
+    );
   });
   await time(
     diagnosticTimings,
@@ -204,23 +110,16 @@ async function measureScenario(descriptor, populationCatalogue) {
       passengerDemandRuntimeIndex(demandPlan);
     },
   );
-  await time(diagnosticTimings, 'directItineraryPlanConstruction', async () => {
-    itinerary = buildPassengerDirectItineraryPlan({ scenario, demandPlan });
-  });
   await time(
     diagnosticTimings,
-    'directItineraryRuntimeIndexConstruction',
+    'directItineraryAuthorityConstruction',
     async () => {
-      createPassengerDirectItineraryRuntimeIndex({
-        plan: itinerary,
+      itinerary = buildPassengerDirectItineraryAuthority({
         scenario,
         demandPlan,
-      });
+      }).plan;
     },
   );
-  await time(startupTimings, 'initialAuthoritySemanticPreflight', async () => {
-    createTransportSimulationState(scenario, 0, demandPlan);
-  });
   await time(startupTimings, 'workerAuthorityCreation', async () => {
     createTransportSimulationState(scenario, 0, demandPlan);
   });
@@ -264,20 +163,14 @@ async function measureScenario(descriptor, populationCatalogue) {
       itineraryPairCount: itinerary.pairCount,
       directItineraryPairCount: itinerary.directPairCount,
       unavailableItineraryPairCount: itinerary.unavailablePairCount,
+      retainedDirectItineraryEntries: itinerary.directEntries.length,
     }),
   });
 }
 
 export async function runScenarioStartupBenchmark(options) {
-  const scenarioCatalogue = json(
-    await readFile(join(publicRoot, 'scenarios', 'catalog.json'), 'utf8'),
-  );
-  const populationCatalogue = json(
-    await readFile(
-      join(publicRoot, 'population-fields', 'catalog.json'),
-      'utf8',
-    ),
-  );
+  const { scenarioCatalogue, populationCatalogue } =
+    await loadBenchmarkCatalogues();
   const selected = scenarioCatalogue.scenarios.filter((descriptor) =>
     options.all
       ? true

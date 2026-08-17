@@ -605,7 +605,7 @@ describe('directional passenger waiting cohorts', () => {
       count: 2,
     });
     expect(
-      realItineraries.entries.find(
+      realItineraries.directEntries.find(
         (entry) =>
           entry.originStopPlaceId === 'tv-place-0207' &&
           entry.destinationStopPlaceId === 'tv-place-0207',

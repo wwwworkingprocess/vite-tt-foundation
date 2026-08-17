@@ -193,6 +193,11 @@ money, integer currency units, fare calculation, operating costs, accounting
 frequency, objective definitions, and win/fail conditions still require a
 separate accepted architecture/task decision before implementation.
 
+Before Phase 4F, derived direct-itinerary authority was migrated to sparse Plan
+V2 and redundant browser/restore construction passes were removed. A headless
+single-tick simulation benchmark now records the evidence needed to select the
+next measured runtime optimization without changing passenger semantics.
+
 ## Later transport growth
 
 Deferred work includes:

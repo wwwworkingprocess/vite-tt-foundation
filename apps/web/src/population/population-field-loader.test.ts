@@ -425,7 +425,7 @@ describe('population field loader', () => {
           itineraryIndex.find(
             originStopPlaceId,
             candidate.destinationStopPlaceId,
-          ).status === 'direct'
+          ) !== undefined
         )
           baselineAvailable += count;
         remainingBaseline -= count;
@@ -442,7 +442,7 @@ describe('population field loader', () => {
           itineraryIndex.find(
             originStopPlaceId,
             allocation.destinationStopPlaceId,
-          ).status === 'direct'
+          ) !== undefined
         )
           available += allocation.count;
       }

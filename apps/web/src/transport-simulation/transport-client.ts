@@ -8,7 +8,6 @@ import {
   createTransportSimulationSnapshot,
   createTransportSimulationState,
   parseTickAdvancement,
-  parsePassengerDemandPlan,
   projectPassengerDemand,
   projectVehiclePassengerLoads,
   parseTransportVehicleCommand,
@@ -334,21 +333,17 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
       if (lifecycle.state !== 'idle')
         throw new Error('Transport client can connect only from idle.');
       assertConnectShape(request);
-      const passengerDemandPlan =
-        request.passengerDemandPlan === undefined
-          ? undefined
-          : parsePassengerDemandPlan(request.passengerDemandPlan);
       const nextAuthority =
         request.mode === 'new'
           ? createTransportSimulationState(
               request.scenario,
               request.initialSimulationTick,
-              passengerDemandPlan,
+              request.passengerDemandPlan,
             )
           : restoreTransportSimulationState(
               request.snapshot,
               request.scenario,
-              passengerDemandPlan,
+              request.passengerDemandPlan,
             );
       publishLifecycle({ state: 'connecting' });
       try {

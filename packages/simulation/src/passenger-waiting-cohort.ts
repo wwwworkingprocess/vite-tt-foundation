@@ -188,7 +188,7 @@ export function activatePassengerDirectItineraries(input: {
     const key = passengerWaitingCohortKey(cohort);
     const priorGeneration = generations.get(key);
     if (
-      itinerary.status !== 'direct' ||
+      itinerary === undefined ||
       !passengerWaitingCohortMatchesItinerary(cohort, itinerary) ||
       destinationCell?.assignedStopPlaceId !== cohort.destinationStopPlaceId ||
       !Number.isSafeInteger(cohort.count) ||
@@ -244,7 +244,7 @@ export function activatePassengerDirectItineraries(input: {
       assignment.originStopPlaceId,
       assignment.destinationStopPlaceId,
     );
-    if (itinerary.status === 'unavailable') {
+    if (itinerary === undefined) {
       unavailable = checkedAdd(
         unavailable,
         assignment.count,

@@ -28,6 +28,7 @@ markers are superseded. Current aggregate versions are centralized in
 | [0017](0017-deterministic-passenger-boarding-and-capacity.md)            | Boarding and capacity                         | Phase 4E4          | Active decision; V8/Save V6 superseded by 0018                                       |
 | [0018](0018-deterministic-passenger-alighting-and-journey-completion.md) | Alighting and journey completion              | Phase 4E5          | Active and current aggregate persistence decision                                    |
 | [0019](0019-deterministically-dispersed-passenger-destinations.md)       | Deterministically dispersed destinations      | Before Phase 4F    | Active destination-dispersion decision; supersedes only 0013's contiguous traversal  |
+| [0020](0020-sparse-passenger-direct-itinerary-plan.md)                   | Sparse Passenger Direct Itinerary Plan V2     | Before Phase 4F    | Active; preserves 0014 routing semantics and supersedes its dense Plan V1 authority  |
 
 ## ADR editing rule
 

@@ -1,7 +1,6 @@
 import { z } from 'zod';
-import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
+import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
-  createTransportSimulationState,
   parsePassengerDemandPlan,
   parsePassengerDemandProjection,
   parseSimulationTick,
@@ -52,8 +51,15 @@ const coordinate = z.strictObject({
 });
 const canonicalScenario = z.unknown().transform((value, context) => {
   try {
-    return createTransportSimulationState(value as CanonicalScenario, 0)
-      .scenario;
+    const scenario = value as Record<string, unknown>;
+    return parseScenarioPackage({
+      manifest: scenario.manifest,
+      settlements: scenario.settlements,
+      stops: scenario.stops,
+      routes: scenario.routes,
+      presentation: scenario.presentation,
+      provenance: scenario.provenance,
+    });
   } catch {
     context.addIssue({
       code: 'custom',

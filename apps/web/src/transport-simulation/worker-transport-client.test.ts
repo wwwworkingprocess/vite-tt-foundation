@@ -127,6 +127,111 @@ const loopbackWorker = (): TransportWorkerLike => {
 };
 
 describe('transport Worker boundary failures', () => {
+  it('isolates the lazy diagnostic mirror from caller request mutation', async () => {
+    const client = createWorkerTransportSimulationClient({
+      workerFactory: loopbackWorker,
+    });
+    const request = {
+      kind: 'transport-client-connect' as const,
+      contractVersion: 4 as const,
+      mode: 'new' as const,
+      gameId: parseGameId('isolated-request'),
+      timelineId: parseTimelineId('isolated-request'),
+      initialSimulationTick: 7,
+      scenario: scenario(),
+    };
+    await client.connect(request);
+    (request as { initialSimulationTick: number }).initialSimulationTick = 99;
+
+    expect(client.getAuthoritativeState().tick).toBe(7);
+    await client.close();
+  });
+
+  it('keeps Worker, pending lifecycle, and lazy mirror on the isolated request', async () => {
+    const listeners = new Map<
+      'message' | 'error' | 'messageerror',
+      (event: TransportWorkerEvent) => void
+    >();
+    let releaseConnect!: () => void;
+    let sentConnect: unknown;
+    const worker: TransportWorkerLike = {
+      postMessage(message) {
+        if (message.operation === 'connect') {
+          sentConnect = structuredClone(message.payload);
+          releaseConnect = () =>
+            listeners.get('message')?.({
+              data: {
+                kind: 'transport-worker-result',
+                contractVersion: 4,
+                requestId: message.requestId,
+                operation: 'connect',
+                payload: null,
+              },
+            });
+        } else if (message.operation === 'close')
+          queueMicrotask(() =>
+            listeners.get('message')?.({
+              data: {
+                kind: 'transport-worker-result',
+                contractVersion: 4,
+                requestId: message.requestId,
+                operation: 'close',
+                payload: null,
+              },
+            }),
+          );
+      },
+      addEventListener: (type, listener) => listeners.set(type, listener),
+      removeEventListener: (type, listener) => {
+        if (listeners.get(type) === listener) listeners.delete(type);
+      },
+      terminate: () => undefined,
+    };
+    const client = createWorkerTransportSimulationClient({
+      workerFactory: () => worker,
+    });
+    const originalScenario = scenario();
+    const request = {
+      kind: 'transport-client-connect' as const,
+      contractVersion: 4 as const,
+      mode: 'new' as const,
+      gameId: parseGameId('original-game'),
+      timelineId: parseTimelineId('original-timeline'),
+      initialSimulationTick: 7,
+      scenario: originalScenario,
+    };
+    const connecting = client.connect(request);
+    Object.assign(request, {
+      gameId: parseGameId('mutated-game'),
+      timelineId: parseTimelineId('mutated-timeline'),
+      initialSimulationTick: 99,
+      scenario: productionScenario('torrevieja-legacy-abc-v1'),
+    });
+    releaseConnect();
+    await connecting;
+
+    expect(sentConnect).toMatchObject({
+      gameId: 'original-game',
+      timelineId: 'original-timeline',
+      initialSimulationTick: 7,
+    });
+    expect(client.getLifecycle()).toMatchObject({
+      state: 'ready',
+      gameId: 'original-game',
+      timelineId: 'original-timeline',
+      scenario: {
+        scenarioId: originalScenario.manifest.scenarioId,
+      },
+    });
+    expect(client.getAuthoritativeState()).toMatchObject({
+      tick: 7,
+      scenario: {
+        manifest: { scenarioId: originalScenario.manifest.scenarioId },
+      },
+    });
+    await client.close();
+  });
+
   it('restores a real production passenger plan reconstructed from canonical assets', async () => {
     const canonical = productionScenario('torrevieja-legacy-abc-v1');
     const savedPlan = createProductionPassengerDemandPlan({
@@ -155,6 +260,9 @@ describe('transport Worker boundary failures', () => {
       passengerDemandPlan: reconstructedPlan,
     });
     await expect(client.exportSnapshot()).resolves.toMatchObject({ snapshot });
+    expect(client.getAuthoritativeState().passengerDemandPlan).toEqual(
+      reconstructedPlan,
+    );
     await client.close();
   }, 60_000);
   it('demands render publications only while a consumer is registered', async () => {

@@ -7,6 +7,7 @@ import {
   parseScenarioStartupBenchmarkArguments,
   runScenarioStartupBenchmark,
 } from '../../../../scripts/scenario-startup-benchmark.mjs';
+import { runSimulationRuntimeBenchmark } from '../../../../scripts/simulation-runtime-benchmark.mjs';
 import { createPopulationFieldLoader } from '../population/population-field-loader.js';
 
 const publicRoot = join(import.meta.dirname, '..', '..', 'public');
@@ -105,6 +106,7 @@ describe('scenario startup benchmark', () => {
         itineraryPairCount: 6162,
         directItineraryPairCount: 1112,
         unavailableItineraryPairCount: 5050,
+        retainedDirectItineraryEntries: 1112,
       },
       startupTimingsMilliseconds: {
         assetLoading: {
@@ -124,12 +126,7 @@ describe('scenario startup benchmark', () => {
           median: expect.any(Number),
           max: expect.any(Number),
         },
-        directItineraryPlanConstruction: {
-          min: expect.any(Number),
-          median: expect.any(Number),
-          max: expect.any(Number),
-        },
-        directItineraryRuntimeIndexConstruction: {
+        directItineraryAuthorityConstruction: {
           min: expect.any(Number),
           median: expect.any(Number),
           max: expect.any(Number),
@@ -147,14 +144,12 @@ describe('scenario startup benchmark', () => {
       'populationView',
       'stopCatchmentConstruction',
       'passengerDemandPlanCreation',
-      'initialAuthoritySemanticPreflight',
       'workerAuthorityCreation',
       'startupTotal',
     ]);
     expect(Object.keys(result.diagnosticTimingsMilliseconds)).toEqual([
       'passengerDemandRuntimeIndexDiagnostic',
-      'directItineraryPlanConstruction',
-      'directItineraryRuntimeIndexConstruction',
+      'directItineraryAuthorityConstruction',
       'diagnosticTotal',
     ]);
     const productionPopulation = await createPopulationFieldLoader({
@@ -168,4 +163,52 @@ describe('scenario startup benchmark', () => {
       productionPopulation.demandModelContentHash,
     );
   }, 30_000);
+
+  it('shares the exact demand-model coordinate with the runtime benchmark', async () => {
+    const startup = (
+      await runScenarioStartupBenchmark({
+        scenario: 'torrevieja-legacy-abc-v1',
+        runs: 1,
+        json: false,
+      })
+    )[0]!;
+    let clock = 0;
+    const runtime = await runSimulationRuntimeBenchmark(
+      {
+        scenario: 'torrevieja-legacy-abc-v1',
+        runs: 1,
+        warmup: 0,
+        ticks: 1,
+      },
+      () => clock++,
+    );
+    expect(runtime.configuration.demandModelContentHash).toBe(
+      startup.demandModelContentHash,
+    );
+  }, 30_000);
+
+  it.each([
+    ['torrevieja-legacy-abc-v1', 79, 6162, 1112, 5050],
+    ['cartagena-radial-legacy-all-v1', 266, 70490, 4495, 65995],
+    ['malaga-day-legacy-all-v1', 1032, 1063992, 26113, 1037879],
+  ] as const)(
+    'retains only sparse direct authority for %s',
+    async (scenarioId, stops, pairs, direct, unavailable) => {
+      const result = (
+        await runScenarioStartupBenchmark({
+          scenario: scenarioId,
+          runs: 1,
+          json: false,
+        })
+      )[0]!;
+      expect(result.structure).toMatchObject({
+        itineraryStopPlaces: stops,
+        itineraryPairCount: pairs,
+        directItineraryPairCount: direct,
+        unavailableItineraryPairCount: unavailable,
+        retainedDirectItineraryEntries: direct,
+      });
+    },
+    120_000,
+  );
 });

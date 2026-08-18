@@ -170,7 +170,11 @@ remain strict.
 
 `yarn benchmark:simulation-runtime` measures deterministic headless repeated
 single-tick advancement after an explicit untimed warmup. It is the simulation
-denominator for later 5 fps versus 60 fps representation-resource profiling.
+denominator for the opt-in browser representation profiler. The finite
+`yarn benchmark:representation-runtime` diagnostic records SVG commits, passenger
+diagnostics, population renders/geometry rebuilds/commits, and manual R3F frame
+advances under the unchanged mini 5 fps and normal 60 fps policies. Profiling is
+off by default and its machine-specific output is not source authority.
 Repeated runs compare complete Snapshot V9 authority outside the timed region,
 publish a final snapshot SHA-256, and report population-cell and itinerary
 structure alongside aggregate passenger metrics.

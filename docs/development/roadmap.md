@@ -197,6 +197,10 @@ Before Phase 4F, derived direct-itinerary authority was migrated to sparse Plan
 V2 and redundant browser/restore construction passes were removed. A headless
 single-tick simulation benchmark now records the evidence needed to select the
 next measured runtime optimization without changing passenger semantics.
+An opt-in finite browser profiler now separates observable SVG, passenger
+diagnostic, population-overlay, and manual R3F frame work. Its evidence is an
+input to a later optimization decision; this milestone does not change cadence
+or passenger/population presentation.
 
 ## Later transport growth
 

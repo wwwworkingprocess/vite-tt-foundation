@@ -5,7 +5,18 @@ import type {
   VehicleState,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
-import { useEffect, useMemo, useState, type KeyboardEvent } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  type KeyboardEvent,
+} from 'react';
+import {
+  beginRepresentationProfile,
+  finishRepresentationProfile,
+  recordRepresentationProfile,
+} from '../performance/representation-profiler.js';
 import { selectVehicle, type GameSelection } from '../ui/game-selection.js';
 import { useLatestRepresentationValue } from '../representation/RepresentationModeContext.js';
 import { projectVehicleMovementSvg } from './vehicle-svg-projection.js';
@@ -33,6 +44,7 @@ export function VehicleMovementSvg(
     showPassengerArrivalPulse?: boolean | undefined;
   }>,
 ) {
+  const renderProfile = beginRepresentationProfile('svg.render-to-commit');
   const {
     scenario,
     fleet,
@@ -64,14 +76,18 @@ export function VehicleMovementSvg(
     });
   }, [passengerOriginStopArrivalEvents, simulationTick]);
   const waitingByStopPlace = useMemo(() => {
+    const profile = beginRepresentationProfile('passengers.derivation');
     const totals = new Map<string, number>();
-    if (passengerDemand?.status !== 'active') return totals;
-    for (const cohort of passengerDemand.waitingCohorts) {
-      const total = (totals.get(cohort.originStopPlaceId) ?? 0) + cohort.count;
-      if (!Number.isSafeInteger(total))
-        throw new Error('Passenger map waiting total exceeds safe range.');
-      totals.set(cohort.originStopPlaceId, total);
+    if (passengerDemand?.status === 'active') {
+      for (const cohort of passengerDemand.waitingCohorts) {
+        const total =
+          (totals.get(cohort.originStopPlaceId) ?? 0) + cohort.count;
+        if (!Number.isSafeInteger(total))
+          throw new Error('Passenger map waiting total exceeds safe range.');
+        totals.set(cohort.originStopPlaceId, total);
+      }
     }
+    finishRepresentationProfile(profile);
     return totals;
   }, [passengerDemand]);
   const representativeNodes = useMemo(() => {
@@ -91,6 +107,11 @@ export function VehicleMovementSvg(
     () => new Map(vehiclePassengerLoads.map((load) => [load.vehicleId, load])),
     [vehiclePassengerLoads],
   );
+  useLayoutEffect(() => {
+    finishRepresentationProfile(renderProfile);
+    recordRepresentationProfile('svg.commit');
+    if (passengersVisible) recordRepresentationProfile('passengers.commit');
+  });
   const activate = (callback: () => void) => (event: KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();

@@ -19,10 +19,18 @@ import {
 } from '@torrevieja-tycoon/simulation';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import { VehicleMovementSvg } from './VehicleMovementSvg.js';
+import { RepresentationModeProvider } from '../representation/RepresentationModeContext.js';
+import {
+  clearRepresentationProfiles,
+  configureRepresentationProfiling,
+  representationProfilePrefix,
+} from '../performance/representation-profiler.js';
 
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+  configureRepresentationProfiling(false);
+  clearRepresentationProfiles();
 });
 const root = join(
   import.meta.dirname,
@@ -121,6 +129,25 @@ it('renders authoritative stop, edge, and changing vehicle projections accessibl
     'data-directed-edge-count',
     String(state.graph.summary.edges),
   );
+});
+
+it('profiles SVG commits and passenger derivation separately when opted in', () => {
+  configureRepresentationProfiling(true);
+  render(
+    <RepresentationModeProvider mode="mini">
+      <VehicleMovementSvg scenario={scenario} fleet={[]} />
+    </RepresentationModeProvider>,
+  );
+  const names = [
+    ...performance.getEntriesByType('mark'),
+    ...performance.getEntriesByType('measure'),
+  ].map(({ name }) => name);
+  expect(names).toContain(`${representationProfilePrefix}svg.commit`);
+  expect(names).toContain(`${representationProfilePrefix}svg.render-to-commit`);
+  expect(names).toContain(
+    `${representationProfilePrefix}passengers.derivation`,
+  );
+  expect(names).toContain(`${representationProfilePrefix}passengers.commit`);
 });
 
 it('publishes live fleet and passenger authority after StrictMode effect replay', () => {

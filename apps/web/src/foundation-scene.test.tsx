@@ -1,7 +1,12 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import FoundationScene from './foundation-scene.js';
 import { RepresentationModeProvider } from './representation/RepresentationModeContext.js';
+import {
+  clearRepresentationProfiles,
+  configureRepresentationProfiling,
+  representationProfilePrefix,
+} from './performance/representation-profiler.js';
 
 const r3fDomDiagnostic =
   /(?:ambientLight|boxGeometry|meshStandardMaterial).*(?:incorrect casing|unrecognized in this browser)|(?:incorrect casing|unrecognized in this browser).*(?:ambientLight|boxGeometry|meshStandardMaterial)/i;
@@ -9,6 +14,26 @@ const r3fDomDiagnostic =
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  configureRepresentationProfiling(false);
+  clearRepresentationProfiles();
+});
+
+it('profiles the actual manually advanced R3F frame', () => {
+  vi.useFakeTimers();
+  configureRepresentationProfiling(true);
+  const mark = vi.spyOn(performance, 'mark');
+  const measure = vi.spyOn(performance, 'measure');
+  render(<FoundationScene />);
+  act(() => vi.advanceTimersByTime(1000 / 60 + 1));
+  expect(mark).toHaveBeenCalledWith(
+    `${representationProfilePrefix}r3f.frame`,
+    expect.anything(),
+  );
+  expect(measure).toHaveBeenCalledWith(
+    `${representationProfilePrefix}r3f.advance`,
+    expect.anything(),
+  );
+  vi.useRealTimers();
 });
 
 it('keeps R3F intrinsic scene elements out of the React DOM test boundary', () => {

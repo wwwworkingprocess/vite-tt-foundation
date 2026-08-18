@@ -4,6 +4,7 @@ coverage/
 .vite/
 cypress/screenshots/
 cypress/videos/
+performance-results/
 .yarn/install-state.gz
 .pnp.*
 .env

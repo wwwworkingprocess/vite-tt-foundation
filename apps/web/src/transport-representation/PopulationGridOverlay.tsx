@@ -1,6 +1,11 @@
-import { memo, useMemo, useState } from 'react';
+import { memo, useLayoutEffect, useMemo, useState } from 'react';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import { createScenarioSvgPositionProjector } from './vehicle-svg-projection.js';
+import {
+  beginRepresentationProfile,
+  finishRepresentationProfile,
+  recordRepresentationProfile,
+} from '../performance/representation-profiler.js';
 
 interface PopulationCell {
   readonly cellId: string;
@@ -19,6 +24,10 @@ function PopulationGridOverlay(props: {
   readonly scenario?: CanonicalScenario;
   readonly project?: (position: PopulationCell['center']) => SvgPoint;
 }) {
+  const renderProfile = beginRepresentationProfile(
+    'population.render-to-commit',
+  );
+  recordRepresentationProfile('population.render');
   const [visible, setVisible] = useState(true);
   const scenarioProject = useMemo(
     () =>
@@ -28,7 +37,15 @@ function PopulationGridOverlay(props: {
     [props.scenario],
   );
   const geometry = useMemo(() => {
-    if (!visible) return [];
+    const profile = beginRepresentationProfile('population.geometry');
+    if (!visible) {
+      if (profile)
+        finishRepresentationProfile(profile, {
+          primitiveCount: 0,
+          cellCount: 0,
+        });
+      return [];
+    }
     const project =
       props.project ??
       ((position: PopulationCell['center']) => {
@@ -67,12 +84,18 @@ function PopulationGridOverlay(props: {
       bands[band]!.paths.push(`M${x} ${y}h${width}v${height}h-${width}Z`);
       bands[band]!.cellCount += 1;
     }
-    return bands
+    const result = bands
       .map((band, index) => ({
         ...band,
         opacity: 0.15 + ((index + 1) / intensityBandCount) * 0.65,
       }))
       .filter((band) => band.paths.length > 0);
+    if (profile)
+      finishRepresentationProfile(profile, {
+        primitiveCount: result.length,
+        cellCount: props.cells.length,
+      });
+    return result;
   }, [
     props.cells,
     props.project,
@@ -80,6 +103,16 @@ function PopulationGridOverlay(props: {
     scenarioProject,
     visible,
   ]);
+  useLayoutEffect(() => {
+    if (!renderProfile) return;
+    const detail = {
+      visible,
+      primitiveCount: visible ? geometry.length : 0,
+      cellCount: visible ? props.cells.length : 0,
+    };
+    finishRepresentationProfile(renderProfile, detail);
+    recordRepresentationProfile('population.commit', detail);
+  });
 
   return (
     <section className="population-grid-overlay" aria-label="Population field">

@@ -572,7 +572,7 @@ for (const file of web.filter((path) =>
 )) {
   const text = await source(file);
   if (
-    /\b(?:Date|performance|setTimeout|setInterval|requestAnimationFrame)\b|Math\.random|from\s+['"](?:three|@react-three)/.test(
+    /\b(?:Date|setTimeout|setInterval|requestAnimationFrame)\b|\bperformance\s*\.|Math\.random|from\s+['"](?:three|@react-three)/.test(
       text,
     )
   )
@@ -583,6 +583,7 @@ for (const file of [...simulation, ...protocol, ...web]) {
   const normalized = file.replaceAll('\\', '/');
   const transportExtension =
     normalized.includes('apps/web/src/population') ||
+    normalized.includes('apps/web/src/performance') ||
     normalized.includes('apps/web/src/scenarios') ||
     normalized.includes('apps/web/src/transport-simulation') ||
     normalized.includes('apps/web/src/transport-representation') ||

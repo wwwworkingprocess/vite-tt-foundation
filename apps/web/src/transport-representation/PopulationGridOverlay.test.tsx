@@ -4,6 +4,11 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import PopulationGridOverlay from './PopulationGridOverlay.js';
+import {
+  clearRepresentationProfiles,
+  configureRepresentationProfiling,
+  representationProfilePrefix,
+} from '../performance/representation-profiler.js';
 
 const fixture = join(
   import.meta.dirname,
@@ -27,7 +32,58 @@ const scenario = parseScenarioPackage({
   provenance: asset('provenance.json'),
 });
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  configureRepresentationProfiling(false);
+  clearRepresentationProfiles();
+});
+
+it('distinguishes profiled renders, geometry rebuilds, and commits', () => {
+  configureRepresentationProfiling(true);
+  const cells = [
+    {
+      cellId: 'r0c0',
+      center: { latitude: 1, longitude: 1 },
+      populationWeight: 2,
+    },
+  ] as const;
+  const project = ({
+    latitude,
+    longitude,
+  }: Readonly<{ latitude: number; longitude: number }>) => ({
+    cx: longitude,
+    cy: latitude,
+  });
+  const rendered = render(
+    <PopulationGridOverlay
+      cells={cells}
+      resolutionDegrees={0.001}
+      project={project}
+    />,
+  );
+  rendered.rerender(
+    <PopulationGridOverlay
+      cells={cells}
+      resolutionDegrees={0.001}
+      project={project}
+    />,
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Hide population' }));
+  const names = [
+    ...performance.getEntriesByType('mark'),
+    ...performance.getEntriesByType('measure'),
+  ].map(({ name }) => name);
+  expect(
+    names.filter(
+      (name) => name === `${representationProfilePrefix}population.geometry`,
+    ),
+  ).toHaveLength(2);
+  expect(names).toContain(`${representationProfilePrefix}population.render`);
+  expect(names).toContain(`${representationProfilePrefix}population.commit`);
+  expect(names).toContain(
+    `${representationProfilePrefix}population.render-to-commit`,
+  );
+});
 
 it('renders and toggles deterministic nonzero population cells', () => {
   render(

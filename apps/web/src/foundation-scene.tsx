@@ -5,6 +5,11 @@ import {
   createRepresentationFrameDriver,
   representationCadence,
 } from './representation/representation-cadence.js';
+import {
+  beginRepresentationProfile,
+  finishRepresentationProfile,
+  recordRepresentationProfile,
+} from './performance/representation-profiler.js';
 
 function RepresentationFrameDriver() {
   const mode = useRepresentationMode();
@@ -15,7 +20,18 @@ function RepresentationFrameDriver() {
       now: () => performance.now(),
       setTimer: (callback, delay) => window.setTimeout(callback, delay),
       cancel: (handle) => window.clearTimeout(handle as number),
-      frame: (time) => advance(time),
+      frame: (time) => {
+        const profile = beginRepresentationProfile('r3f.advance');
+        advance(time);
+        if (profile) {
+          const detail = {
+            targetFramesPerSecond:
+              representationCadence(mode).targetFramesPerSecond,
+          };
+          finishRepresentationProfile(profile, detail);
+          recordRepresentationProfile('r3f.frame', detail);
+        }
+      },
     });
     return () => driver.close();
   }, [advance, mode]);

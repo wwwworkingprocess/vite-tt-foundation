@@ -16,6 +16,7 @@ import {
   type PassengerDemandPlanV1,
 } from './passenger-demand.js';
 import { parseSimulationTick, type SimulationTick } from './time.js';
+import type { PassengerRuntimePhaseObserver } from './passenger-runtime-profiling.js';
 import {
   checkedAdd,
   deepFreeze,
@@ -154,6 +155,7 @@ export function activatePassengerDirectItineraries(input: {
   readonly directItineraryUnavailablePassengerCount: number;
   readonly activationTick: number;
   readonly nonMergeableWaitingCohortIds?: ReadonlySet<PassengerWaitingCohortId>;
+  readonly observer?: PassengerRuntimePhaseObserver;
 }): Readonly<PassengerItineraryActivationResult> {
   const demandPlan = parsePassengerDemandPlan(input.demandPlan);
   const activationTick = parseSimulationTick(input.activationTick);
@@ -167,6 +169,7 @@ export function activatePassengerDirectItineraries(input: {
   const cells = new Map(
     demandPlan.cells.map((cell) => [cell.cellId, cell] as const),
   );
+  input.observer?.(9, demandPlan.cells.length);
   const cohorts = input.waitingCohorts.map((cohort) => ({ ...cohort }));
   const keys = new Map<string, number>();
   const generations = new Map<
@@ -225,6 +228,7 @@ export function activatePassengerDirectItineraries(input: {
       'waiting passenger count',
     );
   }
+  input.observer?.(10, input.waitingCohorts.length);
 
   let nextSequence = input.nextPassengerWaitingCohortSequence;
   let unavailable = input.directItineraryUnavailablePassengerCount;
@@ -295,11 +299,14 @@ export function activatePassengerDirectItineraries(input: {
       'waiting passenger count',
     );
   }
+  input.observer?.(11);
   cohorts.sort(comparePassengerWaitingCohorts);
-  return deepFreeze({
+  const result = deepFreeze({
     nextPassengerWaitingCohortSequence: nextSequence,
     waitingCohorts: cohorts,
     directItineraryUnavailablePassengerCount: unavailable,
     totalWaitingForVehiclePassengerCount: waitingTotal,
   });
+  input.observer?.(12, cohorts.length);
+  return result;
 }

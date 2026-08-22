@@ -75,7 +75,7 @@
     "gameInspector": 8000,
     "persistenceRuntime": 260000,
     "representation": 1200000,
-    "transportWorker": 193000,
+    "transportWorker": 200000,
     "totalEmittedJavaScript": 1750000
   }
 }

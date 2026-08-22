@@ -460,7 +460,7 @@ it('omits direction arrows for collocated canonical stops', () => {
   expect(screen.queryByTestId('edge-direction')).not.toBeInTheDocument();
 });
 
-it('adapts pointer and keyboard input into renderer-independent selections', () => {
+it('adapts pointer and keyboard input into renderer-independent selections', async () => {
   const onSelectionChange = vi.fn();
   const state = createTransportSimulationState(selectionScenario, 0);
   const view = render(
@@ -521,7 +521,7 @@ it('adapts pointer and keyboard input into renderer-independent selections', () 
   expect(
     view.container.querySelector(`[data-stop-place-id="${stopPlaceId(stop)}"]`),
   ).toHaveAttribute('data-selected', 'true');
-  const vehicle = screen.getByTestId('vehicle-position');
+  const vehicle = await screen.findByTestId('vehicle-position');
   fireEvent.click(vehicle);
   fireEvent.keyDown(vehicle, { key: 'Enter' });
   fireEvent.keyDown(vehicle, { key: ' ' });

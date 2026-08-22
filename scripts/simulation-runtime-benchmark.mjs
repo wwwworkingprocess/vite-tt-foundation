@@ -4,11 +4,20 @@ import { buildDirectedScenarioGraph } from '../packages/transport-domain/dist/in
 import {
   DEFAULT_VEHICLE_PASSENGER_CAPACITY,
   advanceTransportTicks,
+  advanceTransportTicksInternal,
   applyTransportVehicleCommand,
   createTransportSimulationSnapshot,
   createTransportSimulationState,
 } from '../packages/simulation/dist/index.js';
 import { prepareBenchmarkScenario } from './scenario-benchmark-support.mjs';
+
+const passengerRuntimePhases = [
+  'passenger-emission',
+  'passenger-access-arrival',
+  'passenger-destination-waiting',
+  'passenger-vehicle-transit',
+  'passenger-destination-access-completion',
+];
 
 export function parseSimulationRuntimeBenchmarkArguments(values) {
   const result = {
@@ -16,11 +25,14 @@ export function parseSimulationRuntimeBenchmarkArguments(values) {
     ticks: 100,
     warmup: 200,
     passengerWorkWindow: 12,
+    profilePassengerPhases: false,
     json: false,
   };
   for (let index = 0; index < values.length; index += 1) {
     const value = values[index];
     if (value === '--json') result.json = true;
+    else if (value === '--profile-passenger-phases')
+      result.profilePassengerPhases = true;
     else if (
       [
         '--scenario',
@@ -69,6 +81,377 @@ const stats = (values) => {
         : (sorted[middle - 1] + sorted[middle]) / 2,
     max: sorted.at(-1),
   });
+};
+
+export function summarizePassengerRuntimePhases(
+  phaseDurations,
+  phaseWork,
+  measuredTicks,
+  wholeSimulationMilliseconds,
+) {
+  const measuredPassengerPhaseTotalMs = passengerRuntimePhases.reduce(
+    (total, phase) =>
+      total + phaseDurations[phase].reduce((sum, value) => sum + value, 0),
+    0,
+  );
+  const passengerPhases = Object.fromEntries(
+    passengerRuntimePhases.map((phase) => {
+      const durations = phaseDurations[phase];
+      const totalMs = durations.reduce((sum, value) => sum + value, 0);
+      return [
+        phase,
+        Object.freeze({
+          invocations: durations.length,
+          totalMs,
+          msPerTick: totalMs / measuredTicks,
+          meanMsPerInvocation:
+            durations.length === 0 ? 0 : totalMs / durations.length,
+          shareOfMeasuredPassengerTime:
+            measuredPassengerPhaseTotalMs === 0
+              ? 0
+              : (totalMs * 100) / measuredPassengerPhaseTotalMs,
+          work: Object.freeze({ ...phaseWork[phase] }),
+        }),
+      ];
+    }),
+  );
+  return Object.freeze({
+    passengerPhases: Object.freeze(passengerPhases),
+    measuredPassengerPhaseTotalMs,
+    unattributedSimulationMs:
+      wholeSimulationMilliseconds - measuredPassengerPhaseTotalMs,
+  });
+}
+
+const summarizeNestedPhase = (
+  durations,
+  work,
+  measuredTicks,
+  destinationWaitingTotalMs,
+) => {
+  const totalMs = durations.reduce((sum, value) => sum + value, 0);
+  return Object.freeze({
+    invocations: durations.length,
+    totalMs,
+    msPerTick: totalMs / measuredTicks,
+    meanMsPerInvocation:
+      durations.length === 0 ? 0 : totalMs / durations.length,
+    shareOfDestinationWaitingTime:
+      destinationWaitingTotalMs === 0
+        ? 0
+        : (totalMs * 100) / destinationWaitingTotalMs,
+    work: Object.freeze({ ...work }),
+  });
+};
+
+export function summarizePassengerDestinationWaitingBreakdown(
+  destinationWaitingTotalMs,
+  destinationAllocationDurations,
+  waitingActivationDurations,
+  destinationAllocationWork,
+  waitingActivationWork,
+  measuredTicks,
+  waitingActivationBreakdown,
+) {
+  const destinationAllocation = summarizeNestedPhase(
+    destinationAllocationDurations,
+    destinationAllocationWork,
+    measuredTicks,
+    destinationWaitingTotalMs,
+  );
+  const waitingActivation = summarizeNestedPhase(
+    waitingActivationDurations,
+    waitingActivationWork,
+    measuredTicks,
+    destinationWaitingTotalMs,
+  );
+  const calculatedResidual =
+    destinationWaitingTotalMs -
+    destinationAllocation.totalMs -
+    waitingActivation.totalMs;
+  const totalMs =
+    calculatedResidual < 0 && calculatedResidual > -1e-9
+      ? 0
+      : calculatedResidual;
+  return Object.freeze({
+    destinationAllocation,
+    waitingActivation: Object.freeze({
+      ...waitingActivation,
+      ...(waitingActivationBreakdown
+        ? { breakdown: waitingActivationBreakdown }
+        : {}),
+    }),
+    residual: Object.freeze({
+      totalMs,
+      msPerTick: totalMs / measuredTicks,
+      shareOfDestinationWaitingTime:
+        destinationWaitingTotalMs === 0
+          ? 0
+          : (totalMs * 100) / destinationWaitingTotalMs,
+    }),
+  });
+}
+
+const waitingActivationPhases = [
+  'planPreparation',
+  'existingAuthorityPreparation',
+  'newAssignmentActivation',
+  'orderingFinalization',
+];
+
+export function summarizePassengerWaitingActivationBreakdown(
+  waitingActivationTotalMs,
+  durations,
+  work,
+  measuredTicks,
+) {
+  const phases = Object.fromEntries(
+    waitingActivationPhases.map((name) => {
+      const values = durations[name];
+      const totalMs = values.reduce((sum, value) => sum + value, 0);
+      return [
+        name,
+        Object.freeze({
+          invocations: values.length,
+          totalMs,
+          msPerTick: totalMs / measuredTicks,
+          meanMsPerInvocation:
+            values.length === 0 ? 0 : totalMs / values.length,
+          shareOfWaitingActivationTime:
+            waitingActivationTotalMs === 0
+              ? 0
+              : (totalMs * 100) / waitingActivationTotalMs,
+          work: Object.freeze({ ...work[name] }),
+        }),
+      ];
+    }),
+  );
+  const calculatedUnattributed =
+    waitingActivationTotalMs -
+    Object.values(phases).reduce((sum, phase) => sum + phase.totalMs, 0);
+  const totalMs =
+    calculatedUnattributed < 0 && calculatedUnattributed > -1e-9
+      ? 0
+      : calculatedUnattributed;
+  return Object.freeze({
+    ...phases,
+    unattributed: Object.freeze({
+      totalMs,
+      msPerTick: totalMs / measuredTicks,
+      shareOfWaitingActivationTime:
+        waitingActivationTotalMs === 0
+          ? 0
+          : (totalMs * 100) / waitingActivationTotalMs,
+    }),
+  });
+}
+
+const createPhaseProfiler = (now) => {
+  const durations = Object.fromEntries(
+    passengerRuntimePhases.map((phase) => [phase, []]),
+  );
+  const work = Object.fromEntries(
+    passengerRuntimePhases.map((phase) => [phase, {}]),
+  );
+  const destinationWaitingDurations = {
+    destinationAllocation: [],
+    waitingActivation: [],
+  };
+  const destinationWaitingWork = {
+    destinationAllocation: {},
+    waitingActivation: {},
+  };
+  const waitingActivationDurations = Object.fromEntries(
+    waitingActivationPhases.map((name) => [name, []]),
+  );
+  const waitingActivationWork = Object.fromEntries(
+    waitingActivationPhases.map((name) => [name, {}]),
+  );
+  let started;
+  let waitingActivationStarted;
+  let waitingActivationChildStarted;
+  const nextPhase = [undefined, 1, 2, 4, 3, 4];
+  return {
+    observer(boundary, primaryWork, secondaryWork) {
+      if (boundary >= 9) {
+        const expected = waitingActivationPhases[boundary - 9];
+        if (
+          waitingActivationStarted === undefined ||
+          waitingActivationChildStarted?.name !== expected
+        )
+          throw new Error(
+            'Passenger waiting activation detail order is invalid.',
+          );
+        const time = now();
+        waitingActivationDurations[expected].push(
+          time - waitingActivationChildStarted.time,
+        );
+        if (boundary === 9)
+          addWork(
+            waitingActivationWork.planPreparation,
+            'demandPlanCells',
+            primaryWork,
+          );
+        else if (boundary === 10)
+          addWork(
+            waitingActivationWork.existingAuthorityPreparation,
+            'inputWaitingCohorts',
+            primaryWork,
+          );
+        else if (boundary === 12)
+          addWork(
+            waitingActivationWork.orderingFinalization,
+            'resultingWaitingCohorts',
+            primaryWork,
+          );
+        const next = waitingActivationPhases[boundary - 8];
+        waitingActivationChildStarted = next ? { name: next, time } : undefined;
+        return;
+      }
+      if (boundary === 7) {
+        if (
+          started?.phase !== 'passenger-destination-waiting' ||
+          waitingActivationStarted !== undefined
+        )
+          throw new Error('Passenger destination allocation order is invalid.');
+        const time = now();
+        destinationWaitingDurations.destinationAllocation.push(
+          time - started.time,
+        );
+        waitingActivationStarted = time;
+        waitingActivationChildStarted = {
+          name: waitingActivationPhases[0],
+          time,
+        };
+        addWork(
+          waitingActivationWork.newAssignmentActivation,
+          'destinationAssignedGroups',
+          primaryWork,
+        );
+        addWork(
+          waitingActivationWork.newAssignmentActivation,
+          'destinationAssignedPassengers',
+          secondaryWork,
+        );
+        return;
+      }
+      if (boundary === 8) {
+        if (
+          waitingActivationStarted === undefined ||
+          waitingActivationChildStarted !== undefined
+        )
+          throw new Error('Passenger waiting activation order is invalid.');
+        const time = now();
+        destinationWaitingDurations.waitingActivation.push(
+          time - waitingActivationStarted,
+        );
+        waitingActivationStarted = undefined;
+        return;
+      }
+      if (boundary === 0) {
+        if (started)
+          throw new Error('Passenger runtime phases must not overlap.');
+        started = { phase: passengerRuntimePhases[0], time: now() };
+      } else {
+        if (!started || waitingActivationStarted !== undefined)
+          throw new Error('Passenger runtime phase order is invalid.');
+        const time = now();
+        durations[started.phase].push(time - started.time);
+        const phase = nextPhase[boundary];
+        started =
+          phase === undefined
+            ? undefined
+            : { phase: passengerRuntimePhases[phase], time };
+      }
+    },
+    durations,
+    work,
+    destinationWaitingDurations,
+    destinationWaitingWork,
+    waitingActivationDurations,
+    waitingActivationWork,
+  };
+};
+
+const addWork = (work, name, count) => {
+  if (count === undefined) return;
+  work[name] = (work[name] ?? 0) + count;
+};
+
+const recordTickWork = (work, destinationWaitingWork, before, after) => {
+  const previous = before.passengerDemand;
+  const current = after.passengerDemand;
+  if (previous.status !== 'active' || current.status !== 'active') return;
+  const scheduler = before.passengerEmissionScheduler;
+  const shard =
+    (after.tick - scheduler.seedTick - 1) % scheduler.workWindowTicks;
+  addWork(
+    work['passenger-emission'],
+    'evaluatedDemandCells',
+    Math.ceil(
+      (before.passengerDemandPlan.cells.length - shard) /
+        scheduler.workWindowTicks,
+    ),
+  );
+  addWork(
+    work['passenger-emission'],
+    'emittedPassengers',
+    current.totalEmittedPassengerCount - previous.totalEmittedPassengerCount,
+  );
+  addWork(
+    work['passenger-access-arrival'],
+    'arrivedPassengers',
+    current.totalArrivedAtStopPassengerCount -
+      previous.totalArrivedAtStopPassengerCount,
+  );
+  addWork(
+    work['passenger-destination-waiting'],
+    'destinationAssignedPassengers',
+    current.totalDestinationAssignedPassengerCount -
+      previous.totalDestinationAssignedPassengerCount,
+  );
+  addWork(
+    destinationWaitingWork.destinationAllocation,
+    'destinationAssignedPassengers',
+    current.totalDestinationAssignedPassengerCount -
+      previous.totalDestinationAssignedPassengerCount,
+  );
+  addWork(
+    destinationWaitingWork.waitingActivation,
+    'inputWaitingCohorts',
+    previous.waitingCohorts.length,
+  );
+  addWork(
+    destinationWaitingWork.waitingActivation,
+    'resultingWaitingCohorts',
+    current.waitingCohorts.length,
+  );
+  addWork(
+    work['passenger-destination-waiting'],
+    'resultingWaitingCohorts',
+    current.waitingCohorts.length,
+  );
+  addWork(
+    work['passenger-vehicle-transit'],
+    'vehicleCallsProcessed',
+    after.currentStopCalls.length,
+  );
+  addWork(
+    work['passenger-vehicle-transit'],
+    'boardedEvents',
+    after.currentBoardingEvents.length,
+  );
+  addWork(
+    work['passenger-vehicle-transit'],
+    'alightedEvents',
+    after.currentAlightingEvents.length,
+  );
+  addWork(
+    work['passenger-destination-access-completion'],
+    'completedPassengers',
+    current.totalCompletedJourneyPassengerCount -
+      previous.totalCompletedJourneyPassengerCount,
+  );
 };
 function benchmarkFleet(state) {
   for (const route of state.scenario.routes.routes) {
@@ -144,6 +527,26 @@ export async function runSimulationRuntimeBenchmark(
   let directItineraryPairCount;
   let benchmarkStartTick;
   let emissionScheduler;
+  const phaseDurations = Object.fromEntries(
+    passengerRuntimePhases.map((phase) => [phase, []]),
+  );
+  const phaseWork = Object.fromEntries(
+    passengerRuntimePhases.map((phase) => [phase, {}]),
+  );
+  const destinationWaitingDurations = {
+    destinationAllocation: [],
+    waitingActivation: [],
+  };
+  const destinationWaitingWork = {
+    destinationAllocation: {},
+    waitingActivation: {},
+  };
+  const waitingActivationDurations = Object.fromEntries(
+    waitingActivationPhases.map((name) => [name, []]),
+  );
+  const waitingActivationWork = Object.fromEntries(
+    waitingActivationPhases.map((name) => [name, {}]),
+  );
   for (let run = 0; run < options.runs; run += 1) {
     let state = benchmarkFleet(
       createTransportSimulationState(scenario, 0, demandPlan, {
@@ -156,9 +559,54 @@ export async function runSimulationRuntimeBenchmark(
     const startTick = state.tick;
     benchmarkStartTick = startTick;
     const start = now();
+    const profiler = options.profilePassengerPhases
+      ? createPhaseProfiler(now)
+      : undefined;
     for (let tick = 0; tick < options.ticks; tick += 1)
-      state = advanceTransportTicks(state, 1);
+      if (profiler) {
+        const before = state;
+        state = advanceTransportTicksInternal(
+          state,
+          1,
+          undefined,
+          profiler.observer,
+        );
+        recordTickWork(
+          profiler.work,
+          profiler.destinationWaitingWork,
+          before,
+          state,
+        );
+      } else state = advanceTransportTicks(state, 1);
     const elapsedMilliseconds = now() - start;
+    if (profiler)
+      for (const phase of passengerRuntimePhases) {
+        phaseDurations[phase].push(...profiler.durations[phase]);
+        for (const [name, count] of Object.entries(profiler.work[phase]))
+          phaseWork[phase][name] = (phaseWork[phase][name] ?? 0) + count;
+      }
+    if (profiler)
+      for (const name of ['destinationAllocation', 'waitingActivation']) {
+        destinationWaitingDurations[name].push(
+          ...profiler.destinationWaitingDurations[name],
+        );
+        for (const [workName, count] of Object.entries(
+          profiler.destinationWaitingWork[name],
+        ))
+          destinationWaitingWork[name][workName] =
+            (destinationWaitingWork[name][workName] ?? 0) + count;
+      }
+    if (profiler)
+      for (const name of waitingActivationPhases) {
+        waitingActivationDurations[name].push(
+          ...profiler.waitingActivationDurations[name],
+        );
+        for (const [workName, count] of Object.entries(
+          profiler.waitingActivationWork[name],
+        ))
+          waitingActivationWork[name][workName] =
+            (waitingActivationWork[name][workName] ?? 0) + count;
+      }
     timings.push({
       elapsedMilliseconds,
       millisecondsPerTick: elapsedMilliseconds / options.ticks,
@@ -188,6 +636,37 @@ export async function runSimulationRuntimeBenchmark(
   const throughput = timings
     .map((value) => value.ticksPerSecond)
     .filter((value) => value !== null);
+  const profile = options.profilePassengerPhases
+    ? summarizePassengerRuntimePhases(
+        phaseDurations,
+        phaseWork,
+        options.ticks * options.runs,
+        elapsed.reduce((sum, value) => sum + value, 0),
+      )
+    : undefined;
+  const passengerDestinationWaitingBreakdown = profile
+    ? (() => {
+        const waitingActivationTotalMs =
+          destinationWaitingDurations.waitingActivation.reduce(
+            (sum, value) => sum + value,
+            0,
+          );
+        return summarizePassengerDestinationWaitingBreakdown(
+          profile.passengerPhases['passenger-destination-waiting'].totalMs,
+          destinationWaitingDurations.destinationAllocation,
+          destinationWaitingDurations.waitingActivation,
+          destinationWaitingWork.destinationAllocation,
+          destinationWaitingWork.waitingActivation,
+          options.ticks * options.runs,
+          summarizePassengerWaitingActivationBreakdown(
+            waitingActivationTotalMs,
+            waitingActivationDurations,
+            waitingActivationWork,
+            options.ticks * options.runs,
+          ),
+        );
+      })()
+    : undefined;
   return Object.freeze({
     configuration: Object.freeze({
       scenarioId: options.scenario,
@@ -244,6 +723,10 @@ export async function runSimulationRuntimeBenchmark(
       startTick: benchmarkStartTick,
       finalSnapshotSha256,
     }),
+    ...(profile ?? {}),
+    ...(passengerDestinationWaitingBreakdown
+      ? { passengerDestinationWaitingBreakdown }
+      : {}),
   });
 }
 
@@ -262,6 +745,14 @@ if (
       console.table(result.structure);
       console.table(result.timings);
       console.table(result.finalAuthority);
+      if (result.passengerPhases) {
+        console.table(result.passengerPhases);
+        console.table(result.passengerDestinationWaitingBreakdown);
+        console.table({
+          measuredPassengerPhaseTotalMs: result.measuredPassengerPhaseTotalMs,
+          unattributedSimulationMs: result.unattributedSimulationMs,
+        });
+      }
     }
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));

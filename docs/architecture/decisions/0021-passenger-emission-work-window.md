@@ -25,8 +25,10 @@ escapes into simulation state. Advancement structurally shares untouched frozen
 buckets, while boundedness high-water diagnostics are derived by the audit and
 do not impose a production record scan.
 
-The provisional production fallback is 12. Future device calibration may
-choose another supported value without changing persistence.
+The provisional production fallback is W12, the maximum-amortization fallback.
+It is not universally fastest: different workloads may spend most of their
+time outside emission evaluation. Future device/city calibration may choose
+any integer from 1 through 12 without changing persistence.
 
 ## Rejected alternative
 

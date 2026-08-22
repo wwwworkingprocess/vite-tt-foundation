@@ -78,6 +78,7 @@ import {
   type PassengerJourneyCompletionEvent,
 } from './passenger-transit.js';
 import { passengerWaitingCohortMatchesItinerary } from './passenger-waiting-cohort.js';
+import type { PassengerRuntimePhaseObserver } from './passenger-runtime-profiling.js';
 
 export type ScenarioCompatibilityErrorCode =
   | 'unsupported-transport-snapshot'
@@ -283,10 +284,11 @@ export function createTransportSimulationState(
   });
 }
 
-function advanceTransportTicksInternal(
+export function advanceTransportTicksInternal(
   state: TransportSimulationState,
   count: TickAdvancement | number,
   arrivalEvents?: PassengerOriginStopArrivalEvent[],
+  observer?: PassengerRuntimePhaseObserver,
 ): TransportSimulationState {
   const tickCount = parseTickAdvancement(count) as number;
   let current = state;
@@ -354,67 +356,71 @@ function advanceTransportTicksInternal(
         left.vehicleId.localeCompare(right.vehicleId) ||
         left.stopCallSequence - right.stopCallSequence,
     );
-    const emission =
-      current.passengerDemand.status === 'active'
-        ? advancePassengerEmissionScheduler(
-            current.passengerDemandPlan!,
-            current.passengerEmissionScheduler!,
-            tick,
-          )
-        : undefined;
-    const passengerDemand =
-      current.passengerDemand.status === 'disabled'
-        ? current.passengerDemand
-        : advanceTrustedPassengerDemandToTickWithScheduledEmissions(
-            current.passengerDemandPlan!,
-            current.passengerDirectItineraryIndex!,
-            current.passengerDemand,
-            tick,
-            emission!.emissions,
-            () =>
-              materializePassengerCellCredits(
-                current.passengerDemandPlan!,
-                emission!.scheduler,
-                tick,
-              ),
-            arrivalEvents,
-          );
+    const passengerActive = current.passengerDemand.status === 'active';
+    const emission = passengerActive
+      ? (observer?.(0),
+        advancePassengerEmissionScheduler(
+          current.passengerDemandPlan!,
+          current.passengerEmissionScheduler!,
+          tick,
+        ))
+      : undefined;
+    const passengerDemand = !passengerActive
+      ? current.passengerDemand
+      : advanceTrustedPassengerDemandToTickWithScheduledEmissions(
+          current.passengerDemandPlan!,
+          current.passengerDirectItineraryIndex!,
+          current.passengerDemand as ActivePassengerDemandState,
+          tick,
+          emission!.emissions,
+          () =>
+            materializePassengerCellCredits(
+              current.passengerDemandPlan!,
+              emission!.scheduler,
+              tick,
+            ),
+          arrivalEvents,
+          observer,
+        );
     const transit =
       passengerDemand.status === 'disabled'
         ? null
-        : processPassengerTransitAtVehicleCalls({
-            tick,
-            demandPlan: current.passengerDemandPlan!,
-            waitingCohorts: passengerDemand.waitingCohorts,
-            waitingGenerationLineageWatermarks:
-              passengerDemand.waitingGenerationLineageWatermarks,
-            onboardGroups: passengerDemand.onboardGroups,
-            destinationAccessGroups: passengerDemand.destinationAccessGroups,
-            nextPassengerOnboardGroupSequence:
-              passengerDemand.nextPassengerOnboardGroupSequence,
-            nextPassengerDestinationAccessGroupSequence:
-              passengerDemand.nextPassengerDestinationAccessGroupSequence,
-            totalWaitingForVehiclePassengerCount:
-              passengerDemand.totalWaitingForVehiclePassengerCount,
-            totalBoardedPassengerCount:
-              passengerDemand.totalBoardedPassengerCount,
-            totalOnboardPassengerCount:
-              passengerDemand.totalOnboardPassengerCount,
-            totalAlightedPassengerCount:
-              passengerDemand.totalAlightedPassengerCount,
-            totalInDestinationAccessPassengerCount:
-              passengerDemand.totalInDestinationAccessPassengerCount,
-            totalCompletedJourneyPassengerCount:
-              passengerDemand.totalCompletedJourneyPassengerCount,
-            capacities: current.vehicleCapacities,
-            vehicleOperations: operations,
-            currentStopCalls: calls,
-            itineraryIsValid:
-              passengerWaitingCohortMatchesRuntimeItinerary.bind(
-                undefined,
-                current.passengerDirectItineraryIndex!,
-              ),
-          });
+        : processPassengerTransitAtVehicleCalls(
+            {
+              tick,
+              demandPlan: current.passengerDemandPlan!,
+              waitingCohorts: passengerDemand.waitingCohorts,
+              waitingGenerationLineageWatermarks:
+                passengerDemand.waitingGenerationLineageWatermarks,
+              onboardGroups: passengerDemand.onboardGroups,
+              destinationAccessGroups: passengerDemand.destinationAccessGroups,
+              nextPassengerOnboardGroupSequence:
+                passengerDemand.nextPassengerOnboardGroupSequence,
+              nextPassengerDestinationAccessGroupSequence:
+                passengerDemand.nextPassengerDestinationAccessGroupSequence,
+              totalWaitingForVehiclePassengerCount:
+                passengerDemand.totalWaitingForVehiclePassengerCount,
+              totalBoardedPassengerCount:
+                passengerDemand.totalBoardedPassengerCount,
+              totalOnboardPassengerCount:
+                passengerDemand.totalOnboardPassengerCount,
+              totalAlightedPassengerCount:
+                passengerDemand.totalAlightedPassengerCount,
+              totalInDestinationAccessPassengerCount:
+                passengerDemand.totalInDestinationAccessPassengerCount,
+              totalCompletedJourneyPassengerCount:
+                passengerDemand.totalCompletedJourneyPassengerCount,
+              capacities: current.vehicleCapacities,
+              vehicleOperations: operations,
+              currentStopCalls: calls,
+              itineraryIsValid:
+                passengerWaitingCohortMatchesRuntimeItinerary.bind(
+                  undefined,
+                  current.passengerDirectItineraryIndex!,
+                ),
+            },
+            observer,
+          );
     current = freezeTrustedAuthority({
       ...current,
       tick,

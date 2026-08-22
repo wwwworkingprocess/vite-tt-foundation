@@ -44,6 +44,7 @@ import {
   type VehicleId,
   type VehicleState,
 } from './vehicle-movement.js';
+import type { PassengerRuntimePhaseObserver } from './passenger-runtime-profiling.js';
 
 const transitContext = 'Passenger transit';
 
@@ -729,12 +730,14 @@ const updateWatermarks = (
 
 export function processPassengerTransitAtVehicleCalls(
   input: PassengerTransitInput,
+  observer?: PassengerRuntimePhaseObserver,
 ): Readonly<PassengerTransitResult> {
   const tick = parseSimulationTick(input.tick);
   if (
     input.currentStopCalls.length === 0 &&
     input.destinationAccessGroups.length === 0
-  )
+  ) {
+    observer?.(6);
     return deepFreeze({
       waitingCohorts: input.waitingCohorts,
       waitingGenerationLineageWatermarks:
@@ -758,12 +761,14 @@ export function processPassengerTransitAtVehicleCalls(
       currentBoardingEvents: [],
       currentJourneyCompletionEvents: [],
     });
+  }
   const settled = advancePassengerDestinationAccessToTick({
     tick,
     destinationAccessGroups: input.destinationAccessGroups,
     totalCompletedJourneyPassengerCount:
       input.totalCompletedJourneyPassengerCount,
   });
+  observer?.(4);
   let waiting = [...input.waitingCohorts];
   let onboard = [...input.onboardGroups];
   let access = [...settled.destinationAccessGroups];
@@ -932,11 +937,13 @@ export function processPassengerTransitAtVehicleCalls(
     );
   }
   access.sort(comparePassengerDestinationAccessGroups);
+  observer?.(5);
   const immediate = advancePassengerDestinationAccessToTick({
     tick,
     destinationAccessGroups: access,
     totalCompletedJourneyPassengerCount: completedTotal,
   });
+  observer?.(6);
   completedTotal = immediate.totalCompletedJourneyPassengerCount;
   access = [...immediate.destinationAccessGroups];
   completionEvents.push(...immediate.currentJourneyCompletionEvents);

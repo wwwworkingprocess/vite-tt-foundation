@@ -180,7 +180,8 @@ publish a final snapshot SHA-256, and report population-cell and itinerary
 structure alongside aggregate passenger metrics.
 
 Passenger emission-cell evaluation uses the ADR 0021 rolling work window. The
-validated runtime-only range is 1–12 ticks and the provisional fallback is 12.
+validated runtime-only range is 1–12 ticks and W12 is the provisional
+maximum-amortization fallback, not a universal optimum.
 It schedules emissions on their exact original ticks; access and transit still
 run every authoritative tick. The window is not persisted in Snapshot V9 or
 Save V7, so restore may select a different value. Use
@@ -189,7 +190,17 @@ equality, and `benchmark:simulation-runtime --passenger-work-window N` for
 diagnostic timing and structural work counts. The frozen scheduler structurally
 shares untouched future buckets; `yarn benchmark:passenger-emission` compares
 the scheduled reducer with the same-process legacy full-cell reference. Device
-auto-calibration remains deferred.
+auto-calibration remains deferred and may later select any supported integer
+from 1 through 12.
+
+Snapshot V9 regression ownership is decomposed into focused core, passenger
+restore, transition, journey, and work-window suites with one small shared
+deterministic fixture. The simulation exposes an optional environment-neutral
+passenger runtime phase observer. The Node runtime benchmark enables it with
+`--profile-passenger-phases` to time emission, access/arrival,
+destination/waiting, vehicle transit, and destination-access/completion work.
+No timing enters simulation authority, Snapshot V9, Save V7, client V4, or
+Worker V4.
 
 Browser-created demo vehicles currently assign a named uniform default of 120
 authoritative ticks per edge. The movement model already accepts non-uniform

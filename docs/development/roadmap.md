@@ -205,7 +205,12 @@ or passenger/population presentation.
 The passenger-emission work-window optimization is complete: a non-persisted
 runtime window from 1 through 12 amortizes canonical cell evaluation while
 retaining exact per-tick passenger authority. Window 12 is the provisional
-fallback. Automatic device measurement and window selection remain a later
+maximum-amortization fallback, not a claim of universal speed. Automatic device
+measurement may later select any integer 1..12. The headless runtime benchmark
+now offers opt-in coarse passenger phase profiling for Torrevieja, Cartagena,
+and Málaga W1/W12 comparisons, with exact profiled/unprofiled authority
+equality. Phase timings exclude setup, asset loading, demand-plan construction,
+snapshots, hashing, and representation. Automatic window selection remains a later
 performance task; later passenger-runtime optimization must be driven by the
 post-window benchmark rather than folded into this milestone.
 

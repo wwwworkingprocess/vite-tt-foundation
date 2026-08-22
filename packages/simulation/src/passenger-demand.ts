@@ -42,6 +42,7 @@ import {
   allocatePermutedDestinationCounts,
   derivePassengerDestinationPermutation,
 } from './passenger-destination-permutation.js';
+import type { PassengerRuntimePhaseObserver } from './passenger-runtime-profiling.js';
 
 export const passengerDemandPlanSchemaVersion = '1.0.0' as const;
 const distanceTieToleranceSquaredCells = 1e-9;
@@ -1048,6 +1049,7 @@ const advancePassengerDemand = (
     emissions: readonly Readonly<{ cellIndex: number; count: number }>[];
     materializeCellCredits: () => readonly PassengerCellCreditState[];
   }>,
+  observer?: PassengerRuntimePhaseObserver,
 ): ActivePassengerDemandState => {
   const parsedPlan = trusted ? plan : parsePassengerDemandPlan(plan);
   let current = trusted
@@ -1124,6 +1126,7 @@ const advancePassengerDemand = (
     if (scheduled)
       for (const { cellIndex, count } of scheduled.emissions)
         emit(parsedPlan.cells[cellIndex]!, count);
+    observer?.(1);
     const arrivals = new Map(
       current.stopArrivals.map((stop) => [
         stop.stopPlaceId,
@@ -1164,6 +1167,7 @@ const advancePassengerDemand = (
         arrivalEvents.push(
           freezeTrustedAuthority({ tick, stopPlaceId, arrivedPassengerCount }),
         );
+    observer?.(2);
     const destinationCursors = new Map(
       current.destinationCursors.map((cursor) => [
         cursor.stopPlaceId,
@@ -1218,6 +1222,11 @@ const advancePassengerDemand = (
       );
       arrivals.set(stop.stopPlaceId, 0);
     }
+    observer?.(
+      7,
+      destinationGroups.length,
+      destinationAssigned - current.totalDestinationAssignedPassengerCount,
+    );
     const activation = activatePassengerDirectItineraries({
       itineraryIndex,
       demandPlan: parsedPlan,
@@ -1234,7 +1243,9 @@ const advancePassengerDemand = (
           (watermark) => watermark.passengerWaitingCohortId,
         ),
       ]),
+      ...(observer ? { observer } : {}),
     });
+    observer?.(8);
     const next: ActivePassengerDemandState = {
       status: 'active',
       demandPlanCoordinate: current.demandPlanCoordinate,
@@ -1289,6 +1300,7 @@ const advancePassengerDemand = (
     current = trusted
       ? freezeTrustedAuthority(next)
       : validatePassengerDemandState(parsedPlan, itineraryIndex, next);
+    observer?.(3);
   }
   return current;
 };
@@ -1301,6 +1313,7 @@ export function advanceTrustedPassengerDemandToTickWithScheduledEmissions(
   emissions: readonly Readonly<{ cellIndex: number; count: number }>[],
   materializeCellCredits: () => readonly PassengerCellCreditState[],
   arrivalEvents?: PassengerOriginStopArrivalEvent[],
+  observer?: PassengerRuntimePhaseObserver,
 ): ActivePassengerDemandState {
   return advancePassengerDemand(
     plan,
@@ -1313,6 +1326,7 @@ export function advanceTrustedPassengerDemandToTickWithScheduledEmissions(
       emissions,
       materializeCellCredits,
     },
+    observer,
   );
 }
 

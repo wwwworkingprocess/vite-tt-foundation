@@ -4,6 +4,7 @@ export default defineConfig({
     name: 'simulation',
     environment: 'node',
     include: ['src/**/*.test.ts'],
+    exclude: ['src/**/*.fixture.test.ts'],
     coverage: {
       provider: 'v8',
       reportsDirectory: '../../coverage/simulation',

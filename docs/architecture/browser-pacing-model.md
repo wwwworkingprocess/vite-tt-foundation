@@ -317,7 +317,12 @@ coalesced but an older state cannot render after a newer one. Reliable
 publication, commands, save/restore, and authoritative whole-tick advancement
 are never throttled by this policy. This explicit boundary enables later
 simulation-versus-representation profiling; it does not claim a 12x CPU change.
-SVG samples latest projections through that shared throttle. R3F uses a
+SVG places a cheap publication wrapper before its memoized committed tree, so
+raw parent publications do not execute the expensive representation before the
+shared throttle accepts them. Its passenger StopPlace diagnostics are separately
+memoized and do not reconcile for vehicle-only movement frames. Disabled arrival
+pulses perform no presentation bookkeeping; the opt-in capability retains its
+five-authoritative-tick lifetime. R3F uses a
 `frameloop="never"` Canvas and a representation-only manual frame driver using
 the same policy, so neither mini nor normal cadence follows arbitrary display
 refresh or invalidation frequency.

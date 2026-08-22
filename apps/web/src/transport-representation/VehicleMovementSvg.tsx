@@ -6,9 +6,12 @@ import type {
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import {
+  memo,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
   type KeyboardEvent,
 } from 'react';
@@ -17,10 +20,13 @@ import {
   finishRepresentationProfile,
   recordRepresentationProfile,
 } from '../performance/representation-profiler.js';
-import { selectVehicle, type GameSelection } from '../ui/game-selection.js';
 import { useLatestRepresentationValue } from '../representation/RepresentationModeContext.js';
-import { projectVehicleMovementSvg } from './vehicle-svg-projection.js';
+import { selectVehicle, type GameSelection } from '../ui/game-selection.js';
 import StaticScenarioSvgLayer from './StaticScenarioSvgLayer.js';
+import PassengerStopDiagnostics, {
+  stableWaitingTotals,
+} from './PassengerStopDiagnostics.js';
+import { projectVehicleMovementSvg } from './vehicle-svg-projection.js';
 
 const noPassengerLoads = Object.freeze(
   [],
@@ -29,39 +35,95 @@ const noArrivalEvents = Object.freeze(
   [],
 ) as readonly PassengerOriginStopArrivalEvent[];
 
-export function VehicleMovementSvg(
-  props: Readonly<{
-    scenario: CanonicalScenario;
-    fleet: readonly VehicleState[];
-    selection?: GameSelection;
-    onSelectionChange?: (selection: GameSelection) => void;
-    passengerDemand?: PassengerDemandProjection | undefined;
-    vehiclePassengerLoads?:
-      readonly VehiclePassengerLoadProjection[] | undefined;
-    passengerOriginStopArrivalEvents?:
-      readonly PassengerOriginStopArrivalEvent[] | undefined;
-    simulationTick?: number | undefined;
-    showPassengerArrivalPulse?: boolean | undefined;
-  }>,
-) {
-  const renderProfile = beginRepresentationProfile('svg.render-to-commit');
-  const {
-    scenario,
-    fleet,
-    selection = null,
-    onSelectionChange,
-    passengerDemand,
-    vehiclePassengerLoads = noPassengerLoads,
-    passengerOriginStopArrivalEvents = noArrivalEvents,
-    simulationTick = 0,
-    showPassengerArrivalPulse = false,
-  } = useLatestRepresentationValue(props);
+interface AuthorityProps {
+  readonly scenario: CanonicalScenario;
+  readonly fleet: readonly VehicleState[];
+  readonly passengerDemand?: PassengerDemandProjection | undefined;
+  readonly vehiclePassengerLoads?:
+    readonly VehiclePassengerLoadProjection[] | undefined;
+  readonly passengerOriginStopArrivalEvents?:
+    readonly PassengerOriginStopArrivalEvent[] | undefined;
+  readonly simulationTick?: number | undefined;
+  readonly showPassengerArrivalPulse?: boolean | undefined;
+}
+interface SvgProps extends AuthorityProps {
+  readonly selection?: GameSelection | undefined;
+  readonly onSelectionChange?: ((selection: GameSelection) => void) | undefined;
+}
+
+export function VehicleMovementSvg(props: Readonly<SvgProps>) {
+  recordRepresentationProfile('svg.wrapper.render');
+  const { selection = null, onSelectionChange } = props;
+  const authority = useMemo<AuthorityProps>(
+    () => ({
+      scenario: props.scenario,
+      fleet: props.fleet,
+      passengerDemand: props.passengerDemand,
+      vehiclePassengerLoads: props.vehiclePassengerLoads,
+      passengerOriginStopArrivalEvents: props.passengerOriginStopArrivalEvents,
+      simulationTick: props.simulationTick,
+      showPassengerArrivalPulse: props.showPassengerArrivalPulse,
+    }),
+    [
+      props.fleet,
+      props.passengerDemand,
+      props.passengerOriginStopArrivalEvents,
+      props.scenario,
+      props.showPassengerArrivalPulse,
+      props.simulationTick,
+      props.vehiclePassengerLoads,
+    ],
+  );
+  const committed = useLatestRepresentationValue(authority);
+  const callback = useRef(onSelectionChange);
+  callback.current = onSelectionChange;
+  const select = useCallback(
+    (next: GameSelection) => callback.current?.(next),
+    [],
+  );
+  return (
+    <CommittedVehicleMovementSvg
+      {...committed}
+      selection={selection}
+      onSelectionChange={select}
+    />
+  );
+}
+
+const activate = (callback: () => void) => (event: KeyboardEvent) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    callback();
+  }
+};
+
+const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
+  scenario,
+  fleet,
+  selection,
+  onSelectionChange,
+  passengerDemand,
+  vehiclePassengerLoads = noPassengerLoads,
+  passengerOriginStopArrivalEvents = noArrivalEvents,
+  simulationTick = 0,
+  showPassengerArrivalPulse = false,
+}: Readonly<SvgProps>) {
+  recordRepresentationProfile('svg.committed.render');
+  const renderProfile = beginRepresentationProfile(
+    'svg.committed.render-to-commit',
+  );
   const [passengersVisible, setPassengersVisible] = useState(true);
   const [lastArrivalTicks, setLastArrivalTicks] = useState<
     ReadonlyMap<string, number>
   >(() => new Map());
-  const projection = projectVehicleMovementSvg(scenario, fleet);
+  const priorWaiting = useRef<ReadonlyMap<string, number>>(new Map());
+  const staticProjection = useMemo(
+    () => projectVehicleMovementSvg(scenario, []),
+    [scenario],
+  );
+  const vehicles = projectVehicleMovementSvg(scenario, fleet).vehicles;
   useEffect(() => {
+    if (!showPassengerArrivalPulse) return;
     setLastArrivalTicks((previous) => {
       const next = new Map(
         [...previous].filter(([, tick]) => simulationTick - tick < 5),
@@ -74,50 +136,37 @@ export function VehicleMovementSvg(
       }
       return next;
     });
-  }, [passengerOriginStopArrivalEvents, simulationTick]);
-  const waitingByStopPlace = useMemo(() => {
-    const profile = beginRepresentationProfile('passengers.derivation');
-    const totals = new Map<string, number>();
-    if (passengerDemand?.status === 'active') {
-      for (const cohort of passengerDemand.waitingCohorts) {
-        const total =
-          (totals.get(cohort.originStopPlaceId) ?? 0) + cohort.count;
-        if (!Number.isSafeInteger(total))
-          throw new Error('Passenger map waiting total exceeds safe range.');
-        totals.set(cohort.originStopPlaceId, total);
-      }
-    }
-    finishRepresentationProfile(profile);
+  }, [
+    passengerOriginStopArrivalEvents,
+    showPassengerArrivalPulse,
+    simulationTick,
+  ]);
+  const waiting = useMemo(() => {
+    const totals = stableWaitingTotals(priorWaiting.current, passengerDemand);
+    priorWaiting.current = totals;
     return totals;
   }, [passengerDemand]);
-  const representativeNodes = useMemo(() => {
-    const nodes = new Map<string, (typeof projection.nodes)[number]>();
-    for (const node of projection.nodes)
+  const representatives = useMemo(() => {
+    const values = new Map<string, (typeof staticProjection.nodes)[number]>();
+    for (const node of staticProjection.nodes)
       if (
         node.stopPlaceId &&
-        (!nodes.has(node.stopPlaceId) ||
+        (!values.has(node.stopPlaceId) ||
           node.stopNodeId.localeCompare(
-            nodes.get(node.stopPlaceId)!.stopNodeId,
+            values.get(node.stopPlaceId)!.stopNodeId,
           ) < 0)
       )
-        nodes.set(node.stopPlaceId, node);
-    return nodes;
-  }, [projection.nodes]);
+        values.set(node.stopPlaceId, node);
+    return values;
+  }, [staticProjection.nodes]);
   const loads = useMemo(
     () => new Map(vehiclePassengerLoads.map((load) => [load.vehicleId, load])),
     [vehiclePassengerLoads],
   );
   useLayoutEffect(() => {
     finishRepresentationProfile(renderProfile);
-    recordRepresentationProfile('svg.commit');
-    if (passengersVisible) recordRepresentationProfile('passengers.commit');
+    recordRepresentationProfile('svg.committed.commit');
   });
-  const activate = (callback: () => void) => (event: KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      callback();
-    }
-  };
   return (
     <section className="passenger-map-diagnostics">
       <button
@@ -130,15 +179,15 @@ export function VehicleMovementSvg(
         data-testid="vehicle-movement-svg"
         data-scenario-id={scenario.manifest.scenarioId}
         data-content-hash={scenario.manifest.contentHash}
-        data-node-count={projection.nodes.length}
-        data-directed-edge-count={projection.edges.length}
-        viewBox={projection.viewBox}
+        data-node-count={staticProjection.nodes.length}
+        data-directed-edge-count={staticProjection.edges.length}
+        viewBox={staticProjection.viewBox}
         role="group"
         aria-label="Authoritative vehicle movement"
       >
         <StaticScenarioSvgLayer
-          edges={projection.edges}
-          nodes={projection.nodes}
+          edges={staticProjection.edges}
+          nodes={staticProjection.nodes}
           selection={
             selection?.kind === 'route' || selection?.kind === 'stop'
               ? selection
@@ -147,60 +196,16 @@ export function VehicleMovementSvg(
           onSelectionChange={onSelectionChange}
         />
         {passengersVisible ? (
-          <g aria-label="Passenger stop diagnostics" pointerEvents="none">
-            {projection.nodes.map((node) => {
-              const waiting = node.stopPlaceId
-                ? (waitingByStopPlace.get(node.stopPlaceId) ?? 0)
-                : 0;
-              return node.stopPlaceId ? (
-                <circle
-                  key={`passenger-stop-${node.stopNodeId}`}
-                  data-testid="passenger-stop-status"
-                  data-stop-place-id={node.stopPlaceId}
-                  data-stop-node-id={node.stopNodeId}
-                  data-has-waiting-passengers={waiting > 0}
-                  cx={node.cx}
-                  cy={node.cy}
-                  r="1.15"
-                  fill={waiting > 0 ? 'black' : 'silver'}
-                />
-              ) : null;
-            })}
-            {[...representativeNodes].map(([stopPlaceId, node]) => {
-              const waiting = waitingByStopPlace.get(stopPlaceId) ?? 0;
-              const arrivalTick = lastArrivalTicks.get(stopPlaceId);
-              const pulsing =
-                arrivalTick !== undefined && simulationTick - arrivalTick < 5;
-              return (
-                <g key={stopPlaceId} data-stop-place-id={stopPlaceId}>
-                  {showPassengerArrivalPulse && pulsing ? (
-                    <circle
-                      data-testid="passenger-arrival-pulse"
-                      data-last-arrival-tick={arrivalTick}
-                      cx={node.cx}
-                      cy={node.cy}
-                      r="3.2"
-                      fill="none"
-                      stroke="gold"
-                    />
-                  ) : null}
-                  {waiting > 0 ? (
-                    <text
-                      data-testid="stop-waiting-passenger-count"
-                      data-waiting-passenger-count={waiting}
-                      x={node.cx + 2}
-                      y={node.cy - 2}
-                    >
-                      {waiting}
-                    </text>
-                  ) : null}
-                </g>
-              );
-            })}
-          </g>
+          <PassengerStopDiagnostics
+            nodes={staticProjection.nodes}
+            representatives={representatives}
+            waiting={waiting}
+            arrivals={lastArrivalTicks}
+            pulseTick={showPassengerArrivalPulse ? simulationTick : undefined}
+          />
         ) : null}
         <g aria-label="Authoritative vehicles">
-          {projection.vehicles.map((vehicle) => (
+          {vehicles.map((vehicle) => (
             <g key={vehicle.vehicleId}>
               <circle
                 data-testid="vehicle-position"
@@ -265,4 +270,4 @@ export function VehicleMovementSvg(
       </svg>
     </section>
   );
-}
+});

@@ -14,8 +14,11 @@ a finite interval and records its start/end simulation ticks.
 
 The browser profile measures:
 
-- SVG component render-to-layout-effect latency and committed primitive counts;
-- passenger waiting-summary derivation and passenger diagnostic commits;
+- raw SVG throttle-wrapper renders separately from accepted expensive SVG-tree
+  renders and commits;
+- committed SVG render-to-layout-effect latency and committed primitive counts;
+- passenger waiting-summary derivation and the isolated passenger StopPlace
+  diagnostic subtree's renders and commits;
 - population component renders, actual memoized geometry rebuilds, and commits;
 - the duration and count of actual manual React Three Fiber `advance` calls.
 
@@ -29,4 +32,15 @@ representation/simulation comparison, not a universal CPU percentage.
 Machine-specific JSON output is written beneath the ignored
 `performance-results/` directory. Timing values are evidence and are never test
 thresholds. The profiler observes the existing mini 5 fps and normal 60 fps policy;
-it does not control cadence or optimize passenger/population presentation.
+it does not control cadence. The expensive SVG tree is downstream of the shared
+latest-value throttle, and the memoized passenger StopPlace subtree is insulated
+from vehicle-only frames. Reports distinguish physical StopPlaces from rendered
+directional passenger-status circles, plus waiting labels, vehicle markers, and
+onboard labels.
+
+The representation-isolation change moved the complete mandatory SVG feature
+from the previously accepted 5,970 / 6,000-byte coordinate to approximately
+7,087 bytes under honest normal bundling. The component boundary is required to
+keep expensive reconciliation behind the accepted cadence. After review, the
+SVG feature budget was explicitly ratcheted to 7,500 bytes; no mandatory static
+dependency is hidden in a separately budgeted or unbudgeted chunk.

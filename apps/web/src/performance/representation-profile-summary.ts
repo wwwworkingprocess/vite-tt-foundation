@@ -50,6 +50,7 @@ export function createRepresentationProfileResult(input: {
     routeEdgePrimitives: number;
     stopPlaceMarkers: number;
     vehicleMarkers: number;
+    passengerStopStatusCircles: number;
     waitingLabels: number;
     onboardLabels: number;
     arrivalPulses: number;
@@ -74,36 +75,43 @@ export function createRepresentationProfileResult(input: {
       tickDelta: input.endTick - input.startTick,
     }),
     svg: Object.freeze({
-      commits: entriesNamed(entries, 'svg.commit').length,
-      ...durationSummary(entries, 'svg.render-to-commit'),
+      wrapperRenders: entriesNamed(entries, 'svg.wrapper.render').length,
+      renders: entriesNamed(entries, 'svg.committed.render').length,
+      commits: entriesNamed(entries, 'svg.committed.commit').length,
+      ...durationSummary(entries, 'svg.committed.render-to-commit'),
       routeEdgePrimitives: Math.max(
         input.primitiveSnapshot.routeEdgePrimitives,
-        maximumDetail(entries, 'svg.commit', 'routeEdgePrimitives'),
+        maximumDetail(entries, 'svg.committed.commit', 'routeEdgePrimitives'),
       ),
       stopPlaceMarkers: Math.max(
         input.primitiveSnapshot.stopPlaceMarkers,
-        maximumDetail(entries, 'svg.commit', 'stopPlaceMarkers'),
+        maximumDetail(entries, 'svg.committed.commit', 'physicalStopPlaces'),
       ),
       vehicleMarkers: Math.max(
         input.primitiveSnapshot.vehicleMarkers,
-        maximumDetail(entries, 'svg.commit', 'vehicleMarkers'),
+        maximumDetail(entries, 'svg.committed.commit', 'vehicleMarkers'),
       ),
     }),
     passengerDiagnostics: Object.freeze({
       derivations: entriesNamed(entries, 'passengers.derivation').length,
-      commits: entriesNamed(entries, 'passengers.commit').length,
+      renders: entriesNamed(entries, 'passengerStops.render').length,
+      commits: entriesNamed(entries, 'passengerStops.commit').length,
       ...durationSummary(entries, 'passengers.derivation'),
       waitingLabels: Math.max(
         input.primitiveSnapshot.waitingLabels,
-        maximumDetail(entries, 'passengers.commit', 'waitingLabels'),
+        maximumDetail(entries, 'passengerStops.commit', 'waitingLabels'),
       ),
       onboardLabels: Math.max(
         input.primitiveSnapshot.onboardLabels,
-        maximumDetail(entries, 'passengers.commit', 'onboardLabels'),
+        maximumDetail(entries, 'svg.committed.commit', 'onboardLabels'),
       ),
       arrivalPulses: Math.max(
         input.primitiveSnapshot.arrivalPulses,
-        maximumDetail(entries, 'passengers.commit', 'arrivalPulses'),
+        maximumDetail(entries, 'passengerStops.commit', 'arrivalPulses'),
+      ),
+      stopStatusCircles: Math.max(
+        input.primitiveSnapshot.passengerStopStatusCircles,
+        maximumDetail(entries, 'passengerStops.commit', 'stopStatusCircles'),
       ),
     }),
     population: Object.freeze({

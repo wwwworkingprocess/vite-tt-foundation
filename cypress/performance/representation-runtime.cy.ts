@@ -109,6 +109,9 @@ const profile = (input: {
           .toArray()
           .map((element) => element.getAttribute('data-stop-place-id')),
       ).size,
+      passengerStopStatusCircles: $svg.find(
+        '[data-testid="passenger-stop-status"]',
+      ).length,
       vehicleMarkers: $svg.find('[data-testid="vehicle-position"]').length,
       waitingLabels: $svg.find('[data-testid="stop-waiting-passenger-count"]')
         .length,

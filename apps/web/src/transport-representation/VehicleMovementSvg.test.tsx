@@ -142,12 +142,156 @@ it('profiles SVG commits and passenger derivation separately when opted in', () 
     ...performance.getEntriesByType('mark'),
     ...performance.getEntriesByType('measure'),
   ].map(({ name }) => name);
-  expect(names).toContain(`${representationProfilePrefix}svg.commit`);
-  expect(names).toContain(`${representationProfilePrefix}svg.render-to-commit`);
+  expect(names).toContain(`${representationProfilePrefix}svg.wrapper.render`);
+  expect(names).toContain(`${representationProfilePrefix}svg.committed.commit`);
+  expect(names).toContain(
+    `${representationProfilePrefix}svg.committed.render-to-commit`,
+  );
   expect(names).toContain(
     `${representationProfilePrefix}passengers.derivation`,
   );
-  expect(names).toContain(`${representationProfilePrefix}passengers.commit`);
+  expect(names).toContain(
+    `${representationProfilePrefix}passengerStops.commit`,
+  );
+});
+
+const marked = (
+  spy: Readonly<{ mock: { calls: readonly (readonly unknown[])[] } }>,
+  suffix: string,
+) =>
+  spy.mock.calls.filter(
+    ([name]) => name === `${representationProfilePrefix}${suffix}`,
+  ).length;
+
+it.each([
+  ['mini', 50, 19, 5],
+  ['normal', 5, 190, 60],
+] as const)(
+  'keeps expensive SVG work behind the %s representation cadence while the latest state wins',
+  (mode, publicationInterval, publications, maximumCommits) => {
+    vi.useFakeTimers();
+    configureRepresentationProfiling(true);
+    const pattern = scenario.routes.routes[0]!.patterns[0]!;
+    let state = applyTransportVehicleCommand(
+      createTransportSimulationState(scenario, 0),
+      {
+        kind: 'transport.vehicle.create',
+        vehicleId: parseVehicleId(`cadence-${mode}`),
+        label: `Cadence ${mode}`,
+        patternId: pattern.patternId,
+        movementPlan: {
+          kind: 'vehicle-movement-plan-v1',
+          edgeTravelTicks: Array.from(
+            { length: pattern.stopNodeIds.length - 1 },
+            () => 1_000,
+          ),
+        },
+      },
+    );
+    state = applyTransportVehicleCommand(state, {
+      kind: 'transport.vehicle.start',
+      vehicleId: parseVehicleId(`cadence-${mode}`),
+    });
+    const view = render(
+      <RepresentationModeProvider mode={mode}>
+        <VehicleMovementSvg scenario={scenario} fleet={state.fleet} />
+      </RepresentationModeProvider>,
+    );
+    act(() => vi.advanceTimersByTime(mode === 'mini' ? 200 : 1000 / 60));
+    clearRepresentationProfiles();
+    const mark = vi.spyOn(performance, 'mark');
+    for (let index = 0; index < publications; index += 1) {
+      state = advanceTransportTicks(state, parseTickAdvancement(1));
+      view.rerender(
+        <RepresentationModeProvider mode={mode}>
+          <VehicleMovementSvg scenario={scenario} fleet={state.fleet} />
+        </RepresentationModeProvider>,
+      );
+      act(() => vi.advanceTimersByTime(publicationInterval));
+    }
+    expect(marked(mark, 'svg.wrapper.render')).toBeGreaterThanOrEqual(
+      publications,
+    );
+    const committed = marked(mark, 'svg.committed.commit');
+    expect(committed).toBeLessThan(marked(mark, 'svg.wrapper.render'));
+    expect(committed).toBeLessThanOrEqual(maximumCommits);
+    act(() => vi.advanceTimersByTime(200));
+    expect(screen.getByTestId('vehicle-position')).toHaveAttribute(
+      'data-progress-numerator',
+      String(publications),
+    );
+  },
+);
+
+it('does not reconcile passenger StopPlace diagnostics for vehicle-only frames', () => {
+  vi.useFakeTimers();
+  configureRepresentationProfiling(true);
+  const pattern = selectionScenario.routes.routes[0]!.patterns[0]!;
+  let state = applyTransportVehicleCommand(
+    createTransportSimulationState(selectionScenario, 0),
+    {
+      kind: 'transport.vehicle.create',
+      vehicleId: parseVehicleId('isolated-passenger-layer'),
+      label: 'Isolated passenger layer',
+      patternId: pattern.patternId,
+      movementPlan: {
+        kind: 'vehicle-movement-plan-v1',
+        edgeTravelTicks: Array.from(
+          { length: pattern.stopNodeIds.length - 1 },
+          () => 100,
+        ),
+      },
+    },
+  );
+  state = applyTransportVehicleCommand(state, {
+    kind: 'transport.vehicle.start',
+    vehicleId: parseVehicleId('isolated-passenger-layer'),
+  });
+  const place = selectionScenario.stops.stopNodes.find(
+    ({ stopPlaceId }) => stopPlaceId !== null,
+  )!.stopPlaceId!;
+  const demand = {
+    status: 'active',
+    waitingCohorts: [{ originStopPlaceId: place, count: 2 }],
+  } as unknown as PassengerDemandProjection;
+  const view = render(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={state.fleet}
+      passengerDemand={demand}
+    />,
+  );
+  clearRepresentationProfiles();
+  const mark = vi.spyOn(performance, 'mark');
+  for (let index = 0; index < 3; index += 1) {
+    state = advanceTransportTicks(state, parseTickAdvancement(1));
+    view.rerender(
+      <VehicleMovementSvg
+        scenario={selectionScenario}
+        fleet={state.fleet}
+        passengerDemand={structuredClone(demand)}
+      />,
+    );
+    act(() => vi.advanceTimersByTime(1000 / 60));
+  }
+  expect(marked(mark, 'svg.committed.commit')).toBe(3);
+  expect(marked(mark, 'passengerStops.commit')).toBe(0);
+  const changedDemand = {
+    status: 'active',
+    waitingCohorts: [{ originStopPlaceId: place, count: 7 }],
+  } as unknown as PassengerDemandProjection;
+  view.rerender(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={state.fleet}
+      passengerDemand={changedDemand}
+    />,
+  );
+  act(() => vi.advanceTimersByTime(1000 / 60));
+  expect(marked(mark, 'passengerStops.commit')).toBe(1);
+  expect(screen.getByTestId('stop-waiting-passenger-count')).toHaveTextContent(
+    '7',
+  );
 });
 
 it('publishes live fleet and passenger authority after StrictMode effect replay', () => {

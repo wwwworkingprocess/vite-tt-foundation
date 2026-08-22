@@ -27,21 +27,25 @@ it('creates a stable structural browser-profile result', () => {
       routeEdgePrimitives: 5,
       stopPlaceMarkers: 4,
       vehicleMarkers: 2,
+      passengerStopStatusCircles: 7,
       waitingLabels: 3,
       onboardLabels: 2,
       arrivalPulses: 0,
       populationPrimitives: 8,
     },
     entries: [
-      named('svg.render-to-commit', 'measure', 3),
-      named('svg.commit', 'mark', 0, {
+      named('svg.wrapper.render', 'mark'),
+      named('svg.committed.render', 'mark'),
+      named('svg.committed.render-to-commit', 'measure', 3),
+      named('svg.committed.commit', 'mark', 0, {
         routeEdgePrimitives: 4,
         vehicleMarkers: 2,
       }),
       named('passengers.derivation', 'measure', 2),
-      named('passengers.commit', 'mark', 0, {
+      named('passengerStops.render', 'mark'),
+      named('passengerStops.commit', 'mark', 0, {
         waitingLabels: 3,
-        onboardLabels: 2,
+        stopStatusCircles: 7,
       }),
       named('population.render', 'mark'),
       named('population.geometry', 'measure', 5, { primitiveCount: 8 }),
@@ -62,12 +66,16 @@ it('creates a stable structural browser-profile result', () => {
     targetFramesPerSecond: 5,
   });
   expect(result.svg).toMatchObject({
+    wrapperRenders: 1,
+    renders: 1,
     commits: 1,
     totalMs: 3,
     vehicleMarkers: 2,
   });
   expect(result.passengerDiagnostics).toMatchObject({
     derivations: 1,
+    renders: 1,
+    stopStatusCircles: 7,
     waitingLabels: 3,
   });
   expect(result.population).toMatchObject({

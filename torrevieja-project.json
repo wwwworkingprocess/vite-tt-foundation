@@ -43,6 +43,7 @@
       "packages/simulation/src/vehicle-movement.ts",
       "packages/simulation/src/transport-simulation.ts",
       "packages/simulation/src/passenger-demand.ts",
+      "packages/simulation/src/passenger-emission-scheduler.ts",
       "packages/simulation/src/passenger-demand-runtime.ts",
       "packages/simulation/src/passenger-destination-permutation.ts",
       "packages/simulation/src/passenger-direct-itinerary.ts",

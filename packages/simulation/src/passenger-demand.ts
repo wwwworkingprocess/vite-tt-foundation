@@ -1044,6 +1044,10 @@ const advancePassengerDemand = (
   targetTickValue: number,
   trusted: boolean,
   arrivalEvents?: PassengerOriginStopArrivalEvent[],
+  scheduled?: Readonly<{
+    emissions: readonly Readonly<{ cellIndex: number; count: number }>[];
+    materializeCellCredits: () => readonly PassengerCellCreditState[];
+  }>,
 ): ActivePassengerDemandState => {
   const parsedPlan = trusted ? plan : parsePassengerDemandPlan(plan);
   let current = trusted
@@ -1069,59 +1073,57 @@ const advancePassengerDemand = (
     let destinationUnavailable =
       current.destinationUnavailableAtStopPassengerCount;
     const groups: AccessingPassengerGroup[] = [...current.accessingGroups];
-    const cellCredits = parsedPlan.cells.map((cell, index) => {
-      const added = checkedMultiply(
-        cell.populationWeight,
-        parsedPlan.emissionPolicy.emissionCreditsPerWeightPerTick,
-        'emission credit',
-      );
-      const accumulated = checkedAdd(
-        current.cellCredits[index]!.credit,
-        added,
-        'emission credit',
-      );
-      const emitted = Math.floor(
-        accumulated / parsedPlan.emissionPolicy.creditsPerPassenger,
-      );
-      const credit =
-        accumulated % parsedPlan.emissionPolicy.creditsPerPassenger;
-      if (emitted > 0) {
-        totalEmitted = checkedAdd(totalEmitted, emitted, 'total emissions');
-        if (cell.assignedStopPlaceId === null)
-          unserved = checkedAdd(unserved, emitted, 'unserved emissions');
-        else {
-          servedEmitted = checkedAdd(
-            servedEmitted,
-            emitted,
-            'served emissions',
-          );
-          const distance = cell.distanceSquaredCells!;
-          const duration = calculatePassengerAccessTicks(
-            distance,
-            parsedPlan.catchmentPolicy.maxAccessDistanceCells,
-            parsedPlan.accessPolicy.accessTicksPerCell,
-          );
-          groups.push({
-            passengerGroupId: passengerGroupIdSchema.parse(
-              `passenger-group-${nextSequence}`,
-            ),
-            cellId: cell.cellId,
-            targetStopPlaceId: cell.assignedStopPlaceId,
-            count: emitted,
-            spawnTick: tick,
-            arrivalTick: parseSimulationTick(
-              checkedAdd(tick, duration, 'passenger arrival tick'),
-            ),
-          });
-          nextSequence = checkedAdd(
-            nextSequence,
-            1,
-            'passenger group sequence',
-          );
-        }
+    const emit = (cell: PassengerDemandPlanCell, count: number) => {
+      if (count === 0) return;
+      totalEmitted = checkedAdd(totalEmitted, count, 'total emissions');
+      if (cell.assignedStopPlaceId === null) {
+        unserved = checkedAdd(unserved, count, 'unserved emissions');
+        return;
       }
-      return { cellId: cell.cellId, credit };
-    });
+      servedEmitted = checkedAdd(servedEmitted, count, 'served emissions');
+      const duration = calculatePassengerAccessTicks(
+        cell.distanceSquaredCells!,
+        parsedPlan.catchmentPolicy.maxAccessDistanceCells,
+        parsedPlan.accessPolicy.accessTicksPerCell,
+      );
+      groups.push({
+        passengerGroupId: passengerGroupIdSchema.parse(
+          `passenger-group-${nextSequence}`,
+        ),
+        cellId: cell.cellId,
+        targetStopPlaceId: cell.assignedStopPlaceId,
+        count,
+        spawnTick: tick,
+        arrivalTick: parseSimulationTick(
+          checkedAdd(tick, duration, 'passenger arrival tick'),
+        ),
+      });
+      nextSequence = checkedAdd(nextSequence, 1, 'passenger group sequence');
+    };
+    const cellCredits = scheduled
+      ? undefined
+      : parsedPlan.cells.map((cell, index) => {
+          const added = checkedMultiply(
+            cell.populationWeight,
+            parsedPlan.emissionPolicy.emissionCreditsPerWeightPerTick,
+            'emission credit',
+          );
+          const accumulated = checkedAdd(
+            current.cellCredits[index]!.credit,
+            added,
+            'emission credit',
+          );
+          const emitted = Math.floor(
+            accumulated / parsedPlan.emissionPolicy.creditsPerPassenger,
+          );
+          const credit =
+            accumulated % parsedPlan.emissionPolicy.creditsPerPassenger;
+          emit(cell, emitted);
+          return { cellId: cell.cellId, credit };
+        });
+    if (scheduled)
+      for (const { cellIndex, count } of scheduled.emissions)
+        emit(parsedPlan.cells[cellIndex]!, count);
     const arrivals = new Map(
       current.stopArrivals.map((stop) => [
         stop.stopPlaceId,
@@ -1244,7 +1246,7 @@ const advancePassengerDemand = (
         current.nextPassengerOnboardGroupSequence,
       nextPassengerDestinationAccessGroupSequence:
         current.nextPassengerDestinationAccessGroupSequence,
-      cellCredits,
+      cellCredits: cellCredits ?? [],
       accessingGroups: accessingGroups.sort(compareGroups),
       stopArrivals: parsedPlan.stops.map((stop) => ({
         stopPlaceId: stop.stopPlaceId,
@@ -1277,12 +1279,54 @@ const advancePassengerDemand = (
       totalCompletedJourneyPassengerCount:
         current.totalCompletedJourneyPassengerCount,
     };
+    if (scheduled) {
+      Object.defineProperty(next, 'cellCredits', {
+        enumerable: true,
+        configurable: false,
+        get: scheduled.materializeCellCredits,
+      });
+    }
     current = trusted
       ? freezeTrustedAuthority(next)
       : validatePassengerDemandState(parsedPlan, itineraryIndex, next);
   }
   return current;
 };
+
+export function advanceTrustedPassengerDemandToTickWithScheduledEmissions(
+  plan: PassengerDemandPlanV1,
+  itineraryIndex: PassengerDirectItineraryRuntimeIndex,
+  state: ActivePassengerDemandState,
+  targetTickValue: number,
+  emissions: readonly Readonly<{ cellIndex: number; count: number }>[],
+  materializeCellCredits: () => readonly PassengerCellCreditState[],
+  arrivalEvents?: PassengerOriginStopArrivalEvent[],
+): ActivePassengerDemandState {
+  return advancePassengerDemand(
+    plan,
+    itineraryIndex,
+    state,
+    targetTickValue,
+    true,
+    arrivalEvents,
+    {
+      emissions,
+      materializeCellCredits,
+    },
+  );
+}
+
+export function replaceTrustedPassengerDemandFields(
+  state: ActivePassengerDemandState,
+  fields: Partial<ActivePassengerDemandState>,
+): ActivePassengerDemandState {
+  const descriptors = Object.getOwnPropertyDescriptors(state);
+  for (const key of Object.keys(fields)) delete descriptors[key];
+  const next = {} as ActivePassengerDemandState;
+  Object.defineProperties(next, descriptors);
+  Object.assign(next, fields);
+  return freezeTrustedAuthority(next);
+}
 
 export function advancePassengerDemandToTick(
   plan: PassengerDemandPlanV1,
@@ -1333,27 +1377,6 @@ export function advanceTrustedPassengerDemandToTick(
     targetTickValue,
     true,
   );
-}
-
-export function advanceTrustedPassengerDemandToTickWithEvents(
-  plan: PassengerDemandPlanV1,
-  itineraryIndex: PassengerDirectItineraryRuntimeIndex,
-  state: ActivePassengerDemandState,
-  targetTickValue: number,
-): PassengerDemandAdvancementResult {
-  const events: PassengerOriginStopArrivalEvent[] = [];
-  const next = advancePassengerDemand(
-    plan,
-    itineraryIndex,
-    state,
-    targetTickValue,
-    true,
-    events,
-  );
-  return freezeTrustedAuthority({
-    state: next,
-    passengerOriginStopArrivalEvents: Object.freeze(events),
-  });
 }
 
 export function parsePassengerDemandProjection(

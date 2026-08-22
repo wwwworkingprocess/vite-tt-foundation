@@ -202,6 +202,13 @@ diagnostic, population-overlay, and manual R3F frame work. Its evidence is an
 input to a later optimization decision; this milestone does not change cadence
 or passenger/population presentation.
 
+The passenger-emission work-window optimization is complete: a non-persisted
+runtime window from 1 through 12 amortizes canonical cell evaluation while
+retaining exact per-tick passenger authority. Window 12 is the provisional
+fallback. Automatic device measurement and window selection remain a later
+performance task; later passenger-runtime optimization must be driven by the
+post-window benchmark rather than folded into this milestone.
+
 ## Later transport growth
 
 Deferred work includes:

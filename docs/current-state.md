@@ -179,6 +179,18 @@ Repeated runs compare complete Snapshot V9 authority outside the timed region,
 publish a final snapshot SHA-256, and report population-cell and itinerary
 structure alongside aggregate passenger metrics.
 
+Passenger emission-cell evaluation uses the ADR 0021 rolling work window. The
+validated runtime-only range is 1–12 ticks and the provisional fallback is 12.
+It schedules emissions on their exact original ticks; access and transit still
+run every authoritative tick. The window is not persisted in Snapshot V9 or
+Save V7, so restore may select a different value. Use
+`yarn audit:passenger-work-windows` for exact cross-window checkpoint and event
+equality, and `benchmark:simulation-runtime --passenger-work-window N` for
+diagnostic timing and structural work counts. The frozen scheduler structurally
+shares untouched future buckets; `yarn benchmark:passenger-emission` compares
+the scheduled reducer with the same-process legacy full-cell reference. Device
+auto-calibration remains deferred.
+
 Browser-created demo vehicles currently assign a named uniform default of 120
 authoritative ticks per edge. The movement model already accepts non-uniform
 per-edge durations. Geographic edge length and authoritative travel duration are

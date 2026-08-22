@@ -1,13 +1,19 @@
 export const deepFreeze = <T>(value: T): T => {
   if (value === null || typeof value !== 'object') return value;
-  for (const child of Object.values(value)) deepFreeze(child);
+  for (const descriptor of Object.values(
+    Object.getOwnPropertyDescriptors(value),
+  ))
+    if ('value' in descriptor) deepFreeze(descriptor.value);
   return Object.isFrozen(value) ? value : Object.freeze(value);
 };
 
 export const freezeTrustedAuthority = <T>(value: T): T => {
   if (value === null || typeof value !== 'object' || Object.isFrozen(value))
     return value;
-  for (const child of Object.values(value)) freezeTrustedAuthority(child);
+  for (const descriptor of Object.values(
+    Object.getOwnPropertyDescriptors(value),
+  ))
+    if ('value' in descriptor) freezeTrustedAuthority(descriptor.value);
   return Object.freeze(value);
 };
 

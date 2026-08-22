@@ -595,6 +595,9 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('packages/simulation/src/transport-simulation.ts') ||
     normalized.endsWith('packages/simulation/src/passenger-demand.ts') ||
     normalized.endsWith(
+      'packages/simulation/src/passenger-emission-scheduler.ts',
+    ) ||
+    normalized.endsWith(
       'packages/simulation/src/passenger-demand-runtime.ts',
     ) ||
     normalized.endsWith(

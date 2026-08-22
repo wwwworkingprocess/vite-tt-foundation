@@ -86,6 +86,7 @@ const requiredSimulationCriticalFiles = [
   'packages/simulation/src/vehicle-movement.ts',
   'packages/simulation/src/transport-simulation.ts',
   'packages/simulation/src/passenger-demand.ts',
+  'packages/simulation/src/passenger-emission-scheduler.ts',
   'packages/simulation/src/passenger-direct-itinerary.ts',
   'packages/simulation/src/passenger-waiting-cohort.ts',
   'packages/simulation/src/passenger-boarding.ts',

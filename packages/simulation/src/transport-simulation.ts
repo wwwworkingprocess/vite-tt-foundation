@@ -25,17 +25,27 @@ import {
   type VehicleState,
 } from './vehicle-movement.js';
 import {
-  advanceTrustedPassengerDemandToTick,
-  advanceTrustedPassengerDemandToTickWithEvents,
+  advanceTrustedPassengerDemandToTickWithScheduledEmissions,
   createDisabledPassengerDemandState,
   createInitialTrustedPassengerDemandState,
   parsePassengerDemandState,
   parsePassengerDemandPlan,
   validateTrustedPassengerDemandState,
+  replaceTrustedPassengerDemandFields,
   type PassengerDemandPlanV1,
   type PassengerDemandState,
+  type ActivePassengerDemandState,
   type PassengerOriginStopArrivalEvent,
 } from './passenger-demand.js';
+import {
+  advancePassengerEmissionScheduler,
+  createPassengerEmissionScheduler,
+  defaultTransportSimulationRuntimeTuning,
+  materializePassengerCellCredits,
+  parseTransportSimulationRuntimeTuning,
+  type PassengerEmissionScheduler,
+  type TransportSimulationRuntimeTuning,
+} from './passenger-emission-scheduler.js';
 import {
   buildTrustedPassengerDirectItineraryAuthority,
   type PassengerDirectItineraryPlanV2,
@@ -124,6 +134,7 @@ export interface TransportSimulationState {
   readonly passengerDirectItineraryPlan: PassengerDirectItineraryPlanV2 | null;
   readonly passengerDirectItineraryIndex: PassengerDirectItineraryRuntimeIndex | null;
   readonly passengerDemand: PassengerDemandState;
+  readonly passengerEmissionScheduler: PassengerEmissionScheduler | null;
   readonly vehicleOperations: readonly VehiclePatternRunState[];
   readonly currentStopCalls: readonly VehicleStopNodeCall[];
   readonly vehicleCapacities: readonly VehiclePassengerCapacity[];
@@ -216,6 +227,7 @@ export function createTransportSimulationState(
   inputScenario: CanonicalScenario,
   tick: number,
   passengerDemandPlan?: PassengerDemandPlanV1,
+  runtimeTuning: TransportSimulationRuntimeTuning = defaultTransportSimulationRuntimeTuning,
 ): TransportSimulationState {
   const scenario = reparseScenario(inputScenario);
   const scenarioCoordinate = createScenarioCoordinate(scenario);
@@ -240,6 +252,11 @@ export function createTransportSimulationState(
         });
   const itineraryPlan = itineraryAuthority?.plan;
   const itineraryIndex = itineraryAuthority?.index;
+  const passengerDemand =
+    parsedPlan === undefined
+      ? createDisabledPassengerDemandState()
+      : createInitialTrustedPassengerDemandState(parsedPlan, tick);
+  const tuning = parseTransportSimulationRuntimeTuning(runtimeTuning);
   return freeze({
     tick: parseSimulationTick(tick),
     scenario,
@@ -248,10 +265,15 @@ export function createTransportSimulationState(
     passengerDemandPlan: parsedPlan ?? null,
     passengerDirectItineraryPlan: itineraryPlan ?? null,
     passengerDirectItineraryIndex: itineraryIndex ?? null,
-    passengerDemand:
-      parsedPlan === undefined
-        ? createDisabledPassengerDemandState()
-        : createInitialTrustedPassengerDemandState(parsedPlan, tick),
+    passengerDemand,
+    passengerEmissionScheduler:
+      passengerDemand.status === 'active'
+        ? createPassengerEmissionScheduler(
+            parsedPlan!,
+            passengerDemand,
+            tuning.passengerEmissionWorkWindowTicks,
+          )
+        : null,
     vehicleOperations: [],
     currentStopCalls: [],
     vehicleCapacities: [],
@@ -332,30 +354,31 @@ function advanceTransportTicksInternal(
         left.vehicleId.localeCompare(right.vehicleId) ||
         left.stopCallSequence - right.stopCallSequence,
     );
-    const demandAdvancement =
-      current.passengerDemand.status === 'active' && arrivalEvents !== undefined
-        ? advanceTrustedPassengerDemandToTickWithEvents(
+    const emission =
+      current.passengerDemand.status === 'active'
+        ? advancePassengerEmissionScheduler(
             current.passengerDemandPlan!,
-            current.passengerDirectItineraryIndex!,
-            current.passengerDemand,
+            current.passengerEmissionScheduler!,
             tick,
           )
         : undefined;
-    if (demandAdvancement !== undefined) {
-      arrivalEvents!.push(
-        ...demandAdvancement.passengerOriginStopArrivalEvents,
-      );
-    }
     const passengerDemand =
       current.passengerDemand.status === 'disabled'
         ? current.passengerDemand
-        : (demandAdvancement?.state ??
-          advanceTrustedPassengerDemandToTick(
+        : advanceTrustedPassengerDemandToTickWithScheduledEmissions(
             current.passengerDemandPlan!,
             current.passengerDirectItineraryIndex!,
             current.passengerDemand,
             tick,
-          ));
+            emission!.emissions,
+            () =>
+              materializePassengerCellCredits(
+                current.passengerDemandPlan!,
+                emission!.scheduler,
+                tick,
+              ),
+            arrivalEvents,
+          );
     const transit =
       passengerDemand.status === 'disabled'
         ? null
@@ -401,27 +424,31 @@ function advanceTransportTicksInternal(
       passengerDemand:
         transit === null
           ? passengerDemand
-          : {
-              ...passengerDemand,
-              waitingCohorts: transit.waitingCohorts,
-              waitingGenerationLineageWatermarks:
-                transit.waitingGenerationLineageWatermarks,
-              onboardGroups: transit.onboardGroups,
-              destinationAccessGroups: transit.destinationAccessGroups,
-              nextPassengerOnboardGroupSequence:
-                transit.nextPassengerOnboardGroupSequence,
-              nextPassengerDestinationAccessGroupSequence:
-                transit.nextPassengerDestinationAccessGroupSequence,
-              totalWaitingForVehiclePassengerCount:
-                transit.totalWaitingForVehiclePassengerCount,
-              totalBoardedPassengerCount: transit.totalBoardedPassengerCount,
-              totalOnboardPassengerCount: transit.totalOnboardPassengerCount,
-              totalAlightedPassengerCount: transit.totalAlightedPassengerCount,
-              totalInDestinationAccessPassengerCount:
-                transit.totalInDestinationAccessPassengerCount,
-              totalCompletedJourneyPassengerCount:
-                transit.totalCompletedJourneyPassengerCount,
-            },
+          : replaceTrustedPassengerDemandFields(
+              passengerDemand as ActivePassengerDemandState,
+              {
+                waitingCohorts: transit.waitingCohorts,
+                waitingGenerationLineageWatermarks:
+                  transit.waitingGenerationLineageWatermarks,
+                onboardGroups: transit.onboardGroups,
+                destinationAccessGroups: transit.destinationAccessGroups,
+                nextPassengerOnboardGroupSequence:
+                  transit.nextPassengerOnboardGroupSequence,
+                nextPassengerDestinationAccessGroupSequence:
+                  transit.nextPassengerDestinationAccessGroupSequence,
+                totalWaitingForVehiclePassengerCount:
+                  transit.totalWaitingForVehiclePassengerCount,
+                totalBoardedPassengerCount: transit.totalBoardedPassengerCount,
+                totalOnboardPassengerCount: transit.totalOnboardPassengerCount,
+                totalAlightedPassengerCount:
+                  transit.totalAlightedPassengerCount,
+                totalInDestinationAccessPassengerCount:
+                  transit.totalInDestinationAccessPassengerCount,
+                totalCompletedJourneyPassengerCount:
+                  transit.totalCompletedJourneyPassengerCount,
+              },
+            ),
+      passengerEmissionScheduler: emission?.scheduler ?? null,
       currentAlightingEvents: transit?.currentAlightingEvents ?? [],
       currentBoardingEvents: transit?.currentBoardingEvents ?? [],
       currentJourneyCompletionEvents:
@@ -535,27 +562,29 @@ export function applyTransportVehicleCommand(
     passengerDemand:
       transit === null
         ? state.passengerDemand
-        : {
-            ...state.passengerDemand,
-            waitingCohorts: transit.waitingCohorts,
-            waitingGenerationLineageWatermarks:
-              transit.waitingGenerationLineageWatermarks,
-            onboardGroups: transit.onboardGroups,
-            destinationAccessGroups: transit.destinationAccessGroups,
-            nextPassengerOnboardGroupSequence:
-              transit.nextPassengerOnboardGroupSequence,
-            nextPassengerDestinationAccessGroupSequence:
-              transit.nextPassengerDestinationAccessGroupSequence,
-            totalWaitingForVehiclePassengerCount:
-              transit.totalWaitingForVehiclePassengerCount,
-            totalBoardedPassengerCount: transit.totalBoardedPassengerCount,
-            totalOnboardPassengerCount: transit.totalOnboardPassengerCount,
-            totalAlightedPassengerCount: transit.totalAlightedPassengerCount,
-            totalInDestinationAccessPassengerCount:
-              transit.totalInDestinationAccessPassengerCount,
-            totalCompletedJourneyPassengerCount:
-              transit.totalCompletedJourneyPassengerCount,
-          },
+        : replaceTrustedPassengerDemandFields(
+            state.passengerDemand as ActivePassengerDemandState,
+            {
+              waitingCohorts: transit.waitingCohorts,
+              waitingGenerationLineageWatermarks:
+                transit.waitingGenerationLineageWatermarks,
+              onboardGroups: transit.onboardGroups,
+              destinationAccessGroups: transit.destinationAccessGroups,
+              nextPassengerOnboardGroupSequence:
+                transit.nextPassengerOnboardGroupSequence,
+              nextPassengerDestinationAccessGroupSequence:
+                transit.nextPassengerDestinationAccessGroupSequence,
+              totalWaitingForVehiclePassengerCount:
+                transit.totalWaitingForVehiclePassengerCount,
+              totalBoardedPassengerCount: transit.totalBoardedPassengerCount,
+              totalOnboardPassengerCount: transit.totalOnboardPassengerCount,
+              totalAlightedPassengerCount: transit.totalAlightedPassengerCount,
+              totalInDestinationAccessPassengerCount:
+                transit.totalInDestinationAccessPassengerCount,
+              totalCompletedJourneyPassengerCount:
+                transit.totalCompletedJourneyPassengerCount,
+            },
+          ),
     currentAlightingEvents,
     currentBoardingEvents: [
       ...state.currentBoardingEvents.filter(
@@ -671,6 +700,7 @@ export function restoreTransportSimulationState(
   snapshotValue: unknown,
   scenarioValue: CanonicalScenario,
   passengerDemandPlan?: PassengerDemandPlanV1,
+  runtimeTuning: TransportSimulationRuntimeTuning = defaultTransportSimulationRuntimeTuning,
 ): TransportSimulationState {
   const snapshot = parseTransportSimulationSnapshot(snapshotValue);
   const scenario = reparseScenario(scenarioValue);
@@ -785,6 +815,7 @@ export function restoreTransportSimulationState(
       itineraryIsValid,
     });
   }
+  const tuning = parseTransportSimulationRuntimeTuning(runtimeTuning);
   return freeze({
     tick: snapshot.state.tick,
     scenario,
@@ -796,6 +827,14 @@ export function restoreTransportSimulationState(
     passengerDirectItineraryIndex:
       passengerDemand.status === 'active' ? itineraryIndex! : null,
     passengerDemand,
+    passengerEmissionScheduler:
+      passengerDemand.status === 'active'
+        ? createPassengerEmissionScheduler(
+            parsedPlan!,
+            passengerDemand,
+            tuning.passengerEmissionWorkWindowTicks,
+          )
+        : null,
     fleet,
     vehicleOperations: operating.operations,
     currentStopCalls: operating.calls,

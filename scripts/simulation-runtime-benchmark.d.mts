@@ -3,6 +3,7 @@ export interface SimulationRuntimeBenchmarkOptions {
   readonly runs: number;
   readonly ticks: number;
   readonly warmup: number;
+  readonly passengerWorkWindow?: number;
   readonly json?: boolean;
 }
 

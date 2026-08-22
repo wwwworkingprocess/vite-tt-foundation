@@ -11,14 +11,30 @@ import {
 import { prepareBenchmarkScenario } from './scenario-benchmark-support.mjs';
 
 export function parseSimulationRuntimeBenchmarkArguments(values) {
-  const result = { runs: 3, ticks: 100, warmup: 200, json: false };
+  const result = {
+    runs: 3,
+    ticks: 100,
+    warmup: 200,
+    passengerWorkWindow: 12,
+    json: false,
+  };
   for (let index = 0; index < values.length; index += 1) {
     const value = values[index];
     if (value === '--json') result.json = true;
-    else if (['--scenario', '--runs', '--ticks', '--warmup'].includes(value)) {
+    else if (
+      [
+        '--scenario',
+        '--runs',
+        '--ticks',
+        '--warmup',
+        '--passenger-work-window',
+      ].includes(value)
+    ) {
       const next = values[++index];
       if (!next) throw new Error(`${value} requires a value.`);
       if (value === '--scenario') result.scenario = next;
+      else if (value === '--passenger-work-window')
+        result.passengerWorkWindow = Number(next);
       else result[value.slice(2)] = Number(next);
     } else throw new Error(`Unknown benchmark argument ${value}.`);
   }
@@ -31,6 +47,14 @@ export function parseSimulationRuntimeBenchmarkArguments(values) {
       throw new Error(
         `--${field} must be ${field === 'warmup' ? 'a nonnegative' : 'a positive'} safe integer.`,
       );
+  if (
+    !Number.isInteger(result.passengerWorkWindow) ||
+    result.passengerWorkWindow < 1 ||
+    result.passengerWorkWindow > 12
+  )
+    throw new Error(
+      '--passenger-work-window must be an integer from 1 through 12.',
+    );
   return Object.freeze(result);
 }
 
@@ -97,11 +121,19 @@ const authorityMetrics = (state) => {
     currentStopNodeCalls: state.currentStopCalls.length,
   });
 };
+const evaluatedCells = (cellCount, scheduler, tick) => {
+  const elapsed = tick - scheduler.seedTick;
+  let total = Math.floor(elapsed / scheduler.workWindowTicks) * cellCount;
+  for (let shard = 0; shard < elapsed % scheduler.workWindowTicks; shard += 1)
+    total += Math.ceil((cellCount - shard) / scheduler.workWindowTicks);
+  return total;
+};
 
 export async function runSimulationRuntimeBenchmark(
   options,
   now = () => performance.now(),
 ) {
+  const passengerWorkWindow = options.passengerWorkWindow ?? 12;
   const { scenario, demandPlan, populationView } =
     await prepareBenchmarkScenario(options.scenario);
   const graph = buildDirectedScenarioGraph(scenario);
@@ -111,9 +143,12 @@ export async function runSimulationRuntimeBenchmark(
   let finalSnapshotSha256;
   let directItineraryPairCount;
   let benchmarkStartTick;
+  let emissionScheduler;
   for (let run = 0; run < options.runs; run += 1) {
     let state = benchmarkFleet(
-      createTransportSimulationState(scenario, 0, demandPlan),
+      createTransportSimulationState(scenario, 0, demandPlan, {
+        passengerEmissionWorkWindowTicks: passengerWorkWindow,
+      }),
     );
     directItineraryPairCount =
       state.passengerDirectItineraryPlan.directPairCount;
@@ -146,6 +181,7 @@ export async function runSimulationRuntimeBenchmark(
     finalSnapshotSha256 = createHash('sha256')
       .update(snapshotJson)
       .digest('hex');
+    emissionScheduler = state.passengerEmissionScheduler;
   }
   const elapsed = timings.map((value) => value.elapsedMilliseconds);
   const perTick = timings.map((value) => value.millisecondsPerTick);
@@ -161,6 +197,7 @@ export async function runSimulationRuntimeBenchmark(
       edgeTravelTicks: 120,
       passengerCapacity: DEFAULT_VEHICLE_PASSENGER_CAPACITY,
       demandModelContentHash: demandPlan.demandModelContentHash,
+      passengerEmissionWorkWindowTicks: passengerWorkWindow,
     }),
     structure: Object.freeze({
       routes: scenario.routes.routes.length,
@@ -182,6 +219,20 @@ export async function runSimulationRuntimeBenchmark(
       ),
       itineraryStopPlaces: demandPlan.stops.length,
       directItineraryPairCount,
+      bootstrapEvaluatedCells: demandPlan.cells.length,
+      averageEvaluatedCellsPerTick:
+        evaluatedCells(
+          demandPlan.cells.length,
+          emissionScheduler,
+          expectedMetrics.tick,
+        ) / (expectedMetrics.tick || 1),
+      maximumEvaluatedCellsPerTick: Math.ceil(
+        demandPlan.cells.length / emissionScheduler.workWindowTicks,
+      ),
+      scheduledEmissionRecords: emissionScheduler.buckets.reduce(
+        (total, bucket) => total + bucket[1].length,
+        0,
+      ),
     }),
     timings: Object.freeze({
       elapsedMilliseconds: stats(elapsed),

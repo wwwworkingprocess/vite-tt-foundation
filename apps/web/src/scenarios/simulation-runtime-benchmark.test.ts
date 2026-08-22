@@ -3,6 +3,7 @@ import {
   parseSimulationRuntimeBenchmarkArguments,
   runSimulationRuntimeBenchmark,
 } from '../../../../scripts/simulation-runtime-benchmark.mjs';
+import { runPassengerEmissionRuntimeBenchmark } from '../../../../scripts/passenger-emission-runtime-benchmark.mjs';
 
 describe('headless simulation runtime benchmark', () => {
   it('parses deterministic workload controls strictly', () => {
@@ -24,6 +25,7 @@ describe('headless simulation runtime benchmark', () => {
       warmup: 3,
       ticks: 4,
       json: true,
+      passengerWorkWindow: 12,
     });
     expect(() => parseSimulationRuntimeBenchmarkArguments([])).toThrow(
       /scenario/i,
@@ -60,6 +62,7 @@ describe('headless simulation runtime benchmark', () => {
         measuredTicks: 3,
         edgeTravelTicks: 120,
         passengerCapacity: 80,
+        passengerEmissionWorkWindowTicks: 12,
       },
       structure: { routes: 3, patterns: 6, stopPlaces: 79 },
       timings: {
@@ -81,6 +84,28 @@ describe('headless simulation runtime benchmark', () => {
       totalPopulationWeight: expect.any(Number),
       itineraryStopPlaces: 79,
       directItineraryPairCount: 1112,
+    });
+  }, 30_000);
+
+  it('compares scheduled emission windows with the same-process legacy reducer', async () => {
+    let clock = 0;
+    const result = await runPassengerEmissionRuntimeBenchmark(
+      'torrevieja-legacy-abc-v1',
+      { warmup: 1, ticks: 2 },
+      () => clock++,
+    );
+    expect(result).toMatchObject({
+      scenarioId: 'torrevieja-legacy-abc-v1',
+      warmupTicks: 1,
+      measuredTicks: 2,
+      demandPlanCells: expect.any(Number),
+      legacy: { elapsedMilliseconds: 1, millisecondsPerTick: 0.5 },
+      scheduled: [
+        { workWindowTicks: 1, millisecondsPerTick: 0.5, speedup: 1 },
+        { workWindowTicks: 4, millisecondsPerTick: 0.5, speedup: 1 },
+        { workWindowTicks: 8, millisecondsPerTick: 0.5, speedup: 1 },
+        { workWindowTicks: 12, millisecondsPerTick: 0.5, speedup: 1 },
+      ],
     });
   }, 30_000);
 });

@@ -9,9 +9,11 @@ completion. The Node benchmark supplies the monotonic clock and aggregates
 durations and naturally available work counts.
 
 The destination/waiting interval retains its original top-level timing and adds
-two nested diagnostics: destination allocation and waiting activation. A third
-residual is derived from the independently measured top-level duration and
-captures state finalization without adding another simulation boundary.
+two nested diagnostics: destination allocation and waiting activation. Three
+further nested regions attribute the post-activation work: accessing-group
+ordering, canonical StopPlace authority materialization, and state
+finalization. Unattributed time is derived from the independently measured
+parent rather than defining that parent as the sum of its children.
 Waiting activation remains independently timed around the complete trusted
 simulation activation call and is explained by four nested regions: plan
 preparation, existing-authority preparation, new-assignment activation, and
@@ -33,9 +35,27 @@ The accepted Torrevieja, Cartagena, and Málaga W1/W12 profiles now measure
 trusted plan preparation at approximately 0.007–0.018 ms/tick with zero
 per-tick plan-cell evaluations, down from approximately 16.85–217.73 ms/tick.
 Within waiting activation, ordering/finalization is now the largest measured
-child. Across the broader destination/waiting parent, the independently derived
-residual/finalization interval is largest. Both are evidence for a later task;
-neither is optimized here.
+child. Across the broader destination/waiting parent, state finalization is the
+dominant post-activation region at approximately 48–76% of the parent. The two
+full StopPlace authority materializations scale linearly from 79 through 1,032
+StopPlaces but account for only approximately 1.9–2.7% of the parent. This
+disproved the materialization-dominance hypothesis and identified recursive
+freezing of freshly reconstructed StopPlace authority as the actual scaling
+cost. Trusted advancement now reuses each unchanged `stopArrivals` and
+`destinationCursors` record, reuses an entire canonical array when every value
+is unchanged, and freezes only changed records and replacement arrays before
+root finalization. Snapshot authority and canonical array ordering are
+unchanged.
+
+Across the follow-up W1/W12 profiles, state finalization fell from approximately
+0.34–4.30 ms/tick to 0.03–0.08 ms/tick. Stop-authority materialization increased
+only from approximately 0.01–0.14 ms/tick to 0.02–0.19 ms/tick, while the
+enclosing destination/waiting interval and all six unprofiled whole-simulation
+runs improved. The cost was therefore removed rather than moved between timing
+regions. Waiting activation is now the largest destination/waiting child in the
+measured scenarios; its existing-cohort preparation and ordering/finalization
+children remain the next evidence-backed investigation, not part of this
+optimization.
 
 The profile excludes scenario and population loading, demand-plan and itinerary
 construction, warmup, Snapshot V9 creation/hashing, persistence, adapters, and

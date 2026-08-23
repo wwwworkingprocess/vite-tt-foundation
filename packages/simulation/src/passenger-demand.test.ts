@@ -15,6 +15,7 @@ import {
   parsePassengerDemandProjection,
   parsePassengerOriginStopArrivalEvents,
   projectPassengerDemand,
+  replaceTrustedPassengerDemandFields,
   validatePassengerDemandState,
   type PassengerOriginStopArrivalEvent,
 } from './passenger-demand.js';
@@ -275,6 +276,103 @@ type MutablePassengerState = {
 };
 
 describe('Passenger Demand Plan V1', () => {
+  it('structurally shares unchanged canonical StopPlace authority', () => {
+    const plan = createPlan();
+    const index = createItineraryIndex();
+    const initial = createInitialPassengerDemandState(plan, 0);
+    const unchanged = advanceTrustedPassengerDemandToTick(
+      plan,
+      index,
+      initial,
+      1,
+    );
+    expect(unchanged.stopArrivals).toBe(initial.stopArrivals);
+    expect(unchanged.destinationCursors).toBe(initial.destinationCursors);
+
+    const withArrival = replaceTrustedPassengerDemandFields(initial, {
+      stopArrivals: [
+        { stopPlaceId: 'stop-a', awaitingDestinationCount: 1 },
+        initial.stopArrivals[1]!,
+      ],
+      totalEmittedPassengerCount: 1,
+      servedEmittedPassengerCount: 1,
+      totalArrivedAtStopPassengerCount: 1,
+    });
+    const consumed = advanceTrustedPassengerDemandToTick(
+      plan,
+      index,
+      withArrival,
+      1,
+    );
+    expect(consumed.stopArrivals).not.toBe(withArrival.stopArrivals);
+    expect(consumed.stopArrivals[0]).not.toBe(withArrival.stopArrivals[0]);
+    expect(consumed.stopArrivals[1]).toBe(withArrival.stopArrivals[1]);
+
+    const beforeCursorChange = advanceTrustedPassengerDemandToTick(
+      plan,
+      index,
+      unchanged,
+      2,
+    );
+    const afterCursorChange = advanceTrustedPassengerDemandToTick(
+      plan,
+      index,
+      beforeCursorChange,
+      3,
+    );
+    expect(afterCursorChange.destinationCursors).not.toBe(
+      beforeCursorChange.destinationCursors,
+    );
+    expect(afterCursorChange.destinationCursors[0]).not.toBe(
+      beforeCursorChange.destinationCursors[0],
+    );
+    expect(afterCursorChange.destinationCursors[1]).toBe(
+      beforeCursorChange.destinationCursors[1],
+    );
+
+    for (const authority of [
+      consumed.stopArrivals,
+      afterCursorChange.destinationCursors,
+    ]) {
+      expect(Object.isFrozen(authority)).toBe(true);
+      expect(authority.every(Object.isFrozen)).toBe(true);
+      expect(() => {
+        (authority as unknown[]).pop();
+      }).toThrow();
+      const record = authority[0]! as unknown as Record<string, unknown>;
+      const original = { ...record };
+      expect(() => {
+        record.stopPlaceId = 'changed';
+      }).toThrow();
+      expect(record).toEqual(original);
+    }
+
+    let current = initial;
+    let reusedStopArrivalArrays = 0;
+    let reusedCursorRecords = 0;
+    let changedCursorRecords = 0;
+    for (let tick = 1; tick <= 20; tick += 1) {
+      const next = advanceTrustedPassengerDemandToTick(
+        plan,
+        index,
+        current,
+        tick,
+      );
+      if (next.stopArrivals === current.stopArrivals)
+        reusedStopArrivalArrays += 1;
+      for (let stop = 0; stop < plan.stops.length; stop += 1)
+        if (next.destinationCursors[stop] === current.destinationCursors[stop])
+          reusedCursorRecords += 1;
+        else changedCursorRecords += 1;
+      current = next;
+    }
+    expect(reusedStopArrivalArrays).toBe(20);
+    expect({ reusedCursorRecords, changedCursorRecords }).toEqual({
+      reusedCursorRecords: 12,
+      changedCursorRecords: 28,
+    });
+  });
+
   it('normalizes exact identity, cells, stops, policies, and deeply freezes values', () => {
     const plan = createPlan();
     expect(plan).toMatchObject({

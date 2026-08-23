@@ -34,7 +34,7 @@ describe('passenger runtime phase profiling', () => {
           'waiting-new-assignment-activation',
           'waiting-ordering-finalization',
         ] as const;
-        if (boundary >= 9) {
+        if (boundary >= 9 && boundary <= 12) {
           if (boundary === 9)
             planPreparationWork.push([primaryWork, secondaryWork]);
           const prior = waitingChildren[boundary - 9];
@@ -51,6 +51,21 @@ describe('passenger runtime phase profiling', () => {
         }
         if (boundary === 8) {
           observed.push('finish:passenger-waiting-activation');
+          observed.push('start:passenger-accessing-ordering');
+          return;
+        }
+        if (boundary === 13) {
+          observed.push('finish:passenger-accessing-ordering');
+          observed.push('start:passenger-stop-authority-materialization');
+          return;
+        }
+        if (boundary === 14) {
+          observed.push('finish:passenger-stop-authority-materialization');
+          observed.push('start:passenger-state-finalization');
+          return;
+        }
+        if (boundary === 15) {
+          observed.push('finish:passenger-state-finalization');
           return;
         }
         if (phase) observed.push(`finish:${phase}`);
@@ -107,6 +122,16 @@ describe('passenger runtime phase profiling', () => {
     const destinationFinish = observed.indexOf(
       'finish:passenger-destination-waiting',
     );
+    const residualTransitions = [
+      'finish:passenger-waiting-activation',
+      'start:passenger-accessing-ordering',
+      'finish:passenger-accessing-ordering',
+      'start:passenger-stop-authority-materialization',
+      'finish:passenger-stop-authority-materialization',
+      'start:passenger-state-finalization',
+      'finish:passenger-state-finalization',
+      'finish:passenger-destination-waiting',
+    ];
     const waitingChildTransitions = [
       'start:passenger-waiting-activation',
       'start:waiting-plan-preparation',
@@ -128,6 +153,11 @@ describe('passenger runtime phase profiling', () => {
           entry.startsWith('finish:waiting-'),
       ),
     ).toEqual(Array.from({ length: 3 }).flatMap(() => waitingChildTransitions));
+    expect(
+      observed.filter((entry) =>
+        residualTransitions.some((transition) => transition === entry),
+      ),
+    ).toEqual(Array.from({ length: 3 }).flatMap(() => residualTransitions));
     expect([
       destinationStart,
       allocationFinish,

@@ -162,41 +162,92 @@ describe('headless simulation runtime benchmark', () => {
     });
   });
 
-  it('derives destination waiting allocation, activation, and residual timing', () => {
+  it('derives destination waiting child timing and unattributed time', () => {
     expect(
       summarizePassengerDestinationWaitingBreakdown(
         100,
+        [10],
         [20],
-        [70],
         { destinationAssignedPassengers: 4 },
         { inputWaitingCohorts: 2, resultingWaitingCohorts: 3 },
+        {
+          accessingOrdering: [5],
+          stopAuthorityMaterialization: [55],
+          stateFinalization: [9],
+        },
+        {
+          accessingOrdering: { accessingGroups: 2 },
+          stopAuthorityMaterialization: { stopPlaces: 79 },
+          stateFinalization: {},
+        },
         10,
       ),
     ).toEqual({
       destinationAllocation: {
         invocations: 1,
-        totalMs: 20,
-        msPerTick: 2,
-        meanMsPerInvocation: 20,
-        shareOfDestinationWaitingTime: 20,
+        totalMs: 10,
+        msPerTick: 1,
+        meanMsPerInvocation: 10,
+        shareOfDestinationWaitingTime: 10,
         work: { destinationAssignedPassengers: 4 },
       },
       waitingActivation: {
         invocations: 1,
-        totalMs: 70,
-        msPerTick: 7,
-        meanMsPerInvocation: 70,
-        shareOfDestinationWaitingTime: 70,
+        totalMs: 20,
+        msPerTick: 2,
+        meanMsPerInvocation: 20,
+        shareOfDestinationWaitingTime: 20,
         work: { inputWaitingCohorts: 2, resultingWaitingCohorts: 3 },
       },
-      residual: {
-        totalMs: 10,
-        msPerTick: 1,
-        shareOfDestinationWaitingTime: 10,
+      accessingOrdering: {
+        invocations: 1,
+        totalMs: 5,
+        msPerTick: 0.5,
+        meanMsPerInvocation: 5,
+        shareOfDestinationWaitingTime: 5,
+        work: { accessingGroups: 2 },
+      },
+      stopAuthorityMaterialization: {
+        invocations: 1,
+        totalMs: 55,
+        msPerTick: 5.5,
+        meanMsPerInvocation: 55,
+        shareOfDestinationWaitingTime: 55,
+        work: { stopPlaces: 79 },
+      },
+      stateFinalization: {
+        invocations: 1,
+        totalMs: 9,
+        msPerTick: 0.9,
+        meanMsPerInvocation: 9,
+        shareOfDestinationWaitingTime: 9,
+        work: {},
+      },
+      unattributed: {
+        totalMs: 1,
+        msPerTick: 0.1,
+        shareOfDestinationWaitingTime: 1,
       },
     });
     expect(
-      summarizePassengerDestinationWaitingBreakdown(0, [], [], {}, {}, 1),
+      summarizePassengerDestinationWaitingBreakdown(
+        0,
+        [],
+        [],
+        {},
+        {},
+        {
+          accessingOrdering: [],
+          stopAuthorityMaterialization: [],
+          stateFinalization: [],
+        },
+        {
+          accessingOrdering: {},
+          stopAuthorityMaterialization: {},
+          stateFinalization: {},
+        },
+        1,
+      ),
     ).toEqual({
       destinationAllocation: {
         invocations: 0,
@@ -214,7 +265,31 @@ describe('headless simulation runtime benchmark', () => {
         shareOfDestinationWaitingTime: 0,
         work: {},
       },
-      residual: {
+      accessingOrdering: {
+        invocations: 0,
+        totalMs: 0,
+        msPerTick: 0,
+        meanMsPerInvocation: 0,
+        shareOfDestinationWaitingTime: 0,
+        work: {},
+      },
+      stopAuthorityMaterialization: {
+        invocations: 0,
+        totalMs: 0,
+        msPerTick: 0,
+        meanMsPerInvocation: 0,
+        shareOfDestinationWaitingTime: 0,
+        work: {},
+      },
+      stateFinalization: {
+        invocations: 0,
+        totalMs: 0,
+        msPerTick: 0,
+        meanMsPerInvocation: 0,
+        shareOfDestinationWaitingTime: 0,
+        work: {},
+      },
+      unattributed: {
         totalMs: 0,
         msPerTick: 0,
         shareOfDestinationWaitingTime: 0,

@@ -51,7 +51,10 @@ export interface PassengerDestinationWaitingBreakdown {
   readonly destinationAllocation: PassengerRuntimeNestedPhaseSummary;
   readonly waitingActivation: PassengerRuntimeNestedPhaseSummary &
     Readonly<{ breakdown?: PassengerWaitingActivationBreakdown }>;
-  readonly residual: Readonly<{
+  readonly accessingOrdering: PassengerRuntimeNestedPhaseSummary;
+  readonly stopAuthorityMaterialization: PassengerRuntimeNestedPhaseSummary;
+  readonly stateFinalization: PassengerRuntimeNestedPhaseSummary;
+  readonly unattributed: Readonly<{
     totalMs: number;
     msPerTick: number;
     shareOfDestinationWaitingTime: number;
@@ -97,6 +100,8 @@ export function summarizePassengerDestinationWaitingBreakdown(
   waitingActivationDurations: readonly number[],
   destinationAllocationWork: Readonly<Record<string, number>>,
   waitingActivationWork: Readonly<Record<string, number>>,
+  residualDurations: Readonly<Record<string, readonly number[]>>,
+  residualWork: Readonly<Record<string, Readonly<Record<string, number>>>>,
   measuredTicks: number,
   waitingActivationBreakdown?: PassengerWaitingActivationBreakdown,
 ): PassengerDestinationWaitingBreakdown;

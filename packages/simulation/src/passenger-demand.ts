@@ -1247,6 +1247,39 @@ const advancePassengerDemand = (
       ...(observer ? { observer } : {}),
     });
     observer?.(8);
+    const orderedAccessingGroups = accessingGroups.sort(compareGroups);
+    observer?.(13, orderedAccessingGroups.length);
+    let changedStopArrivals: StopPlaceArrivalState[] | undefined;
+    let changedDestinationCursors:
+      PassengerDestinationCursorState[] | undefined;
+    for (let index = 0; index < parsedPlan.stops.length; index += 1) {
+      const stop = parsedPlan.stops[index]!;
+      const priorArrival = current.stopArrivals[index]!;
+      const awaitingDestinationCount = arrivals.get(stop.stopPlaceId)!;
+      if (priorArrival.awaitingDestinationCount !== awaitingDestinationCount) {
+        changedStopArrivals ??= [...current.stopArrivals];
+        changedStopArrivals[index] = freezeTrustedAuthority({
+          stopPlaceId: stop.stopPlaceId,
+          awaitingDestinationCount,
+        });
+      }
+      const priorCursor = current.destinationCursors[index]!;
+      const destinationCursor = destinationCursors.get(stop.stopPlaceId)!;
+      if (priorCursor.destinationCursor !== destinationCursor) {
+        changedDestinationCursors ??= [...current.destinationCursors];
+        changedDestinationCursors[index] = freezeTrustedAuthority({
+          stopPlaceId: stop.stopPlaceId,
+          destinationCursor,
+        });
+      }
+    }
+    const nextStopArrivals = changedStopArrivals
+      ? Object.freeze(changedStopArrivals)
+      : current.stopArrivals;
+    const nextDestinationCursors = changedDestinationCursors
+      ? Object.freeze(changedDestinationCursors)
+      : current.destinationCursors;
+    observer?.(14, parsedPlan.stops.length);
     const next: ActivePassengerDemandState = {
       status: 'active',
       demandPlanCoordinate: current.demandPlanCoordinate,
@@ -1259,15 +1292,9 @@ const advancePassengerDemand = (
       nextPassengerDestinationAccessGroupSequence:
         current.nextPassengerDestinationAccessGroupSequence,
       cellCredits: cellCredits ?? [],
-      accessingGroups: accessingGroups.sort(compareGroups),
-      stopArrivals: parsedPlan.stops.map((stop) => ({
-        stopPlaceId: stop.stopPlaceId,
-        awaitingDestinationCount: arrivals.get(stop.stopPlaceId)!,
-      })),
-      destinationCursors: parsedPlan.stops.map((stop) => ({
-        stopPlaceId: stop.stopPlaceId,
-        destinationCursor: destinationCursors.get(stop.stopPlaceId)!,
-      })),
+      accessingGroups: orderedAccessingGroups,
+      stopArrivals: nextStopArrivals,
+      destinationCursors: nextDestinationCursors,
       waitingCohorts: activation.waitingCohorts,
       waitingGenerationLineageWatermarks:
         current.waitingGenerationLineageWatermarks,
@@ -1301,6 +1328,7 @@ const advancePassengerDemand = (
     current = trusted
       ? freezeTrustedAuthority(next)
       : validatePassengerDemandState(parsedPlan, itineraryIndex, next);
+    observer?.(15);
     observer?.(3);
   }
   return current;

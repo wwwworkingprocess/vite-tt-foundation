@@ -150,6 +150,8 @@ export function summarizePassengerDestinationWaitingBreakdown(
   waitingActivationDurations,
   destinationAllocationWork,
   waitingActivationWork,
+  residualDurations,
+  residualWork,
   measuredTicks,
   waitingActivationBreakdown,
 ) {
@@ -165,10 +167,25 @@ export function summarizePassengerDestinationWaitingBreakdown(
     measuredTicks,
     destinationWaitingTotalMs,
   );
+  const residualPhases = Object.fromEntries(
+    destinationWaitingResidualPhases.map((name) => [
+      name,
+      summarizeNestedPhase(
+        residualDurations[name],
+        residualWork[name],
+        measuredTicks,
+        destinationWaitingTotalMs,
+      ),
+    ]),
+  );
   const calculatedResidual =
     destinationWaitingTotalMs -
     destinationAllocation.totalMs -
-    waitingActivation.totalMs;
+    waitingActivation.totalMs -
+    Object.values(residualPhases).reduce(
+      (sum, phase) => sum + phase.totalMs,
+      0,
+    );
   const totalMs =
     calculatedResidual < 0 && calculatedResidual > -1e-9
       ? 0
@@ -181,7 +198,8 @@ export function summarizePassengerDestinationWaitingBreakdown(
         ? { breakdown: waitingActivationBreakdown }
         : {}),
     }),
-    residual: Object.freeze({
+    ...residualPhases,
+    unattributed: Object.freeze({
       totalMs,
       msPerTick: totalMs / measuredTicks,
       shareOfDestinationWaitingTime:
@@ -197,6 +215,12 @@ const waitingActivationPhases = [
   'existingAuthorityPreparation',
   'newAssignmentActivation',
   'orderingFinalization',
+];
+
+const destinationWaitingResidualPhases = [
+  'accessingOrdering',
+  'stopAuthorityMaterialization',
+  'stateFinalization',
 ];
 
 export function summarizePassengerWaitingActivationBreakdown(
@@ -256,10 +280,16 @@ const createPhaseProfiler = (now) => {
   const destinationWaitingDurations = {
     destinationAllocation: [],
     waitingActivation: [],
+    accessingOrdering: [],
+    stopAuthorityMaterialization: [],
+    stateFinalization: [],
   };
   const destinationWaitingWork = {
     destinationAllocation: {},
     waitingActivation: {},
+    accessingOrdering: {},
+    stopAuthorityMaterialization: {},
+    stateFinalization: {},
   };
   const waitingActivationDurations = Object.fromEntries(
     waitingActivationPhases.map((name) => [name, []]),
@@ -270,10 +300,11 @@ const createPhaseProfiler = (now) => {
   let started;
   let waitingActivationStarted;
   let waitingActivationChildStarted;
+  let destinationWaitingResidualStarted;
   const nextPhase = [undefined, 1, 2, 4, 3, 4];
   return {
     observer(boundary, primaryWork, secondaryWork) {
-      if (boundary >= 9) {
+      if (boundary >= 9 && boundary <= 12) {
         const expected = waitingActivationPhases[boundary - 9];
         if (
           waitingActivationStarted === undefined ||
@@ -353,6 +384,38 @@ const createPhaseProfiler = (now) => {
           time - waitingActivationStarted,
         );
         waitingActivationStarted = undefined;
+        destinationWaitingResidualStarted = {
+          name: destinationWaitingResidualPhases[0],
+          time,
+        };
+        return;
+      }
+      if (boundary >= 13 && boundary <= 15) {
+        const expected = destinationWaitingResidualPhases[boundary - 13];
+        if (destinationWaitingResidualStarted?.name !== expected)
+          throw new Error(
+            'Passenger destination waiting residual order is invalid.',
+          );
+        const time = now();
+        destinationWaitingDurations[expected].push(
+          time - destinationWaitingResidualStarted.time,
+        );
+        if (boundary === 13)
+          addWork(
+            destinationWaitingWork.accessingOrdering,
+            'accessingGroups',
+            primaryWork,
+          );
+        else if (boundary === 14)
+          addWork(
+            destinationWaitingWork.stopAuthorityMaterialization,
+            'stopPlaces',
+            primaryWork,
+          );
+        const next = destinationWaitingResidualPhases[boundary - 12];
+        destinationWaitingResidualStarted = next
+          ? { name: next, time }
+          : undefined;
         return;
       }
       if (boundary === 0) {
@@ -360,7 +423,11 @@ const createPhaseProfiler = (now) => {
           throw new Error('Passenger runtime phases must not overlap.');
         started = { phase: passengerRuntimePhases[0], time: now() };
       } else {
-        if (!started || waitingActivationStarted !== undefined)
+        if (
+          !started ||
+          waitingActivationStarted !== undefined ||
+          destinationWaitingResidualStarted !== undefined
+        )
           throw new Error('Passenger runtime phase order is invalid.');
         const time = now();
         durations[started.phase].push(time - started.time);
@@ -543,10 +610,16 @@ export async function runSimulationRuntimeBenchmark(
   const destinationWaitingDurations = {
     destinationAllocation: [],
     waitingActivation: [],
+    accessingOrdering: [],
+    stopAuthorityMaterialization: [],
+    stateFinalization: [],
   };
   const destinationWaitingWork = {
     destinationAllocation: {},
     waitingActivation: {},
+    accessingOrdering: {},
+    stopAuthorityMaterialization: {},
+    stateFinalization: {},
   };
   const waitingActivationDurations = Object.fromEntries(
     waitingActivationPhases.map((name) => [name, []]),
@@ -593,7 +666,11 @@ export async function runSimulationRuntimeBenchmark(
           phaseWork[phase][name] = (phaseWork[phase][name] ?? 0) + count;
       }
     if (profiler)
-      for (const name of ['destinationAllocation', 'waitingActivation']) {
+      for (const name of [
+        'destinationAllocation',
+        'waitingActivation',
+        ...destinationWaitingResidualPhases,
+      ]) {
         destinationWaitingDurations[name].push(
           ...profiler.destinationWaitingDurations[name],
         );
@@ -666,6 +743,18 @@ export async function runSimulationRuntimeBenchmark(
           destinationWaitingDurations.waitingActivation,
           destinationWaitingWork.destinationAllocation,
           destinationWaitingWork.waitingActivation,
+          Object.fromEntries(
+            destinationWaitingResidualPhases.map((name) => [
+              name,
+              destinationWaitingDurations[name],
+            ]),
+          ),
+          Object.fromEntries(
+            destinationWaitingResidualPhases.map((name) => [
+              name,
+              destinationWaitingWork[name],
+            ]),
+          ),
           options.ticks * options.runs,
           summarizePassengerWaitingActivationBreakdown(
             waitingActivationTotalMs,

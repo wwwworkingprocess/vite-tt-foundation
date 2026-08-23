@@ -40,7 +40,18 @@ export {
   type PassengerDemandState,
   type PassengerDemandProjection,
 } from './passenger-demand.js';
-export * from './passenger-waiting-cohort.js';
+export {
+  passengerWaitingCohortIdSchema,
+  passengerWaitingCohortSchema,
+  passengerWaitingCohortKey,
+  passengerWaitingCohortMatchesItinerary,
+  passengerWaitingCohortSequence,
+  comparePassengerWaitingCohorts,
+  activatePassengerDirectItineraries,
+  type PassengerWaitingCohortId,
+  type PassengerWaitingCohort,
+  type PassengerItineraryActivationResult,
+} from './passenger-waiting-cohort.js';
 export * from './passenger-boarding.js';
 export * from './passenger-transit.js';
 export * from './passenger-emission-scheduler.js';

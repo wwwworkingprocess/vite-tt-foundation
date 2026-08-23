@@ -1,4 +1,7 @@
-import type { StopPlaceId } from '@torrevieja-tycoon/transport-domain';
+import type {
+  CityPopulationCellId,
+  StopPlaceId,
+} from '@torrevieja-tycoon/transport-domain';
 import {
   checkedAdd,
   checkedMultiply,
@@ -6,6 +9,7 @@ import {
 } from './authority-utils.js';
 import type {
   PassengerDemandPlanV1,
+  PassengerDemandPlanCell,
   PassengerDestinationCandidate,
 } from './passenger-demand.js';
 import {
@@ -27,6 +31,10 @@ export interface PassengerDemandRuntimeIndex {
     }>
   >;
   readonly cumulativeWeightEnds: readonly number[];
+  readonly planCellCount: number;
+  readonly findCell: (
+    cellId: CityPopulationCellId | string,
+  ) => Readonly<PassengerDemandPlanCell> | undefined;
 }
 
 const indexes = new WeakMap<
@@ -44,8 +52,10 @@ export const passengerDemandRuntimeIndex = (
   );
   let totalServedDestinationWeight = 0;
   const candidateIndexesByStopPlace = new Map<StopPlaceId, number[]>();
+  const cellsById = new Map<CityPopulationCellId, PassengerDemandPlanCell>();
   const cumulativeWeightEnds: number[] = [];
   const servedCandidates = plan.cells.flatMap((cell) => {
+    cellsById.set(cell.cellId, cell);
     if (cell.assignedStopPlaceId === null) return [];
     totalServedDestinationWeight = checkedAdd(
       totalServedDestinationWeight,
@@ -102,6 +112,9 @@ export const passengerDemandRuntimeIndex = (
     assignedWeightByStopPlace,
     exclusionByStopPlace,
     cumulativeWeightEnds,
+    planCellCount: plan.cells.length,
+    findCell: (cellId: CityPopulationCellId | string) =>
+      cellsById.get(cellId as CityPopulationCellId),
   });
   indexes.set(plan, created);
   return created;

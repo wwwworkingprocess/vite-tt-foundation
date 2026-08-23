@@ -233,7 +233,10 @@ describe('headless simulation runtime benchmark', () => {
           orderingFinalization: [5],
         },
         {
-          planPreparation: { demandPlanCells: 10 },
+          planPreparation: {
+            demandPlanCells: 10,
+            planPreparationCellEvaluations: 0,
+          },
           existingAuthorityPreparation: { inputWaitingCohorts: 3 },
           newAssignmentActivation: {
             destinationAssignedGroups: 2,
@@ -244,7 +247,14 @@ describe('headless simulation runtime benchmark', () => {
         10,
       ),
     ).toMatchObject({
-      planPreparation: { totalMs: 70, shareOfWaitingActivationTime: 70 },
+      planPreparation: {
+        totalMs: 70,
+        shareOfWaitingActivationTime: 70,
+        work: {
+          demandPlanCells: 10,
+          planPreparationCellEvaluations: 0,
+        },
+      },
       existingAuthorityPreparation: {
         totalMs: 20,
         shareOfWaitingActivationTime: 20,

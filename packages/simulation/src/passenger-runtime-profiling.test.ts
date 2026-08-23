@@ -19,6 +19,7 @@ describe('passenger runtime phase profiling', () => {
   it('observes finite ordered phases without changing authority or transitions', () => {
     const state = createTransportSimulationState(scenario(), 0, demandPlan());
     const observed: string[] = [];
+    const planPreparationWork: readonly (number | undefined)[][] = [];
     let phase: (typeof passengerRuntimePhases)[number] | undefined;
     const nextPhase = [undefined, 1, 2, 4, 3, 4] as const;
     const events: Parameters<typeof advanceTransportTicksInternal>[2] = [];
@@ -26,7 +27,7 @@ describe('passenger runtime phase profiling', () => {
       state,
       3,
       events,
-      (boundary) => {
+      (boundary, primaryWork, secondaryWork) => {
         const waitingChildren = [
           'waiting-plan-preparation',
           'waiting-existing-authority-preparation',
@@ -34,6 +35,8 @@ describe('passenger runtime phase profiling', () => {
           'waiting-ordering-finalization',
         ] as const;
         if (boundary >= 9) {
+          if (boundary === 9)
+            planPreparationWork.push([primaryWork, secondaryWork]);
           const prior = waitingChildren[boundary - 9];
           if (prior) observed.push(`finish:${prior}`);
           const next = waitingChildren[boundary - 8];
@@ -62,6 +65,11 @@ describe('passenger runtime phase profiling', () => {
       createTransportSimulationSnapshot(ordinary.state),
     );
     expect(events).toEqual(ordinary.passengerOriginStopArrivalEvents);
+    expect(planPreparationWork).toEqual([
+      [0, demandPlan().cells.length],
+      [0, demandPlan().cells.length],
+      [0, demandPlan().cells.length],
+    ]);
     expect(
       new Set(
         observed

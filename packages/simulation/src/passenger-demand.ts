@@ -18,6 +18,7 @@ import {
 } from './authority-utils.js';
 import {
   activatePassengerDirectItineraries,
+  activateTrustedPassengerDirectItineraries,
   passengerWaitingCohortMatchesItinerary,
   passengerWaitingCohortIdSchema,
   passengerWaitingCohortSchema,
@@ -1227,9 +1228,9 @@ const advancePassengerDemand = (
       destinationGroups.length,
       destinationAssigned - current.totalDestinationAssignedPassengerCount,
     );
-    const activation = activatePassengerDirectItineraries({
+    const activation = activateTrustedPassengerDirectItineraries({
       itineraryIndex,
-      demandPlan: parsedPlan,
+      demandRuntimeIndex: runtimeIndex,
       destinationAssignedGroups: destinationGroups,
       waitingCohorts: current.waitingCohorts,
       nextPassengerWaitingCohortSequence:

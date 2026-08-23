@@ -286,13 +286,20 @@ const createPhaseProfiler = (now) => {
         waitingActivationDurations[expected].push(
           time - waitingActivationChildStarted.time,
         );
-        if (boundary === 9)
+        if (boundary === 9) {
+          if (secondaryWork !== undefined) {
+            const prior = waitingActivationWork.planPreparation.demandPlanCells;
+            if (prior !== undefined && prior !== secondaryWork)
+              throw new Error('Passenger demand-plan size changed.');
+            waitingActivationWork.planPreparation.demandPlanCells =
+              secondaryWork;
+          }
           addWork(
             waitingActivationWork.planPreparation,
-            'demandPlanCells',
+            'planPreparationCellEvaluations',
             primaryWork,
           );
-        else if (boundary === 10)
+        } else if (boundary === 10)
           addWork(
             waitingActivationWork.existingAuthorityPreparation,
             'inputWaitingCohorts',
@@ -605,7 +612,9 @@ export async function runSimulationRuntimeBenchmark(
           profiler.waitingActivationWork[name],
         ))
           waitingActivationWork[name][workName] =
-            (waitingActivationWork[name][workName] ?? 0) + count;
+            workName === 'demandPlanCells'
+              ? Math.max(waitingActivationWork[name][workName] ?? 0, count)
+              : (waitingActivationWork[name][workName] ?? 0) + count;
       }
     timings.push({
       elapsedMilliseconds,

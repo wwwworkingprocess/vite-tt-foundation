@@ -214,6 +214,16 @@ snapshots, hashing, and representation. Automatic window selection remains a lat
 performance task; later passenger-runtime optimization must be driven by the
 post-window benchmark rather than folded into this milestone.
 
+The first evidence-driven post-window optimization is complete. The strict
+public waiting-activation boundary remains unchanged, while trusted simulation
+advancement reuses a closure-hidden demand-cell lookup owned by the existing
+WeakMap-cached `PassengerDemandRuntimeIndex`. This moves one O(plan cells)
+lookup construction to canonical-plan first use and removes repeated plan
+parsing and transient full-cell maps from steady-state ticks. The derived index
+is rebuilt after restore and is absent from Snapshot V9 and Save V7. Profiling
+remains available to identify the next measured cost; no cohort-validation,
+sorting, freezing, or assignment optimization is included.
+
 ## Later transport growth
 
 Deferred work includes:

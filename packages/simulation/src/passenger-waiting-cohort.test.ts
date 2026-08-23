@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import { parsePassengerDemandPlan } from './passenger-demand.js';
+import { passengerDemandRuntimeIndex } from './passenger-demand-runtime.js';
 import {
   buildPassengerDirectItineraryPlan,
   createPassengerDirectItineraryRuntimeIndex,
 } from './passenger-direct-itinerary.js';
 import {
   activatePassengerDirectItineraries,
+  activateTrustedPassengerDirectItineraries,
   comparePassengerWaitingCohorts,
 } from './passenger-waiting-cohort.js';
 
@@ -146,6 +148,91 @@ const itineraryIndex = createPassengerDirectItineraryRuntimeIndex({
 });
 
 describe('directional passenger waiting cohorts', () => {
+  it('keeps strict public and trusted canonical activation exactly equivalent', () => {
+    const cases = [
+      [],
+      [
+        {
+          passengerJourneyGroupId: 'passenger-journey-group-1',
+          originStopPlaceId: 'A',
+          destinationCellId: 'r0c1',
+          destinationStopPlaceId: 'B',
+          count: 3,
+          firstAssignedTick: 4,
+          lastAssignedTick: 4,
+        },
+        {
+          passengerJourneyGroupId: 'passenger-journey-group-2',
+          originStopPlaceId: 'A',
+          destinationCellId: 'r0c2',
+          destinationStopPlaceId: 'C',
+          count: 2,
+          firstAssignedTick: 4,
+          lastAssignedTick: 4,
+        },
+      ],
+    ] as const;
+    for (const destinationAssignedGroups of cases) {
+      const common = {
+        itineraryIndex,
+        destinationAssignedGroups,
+        waitingCohorts: [],
+        nextPassengerWaitingCohortSequence: 1,
+        directItineraryUnavailablePassengerCount: 0,
+        activationTick: 4,
+      } as const;
+      expect(
+        activateTrustedPassengerDirectItineraries({
+          ...common,
+          demandRuntimeIndex: passengerDemandRuntimeIndex(demandPlan),
+        }),
+      ).toEqual(activatePassengerDirectItineraries({ ...common, demandPlan }));
+    }
+
+    const initial = activatePassengerDirectItineraries({
+      itineraryIndex,
+      demandPlan,
+      destinationAssignedGroups: cases[1],
+      waitingCohorts: [],
+      nextPassengerWaitingCohortSequence: 1,
+      directItineraryUnavailablePassengerCount: 0,
+      activationTick: 4,
+    });
+    for (const nonMergeableWaitingCohortIds of [
+      undefined,
+      new Set([initial.waitingCohorts[0]!.passengerWaitingCohortId]),
+    ]) {
+      const common = {
+        itineraryIndex,
+        destinationAssignedGroups: [
+          {
+            passengerJourneyGroupId: 'passenger-journey-group-3',
+            originStopPlaceId: 'A',
+            destinationCellId: 'r0c1',
+            destinationStopPlaceId: 'B',
+            count: 5,
+            firstAssignedTick: 7,
+            lastAssignedTick: 7,
+          },
+        ],
+        waitingCohorts: initial.waitingCohorts,
+        nextPassengerWaitingCohortSequence:
+          initial.nextPassengerWaitingCohortSequence,
+        directItineraryUnavailablePassengerCount:
+          initial.directItineraryUnavailablePassengerCount,
+        activationTick: 7,
+        ...(nonMergeableWaitingCohortIds
+          ? { nonMergeableWaitingCohortIds }
+          : {}),
+      } as const;
+      expect(
+        activateTrustedPassengerDirectItineraries({
+          ...common,
+          demandRuntimeIndex: passengerDemandRuntimeIndex(demandPlan),
+        }),
+      ).toEqual(activatePassengerDirectItineraries({ ...common, demandPlan }));
+    }
+  });
   it('activates direct assignments, merges stable cohorts, and counts unavailable journeys', () => {
     const first = activatePassengerDirectItineraries({
       itineraryIndex,

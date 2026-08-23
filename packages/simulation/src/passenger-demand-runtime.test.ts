@@ -75,6 +75,9 @@ describe('internal passenger-demand runtime', () => {
     expect(simulationPackage).not.toHaveProperty(
       'advanceTrustedPassengerDemandToTick',
     );
+    expect(simulationPackage).not.toHaveProperty(
+      'activateTrustedPassengerDirectItineraries',
+    );
   });
   it.each([0, 1, 8, 9, 10, 37])(
     'matches the public allocator for %i passengers',
@@ -114,7 +117,17 @@ describe('internal passenger-demand runtime', () => {
   );
 
   it('retains only linear shared cell and StopPlace index records', () => {
-    const index = passengerDemandRuntimeIndex(plan());
+    const value = plan();
+    const index = passengerDemandRuntimeIndex(value);
+    expect(passengerDemandRuntimeIndex(value)).toBe(index);
+    expect(index.planCellCount).toBe(5);
+    expect(index.findCell('r0c0')).toBe(value.cells[0]);
+    expect(index.findCell('r0c2')).toBe(value.cells[2]);
+    expect(index.findCell('r1c1')).toBe(value.cells[4]);
+    expect(index.findCell('r9c9')).toBeUndefined();
+    expect(Object.isFrozen(index.findCell('r0c0'))).toBe(true);
+    expect(Object.isFrozen(index)).toBe(true);
+    expect(index).not.toHaveProperty('cellsById');
     expect(index.servedCandidates).toHaveLength(4);
     expect(index.assignedWeightByStopPlace.size).toBe(3);
     const exclusionRecords = [...index.exclusionByStopPlace.values()].reduce(
@@ -128,12 +141,14 @@ describe('internal passenger-demand runtime', () => {
       exclusionRecords,
       assignedStops: index.assignedWeightByStopPlace.size,
       exclusionStops: index.exclusionByStopPlace.size,
+      cellLookupEntries: index.planCellCount,
     }).toEqual({
       candidates: 4,
       cumulativeEnds: 4,
       exclusionRecords: 8,
       assignedStops: 3,
       exclusionStops: 3,
+      cellLookupEntries: 5,
     });
   });
 
@@ -147,6 +162,8 @@ describe('internal passenger-demand runtime', () => {
           assignedWeightByStopPlace: new Map(),
           exclusionByStopPlace: new Map(),
           cumulativeWeightEnds: [],
+          planCellCount: 0,
+          findCell: () => undefined,
         },
         'a',
         0,
@@ -192,6 +209,9 @@ describe('internal passenger-demand runtime', () => {
     expect(index.assignedWeightByStopPlace.size).toBe(stopCount);
     expect(index.exclusionByStopPlace.size).toBe(stopCount);
     expect(index.servedCandidates).toHaveLength(cellCount);
+    expect(index.planCellCount).toBe(cellCount);
+    expect(index.findCell('r0c0')).toBe(large.cells[0]);
+    expect(index.findCell('r19c29')).toBe(large.cells[cellCount - 1]);
   });
 
   it('uses the compact global index when the origin has no excluded cells', () => {

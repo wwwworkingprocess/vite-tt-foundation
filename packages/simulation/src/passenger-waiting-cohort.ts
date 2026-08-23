@@ -15,6 +15,10 @@ import {
   type DestinationAssignedPassengerGroup,
   type PassengerDemandPlanV1,
 } from './passenger-demand.js';
+import {
+  passengerDemandRuntimeIndex,
+  type PassengerDemandRuntimeIndex,
+} from './passenger-demand-runtime.js';
 import { parseSimulationTick, type SimulationTick } from './time.js';
 import type { PassengerRuntimePhaseObserver } from './passenger-runtime-profiling.js';
 import {
@@ -146,9 +150,8 @@ export interface PassengerItineraryActivationResult {
   readonly totalWaitingForVehiclePassengerCount: number;
 }
 
-export function activatePassengerDirectItineraries(input: {
+interface PassengerItineraryActivationInput {
   readonly itineraryIndex: PassengerDirectItineraryRuntimeIndex;
-  readonly demandPlan: PassengerDemandPlanV1;
   readonly destinationAssignedGroups: readonly Readonly<DestinationAssignedPassengerGroup>[];
   readonly waitingCohorts: readonly Readonly<PassengerWaitingCohort>[];
   readonly nextPassengerWaitingCohortSequence: number;
@@ -156,8 +159,25 @@ export function activatePassengerDirectItineraries(input: {
   readonly activationTick: number;
   readonly nonMergeableWaitingCohortIds?: ReadonlySet<PassengerWaitingCohortId>;
   readonly observer?: PassengerRuntimePhaseObserver;
-}): Readonly<PassengerItineraryActivationResult> {
+}
+
+export function activatePassengerDirectItineraries(
+  input: PassengerItineraryActivationInput & {
+    readonly demandPlan: PassengerDemandPlanV1;
+  },
+): Readonly<PassengerItineraryActivationResult> {
   const demandPlan = parsePassengerDemandPlan(input.demandPlan);
+  return activateTrustedPassengerDirectItineraries({
+    ...input,
+    demandRuntimeIndex: passengerDemandRuntimeIndex(demandPlan),
+  });
+}
+
+export function activateTrustedPassengerDirectItineraries(
+  input: PassengerItineraryActivationInput & {
+    readonly demandRuntimeIndex: PassengerDemandRuntimeIndex;
+  },
+): Readonly<PassengerItineraryActivationResult> {
   const activationTick = parseSimulationTick(input.activationTick);
   if (
     !Number.isSafeInteger(input.nextPassengerWaitingCohortSequence) ||
@@ -166,10 +186,7 @@ export function activatePassengerDirectItineraries(input: {
     input.directItineraryUnavailablePassengerCount < 0
   )
     throw new Error('Invalid waiting-cohort authority.');
-  const cells = new Map(
-    demandPlan.cells.map((cell) => [cell.cellId, cell] as const),
-  );
-  input.observer?.(9, demandPlan.cells.length);
+  input.observer?.(9, 0, input.demandRuntimeIndex.planCellCount);
   const cohorts = input.waitingCohorts.map((cohort) => ({ ...cohort }));
   const keys = new Map<string, number>();
   const generations = new Map<
@@ -180,7 +197,9 @@ export function activatePassengerDirectItineraries(input: {
   let waitingTotal = 0;
   for (let index = 0; index < cohorts.length; index += 1) {
     const cohort = cohorts[index]!;
-    const destinationCell = cells.get(cohort.destinationCellId);
+    const destinationCell = input.demandRuntimeIndex.findCell(
+      cohort.destinationCellId,
+    );
     const itinerary = input.itineraryIndex.find(
       cohort.originStopPlaceId,
       cohort.destinationStopPlaceId,
@@ -239,7 +258,9 @@ export function activatePassengerDirectItineraries(input: {
       assignment.lastAssignedTick !== activationTick
     )
       throw new Error('Invalid destination assignment activation.');
-    const destinationCell = cells.get(assignment.destinationCellId);
+    const destinationCell = input.demandRuntimeIndex.findCell(
+      assignment.destinationCellId,
+    );
     if (
       destinationCell?.assignedStopPlaceId !== assignment.destinationStopPlaceId
     )

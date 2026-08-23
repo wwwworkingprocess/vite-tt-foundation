@@ -167,6 +167,14 @@ Simulation create/restore parses Passenger Demand Plan authority once at its
 public boundary, then reuses that canonical value through trusted itinerary and
 passenger-state composition. Public helpers and both Worker wire boundaries
 remain strict.
+Trusted passenger advancement also reuses one WeakMap-cached
+`PassengerDemandRuntimeIndex` per canonical plan identity. The index now owns a
+closure-hidden demand-cell lookup used by waiting activation, so steady-state
+ticks neither reparse the canonical plan nor rebuild a full cell `Map`. The
+strict public waiting-activation helper still performs complete plan parsing
+before delegating to the same activation core. This derived O(plan cells)
+lookup is runtime-only and is reconstructed from canonical plan authority after
+restore; Snapshot V9 and Save V7 remain unchanged.
 
 `yarn benchmark:simulation-runtime` measures deterministic headless repeated
 single-tick advancement after an explicit untimed warmup. It is the simulation
@@ -201,6 +209,15 @@ passenger runtime phase observer. The Node runtime benchmark enables it with
 destination/waiting, vehicle transit, and destination-access/completion work.
 No timing enters simulation authority, Snapshot V9, Save V7, client V4, or
 Worker V4.
+The waiting-activation detail remains available after optimization. Its plan
+size and per-tick cell-evaluation counters are distinct: a trusted steady-state
+activation reports zero plan-preparation cell evaluations even though the
+canonical plan still contains all demand cells.
+The accepted post-change W1/W12 profiles reduce trusted plan preparation to
+approximately 0.007–0.018 ms/tick across Torrevieja, Cartagena, and Málaga.
+Ordering/finalization is now the largest waiting-activation child, while the
+broader destination/waiting residual is the largest enclosing cost. Those
+coordinates remain diagnostic evidence, not additional optimization scope.
 
 Browser-created demo vehicles currently assign a named uniform default of 120
 authoritative ticks per edge. The movement model already accepts non-uniform

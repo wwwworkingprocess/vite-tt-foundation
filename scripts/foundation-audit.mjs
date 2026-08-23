@@ -630,6 +630,9 @@ for (const file of [
     (path) =>
       !path
         .replaceAll('\\', '/')
+        .endsWith('packages/simulation/src/index.ts') &&
+      !path
+        .replaceAll('\\', '/')
         .endsWith('packages/simulation/src/passenger-demand.ts') &&
       !path
         .replaceAll('\\', '/')

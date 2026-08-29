@@ -40,10 +40,11 @@ Destination assignment uses an origin-keyed deterministic affine permutation
 of eligible population-weight units. It preserves exact full-cycle weights and
 network-independent spatial intent while avoiding the former shared-phase,
 contiguous row-major startup bias.
-The next planned product layer is Phase 4F economics and objectives. Transfers,
-multi-pattern passenger routing, advanced services, traffic, schedules, and
-richer operational realism remain later work unless an active task explicitly
-changes the sequence.
+The urgent performance-optimization epic is complete. The next product epic is
+the Selected StopPlace Details capability / information view. Phase 4F
+economics, transfers, multi-pattern passenger routing, advanced services,
+traffic, schedules, and richer operational realism remain later work unless an
+active task explicitly changes the sequence.
 
 ## Workspace and dependency graph
 
@@ -197,9 +198,12 @@ Save V7, so restore may select a different value. Use
 equality, and `benchmark:simulation-runtime --passenger-work-window N` for
 diagnostic timing and structural work counts. The frozen scheduler structurally
 shares untouched future buckets; `yarn benchmark:passenger-emission` compares
-the scheduled reducer with the same-process legacy full-cell reference. Device
-auto-calibration remains deferred and may later select any supported integer
-from 1 through 12.
+the scheduled reducer with the same-process legacy full-cell reference. Apps/web
+now performs bounded scheduler-only calibration inside the production Worker
+using the active scenario plan and current credits. A challenger must materially
+beat W12; near ties or measurement failure retain W12. Selection is local
+runtime tuning, is not persisted, and restore recalibrates without changing
+Snapshot V9, Save V7, client V4, or Worker V4.
 
 Snapshot V9 regression ownership is decomposed into focused core, passenger
 restore, transition, journey, and work-window suites with one small shared

@@ -4,6 +4,7 @@ import {
   applyTransportVehicleCommand,
   createFoundationSimulationSnapshot,
   createFoundationState,
+  createInitialPassengerDemandState,
   createScenarioCoordinate,
   createTransportSimulationSnapshot,
   createTransportSimulationState,
@@ -12,6 +13,8 @@ import {
   projectVehiclePassengerLoads,
   parseTransportVehicleCommand,
   restoreTransportSimulationState,
+  scenarioCoordinatesEqual,
+  DEFAULT_PASSENGER_EMISSION_WORK_WINDOW_TICKS,
   type ScenarioCoordinate,
   type PassengerDemandPlanV1,
   type PassengerDemandProjection,
@@ -45,6 +48,10 @@ import {
   parseFoundationProtocolError,
 } from '@torrevieja-tycoon/protocol';
 import { createDirectFoundationClient } from '../simulation-host/direct-client.js';
+import {
+  calibratePassengerEmissionWorkWindow,
+  type PassengerWorkWindowCalibrationResult,
+} from './passenger-work-window-calibration.js';
 
 export const transportClientContractVersion = 4 as const;
 
@@ -181,7 +188,19 @@ function assertConnectShape(request: TransportClientConnectRequest): void {
     throw new Error('Unsupported transport client connect request.');
 }
 
-export function createDirectTransportSimulationClient(): TransportSimulationClient {
+export interface DirectTransportSimulationClientOptions {
+  readonly calibratePassengerWorkWindow?: (
+    demandPlan: PassengerDemandPlanV1,
+    passengerDemandState: Extract<
+      TransportSimulationState['passengerDemand'],
+      { readonly status: 'active' }
+    >,
+  ) => PassengerWorkWindowCalibrationResult;
+}
+
+export function createDirectTransportSimulationClient(
+  options: DirectTransportSimulationClientOptions = {},
+): TransportSimulationClient {
   const foundation = createDirectFoundationClient();
   let authority: TransportSimulationState | undefined;
   let lifecycle: TransportClientLifecycle = freeze({ state: 'idle' });
@@ -333,17 +352,55 @@ export function createDirectTransportSimulationClient(): TransportSimulationClie
       if (lifecycle.state !== 'idle')
         throw new Error('Transport client can connect only from idle.');
       assertConnectShape(request);
+      const passengerDemandState =
+        request.passengerDemandPlan === undefined
+          ? undefined
+          : request.mode === 'new'
+            ? createInitialPassengerDemandState(
+                request.passengerDemandPlan,
+                request.initialSimulationTick,
+              )
+            : request.snapshot.state.passengerDemand;
+      if (
+        request.passengerDemandPlan !== undefined &&
+        !scenarioCoordinatesEqual(
+          request.passengerDemandPlan.scenario,
+          createScenarioCoordinate(request.scenario),
+        )
+      )
+        throw new Error('Passenger demand plan scenario is incompatible.');
+      let passengerEmissionWorkWindowTicks =
+        DEFAULT_PASSENGER_EMISSION_WORK_WINDOW_TICKS;
+      if (passengerDemandState?.status === 'active')
+        try {
+          passengerEmissionWorkWindowTicks = (
+            options.calibratePassengerWorkWindow ??
+            ((demandPlan, state) =>
+              calibratePassengerEmissionWorkWindow({
+                demandPlan,
+                passengerDemandState: state,
+              }))
+          )(
+            request.passengerDemandPlan!,
+            passengerDemandState,
+          ).selectedWorkWindowTicks;
+        } catch {
+          passengerEmissionWorkWindowTicks =
+            DEFAULT_PASSENGER_EMISSION_WORK_WINDOW_TICKS;
+        }
       const nextAuthority =
         request.mode === 'new'
           ? createTransportSimulationState(
               request.scenario,
               request.initialSimulationTick,
               request.passengerDemandPlan,
+              { passengerEmissionWorkWindowTicks },
             )
           : restoreTransportSimulationState(
               request.snapshot,
               request.scenario,
               request.passengerDemandPlan,
+              { passengerEmissionWorkWindowTicks },
             );
       publishLifecycle({ state: 'connecting' });
       try {

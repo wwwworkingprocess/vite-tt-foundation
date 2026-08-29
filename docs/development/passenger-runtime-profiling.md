@@ -65,11 +65,14 @@ tick time outside those phase boundaries.
 
 Reference comparisons use `torrevieja-legacy-abc-v1`,
 `cartagena-radial-legacy-all-v1`, and `malaga-day-legacy-all-v1` at W1 and W12.
-W12 is the current maximum-amortization fallback; it is not assumed universally
-fastest. A future device/city calibrator may select any supported integer from
-1 through 12. Post-change profiling selects any later optimization target.
+W12 remains the maximum-amortization fallback; it is not assumed universally
+fastest. Apps/web now runs bounded scheduler-only device/scenario calibration
+and may select any supported integer from 1 through 12 when the measured win is
+material. Calibration is non-authoritative and unpersisted. The urgent passenger
+performance epic is concluded; retained profiling is a regression and future
+diagnostic tool rather than an instruction to continue algorithm optimization.
 Existing-cohort validation, assignment activation, sorting, freezing, and other
-passenger phases remain deliberately unchanged in this milestone.
+passenger phases remain deliberately unchanged.
 
 The reviewed mandatory Worker functionality measured 192,991 bytes against the
 former 193,000-byte coordinate. The architect-authorized 200,000-byte Worker

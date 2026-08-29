@@ -25,10 +25,21 @@ escapes into simulation state. Advancement structurally shares untouched frozen
 buckets, while boundedness high-water diagnostics are derived by the audit and
 do not impose a production record scan.
 
-The provisional production fallback is W12, the maximum-amortization fallback.
-It is not universally fastest: different workloads may spend most of their
-time outside emission evaluation. Future device/city calibration may choose
-any integer from 1 through 12 without changing persistence.
+The simulation default and production fallback remain W12, the
+maximum-amortization fallback. It is not universally fastest. Apps/web runtime
+composition now performs bounded scheduler-only calibration using the active
+scenario demand plan and initial or restored passenger credits. It may choose
+any integer from 1 through 12 when a challenger is materially faster; near ties,
+unavailable timing, incomplete evidence, and measurement failures retain W12.
+The timing and selected window are device-, scenario-, and session-local,
+non-authoritative, and unpersisted. Restore recalibrates for its current runtime.
+Production calibration executes inside the simulation Worker through direct
+client composition without changing the V4 client or Worker wire contracts.
+One untimed warmup precedes 48-scheduler-tick candidate batches. W12 receives
+two timed reference probes to reduce cold-start noise. A 250 ms between-batch
+ceiling bounds additional work; a single in-flight batch may finish beyond it.
+Challengers must beat the better W12 reference by at least 5%, and candidates
+within 5% of the fastest challenger prefer the larger work window.
 
 ## Rejected alternative
 

@@ -3,8 +3,11 @@ import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
+  advanceTransportTicks,
+  createScenarioCoordinate,
   createTransportSimulationSnapshot,
   createTransportSimulationState,
+  parsePassengerDemandPlan,
 } from '@torrevieja-tycoon/simulation';
 import {
   parseClientId,
@@ -47,6 +50,71 @@ const scenario = () =>
     presentation: json('presentation.json'),
     provenance: json('provenance.json'),
   });
+const publicRoot = join(
+  import.meta.dirname,
+  '..',
+  '..',
+  'public',
+  'scenarios',
+  'torrevieja-v1',
+  'torrevieja-mini-v1',
+);
+const activeScenario = () =>
+  parseScenarioPackage({
+    manifest: JSON.parse(
+      readFileSync(join(publicRoot, 'scenario.json'), 'utf8'),
+    ) as unknown,
+    settlements: JSON.parse(
+      readFileSync(join(publicRoot, 'settlements.json'), 'utf8'),
+    ) as unknown,
+    stops: JSON.parse(
+      readFileSync(join(publicRoot, 'stops.json'), 'utf8'),
+    ) as unknown,
+    routes: JSON.parse(
+      readFileSync(join(publicRoot, 'routes.json'), 'utf8'),
+    ) as unknown,
+    presentation: JSON.parse(
+      readFileSync(join(publicRoot, 'presentation.json'), 'utf8'),
+    ) as unknown,
+    provenance: JSON.parse(
+      readFileSync(join(publicRoot, 'provenance.json'), 'utf8'),
+    ) as unknown,
+  });
+const demandPlan = () => {
+  const canonical = activeScenario();
+  return parsePassengerDemandPlan({
+    schemaVersion: '1.0.0',
+    demandModelContentHash: 'c'.repeat(64),
+    scenario: createScenarioCoordinate(canonical),
+    grid: {
+      cityId: 'Q36730',
+      populationGridSchemaVersion: '1.0.0',
+      gridVersion: '1.0.0',
+      rows: 1,
+      columns: 1,
+      resolutionDegrees: 0.001,
+      totalActiveCellCount: 1,
+      totalPopulationWeight: 1,
+    },
+    catchmentPolicy: { maxAccessDistanceCells: 5 },
+    emissionPolicy: {
+      emissionCreditsPerWeightPerTick: 1,
+      creditsPerPassenger: 50_000,
+    },
+    accessPolicy: { accessTicksPerCell: 1 },
+    cells: [
+      {
+        cellId: 'r0c0',
+        row: 0,
+        column: 0,
+        populationWeight: 1,
+        assignedStopPlaceId: 'tv-place-0053',
+        distanceSquaredCells: 0,
+      },
+    ],
+    stops: [{ stopPlaceId: 'tv-place-0053' }],
+  });
+};
 const createLoopbackWorker = (): TransportWorkerLike => {
   const workerListeners = new Set<(event: { data: unknown }) => void>();
   const workerErrorListeners = new Set<(event: { data: unknown }) => void>();
@@ -368,6 +436,136 @@ describe('direct transport startup failure', () => {
     ).rejects.toThrow();
     expect(client.getAuthoritativeState().tick).toBe(0);
 
+    await client.close();
+  });
+});
+
+describe('direct transport passenger work-window calibration', () => {
+  const calibrated = (selectedWorkWindowTicks: number) =>
+    Object.freeze({
+      selectedWorkWindowTicks,
+      measuredCandidateCount: 12,
+      elapsedMilliseconds: 1,
+      fallbackUsed: selectedWorkWindowTicks === 12,
+    });
+
+  it('applies selected tuning to new games and skips disabled passenger authority', async () => {
+    const calibrate = vi.fn(() => calibrated(4));
+    const active = createDirectTransportSimulationClient({
+      calibratePassengerWorkWindow: calibrate,
+    });
+    await active.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 4,
+      mode: 'new',
+      gameId: parseGameId('calibrated-new'),
+      timelineId: parseTimelineId('calibrated-new'),
+      initialSimulationTick: 0,
+      scenario: activeScenario(),
+      passengerDemandPlan: demandPlan(),
+    });
+    expect(
+      active.getAuthoritativeState().passengerEmissionScheduler
+        ?.workWindowTicks,
+    ).toBe(4);
+    expect(calibrate).toHaveBeenCalledOnce();
+    await active.close();
+
+    const disabled = createDirectTransportSimulationClient({
+      calibratePassengerWorkWindow: calibrate,
+    });
+    await disabled.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 4,
+      mode: 'new',
+      gameId: parseGameId('calibrated-disabled'),
+      timelineId: parseTimelineId('calibrated-disabled'),
+      initialSimulationTick: 0,
+      scenario: scenario(),
+    });
+    expect(
+      disabled.getAuthoritativeState().passengerEmissionScheduler,
+    ).toBeNull();
+    expect(calibrate).toHaveBeenCalledOnce();
+    await disabled.close();
+  });
+
+  it('recalibrates restore from snapshot credits and preserves Snapshot V9 authority', async () => {
+    const canonical = activeScenario();
+    const plan = demandPlan();
+    const snapshot = createTransportSimulationSnapshot(
+      advanceTransportTicks(
+        createTransportSimulationState(canonical, 0, plan),
+        3,
+      ),
+    );
+    const calibrate = vi.fn(() => calibrated(7));
+    const client = createDirectTransportSimulationClient({
+      calibratePassengerWorkWindow: calibrate,
+    });
+    await client.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 4,
+      mode: 'restore',
+      gameId: parseGameId('calibrated-restore'),
+      timelineId: parseTimelineId('calibrated-restore'),
+      scenario: canonical,
+      snapshot,
+      passengerDemandPlan: plan,
+    });
+    expect(
+      client.getAuthoritativeState().passengerEmissionScheduler
+        ?.workWindowTicks,
+    ).toBe(7);
+    expect(calibrate).toHaveBeenCalledWith(
+      plan,
+      snapshot.state.passengerDemand,
+    );
+    expect((await client.exportSnapshot()).snapshot).toEqual(snapshot);
+    await client.close();
+  });
+
+  it('falls back to W12 when calibration fails', async () => {
+    const client = createDirectTransportSimulationClient({
+      calibratePassengerWorkWindow: () => {
+        throw new Error('measurement failed');
+      },
+    });
+    await client.connect({
+      kind: 'transport-client-connect',
+      contractVersion: 4,
+      mode: 'new',
+      gameId: parseGameId('calibration-fallback'),
+      timelineId: parseTimelineId('calibration-fallback'),
+      initialSimulationTick: 0,
+      scenario: activeScenario(),
+      passengerDemandPlan: demandPlan(),
+    });
+    expect(
+      client.getAuthoritativeState().passengerEmissionScheduler
+        ?.workWindowTicks,
+    ).toBe(12);
+    await client.close();
+  });
+
+  it('rejects incompatible demand authority before calibration', async () => {
+    const calibrate = vi.fn(() => calibrated(4));
+    const client = createDirectTransportSimulationClient({
+      calibratePassengerWorkWindow: calibrate,
+    });
+    await expect(
+      client.connect({
+        kind: 'transport-client-connect',
+        contractVersion: 4,
+        mode: 'new',
+        gameId: parseGameId('calibration-invalid'),
+        timelineId: parseTimelineId('calibration-invalid'),
+        initialSimulationTick: 0,
+        scenario: scenario(),
+        passengerDemandPlan: demandPlan(),
+      }),
+    ).rejects.toThrow('incompatible');
+    expect(calibrate).not.toHaveBeenCalled();
     await client.close();
   });
 });

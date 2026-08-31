@@ -24,7 +24,7 @@ population field
 
 The browser now provides an explicit Open Screen lifecycle, city/scenario new-game
 entry, resumable-session discovery, renderer-independent Route/StopPlace/Vehicle
-selection, and exact authority inspectors including live passenger diagnostics.
+selection, and exact authority diagnostics including live passenger projections.
 Session composition resolves the active settlement's checksum-pinned canonical
 population grid, exact operational crop, StopPlace catchments, and deterministic
 development-seed Production Passenger Demand Policy V1 for both new games and
@@ -40,8 +40,16 @@ Destination assignment uses an origin-keyed deterministic affine permutation
 of eligible population-weight units. It preserves exact full-cycle weights and
 network-independent spatial intent while avoiding the former shared-phase,
 contiguous row-major startup bias.
-The urgent performance-optimization epic is complete. The next product epic is
-the Selected StopPlace Details capability / information view. Phase 4F
+The urgent performance-optimization epic is complete. Selected StopPlace
+Details V1 now reconstructs serving routes, every serving pattern, exact ordered
+calls, selected occurrences, loops, and interchange badges from canonical
+scenario topology while retaining separate live passenger diagnostics. Rich
+StopPlace details are presented in the primary representation slot's scoped
+modal, and selected Vehicle details use the same renderer-independent modal
+lifecycle for movement, operation, capacity, onboard, and current-tick transit
+authority. The bottom GameInspector dock retains the global five-metric summary,
+compact selected StopPlace/Vehicle context, and Open details actions. Current
+scenario authority contains no timetable or service-calendar data. Phase 4F
 economics, transfers, multi-pattern passenger routing, advanced services,
 traffic, schedules, and richer operational realism remain later work unless an
 active task explicitly changes the sequence.
@@ -139,9 +147,18 @@ is presentation-only and never advances simulation ticks.
 
 The browser has a stable authority/representation boundary, a selectable
 full-workspace SVG diagnostic, an R3F representation boundary, swappable
-primary/minimap shell roles, and an authority-derived inspector. Route, physical
+primary/minimap shell roles, an authority-derived compact inspector dock, and
+renderer-independent primary-slot detail modals. Route, physical
 StopPlace, and Vehicle selections are browser-owned canonical identities; the SVG
 is only one input adapter and never owns selection or simulation authority.
+
+The workspace distinguishes primary/secondary slots, 2D/3D representation
+families, and family-owned active views. The 2D family currently exposes one
+visible `Map` tab backed by the unchanged SVG; 3D exposes only its existing
+`Main` scene. Canvas2D and additional D3D views are not implemented. The mini
+slot uses a renderer-independent accessible overlay and an explicit arm/confirm
+swap interaction. Its renderer and temporary swap affordance remain above the
+primary-slot modal.
 
 Both renderers consume one `RepresentationMode`: `mini` targets 5 fps and
 `normal` targets 60 fps. Replaceable render projection is sampled with
@@ -228,10 +245,12 @@ authoritative ticks per edge. The movement model already accepts non-uniform
 per-edge durations. Geographic edge length and authoritative travel duration are
 distinct; no metres, speeds, traffic, or distance-derived timing model exists.
 
-A production passenger-aware visualization is not complete. The inspector exposes
-exact waiting, onboard, capacity, alighting, destination-access, completion, and
-bounded current-tick events, while smooth vehicle interpolation, final visual
-design, and performance acceptance remain product work.
+A production passenger-aware visualization is not complete. The dock exposes
+the exact global five-metric summary and compact selected-object context; rich
+StopPlace and Vehicle modal projections expose exact waiting, onboard, capacity,
+alighting, destination-access, completion, and bounded current-tick authority as
+applicable. Smooth vehicle interpolation, final visual design, and performance
+acceptance remain product work.
 
 ## Validation command tiers
 

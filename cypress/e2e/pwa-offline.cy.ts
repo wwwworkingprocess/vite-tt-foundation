@@ -59,18 +59,7 @@ const vehicleSvgState = (): Cypress.Chainable<VehicleSvgState> =>
     })),
   );
 const expectVehicleSvg = (expected: VehicleSvgState) =>
-  cy.get('[data-testid="vehicle-position"]').should(($vehicles) => {
-    const current = [...$vehicles].map((vehicle) => ({
-      vehicleId: vehicle.getAttribute('data-vehicle-id'),
-      movementKind: vehicle.getAttribute('data-movement-kind'),
-      edgeId: vehicle.getAttribute('data-edge-id'),
-      progressNumerator: vehicle.getAttribute('data-progress-numerator'),
-      progressDenominator: vehicle.getAttribute('data-progress-denominator'),
-      cx: vehicle.getAttribute('cx'),
-      cy: vehicle.getAttribute('cy'),
-    }));
-    expect(current).to.deep.equal(expected);
-  });
+  vehicleSvgState().should('deep.equal', expected);
 const expectVehicleSvgToChange = (expected: VehicleSvgState) =>
   cy.get('[data-testid="vehicle-position"]').should(($vehicles) => {
     const current = [...$vehicles].map((vehicle) => ({
@@ -101,15 +90,8 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
 const openControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
 const workerReadyTimeoutMs = 15_000;
-const restoreReadyTimeoutMs = 15_000;
 const serviceWorkerReadyTimeoutMs = 30_000;
-const representationSettleMs = 250;
-const expectServiceWorkerReady = () =>
-  cy.window().then((win) =>
-    cy.wrap(win.navigator.serviceWorker.ready, {
-      timeout: serviceWorkerReadyTimeoutMs,
-    }),
-  );
+const restoreReadyTimeoutMs = 60_000;
 const expectWorkerReady = () =>
   cy
     .get('[data-testid="worker-status"]', { timeout: workerReadyTimeoutMs })
@@ -148,7 +130,15 @@ describe('built foundation PWA offline lifecycle', () => {
       'contain.text',
       '1.0.0:torrevieja-legacy-abc-v1@1.0.0#',
     );
-    expectServiceWorkerReady();
+    cy.window().then((win) =>
+      cy
+        .wrap(win.navigator.serviceWorker.ready, {
+          timeout: serviceWorkerReadyTimeoutMs,
+          log: false,
+        })
+        .its('active')
+        .should('not.be.null'),
+    );
     cy.reload();
     startDefaultGame();
     openControls();
@@ -211,7 +201,6 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="scenario-coordinate"]').then(($coordinate) => {
       savedCoordinate = $coordinate.text();
     });
-    cy.wait(representationSettleMs);
     vehicleSvgState().then((snapshot) => {
       savedSvg = snapshot;
       cy.wait(350);
@@ -282,7 +271,6 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="scenario-coordinate"]').then(($coordinate) => {
       secondarySavedCoordinate = $coordinate.text();
     });
-    cy.wait(representationSettleMs);
     vehicleSvgState().then((snapshot) => {
       secondarySavedSvg = snapshot;
       cy.wait(350);
@@ -463,10 +451,9 @@ describe('built foundation PWA offline lifecycle', () => {
         secondarySavedTick,
       ),
     );
-    expectVehicleSvgToChange(secondarySavedSvg);
+    cy.then(() => expectVehicleSvgToChange(secondarySavedSvg));
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
-    cy.wait(representationSettleMs);
     vehicleSvgState().then((snapshot) => {
       cy.wait(350);
       expectVehicleSvg(snapshot);

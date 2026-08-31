@@ -227,9 +227,17 @@ is rebuilt after restore and is absent from Snapshot V9 and Save V7. Profiling
 remains available to identify the next measured cost; no cohort-validation,
 sorting, freezing, or assignment optimization is included.
 
-The next product epic is the Selected StopPlace Details capability / information
-view. Its design and implementation are intentionally outside this milestone;
-Phase 4F remains deferred.
+Selected StopPlace Details V1 is complete. The primary representation's scoped
+modal now projects
+physical-stop identity, canonical serving routes and patterns, exact ordered
+occurrences, selected calls, loop status, and topology-derived interchange
+badges without recomputing static topology on live passenger updates. The dock
+retains compact selection context and reopens the details modal. The 2D `Map`
+and 3D `Main` single-view hosts establish family-owned multi-view state without
+implementing Canvas2D or additional D3D scenes; mini swapping is explicit
+arm/confirm interaction. Canonical
+timetable/service-calendar authority remains a separate future data/schema
+milestone. Phase 4F remains deferred.
 
 ## Later transport growth
 

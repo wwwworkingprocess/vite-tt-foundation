@@ -502,6 +502,36 @@ describe('foundation screen', () => {
     expect(await screen.findByTestId('r3f-canvas')).toBeInTheDocument();
   }, 15_000);
 
+  it('opens renderer-independent StopPlace details and keeps selection after close', async () => {
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    render(<App />);
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'Select legacy routes' }),
+    );
+    const start = await screen.findByRole('button', { name: 'Start new game' });
+    await waitFor(() => expect(start).toBeEnabled());
+    fireEvent.click(start);
+    await screen.findByTestId('game-shell');
+    const stop = (
+      await screen.findAllByRole('button', {
+        name: /^Select stop /,
+      })
+    )[0]!;
+    fireEvent.click(stop);
+    const dialog = await screen.findByRole('dialog');
+    await within(dialog).findByText('Serving routes');
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(screen.getByTestId('stop-inspector')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Open details' }));
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    fireEvent.click(
+      within(screen.getByRole('dialog')).getByRole('button', { name: 'Close' }),
+    );
+    fireEvent.click(stop);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+  }, 15_000);
+
   it('preserves explicit non-default intent while city presentation metadata resolves late', async () => {
     deferCityNameResolution = true;
     vi.stubGlobal('Worker', class FoundationWorker {});
@@ -955,6 +985,30 @@ describe('foundation screen', () => {
     expect(position).toHaveAttribute(
       'data-vehicle-id',
       'browser-demo-vehicle-001',
+    );
+    fireEvent.click(position);
+    const vehicleDialog = await screen.findByRole('dialog', {
+      name: 'Vehicle browser-demo-vehicle-001',
+    });
+    expect(
+      await within(vehicleDialog).findByTestId('vehicle-modal-details'),
+    ).toHaveTextContent('Vehicle overview');
+    fireEvent.click(
+      within(vehicleDialog).getByRole('button', { name: 'Close' }),
+    );
+    expect(screen.getByTestId('vehicle-inspector')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('dialog', {
+        name: 'Vehicle browser-demo-vehicle-001',
+      }),
+    ).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Open details' }));
+    const reopenedVehicleDialog = await screen.findByRole('dialog', {
+      name: 'Vehicle browser-demo-vehicle-001',
+    });
+    expect(reopenedVehicleDialog).toBeInTheDocument();
+    fireEvent.click(
+      within(reopenedVehicleDialog).getByRole('button', { name: 'Close' }),
     );
     const pausedPosition = [
       position.getAttribute('data-movement-kind'),

@@ -8,7 +8,10 @@ import {
   useState,
 } from 'react';
 import type { FoundationSaveOutcome } from '../foundation-session-composition.js';
-import { RepresentationModeProvider } from '../representation/RepresentationModeContext.js';
+import {
+  type RepresentationModal,
+  RepresentationWorkspace,
+} from '../representation/RepresentationWorkspace.js';
 
 type DialogName = 'project' | 'simulation' | 'session';
 
@@ -22,6 +25,7 @@ export interface GameShellProps {
   readonly scenarioControl: ReactNode;
   readonly primaryVisualization: ReactNode;
   readonly secondaryVisualization: ReactNode;
+  readonly representationModal?: RepresentationModal | undefined;
   readonly inspector?: ReactNode;
   readonly saveDisabled?: boolean;
   readonly restartDisabled?: boolean;
@@ -40,6 +44,7 @@ export function GameShell({
   scenarioControl,
   primaryVisualization,
   secondaryVisualization,
+  representationModal,
   inspector,
   saveDisabled,
   restartDisabled,
@@ -48,7 +53,6 @@ export function GameShell({
   onRestart,
 }: GameShellProps) {
   const [openDialog, setOpenDialog] = useState<DialogName>();
-  const [threePrimary, setThreePrimary] = useState(false);
   const [dockExpanded, setDockExpanded] = useState(true);
   const [saveFeedback, setSaveFeedback] = useState<string>();
   const trigger = useRef<HTMLElement | undefined>(undefined);
@@ -111,46 +115,11 @@ export function GameShell({
           {saveFeedback ? ` · ${saveFeedback}` : ''}
         </div>
       </nav>
-      <section
-        className="visualization-workspace"
-        data-testid="visualization-workspace"
-      >
-        <div
-          className={`visualization-surface ${
-            threePrimary ? 'minimap' : 'primary'
-          }`}
-          data-testid={
-            threePrimary ? 'secondary-minimap' : 'primary-visualization'
-          }
-          data-view="transport"
-          data-representation-mode={threePrimary ? 'mini' : 'normal'}
-        >
-          <RepresentationModeProvider mode={threePrimary ? 'mini' : 'normal'}>
-            {primaryVisualization}
-          </RepresentationModeProvider>
-        </div>
-        <div
-          className={`visualization-surface ${
-            threePrimary ? 'primary' : 'minimap'
-          }`}
-          data-testid={
-            threePrimary ? 'primary-visualization' : 'secondary-minimap'
-          }
-          data-view="three"
-          data-representation-mode={threePrimary ? 'normal' : 'mini'}
-        >
-          <RepresentationModeProvider mode={threePrimary ? 'normal' : 'mini'}>
-            {secondaryVisualization}
-          </RepresentationModeProvider>
-        </div>
-        <button
-          type="button"
-          className="swap-visualizations"
-          onClick={() => setThreePrimary((current) => !current)}
-        >
-          Swap visualizations
-        </button>
-      </section>
+      <RepresentationWorkspace
+        twoDimensional={primaryVisualization}
+        threeDimensional={secondaryVisualization}
+        modal={representationModal}
+      />
       {inspector ? (
         <section
           className="game-inspector-panel"

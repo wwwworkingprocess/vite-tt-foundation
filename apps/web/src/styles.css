@@ -4,7 +4,10 @@
   background: #eee8dc;
   font-synthesis: none;
   --navigation-height: clamp(4rem, 10dvh, 6.5rem);
-  --layer-minimap: 10;
+  --layer-primary-representation: 0;
+  --layer-representation-modal: 10;
+  --layer-mini-representation: 20;
+  --layer-mini-interaction: 30;
   --layer-navigation: 20;
   --layer-menu: 30;
   --layer-dialog: 50;
@@ -91,6 +94,79 @@ summary {
   padding: 0.4rem 0.55rem;
   border: 1px solid #b8afa1;
   border-radius: 0.45rem;
+}
+
+.stop-service > h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.stop-place-details h2,
+.stop-place-details h3,
+.stop-place-details h4,
+.stop-place-details h5 {
+  margin-block: 0.65rem 0.35rem;
+}
+
+.stop-live-state dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin: 0;
+}
+
+.stop-live-state dl > div {
+  padding: 0.25rem 0;
+  border: 0;
+}
+
+.stop-service {
+  margin-block: 0.7rem;
+  padding-block: 0.15rem 0.6rem;
+  border-top: 1px solid #b8afa1;
+}
+
+.stop-patterns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1rem;
+}
+
+.stop-sequence {
+  margin: 0;
+  padding-left: 1.6rem;
+  border-left: 2px solid #7da7b8;
+}
+
+.stop-sequence li {
+  padding: 0.25rem 0 0.45rem 0.25rem;
+}
+
+.stop-sequence li[data-selected='true'] {
+  font-weight: 700;
+  color: #8f321f;
+}
+
+.stop-sequence small {
+  display: block;
+  color: #53656d;
+  font-weight: 400;
+}
+
+.route-badge {
+  display: inline-block;
+  min-width: 1.7rem;
+  padding: 0.08rem 0.32rem;
+  border: 1px solid currentColor;
+  border-radius: 0.3rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.stop-timetable-unavailable {
+  padding-top: 0.6rem;
+  border-top: 1px solid #b8afa1;
 }
 
 .top-navigation {
@@ -180,33 +256,63 @@ summary {
   background: #d9d1c3;
 }
 
-.visualization-surface {
+.representation-slot {
   overflow: hidden;
   background: #f7f2e9;
 }
 
-.visualization-surface.primary {
+.representation-slot-primary {
   position: absolute;
+  z-index: var(--layer-primary-representation);
   inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
-.visualization-surface.minimap {
+.mini-representation-boundary {
   position: absolute;
-  z-index: var(--layer-minimap);
+  z-index: var(--layer-mini-representation);
   top: clamp(0.6rem, 2vw, 1.2rem);
   right: clamp(0.6rem, 2vw, 1.2rem);
   width: clamp(11rem, 26vw, 25rem);
   aspect-ratio: 4 / 3;
   max-height: calc(100% - 4rem);
+}
+
+.representation-slot-mini {
+  width: 100%;
+  height: 100%;
   padding: 0.4rem;
   border: 1px solid rgb(16 46 60 / 55%);
   border-radius: 1rem;
   box-shadow: 0 0.6rem 2rem rgb(11 37 51 / 24%);
 }
 
-.visualization-surface > *,
-.visualization-surface svg,
-.visualization-surface canvas,
+.mini-representation-boundary[data-armed='true'] .representation-slot-mini {
+  outline: 3px solid #ef6a4c;
+  outline-offset: 2px;
+}
+
+.representation-view-tabs {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  padding: 0.35rem 0.5rem 0;
+}
+
+.representation-view-tabs [role='tab'][aria-selected='true'] {
+  border-bottom-color: transparent;
+  background: #f7f2e9;
+  font-weight: 700;
+}
+
+.representation-view-host,
+.representation-view-host > *,
+.representation-view-host svg,
+.representation-view-host canvas,
+.representation-slot-mini > *,
+.representation-slot-mini svg,
+.representation-slot-mini canvas,
 .scene {
   display: block;
   width: 100%;
@@ -277,11 +383,69 @@ summary {
   background: #0b2533;
 }
 
+.mini-representation-selector {
+  position: absolute;
+  z-index: var(--layer-mini-interaction);
+  inset: 0;
+  border: 0;
+  border-radius: 1rem;
+  background: transparent;
+}
+
+.mini-representation-selector:focus-visible {
+  outline: 3px solid #ef6a4c;
+  outline-offset: 3px;
+}
+
 .swap-visualizations {
   position: absolute;
-  z-index: calc(var(--layer-minimap) + 1);
-  right: clamp(0.8rem, 2.2vw, 1.4rem);
-  bottom: clamp(0.8rem, 2.2vw, 1.4rem);
+  z-index: calc(var(--layer-mini-interaction) + 1);
+  right: 0.5rem;
+  bottom: 0.5rem;
+}
+
+.representation-modal-backdrop {
+  position: absolute;
+  z-index: var(--layer-representation-modal);
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.6rem, 2vw, 1.5rem);
+  padding-right: clamp(0.6rem, 29vw, 27rem);
+  background: rgb(7 25 34 / 58%);
+}
+
+.representation-modal-card {
+  display: flex;
+  width: min(64rem, 100%);
+  max-height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #f8f4ec;
+  box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 35%);
+}
+
+.representation-modal-header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #c9bfb1;
+}
+
+.representation-modal-header h2 {
+  margin: 0;
+}
+
+.representation-modal-body {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  overscroll-behavior: contain;
 }
 
 .dialog-backdrop {
@@ -389,8 +553,12 @@ dd {
     flex: 0 0 auto;
   }
 
-  .visualization-surface.minimap {
+  .mini-representation-boundary {
     width: clamp(9rem, 38vw, 15rem);
+  }
+
+  .representation-modal-backdrop {
+    padding-right: clamp(0.6rem, 41vw, 16rem);
   }
 }
 

@@ -9,6 +9,7 @@ const renderShell = (
   save: () => Promise<FoundationSaveOutcome> = vi.fn(
     async (): Promise<FoundationSaveOutcome> => ({ status: 'saved' }),
   ),
+  representationModal?: Parameters<typeof GameShell>[0]['representationModal'],
 ) => {
   const restart = vi.fn();
   render(
@@ -41,6 +42,7 @@ const renderShell = (
       }
       primaryVisualization={<div data-testid="svg-identity">SVG</div>}
       secondaryVisualization={<div data-testid="r3f-identity">R3F</div>}
+      representationModal={representationModal}
       inspector={
         <dl data-testid="passenger-summary">
           {[
@@ -77,17 +79,42 @@ it('renders a viewport shell with compact navigation and paired stable views', (
     screen.getByTestId('r3f-identity'),
   );
 
+  expect(screen.getByRole('tab', { name: 'Map' })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
+    'data-family',
+    '2d',
+  );
   fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
   expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
-    'data-view',
-    'three',
+    'data-family',
+    '3d',
   );
   expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
-    'data-view',
-    'transport',
+    'data-family',
+    '2d',
   );
   expect(screen.getByTestId('svg-identity')).toBeInTheDocument();
   expect(screen.getByTestId('r3f-identity')).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Main' })).toBeInTheDocument();
+  expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
+    'data-view',
+    'map',
+  );
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
+  expect(screen.getByRole('tab', { name: 'Map' })).toBeInTheDocument();
+  expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
+    'data-view',
+    'main',
+  );
 });
 
 it('collapses the information dock without changing its presentation content', () => {
@@ -116,6 +143,9 @@ it('labels both representations with the shared mini and normal modes', () => {
     'data-representation-mode',
     'mini',
   );
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
   fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
   expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
     'data-representation-mode',
@@ -125,6 +155,44 @@ it('labels both representations with the shared mini and normal modes', () => {
     'data-representation-mode',
     'mini',
   );
+});
+
+it('owns a scoped modal above primary content while leaving mini swap coherent', () => {
+  const close = vi.fn();
+  renderShell(undefined, {
+    title: 'Hotel Fontana',
+    content: <p>Full route topology</p>,
+    onClose: close,
+  });
+  const dialog = screen.getByRole('dialog', { name: 'Hotel Fontana' });
+  expect(dialog).not.toHaveAttribute('aria-modal');
+  expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus();
+  fireEvent.mouseDown(screen.getByText('Full route topology'));
+  expect(close).not.toHaveBeenCalled();
+  fireEvent.mouseDown(screen.getByTestId('representation-modal-backdrop'));
+  expect(close).toHaveBeenCalledOnce();
+});
+
+it('arms, cancels, and confirms mini swaps through one focus boundary', () => {
+  renderShell();
+  const overlay = screen.getByRole('button', {
+    name: 'Select mini representation for swap',
+  });
+  fireEvent.click(overlay);
+  const confirm = screen.getByRole('button', { name: 'Swap visualizations' });
+  fireEvent.blur(overlay, { relatedTarget: confirm });
+  expect(confirm).toBeInTheDocument();
+  fireEvent.blur(confirm, {
+    relatedTarget: screen.getByRole('button', { name: 'Project info' }),
+  });
+  expect(
+    screen.queryByRole('button', { name: 'Swap visualizations' }),
+  ).toBeNull();
+  fireEvent.click(overlay);
+  fireEvent.keyDown(document, { key: 'Escape' });
+  expect(
+    screen.queryByRole('button', { name: 'Swap visualizations' }),
+  ).toBeNull();
 });
 
 it.each([

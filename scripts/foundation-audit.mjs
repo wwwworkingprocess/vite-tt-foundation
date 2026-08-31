@@ -591,6 +591,10 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('apps/web/src/ui/SessionControls.tsx') ||
     normalized.endsWith('apps/web/src/ui/SimulationControls.tsx') ||
     normalized.endsWith('apps/web/src/ui/GameInspector.tsx') ||
+    normalized.endsWith('apps/web/src/ui/StopPlaceDetails.tsx') ||
+    normalized.endsWith('apps/web/src/ui/StopPlaceModalDetails.tsx') ||
+    normalized.endsWith('apps/web/src/ui/VehicleModalDetails.tsx') ||
+    normalized.endsWith('apps/web/src/ui/stop-place-details-model.ts') ||
     normalized.endsWith('apps/web/src/ui/game-selection.ts') ||
     normalized.endsWith('packages/simulation/src/transport-simulation.ts') ||
     normalized.endsWith('packages/simulation/src/passenger-demand.ts') ||

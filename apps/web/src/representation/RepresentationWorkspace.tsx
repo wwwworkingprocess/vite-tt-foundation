@@ -1,0 +1,213 @@
+import {
+  type FocusEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { RepresentationModeProvider } from './RepresentationModeContext.js';
+
+export type RepresentationFamily = '2d' | '3d';
+export type RepresentationView = 'map' | 'main';
+
+export interface RepresentationModal {
+  readonly title: string;
+  readonly content: ReactNode;
+  readonly onClose: () => void;
+}
+
+interface RepresentationWorkspaceProps {
+  readonly twoDimensional: ReactNode;
+  readonly threeDimensional: ReactNode;
+  readonly modal?: RepresentationModal | undefined;
+}
+
+const viewForFamily = (family: RepresentationFamily): RepresentationView =>
+  family === '2d' ? 'map' : 'main';
+const labelForView = (view: RepresentationView) =>
+  view === 'map' ? 'Map' : 'Main';
+
+export function RepresentationWorkspace({
+  twoDimensional,
+  threeDimensional,
+  modal,
+}: RepresentationWorkspaceProps) {
+  const [primaryFamily, setPrimaryFamily] =
+    useState<RepresentationFamily>('2d');
+  const [familyViews] = useState(
+    () =>
+      ({
+        '2d': viewForFamily('2d'),
+        '3d': viewForFamily('3d'),
+      }) as const,
+  );
+  const [swapArmed, setSwapArmed] = useState(false);
+  const miniBoundary = useRef<HTMLDivElement>(null);
+  const restoreModalFocus = useRef(true);
+  const secondaryFamily: RepresentationFamily =
+    primaryFamily === '2d' ? '3d' : '2d';
+  const renderFamily = (family: RepresentationFamily) =>
+    family === '2d' ? twoDimensional : threeDimensional;
+  const closeModal = () => {
+    restoreModalFocus.current = true;
+    setSwapArmed(false);
+    modal?.onClose();
+  };
+
+  useEffect(() => {
+    if (modal) setSwapArmed(false);
+    else restoreModalFocus.current = true;
+  }, [modal]);
+  useEffect(() => {
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      if (modal) closeModal();
+      else setSwapArmed(false);
+    };
+    document.addEventListener('keydown', onEscape);
+    return () => document.removeEventListener('keydown', onEscape);
+  });
+
+  const armSwap = () => {
+    if (modal) {
+      restoreModalFocus.current = false;
+      modal.onClose();
+    }
+    setSwapArmed(true);
+  };
+  const leaveMiniBoundary = (event: FocusEvent<HTMLDivElement>) => {
+    if (
+      !event.relatedTarget ||
+      !miniBoundary.current?.contains(event.relatedTarget)
+    )
+      setSwapArmed(false);
+  };
+  const confirmSwap = () => {
+    closeModal();
+    setPrimaryFamily(secondaryFamily);
+    setSwapArmed(false);
+  };
+
+  return (
+    <section
+      className="visualization-workspace"
+      data-testid="visualization-workspace"
+    >
+      <section
+        className="representation-slot representation-slot-primary"
+        data-testid="primary-visualization"
+        data-family={primaryFamily}
+        data-view={familyViews[primaryFamily]}
+        data-representation-mode="normal"
+      >
+        <div className="representation-view-tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected="true"
+            data-view={familyViews[primaryFamily]}
+          >
+            {labelForView(familyViews[primaryFamily])}
+          </button>
+        </div>
+        <div className="representation-view-host">
+          <RepresentationModeProvider mode="normal">
+            {renderFamily(primaryFamily)}
+          </RepresentationModeProvider>
+        </div>
+        {modal ? (
+          <RepresentationModalLayer
+            title={modal.title}
+            onClose={closeModal}
+            shouldRestoreFocus={() => restoreModalFocus.current}
+          >
+            {modal.content}
+          </RepresentationModalLayer>
+        ) : null}
+      </section>
+      <div
+        ref={miniBoundary}
+        className="mini-representation-boundary"
+        data-armed={swapArmed}
+        onBlurCapture={leaveMiniBoundary}
+      >
+        <section
+          className="representation-slot representation-slot-mini"
+          data-testid="secondary-minimap"
+          data-family={secondaryFamily}
+          data-view={familyViews[secondaryFamily]}
+          data-representation-mode="mini"
+        >
+          <RepresentationModeProvider mode="mini">
+            {renderFamily(secondaryFamily)}
+          </RepresentationModeProvider>
+        </section>
+        <button
+          type="button"
+          className="mini-representation-selector"
+          aria-label="Select mini representation for swap"
+          aria-pressed={swapArmed}
+          onClick={armSwap}
+        />
+        {swapArmed ? (
+          <button
+            type="button"
+            className="swap-visualizations"
+            onClick={confirmSwap}
+          >
+            Swap visualizations
+          </button>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
+function RepresentationModalLayer({
+  title,
+  children,
+  onClose,
+  shouldRestoreFocus,
+}: Readonly<{
+  title: string;
+  children: ReactNode;
+  onClose: () => void;
+  shouldRestoreFocus: () => boolean;
+}>) {
+  const close = useRef<HTMLButtonElement>(null);
+  const previousFocus = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    previousFocus.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    close.current?.focus();
+    return () => {
+      if (shouldRestoreFocus()) previousFocus.current?.focus();
+    };
+  }, []);
+  const titleId = 'representation-modal-title';
+  return (
+    <div
+      className="representation-modal-backdrop"
+      data-testid="representation-modal-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <section
+        className="representation-modal-card"
+        role="dialog"
+        aria-labelledby={titleId}
+      >
+        <header className="representation-modal-header">
+          <h2 id={titleId}>{title}</h2>
+          <button ref={close} type="button" onClick={onClose}>
+            Close
+          </button>
+        </header>
+        <div className="representation-modal-body">{children}</div>
+      </section>
+    </div>
+  );
+}

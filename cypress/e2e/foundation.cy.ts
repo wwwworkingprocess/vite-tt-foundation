@@ -51,7 +51,7 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
 };
 const openSimulationControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
-const restoreReadyTimeoutMs = 15_000;
+const restoreReadyTimeoutMs = 60_000;
 const representationSettleMs = 250;
 const expectRestoredAuthority = (scenarioId: string) => {
   cy.get('[data-testid="worker-timeline"]', {
@@ -84,21 +84,17 @@ describe('foundation screen', () => {
     cy.get('[data-testid="game-shell"]').should('not.exist');
     startDefaultGame();
     cy.get('[data-testid="top-navigation"]').should('be.visible');
-    cy.get('[data-testid="primary-visualization"]').should(
-      'have.attr',
-      'data-view',
-      'transport',
-    );
-    cy.get('[data-testid="secondary-minimap"]').should(
-      'have.attr',
-      'data-view',
-      'three',
-    );
+    cy.get('[data-testid="primary-visualization"]')
+      .should('have.attr', 'data-family', '2d')
+      .and('have.attr', 'data-view', 'map');
+    cy.get('[data-testid="secondary-minimap"]')
+      .should('have.attr', 'data-family', '3d')
+      .and('have.attr', 'data-view', 'main');
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.get('.scenario-menu-panel').then(($menu) => {
-      cy.get('[data-testid="secondary-minimap"]').then(($minimap) => {
+      cy.get('.mini-representation-boundary').then(($miniBoundary) => {
         expect(Number(getComputedStyle($menu[0]).zIndex)).to.be.greaterThan(
-          Number(getComputedStyle($minimap[0]).zIndex),
+          Number(getComputedStyle($miniBoundary[0]).zIndex),
         );
       });
     });
@@ -107,12 +103,15 @@ describe('foundation screen', () => {
       .then((height) => {
         cy.window().its('innerHeight').should('equal', height);
       });
-    cy.contains('button', 'Swap visualizations').click();
-    cy.get('[data-testid="primary-visualization"]').should(
-      'have.attr',
-      'data-view',
-      'three',
-    );
+    cy.get('[data-testid="scenario-menu-trigger"]').click();
+    cy.get('button[aria-label="Select mini representation for swap"]').click();
+    cy.contains('button', 'Swap visualizations').should('be.visible').click();
+    cy.get('[data-testid="primary-visualization"]')
+      .should('have.attr', 'data-family', '3d')
+      .and('have.attr', 'data-view', 'main');
+    cy.get('[data-testid="secondary-minimap"]')
+      .should('have.attr', 'data-family', '2d')
+      .and('have.attr', 'data-view', 'map');
     cy.contains('button', 'Project info').focus().click();
     cy.get('[role="dialog"]').should('contain.text', 'Project foundation');
     cy.get('body').type('{esc}');

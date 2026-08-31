@@ -161,6 +161,9 @@ export function App() {
   const [browserActionMessage, setBrowserActionMessage] = useState<string>();
   const [selectedRouteId, setSelectedRouteId] = useState<string>();
   const [gameSelection, setGameSelection] = useState<GameSelection>(null);
+  const [openSelectionDetails, setOpenSelectionDetails] = useState<
+    'stop' | 'vehicle'
+  >();
   const [authoritativePackageState, setAuthoritativePackageState] =
     useState<AuthoritativeScenarioPackageState>({ status: 'idle' });
   const selectedRouteIdRef = useRef<string | undefined>(undefined);
@@ -617,6 +620,7 @@ export function App() {
   useEffect(() => {
     if (!authoritativeScenarioPackage || !fleet) {
       setGameSelection(null);
+      setOpenSelectionDetails(undefined);
       return;
     }
     if (
@@ -633,8 +637,10 @@ export function App() {
         ),
         vehicleIds: new Set(fleet.map(({ vehicleId }) => String(vehicleId))),
       })
-    )
+    ) {
       setGameSelection(null);
+      setOpenSelectionDetails(undefined);
+    }
   }, [
     authoritativeCoordinateKey,
     authoritativeScenarioPackage,
@@ -643,6 +649,18 @@ export function App() {
   ]);
   const action = (operation: (() => Promise<void>) | undefined) => () => {
     void operation?.();
+  };
+  const selectGameObject = (selection: GameSelection) => {
+    setGameSelection(selection);
+    setOpenSelectionDetails(
+      selection?.kind === 'stop' || selection?.kind === 'vehicle'
+        ? selection.kind
+        : undefined,
+    );
+  };
+  const clearGameSelection = () => {
+    setOpenSelectionDetails(undefined);
+    setGameSelection(null);
   };
 
   const scenarioChooser = (
@@ -916,7 +934,7 @@ export function App() {
                 scenario={authoritativeScenarioPackage}
                 fleet={fleet}
                 selection={gameSelection}
-                onSelectionChange={setGameSelection}
+                onSelectionChange={selectGameObject}
                 passengerDemand={transportApplication?.passengerDemand}
                 vehiclePassengerLoads={
                   transportApplication?.vehiclePassengerLoads
@@ -937,6 +955,66 @@ export function App() {
         <Suspense fallback={<p>Loading representation…</p>}>
           <FoundationScene />
         </Suspense>
+      }
+      representationModal={
+        openSelectionDetails === 'stop' &&
+        gameSelection?.kind === 'stop' &&
+        authoritativeScenarioPackage
+          ? {
+              title:
+                authoritativeScenarioPackage.stops.stopPlaces.find(
+                  ({ stopPlaceId }) =>
+                    stopPlaceId === gameSelection.stopPlaceId,
+                )?.name ?? 'StopPlace details',
+              content: (
+                <Suspense fallback={<p>Loading StopPlace details…</p>}>
+                  <StopPlaceModalDetails
+                    scenario={authoritativeScenarioPackage}
+                    stopPlaceId={gameSelection.stopPlaceId}
+                    passengerDemand={transportApplication?.passengerDemand}
+                    currentBoardingEvents={
+                      transportApplication?.currentBoardingEvents
+                    }
+                    currentAlightingEvents={
+                      transportApplication?.currentAlightingEvents
+                    }
+                  />
+                </Suspense>
+              ),
+              onClose: () => setOpenSelectionDetails(undefined),
+            }
+          : openSelectionDetails === 'vehicle' &&
+              gameSelection?.kind === 'vehicle' &&
+              fleet
+            ? {
+                title: `Vehicle ${gameSelection.vehicleId}`,
+                content: (
+                  <Suspense fallback={<p>Loading vehicle details…</p>}>
+                    <VehicleModalDetails
+                      vehicleId={gameSelection.vehicleId}
+                      fleet={fleet}
+                      passengerDemand={transportApplication?.passengerDemand}
+                      vehicleOperations={
+                        transportApplication?.vehicleOperations
+                      }
+                      vehiclePassengerLoads={
+                        transportApplication?.vehiclePassengerLoads
+                      }
+                      currentBoardingEvents={
+                        transportApplication?.currentBoardingEvents
+                      }
+                      currentAlightingEvents={
+                        transportApplication?.currentAlightingEvents
+                      }
+                      currentJourneyCompletionEvents={
+                        transportApplication?.currentJourneyCompletionEvents
+                      }
+                    />
+                  </Suspense>
+                ),
+                onClose: () => setOpenSelectionDetails(undefined),
+              }
+            : undefined
       }
       inspector={
         authoritativeScenarioPackage && fleet ? (
@@ -959,7 +1037,18 @@ export function App() {
               currentJourneyCompletionEvents={
                 transportApplication?.currentJourneyCompletionEvents
               }
-              onClear={() => setGameSelection(null)}
+              selectionDetailsOpen={
+                openSelectionDetails === gameSelection?.kind
+              }
+              onOpenSelectionDetails={() =>
+                setOpenSelectionDetails(
+                  gameSelection?.kind === 'stop' ||
+                    gameSelection?.kind === 'vehicle'
+                    ? gameSelection.kind
+                    : undefined,
+                )
+              }
+              onClear={clearGameSelection}
             />
           </Suspense>
         ) : null
@@ -977,3 +1066,7 @@ const ScenarioPanel = lazy(() =>
 );
 const OpenScreen = lazy(() => import('./ui/OpenScreen.js'));
 const GameInspector = lazy(() => import('./ui/GameInspector.js'));
+const StopPlaceModalDetails = lazy(
+  () => import('./ui/StopPlaceModalDetails.js'),
+);
+const VehicleModalDetails = lazy(() => import('./ui/VehicleModalDetails.js'));

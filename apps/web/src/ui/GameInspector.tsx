@@ -24,36 +24,33 @@ export interface GameInspectorProps {
   readonly currentJourneyCompletionEvents?:
     readonly PassengerJourneyCompletionEvent[] | undefined;
   readonly onClear: () => void;
+  readonly selectionDetailsOpen?: boolean;
+  readonly onOpenSelectionDetails?: () => void;
 }
 
 const sum = (values: readonly number[]) =>
   values.reduce((total, value) => total + value, 0);
+const Lines = ({ values }: { readonly values: readonly string[] }) =>
+  values.map((value) => <p key={value}>{value}</p>);
 
 export default function GameInspector(props: GameInspectorProps) {
   const demand = props.passengerDemand;
   const active = demand?.status === 'active' ? demand : undefined;
+  const summaries = [
+    ['Waiting', active?.totalWaitingForVehiclePassengerCount ?? 0],
+    ['Onboard', active?.totalOnboardPassengerCount ?? 0],
+    ['Destination access', active?.totalInDestinationAccessPassengerCount ?? 0],
+    ['Completed journeys', active?.totalCompletedJourneyPassengerCount ?? 0],
+    ['Active vehicles', props.fleet.length],
+  ] as const;
   const global = (
     <dl data-testid="passenger-summary">
-      <div>
-        <dt>Waiting</dt>
-        <dd>{active?.totalWaitingForVehiclePassengerCount ?? 0}</dd>
-      </div>
-      <div>
-        <dt>Onboard</dt>
-        <dd>{active?.totalOnboardPassengerCount ?? 0}</dd>
-      </div>
-      <div>
-        <dt>Destination access</dt>
-        <dd>{active?.totalInDestinationAccessPassengerCount ?? 0}</dd>
-      </div>
-      <div>
-        <dt>Completed journeys</dt>
-        <dd>{active?.totalCompletedJourneyPassengerCount ?? 0}</dd>
-      </div>
-      <div>
-        <dt>Active vehicles</dt>
-        <dd>{props.fleet.length}</dd>
-      </div>
+      {summaries.map(([label, value]) => (
+        <div key={label}>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))}
     </dl>
   );
   const selection = props.selection;
@@ -102,8 +99,7 @@ export default function GameInspector(props: GameInspectorProps) {
         {global}
         <button onClick={props.onClear}>Clear selection</button>
         <h2>Route {route.publicCode}</h2>
-        <p>{route.name}</p>
-        <p>{route.routeId}</p>
+        <Lines values={[route.name, route.routeId]} />
         <ul>
           {route.patterns.map((pattern) => (
             <li key={pattern.patternId}>
@@ -112,16 +108,19 @@ export default function GameInspector(props: GameInspectorProps) {
             </li>
           ))}
         </ul>
-        <p>Physical stops: {stopPlaces.size}</p>
-        <p>
-          Active vehicles:{' '}
-          {props.fleet
-            .filter(({ routeId }) => routeId === route.routeId)
-            .map(({ vehicleId }) => vehicleId)
-            .join(', ') || 'none'}
-        </p>
-        <p>Waiting passengers: {sum(waiting.map(({ count }) => count))}</p>
-        <p>Onboard passengers: {sum(onboard.map(({ count }) => count))}</p>
+        <Lines
+          values={[
+            `Physical stops: ${stopPlaces.size}`,
+            `Active vehicles: ${
+              props.fleet
+                .filter(({ routeId }) => routeId === route.routeId)
+                .map(({ vehicleId }) => vehicleId)
+                .join(', ') || 'none'
+            }`,
+            `Waiting passengers: ${sum(waiting.map(({ count }) => count))}`,
+            `Onboard passengers: ${sum(onboard.map(({ count }) => count))}`,
+          ]}
+        />
       </aside>
     );
   }
@@ -135,72 +134,36 @@ export default function GameInspector(props: GameInspectorProps) {
       ({ stopPlaceId }) => stopPlaceId === place.stopPlaceId,
     );
     const nodeIds = new Set(nodes.map(({ stopNodeId }) => stopNodeId));
-    const patterns = props.scenario.routes.routes.flatMap((route) =>
-      route.patterns
-        .filter(({ stopNodeIds }) => stopNodeIds.some((id) => nodeIds.has(id)))
-        .map((pattern) => `${route.routeId}/${pattern.patternId}`),
-    );
     const waiting =
       active?.waitingCohorts.filter(
         ({ originStopPlaceId }) => originStopPlaceId === place.stopPlaceId,
       ) ?? [];
-    const boarding =
-      props.currentBoardingEvents?.filter(({ stopNodeId }) =>
-        nodeIds.has(stopNodeId),
-      ) ?? [];
-    const alighting =
-      props.currentAlightingEvents?.filter(({ stopNodeId }) =>
-        nodeIds.has(stopNodeId),
-      ) ?? [];
-    const access =
-      active?.destinationAccessGroups.filter(
-        ({ destinationStopPlaceId }) =>
-          destinationStopPlaceId === place.stopPlaceId,
-      ) ?? [];
+    const servingRoutes = props.scenario.routes.routes.filter((route) =>
+      route.patterns.some((pattern) =>
+        pattern.stopNodeIds.some((id) => nodeIds.has(id)),
+      ),
+    );
     return (
       <aside aria-label="Game object inspector" data-testid="stop-inspector">
         {global}
         <button onClick={props.onClear}>Clear selection</button>
-        <h2>Stop {place.name}</h2>
-        <p>{place.stopPlaceId}</p>
-        <p>{place.settlementId}</p>
-        <p>
-          {place.position
-            ? `${place.position.latitude}, ${place.position.longitude}`
-            : 'No canonical position'}
-        </p>
-        <p>
-          Directional nodes:{' '}
-          {nodes.map(({ stopNodeId }) => stopNodeId).join(', ')}
-        </p>
-        <p>Services: {patterns.join(', ') || 'none'}</p>
-        <p>Waiting passengers: {sum(waiting.map(({ count }) => count))}</p>
-        <p>Waiting cohorts: {waiting.length}</p>
-        <p>
-          Distinct destination StopPlaces:{' '}
-          {
-            new Set(
-              waiting.map(
-                ({ destinationStopPlaceId }) => destinationStopPlaceId,
-              ),
-            ).size
-          }
-        </p>
-        <p>
-          Boarding this tick:{' '}
-          {sum(
-            boarding.map(({ boardedPassengerCount }) => boardedPassengerCount),
-          )}
-        </p>
-        <p>
-          Alighting this tick:{' '}
-          {sum(
-            alighting.map(
-              ({ alightedPassengerCount }) => alightedPassengerCount,
-            ),
-          )}
-        </p>
-        <p>Destination access: {sum(access.map(({ count }) => count))}</p>
+        <section className="compact-stop-summary">
+          <h2>Stop {place.name}</h2>
+          <p>
+            Services:{' '}
+            {servingRoutes.map(({ routeId, publicCode }) => (
+              <b className="route-badge" key={routeId}>
+                {publicCode}
+              </b>
+            ))}
+          </p>
+          <p>Waiting passengers: {sum(waiting.map(({ count }) => count))}</p>
+          {!props.selectionDetailsOpen ? (
+            <button type="button" onClick={props.onOpenSelectionDetails}>
+              Open details
+            </button>
+          ) : null}
+        </section>
       </aside>
     );
   }
@@ -209,71 +172,28 @@ export default function GameInspector(props: GameInspectorProps) {
     ({ vehicleId }) => vehicleId === selection.vehicleId,
   );
   if (!vehicle) return unavailable;
-  const operation = props.vehicleOperations?.find(
-    ({ vehicleId }) => vehicleId === vehicle.vehicleId,
-  );
   const load = props.vehiclePassengerLoads?.find(
     ({ vehicleId }) => vehicleId === vehicle.vehicleId,
   );
-  const onboard =
-    active?.onboardGroups.filter(
-      ({ vehicleId }) => vehicleId === vehicle.vehicleId,
-    ) ?? [];
-  const boarding =
-    props.currentBoardingEvents?.filter(
-      ({ vehicleId }) => vehicleId === vehicle.vehicleId,
-    ) ?? [];
-  const alighting =
-    props.currentAlightingEvents?.filter(
-      ({ vehicleId }) => vehicleId === vehicle.vehicleId,
-    ) ?? [];
   return (
     <aside aria-label="Game object inspector" data-testid="vehicle-inspector">
       {global}
       <button onClick={props.onClear}>Clear selection</button>
-      <h2>Vehicle {vehicle.vehicleId}</h2>
-      <p>Route {vehicle.routeId ?? 'standalone'}</p>
-      <p>Pattern {vehicle.patternId}</p>
-      <p>Movement {vehicle.movement.kind}</p>
-      <p>
-        Location{' '}
-        {vehicle.movement.kind === 'running-on-edge'
-          ? vehicle.movement.edgeId
-          : vehicle.movement.stopNodeId}
-      </p>
-      <p>Route leg {vehicle.routeLegIndex ?? 0}</p>
-      <p>Completed cycles {vehicle.completedRouteCycles ?? 0}</p>
-      <p>Pattern run {operation?.patternRunSequence ?? 'unavailable'}</p>
-      <p>Stop call {operation?.stopCallSequence ?? 'unavailable'}</p>
-      <p>Capacity {load?.passengerCapacity ?? 0}</p>
-      <p>Occupancy {load?.onboardPassengerCount ?? 0}</p>
-      <p>Remaining {load?.remainingPassengerCapacity ?? 0}</p>
-      <p>
-        Onboard groups:{' '}
-        {onboard
-          .map(
-            ({ passengerOnboardGroupId, destinationStopPlaceId, count }) =>
-              `${passengerOnboardGroupId}→${destinationStopPlaceId} (${count})`,
-          )
-          .join(', ') || 'none'}
-      </p>
-      <p>
-        Boarding this tick:{' '}
-        {sum(
-          boarding.map(({ boardedPassengerCount }) => boardedPassengerCount),
-        )}
-      </p>
-      <p>
-        Alighting this tick:{' '}
-        {sum(
-          alighting.map(({ alightedPassengerCount }) => alightedPassengerCount),
-        )}
-      </p>
-      {props.currentJourneyCompletionEvents?.some(
-        ({ vehicleId }) => vehicleId === vehicle.vehicleId,
-      ) ? (
-        <p>Journey completion occurred this tick.</p>
-      ) : null}
+      <section className="compact-vehicle-summary">
+        <h2>Vehicle {vehicle.vehicleId}</h2>
+        <Lines
+          values={[
+            `Route ${vehicle.routeId ?? 'standalone'}`,
+            `Movement ${vehicle.movement.kind}`,
+            `Occupancy ${load?.onboardPassengerCount ?? 0}`,
+          ]}
+        />
+        {!props.selectionDetailsOpen ? (
+          <button type="button" onClick={props.onOpenSelectionDetails}>
+            Open details
+          </button>
+        ) : null}
+      </section>
     </aside>
   );
 }

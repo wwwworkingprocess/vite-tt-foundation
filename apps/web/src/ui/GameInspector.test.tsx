@@ -235,34 +235,62 @@ it('shows exact route authority and attributable passenger totals', () => {
   expect(screen.getByTestId('route-inspector')).toBeInTheDocument();
 });
 
-it('shows physical StopPlace service and current-tick passenger events', () => {
+it('shows a compact physical StopPlace summary and opens rich details', () => {
+  const onOpenSelectionDetails = vi.fn();
   render(
     <GameInspector
       {...common}
       selection={{ kind: 'stop', stopPlaceId: stopPlace.stopPlaceId }}
+      onOpenSelectionDetails={onOpenSelectionDetails}
     />,
   );
   const inspector = screen.getByTestId('stop-inspector');
   expect(inspector).toHaveTextContent(`Stop ${stopPlace.name}`);
+  expect(inspector).toHaveTextContent(route.publicCode);
   expect(inspector).toHaveTextContent('Waiting passengers: 10');
-  expect(inspector).toHaveTextContent('Boarding this tick: 2');
-  expect(inspector).toHaveTextContent('Alighting this tick: 1');
-  expect(inspector).toHaveTextContent('Destination access: 4');
+  expect(inspector).not.toHaveTextContent(pattern.directionLabel);
+  fireEvent.click(screen.getByRole('button', { name: 'Open details' }));
+  expect(onOpenSelectionDetails).toHaveBeenCalledOnce();
 });
 
-it('shows exact vehicle movement, operation, capacity, and onboard authority', () => {
+it('omits the open-details action while the representation modal is open', () => {
+  if (demand.status !== 'active') throw new Error('active fixture required');
+  const view = render(
+    <GameInspector
+      {...common}
+      selectionDetailsOpen
+      selection={{ kind: 'stop', stopPlaceId: stopPlace.stopPlaceId }}
+    />,
+  );
+  expect(screen.queryByRole('button', { name: 'Open details' })).toBeNull();
+  view.rerender(
+    <GameInspector
+      {...common}
+      passengerDemand={{
+        ...demand,
+        totalWaitingForVehiclePassengerCount: 4,
+      }}
+      selection={{ kind: 'stop', stopPlaceId: stopPlace.stopPlaceId }}
+    />,
+  );
+  expect(screen.getByTestId('passenger-summary')).toHaveTextContent('Waiting4');
+});
+
+it('keeps selected vehicle context compact and opens its modal details', () => {
+  const onOpenSelectionDetails = vi.fn();
   render(
     <GameInspector
       {...common}
       selection={{ kind: 'vehicle', vehicleId: vehicle.vehicleId }}
+      selectionDetailsOpen={false}
+      onOpenSelectionDetails={onOpenSelectionDetails}
     />,
   );
   const inspector = screen.getByTestId('vehicle-inspector');
-  expect(inspector).toHaveTextContent('Pattern run 2');
-  expect(inspector).toHaveTextContent('Stop call 7');
-  expect(inspector).toHaveTextContent('Capacity 80');
   expect(inspector).toHaveTextContent('Occupancy 2');
-  expect(inspector).toHaveTextContent('Journey completion occurred this tick.');
+  expect(inspector).not.toHaveTextContent('Pattern run 2');
+  fireEvent.click(screen.getByRole('button', { name: 'Open details' }));
+  expect(onOpenSelectionDetails).toHaveBeenCalledOnce();
 });
 
 it('renders stale selection safely and clears it on request', () => {
@@ -321,9 +349,7 @@ it('uses explicit empty diagnostics when optional authority is unavailable', () 
     />,
   );
   const stopInspector = screen.getByTestId('stop-inspector');
-  expect(stopInspector).toHaveTextContent('No canonical position');
-  expect(stopInspector).toHaveTextContent('Services: none');
-  expect(stopInspector).toHaveTextContent('Boarding this tick: 0');
+  expect(stopInspector).toHaveTextContent(`Stop ${stopPlace.name}`);
 });
 
 it('shows standalone on-edge movement without optional operation or passenger projections', () => {
@@ -343,7 +369,7 @@ it('shows standalone on-edge movement without optional operation or passenger pr
   const inspector = screen.getByTestId('vehicle-inspector');
   expect(inspector).toHaveTextContent('Route standalone');
   expect(inspector).toHaveTextContent('Movement running-on-edge');
-  expect(inspector).toHaveTextContent('Pattern run unavailable');
-  expect(inspector).toHaveTextContent('Onboard groups: none');
+  expect(inspector).not.toHaveTextContent('Pattern run unavailable');
+  expect(inspector).not.toHaveTextContent('Onboard groups: none');
   expect(inspector).not.toHaveTextContent('Journey completion occurred');
 });

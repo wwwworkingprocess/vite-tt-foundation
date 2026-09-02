@@ -152,15 +152,21 @@ renderer-independent primary-slot detail modals. Route, physical
 StopPlace, and Vehicle selections are browser-owned canonical identities; the SVG
 is only one input adapter and never owns selection or simulation authority.
 
-The workspace distinguishes primary/secondary slots, 2D/3D representation
-families, and family-owned active views. The 2D family currently exposes one
-visible `Map` tab backed by the unchanged SVG; 3D exposes only its existing
-`Main` scene. Canvas2D and additional D3D views are not implemented. The mini
-slot uses a renderer-independent accessible overlay and an explicit arm/confirm
-swap interaction. Its renderer and temporary swap affordance remain above the
-primary-slot modal.
+The workspace distinguishes primary/mini slots, three representation families,
+and family-owned active views. DOM 2D exposes `Map` through the unchanged SVG,
+Canvas 2D exposes a deterministic foundation `Main` canvas, and D3D exposes its
+existing `Main` scene. Exactly two families are mounted; the third remains
+inactive until an armed mini action explicitly installs it. Swap remains a
+separate confirmation that exchanges the visible families without changing the
+inactive family. Mini controls remain above the primary-slot modal.
 
-Both renderers consume one `RepresentationMode`: `mini` targets 5 fps and
+Canvas 2D currently implements only its deterministic `Main` foundation/smoke
+view. Canvas StopPlace hit testing, Vehicle hit testing, `GameSelection`
+mapping, Canvas Map, a renderer-neutral Map projection, a universal view
+capability model, and D3D Map are intentionally deferred representation
+milestones rather than current capabilities.
+
+All renderers consume one `RepresentationMode`: `mini` targets 5 fps and
 `normal` targets 60 fps. Replaceable render projection is sampled with
 latest-state coalescing at that presentation cadence; reliable publication and
 authoritative tick advancement remain unthrottled. SVG uses the shared latest

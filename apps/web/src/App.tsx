@@ -956,6 +956,11 @@ export function App() {
           <FoundationScene />
         </Suspense>
       }
+      canvasVisualization={
+        <Suspense fallback={<p>Loading Canvas 2D representation…</p>}>
+          <Canvas2dRepresentation />
+        </Suspense>
+      }
       representationModal={
         openSelectionDetails === 'stop' &&
         gameSelection?.kind === 'stop' &&
@@ -1058,6 +1063,11 @@ export function App() {
 }
 
 const FoundationScene = lazy(() => import('./foundation-scene.js'));
+const Canvas2dRepresentation = lazy(() =>
+  import('./representation/Canvas2dRepresentation.js').then((module) => ({
+    default: module.Canvas2dRepresentation,
+  })),
+);
 const ProjectInfo = lazy(() => import('./ui/ProjectInfo.js'));
 const ScenarioPanel = lazy(() =>
   import('./scenarios/ScenarioPanel.js').then(({ ScenarioPanel }) => ({

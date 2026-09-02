@@ -300,6 +300,22 @@ export function environmentNeutralViolations(text) {
     violations.push('timer-api');
   return violations;
 }
+export function canvasRepresentationViolations(text) {
+  const violations = [];
+  if (/\bDate\b/.test(text)) violations.push('date-authority');
+  if (/Math\.random/.test(text)) violations.push('randomness');
+  if (/\brequestAnimationFrame\b/.test(text))
+    violations.push('private-animation-loop');
+  if (/from\s+['"](?:three|@react-three(?:\/[^'"]*)?)['"]/.test(text))
+    violations.push('three-import');
+  if (
+    /from\s+['"][^'"]*(?:@torrevieja-tycoon\/simulation|transport-simulation|packages\/simulation)[^'"]*['"]/.test(
+      text,
+    )
+  )
+    violations.push('simulation-import');
+  return violations;
+}
 export function nodeBuiltinImports(text) {
   const sourceFile = parse(text);
   const builtins = new Set(
@@ -578,6 +594,15 @@ for (const file of web.filter((path) =>
   )
     fail(`${file} gives the SVG representation authority or frame timing.`);
 }
+const canvasRepresentationFile =
+  'apps/web/src/representation/Canvas2dRepresentation.tsx';
+const canvasViolations = canvasRepresentationViolations(
+  await source(canvasRepresentationFile),
+);
+if (canvasViolations.length)
+  fail(
+    `${canvasRepresentationFile} violates Canvas representation ownership: ${canvasViolations.join(', ')}.`,
+  );
 for (const file of [...simulation, ...protocol, ...web]) {
   const text = await source(file);
   const normalized = file.replaceAll('\\', '/');
@@ -735,6 +760,12 @@ const transportGenericFixture = await source(
 const vehicleAuthorityForbiddenFixture = await source(
   'scripts/fixtures/architecture/vehicle-authority-forbidden.txt',
 );
+const canvasRepresentationForbiddenFixture = await source(
+  'scripts/fixtures/architecture/canvas-representation-forbidden.txt',
+);
+const canvasRepresentationAllowedFixture = await source(
+  'scripts/fixtures/architecture/canvas-representation-allowed.txt',
+);
 const populationExtensionFixture = await source(
   'scripts/fixtures/architecture/population-extension-allowed.txt',
 );
@@ -791,6 +822,31 @@ if (
   !topLevelSingletons(vehicleAuthorityForbiddenFixture).length
 )
   fail('vehicle-authority negative fixture was not fully detected.');
+if (
+  canvasRepresentationViolations(canvasRepresentationForbiddenFixture)
+    .length !== 5
+)
+  fail('Canvas representation negative fixture was not fully detected.');
+if (canvasRepresentationViolations(canvasRepresentationAllowedFixture).length)
+  fail('legitimate Canvas representation fixture was rejected.');
+
+const representationBenchmarkSource = await source(
+  'cypress/performance/representation-runtime.cy.ts',
+);
+const setSvgModeSource = representationBenchmarkSource.slice(
+  representationBenchmarkSource.indexOf('const setSvgMode'),
+  representationBenchmarkSource.indexOf('const selectAndStart'),
+);
+const armIndex = setSvgModeSource.indexOf(
+  'button[aria-label="Select mini representation for swap"]',
+);
+const confirmIndex = setSvgModeSource.indexOf(
+  "cy.contains('button', 'Swap visualizations')",
+);
+if (armIndex < 0 || confirmIndex < 0 || armIndex > confirmIndex)
+  fail(
+    'representation performance mode changes must arm mini before confirming Swap visualizations.',
+  );
 if (topLevelSingletons(singletonFixture).length !== 12)
   fail('singleton regression fixture was not fully detected.');
 if (environmentNeutralViolations(forbiddenFixture).length !== 3)

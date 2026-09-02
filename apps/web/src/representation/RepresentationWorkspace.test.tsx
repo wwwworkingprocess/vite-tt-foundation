@@ -13,7 +13,8 @@ function ControlledWorkspace() {
         Open StopPlace details
       </button>
       <RepresentationWorkspace
-        twoDimensional={<button type="button">SVG StopPlace</button>}
+        domTwoDimensional={<button type="button">SVG StopPlace</button>}
+        canvasTwoDimensional={<div>Canvas scene</div>}
         threeDimensional={<div>3D scene</div>}
         modal={
           open
@@ -54,9 +55,84 @@ it('keeps modal and mini-swap transient modes mutually exclusive', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
   expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
     'data-family',
-    '3d',
+    'd3d',
   );
   expect(screen.queryByRole('dialog')).toBeNull();
+});
+
+it('mounts exactly two families and replaces only the mini with the inactive family', () => {
+  render(<ControlledWorkspace />);
+  expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
+    'data-family',
+    'dom2d',
+  );
+  expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
+    'data-family',
+    'd3d',
+  );
+  expect(screen.queryByText('Canvas scene')).toBeNull();
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  const miniSelector = screen.getByRole('button', {
+    name: 'Select mini representation for swap',
+  });
+  const swap = screen.getByRole('button', { name: 'Swap visualizations' });
+  const useCanvas = screen.getByRole('button', {
+    name: 'Use Canvas 2D in mini',
+  });
+  const actions = swap.parentElement;
+  expect(actions).toHaveClass('mini-representation-actions');
+  expect(actions).toContainElement(useCanvas);
+  expect(actions?.parentElement).toHaveClass('mini-representation-boundary');
+  miniSelector.focus();
+  swap.focus();
+  expect(useCanvas).toBeInTheDocument();
+  useCanvas.focus();
+  expect(swap).toBeInTheDocument();
+  fireEvent.click(useCanvas);
+  expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
+    'data-family',
+    'dom2d',
+  );
+  expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
+    'data-family',
+    'canvas2d',
+  );
+  expect(screen.getByText('Canvas scene')).toBeInTheDocument();
+  expect(screen.queryByText('3D scene')).toBeNull();
+  expect(
+    screen.queryByRole('button', { name: 'Swap visualizations' }),
+  ).toBeNull();
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
+  expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
+    'data-family',
+    'canvas2d',
+  );
+  expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
+    'data-family',
+    'dom2d',
+  );
+  expect(screen.getByTestId('visualization-workspace')).toHaveAttribute(
+    'data-inactive-family',
+    'd3d',
+  );
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  expect(
+    screen.getByRole('button', { name: 'Use 3D in mini' }),
+  ).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Use 3D in mini' }));
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  expect(
+    screen.getByRole('button', { name: 'Use DOM 2D in mini' }),
+  ).toBeInTheDocument();
 });
 
 it('keeps the mini boundary armed when mini activation closes an open modal', () => {
@@ -76,7 +152,7 @@ it('keeps the mini boundary armed when mini activation closes an open modal', ()
   fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
   expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
     'data-family',
-    '3d',
+    'd3d',
   );
   expect(
     screen.queryByRole('button', { name: 'Swap visualizations' }),

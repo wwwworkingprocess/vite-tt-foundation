@@ -30,6 +30,7 @@ const projectInfo = one(/^ProjectInfo-[\w-]+\.js$/);
 const simulationControls = one(/^SimulationControls-[\w-]+\.js$/);
 const sessionControls = one(/^SessionControls-[\w-]+\.js$/);
 const svgRepresentation = one(/^VehicleMovementSvg-[\w-]+\.js$/);
+const canvas2dRepresentation = one(/^Canvas2dRepresentation-[\w-]+\.js$/);
 const populationOverlay = one(/^PopulationGridOverlay-[\w-]+\.js$/);
 const openScreen = one(/^OpenScreen-[\w-]+\.js$/);
 const gameInspector = one(/^GameInspector-[\w-]+\.js$/);
@@ -45,6 +46,7 @@ for (const [name, matches] of Object.entries({
   simulationControls,
   sessionControls,
   svgRepresentation,
+  canvas2dRepresentation,
   populationOverlay,
   openScreen,
   gameInspector,
@@ -78,6 +80,7 @@ const sizes = {
   simulationControls: await size(simulationControls[0]),
   sessionControls: await size(sessionControls[0]),
   svgRepresentation: await size(svgRepresentation[0]),
+  canvas2dRepresentation: await size(canvas2dRepresentation[0]),
   populationOverlay: await size(populationOverlay[0]),
   openScreen: await size(openScreen[0]),
   gameInspector: await size(gameInspector[0]),

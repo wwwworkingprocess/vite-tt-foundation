@@ -1,0 +1,12 @@
+import { createRepresentationFrameDriver } from '../../../apps/web/src/representation/representation-cadence.js';
+const observer = new ResizeObserver(() => undefined);
+const context = {} as CanvasRenderingContext2D;
+const driver = createRepresentationFrameDriver({
+  mode: 'mini',
+  now: () => performance.now(),
+  setTimer: (callback, delay) => setTimeout(callback, delay),
+  cancel: (handle) => clearTimeout(handle as number),
+  frame: () => context.resetTransform(),
+});
+observer.disconnect();
+driver.close();

@@ -24,6 +24,7 @@ export interface GameShellProps {
   readonly sessionControls: ReactNode;
   readonly scenarioControl: ReactNode;
   readonly primaryVisualization: ReactNode;
+  readonly canvasVisualization: ReactNode;
   readonly secondaryVisualization: ReactNode;
   readonly representationModal?: RepresentationModal | undefined;
   readonly inspector?: ReactNode;
@@ -43,6 +44,7 @@ export function GameShell({
   sessionControls,
   scenarioControl,
   primaryVisualization,
+  canvasVisualization,
   secondaryVisualization,
   representationModal,
   inspector,
@@ -116,7 +118,8 @@ export function GameShell({
         </div>
       </nav>
       <RepresentationWorkspace
-        twoDimensional={primaryVisualization}
+        domTwoDimensional={primaryVisualization}
+        canvasTwoDimensional={canvasVisualization}
         threeDimensional={secondaryVisualization}
         modal={representationModal}
       />

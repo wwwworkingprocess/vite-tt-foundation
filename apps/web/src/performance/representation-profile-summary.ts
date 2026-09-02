@@ -2,6 +2,36 @@ import {
   representationProfilePrefix,
   summarizeDurations,
 } from './representation-profiler.js';
+import type { RepresentationFamily } from '../representation/RepresentationWorkspace.js';
+
+const representationFamilies: readonly RepresentationFamily[] = [
+  'dom2d',
+  'canvas2d',
+  'd3d',
+];
+
+const familyPlacement = (
+  family: RepresentationFamily,
+  primaryFamily: RepresentationFamily,
+  miniFamily: RepresentationFamily,
+) =>
+  family === primaryFamily
+    ? Object.freeze({
+        slot: 'primary' as const,
+        mode: 'normal' as const,
+        targetFramesPerSecond: 60,
+      })
+    : family === miniFamily
+      ? Object.freeze({
+          slot: 'mini' as const,
+          mode: 'mini' as const,
+          targetFramesPerSecond: 5,
+        })
+      : Object.freeze({
+          slot: 'inactive' as const,
+          mode: null,
+          targetFramesPerSecond: null,
+        });
 
 export interface ProfileEntryLike {
   readonly name: string;
@@ -41,7 +71,8 @@ export function createRepresentationProfileResult(input: {
   readonly representationMode: 'mini' | 'normal';
   readonly passengersVisible: boolean;
   readonly populationVisible: boolean;
-  readonly threePrimary: boolean;
+  readonly primaryFamily: RepresentationFamily;
+  readonly miniFamily: RepresentationFamily;
   readonly observationDurationMs: number;
   readonly startTick: number;
   readonly endTick: number;
@@ -58,14 +89,19 @@ export function createRepresentationProfileResult(input: {
   }>;
 }) {
   const { entries } = input;
+  const inactiveFamily = representationFamilies.find(
+    (family) => family !== input.primaryFamily && family !== input.miniFamily,
+  )!;
   return Object.freeze({
-    schemaVersion: '1.0.0',
+    schemaVersion: '2.0.0',
     scenarioId: input.scenarioId,
     representation: Object.freeze({
       mode: input.representationMode,
       passengersVisible: input.passengersVisible,
       populationVisible: input.populationVisible,
-      threePrimary: input.threePrimary,
+      primaryFamily: input.primaryFamily,
+      miniFamily: input.miniFamily,
+      inactiveFamily,
       targetFramesPerSecond: input.representationMode === 'mini' ? 5 : 60,
     }),
     observation: Object.freeze({
@@ -126,9 +162,39 @@ export function createRepresentationProfileResult(input: {
       ),
     }),
     r3f: Object.freeze({
-      targetFramesPerSecond: input.threePrimary ? 60 : 5,
+      ...familyPlacement('d3d', input.primaryFamily, input.miniFamily),
       frameAdvances: entriesNamed(entries, 'r3f.frame').length,
       ...durationSummary(entries, 'r3f.advance'),
     }),
+    ...(entriesNamed(entries, 'canvas2d.frame').length
+      ? {
+          canvas2d: Object.freeze({
+            ...familyPlacement(
+              'canvas2d',
+              input.primaryFamily,
+              input.miniFamily,
+            ),
+            frames: entriesNamed(entries, 'canvas2d.frame').length,
+            ...durationSummary(entries, 'canvas2d.draw'),
+            cssWidth: maximumDetail(entries, 'canvas2d.frame', 'cssWidth'),
+            cssHeight: maximumDetail(entries, 'canvas2d.frame', 'cssHeight'),
+            backingWidth: maximumDetail(
+              entries,
+              'canvas2d.frame',
+              'backingWidth',
+            ),
+            backingHeight: maximumDetail(
+              entries,
+              'canvas2d.frame',
+              'backingHeight',
+            ),
+            devicePixelRatio: maximumDetail(
+              entries,
+              'canvas2d.frame',
+              'devicePixelRatio',
+            ),
+          }),
+        }
+      : {}),
   });
 }

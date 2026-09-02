@@ -1,5 +1,6 @@
 import { createRepresentationProfileResult } from '../../apps/web/src/performance/representation-profile-summary.js';
 import { representationProfilePrefix } from '../../apps/web/src/performance/representation-profiler.js';
+import type { RepresentationFamily } from '../../apps/web/src/representation/RepresentationWorkspace.js';
 
 const scenarios = [
   { id: 'torrevieja-legacy-abc-v1', city: 'Torrevieja' },
@@ -9,6 +10,26 @@ const scenarios = [
 const warmupMs = 1_000;
 const observationMs = 3_000;
 const results: unknown[] = [];
+const parseRepresentationFamily = (
+  value: string | undefined,
+): RepresentationFamily => {
+  if (value === 'dom2d' || value === 'canvas2d' || value === 'd3d')
+    return value;
+  throw new Error(`Invalid representation family: ${String(value)}.`);
+};
+const visibleFamilies = () =>
+  cy
+    .get('[data-testid="primary-visualization"]')
+    .invoke('attr', 'data-family')
+    .then((primary) =>
+      cy
+        .get('[data-testid="secondary-minimap"]')
+        .invoke('attr', 'data-family')
+        .then((mini) => ({
+          primaryFamily: parseRepresentationFamily(primary),
+          miniFamily: parseRepresentationFamily(mini),
+        })),
+    );
 
 const tick = () =>
   cy
@@ -35,11 +56,12 @@ const setToggle = (kind: 'population' | 'passengers', visible: boolean) => {
 };
 
 const setSvgMode = (mode: 'mini' | 'normal') => {
-  cy.get('[data-view="transport"]').then(($surface) => {
-    if ($surface.attr('data-representation-mode') !== mode)
-      cy.contains('button', 'Swap visualizations').click();
+  cy.get('[data-family="dom2d"]').then(($surface) => {
+    if ($surface.attr('data-representation-mode') === mode) return;
+    cy.get('button[aria-label="Select mini representation for swap"]').click();
+    cy.contains('button', 'Swap visualizations').should('be.visible').click();
   });
-  cy.get('[data-view="transport"]').should(
+  cy.get('[data-family="dom2d"]').should(
     'have.attr',
     'data-representation-mode',
     mode,
@@ -137,34 +159,39 @@ const profile = (input: {
       openSimulationControls();
       tick().then((endTick) => {
         closeDialog();
-        cy.window().then((window) => {
-          const entries = [
-            ...window.performance.getEntriesByType('mark'),
-            ...window.performance.getEntriesByType('measure'),
-          ]
-            .filter(({ name }) => name.startsWith(representationProfilePrefix))
-            .map((entry) => ({
-              name: entry.name,
-              entryType: entry.entryType,
-              duration: entry.duration,
-              detail: (entry as PerformanceMark | PerformanceMeasure).detail as
-                Record<string, unknown> | undefined,
-            }));
-          results.push(
-            createRepresentationProfileResult({
-              scenarioId: input.scenarioId,
-              representationMode: input.mode,
-              passengersVisible: input.passengersVisible,
-              populationVisible: input.populationVisible,
-              threePrimary: input.mode === 'mini',
-              observationDurationMs: observationMs,
-              startTick,
-              endTick,
-              entries,
-              primitiveSnapshot,
-            }),
-          );
-        });
+        visibleFamilies().then(({ primaryFamily, miniFamily }) =>
+          cy.window().then((window) => {
+            const entries = [
+              ...window.performance.getEntriesByType('mark'),
+              ...window.performance.getEntriesByType('measure'),
+            ]
+              .filter(({ name }) =>
+                name.startsWith(representationProfilePrefix),
+              )
+              .map((entry) => ({
+                name: entry.name,
+                entryType: entry.entryType,
+                duration: entry.duration,
+                detail: (entry as PerformanceMark | PerformanceMeasure)
+                  .detail as Record<string, unknown> | undefined,
+              }));
+            results.push(
+              createRepresentationProfileResult({
+                scenarioId: input.scenarioId,
+                representationMode: input.mode,
+                passengersVisible: input.passengersVisible,
+                populationVisible: input.populationVisible,
+                primaryFamily,
+                miniFamily,
+                observationDurationMs: observationMs,
+                startTick,
+                endTick,
+                entries,
+                primitiveSnapshot,
+              }),
+            );
+          }),
+        );
       });
     });
   });

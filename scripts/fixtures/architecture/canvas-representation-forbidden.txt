@@ -1,0 +1,6 @@
+import { Canvas } from '@react-three/fiber';
+import { createTransportSimulationState } from '@torrevieja-tycoon/simulation';
+const frame = requestAnimationFrame(() => Date.now() + Math.random());
+void Canvas;
+void createTransportSimulationState;
+void frame;

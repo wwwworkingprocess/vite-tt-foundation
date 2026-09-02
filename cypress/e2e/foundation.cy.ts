@@ -85,11 +85,12 @@ describe('foundation screen', () => {
     startDefaultGame();
     cy.get('[data-testid="top-navigation"]').should('be.visible');
     cy.get('[data-testid="primary-visualization"]')
-      .should('have.attr', 'data-family', '2d')
+      .should('have.attr', 'data-family', 'dom2d')
       .and('have.attr', 'data-view', 'map');
     cy.get('[data-testid="secondary-minimap"]')
-      .should('have.attr', 'data-family', '3d')
+      .should('have.attr', 'data-family', 'd3d')
       .and('have.attr', 'data-view', 'main');
+    cy.get('[data-testid="canvas2d-representation"]').should('not.exist');
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.get('.scenario-menu-panel').then(($menu) => {
       cy.get('.mini-representation-boundary').then(($miniBoundary) => {
@@ -105,12 +106,25 @@ describe('foundation screen', () => {
       });
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.get('button[aria-label="Select mini representation for swap"]').click();
-    cy.contains('button', 'Swap visualizations').should('be.visible').click();
+    cy.contains('button', 'Use Canvas 2D in mini').should('be.visible').click();
     cy.get('[data-testid="primary-visualization"]')
-      .should('have.attr', 'data-family', '3d')
+      .should('have.attr', 'data-family', 'dom2d')
+      .and('have.attr', 'data-representation-mode', 'normal');
+    cy.get('[data-testid="secondary-minimap"]')
+      .should('have.attr', 'data-family', 'canvas2d')
+      .and('have.attr', 'data-view', 'main')
+      .and('have.attr', 'data-representation-mode', 'mini');
+    cy.get('[data-testid="canvas2d-representation"]').should('be.visible');
+    cy.get('[aria-label="Three-dimensional renderer smoke test"]').should(
+      'not.exist',
+    );
+    cy.get('button[aria-label="Select mini representation for swap"]').click();
+    cy.contains('button', 'Swap visualizations').click();
+    cy.get('[data-testid="primary-visualization"]')
+      .should('have.attr', 'data-family', 'canvas2d')
       .and('have.attr', 'data-view', 'main');
     cy.get('[data-testid="secondary-minimap"]')
-      .should('have.attr', 'data-family', '2d')
+      .should('have.attr', 'data-family', 'dom2d')
       .and('have.attr', 'data-view', 'map');
     cy.contains('button', 'Project info').focus().click();
     cy.get('[role="dialog"]').should('contain.text', 'Project foundation');

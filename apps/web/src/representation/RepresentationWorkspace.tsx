@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { RepresentationModeProvider } from './RepresentationModeContext.js';
 
-export type RepresentationFamily = '2d' | '3d';
+export type RepresentationFamily = 'dom2d' | 'canvas2d' | 'd3d';
 export type RepresentationView = 'map' | 'main';
 
 export interface RepresentationModal {
@@ -17,37 +17,49 @@ export interface RepresentationModal {
 }
 
 interface RepresentationWorkspaceProps {
-  readonly twoDimensional: ReactNode;
+  readonly domTwoDimensional: ReactNode;
+  readonly canvasTwoDimensional: ReactNode;
   readonly threeDimensional: ReactNode;
   readonly modal?: RepresentationModal | undefined;
 }
 
 const viewForFamily = (family: RepresentationFamily): RepresentationView =>
-  family === '2d' ? 'map' : 'main';
+  family === 'dom2d' ? 'map' : 'main';
+const labelForFamily = (family: RepresentationFamily) =>
+  family === 'dom2d' ? 'DOM 2D' : family === 'canvas2d' ? 'Canvas 2D' : '3D';
 const labelForView = (view: RepresentationView) =>
   view === 'map' ? 'Map' : 'Main';
 
 export function RepresentationWorkspace({
-  twoDimensional,
+  domTwoDimensional,
+  canvasTwoDimensional,
   threeDimensional,
   modal,
 }: RepresentationWorkspaceProps) {
-  const [primaryFamily, setPrimaryFamily] =
-    useState<RepresentationFamily>('2d');
+  const [visibleFamilies, setVisibleFamilies] = useState<
+    readonly [RepresentationFamily, RepresentationFamily]
+  >(['dom2d', 'd3d']);
   const [familyViews] = useState(
     () =>
       ({
-        '2d': viewForFamily('2d'),
-        '3d': viewForFamily('3d'),
+        dom2d: viewForFamily('dom2d'),
+        canvas2d: viewForFamily('canvas2d'),
+        d3d: viewForFamily('d3d'),
       }) as const,
   );
   const [swapArmed, setSwapArmed] = useState(false);
   const miniBoundary = useRef<HTMLDivElement>(null);
   const restoreModalFocus = useRef(true);
-  const secondaryFamily: RepresentationFamily =
-    primaryFamily === '2d' ? '3d' : '2d';
+  const [primaryFamily, secondaryFamily] = visibleFamilies;
+  const inactiveFamily = (['dom2d', 'canvas2d', 'd3d'] as const).find(
+    (family) => !visibleFamilies.includes(family),
+  )!;
   const renderFamily = (family: RepresentationFamily) =>
-    family === '2d' ? twoDimensional : threeDimensional;
+    family === 'dom2d'
+      ? domTwoDimensional
+      : family === 'canvas2d'
+        ? canvasTwoDimensional
+        : threeDimensional;
   const closeModal = () => {
     restoreModalFocus.current = true;
     setSwapArmed(false);
@@ -84,7 +96,11 @@ export function RepresentationWorkspace({
   };
   const confirmSwap = () => {
     closeModal();
-    setPrimaryFamily(secondaryFamily);
+    setVisibleFamilies([secondaryFamily, primaryFamily]);
+    setSwapArmed(false);
+  };
+  const replaceMini = () => {
+    setVisibleFamilies([primaryFamily, inactiveFamily]);
     setSwapArmed(false);
   };
 
@@ -92,6 +108,7 @@ export function RepresentationWorkspace({
     <section
       className="visualization-workspace"
       data-testid="visualization-workspace"
+      data-inactive-family={inactiveFamily}
     >
       <section
         className="representation-slot representation-slot-primary"
@@ -150,13 +167,18 @@ export function RepresentationWorkspace({
           onClick={armSwap}
         />
         {swapArmed ? (
-          <button
-            type="button"
-            className="swap-visualizations"
-            onClick={confirmSwap}
-          >
-            Swap visualizations
-          </button>
+          <div className="mini-representation-actions">
+            <button
+              type="button"
+              className="swap-visualizations"
+              onClick={confirmSwap}
+            >
+              Swap visualizations
+            </button>
+            <button type="button" onClick={replaceMini}>
+              Use {labelForFamily(inactiveFamily)} in mini
+            </button>
+          </div>
         ) : null}
       </div>
     </section>

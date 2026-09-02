@@ -14,6 +14,19 @@ a finite interval and records its start/end simulation ticks.
 
 The browser profile measures:
 
+- Canvas 2D accepted frames and draw duration, including presentation mode,
+  target cadence, CSS and backing-store dimensions, and device-pixel ratio;
+
+Canvas profiling currently covers only the Canvas 2D `Main` foundation/smoke
+view. StopPlace/Vehicle hit testing, `GameSelection` mapping, Canvas Map,
+renderer-neutral Map projection, a universal view capability model, and D3D Map
+remain explicitly deferred.
+
+Profile result schema v2 records the actual primary, mini, and derived inactive
+representation families. Renderer-specific cadence metadata follows the real
+visible slot; an inactive renderer is identified as inactive with no active
+mode or target frame rate.
+
 - raw SVG throttle-wrapper renders separately from accepted expensive SVG-tree
   renders and commits;
 - committed SVG render-to-layout-effect latency and committed primitive counts;

@@ -42,6 +42,7 @@ const manifest = z
       simulationControls: z.number().int().positive(),
       sessionControls: z.number().int().positive(),
       svgRepresentation: z.number().int().positive(),
+      canvas2dRepresentation: z.literal(12000),
       populationOverlay: z.number().int().positive(),
       openScreen: z.number().int().positive(),
       gameInspector: z.number().int().positive(),

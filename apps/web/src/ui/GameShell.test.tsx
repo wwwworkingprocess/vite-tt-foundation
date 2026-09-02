@@ -41,6 +41,7 @@ const renderShell = (
         </label>
       }
       primaryVisualization={<div data-testid="svg-identity">SVG</div>}
+      canvasVisualization={<div data-testid="canvas-identity">Canvas</div>}
       secondaryVisualization={<div data-testid="r3f-identity">R3F</div>}
       representationModal={representationModal}
       inspector={
@@ -88,16 +89,16 @@ it('renders a viewport shell with compact navigation and paired stable views', (
   );
   expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
     'data-family',
-    '2d',
+    'dom2d',
   );
   fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
   expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
     'data-family',
-    '3d',
+    'd3d',
   );
   expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
     'data-family',
-    '2d',
+    'dom2d',
   );
   expect(screen.getByTestId('svg-identity')).toBeInTheDocument();
   expect(screen.getByTestId('r3f-identity')).toBeInTheDocument();

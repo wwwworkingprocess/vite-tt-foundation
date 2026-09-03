@@ -160,11 +160,15 @@ inactive until an armed mini action explicitly installs it. Swap remains a
 separate confirmation that exchanges the visible families without changing the
 inactive family. Mini controls remain above the primary-slot modal.
 
-Canvas 2D currently implements only its deterministic `Main` foundation/smoke
-view. Canvas StopPlace hit testing, Vehicle hit testing, `GameSelection`
-mapping, Canvas Map, a renderer-neutral Map projection, a universal view
-capability model, and D3D Map are intentionally deferred representation
-milestones rather than current capabilities.
+Canvas 2D `Main` now provides canonical directed route-network context with
+route colours and direction arrows, plus StopPlace/Vehicle pointer and compact
+keyboard selection, existing `GameSelection` and workspace-modal integration,
+and Canvas-native selected-object feedback. Directed graph edges are
+presentation-only in Canvas and DOM2D: they are neither focusable nor
+selectable. Future whole-route interaction may continue to use the existing
+route selection authority, but Canvas route selection, Canvas Map,
+renderer-neutral Map projection, population/passenger rendering, a universal
+view capability model, and D3D Map remain deferred representation milestones.
 
 All renderers consume one `RepresentationMode`: `mini` targets 5 fps and
 `normal` targets 60 fps. Replaceable render projection is sampled with

@@ -326,6 +326,19 @@ summary {
   height: 100%;
 }
 
+.canvas2d-representation[data-interactive='true'] {
+  cursor: pointer;
+}
+
+.canvas2d-selection-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .mini-representation-actions {
   position: absolute;
   z-index: calc(var(--layer-mini-interaction) + 1);

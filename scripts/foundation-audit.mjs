@@ -302,6 +302,10 @@ export function environmentNeutralViolations(text) {
 }
 export function canvasRepresentationViolations(text) {
   const violations = [];
+  const runtimeText = text.replace(
+    /import\s+type[\s\S]*?from\s+['"][^'"]+['"];?/g,
+    '',
+  );
   if (/\bDate\b/.test(text)) violations.push('date-authority');
   if (/Math\.random/.test(text)) violations.push('randomness');
   if (/\brequestAnimationFrame\b/.test(text))
@@ -310,10 +314,12 @@ export function canvasRepresentationViolations(text) {
     violations.push('three-import');
   if (
     /from\s+['"][^'"]*(?:@torrevieja-tycoon\/simulation|transport-simulation|packages\/simulation)[^'"]*['"]/.test(
-      text,
+      runtimeText,
     )
   )
     violations.push('simulation-import');
+  if (/from\s+['"][^'"]*transport-representation[^'"]*['"]/.test(text))
+    violations.push('renderer-coupling');
   return violations;
 }
 export function nodeBuiltinImports(text) {
@@ -594,15 +600,18 @@ for (const file of web.filter((path) =>
   )
     fail(`${file} gives the SVG representation authority or frame timing.`);
 }
-const canvasRepresentationFile =
-  'apps/web/src/representation/Canvas2dRepresentation.tsx';
-const canvasViolations = canvasRepresentationViolations(
-  await source(canvasRepresentationFile),
-);
-if (canvasViolations.length)
-  fail(
-    `${canvasRepresentationFile} violates Canvas representation ownership: ${canvasViolations.join(', ')}.`,
+for (const canvasRepresentationFile of [
+  'apps/web/src/representation/Canvas2dRepresentation.tsx',
+  'apps/web/src/representation/canvas2d-selection-model.ts',
+]) {
+  const canvasViolations = canvasRepresentationViolations(
+    await source(canvasRepresentationFile),
   );
+  if (canvasViolations.length)
+    fail(
+      `${canvasRepresentationFile} violates Canvas representation ownership: ${canvasViolations.join(', ')}.`,
+    );
+}
 for (const file of [...simulation, ...protocol, ...web]) {
   const text = await source(file);
   const normalized = file.replaceAll('\\', '/');
@@ -612,6 +621,12 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.includes('apps/web/src/scenarios') ||
     normalized.includes('apps/web/src/transport-simulation') ||
     normalized.includes('apps/web/src/transport-representation') ||
+    normalized.endsWith(
+      'apps/web/src/representation/canvas2d-selection-model.ts',
+    ) ||
+    normalized.endsWith(
+      'apps/web/src/representation/Canvas2dRepresentation.tsx',
+    ) ||
     normalized.endsWith('apps/web/src/App.tsx') ||
     normalized.endsWith('apps/web/src/ui/SessionControls.tsx') ||
     normalized.endsWith('apps/web/src/ui/SimulationControls.tsx') ||
@@ -824,7 +839,7 @@ if (
   fail('vehicle-authority negative fixture was not fully detected.');
 if (
   canvasRepresentationViolations(canvasRepresentationForbiddenFixture)
-    .length !== 5
+    .length !== 6
 )
   fail('Canvas representation negative fixture was not fully detected.');
 if (canvasRepresentationViolations(canvasRepresentationAllowedFixture).length)

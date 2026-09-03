@@ -1,9 +1,5 @@
 import { memo, type KeyboardEvent } from 'react';
-import {
-  selectRoute,
-  selectStop,
-  type GameSelection,
-} from '../ui/game-selection.js';
+import { selectStop, type GameSelection } from '../ui/game-selection.js';
 import type { VehicleSvgProjection } from './vehicle-svg-projection.js';
 
 const activate = (callback: () => void) => (event: KeyboardEvent) => {
@@ -63,17 +59,8 @@ function StaticScenarioSvgLayer({
                 y2={edge.y2}
                 stroke={color}
                 strokeWidth="0.6"
-                role="button"
-                tabIndex={0}
-                aria-label={`Select route ${edge.routeId}`}
-                data-selected={
-                  selection?.kind === 'route' &&
-                  selection.routeId === edge.routeId
-                }
-                onClick={() => onSelectionChange?.(selectRoute(edge.routeId))}
-                onKeyDown={activate(() =>
-                  onSelectionChange?.(selectRoute(edge.routeId)),
-                )}
+                pointerEvents="none"
+                aria-hidden="true"
               />
               {points ? (
                 <polygon

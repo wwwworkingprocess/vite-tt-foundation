@@ -958,7 +958,14 @@ export function App() {
       }
       canvasVisualization={
         <Suspense fallback={<p>Loading Canvas 2D representation…</p>}>
-          <Canvas2dRepresentation />
+          {authoritativeScenarioPackage && fleet ? (
+            <Canvas2dRepresentation
+              scenario={authoritativeScenarioPackage}
+              fleet={fleet}
+              selection={gameSelection}
+              onSelectionChange={selectGameObject}
+            />
+          ) : null}
         </Suspense>
       }
       representationModal={

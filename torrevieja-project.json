@@ -35,6 +35,7 @@
       "apps/web/src/ui/stop-place-details-model.ts",
       "apps/web/src/representation/RepresentationWorkspace.tsx",
       "apps/web/src/representation/Canvas2dRepresentation.tsx",
+      "apps/web/src/representation/canvas2d-selection-model.ts",
       "apps/web/src/population/population-field-loader.ts",
       "apps/web/src/population/population-demand-plan.ts",
       "apps/web/src/transport-representation/PopulationGridOverlay.tsx"

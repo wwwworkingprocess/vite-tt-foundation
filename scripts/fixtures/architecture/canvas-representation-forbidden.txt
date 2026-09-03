@@ -1,6 +1,8 @@
 import { Canvas } from '@react-three/fiber';
 import { createTransportSimulationState } from '@torrevieja-tycoon/simulation';
+import { VehicleMovementSvg } from '../../../apps/web/src/transport-representation/VehicleMovementSvg.js';
 const frame = requestAnimationFrame(() => Date.now() + Math.random());
 void Canvas;
 void createTransportSimulationState;
+void VehicleMovementSvg;
 void frame;

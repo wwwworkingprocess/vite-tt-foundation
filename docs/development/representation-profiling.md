@@ -17,9 +17,13 @@ The browser profile measures:
 - Canvas 2D accepted frames and draw duration, including presentation mode,
   target cadence, CSS and backing-store dimensions, and device-pixel ratio;
 
-Canvas profiling currently covers only the Canvas 2D `Main` foundation/smoke
-view. StopPlace/Vehicle hit testing, `GameSelection` mapping, Canvas Map,
-renderer-neutral Map projection, a universal view capability model, and D3D Map
+Canvas profiling covers the Canvas 2D `Main` canonical directed route context
+and sparse StopPlace/Vehicle selection field, including directed-edge,
+arrowhead, and selectable-point counts. Directed edges are presentation-only;
+pointer and keyboard activation remain limited to StopPlaces and Vehicles and
+reuse application-owned `GameSelection` and workspace modal details. Canvas
+whole-route selection/highlighting, Canvas Map, renderer-neutral Map projection,
+population/passenger rendering, a universal view capability model, and D3D Map
 remain explicitly deferred.
 
 Profile result schema v2 records the actual primary, mini, and derived inactive

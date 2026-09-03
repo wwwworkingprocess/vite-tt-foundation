@@ -126,6 +126,24 @@ describe('foundation screen', () => {
     cy.get('[data-testid="secondary-minimap"]')
       .should('have.attr', 'data-family', 'dom2d')
       .and('have.attr', 'data-view', 'map');
+    cy.get('[data-testid="canvas2d-representation"]')
+      .should('have.attr', 'tabindex', '0')
+      .focus()
+      .type('{home}{enter}');
+    cy.get('[role="dialog"]')
+      .should('contain.text', 'Stop overview')
+      .find('button')
+      .contains('Close')
+      .click();
+    cy.get('[data-testid="stop-inspector"]').should('exist');
+    cy.get('[data-testid="canvas2d-representation"]')
+      .should('have.focus')
+      .type('{enter}');
+    cy.get('[role="dialog"]')
+      .should('contain.text', 'Stop overview')
+      .find('button')
+      .contains('Close')
+      .click();
     cy.contains('button', 'Project info').focus().click();
     cy.get('[role="dialog"]').should('contain.text', 'Project foundation');
     cy.get('body').type('{esc}');

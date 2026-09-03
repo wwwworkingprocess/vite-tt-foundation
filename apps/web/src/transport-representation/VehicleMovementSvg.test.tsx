@@ -474,6 +474,9 @@ it('adapts pointer and keyboard input into renderer-independent selections', asy
   const stop = view.container.querySelector<SVGCircleElement>(
     '[data-stop-place-id]',
   )!;
+  expect(edge).not.toHaveAttribute('role');
+  expect(edge).not.toHaveAttribute('tabindex');
+  expect(edge).toHaveAttribute('aria-hidden', 'true');
   fireEvent.click(edge);
   fireEvent.keyDown(edge, { key: 'Enter' });
   fireEvent.keyDown(edge, { key: ' ' });
@@ -482,7 +485,7 @@ it('adapts pointer and keyboard input into renderer-independent selections', asy
   fireEvent.keyDown(stop, { key: 'Enter' });
   expect(
     onSelectionChange.mock.calls.map(([selection]) => selection.kind),
-  ).toEqual(['route', 'route', 'route', 'stop', 'stop']);
+  ).toEqual(['stop', 'stop']);
 
   const pattern = selectionScenario.routes.routes[0]!.patterns[0]!;
   const withVehicle = applyTransportVehicleCommand(state, {
@@ -509,7 +512,7 @@ it('adapts pointer and keyboard input into renderer-independent selections', asy
       onSelectionChange={onSelectionChange}
     />,
   );
-  expect(edge).toHaveAttribute('data-selected', 'true');
+  expect(edge).not.toHaveAttribute('data-selected');
   view.rerender(
     <VehicleMovementSvg
       scenario={selectionScenario}

@@ -144,6 +144,14 @@ The simulation publishes logical information such as an exact edge identity and
 integer progress/travel values. Representation converts that authority into
 world position, orientation, interpolation, meshes, labels, and camera framing.
 
+`apps/web/src/representation/transport-map-projection.ts` is the pure shared
+2D transport projection boundary. It converts canonical scenario topology and
+authoritative Vehicle positions into immutable normalized west-to-east,
+north-to-south Map coordinates. It owns no React, DOM, SVG, Canvas, Three.js,
+interaction, cadence, population, or passenger-diagnostic materialization.
+DOM2D and Canvas2D independently materialize that projection in their own
+coordinate spaces.
+
 Scene interpolation is visual only. It cannot become authoritative movement.
 
 ## Enforcement

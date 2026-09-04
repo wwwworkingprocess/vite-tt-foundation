@@ -49,11 +49,12 @@ interface AuthorityProps {
 interface SvgProps extends AuthorityProps {
   readonly selection?: GameSelection | undefined;
   readonly onSelectionChange?: ((selection: GameSelection) => void) | undefined;
+  readonly passengersVisible?: boolean | undefined;
 }
 
 export function VehicleMovementSvg(props: Readonly<SvgProps>) {
   recordRepresentationProfile('svg.wrapper.render');
-  const { selection = null, onSelectionChange } = props;
+  const { selection = null, onSelectionChange, passengersVisible } = props;
   const authority = useMemo<AuthorityProps>(
     () => ({
       scenario: props.scenario,
@@ -86,6 +87,7 @@ export function VehicleMovementSvg(props: Readonly<SvgProps>) {
       {...committed}
       selection={selection}
       onSelectionChange={select}
+      passengersVisible={passengersVisible}
     />
   );
 }
@@ -107,12 +109,12 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
   passengerOriginStopArrivalEvents = noArrivalEvents,
   simulationTick = 0,
   showPassengerArrivalPulse = false,
+  passengersVisible = true,
 }: Readonly<SvgProps>) {
   recordRepresentationProfile('svg.committed.render');
   const renderProfile = beginRepresentationProfile(
     'svg.committed.render-to-commit',
   );
-  const [passengersVisible, setPassengersVisible] = useState(true);
   const [lastArrivalTicks, setLastArrivalTicks] = useState<
     ReadonlyMap<string, number>
   >(() => new Map());
@@ -169,12 +171,6 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
   });
   return (
     <section className="passenger-map-diagnostics">
-      <button
-        type="button"
-        onClick={() => setPassengersVisible((current) => !current)}
-      >
-        {passengersVisible ? 'Hide passengers' : 'Show passengers'}
-      </button>
       <svg
         data-testid="vehicle-movement-svg"
         data-scenario-id={scenario.manifest.scenarioId}

@@ -1,4 +1,4 @@
-import { memo, useLayoutEffect, useMemo, useState } from 'react';
+import { memo, useLayoutEffect, useMemo } from 'react';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import { createScenarioSvgPositionProjector } from './vehicle-svg-projection.js';
 import {
@@ -23,12 +23,13 @@ function PopulationGridOverlay(props: {
   readonly demandModelContentHash?: string;
   readonly scenario?: CanonicalScenario;
   readonly project?: (position: PopulationCell['center']) => SvgPoint;
+  readonly visible?: boolean;
 }) {
   const renderProfile = beginRepresentationProfile(
     'population.render-to-commit',
   );
   recordRepresentationProfile('population.render');
-  const [visible, setVisible] = useState(true);
+  const visible = props.visible ?? true;
   const scenarioProject = useMemo(
     () =>
       props.scenario
@@ -116,9 +117,6 @@ function PopulationGridOverlay(props: {
 
   return (
     <section className="population-grid-overlay" aria-label="Population field">
-      <button type="button" onClick={() => setVisible((current) => !current)}>
-        {visible ? 'Hide population' : 'Show population'}
-      </button>
       {visible ? (
         <svg
           role="img"

@@ -166,14 +166,10 @@ it('builds canonical physical StopPlace and stopped/running Vehicle selection ge
 });
 
 it('projects degenerate extents and converts client coordinates in CSS pixels', () => {
-  expect(
-    projectCanvas2dPosition(
-      { latitude: 1, longitude: 2 },
-      { south: 1, north: 1, west: 2, east: 2 },
-      200,
-      100,
-    ),
-  ).toEqual({ x: 100, y: 50 });
+  expect(projectCanvas2dPosition({ x: 0.5, y: 0.5 }, 200, 100)).toEqual({
+    x: 100,
+    y: 50,
+  });
   expect(
     canvas2dPointerPosition(
       { left: 10, top: 20, width: 200, height: 100 },
@@ -382,8 +378,13 @@ it('covers standalone physical stops, dimensions, ordering, and strict running a
   ).toHaveLength(3);
   expect(() =>
     createCanvas2dSelectionSnapshot(
-      { ...index, edges: new Map() },
-      [base],
+      index,
+      [
+        {
+          ...base,
+          movement: { ...base.movement, edgeId: 'missing-edge' as never },
+        },
+      ],
       100,
       100,
     ),
@@ -479,7 +480,7 @@ it('fails closed for malformed canonical stop ownership and covers deterministic
     },
   };
   expect(() => createCanvas2dSelectionIndex(unpositioned)).toThrow(
-    'has no canonical selection position',
+    'has no canonical Map position',
   );
 
   const stopA = {

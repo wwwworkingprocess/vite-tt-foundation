@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, expect, it } from 'vitest';
 import { RepresentationWorkspace } from './RepresentationWorkspace.js';
+import { RepresentationViewActions } from './RepresentationViewActions.js';
 
 afterEach(cleanup);
 
@@ -219,4 +220,35 @@ it('opens safely when the initiating representation focus is not HTML', () => {
   );
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   expect(screen.queryByRole('dialog')).toBeNull();
+});
+
+it('shows DOM2D view actions only while primary and preserves their external state', () => {
+  function ActionWorkspace() {
+    const [visible, setVisible] = useState(true);
+    return (
+      <RepresentationWorkspace
+        domTwoDimensional={
+          <RepresentationViewActions>
+            <button type="button" onClick={() => setVisible(!visible)}>
+              {visible ? 'Hide layer' : 'Show layer'}
+            </button>
+          </RepresentationViewActions>
+        }
+        canvasTwoDimensional={<div>Canvas scene</div>}
+        threeDimensional={<div>3D scene</div>}
+      />
+    );
+  }
+  render(<ActionWorkspace />);
+  fireEvent.click(screen.getByRole('button', { name: 'Hide layer' }));
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
+  expect(screen.queryByRole('button', { name: 'Show layer' })).toBeNull();
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
+  expect(screen.getByRole('button', { name: 'Show layer' })).toBeVisible();
 });

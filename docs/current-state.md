@@ -165,10 +165,30 @@ route colours and direction arrows, plus StopPlace/Vehicle pointer and compact
 keyboard selection, existing `GameSelection` and workspace-modal integration,
 and Canvas-native selected-object feedback. Directed graph edges are
 presentation-only in Canvas and DOM2D: they are neither focusable nor
-selectable. Future whole-route interaction may continue to use the existing
-route selection authority, but Canvas route selection, Canvas Map,
-renderer-neutral Map projection, population/passenger rendering, a universal
-view capability model, and D3D Map remain deferred representation milestones.
+selectable. DOM2D and Canvas consume one renderer-neutral, scenario-cached
+transport Map projection for normalized bounds, StopNode/StopPlace spatial
+identity, directed route topology and presentation identity, and exact current
+Vehicle positions. SVG viewBox materialization and accessibility remain DOM2D
+owned; CSS-pixel drawing, arrowheads, hit regions, keyboard candidates, and
+last-drawn interaction authority remain Canvas owned. DOM2D Map population and
+passenger actions are primary-slot-only view chrome: they disappear completely
+while DOM2D is mini and retain their chosen state when it returns to primary.
+Population visibility resets with a new authoritative scenario; passenger
+visibility resets with a new authoritative scenario or timeline, matching the
+former renderer-mount lifecycle. Canvas and D3D expose no empty action bars. Future whole-route interaction may
+continue to use the existing route selection authority, but Canvas route
+selection, Canvas Map promotion, Canvas population/passenger rendering, a
+universal view capability model, and D3D Map remain deferred representation
+milestones.
+
+Build budgets account for renderer-specific emitted artifacts independently
+from shared production architecture. The shared transport Map projection has a
+4,500-byte hard coordinate and the DOM2D projection adapter has a 2,500-byte
+hard coordinate. The build audit also reports Canvas, DOM2D, and population Map
+logical compositions including their mandatory shared dependencies, while the
+total-emitted-JavaScript budget remains the global no-hiding backstop. These
+report-only compositions are not compared with the historical exclusive
+renderer ceilings.
 
 All renderers consume one `RepresentationMode`: `mini` targets 5 fps and
 `normal` targets 60 fps. Replaceable render projection is sampled with

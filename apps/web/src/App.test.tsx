@@ -652,6 +652,10 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('scenario-menu-trigger')).toHaveTextContent(
       alternateScenario.manifest.title,
     );
+    fireEvent.click(screen.getByRole('button', { name: 'Hide passengers' }));
+    expect(
+      screen.getByRole('button', { name: 'Show passengers' }),
+    ).toBeVisible();
     fireEvent.click(screen.getByRole('button', { name: 'Restart' }));
     expect(await screen.findByTestId('vehicle-movement-svg')).toHaveAttribute(
       'data-scenario-id',
@@ -660,6 +664,7 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('scenario-menu-trigger')).toHaveTextContent(
       alternateScenario.manifest.title,
     );
+    await screen.findByRole('button', { name: 'Hide passengers' });
     const cleanupRepository = createDexieTransportSaveRepository(
       'foundation-template',
     );
@@ -1324,6 +1329,50 @@ describe('foundation screen', () => {
         `[data-authoritative-scenario-id="${alternateScenario.manifest.scenarioId}"]`,
       ),
     ).toBeInTheDocument();
+    const actionBars = document.querySelectorAll(
+      '.representation-view-actions',
+    );
+    expect(actionBars).toHaveLength(1);
+    expect(
+      within(actionBars[0] as HTMLElement).getByRole('button', {
+        name: 'Hide population',
+      }),
+    ).toBeVisible();
+    expect(
+      within(actionBars[0] as HTMLElement).getByRole('button', {
+        name: 'Hide passengers',
+      }),
+    ).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Hide population' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Hide passengers' }));
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Select mini representation for swap',
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Swap visualizations' }),
+    );
+    expect(
+      screen.queryByRole('button', { name: 'Show population' }),
+    ).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'Show passengers' }),
+    ).toBeNull();
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Select mini representation for swap',
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Swap visualizations' }),
+    );
+    expect(
+      screen.getByRole('button', { name: 'Show population' }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: 'Show passengers' }),
+    ).toBeVisible();
     deferredPopulation = {
       scenarioId: scenario.manifest.scenarioId,
       skipMatchingCalls: 0,
@@ -1349,6 +1398,9 @@ describe('foundation screen', () => {
     await screen.findByRole('button', {
       name: 'Hide population',
     });
+    expect(
+      screen.getByRole('button', { name: 'Hide passengers' }),
+    ).toBeVisible();
     expect(screen.getByTestId('population-band')).toBeInTheDocument();
     expect(
       document.querySelector(

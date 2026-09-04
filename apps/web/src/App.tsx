@@ -49,6 +49,7 @@ import {
 } from './scenarios/scenario-loader.js';
 import { defaultScenarioId } from './project-defaults.js';
 import { createProductionPassengerDemandPlan } from './population/population-demand-plan.js';
+import { RepresentationViewActions } from './representation/RepresentationViewActions.js';
 import {
   createPopulationFieldLoader,
   type ScenarioPopulationView,
@@ -161,6 +162,8 @@ export function App() {
   const [browserActionMessage, setBrowserActionMessage] = useState<string>();
   const [selectedRouteId, setSelectedRouteId] = useState<string>();
   const [gameSelection, setGameSelection] = useState<GameSelection>(null);
+  const [populationVisible, setPopulationVisible] = useState(true);
+  const [passengersVisible, setPassengersVisible] = useState(true);
   const [openSelectionDetails, setOpenSelectionDetails] = useState<
     'stop' | 'vehicle'
   >();
@@ -480,6 +483,15 @@ export function App() {
   const authoritativeCoordinateKey = authoritativeCoordinate
     ? scenarioKey(authoritativeCoordinate)
     : undefined;
+  const authoritativeTimelineKey =
+    application?.session.status === 'ready'
+      ? application.session.timelineId
+      : undefined;
+  useEffect(() => setPopulationVisible(true), [authoritativeCoordinateKey]);
+  useEffect(
+    () => setPassengersVisible(true),
+    [authoritativeCoordinateKey, authoritativeTimelineKey],
+  );
   const cachedAuthoritativeScenario = authoritativeCoordinateKey
     ? scenarioCache.current.get(authoritativeCoordinateKey)
     : undefined;
@@ -907,6 +919,20 @@ export function App() {
         <Suspense fallback={<p>Loading transport representation…</p>}>
           {authoritativeScenarioPackage && fleet ? (
             <div className="vehicle-movement-representation">
+              <RepresentationViewActions>
+                <button
+                  type="button"
+                  onClick={() => setPopulationVisible((visible) => !visible)}
+                >
+                  {populationVisible ? 'Hide population' : 'Show population'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPassengersVisible((visible) => !visible)}
+                >
+                  {passengersVisible ? 'Hide passengers' : 'Show passengers'}
+                </button>
+              </RepresentationViewActions>
               {authoritativePopulationState.status === 'ready' &&
               authoritativePopulationState.coordinateKey ===
                 authoritativeCoordinateKey &&
@@ -926,11 +952,12 @@ export function App() {
                       authoritativePopulationState.population
                         .demandModelContentHash
                     }
+                    visible={populationVisible}
                   />
                 </Suspense>
               ) : null}
               <VehicleMovementSvg
-                key={`${authoritativeCoordinateKey ?? 'none'}:${application?.session.status === 'ready' ? application.session.timelineId : 'none'}`}
+                key={`${authoritativeCoordinateKey ?? 'none'}:${authoritativeTimelineKey ?? 'none'}`}
                 scenario={authoritativeScenarioPackage}
                 fleet={fleet}
                 selection={gameSelection}
@@ -944,6 +971,7 @@ export function App() {
                 }
                 simulationTick={application?.authoritative?.simulationTick}
                 showPassengerArrivalPulse={false}
+                passengersVisible={passengersVisible}
               />
             </div>
           ) : (

@@ -604,7 +604,6 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
       showPassengerArrivalPulse
     />,
   );
-  expect(screen.getByRole('button', { name: 'Hide passengers' })).toBeVisible();
   expect(screen.getByTestId('stop-waiting-passenger-count')).toHaveTextContent(
     '5',
   );
@@ -681,10 +680,18 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
   );
   act(() => vi.advanceTimersByTime(normalRepresentationFrameMs));
   expect(screen.queryByTestId('passenger-arrival-pulse')).toBeNull();
-  fireEvent.click(screen.getByRole('button', { name: 'Hide passengers' }));
+  view.rerender(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={state.fleet}
+      passengerDemand={demand}
+      vehiclePassengerLoads={[]}
+      passengersVisible={false}
+    />,
+  );
+  act(() => vi.advanceTimersByTime(normalRepresentationFrameMs));
   expect(screen.queryByTestId('stop-waiting-passenger-count')).toBeNull();
   expect(screen.queryByTestId('vehicle-onboard-passenger-count')).toBeNull();
-  expect(screen.getByRole('button', { name: 'Show passengers' })).toBeVisible();
   view.unmount();
   expect(() =>
     render(

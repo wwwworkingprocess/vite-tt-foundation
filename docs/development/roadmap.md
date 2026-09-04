@@ -167,7 +167,11 @@ Completed:
 - shared mini (5 fps) and normal (60 fps) presentation cadence with latest-state
   coalescing;
 - compact collapsible information dock and route-coloured vehicle diagnostics;
-- reusable per-scenario startup timing diagnostics.
+- reusable per-scenario startup timing diagnostics;
+- renderer-neutral normalized transport Map projection shared by DOM2D and
+  Canvas2D, with renderer-specific materialization and interaction retained;
+- primary-only representation view actions, currently used by DOM2D Map's
+  population and passenger toggles without exposing controls in the mini slot.
 
 Remaining product visualization work:
 
@@ -236,7 +240,8 @@ retains compact selection context and reopens the details modal. DOM 2D `Map`,
 Canvas 2D `Main` with presentation-only directed route context and canonical
 StopPlace/Vehicle selection, and D3D `Main` establish the three-family,
 two-mounted-slot lifecycle; mini swapping remains an explicit arm/confirm
-interaction. Canvas Map parity, whole-route interaction, population/passenger
+interaction. Canvas Map promotion, whole-route interaction, Canvas
+population/passenger
 layers, a universal view capability model, D3D Map, and additional D3D scenes
 remain deferred. Canonical
 timetable/service-calendar authority remains a separate future data/schema

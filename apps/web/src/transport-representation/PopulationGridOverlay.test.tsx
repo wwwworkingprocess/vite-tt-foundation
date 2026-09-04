@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -68,7 +68,14 @@ it('distinguishes profiled renders, geometry rebuilds, and commits', () => {
       project={project}
     />,
   );
-  fireEvent.click(screen.getByRole('button', { name: 'Hide population' }));
+  rendered.rerender(
+    <PopulationGridOverlay
+      cells={cells}
+      resolutionDegrees={0.001}
+      project={project}
+      visible={false}
+    />,
+  );
   const names = [
     ...performance.getEntriesByType('mark'),
     ...performance.getEntriesByType('measure'),
@@ -85,8 +92,8 @@ it('distinguishes profiled renders, geometry rebuilds, and commits', () => {
   );
 });
 
-it('renders and toggles deterministic nonzero population cells', () => {
-  render(
+it('materializes deterministic nonzero population cells only when visible', () => {
+  const view = render(
     <PopulationGridOverlay
       cells={[
         {
@@ -105,6 +112,7 @@ it('renders and toggles deterministic nonzero population cells', () => {
         cx: longitude,
         cy: latitude,
       })}
+      visible
     />,
   );
   expect(screen.getAllByTestId('population-band')).toHaveLength(2);
@@ -118,10 +126,18 @@ it('renders and toggles deterministic nonzero population cells', () => {
   expect(
     screen.getByRole('img', { name: 'Operational population grid' }),
   ).toHaveAttribute('data-population-cell-count', '2');
-  fireEvent.click(screen.getByRole('button', { name: 'Hide population' }));
+  view.rerender(
+    <PopulationGridOverlay
+      cells={[]}
+      resolutionDegrees={0.001}
+      project={() => ({ cx: 0, cy: 0 })}
+      visible={false}
+    />,
+  );
   expect(screen.queryByTestId('population-band')).toBeNull();
-  fireEvent.click(screen.getByRole('button', { name: 'Show population' }));
-  expect(screen.getAllByTestId('population-band')).toHaveLength(2);
+  expect(
+    screen.queryByRole('img', { name: 'Operational population grid' }),
+  ).toBeNull();
 });
 
 it('does not rerender for unrelated parent authority updates', () => {

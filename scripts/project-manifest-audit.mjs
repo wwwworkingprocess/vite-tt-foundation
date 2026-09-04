@@ -44,6 +44,8 @@ const manifest = z
       svgRepresentation: z.number().int().positive(),
       canvas2dRepresentation: z.literal(12000),
       populationOverlay: z.number().int().positive(),
+      transportMapProjection: z.literal(4500),
+      dom2dProjectionAdapter: z.literal(2500),
       openScreen: z.number().int().positive(),
       gameInspector: z.number().int().positive(),
       persistenceRuntime: z.number().int().positive(),

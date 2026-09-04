@@ -32,6 +32,8 @@ const sessionControls = one(/^SessionControls-[\w-]+\.js$/);
 const svgRepresentation = one(/^VehicleMovementSvg-[\w-]+\.js$/);
 const canvas2dRepresentation = one(/^Canvas2dRepresentation-[\w-]+\.js$/);
 const populationOverlay = one(/^PopulationGridOverlay-[\w-]+\.js$/);
+const transportMapProjection = one(/^transport-map-projection-[\w-]+\.js$/);
+const dom2dProjectionAdapter = one(/^vehicle-svg-projection-[\w-]+\.js$/);
 const openScreen = one(/^OpenScreen-[\w-]+\.js$/);
 const gameInspector = one(/^GameInspector-[\w-]+\.js$/);
 const persistenceRuntime = one(/^persistence-runtime-[\w-]+\.js$/);
@@ -48,6 +50,8 @@ for (const [name, matches] of Object.entries({
   svgRepresentation,
   canvas2dRepresentation,
   populationOverlay,
+  transportMapProjection,
+  dom2dProjectionAdapter,
   openScreen,
   gameInspector,
   persistenceRuntime,
@@ -82,6 +86,8 @@ const sizes = {
   svgRepresentation: await size(svgRepresentation[0]),
   canvas2dRepresentation: await size(canvas2dRepresentation[0]),
   populationOverlay: await size(populationOverlay[0]),
+  transportMapProjection: await size(transportMapProjection[0]),
+  dom2dProjectionAdapter: await size(dom2dProjectionAdapter[0]),
   openScreen: await size(openScreen[0]),
   gameInspector: await size(gameInspector[0]),
   persistenceRuntime: await size(persistenceRuntime[0]),
@@ -91,6 +97,18 @@ const sizes = {
     (sum, bytes) => sum + bytes,
     0,
   ),
+};
+const logicalCompositions = {
+  canvasTransportRepresentation:
+    sizes.canvas2dRepresentation + sizes.transportMapProjection,
+  dom2dTransportRepresentation:
+    sizes.svgRepresentation +
+    sizes.dom2dProjectionAdapter +
+    sizes.transportMapProjection,
+  populationMap:
+    sizes.populationOverlay +
+    sizes.dom2dProjectionAdapter +
+    sizes.transportMapProjection,
 };
 for (const [name, budget] of Object.entries(configured))
   if (sizes[name] > budget)
@@ -172,5 +190,5 @@ for (const asset of populationAssets)
   if (!serviceWorkerSource.includes(`url:${JSON.stringify(asset)}`))
     throw new Error(`Service Worker does not precache ${asset}.`);
 console.log(
-  `Build and installability audit passed: ${JSON.stringify({ javascript, sizes, budgets: configured })}.`,
+  `Build and installability audit passed: ${JSON.stringify({ javascript, hardBudgetCoordinates: sizes, budgets: configured, reportOnlyLogicalCompositions: logicalCompositions })}.`,
 );

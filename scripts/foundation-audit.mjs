@@ -603,6 +603,7 @@ for (const file of web.filter((path) =>
 for (const canvasRepresentationFile of [
   'apps/web/src/representation/Canvas2dRepresentation.tsx',
   'apps/web/src/representation/canvas2d-selection-model.ts',
+  'apps/web/src/representation/transport-map-projection.ts',
 ]) {
   const canvasViolations = canvasRepresentationViolations(
     await source(canvasRepresentationFile),
@@ -612,6 +613,29 @@ for (const canvasRepresentationFile of [
       `${canvasRepresentationFile} violates Canvas representation ownership: ${canvasViolations.join(', ')}.`,
     );
 }
+const transportMapProjectionSource = await source(
+  'apps/web/src/representation/transport-map-projection.ts',
+);
+if (
+  /from\s+['"](?:react|three|@react-three(?:\/[^'"]*)?)[^'"]*['"]|\b(?:window|document|CanvasRenderingContext2D|SVGElement|HTMLElement)\b/.test(
+    transportMapProjectionSource,
+  )
+)
+  fail(
+    'renderer-neutral transport Map projection imports renderer or browser authority.',
+  );
+const appSource = await source('apps/web/src/App.tsx');
+const representationActionOwners = (
+  appSource.match(/<RepresentationViewActions>/g) ?? []
+).length;
+if (representationActionOwners !== 1)
+  fail('DOM2D Map must compose exactly one primary representation action bar.');
+for (const rendererLayer of [
+  'apps/web/src/transport-representation/PopulationGridOverlay.tsx',
+  'apps/web/src/transport-representation/VehicleMovementSvg.tsx',
+])
+  if ((await source(rendererLayer)).includes('RepresentationViewActions'))
+    fail(`${rendererLayer} owns primary/mini representation chrome.`);
 for (const file of [...simulation, ...protocol, ...web]) {
   const text = await source(file);
   const normalized = file.replaceAll('\\', '/');
@@ -626,6 +650,9 @@ for (const file of [...simulation, ...protocol, ...web]) {
     ) ||
     normalized.endsWith(
       'apps/web/src/representation/Canvas2dRepresentation.tsx',
+    ) ||
+    normalized.endsWith(
+      'apps/web/src/representation/transport-map-projection.ts',
     ) ||
     normalized.endsWith('apps/web/src/App.tsx') ||
     normalized.endsWith('apps/web/src/ui/SessionControls.tsx') ||

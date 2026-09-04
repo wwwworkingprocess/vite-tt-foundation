@@ -36,6 +36,7 @@
       "apps/web/src/representation/RepresentationWorkspace.tsx",
       "apps/web/src/representation/Canvas2dRepresentation.tsx",
       "apps/web/src/representation/canvas2d-selection-model.ts",
+      "apps/web/src/representation/transport-map-projection.ts",
       "apps/web/src/population/population-field-loader.ts",
       "apps/web/src/population/population-demand-plan.ts",
       "apps/web/src/transport-representation/PopulationGridOverlay.tsx"
@@ -79,6 +80,8 @@
     "svgRepresentation": 7500,
     "canvas2dRepresentation": 12000,
     "populationOverlay": 3000,
+    "transportMapProjection": 4500,
+    "dom2dProjectionAdapter": 2500,
     "openScreen": 4000,
     "gameInspector": 8000,
     "persistenceRuntime": 260000,

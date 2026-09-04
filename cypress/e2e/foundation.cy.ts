@@ -118,6 +118,8 @@ describe('foundation screen', () => {
     cy.get('[aria-label="Three-dimensional renderer smoke test"]').should(
       'not.exist',
     );
+    cy.contains('button', 'Hide population').click();
+    cy.contains('button', 'Hide passengers').click();
     cy.get('button[aria-label="Select mini representation for swap"]').click();
     cy.contains('button', 'Swap visualizations').click();
     cy.get('[data-testid="primary-visualization"]')
@@ -126,6 +128,14 @@ describe('foundation screen', () => {
     cy.get('[data-testid="secondary-minimap"]')
       .should('have.attr', 'data-family', 'dom2d')
       .and('have.attr', 'data-view', 'map');
+    cy.contains('button', 'Show population').should('not.exist');
+    cy.contains('button', 'Show passengers').should('not.exist');
+    cy.get('button[aria-label="Select mini representation for swap"]').click();
+    cy.contains('button', 'Swap visualizations').click();
+    cy.contains('button', 'Show population').should('be.visible');
+    cy.contains('button', 'Show passengers').should('be.visible');
+    cy.get('button[aria-label="Select mini representation for swap"]').click();
+    cy.contains('button', 'Swap visualizations').click();
     cy.get('[data-testid="canvas2d-representation"]')
       .should('have.attr', 'tabindex', '0')
       .focus()

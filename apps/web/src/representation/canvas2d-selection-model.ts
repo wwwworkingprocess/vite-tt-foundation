@@ -1,19 +1,17 @@
 import type { VehicleId, VehicleState } from '@torrevieja-tycoon/simulation';
-import {
-  buildDirectedScenarioGraph,
-  type CanonicalScenario,
-  type StopNodeId,
-  type StopPlaceId,
+import type {
+  CanonicalScenario,
+  StopNodeId,
+  StopPlaceId,
 } from '@torrevieja-tycoon/transport-domain';
+import {
+  createTransportMapProjection,
+  projectTransportMapVehicles,
+  type TransportMapPoint,
+  type TransportMapProjection,
+} from './transport-map-projection.js';
 
-type GeographicPosition = Readonly<{ latitude: number; longitude: number }>;
 type CanvasPosition = Readonly<{ x: number; y: number }>;
-type GeographicBounds = Readonly<{
-  south: number;
-  north: number;
-  west: number;
-  east: number;
-}>;
 
 export type Canvas2dSelectablePoint =
   | Readonly<
@@ -31,20 +29,20 @@ export type Canvas2dSelectablePoint =
       }
     >;
 
-type GeographicStop = Readonly<{
+type MapStop = Readonly<{
   stopPlaceId: StopPlaceId;
   stopNodeId?: StopNodeId;
   label: string;
-  position: GeographicPosition;
+  point: TransportMapPoint;
 }>;
 
-type GeographicRouteEdge = Readonly<{
+type MapRouteEdge = Readonly<{
   edgeId: string;
   routeId: string;
   patternId: string;
   color: string;
-  from: GeographicPosition;
-  to: GeographicPosition;
+  from: TransportMapPoint;
+  to: TransportMapPoint;
 }>;
 
 export type Canvas2dRouteEdge = Readonly<{
@@ -59,11 +57,11 @@ export type Canvas2dRouteEdge = Readonly<{
 
 export interface Canvas2dSelectionIndex {
   readonly scenario: CanonicalScenario;
-  readonly bounds: GeographicBounds;
-  readonly stopOccurrences: readonly GeographicStop[];
-  readonly keyboardStops: readonly GeographicStop[];
-  readonly routeEdges: readonly GeographicRouteEdge[];
-  readonly nodes: ReadonlyMap<StopNodeId, GeographicPosition>;
+  readonly map: TransportMapProjection;
+  readonly stopOccurrences: readonly MapStop[];
+  readonly keyboardStops: readonly MapStop[];
+  readonly routeEdges: readonly MapRouteEdge[];
+  readonly nodes: ReadonlyMap<StopNodeId, TransportMapPoint>;
   readonly edges: ReadonlyMap<
     string,
     Readonly<{ fromStopNodeId: StopNodeId; toStopNodeId: StopNodeId }>
@@ -94,84 +92,55 @@ const freeze = <T>(value: T): Readonly<T> => Object.freeze(value);
 export function createCanvas2dSelectionIndex(
   scenario: CanonicalScenario,
 ): Canvas2dSelectionIndex {
-  const graph = buildDirectedScenarioGraph(scenario);
-  if (graph.nodes.length === 0)
-    throw new Error('Canvas selection requires at least one canonical stop.');
-  const nodes = new Map(
-    graph.nodes.map((node) => [node.stopNodeId, node.position]),
+  const map = createTransportMapProjection(scenario);
+  const nodes = new Map(map.nodes.map((node) => [node.stopNodeId, node.point]));
+  const placeNames = new Map(
+    map.stopPlaces.map((stop) => [stop.stopPlaceId, stop.name]),
   );
-  const stopPlaces = new Map(
-    scenario.stops.stopPlaces.map((stop) => [stop.stopPlaceId, stop]),
-  );
-  const stopOccurrences: GeographicStop[] = [];
-  const firstOccurrence = new Map<StopPlaceId, GeographicStop>();
-  for (const node of graph.nodes) {
+  const stopOccurrences: MapStop[] = [];
+  const firstOccurrence = new Map<StopPlaceId, MapStop>();
+  for (const node of map.nodes) {
     if (!node.stopPlaceId) continue;
-    const stop = stopPlaces.get(node.stopPlaceId);
-    if (!stop)
-      throw new Error(
-        `StopNode references missing physical StopPlace: ${node.stopPlaceId}.`,
-      );
     const occurrence = freeze({
-      stopPlaceId: stop.stopPlaceId,
+      stopPlaceId: node.stopPlaceId,
       stopNodeId: node.stopNodeId,
-      label: stop.name,
-      position: node.position,
+      label: placeNames.get(node.stopPlaceId)!,
+      point: node.point,
     });
     stopOccurrences.push(occurrence);
-    if (!firstOccurrence.has(stop.stopPlaceId))
-      firstOccurrence.set(stop.stopPlaceId, occurrence);
+    if (!firstOccurrence.has(node.stopPlaceId))
+      firstOccurrence.set(node.stopPlaceId, occurrence);
   }
-  const keyboardStops = scenario.stops.stopPlaces.map((stop) => {
+  const keyboardStops = map.stopPlaces.map((stop) => {
     const occurrence = firstOccurrence.get(stop.stopPlaceId);
     if (occurrence) return occurrence;
-    if (!stop.position)
-      throw new Error(
-        `Physical StopPlace has no canonical selection position: ${stop.stopPlaceId}.`,
-      );
     const standalone = freeze({
       stopPlaceId: stop.stopPlaceId,
       label: stop.name,
-      position: stop.position,
+      point: stop.point,
     });
     stopOccurrences.push(standalone);
     return standalone;
   });
-  const positions = [
-    ...graph.nodes.map(({ position }) => position),
-    ...scenario.stops.stopPlaces.flatMap(({ position }) =>
-      position ? [position] : [],
-    ),
-  ];
-  const routeStyles = (
-    scenario.presentation as
-      { routeStyles?: Record<string, { color?: unknown }> } | undefined
-  )?.routeStyles;
-  const routeEdges = graph.edges.map((edge) => {
-    const color = routeStyles?.[edge.routeId]?.color;
-    return freeze({
+  const routeEdges = map.edges.map((edge) =>
+    freeze({
       edgeId: edge.edgeId,
       routeId: edge.routeId,
       patternId: edge.patternId,
-      color: typeof color === 'string' ? color : '#67bed6',
-      from: nodes.get(edge.fromStopNodeId)!,
-      to: nodes.get(edge.toStopNodeId)!,
-    });
-  });
+      color: edge.color ?? '#67bed6',
+      from: edge.from,
+      to: edge.to,
+    }),
+  );
   return freeze({
     scenario,
-    bounds: freeze({
-      south: Math.min(...positions.map(({ latitude }) => latitude)),
-      north: Math.max(...positions.map(({ latitude }) => latitude)),
-      west: Math.min(...positions.map(({ longitude }) => longitude)),
-      east: Math.max(...positions.map(({ longitude }) => longitude)),
-    }),
+    map,
     stopOccurrences: freeze(stopOccurrences),
     keyboardStops: freeze(keyboardStops),
     routeEdges: freeze(routeEdges),
     nodes,
     edges: new Map(
-      graph.edges.map(({ edgeId, fromStopNodeId, toStopNodeId }) => [
+      map.edges.map(({ edgeId, fromStopNodeId, toStopNodeId }) => [
         edgeId,
         freeze({ fromStopNodeId, toStopNodeId }),
       ]),
@@ -213,70 +182,16 @@ const routeArrowhead = (
 };
 
 export function projectCanvas2dPosition(
-  position: GeographicPosition,
-  bounds: GeographicBounds,
+  point: TransportMapPoint,
   width: number,
   height: number,
 ): CanvasPosition {
   const margin = Math.min(16, width / 4, height / 4);
-  const latitudeSpan = bounds.north - bounds.south;
-  const longitudeSpan = bounds.east - bounds.west;
   return freeze({
-    x:
-      longitudeSpan === 0
-        ? width / 2
-        : margin +
-          ((position.longitude - bounds.west) / longitudeSpan) *
-            (width - margin * 2),
-    y:
-      latitudeSpan === 0
-        ? height / 2
-        : margin +
-          ((bounds.north - position.latitude) / latitudeSpan) *
-            (height - margin * 2),
+    x: margin + point.x * (width - margin * 2),
+    y: margin + point.y * (height - margin * 2),
   });
 }
-
-const requireNode = (index: Canvas2dSelectionIndex, id: StopNodeId) => {
-  const position = index.nodes.get(id);
-  if (!position)
-    throw new Error(`Vehicle references missing canonical stop: ${id}.`);
-  return position;
-};
-
-const vehiclePosition = (
-  index: Canvas2dSelectionIndex,
-  vehicle: VehicleState,
-): GeographicPosition => {
-  const movement = vehicle.movement;
-  if (movement.kind !== 'running-on-edge')
-    return requireNode(index, movement.stopNodeId);
-  const edge = index.edges.get(movement.edgeId);
-  if (!edge)
-    throw new Error(
-      `Vehicle references missing canonical edge: ${movement.edgeId}.`,
-    );
-  if (
-    edge.fromStopNodeId !== movement.fromStopNodeId ||
-    edge.toStopNodeId !== movement.toStopNodeId
-  )
-    throw new Error(`Vehicle edge endpoints do not match ${movement.edgeId}.`);
-  if (
-    !Number.isSafeInteger(movement.progressTicks) ||
-    movement.progressTicks < 0 ||
-    !Number.isSafeInteger(movement.travelTicks) ||
-    movement.travelTicks <= 0 ||
-    movement.progressTicks > movement.travelTicks
-  )
-    throw new Error('Invalid authoritative vehicle progress.');
-  const from = requireNode(index, movement.fromStopNodeId);
-  const to = requireNode(index, movement.toStopNodeId);
-  const ratio = movement.progressTicks / movement.travelTicks;
-  return freeze({
-    latitude: from.latitude + (to.latitude - from.latitude) * ratio,
-    longitude: from.longitude + (to.longitude - from.longitude) * ratio,
-  });
-};
 
 export function createCanvas2dSelectionSnapshot(
   index: Canvas2dSelectionIndex,
@@ -294,14 +209,14 @@ export function createCanvas2dSelectionSnapshot(
     throw new Error(
       'Canvas selection requires positive finite CSS dimensions.',
     );
-  const project = (position: GeographicPosition) =>
-    projectCanvas2dPosition(position, index.bounds, width, height);
-  const stopPoint = (stop: GeographicStop) =>
+  const project = (point: TransportMapPoint) =>
+    projectCanvas2dPosition(point, width, height);
+  const stopPoint = (stop: MapStop) =>
     freeze({
       kind: 'stop' as const,
       stopPlaceId: stop.stopPlaceId,
       label: stop.label,
-      ...project(stop.position),
+      ...project(stop.point),
     });
   const reusable =
     previous?.scenario === index.scenario &&
@@ -330,13 +245,13 @@ export function createCanvas2dSelectionSnapshot(
           });
         }),
       );
-  const vehiclePoints = fleet
+  const vehiclePoints = projectTransportMapVehicles(index.map, fleet)
     .map((vehicle) =>
       freeze({
         kind: 'vehicle' as const,
         vehicleId: vehicle.vehicleId,
         label: vehicle.label,
-        ...project(vehiclePosition(index, vehicle)),
+        ...project(vehicle.point),
       }),
     )
     .sort((left, right) =>

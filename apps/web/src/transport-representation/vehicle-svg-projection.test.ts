@@ -11,7 +11,6 @@ import {
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import {
   createScenarioSvgPositionProjector,
-  interpolateSvgPosition,
   projectVehicleMovementSvg,
 } from './vehicle-svg-projection.js';
 
@@ -96,15 +95,6 @@ describe('vehicle SVG projection', () => {
       progressDenominator: 4,
       edgeId: `${pattern.patternId}:0`,
     });
-    const from = scenario.stops.stopNodes.find(
-      (node) => node.stopNodeId === pattern.stopNodeIds[0],
-    )!.position;
-    const to = scenario.stops.stopNodes.find(
-      (node) => node.stopNodeId === pattern.stopNodeIds[1],
-    )!.position;
-    expect(interpolateSvgPosition(from, to, 0, 4)).toEqual(from);
-    expect(interpolateSvgPosition(from, to, 4, 4)).toEqual(to);
-
     const second = applyTransportVehicleCommand(state, {
       kind: 'transport.vehicle.create',
       vehicleId: parseVehicleId('vehicle-b'),
@@ -121,14 +111,6 @@ describe('vehicle SVG projection', () => {
   });
 
   it('centres degenerate coordinates and rejects missing canonical locations', () => {
-    expect(
-      interpolateSvgPosition(
-        { latitude: 1, longitude: 2 },
-        { latitude: 1, longitude: 2 },
-        1,
-        2,
-      ),
-    ).toEqual({ latitude: 1, longitude: 2 });
     const invalid = structuredClone(createFleet().fleet) as unknown as Array<{
       movement: { kind: string; stopNodeId: string };
     }>;
@@ -161,14 +143,6 @@ describe('vehicle SVG projection', () => {
     expect(() => createScenarioSvgPositionProjector(noStops as never)).toThrow(
       'at least one canonical stop',
     );
-    expect(() =>
-      interpolateSvgPosition(
-        { latitude: 0, longitude: 0 },
-        { latitude: 1, longitude: 1 },
-        -1,
-        2,
-      ),
-    ).toThrow('Invalid authoritative vehicle progress');
   });
 
   it('rejects missing edges and mismatched authoritative edge endpoints', () => {

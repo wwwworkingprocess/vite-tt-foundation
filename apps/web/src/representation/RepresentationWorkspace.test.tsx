@@ -100,6 +100,10 @@ it('mounts exactly two families and replaces only the mini with the inactive fam
     'data-family',
     'canvas2d',
   );
+  expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
+    'data-view',
+    'map',
+  );
   expect(screen.getByText('Canvas scene')).toBeInTheDocument();
   expect(screen.queryByText('3D scene')).toBeNull();
   expect(
@@ -112,6 +116,10 @@ it('mounts exactly two families and replaces only the mini with the inactive fam
   expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
     'data-family',
     'canvas2d',
+  );
+  expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
+    'data-view',
+    'map',
   );
   expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
     'data-family',

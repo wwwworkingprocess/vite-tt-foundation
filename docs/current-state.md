@@ -153,32 +153,36 @@ StopPlace, and Vehicle selections are browser-owned canonical identities; the SV
 is only one input adapter and never owns selection or simulation authority.
 
 The workspace distinguishes primary/mini slots, three representation families,
-and family-owned active views. DOM 2D exposes `Map` through the unchanged SVG,
-Canvas 2D exposes a deterministic foundation `Main` canvas, and D3D exposes its
+and family-owned active views. DOM 2D exposes `Map` through SVG, Canvas 2D
+exposes `Map` through Canvas-native materialization, and D3D exposes its
 existing `Main` scene. Exactly two families are mounted; the third remains
 inactive until an armed mini action explicitly installs it. Swap remains a
 separate confirmation that exchanges the visible families without changing the
 inactive family. Mini controls remain above the primary-slot modal.
 
-Canvas 2D `Main` now provides canonical directed route-network context with
+Canvas 2D `Map` provides canonical directed route-network context with
 route colours and direction arrows, plus StopPlace/Vehicle pointer and compact
 keyboard selection, existing `GameSelection` and workspace-modal integration,
-and Canvas-native selected-object feedback. Directed graph edges are
+Canvas-native selected-object feedback, population cells, passenger StopPlace
+status/waiting/arrival diagnostics, and Vehicle onboard counts. Directed graph edges are
 presentation-only in Canvas and DOM2D: they are neither focusable nor
 selectable. DOM2D and Canvas consume one renderer-neutral, scenario-cached
 transport Map projection for normalized bounds, StopNode/StopPlace spatial
 identity, directed route topology and presentation identity, and exact current
 Vehicle positions. SVG viewBox materialization and accessibility remain DOM2D
 owned; CSS-pixel drawing, arrowheads, hit regions, keyboard candidates, and
-last-drawn interaction authority remain Canvas owned. DOM2D Map population and
-passenger actions are primary-slot-only view chrome: they disappear completely
-while DOM2D is mini and retain their chosen state when it returns to primary.
+last-drawn interaction authority remain Canvas owned. DOM2D and Canvas2D share
+the same Map population/passenger visibility state and primary-only action
+composition: controls disappear completely while a Map is mini while enabled
+layers continue rendering at mini cadence.
+Waiting totals and five-tick arrival status are derived by one renderer-neutral,
+React/DOM/SVG/Canvas-free presentation boundary; DOM2D and Canvas materialize
+that shared meaning independently.
 Population visibility resets with a new authoritative scenario; passenger
 visibility resets with a new authoritative scenario or timeline, matching the
-former renderer-mount lifecycle. Canvas and D3D expose no empty action bars. Future whole-route interaction may
+former renderer-mount lifecycle. D3D exposes no empty action bar. Future whole-route interaction may
 continue to use the existing route selection authority, but Canvas route
-selection, Canvas Map promotion, Canvas population/passenger rendering, a
-universal view capability model, and D3D Map remain deferred representation
+selection, a universal view capability model, and D3D Map remain deferred representation
 milestones.
 
 Build budgets account for renderer-specific emitted artifacts independently

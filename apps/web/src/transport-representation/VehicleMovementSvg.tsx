@@ -21,6 +21,7 @@ import {
   recordRepresentationProfile,
 } from '../performance/representation-profiler.js';
 import { useLatestRepresentationValue } from '../representation/RepresentationModeContext.js';
+import { updatePassengerArrivalTicks } from '../representation/passenger-map-diagnostics.js';
 import { selectVehicle, type GameSelection } from '../ui/game-selection.js';
 import StaticScenarioSvgLayer from './StaticScenarioSvgLayer.js';
 import PassengerStopDiagnostics, {
@@ -126,18 +127,13 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
   const vehicles = projectVehicleMovementSvg(scenario, fleet).vehicles;
   useEffect(() => {
     if (!showPassengerArrivalPulse) return;
-    setLastArrivalTicks((previous) => {
-      const next = new Map(
-        [...previous].filter(([, tick]) => simulationTick - tick < 5),
-      );
-      for (const event of passengerOriginStopArrivalEvents) {
-        if (simulationTick - event.tick >= 5) continue;
-        const prior = next.get(event.stopPlaceId);
-        if (prior === undefined || prior < event.tick)
-          next.set(event.stopPlaceId, event.tick);
-      }
-      return next;
-    });
+    setLastArrivalTicks((previous) =>
+      updatePassengerArrivalTicks(
+        previous,
+        passengerOriginStopArrivalEvents,
+        simulationTick,
+      ),
+    );
   }, [
     passengerOriginStopArrivalEvents,
     showPassengerArrivalPulse,

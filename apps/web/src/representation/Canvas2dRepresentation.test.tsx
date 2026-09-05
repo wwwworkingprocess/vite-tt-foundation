@@ -10,17 +10,23 @@ import {
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import * as profiler from '../performance/representation-profiler.js';
 import { selectStop, selectVehicle } from '../ui/game-selection.js';
-import { Canvas2dRepresentation } from './Canvas2dRepresentation.js';
+import {
+  Canvas2dRepresentation,
+  materializeCanvas2dPopulationCells,
+} from './Canvas2dRepresentation.js';
+import type { ScenarioPopulationView } from '../population/population-field-loader.js';
 import { RepresentationModeProvider } from './RepresentationModeContext.js';
 import {
   createCanvas2dSelectionIndex,
   createCanvas2dSelectionSnapshot,
+  projectCanvas2dPosition,
 } from './canvas2d-selection-model.js';
 
 const context = {
   setTransform: vi.fn(),
   clearRect: vi.fn(),
   fillRect: vi.fn(),
+  fillText: vi.fn(),
   strokeRect: vi.fn(),
   moveTo: vi.fn(),
   lineTo: vi.fn(),
@@ -32,6 +38,9 @@ const context = {
   fillStyle: '',
   strokeStyle: '',
   lineWidth: 0,
+  globalAlpha: 1,
+  font: '',
+  textAlign: 'start',
 };
 let resize: ResizeObserverCallback;
 const disconnect = vi.fn();
@@ -72,6 +81,16 @@ const props = {
   selection: null,
   onSelectionChange: vi.fn(),
 };
+const population = {
+  grid: { resolutionDegrees: 0.001 },
+  canonicalCells: [
+    {
+      cellId: 'r0c0',
+      center: scenario.stops.stopNodes[0]!.position,
+      populationWeight: 10,
+    },
+  ],
+} as unknown as ScenarioPopulationView;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -114,7 +133,7 @@ it('owns strict-mode resize, cadence, DPR backing store, profiling, and cleanup'
     </StrictMode>,
   );
   const canvas = screen.getByRole('img', {
-    name: 'Canvas 2D directed route network with StopPlace and Vehicle selection',
+    name: 'Canvas 2D transport Map with StopPlace and Vehicle selection',
   });
   expect(canvas).not.toHaveAttribute('tabindex');
   resize(
@@ -202,7 +221,7 @@ it('selects drawn StopPlaces and Vehicles in CSS coordinates while empty clicks 
     </RepresentationModeProvider>,
   );
   const canvas = screen.getByRole('group', {
-    name: 'Canvas 2D directed route network with StopPlace and Vehicle selection',
+    name: 'Canvas 2D transport Map with StopPlace and Vehicle selection',
   });
   vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({
     left: 10,
@@ -215,8 +234,9 @@ it('selects drawn StopPlaces and Vehicles in CSS coordinates while empty clicks 
     {} as ResizeObserver,
   );
   vi.advanceTimersByTime(17);
+  const selectionIndex = createCanvas2dSelectionIndex(scenario);
   const snapshot = createCanvas2dSelectionSnapshot(
-    createCanvas2dSelectionIndex(scenario),
+    selectionIndex,
     fleet,
     200,
     100,
@@ -279,6 +299,198 @@ it('draws canonical directed edges and arrowheads before selectable entities', (
       routeArrowheads: expect.any(Number),
     }),
   );
+});
+
+it('draws population and passenger Map diagnostics without adding selection geometry', () => {
+  const stopPlaceId = scenario.stops.stopNodes.find(
+    (node) => node.stopPlaceId,
+  )!.stopPlaceId!;
+  const fleet = [vehicleAt(pattern.stopNodeIds[0]!)];
+  const view = render(
+    <RepresentationModeProvider mode="normal">
+      <Canvas2dRepresentation
+        {...props}
+        fleet={fleet}
+        population={population}
+        populationVisible
+        passengerDemand={
+          {
+            status: 'active',
+            waitingCohorts: [{ originStopPlaceId: stopPlaceId, count: 7 }],
+          } as never
+        }
+        vehiclePassengerLoads={[
+          {
+            vehicleId: fleet[0]!.vehicleId,
+            onboardPassengerCount: 4,
+          } as never,
+        ]}
+        passengerOriginStopArrivalEvents={[
+          { tick: 8, stopPlaceId, arrivedPassengerCount: 2 } as never,
+        ]}
+        simulationTick={10}
+        showPassengerArrivalPulse
+        passengersVisible
+      />
+    </RepresentationModeProvider>,
+  );
+  resize(
+    [{ contentRect: { width: 200, height: 100 } } as ResizeObserverEntry],
+    {} as ResizeObserver,
+  );
+  vi.advanceTimersByTime(17);
+  expect(context.fillText).toHaveBeenCalledWith(
+    '7',
+    expect.any(Number),
+    expect.any(Number),
+  );
+  expect(
+    context.fillText.mock.calls.filter(([text]) => text === '7'),
+  ).toHaveLength(1);
+  expect(context.fillText).toHaveBeenCalledWith(
+    '4',
+    expect.any(Number),
+    expect.any(Number),
+  );
+  expect(context.arc.mock.calls.some((call) => call[2] === 8)).toBe(true);
+  const selectionIndex = createCanvas2dSelectionIndex(scenario);
+  const snapshot = createCanvas2dSelectionSnapshot(
+    selectionIndex,
+    fleet,
+    200,
+    100,
+  );
+  expect(snapshot.keyboardCandidates).toHaveLength(
+    selectionIndex.keyboardStops.length + snapshot.vehiclePoints.length,
+  );
+
+  context.fillText.mockClear();
+  view.rerender(
+    <RepresentationModeProvider mode="normal">
+      <Canvas2dRepresentation
+        {...props}
+        fleet={fleet}
+        population={population}
+        populationVisible={false}
+        passengersVisible={false}
+      />
+    </RepresentationModeProvider>,
+  );
+  vi.advanceTimersByTime(17);
+  expect(context.fillText).not.toHaveBeenCalled();
+});
+
+it('materializes population cell centers in the same inset space as transport points after resize', () => {
+  render(
+    <RepresentationModeProvider mode="normal">
+      <Canvas2dRepresentation {...props} population={population} />
+    </RepresentationModeProvider>,
+  );
+  const index = createCanvas2dSelectionIndex(scenario);
+  const stopNode = scenario.stops.stopNodes[0]!;
+  const normalizedPoint = index.nodes.get(stopNode.stopNodeId)!;
+  const expectAlignedAt = (width: number, height: number) => {
+    context.fillRect.mockClear();
+    resize(
+      [{ contentRect: { width, height } } as ResizeObserverEntry],
+      {} as ResizeObserver,
+    );
+    vi.advanceTimersByTime(17);
+    const populationRectangle = context.fillRect.mock.calls[1]!;
+    const [x, y, cellWidth, cellHeight] = populationRectangle as [
+      number,
+      number,
+      number,
+      number,
+    ];
+    const transportPoint = projectCanvas2dPosition(
+      normalizedPoint,
+      width,
+      height,
+    );
+    expect(x + cellWidth / 2).toBeCloseTo(transportPoint.x);
+    expect(y + cellHeight / 2).toBeCloseTo(transportPoint.y);
+  };
+
+  expectAlignedAt(200, 100);
+  expectAlignedAt(400, 200);
+});
+
+it('keeps population projection static across fleet-only updates', () => {
+  let cellReads = 0;
+  const trackedPopulation = {
+    ...population,
+    get canonicalCells() {
+      cellReads += 1;
+      return population.canonicalCells;
+    },
+  };
+  const view = render(
+    <RepresentationModeProvider mode="normal">
+      <Canvas2dRepresentation {...props} population={trackedPopulation} />
+    </RepresentationModeProvider>,
+  );
+  resize(
+    [{ contentRect: { width: 200, height: 100 } } as ResizeObserverEntry],
+    {} as ResizeObserver,
+  );
+  vi.advanceTimersByTime(17);
+  const initialReads = cellReads;
+  view.rerender(
+    <RepresentationModeProvider mode="normal">
+      <Canvas2dRepresentation
+        {...props}
+        fleet={[vehicleAt(pattern.stopNodeIds[0]!)]}
+        population={trackedPopulation}
+      />
+    </RepresentationModeProvider>,
+  );
+  vi.advanceTimersByTime(17);
+  expect(cellReads).toBe(initialReads);
+});
+
+it('reuses Canvas-space population geometry until its materialization inputs change', () => {
+  const cells = Object.freeze([
+    Object.freeze({ x: 0.25, y: 0.4, width: 0.1, height: 0.2, opacity: 0.5 }),
+  ]);
+  const first = materializeCanvas2dPopulationCells(cells, 200, 100);
+  const fleetOnly = materializeCanvas2dPopulationCells(cells, 200, 100, first);
+  const visibilityOnly = materializeCanvas2dPopulationCells(
+    cells,
+    200,
+    100,
+    fleetOnly,
+  );
+  const resized = materializeCanvas2dPopulationCells(cells, 400, 200, first);
+  const widthChanged = materializeCanvas2dPopulationCells(
+    cells,
+    400,
+    100,
+    first,
+  );
+  const heightChanged = materializeCanvas2dPopulationCells(
+    cells,
+    200,
+    200,
+    first,
+  );
+  const replacement = materializeCanvas2dPopulationCells(
+    Object.freeze([...cells]),
+    200,
+    100,
+    first,
+  );
+
+  expect(first.rectangles).toHaveLength(1);
+  expect(first.rectangles[0]).toMatchObject({ x: 58, y: 43.2, opacity: 0.5 });
+  expect(first.rectangles[0]!.width).toBeCloseTo(16.8);
+  expect(first.rectangles[0]!.height).toBeCloseTo(13.6);
+  expect(fleetOnly).toBe(first);
+  expect(visibilityOnly).toBe(first);
+  expect(resized).not.toBe(first);
+  expect(widthChanged).not.toBe(first);
+  expect(heightChanged).not.toBe(first);
+  expect(replacement).not.toBe(first);
 });
 
 it('keeps collocated directed edges as presentation geometry without arrowheads', () => {

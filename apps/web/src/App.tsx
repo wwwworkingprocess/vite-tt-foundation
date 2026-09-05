@@ -49,7 +49,7 @@ import {
 } from './scenarios/scenario-loader.js';
 import { defaultScenarioId } from './project-defaults.js';
 import { createProductionPassengerDemandPlan } from './population/population-demand-plan.js';
-import { RepresentationViewActions } from './representation/RepresentationViewActions.js';
+import { TransportMapViewActions } from './representation/TransportMapViewActions.js';
 import {
   createPopulationFieldLoader,
   type ScenarioPopulationView,
@@ -919,20 +919,12 @@ export function App() {
         <Suspense fallback={<p>Loading transport representation…</p>}>
           {authoritativeScenarioPackage && fleet ? (
             <div className="vehicle-movement-representation">
-              <RepresentationViewActions>
-                <button
-                  type="button"
-                  onClick={() => setPopulationVisible((visible) => !visible)}
-                >
-                  {populationVisible ? 'Hide population' : 'Show population'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPassengersVisible((visible) => !visible)}
-                >
-                  {passengersVisible ? 'Hide passengers' : 'Show passengers'}
-                </button>
-              </RepresentationViewActions>
+              <TransportMapViewActions
+                populationVisible={populationVisible}
+                passengersVisible={passengersVisible}
+                onPopulationVisibleChange={setPopulationVisible}
+                onPassengersVisibleChange={setPassengersVisible}
+              />
               {authoritativePopulationState.status === 'ready' &&
               authoritativePopulationState.coordinateKey ===
                 authoritativeCoordinateKey &&
@@ -987,12 +979,38 @@ export function App() {
       canvasVisualization={
         <Suspense fallback={<p>Loading Canvas 2D representation…</p>}>
           {authoritativeScenarioPackage && fleet ? (
-            <Canvas2dRepresentation
-              scenario={authoritativeScenarioPackage}
-              fleet={fleet}
-              selection={gameSelection}
-              onSelectionChange={selectGameObject}
-            />
+            <div className="canvas2d-map-representation">
+              <TransportMapViewActions
+                populationVisible={populationVisible}
+                passengersVisible={passengersVisible}
+                onPopulationVisibleChange={setPopulationVisible}
+                onPassengersVisibleChange={setPassengersVisible}
+              />
+              <Canvas2dRepresentation
+                scenario={authoritativeScenarioPackage}
+                fleet={fleet}
+                selection={gameSelection}
+                onSelectionChange={selectGameObject}
+                population={
+                  authoritativePopulationState.status === 'ready' &&
+                  authoritativePopulationState.coordinateKey ===
+                    authoritativeCoordinateKey
+                    ? authoritativePopulationState.population
+                    : undefined
+                }
+                populationVisible={populationVisible}
+                passengerDemand={transportApplication?.passengerDemand}
+                vehiclePassengerLoads={
+                  transportApplication?.vehiclePassengerLoads
+                }
+                passengerOriginStopArrivalEvents={
+                  transportApplication?.passengerOriginStopArrivalEvents
+                }
+                simulationTick={application?.authoritative?.simulationTick}
+                showPassengerArrivalPulse={false}
+                passengersVisible={passengersVisible}
+              />
+            </div>
           ) : null}
         </Suspense>
       }

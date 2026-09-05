@@ -654,7 +654,7 @@ describe('foundation screen', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: 'Hide passengers' }));
     expect(
-      screen.getByRole('button', { name: 'Show passengers' }),
+      await screen.findByRole('button', { name: 'Show passengers' }),
     ).toBeVisible();
     fireEvent.click(screen.getByRole('button', { name: 'Restart' }));
     expect(await screen.findByTestId('vehicle-movement-svg')).toHaveAttribute(

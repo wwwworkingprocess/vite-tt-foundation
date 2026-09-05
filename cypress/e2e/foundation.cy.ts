@@ -112,7 +112,7 @@ describe('foundation screen', () => {
       .and('have.attr', 'data-representation-mode', 'normal');
     cy.get('[data-testid="secondary-minimap"]')
       .should('have.attr', 'data-family', 'canvas2d')
-      .and('have.attr', 'data-view', 'main')
+      .and('have.attr', 'data-view', 'map')
       .and('have.attr', 'data-representation-mode', 'mini');
     cy.get('[data-testid="canvas2d-representation"]').should('be.visible');
     cy.get('[aria-label="Three-dimensional renderer smoke test"]').should(
@@ -124,16 +124,16 @@ describe('foundation screen', () => {
     cy.contains('button', 'Swap visualizations').click();
     cy.get('[data-testid="primary-visualization"]')
       .should('have.attr', 'data-family', 'canvas2d')
-      .and('have.attr', 'data-view', 'main');
+      .and('have.attr', 'data-view', 'map');
     cy.get('[data-testid="secondary-minimap"]')
       .should('have.attr', 'data-family', 'dom2d')
       .and('have.attr', 'data-view', 'map');
-    cy.contains('button', 'Show population').should('not.exist');
-    cy.contains('button', 'Show passengers').should('not.exist');
+    cy.contains('button', 'Show population').should('be.visible').click();
+    cy.contains('button', 'Show passengers').should('be.visible').click();
     cy.get('button[aria-label="Select mini representation for swap"]').click();
     cy.contains('button', 'Swap visualizations').click();
-    cy.contains('button', 'Show population').should('be.visible');
-    cy.contains('button', 'Show passengers').should('be.visible');
+    cy.contains('button', 'Hide population').should('be.visible');
+    cy.contains('button', 'Hide passengers').should('be.visible');
     cy.get('button[aria-label="Select mini representation for swap"]').click();
     cy.contains('button', 'Swap visualizations').click();
     cy.get('[data-testid="canvas2d-representation"]')

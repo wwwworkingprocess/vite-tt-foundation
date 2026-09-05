@@ -624,12 +624,25 @@ if (
   fail(
     'renderer-neutral transport Map projection imports renderer or browser authority.',
   );
+const passengerMapDiagnosticsSource = await source(
+  'apps/web/src/representation/passenger-map-diagnostics.ts',
+);
+if (
+  /from\s+['"](?:react|three|@react-three(?:\/[^'"]*)?)[^'"]*['"]|\b(?:window|document|CanvasRenderingContext2D|SVGElement|HTMLElement)\b/.test(
+    passengerMapDiagnosticsSource,
+  )
+)
+  fail('renderer-neutral passenger Map diagnostics import renderer authority.');
 const appSource = await source('apps/web/src/App.tsx');
 const representationActionOwners = (
-  appSource.match(/<RepresentationViewActions>/g) ?? []
+  (
+    await source('apps/web/src/representation/TransportMapViewActions.tsx')
+  ).match(/<RepresentationViewActions>/g) ?? []
 ).length;
 if (representationActionOwners !== 1)
-  fail('DOM2D Map must compose exactly one primary representation action bar.');
+  fail('Transport Map actions must compose one representation action bar.');
+if ((appSource.match(/<TransportMapViewActions/g) ?? []).length !== 2)
+  fail('DOM2D and Canvas2D Map must each compose shared Map actions.');
 for (const rendererLayer of [
   'apps/web/src/transport-representation/PopulationGridOverlay.tsx',
   'apps/web/src/transport-representation/VehicleMovementSvg.tsx',
@@ -653,6 +666,12 @@ for (const file of [...simulation, ...protocol, ...web]) {
     ) ||
     normalized.endsWith(
       'apps/web/src/representation/transport-map-projection.ts',
+    ) ||
+    normalized.endsWith(
+      'apps/web/src/representation/passenger-map-diagnostics.ts',
+    ) ||
+    normalized.endsWith(
+      'apps/web/src/representation/TransportMapViewActions.tsx',
     ) ||
     normalized.endsWith('apps/web/src/App.tsx') ||
     normalized.endsWith('apps/web/src/ui/SessionControls.tsx') ||

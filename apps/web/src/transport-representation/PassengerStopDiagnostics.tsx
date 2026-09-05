@@ -6,20 +6,14 @@ import {
   recordRepresentationProfile,
 } from '../performance/representation-profiler.js';
 import type { VehicleSvgProjection } from './vehicle-svg-projection.js';
+import { passengerWaitingTotals } from '../representation/passenger-map-diagnostics.js';
 
 export function stableWaitingTotals(
   previous: ReadonlyMap<string, number>,
   passengerDemand: PassengerDemandProjection | undefined,
 ) {
   const profile = beginRepresentationProfile('passengers.derivation');
-  const totals = new Map<string, number>();
-  if (passengerDemand?.status === 'active')
-    for (const cohort of passengerDemand.waitingCohorts) {
-      const total = (totals.get(cohort.originStopPlaceId) ?? 0) + cohort.count;
-      if (!Number.isSafeInteger(total))
-        throw new Error('Passenger map waiting total exceeds safe range.');
-      totals.set(cohort.originStopPlaceId, total);
-    }
+  const totals = passengerWaitingTotals(passengerDemand);
   finishRepresentationProfile(profile);
   return previous.size === totals.size &&
     [...totals].every(([place, count]) => previous.get(place) === count)

@@ -34,6 +34,7 @@ const canvas2dRepresentation = one(/^Canvas2dRepresentation-[\w-]+\.js$/);
 const populationOverlay = one(/^PopulationGridOverlay-[\w-]+\.js$/);
 const transportMapProjection = one(/^transport-map-projection-[\w-]+\.js$/);
 const dom2dProjectionAdapter = one(/^vehicle-svg-projection-[\w-]+\.js$/);
+const passengerMapDiagnostics = one(/^passenger-map-diagnostics-[\w-]+\.js$/);
 const openScreen = one(/^OpenScreen-[\w-]+\.js$/);
 const gameInspector = one(/^GameInspector-[\w-]+\.js$/);
 const persistenceRuntime = one(/^persistence-runtime-[\w-]+\.js$/);
@@ -52,6 +53,7 @@ for (const [name, matches] of Object.entries({
   populationOverlay,
   transportMapProjection,
   dom2dProjectionAdapter,
+  passengerMapDiagnostics,
   openScreen,
   gameInspector,
   persistenceRuntime,
@@ -100,15 +102,21 @@ const sizes = {
 };
 const logicalCompositions = {
   canvasTransportRepresentation:
-    sizes.canvas2dRepresentation + sizes.transportMapProjection,
+    sizes.canvas2dRepresentation +
+    sizes.transportMapProjection +
+    (await size(passengerMapDiagnostics[0])),
   dom2dTransportRepresentation:
     sizes.svgRepresentation +
     sizes.dom2dProjectionAdapter +
-    sizes.transportMapProjection,
+    sizes.transportMapProjection +
+    (await size(passengerMapDiagnostics[0])),
   populationMap:
     sizes.populationOverlay +
     sizes.dom2dProjectionAdapter +
     sizes.transportMapProjection,
+};
+const reportOnlySharedArchitecture = {
+  passengerMapDiagnostics: await size(passengerMapDiagnostics[0]),
 };
 for (const [name, budget] of Object.entries(configured))
   if (sizes[name] > budget)
@@ -190,5 +198,5 @@ for (const asset of populationAssets)
   if (!serviceWorkerSource.includes(`url:${JSON.stringify(asset)}`))
     throw new Error(`Service Worker does not precache ${asset}.`);
 console.log(
-  `Build and installability audit passed: ${JSON.stringify({ javascript, hardBudgetCoordinates: sizes, budgets: configured, reportOnlyLogicalCompositions: logicalCompositions })}.`,
+  `Build and installability audit passed: ${JSON.stringify({ javascript, hardBudgetCoordinates: sizes, budgets: configured, reportOnlySharedArchitecture, reportOnlyLogicalCompositions: logicalCompositions })}.`,
 );

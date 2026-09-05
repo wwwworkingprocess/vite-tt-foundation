@@ -237,12 +237,11 @@ physical-stop identity, canonical serving routes and patterns, exact ordered
 occurrences, selected calls, loop status, and topology-derived interchange
 badges without recomputing static topology on live passenger updates. The dock
 retains compact selection context and reopens the details modal. DOM 2D `Map`,
-Canvas 2D `Main` with presentation-only directed route context and canonical
-StopPlace/Vehicle selection, and D3D `Main` establish the three-family,
+Canvas 2D `Map` with directed route context, canonical StopPlace/Vehicle
+selection, population, and passenger diagnostics, and D3D `Main` establish the three-family,
 two-mounted-slot lifecycle; mini swapping remains an explicit arm/confirm
-interaction. Canvas Map promotion, whole-route interaction, Canvas
-population/passenger
-layers, a universal view capability model, D3D Map, and additional D3D scenes
+interaction. Whole-route interaction, a universal view capability model, D3D
+Map, and additional D3D scenes
 remain deferred. Canonical
 timetable/service-calendar authority remains a separate future data/schema
 milestone. Phase 4F remains deferred.

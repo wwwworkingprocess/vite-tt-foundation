@@ -140,6 +140,20 @@ const toScenarioSelectionState = (
     ...(state.message ? { message: state.message } : {}),
   });
 
+const useAuthorityScopedVisibility = (scopeKey: string | undefined) => {
+  const [visibility, setVisibility] = useState<
+    Readonly<{ scopeKey: string | undefined; visible: boolean }>
+  >({ scopeKey, visible: true });
+  const setVisible = useCallback(
+    (visible: boolean) => setVisibility({ scopeKey, visible }),
+    [scopeKey],
+  );
+  return [
+    visibility.scopeKey === scopeKey ? visibility.visible : true,
+    setVisible,
+  ] as const;
+};
+
 export function App() {
   const [state, setState] = useState<FoundationSessionCompositionState>();
   const [lifecycle, setLifecycle] = useState<BrowserLifecycle>({
@@ -162,8 +176,6 @@ export function App() {
   const [browserActionMessage, setBrowserActionMessage] = useState<string>();
   const [selectedRouteId, setSelectedRouteId] = useState<string>();
   const [gameSelection, setGameSelection] = useState<GameSelection>(null);
-  const [populationVisible, setPopulationVisible] = useState(true);
-  const [passengersVisible, setPassengersVisible] = useState(true);
   const [openSelectionDetails, setOpenSelectionDetails] = useState<
     'stop' | 'vehicle'
   >();
@@ -487,11 +499,15 @@ export function App() {
     application?.session.status === 'ready'
       ? application.session.timelineId
       : undefined;
-  useEffect(() => setPopulationVisible(true), [authoritativeCoordinateKey]);
-  useEffect(
-    () => setPassengersVisible(true),
-    [authoritativeCoordinateKey, authoritativeTimelineKey],
-  );
+  const [populationVisible, setPopulationVisible] =
+    useAuthorityScopedVisibility(authoritativeCoordinateKey);
+  const [passengersVisible, setPassengersVisible] =
+    useAuthorityScopedVisibility(
+      JSON.stringify([
+        authoritativeCoordinateKey ?? null,
+        authoritativeTimelineKey ?? null,
+      ]),
+    );
   const cachedAuthoritativeScenario = authoritativeCoordinateKey
     ? scenarioCache.current.get(authoritativeCoordinateKey)
     : undefined;

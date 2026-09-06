@@ -7,7 +7,7 @@ import {
   waitFor,
   within,
 } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
@@ -17,7 +17,12 @@ import {
 import { createScenarioCoordinate } from '@torrevieja-tycoon/simulation';
 import { createScenarioScopedSaveTarget } from './transport-simulation/scenario-save-target.js';
 import type { TransportSaveSummary } from './transport-simulation/transport-save-record.js';
-import { createDexieTransportSaveRepository } from './transport-simulation/transport-save-repository.js';
+import {
+  createDexieTransportSaveRepository,
+  deleteTransportSaveDatabase,
+} from './transport-simulation/transport-save-repository.js';
+
+const testSaveDatabase = 'foundation-template';
 
 const fleetTuples = () =>
   [...document.querySelectorAll('[data-testid^="vehicle-row-"]')].map(
@@ -207,15 +212,22 @@ vi.mock('./scenarios/ScenarioPanel.js', () => ({
     ...(state.message ? { message: state.message } : {}),
   }),
   ScenarioPanel: ({
+    state,
     onScenarioChange,
     disabled,
   }: {
+    state: { status: string; selectedScenarioId?: string };
     onScenarioChange(value: string): void;
     disabled?: boolean;
   }) => {
     return (
       <div>
         Scenario fixture
+        <span
+          data-testid="scenario-selection-state"
+          data-status={state.status}
+          data-scenario-id={state.selectedScenarioId}
+        />
         <button
           disabled={disabled}
           onClick={() =>
@@ -463,7 +475,27 @@ const pauseSimulation = async () => {
   );
 };
 
-afterEach(() => {
+const waitForScenarioSelection = (scenarioId: string) =>
+  waitFor(() =>
+    expect(screen.getByTestId('scenario-selection-state')).toHaveAttribute(
+      'data-scenario-id',
+      scenarioId,
+    ),
+  );
+
+const waitForAuthoritativeScenario = (scenarioId: string) =>
+  waitFor(() =>
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-scenario-id',
+      scenarioId,
+    ),
+  );
+
+beforeEach(async () => {
+  await deleteTransportSaveDatabase(testSaveDatabase);
+});
+
+afterEach(async () => {
   cleanup();
   vi.unstubAllGlobals();
   deferCityNameResolution = false;
@@ -477,6 +509,7 @@ afterEach(() => {
   populationFailureMessages = [];
   demandPlanFailureMessages = [];
   deferredPopulation = undefined;
+  await deleteTransportSaveDatabase(testSaveDatabase);
 });
 
 describe('foundation screen', () => {
@@ -505,13 +538,16 @@ describe('foundation screen', () => {
   it('opens renderer-independent StopPlace details and keeps selection after close', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
     render(<App />);
+    await waitForScenarioSelection(scenario.manifest.scenarioId);
     fireEvent.click(
       await screen.findByRole('button', { name: 'Select legacy routes' }),
     );
     const start = await screen.findByRole('button', { name: 'Start new game' });
+    await waitForScenarioSelection(legacyScenario.manifest.scenarioId);
     await waitFor(() => expect(start).toBeEnabled());
     fireEvent.click(start);
     await screen.findByTestId('game-shell');
+    await waitForAuthoritativeScenario(legacyScenario.manifest.scenarioId);
     const stop = (
       await screen.findAllByRole('button', {
         name: /^Select stop /,
@@ -536,10 +572,12 @@ describe('foundation screen', () => {
     deferCityNameResolution = true;
     vi.stubGlobal('Worker', class FoundationWorker {});
     render(<App />);
+    await waitForScenarioSelection(scenario.manifest.scenarioId);
     fireEvent.click(
       await screen.findByRole('button', { name: 'Select scenario B' }),
     );
     const start = screen.getByRole('button', { name: 'Start new game' });
+    await waitForScenarioSelection(alternateScenario.manifest.scenarioId);
     await waitFor(() => expect(start).toBeEnabled());
     releaseCityNameResolution?.();
     deferCityNameResolution = false;
@@ -559,11 +597,13 @@ describe('foundation screen', () => {
     holdNextWorkerStart = true;
     vi.stubGlobal('Worker', class FoundationWorker {});
     render(<App />);
+    await waitForScenarioSelection(scenario.manifest.scenarioId);
     const selectB = await screen.findByRole('button', {
       name: 'Select scenario B',
     });
     fireEvent.click(selectB);
     const start = screen.getByRole('button', { name: 'Start new game' });
+    await waitForScenarioSelection(alternateScenario.manifest.scenarioId);
     await waitFor(() => expect(start).toBeEnabled());
     fireEvent.click(start);
     expect(
@@ -585,23 +625,18 @@ describe('foundation screen', () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     render(<App />);
+    await waitForScenarioSelection(scenario.manifest.scenarioId);
     fireEvent.click(
       await screen.findByRole('button', { name: 'Select scenario B' }),
     );
     const start = screen.getByRole('button', { name: 'Start new game' });
+    await waitForScenarioSelection(alternateScenario.manifest.scenarioId);
     await waitFor(() => expect(start).toBeEnabled());
     fireEvent.click(start);
     await screen.findByTestId('game-shell');
-    await waitFor(() =>
-      expect(screen.getByTestId('scenario-menu-trigger')).toHaveTextContent(
-        alternateScenario.manifest.title,
-      ),
-    );
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
     await screen.findByText(/Save completed\./);
-    const repository = createDexieTransportSaveRepository(
-      'foundation-template',
-    );
+    const repository = createDexieTransportSaveRepository(testSaveDatabase);
     const records = await repository.list();
     discoveredSave = records
       .flatMap((record) =>
@@ -652,7 +687,11 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('scenario-menu-trigger')).toHaveTextContent(
       alternateScenario.manifest.title,
     );
+    fireEvent.click(screen.getByRole('button', { name: 'Hide population' }));
     fireEvent.click(screen.getByRole('button', { name: 'Hide passengers' }));
+    expect(
+      screen.getByRole('button', { name: 'Show population' }),
+    ).toBeVisible();
     expect(
       await screen.findByRole('button', { name: 'Show passengers' }),
     ).toBeVisible();
@@ -665,9 +704,11 @@ describe('foundation screen', () => {
       alternateScenario.manifest.title,
     );
     await screen.findByRole('button', { name: 'Hide passengers' });
-    const cleanupRepository = createDexieTransportSaveRepository(
-      'foundation-template',
-    );
+    expect(
+      screen.getByRole('button', { name: 'Show population' }),
+    ).toBeVisible();
+    const cleanupRepository =
+      createDexieTransportSaveRepository(testSaveDatabase);
     await cleanupRepository.delete(discoveredSave!.saveId);
     await cleanupRepository.close();
   });

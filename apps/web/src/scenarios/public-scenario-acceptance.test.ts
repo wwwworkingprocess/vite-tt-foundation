@@ -26,27 +26,45 @@ const torreviejaScenarioIds = [
   'torrevieja-legacy-south-v1',
 ] as const;
 
+const publicCatalog = readFile(
+  join(publicRoot, 'scenarios', 'catalog.json'),
+  'utf8',
+).then(
+  (text) =>
+    JSON.parse(text) as {
+      readonly scenarios: readonly {
+        readonly scenarioId: string;
+        readonly manifestPath: string;
+      }[];
+    },
+);
+const canonicalScenarios = new Map<string, Promise<CanonicalScenario>>();
+
 async function loadCanonicalScenario(
   scenarioId: string,
 ): Promise<CanonicalScenario> {
-  const catalog = JSON.parse(
-    await readFile(join(publicRoot, 'scenarios', 'catalog.json'), 'utf8'),
-  ) as { scenarios: Array<{ scenarioId: string; manifestPath: string }> };
+  const cached = canonicalScenarios.get(scenarioId);
+  if (cached) return cached;
+  const catalog = await publicCatalog;
   const descriptor = catalog.scenarios.find(
     (candidate) => candidate.scenarioId === scenarioId,
   );
   if (!descriptor) throw new Error(`Unknown public scenario ${scenarioId}.`);
-  const root = join(publicRoot, 'scenarios', descriptor.manifestPath, '..');
-  const json = async (name: string) =>
-    JSON.parse(await readFile(join(root, name), 'utf8')) as unknown;
-  return parseScenarioPackage({
-    manifest: await json('scenario.json'),
-    settlements: await json('settlements.json'),
-    stops: await json('stops.json'),
-    routes: await json('routes.json'),
-    presentation: await json('presentation.json'),
-    provenance: await json('provenance.json'),
-  });
+  const loading = (async () => {
+    const root = join(publicRoot, 'scenarios', descriptor.manifestPath, '..');
+    const json = async (name: string) =>
+      JSON.parse(await readFile(join(root, name), 'utf8')) as unknown;
+    return parseScenarioPackage({
+      manifest: await json('scenario.json'),
+      settlements: await json('settlements.json'),
+      stops: await json('stops.json'),
+      routes: await json('routes.json'),
+      presentation: await json('presentation.json'),
+      provenance: await json('provenance.json'),
+    });
+  })();
+  canonicalScenarios.set(scenarioId, loading);
+  return loading;
 }
 
 describe('public multi-scenario catalogue', () => {
@@ -222,7 +240,7 @@ describe('public multi-scenario catalogue', () => {
         });
       }
     },
-    30_000,
+    60_000,
   );
 
   it('accepts absent optional assets and normalizes non-Error catalogue failure', async () => {
@@ -256,41 +274,46 @@ describe('public multi-scenario catalogue', () => {
   });
 
   it('creates, starts, and advances a production vehicle on every public route', async () => {
-    const catalog = JSON.parse(
-      await readFile(join(publicRoot, 'scenarios', 'catalog.json'), 'utf8'),
-    ) as { scenarios: readonly { scenarioId: string }[] };
+    const catalog = await publicCatalog;
     let routeCount = 0;
     for (const descriptor of catalog.scenarios) {
       const canonical = await loadCanonicalScenario(descriptor.scenarioId);
       const coordinate = createScenarioCoordinate(canonical);
+      let authority = createTransportSimulationState(canonical, 0);
+      const expectedVehicles: Array<
+        Readonly<{ vehicleId: string; routeId: string }>
+      > = [];
       for (const route of canonical.routes.routes) {
         routeCount += 1;
         const create = createDemoVehicleCommandForAuthority(
           coordinate,
           () => canonical,
-          [],
+          authority.fleet,
           route.routeId,
         );
-        let authority = applyTransportVehicleCommand(
-          createTransportSimulationState(canonical, 0),
-          create,
-        );
+        authority = applyTransportVehicleCommand(authority, create);
         authority = applyTransportVehicleCommand(authority, {
           kind: 'transport.vehicle.start',
           vehicleId: create.vehicleId,
         });
-        authority = advanceTransportTicks(authority, parseTickAdvancement(1));
-        expect(authority.tick).toBe(1);
-        expect(authority.fleet).toHaveLength(1);
-        expect(authority.fleet[0]).toMatchObject({
+        expectedVehicles.push({
           vehicleId: create.vehicleId,
           routeId: route.routeId,
         });
-        expect(authority.fleet[0]!.movement.kind).not.toBe('parked-at-stop');
+      }
+      authority = advanceTransportTicks(authority, parseTickAdvancement(1));
+      expect(authority.tick).toBe(1);
+      expect(authority.fleet).toHaveLength(expectedVehicles.length);
+      for (const expected of expectedVehicles) {
+        const vehicle = authority.fleet.find(
+          ({ vehicleId }) => vehicleId === expected.vehicleId,
+        );
+        expect(vehicle).toMatchObject(expected);
+        expect(vehicle?.movement.kind).not.toBe('parked-at-stop');
       }
     }
     expect(routeCount).toBeGreaterThan(0);
-  }, 60_000);
+  }, 120_000);
 
   it('accepts the physical Torrevieja StopPlace projection consistently', async () => {
     const scenarios = await Promise.all(

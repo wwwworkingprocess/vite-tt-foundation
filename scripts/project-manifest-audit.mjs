@@ -77,6 +77,7 @@ const requiredCriticalFiles = [
   'apps/web/src/transport-representation/vehicle-svg-projection.ts',
   'apps/web/src/transport-representation/demo-vehicle-command.ts',
   'apps/web/src/representation/passenger-map-diagnostics.ts',
+  'apps/web/src/representation/representation-view-capabilities.ts',
   'apps/web/src/transport-simulation/scenario-save-target.ts',
 ];
 for (const path of requiredCriticalFiles)

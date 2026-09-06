@@ -2,13 +2,11 @@ import {
   representationProfilePrefix,
   summarizeDurations,
 } from './representation-profiler.js';
-import type { RepresentationFamily } from '../representation/RepresentationWorkspace.js';
-
-const representationFamilies: readonly RepresentationFamily[] = [
-  'dom2d',
-  'canvas2d',
-  'd3d',
-];
+import {
+  defaultRepresentationViewForFamily,
+  representationFamilies,
+  type RepresentationFamily,
+} from '../representation/representation-view-capabilities.js';
 
 const familyPlacement = (
   family: RepresentationFamily,
@@ -17,17 +15,20 @@ const familyPlacement = (
 ) =>
   family === primaryFamily
     ? Object.freeze({
+        view: defaultRepresentationViewForFamily(family),
         slot: 'primary' as const,
         mode: 'normal' as const,
         targetFramesPerSecond: 60,
       })
     : family === miniFamily
       ? Object.freeze({
+          view: defaultRepresentationViewForFamily(family),
           slot: 'mini' as const,
           mode: 'mini' as const,
           targetFramesPerSecond: 5,
         })
       : Object.freeze({
+          view: defaultRepresentationViewForFamily(family),
           slot: 'inactive' as const,
           mode: null,
           targetFramesPerSecond: null,
@@ -102,6 +103,9 @@ export function createRepresentationProfileResult(input: {
       primaryFamily: input.primaryFamily,
       miniFamily: input.miniFamily,
       inactiveFamily,
+      primaryView: defaultRepresentationViewForFamily(input.primaryFamily),
+      miniView: defaultRepresentationViewForFamily(input.miniFamily),
+      inactiveView: defaultRepresentationViewForFamily(inactiveFamily),
       targetFramesPerSecond: input.representationMode === 'mini' ? 5 : 60,
     }),
     observation: Object.freeze({

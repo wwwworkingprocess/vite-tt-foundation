@@ -3,8 +3,28 @@ import { useState } from 'react';
 import { afterEach, expect, it } from 'vitest';
 import { RepresentationWorkspace } from './RepresentationWorkspace.js';
 import { RepresentationViewActions } from './RepresentationViewActions.js';
+import { supportsRepresentationView } from './representation-view-capabilities.js';
 
 afterEach(cleanup);
+
+const expectWorkspacePairsSupported = () => {
+  for (const testId of ['primary-visualization', 'secondary-minimap']) {
+    const slot = screen.getByTestId(testId);
+    expect(
+      supportsRepresentationView(
+        slot.getAttribute('data-family') ?? '',
+        slot.getAttribute('data-view') ?? '',
+      ),
+    ).toBe(true);
+  }
+  const workspace = screen.getByTestId('visualization-workspace');
+  expect(
+    supportsRepresentationView(
+      workspace.getAttribute('data-inactive-family') ?? '',
+      workspace.getAttribute('data-inactive-view') ?? '',
+    ),
+  ).toBe(true);
+};
 
 function ControlledWorkspace() {
   const [open, setOpen] = useState(false);
@@ -71,7 +91,20 @@ it('mounts exactly two families and replaces only the mini with the inactive fam
     'data-family',
     'd3d',
   );
+  expect(screen.getByTestId('primary-visualization')).toHaveAttribute(
+    'data-view',
+    'map',
+  );
+  expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
+    'data-view',
+    'main',
+  );
+  expect(screen.getByTestId('visualization-workspace')).toHaveAttribute(
+    'data-inactive-view',
+    'map',
+  );
   expect(screen.queryByText('Canvas scene')).toBeNull();
+  expectWorkspacePairsSupported();
   fireEvent.click(
     screen.getByRole('button', { name: 'Select mini representation for swap' }),
   );
@@ -106,6 +139,7 @@ it('mounts exactly two families and replaces only the mini with the inactive fam
   );
   expect(screen.getByText('Canvas scene')).toBeInTheDocument();
   expect(screen.queryByText('3D scene')).toBeNull();
+  expectWorkspacePairsSupported();
   expect(
     screen.queryByRole('button', { name: 'Swap visualizations' }),
   ).toBeNull();
@@ -129,6 +163,11 @@ it('mounts exactly two families and replaces only the mini with the inactive fam
     'data-inactive-family',
     'd3d',
   );
+  expect(screen.getByTestId('visualization-workspace')).toHaveAttribute(
+    'data-inactive-view',
+    'main',
+  );
+  expectWorkspacePairsSupported();
   fireEvent.click(
     screen.getByRole('button', { name: 'Select mini representation for swap' }),
   );
@@ -136,6 +175,11 @@ it('mounts exactly two families and replaces only the mini with the inactive fam
     screen.getByRole('button', { name: 'Use 3D in mini' }),
   ).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Use 3D in mini' }));
+  expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
+    'data-view',
+    'main',
+  );
+  expectWorkspacePairsSupported();
   fireEvent.click(
     screen.getByRole('button', { name: 'Select mini representation for swap' }),
   );

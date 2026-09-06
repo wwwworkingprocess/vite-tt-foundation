@@ -1,6 +1,6 @@
 import { createRepresentationProfileResult } from '../../apps/web/src/performance/representation-profile-summary.js';
 import { representationProfilePrefix } from '../../apps/web/src/performance/representation-profiler.js';
-import type { RepresentationFamily } from '../../apps/web/src/representation/RepresentationWorkspace.js';
+import type { RepresentationFamily } from '../../apps/web/src/representation/representation-view-capabilities.js';
 
 const scenarios = [
   { id: 'torrevieja-legacy-abc-v1', city: 'Torrevieja' },

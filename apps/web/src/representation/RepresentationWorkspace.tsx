@@ -6,9 +6,17 @@ import {
   useState,
 } from 'react';
 import { RepresentationModeProvider } from './RepresentationModeContext.js';
+import {
+  defaultRepresentationViewForFamily,
+  representationFamilies,
+  type RepresentationFamily,
+  type RepresentationView,
+} from './representation-view-capabilities.js';
 
-export type RepresentationFamily = 'dom2d' | 'canvas2d' | 'd3d';
-export type RepresentationView = 'map' | 'main';
+export type {
+  RepresentationFamily,
+  RepresentationView,
+} from './representation-view-capabilities.js';
 
 export interface RepresentationModal {
   readonly title: string;
@@ -23,8 +31,6 @@ interface RepresentationWorkspaceProps {
   readonly modal?: RepresentationModal | undefined;
 }
 
-const viewForFamily = (family: RepresentationFamily): RepresentationView =>
-  family === 'd3d' ? 'main' : 'map';
 const labelForFamily = (family: RepresentationFamily) =>
   family === 'dom2d' ? 'DOM 2D' : family === 'canvas2d' ? 'Canvas 2D' : '3D';
 const labelForView = (view: RepresentationView) =>
@@ -39,21 +45,16 @@ export function RepresentationWorkspace({
   const [visibleFamilies, setVisibleFamilies] = useState<
     readonly [RepresentationFamily, RepresentationFamily]
   >(['dom2d', 'd3d']);
-  const [familyViews] = useState(
-    () =>
-      ({
-        dom2d: viewForFamily('dom2d'),
-        canvas2d: viewForFamily('canvas2d'),
-        d3d: viewForFamily('d3d'),
-      }) as const,
-  );
   const [swapArmed, setSwapArmed] = useState(false);
   const miniBoundary = useRef<HTMLDivElement>(null);
   const restoreModalFocus = useRef(true);
   const [primaryFamily, secondaryFamily] = visibleFamilies;
-  const inactiveFamily = (['dom2d', 'canvas2d', 'd3d'] as const).find(
+  const inactiveFamily = representationFamilies.find(
     (family) => !visibleFamilies.includes(family),
   )!;
+  const primaryView = defaultRepresentationViewForFamily(primaryFamily);
+  const secondaryView = defaultRepresentationViewForFamily(secondaryFamily);
+  const inactiveView = defaultRepresentationViewForFamily(inactiveFamily);
   const renderFamily = (family: RepresentationFamily) =>
     family === 'dom2d'
       ? domTwoDimensional
@@ -109,12 +110,13 @@ export function RepresentationWorkspace({
       className="visualization-workspace"
       data-testid="visualization-workspace"
       data-inactive-family={inactiveFamily}
+      data-inactive-view={inactiveView}
     >
       <section
         className="representation-slot representation-slot-primary"
         data-testid="primary-visualization"
         data-family={primaryFamily}
-        data-view={familyViews[primaryFamily]}
+        data-view={primaryView}
         data-representation-mode="normal"
       >
         <div className="representation-view-tabs" role="tablist">
@@ -122,9 +124,9 @@ export function RepresentationWorkspace({
             type="button"
             role="tab"
             aria-selected="true"
-            data-view={familyViews[primaryFamily]}
+            data-view={primaryView}
           >
-            {labelForView(familyViews[primaryFamily])}
+            {labelForView(primaryView)}
           </button>
         </div>
         <div className="representation-view-host">
@@ -152,7 +154,7 @@ export function RepresentationWorkspace({
           className="representation-slot representation-slot-mini"
           data-testid="secondary-minimap"
           data-family={secondaryFamily}
-          data-view={familyViews[secondaryFamily]}
+          data-view={secondaryView}
           data-representation-mode="mini"
         >
           <RepresentationModeProvider mode="mini">

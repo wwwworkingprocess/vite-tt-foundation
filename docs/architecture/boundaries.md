@@ -144,6 +144,22 @@ The simulation publishes logical information such as an exact edge identity and
 integer progress/travel values. Representation converts that authority into
 world position, orientation, interpolation, meshes, labels, and camera framing.
 
+Representation family, view, and mode are orthogonal application concepts.
+Family names renderer/materialization technology (`dom2d`, `canvas2d`, `d3d`),
+view names an application capability (`map`, `main`), and mode names slot
+presentation (`normal`, `mini`). One pure capability boundary owns the current
+supported pairs and defaults:
+
+| Family    | Map | Main | Default |
+| --------- | --- | ---- | ------- |
+| DOM 2D    | yes | no   | Map     |
+| Canvas 2D | yes | no   | Map     |
+| D3D       | no  | yes  | Main    |
+
+Primary, mini, and inactive placement do not grant capabilities. Swapping a
+family changes its slot and mode, not its view. Renderer materialization remains
+explicit rather than becoming a plugin registry or generic renderer factory.
+
 `apps/web/src/representation/transport-map-projection.ts` is the pure shared
 2D transport projection boundary. It converts canonical scenario topology and
 authoritative Vehicle positions into immutable normalized west-to-east,

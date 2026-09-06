@@ -153,10 +153,16 @@ StopPlace, and Vehicle selections are browser-owned canonical identities; the SV
 is only one input adapter and never owns selection or simulation authority.
 
 The workspace distinguishes primary/mini slots, three representation families,
-and family-owned active views. DOM 2D exposes `Map` through SVG, Canvas 2D
+and family-owned active views. Family identifies renderer/materialization
+technology, view identifies an application representation capability, and mode
+(`normal` or `mini`) identifies slot presentation without changing the view.
+One renderer-independent capability table defines the current matrix: DOM 2D
+and Canvas 2D support only `Map`; D3D supports only `Main`. Unsupported pairs
+fail closed. DOM 2D exposes `Map` through SVG, Canvas 2D
 exposes `Map` through Canvas-native materialization, and D3D exposes its
 existing `Main` scene. Exactly two families are mounted; the third remains
-inactive until an armed mini action explicitly installs it. Swap remains a
+inactive while retaining its canonical view identity until an armed mini action
+explicitly installs it. Swap remains a
 separate confirmation that exchanges the visible families without changing the
 inactive family. Mini controls remain above the primary-slot modal.
 
@@ -182,8 +188,12 @@ Population visibility resets with a new authoritative scenario; passenger
 visibility resets with a new authoritative scenario or timeline, matching the
 former renderer-mount lifecycle. D3D exposes no empty action bar. Future whole-route interaction may
 continue to use the existing route selection authority, but Canvas route
-selection, a universal view capability model, and D3D Map remain deferred representation
+selection, multi-view selection UX, and D3D Map remain deferred representation
 milestones.
+
+A future D3D Map adds `map` to D3D's supported views; it does not create a new
+renderer family. No view-switch control exists while every family supports only
+one view.
 
 Build budgets account for renderer-specific emitted artifacts independently
 from shared production architecture. The shared transport Map projection has a

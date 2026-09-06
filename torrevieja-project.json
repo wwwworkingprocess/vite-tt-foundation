@@ -34,6 +34,7 @@
       "apps/web/src/ui/VehicleModalDetails.tsx",
       "apps/web/src/ui/stop-place-details-model.ts",
       "apps/web/src/representation/RepresentationWorkspace.tsx",
+      "apps/web/src/representation/representation-view-capabilities.ts",
       "apps/web/src/representation/Canvas2dRepresentation.tsx",
       "apps/web/src/representation/canvas2d-selection-model.ts",
       "apps/web/src/representation/transport-map-projection.ts",

@@ -1,6 +1,7 @@
 import { expect, it } from 'vitest';
 import { createRepresentationProfileResult } from './representation-profile-summary.js';
 import { representationProfilePrefix } from './representation-profiler.js';
+import { defaultRepresentationViewForFamily } from '../representation/representation-view-capabilities.js';
 
 it('creates a stable structural browser-profile result', () => {
   const named = (
@@ -75,6 +76,9 @@ it('creates a stable structural browser-profile result', () => {
     primaryFamily: 'dom2d',
     miniFamily: 'd3d',
     inactiveFamily: 'canvas2d',
+    primaryView: 'map',
+    miniView: 'main',
+    inactiveView: 'map',
     targetFramesPerSecond: 5,
   });
   expect(result.svg).toMatchObject({
@@ -96,6 +100,7 @@ it('creates a stable structural browser-profile result', () => {
     primitiveCount: 8,
   });
   expect(result.r3f).toMatchObject({
+    view: 'main',
     slot: 'mini',
     mode: 'mini',
     targetFramesPerSecond: 5,
@@ -103,6 +108,7 @@ it('creates a stable structural browser-profile result', () => {
     totalMs: 1,
   });
   expect(result.canvas2d).toMatchObject({
+    view: 'map',
     slot: 'inactive',
     mode: null,
     targetFramesPerSecond: null,
@@ -165,11 +171,17 @@ it.each([
         },
       ],
     });
+    const inactiveFamily = (['dom2d', 'canvas2d', 'd3d'] as const).find(
+      (family) => family !== primaryFamily && family !== miniFamily,
+    )!;
     expect(result.representation).toMatchObject({
       primaryFamily,
       miniFamily,
+      primaryView: defaultRepresentationViewForFamily(primaryFamily),
+      miniView: defaultRepresentationViewForFamily(miniFamily),
+      inactiveView: defaultRepresentationViewForFamily(inactiveFamily),
     });
-    expect(result.r3f).toMatchObject(d3d);
-    expect(result.canvas2d).toMatchObject(canvas);
+    expect(result.r3f).toMatchObject({ view: 'main', ...d3d });
+    expect(result.canvas2d).toMatchObject({ view: 'map', ...canvas });
   },
 );

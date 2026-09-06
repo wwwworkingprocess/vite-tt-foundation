@@ -633,6 +633,24 @@ if (
   )
 )
   fail('renderer-neutral passenger Map diagnostics import renderer authority.');
+const representationCapabilityFile =
+  'apps/web/src/representation/representation-view-capabilities.ts';
+const representationCapabilitySource = await source(
+  representationCapabilityFile,
+);
+if (
+  /from\s+['"](?:react|three|@react-three(?:\/[^'"]*)?)[^'"]*['"]|\b(?:window|document|CanvasRenderingContext2D|SVGElement|HTMLElement)\b/.test(
+    representationCapabilitySource,
+  )
+)
+  fail(
+    'representation view capabilities import renderer or browser authority.',
+  );
+for (const file of web.filter(
+  (file) => file.replaceAll('\\', '/') !== representationCapabilityFile,
+))
+  if (/supportedViews\s*:/.test(await source(file)))
+    fail(`${file} duplicates representation view capability declarations.`);
 const appSource = await source('apps/web/src/App.tsx');
 const representationActionOwners = (
   (

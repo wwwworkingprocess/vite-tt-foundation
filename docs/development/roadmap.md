@@ -172,6 +172,10 @@ Completed:
   Canvas2D, with renderer-specific materialization and interaction retained;
 - primary-only representation view actions, currently used by DOM2D Map's
   population and passenger toggles without exposing controls in the mini slot.
+- a renderer-independent family/view capability table that retains DOM2D Map,
+  Canvas2D Map, and D3D Main identity across primary, mini, and inactive
+  placement, forming the foundation for a later D3D Map without introducing
+  generic view-switch UI now.
 
 Remaining product visualization work:
 
@@ -240,8 +244,7 @@ retains compact selection context and reopens the details modal. DOM 2D `Map`,
 Canvas 2D `Map` with directed route context, canonical StopPlace/Vehicle
 selection, population, and passenger diagnostics, and D3D `Main` establish the three-family,
 two-mounted-slot lifecycle; mini swapping remains an explicit arm/confirm
-interaction. Whole-route interaction, a universal view capability model, D3D
-Map, and additional D3D scenes
+interaction. Whole-route interaction, multi-view selection UX, D3D Map, and additional D3D scenes
 remain deferred. Canonical
 timetable/service-calendar authority remains a separate future data/schema
 milestone. Phase 4F remains deferred.

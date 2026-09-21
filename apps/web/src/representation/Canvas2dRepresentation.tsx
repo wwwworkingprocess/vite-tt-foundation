@@ -301,14 +301,18 @@ export function Canvas2dRepresentation({
         context.lineWidth = 1.5;
         let routeArrowheads = 0;
         for (const edge of snapshot.routeEdges) {
-          context.strokeStyle = edge.color;
+          const selected =
+            currentInput.selection?.kind === 'route' &&
+            currentInput.selection.routeId === edge.routeId;
+          context.strokeStyle = selected ? '#ffd166' : edge.color;
+          context.lineWidth = selected ? 4 : 1.5;
           context.beginPath();
           context.moveTo(edge.from.x, edge.from.y);
           context.lineTo(edge.to.x, edge.to.y);
           context.stroke();
           if (edge.arrowhead) {
             routeArrowheads += 1;
-            context.fillStyle = edge.color;
+            context.fillStyle = selected ? '#ffd166' : edge.color;
             context.beginPath();
             context.moveTo(edge.arrowhead[0]!.x, edge.arrowhead[0]!.y);
             context.lineTo(edge.arrowhead[1]!.x, edge.arrowhead[1]!.y);

@@ -1,31 +1,25 @@
 import {
-  createScenarioCoordinate,
   parseVehicleId,
-  scenarioCoordinatesEqual,
   type TransportVehicleCommand,
   type VehicleState,
 } from '@torrevieja-tycoon/simulation';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import type { FoundationSessionCompositionState } from '../foundation-session-composition.js';
 import type { ScenarioSelectionState } from '../scenarios/ScenarioPanel.js';
-import { createDemoVehicleCommandForAuthority } from '../transport-representation/demo-vehicle-command.js';
 
 export interface SimulationControlsProps {
   readonly status: string;
   readonly state?: FoundationSessionCompositionState | undefined;
   readonly selectedScenario?: CanonicalScenario | undefined;
   readonly scenarioSelection: ScenarioSelectionState;
-  readonly selectedRouteId?: string | undefined;
   readonly authoritativeScenarioPackage?: CanonicalScenario | undefined;
   readonly authoritativePackageStatus?:
     'idle' | 'loading' | 'ready' | 'failed' | undefined;
   readonly authoritativePackageMessage?: string | undefined;
   readonly fleet?: readonly VehicleState[] | undefined;
   readonly ready: boolean;
-  readonly onRouteChange: (routeId: string) => void;
   readonly onSendVehicleCommand?:
     ((command: TransportVehicleCommand) => Promise<void>) | undefined;
-  readonly onVehicleActionMessage: (message: string | undefined) => void;
   readonly onMode?:
     | ((mode: 'paused' | 'normal' | 'fast' | 'maximum') => Promise<void>)
     | undefined;
@@ -41,15 +35,12 @@ export default function SimulationControls({
   state,
   selectedScenario,
   scenarioSelection,
-  selectedRouteId,
   authoritativeScenarioPackage,
   authoritativePackageStatus,
   authoritativePackageMessage,
   fleet,
   ready,
-  onRouteChange,
   onSendVehicleCommand,
-  onVehicleActionMessage,
   onMode,
   onBonus,
 }: SimulationControlsProps) {
@@ -57,31 +48,6 @@ export default function SimulationControls({
   const pacing = state?.pacing;
   const session = application?.session;
   const firstVehicle = fleet?.[0];
-  const createVehicle = async () => {
-    if (!application?.scenario || !authoritativeScenarioPackage) return;
-    try {
-      const command = createDemoVehicleCommandForAuthority(
-        application.scenario,
-        (coordinate) =>
-          scenarioCoordinatesEqual(
-            coordinate,
-            createScenarioCoordinate(authoritativeScenarioPackage),
-          )
-            ? authoritativeScenarioPackage
-            : undefined,
-        fleet ?? [],
-        selectedRouteId,
-      );
-      onVehicleActionMessage(undefined);
-      await onSendVehicleCommand?.(command);
-    } catch (error) {
-      onVehicleActionMessage(
-        error instanceof Error
-          ? error.message
-          : 'The demo vehicle could not be created.',
-      );
-    }
-  };
   return (
     <div
       className="simulation-control-groups"
@@ -135,20 +101,6 @@ export default function SimulationControls({
       </section>
       <section aria-labelledby="routes-fleet-heading">
         <h3 id="routes-fleet-heading">Routes and fleet</h3>
-        <label>
-          Vehicle route
-          <select
-            value={selectedRouteId ?? ''}
-            disabled={!ready || !authoritativeScenarioPackage}
-            onChange={(event) => onRouteChange(event.target.value)}
-          >
-            {authoritativeScenarioPackage?.routes.routes.map((route) => (
-              <option key={route.routeId} value={route.routeId}>
-                {route.publicCode} — {route.name}
-              </option>
-            ))}
-          </select>
-        </label>
         <div
           data-testid="route-list"
           aria-label="Canonical routes"
@@ -263,21 +215,12 @@ export default function SimulationControls({
           })}
         </div>
       </section>
-      <section aria-labelledby="vehicle-commands-heading">
-        <h3 id="vehicle-commands-heading">Vehicle commands</h3>
-        <button
-          disabled={!ready || !authoritativeScenarioPackage}
-          onClick={run(createVehicle)}
-        >
-          Create demo vehicle
-        </button>
-        {authoritativePackageStatus === 'loading' ? (
-          <p>Authoritative scenario package loading.</p>
-        ) : null}
-        {authoritativePackageStatus === 'failed' ? (
-          <p role="alert">{authoritativePackageMessage}</p>
-        ) : null}
-      </section>
+      {authoritativePackageStatus === 'loading' ? (
+        <p>Authoritative scenario package loading.</p>
+      ) : null}
+      {authoritativePackageStatus === 'failed' ? (
+        <p role="alert">{authoritativePackageMessage}</p>
+      ) : null}
       <section
         aria-labelledby="pacing-heading"
         aria-label="Foundation pacing controls"

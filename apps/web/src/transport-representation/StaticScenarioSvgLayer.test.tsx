@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, within } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -142,4 +142,33 @@ it('retains physical StopPlace pointer and keyboard activation', () => {
     </svg>,
   );
   expect(rendered.getByRole('button')).toHaveAttribute('data-selected', 'true');
+});
+
+it('highlights every edge of the selected route without making edges interactive', () => {
+  const projection = projectVehicleMovementSvg(physicalScenario, []);
+  const routeId = projection.edges[0]!.routeId;
+  const rendered = render(
+    <svg>
+      <StaticScenarioSvgLayer
+        edges={projection.edges}
+        nodes={[]}
+        selection={{ kind: 'route', routeId }}
+        onSelectionChange={vi.fn()}
+      />
+    </svg>,
+  );
+  const selected = [
+    ...rendered.container.querySelectorAll(
+      `[data-edge-group-id][data-route-id="${routeId}"]`,
+    ),
+  ];
+  expect(selected.length).toBeGreaterThan(1);
+  expect(
+    selected.every((edge) => edge.getAttribute('data-selected') === 'true'),
+  ).toBe(true);
+  expect(within(rendered.container).queryByRole('button')).toBeNull();
+  expect(selected[0]!.querySelector('line')).toHaveAttribute(
+    'pointer-events',
+    'none',
+  );
 });

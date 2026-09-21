@@ -4,6 +4,7 @@ import {
   type ReactNode,
   Suspense,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react';
@@ -27,6 +28,7 @@ export interface GameShellProps {
   readonly canvasVisualization: ReactNode;
   readonly secondaryVisualization: ReactNode;
   readonly representationModal?: RepresentationModal | undefined;
+  readonly workspaceSidecar?: ReactNode | undefined;
   readonly inspector?: ReactNode;
   readonly saveDisabled?: boolean;
   readonly restartDisabled?: boolean;
@@ -47,6 +49,7 @@ export function GameShell({
   canvasVisualization,
   secondaryVisualization,
   representationModal,
+  workspaceSidecar,
   inspector,
   saveDisabled,
   restartDisabled,
@@ -58,15 +61,23 @@ export function GameShell({
   const [dockExpanded, setDockExpanded] = useState(true);
   const [saveFeedback, setSaveFeedback] = useState<string>();
   const trigger = useRef<HTMLElement | undefined>(undefined);
+  const focusRestorationPending = useRef(false);
   const open =
     (dialog: DialogName) => (event: ReactMouseEvent<HTMLElement>) => {
       trigger.current = event.currentTarget;
       setOpenDialog(dialog);
     };
   const close = () => {
+    focusRestorationPending.current = true;
     setOpenDialog(undefined);
-    trigger.current?.focus();
   };
+  useLayoutEffect(() => {
+    if (openDialog || !focusRestorationPending.current) return;
+    focusRestorationPending.current = false;
+    const opener = trigger.current;
+    trigger.current = undefined;
+    if (opener?.isConnected) opener.focus();
+  }, [openDialog]);
   useEffect(() => {
     if (!openDialog) return;
     const escape = (event: KeyboardEvent) => {
@@ -122,6 +133,7 @@ export function GameShell({
         canvasTwoDimensional={canvasVisualization}
         threeDimensional={secondaryVisualization}
         modal={representationModal}
+        sidecar={workspaceSidecar}
       />
       {inspector ? (
         <section

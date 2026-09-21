@@ -50,12 +50,14 @@ import {
 import { defaultScenarioId } from './project-defaults.js';
 import { createProductionPassengerDemandPlan } from './population/population-demand-plan.js';
 import { TransportMapViewActions } from './representation/TransportMapViewActions.js';
+import { TransportRouteDock } from './ui/TransportRouteDock.js';
 import {
   createPopulationFieldLoader,
   type ScenarioPopulationView,
 } from './population/population-field-loader.js';
 import { GameShell } from './ui/GameShell.js';
 import { selectionExists, type GameSelection } from './ui/game-selection.js';
+import { createDemoVehicleCommandForAuthority } from './transport-representation/demo-vehicle-command.js';
 import {
   discoverBrowserSave,
   type CityNameLookup,
@@ -174,14 +176,16 @@ export function App() {
     useState<CanonicalScenario>();
   const [sessionLaunch, setSessionLaunch] = useState<SessionLaunchRequest>();
   const [browserActionMessage, setBrowserActionMessage] = useState<string>();
-  const [selectedRouteId, setSelectedRouteId] = useState<string>();
+  const demoVehicleIdReservations = useRef<{
+    authorityKey: string | undefined;
+    vehicleIds: Set<string>;
+  }>({ authorityKey: undefined, vehicleIds: new Set() });
   const [gameSelection, setGameSelection] = useState<GameSelection>(null);
   const [openSelectionDetails, setOpenSelectionDetails] = useState<
     'stop' | 'vehicle'
   >();
   const [authoritativePackageState, setAuthoritativePackageState] =
     useState<AuthoritativeScenarioPackageState>({ status: 'idle' });
-  const selectedRouteIdRef = useRef<string | undefined>(undefined);
   const authoritativePackageGeneration = useRef(0);
   const [scenarioCacheRevision, setScenarioCacheRevision] = useState(0);
   const scenarioCache = useRef(new Map<string, CanonicalScenario>());
@@ -499,6 +503,13 @@ export function App() {
     application?.session.status === 'ready'
       ? application.session.timelineId
       : undefined;
+  const demoVehicleReservationAuthorityKey =
+    authoritativeCoordinateKey && authoritativeTimelineKey
+      ? JSON.stringify([
+          authoritativeCoordinateKey,
+          authoritativeTimelineKey,
+        ])
+      : undefined;
   const [populationVisible, setPopulationVisible] =
     useAuthorityScopedVisibility(authoritativeCoordinateKey);
   const [passengersVisible, setPassengersVisible] =
@@ -631,21 +642,6 @@ export function App() {
     populationFieldLoader,
   ]);
   useEffect(() => {
-    if (!authoritativeScenarioPackage) {
-      selectedRouteIdRef.current = undefined;
-      setSelectedRouteId(undefined);
-      return;
-    }
-    const available = authoritativeScenarioPackage.routes.routes.some(
-      (route) => route.routeId === selectedRouteIdRef.current,
-    );
-    if (!available) {
-      const first = authoritativeScenarioPackage.routes.routes[0]?.routeId;
-      selectedRouteIdRef.current = first;
-      setSelectedRouteId(first);
-    }
-  }, [authoritativeScenarioPackage]);
-  useEffect(() => {
     if (!authoritativeScenarioPackage || !fleet) {
       setGameSelection(null);
       setOpenSelectionDetails(undefined);
@@ -689,6 +685,50 @@ export function App() {
   const clearGameSelection = () => {
     setOpenSelectionDetails(undefined);
     setGameSelection(null);
+  };
+  const addBusToSelectedRoute = async () => {
+    if (
+      gameSelection?.kind !== 'route' ||
+      !application?.scenario ||
+      !authoritativeScenarioPackage
+    )
+      return;
+    try {
+      if (
+        demoVehicleIdReservations.current.authorityKey !==
+        demoVehicleReservationAuthorityKey
+      ) {
+        demoVehicleIdReservations.current = {
+          authorityKey: demoVehicleReservationAuthorityKey,
+          vehicleIds: new Set(),
+        };
+      }
+      const reservations = demoVehicleIdReservations.current;
+      const command = createDemoVehicleCommandForAuthority(
+        application.scenario,
+        (coordinate) =>
+          scenarioCoordinatesEqual(
+            coordinate,
+            createScenarioCoordinate(authoritativeScenarioPackage),
+          )
+            ? authoritativeScenarioPackage
+            : undefined,
+        [
+          ...(fleet ?? []),
+          ...[...reservations.vehicleIds].map((vehicleId) => ({ vehicleId })),
+        ],
+        gameSelection.routeId,
+      );
+      reservations.vehicleIds.add(String(command.vehicleId));
+      setBrowserActionMessage(undefined);
+      await actions?.sendVehicleCommand(command);
+    } catch (error) {
+      setBrowserActionMessage(
+        error instanceof Error
+          ? error.message
+          : 'The demo vehicle could not be created.',
+      );
+    }
   };
 
   const scenarioChooser = (
@@ -802,18 +842,12 @@ export function App() {
         state={state}
         selectedScenario={selectedScenario}
         scenarioSelection={scenarioSelection}
-        selectedRouteId={selectedRouteId}
         authoritativeScenarioPackage={authoritativeScenarioPackage}
         authoritativePackageStatus={currentAuthoritativePackageState?.status}
         authoritativePackageMessage={currentAuthoritativePackageState?.message}
         fleet={fleet}
         ready={ready}
-        onRouteChange={(routeId) => {
-          selectedRouteIdRef.current = routeId;
-          setSelectedRouteId(routeId);
-        }}
         onSendVehicleCommand={actions?.sendVehicleCommand}
-        onVehicleActionMessage={setBrowserActionMessage}
         onMode={actions?.mode}
         onBonus={actions?.bonus}
       />
@@ -1089,6 +1123,17 @@ export function App() {
                 onClose: () => setOpenSelectionDetails(undefined),
               }
             : undefined
+      }
+      workspaceSidecar={
+        authoritativeScenarioPackage ? (
+          <TransportRouteDock
+            scenario={authoritativeScenarioPackage}
+            selection={gameSelection}
+            ready={ready}
+            onSelectionChange={selectGameObject}
+            onAddBus={() => void addBusToSelectedRoute()}
+          />
+        ) : null
       }
       inspector={
         authoritativeScenarioPackage && fleet ? (

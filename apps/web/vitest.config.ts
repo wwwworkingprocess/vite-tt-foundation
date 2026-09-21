@@ -30,6 +30,7 @@ export default defineConfig({
         'src/ui/StopPlaceDetails.tsx',
         'src/ui/StopPlaceModalDetails.tsx',
         'src/ui/VehicleModalDetails.tsx',
+        'src/ui/TransportRouteDock.tsx',
         'src/ui/stop-place-details-model.ts',
         'apps/web/src/simulation-host/**/*.ts',
         'apps/web/src/simulation-worker/**/*.ts',
@@ -49,6 +50,7 @@ export default defineConfig({
         'apps/web/src/ui/StopPlaceDetails.tsx',
         'apps/web/src/ui/StopPlaceModalDetails.tsx',
         'apps/web/src/ui/VehicleModalDetails.tsx',
+        'apps/web/src/ui/TransportRouteDock.tsx',
         'apps/web/src/ui/stop-place-details-model.ts',
       ],
       exclude: [

@@ -9,7 +9,11 @@ import {
 } from '@torrevieja-tycoon/simulation';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import * as profiler from '../performance/representation-profiler.js';
-import { selectStop, selectVehicle } from '../ui/game-selection.js';
+import {
+  selectRoute,
+  selectStop,
+  selectVehicle,
+} from '../ui/game-selection.js';
 import {
   Canvas2dRepresentation,
   materializeCanvas2dPopulationCells,
@@ -739,4 +743,41 @@ it('draws Canvas-native selected StopPlace and Vehicle feedback', () => {
   );
   vi.advanceTimersByTime(17);
   expect(context.strokeRect).toHaveBeenCalled();
+});
+
+it('highlights every directed edge for a selected route without adding hit regions', () => {
+  let strokeStyle = '';
+  const strokedStyles: string[] = [];
+  Object.defineProperty(context, 'strokeStyle', {
+    configurable: true,
+    get: () => strokeStyle,
+    set: (value: string) => {
+      strokeStyle = value;
+    },
+  });
+  context.stroke.mockImplementation(() => strokedStyles.push(strokeStyle));
+  render(
+    <RepresentationModeProvider mode="normal">
+      <Canvas2dRepresentation
+        {...props}
+        selection={selectRoute(scenario.routes.routes[0]!.routeId)}
+      />
+    </RepresentationModeProvider>,
+  );
+  resize(
+    [{ contentRect: { width: 200, height: 100 } } as ResizeObserverEntry],
+    {} as ResizeObserver,
+  );
+  vi.advanceTimersByTime(17);
+  const selectedEdgeCount = createCanvas2dSelectionIndex(
+    scenario,
+  ).routeEdges.filter(
+    (edge) => edge.routeId === scenario.routes.routes[0]!.routeId,
+  ).length;
+  expect(strokedStyles.filter((style) => style === '#ffd166')).toHaveLength(
+    selectedEdgeCount,
+  );
+  expect(screen.getByTestId('canvas2d-representation')).not.toHaveAttribute(
+    'data-route-hit-regions',
+  );
 });

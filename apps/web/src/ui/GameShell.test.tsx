@@ -10,6 +10,7 @@ const renderShell = (
     async (): Promise<FoundationSaveOutcome> => ({ status: 'saved' }),
   ),
   representationModal?: Parameters<typeof GameShell>[0]['representationModal'],
+  strictMode = false,
 ) => {
   const restart = vi.fn();
   render(
@@ -64,6 +65,7 @@ const renderShell = (
       onSave={save}
       onRestart={restart}
     />,
+    { reactStrictMode: strictMode },
   );
   return { save, restart };
 };
@@ -206,24 +208,41 @@ it.each([
     renderShell();
     const trigger = screen.getByRole('button', { name: triggerName });
     trigger.focus();
+    const originalFocus = trigger.focus.bind(trigger);
+    let dialogMountedWhenFocusRestored: boolean | undefined;
+    const restoredFocus = vi.spyOn(trigger, 'focus').mockImplementation(() => {
+      dialogMountedWhenFocusRestored =
+        screen.queryByRole('dialog', {
+          name: dialogName,
+        }) !== null;
+      originalFocus();
+    });
     fireEvent.click(trigger);
     expect(
       await screen.findByRole('dialog', { name: dialogName }),
     ).toHaveTextContent(content);
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(screen.queryByRole('dialog', { name: dialogName })).toBeNull();
+    expect(dialogMountedWhenFocusRestored).toBe(false);
+    expect(restoredFocus).toHaveBeenCalledOnce();
     expect(trigger).toHaveFocus();
   },
 );
 
 it('keeps simulation and saved-session content separate', async () => {
   renderShell();
-  fireEvent.click(screen.getByRole('button', { name: 'Simulation controls' }));
+  const simulationTrigger = screen.getByRole('button', {
+    name: 'Simulation controls',
+  });
+  simulationTrigger.focus();
+  fireEvent.click(simulationTrigger);
   expect(await screen.findByRole('dialog')).toHaveTextContent('Route choice');
   expect(screen.getByRole('dialog')).not.toHaveTextContent('Save library');
   fireEvent.click(
     screen.getByRole('button', { name: 'Close Simulation controls' }),
   );
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(simulationTrigger).toHaveFocus();
   fireEvent.click(screen.getByRole('button', { name: 'Load' }));
   expect(await screen.findByRole('dialog')).toHaveTextContent('Save library');
   expect(screen.getByRole('dialog')).not.toHaveTextContent('Route choice');
@@ -231,15 +250,39 @@ it('keeps simulation and saved-session content separate', async () => {
 
 it('closes dialogs from the backdrop and keeps direct session actions accessible', async () => {
   const { save, restart } = renderShell();
-  fireEvent.click(screen.getByRole('button', { name: 'Project info' }));
+  const projectTrigger = screen.getByRole('button', { name: 'Project info' });
+  projectTrigger.focus();
+  fireEvent.click(projectTrigger);
   await screen.findByRole('dialog');
   fireEvent.mouseDown(screen.getByTestId('dialog-backdrop'));
   expect(screen.queryByRole('dialog')).toBeNull();
+  expect(projectTrigger).toHaveFocus();
 
   fireEvent.click(screen.getByRole('button', { name: 'Save' }));
   fireEvent.click(screen.getByRole('button', { name: 'Restart' }));
   expect(save).toHaveBeenCalledOnce();
   expect(restart).toHaveBeenCalledOnce();
+});
+
+it('restores focus once under StrictMode and ignores a disconnected opener', async () => {
+  renderShell(undefined, undefined, true);
+  const projectTrigger = screen.getByRole('button', { name: 'Project info' });
+  projectTrigger.focus();
+  const restoredFocus = vi.spyOn(projectTrigger, 'focus');
+  fireEvent.click(projectTrigger);
+  await screen.findByRole('dialog', { name: 'Project information' });
+  fireEvent.keyDown(document, { key: 'Escape' });
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(restoredFocus).toHaveBeenCalledOnce();
+  expect(projectTrigger).toHaveFocus();
+
+  const loadTrigger = screen.getByRole('button', { name: 'Load' });
+  loadTrigger.focus();
+  fireEvent.click(loadTrigger);
+  await screen.findByRole('dialog', { name: 'Saved sessions' });
+  loadTrigger.remove();
+  expect(() => fireEvent.keyDown(document, { key: 'Escape' })).not.toThrow();
+  expect(screen.queryByRole('dialog')).toBeNull();
 });
 
 it('announces only truthful navigation save outcomes', async () => {

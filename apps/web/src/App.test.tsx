@@ -458,6 +458,34 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
 
 const openSimulationControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
+const selectRoute = async (routeId?: string) => {
+  const routeGroup = screen.getByRole('group', { name: 'Routes' });
+  const routes = within(routeGroup);
+  const button = routeId
+    ? routeGroup.querySelector<HTMLButtonElement>(
+        `[data-route-id="${routeId}"]`,
+      )!
+    : routes.getAllByRole('button')[0]!;
+  fireEvent.click(button);
+  await waitFor(() => expect(button).toHaveAttribute('aria-pressed', 'true'));
+  return button;
+};
+const addBus = async (routeId?: string, reopenControls = true) => {
+  const controls = screen.queryByRole('dialog', {
+    name: 'Simulation controls',
+  });
+  if (controls)
+    fireEvent.click(
+      within(controls).getByRole('button', {
+        name: 'Close Simulation controls',
+      }),
+    );
+  await selectRoute(routeId);
+  const add = await screen.findByRole('button', { name: 'Add bus' });
+  await waitFor(() => expect(add).toBeEnabled());
+  fireEvent.click(add);
+  if (controls && reopenControls) openSimulationControls();
+};
 const pauseSimulation = async () => {
   await waitFor(() =>
     expect(screen.getByTestId('pacing-status')).toHaveTextContent(
@@ -793,9 +821,7 @@ describe('foundation screen', () => {
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
     await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: 'Create demo vehicle' }),
-      ).toBeEnabled(),
+      expect(screen.getByRole('group', { name: 'Routes' })).toBeInTheDocument(),
     );
     openSimulationControls();
     expect(
@@ -960,26 +986,15 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
-    await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: 'Create demo vehicle' }),
-      ).toBeEnabled(),
-    );
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Create demo vehicle' }),
-    );
+    await addBus();
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-count')).toHaveTextContent('1'),
     );
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Create demo vehicle' }),
-    );
+    await addBus();
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-count')).toHaveTextContent('2'),
     );
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Create demo vehicle' }),
-    );
+    await addBus();
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-count')).toHaveTextContent('3'),
     );
@@ -1084,7 +1099,7 @@ describe('foundation screen', () => {
         position.getAttribute('cy'),
       ]).not.toEqual(pausedPosition),
     );
-  });
+  }, 10_000);
 
   it('lists canonical legacy routes and creates a vehicle on the chosen RouteId', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
@@ -1130,22 +1145,40 @@ describe('foundation screen', () => {
         'C — Torrevieja - Lomas',
       ),
     ).toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText('Vehicle route'), {
-      target: { value: 'legacy-B' },
-    });
-    await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: 'Create demo vehicle' }),
-      ).toBeEnabled(),
-    );
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Create demo vehicle' }),
-    );
+    expect(screen.queryByLabelText('Vehicle route')).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'Create demo vehicle' }),
+    ).toBeNull();
+    await addBus('legacy-B');
+    expect(
+      screen
+        .getByRole('group', { name: 'Routes' })
+        .querySelector('[data-route-id="legacy-B"]'),
+    ).toHaveAttribute('aria-pressed', 'true');
     await waitFor(() =>
       expect(
         screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
       ).toHaveAttribute('data-route-id', 'legacy-B'),
     );
+    expect(
+      screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
+    ).toHaveAttribute('data-movement-kind', 'parked-at-stop');
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Close Simulation controls' }),
+    );
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Select mini representation for swap',
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Swap visualizations' }),
+    );
+    expect(
+      screen
+        .getByRole('group', { name: 'Routes' })
+        .querySelector('[data-route-id="legacy-B"]'),
+    ).toHaveAttribute('aria-pressed', 'true');
   }, 15_000);
 
   it('keeps selection non-destructive and replaces every authority-bound surface together', async () => {
@@ -1155,14 +1188,7 @@ describe('foundation screen', () => {
       expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
     );
     const initialGraph = buildDirectedScenarioGraph(scenario);
-    await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: 'Create demo vehicle' }),
-      ).toBeEnabled(),
-    );
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Create demo vehicle' }),
-    );
+    await addBus();
     await screen.findByTestId('vehicle-row-browser-demo-vehicle-001');
 
     fireEvent.click(
@@ -1216,6 +1242,7 @@ describe('foundation screen', () => {
       'data-authoritative-scenario-id',
       legacyScenario.manifest.scenarioId,
     );
+    expect(screen.queryByRole('button', { name: 'Add bus' })).toBeNull();
 
     fireEvent.click(screen.getByRole('button', { name: 'Select scenario A' }));
     expect(screen.getByTestId('route-list')).toHaveAttribute(
@@ -1250,6 +1277,38 @@ describe('foundation screen', () => {
     ).toBeNull();
   }, 20_000);
 
+  it('allocates distinct vehicle ids for back-to-back Add bus actions', async () => {
+    vi.stubGlobal('Worker', class FoundationWorker {});
+    await renderAppWithControls();
+    await waitFor(() =>
+      expect(screen.getByTestId('worker-status')).toHaveTextContent('ready'),
+    );
+    openSimulationControls();
+    await pauseSimulation();
+    fireEvent.click(
+      within(
+        screen.getByRole('dialog', { name: 'Simulation controls' }),
+      ).getByRole('button', { name: 'Close Simulation controls' }),
+    );
+    await selectRoute();
+    const add = await screen.findByRole('button', { name: 'Add bus' });
+    await waitFor(() => expect(add).toBeEnabled());
+
+    fireEvent.click(add);
+    fireEvent.click(add);
+
+    openSimulationControls();
+    await waitFor(() =>
+      expect(screen.getByTestId('vehicle-count')).toHaveTextContent('2'),
+    );
+    expect(
+      screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId('vehicle-row-browser-demo-vehicle-002'),
+    ).toBeInTheDocument();
+  }, 15_000);
+
   it('constructs demo vehicle commands from restored disjoint authority, not selection or stack seed', async () => {
     vi.stubGlobal('Worker', class FoundationWorker {});
     const confirm = vi.fn(() => true);
@@ -1267,9 +1326,7 @@ describe('foundation screen', () => {
     openSimulationControls();
 
     for (const count of [1, 2, 3]) {
-      fireEvent.click(
-        screen.getByRole('button', { name: 'Create demo vehicle' }),
-      );
+      await addBus();
       await waitFor(() =>
         expect(screen.getByTestId('vehicle-count')).toHaveTextContent(
           String(count),
@@ -1312,15 +1369,8 @@ describe('foundation screen', () => {
       ),
     );
     await pauseSimulation();
-    await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: 'Create demo vehicle' }),
-      ).toBeEnabled(),
-    );
     for (const count of [1, 2]) {
-      fireEvent.click(
-        screen.getByRole('button', { name: 'Create demo vehicle' }),
-      );
+      await addBus();
       await waitFor(() =>
         expect(screen.getByTestId('vehicle-count')).toHaveTextContent(
           String(count),
@@ -1442,7 +1492,7 @@ describe('foundation screen', () => {
     expect(
       screen.getByRole('button', { name: 'Hide passengers' }),
     ).toBeVisible();
-    expect(screen.getByTestId('population-band')).toBeInTheDocument();
+    expect(await screen.findByTestId('population-band')).toBeInTheDocument();
     expect(
       document.querySelector(
         `[data-authoritative-scenario-id="${scenario.manifest.scenarioId}"]`,
@@ -1458,14 +1508,7 @@ describe('foundation screen', () => {
     );
     expect(screen.getByTestId('vehicle-count')).toHaveTextContent('3');
     expect(fleetTuples()).toEqual(fleetA);
-    await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: 'Create demo vehicle' }),
-      ).toBeEnabled(),
-    );
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Create demo vehicle' }),
-    );
+    await addBus();
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-count')).toHaveTextContent('4'),
     );
@@ -1509,14 +1552,7 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('selected-scenario')).toHaveTextContent(
       'torrevieja-mini-v1',
     );
-    await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: 'Create demo vehicle' }),
-      ).toBeEnabled(),
-    );
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Create demo vehicle' }),
-    );
+    await addBus();
     await waitFor(() =>
       expect(screen.getByTestId('vehicle-count')).toHaveTextContent('3'),
     );
@@ -1528,5 +1564,5 @@ describe('foundation screen', () => {
     expect(screen.getByTestId('vehicle-pattern')).not.toHaveTextContent(
       'legacy-A2-torrevieja-la-mata',
     );
-  }, 15_000);
+  }, 25_000);
 });

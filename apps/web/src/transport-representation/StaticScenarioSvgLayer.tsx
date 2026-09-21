@@ -41,6 +41,8 @@ function StaticScenarioSvgLayer({
       <g aria-label="Directed route edges">
         {edges.map((edge) => {
           const color = edge.color ?? 'currentColor';
+          const selected =
+            selection?.kind === 'route' && selection.routeId === edge.routeId;
           const points = arrow(edge);
           return (
             <g
@@ -48,6 +50,7 @@ function StaticScenarioSvgLayer({
               data-edge-group-id={edge.edgeId}
               data-route-id={edge.routeId}
               data-pattern-id={edge.patternId}
+              data-selected={selected}
             >
               <line
                 data-edge-id={edge.edgeId}
@@ -57,8 +60,8 @@ function StaticScenarioSvgLayer({
                 y1={edge.y1}
                 x2={edge.x2}
                 y2={edge.y2}
-                stroke={color}
-                strokeWidth="0.6"
+                stroke={selected ? '#ffd166' : color}
+                strokeWidth={selected ? '1.5' : '0.6'}
                 pointerEvents="none"
                 aria-hidden="true"
               />
@@ -69,7 +72,7 @@ function StaticScenarioSvgLayer({
                   data-route-id={edge.routeId}
                   data-pattern-id={edge.patternId}
                   points={points}
-                  fill={color}
+                  fill={selected ? '#ffd166' : color}
                   pointerEvents="none"
                   aria-hidden="true"
                 />

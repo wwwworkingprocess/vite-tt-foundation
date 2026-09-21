@@ -29,6 +29,7 @@ interface RepresentationWorkspaceProps {
   readonly canvasTwoDimensional: ReactNode;
   readonly threeDimensional: ReactNode;
   readonly modal?: RepresentationModal | undefined;
+  readonly sidecar?: ReactNode | undefined;
 }
 
 const labelForFamily = (family: RepresentationFamily) =>
@@ -41,6 +42,7 @@ export function RepresentationWorkspace({
   canvasTwoDimensional,
   threeDimensional,
   modal,
+  sidecar,
 }: RepresentationWorkspaceProps) {
   const [visibleFamilies, setVisibleFamilies] = useState<
     readonly [RepresentationFamily, RepresentationFamily]
@@ -145,41 +147,57 @@ export function RepresentationWorkspace({
         ) : null}
       </section>
       <div
-        ref={miniBoundary}
-        className="mini-representation-boundary"
-        data-armed={swapArmed}
-        onBlurCapture={leaveMiniBoundary}
+        className="representation-sidecar-column"
+        data-testid="representation-sidecar-column"
       >
-        <section
-          className="representation-slot representation-slot-mini"
-          data-testid="secondary-minimap"
-          data-family={secondaryFamily}
-          data-view={secondaryView}
-          data-representation-mode="mini"
+        <div
+          ref={miniBoundary}
+          className="mini-representation-boundary"
+          data-armed={swapArmed}
+          onBlurCapture={leaveMiniBoundary}
         >
-          <RepresentationModeProvider mode="mini">
-            {renderFamily(secondaryFamily)}
-          </RepresentationModeProvider>
-        </section>
-        <button
-          type="button"
-          className="mini-representation-selector"
-          aria-label="Select mini representation for swap"
-          aria-pressed={swapArmed}
-          onClick={armSwap}
-        />
-        {swapArmed ? (
-          <div className="mini-representation-actions">
-            <button
-              type="button"
-              className="swap-visualizations"
-              onClick={confirmSwap}
-            >
-              Swap visualizations
-            </button>
-            <button type="button" onClick={replaceMini}>
-              Use {labelForFamily(inactiveFamily)} in mini
-            </button>
+          <section
+            className="representation-slot representation-slot-mini"
+            data-testid="secondary-minimap"
+            data-family={secondaryFamily}
+            data-view={secondaryView}
+            data-representation-mode="mini"
+          >
+            <RepresentationModeProvider mode="mini">
+              {renderFamily(secondaryFamily)}
+            </RepresentationModeProvider>
+          </section>
+          <button
+            type="button"
+            className="mini-representation-selector"
+            aria-label="Select mini representation for swap"
+            aria-pressed={swapArmed}
+            onClick={armSwap}
+          />
+          {swapArmed ? (
+            <div className="mini-representation-actions">
+              <button
+                type="button"
+                className="swap-visualizations"
+                onClick={confirmSwap}
+              >
+                Swap visualizations
+              </button>
+              <button type="button" onClick={replaceMini}>
+                Use {labelForFamily(inactiveFamily)} in mini
+              </button>
+            </div>
+          ) : null}
+        </div>
+        {sidecar ? (
+          <div
+            className="representation-sidecar"
+            data-testid="representation-sidecar"
+            onClickCapture={() => {
+              if (modal) restoreModalFocus.current = false;
+            }}
+          >
+            {sidecar}
           </div>
         ) : null}
       </div>

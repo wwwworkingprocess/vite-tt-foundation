@@ -46,10 +46,45 @@ function ControlledWorkspace() {
               }
             : undefined
         }
+        sidecar={
+          <button type="button" onClick={() => setOpen(false)}>
+            Route B
+          </button>
+        }
       />
     </>
   );
 }
+
+it('keeps sidecar focus when its activation closes a representation modal', () => {
+  render(<ControlledWorkspace />);
+  const open = screen.getByRole('button', { name: 'Open StopPlace details' });
+  open.focus();
+  fireEvent.click(open);
+  expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus();
+  const route = screen.getByRole('button', { name: 'Route B' });
+  route.focus();
+  fireEvent.click(route);
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(route).toHaveFocus();
+});
+
+it('keeps the sidecar structurally below and outside the mini interaction boundary', () => {
+  render(<ControlledWorkspace />);
+  const column = screen.getByTestId('representation-sidecar-column');
+  const mini = screen.getByTestId('secondary-minimap');
+  const sidecar = screen.getByTestId('representation-sidecar');
+  const miniBoundary = mini.parentElement;
+  expect(column).toContainElement(miniBoundary);
+  expect(column).toContainElement(sidecar);
+  expect(miniBoundary).toHaveClass('mini-representation-boundary');
+  expect(sidecar).not.toBe(miniBoundary);
+  expect(miniBoundary).not.toContainElement(sidecar);
+  fireEvent.click(screen.getByRole('button', { name: 'Route B' }));
+  expect(
+    screen.queryByRole('button', { name: 'Swap visualizations' }),
+  ).toBeNull();
+});
 
 it('keeps modal and mini-swap transient modes mutually exclusive', () => {
   render(<ControlledWorkspace />);

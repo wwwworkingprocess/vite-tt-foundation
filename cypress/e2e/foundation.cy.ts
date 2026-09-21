@@ -1,4 +1,20 @@
 type VehicleSvgState = readonly Readonly<Record<string, string | null>>[];
+type VehicleMovementState = Readonly<{
+  vehicleId: string | null;
+  movementKind: string | null;
+  edgeId: string | null;
+  progressNumerator: string | null;
+  progressDenominator: string | null;
+}>;
+
+const vehicleMovementState = (element: Element): VehicleMovementState => ({
+  vehicleId: element.getAttribute('data-vehicle-id'),
+  movementKind: element.getAttribute('data-movement-kind'),
+  edgeId: element.getAttribute('data-edge-id'),
+  progressNumerator: element.getAttribute('data-progress-numerator'),
+  progressDenominator: element.getAttribute('data-progress-denominator'),
+});
+
 const vehicleSvgState = (): Cypress.Chainable<VehicleSvgState> =>
   cy.get('[data-testid="vehicle-position"]').then(($vehicles) =>
     [...$vehicles].map((vehicle) => ({
@@ -37,6 +53,27 @@ const expectVehicleSvgToChange = (expected: VehicleSvgState) =>
     }));
     expect(current).not.to.deep.equal(expected);
   });
+
+const expectVehicleSvgToMatchAuthority = () =>
+  cy.get('[data-testid^="vehicle-row-"]').then(($rows) => {
+    const authoritative = new Map(
+      [...$rows].map((row) => {
+        const state = vehicleMovementState(row);
+        return [state.vehicleId, state] as const;
+      }),
+    );
+
+    return cy.get('[data-testid="vehicle-position"]').should(($vehicles) => {
+      expect($vehicles).to.have.length($rows.length);
+      for (const vehicle of $vehicles) {
+        const state = vehicleMovementState(vehicle);
+        expect(authoritative.get(state.vehicleId)).to.deep.equal(state);
+      }
+    });
+  });
+
+const vehicleSvgStateAtAuthority = (): Cypress.Chainable<VehicleSvgState> =>
+  expectVehicleSvgToMatchAuthority().then(() => vehicleSvgState());
 const restoreScenario = (scenarioId: string) =>
   cy
     .contains('[data-save-id]', scenarioId)
@@ -51,8 +88,14 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
 };
 const openSimulationControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
+const addBus = (routeId?: string) => {
+  const route = routeId
+    ? cy.get(`[aria-label="Routes"] [data-route-id="${routeId}"]`)
+    : cy.get('[aria-label="Routes"] [data-route-id]').first();
+  route.click();
+  cy.contains('button', 'Add bus').should('be.enabled').click();
+};
 const restoreReadyTimeoutMs = 60_000;
-const representationSettleMs = 250;
 const expectRestoredAuthority = (scenarioId: string) => {
   cy.get('[data-testid="worker-timeline"]', {
     timeout: restoreReadyTimeoutMs,
@@ -93,11 +136,13 @@ describe('foundation screen', () => {
     cy.get('[data-testid="canvas2d-representation"]').should('not.exist');
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.get('.scenario-menu-panel').then(($menu) => {
-      cy.get('.mini-representation-boundary').then(($miniBoundary) => {
-        expect(Number(getComputedStyle($menu[0]).zIndex)).to.be.greaterThan(
-          Number(getComputedStyle($miniBoundary[0]).zIndex),
-        );
-      });
+      cy.get('[data-testid="representation-sidecar-column"]').then(
+        ($sidecarColumn) => {
+          expect(Number(getComputedStyle($menu[0]).zIndex)).to.be.greaterThan(
+            Number(getComputedStyle($sidecarColumn[0]).zIndex),
+          );
+        },
+      );
     });
     cy.document()
       .its('documentElement.scrollHeight')
@@ -213,14 +258,11 @@ describe('foundation screen', () => {
       3,
     );
     cy.contains('[data-testid="route-list"]', 'A — Torrevieja - La Mata');
-    cy.contains('label', 'Vehicle route').find('select').select('legacy-A');
-    cy.contains('button', 'Create demo vehicle').click();
-    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
-    cy.contains('label', 'Vehicle route').find('select').select('legacy-B');
-    cy.contains('button', 'Create demo vehicle').click();
-    cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
-    cy.contains('label', 'Vehicle route').find('select').select('legacy-C');
-    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[role="dialog"] button[aria-label^="Close "]').click();
+    addBus('legacy-A');
+    addBus('legacy-B');
+    addBus('legacy-C');
+    openSimulationControls();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '3');
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
@@ -282,11 +324,8 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-timeline"]').then(($timeline) => {
       fullTimeline = $timeline.text();
     });
-    cy.wait(representationSettleMs);
-    vehicleSvgState().then((snapshot) => {
+    vehicleSvgStateAtAuthority().then((snapshot) => {
       fullSvg = snapshot;
-      cy.wait(350);
-      expectVehicleSvg(snapshot);
     });
     openSessionControls();
     cy.contains('button', 'Save transport session').click();
@@ -348,9 +387,10 @@ describe('foundation screen', () => {
       'contain.text',
       'torrevieja-legacy-east-v1',
     );
-    cy.contains('button', 'Create demo vehicle').click();
-    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
-    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[role="dialog"] button[aria-label^="Close "]').click();
+    addBus();
+    cy.contains('button', 'Add bus').click();
+    openSimulationControls();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
     cy.contains('button', 'Start browser-demo-vehicle-001').click();
     cy.contains('button', /^Normal /).click();
@@ -364,11 +404,8 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-tick"]').then(($tick) => {
       secondaryTick = Number($tick.text().split(': ')[1]);
     });
-    cy.wait(representationSettleMs);
-    vehicleSvgState().then((snapshot) => {
+    vehicleSvgStateAtAuthority().then((snapshot) => {
       secondarySvg = snapshot;
-      cy.wait(350);
-      expectVehicleSvg(snapshot);
     });
     openSessionControls();
     cy.contains('button', 'Save transport session').click();
@@ -418,9 +455,7 @@ describe('foundation screen', () => {
     expectVehicleSvgToChange(secondarySvg);
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
-    cy.wait(representationSettleMs);
-    vehicleSvgState().then((snapshot) => {
-      cy.wait(350);
+    vehicleSvgStateAtAuthority().then((snapshot) => {
       expectVehicleSvg(snapshot);
     });
     openSessionControls();

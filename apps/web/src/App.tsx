@@ -505,10 +505,7 @@ export function App() {
       : undefined;
   const demoVehicleReservationAuthorityKey =
     authoritativeCoordinateKey && authoritativeTimelineKey
-      ? JSON.stringify([
-          authoritativeCoordinateKey,
-          authoritativeTimelineKey,
-        ])
+      ? JSON.stringify([authoritativeCoordinateKey, authoritativeTimelineKey])
       : undefined;
   const [populationVisible, setPopulationVisible] =
     useAuthorityScopedVisibility(authoritativeCoordinateKey);

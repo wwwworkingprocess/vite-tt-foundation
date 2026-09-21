@@ -169,7 +169,8 @@ inactive family. Mini controls remain above the primary-slot modal.
 Canvas 2D `Map` provides canonical directed route-network context with
 route colours and direction arrows, plus StopPlace/Vehicle pointer and compact
 keyboard selection, existing `GameSelection` and workspace-modal integration,
-Canvas-native selected-object feedback, population cells, passenger StopPlace
+Canvas-native selected-object feedback, whole-route highlighting from the
+shared route selection authority, population cells, passenger StopPlace
 status/waiting/arrival diagnostics, and Vehicle onboard counts. Directed graph edges are
 presentation-only in Canvas and DOM2D: they are neither focusable nor
 selectable. DOM2D and Canvas consume one renderer-neutral, scenario-cached
@@ -186,10 +187,14 @@ React/DOM/SVG/Canvas-free presentation boundary; DOM2D and Canvas materialize
 that shared meaning independently.
 Population visibility resets with a new authoritative scenario; passenger
 visibility resets with a new authoritative scenario or timeline, matching the
-former renderer-mount lifecycle. D3D exposes no empty action bar. Future whole-route interaction may
-continue to use the existing route selection authority, but Canvas route
-selection, multi-view selection UX, and D3D Map remain deferred representation
-milestones.
+former renderer-mount lifecycle. A renderer-independent route dock below the
+mini slot selects canonical routes through `GameSelection`; its separate
+selected-route action bar creates an unstarted bus on exactly that route through
+the existing command boundary. Route selection and highlighting survive family
+swaps, while stale selection is cleared on authoritative scenario replacement.
+DOM2D and Canvas highlight every directed edge of the selected route without
+making edges focusable or selectable. D3D exposes no empty action bar. Multi-view
+selection UX and D3D Map remain deferred representation milestones.
 
 A future D3D Map adds `map` to D3D's supported views; it does not create a new
 renderer family. No view-switch control exists while every family supports only

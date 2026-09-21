@@ -698,6 +698,7 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('apps/web/src/ui/StopPlaceDetails.tsx') ||
     normalized.endsWith('apps/web/src/ui/StopPlaceModalDetails.tsx') ||
     normalized.endsWith('apps/web/src/ui/VehicleModalDetails.tsx') ||
+    normalized.endsWith('apps/web/src/ui/TransportRouteDock.tsx') ||
     normalized.endsWith('apps/web/src/ui/stop-place-details-model.ts') ||
     normalized.endsWith('apps/web/src/ui/game-selection.ts') ||
     normalized.endsWith('packages/simulation/src/transport-simulation.ts') ||

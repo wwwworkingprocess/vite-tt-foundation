@@ -22,8 +22,9 @@ and sparse StopPlace/Vehicle selection field, including directed-edge,
 arrowhead, and selectable-point counts. Directed edges are presentation-only;
 pointer and keyboard activation remain limited to StopPlaces and Vehicles and
 reuse application-owned `GameSelection` and workspace modal details. Canvas
-whole-route selection/highlighting, a universal view capability model, and D3D Map
-remain explicitly deferred.
+whole-route highlighting consumes the same renderer-independent route selection
+as DOM2D while route edges remain noninteractive. D3D Map remains explicitly
+deferred.
 
 Profile result schema v2 records the actual primary, mini, and derived inactive
 representation families. Renderer-specific cadence metadata follows the real

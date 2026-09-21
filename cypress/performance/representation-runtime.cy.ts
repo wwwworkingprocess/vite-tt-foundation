@@ -113,7 +113,10 @@ const profile = (input: {
         expect(Number($tick.text().split(': ')[1])).to.be.at.least(200);
       },
     );
-    cy.contains('button', 'Create demo vehicle').click();
+    closeDialog();
+    cy.get('[aria-label="Routes"] [data-route-id]').first().click();
+    cy.contains('button', 'Add bus').click();
+    openSimulationControls();
     cy.get('[data-testid="vehicle-count"]').should('not.contain.text', ': 0');
   }
   cy.contains('button', 'Normal 20×').click();

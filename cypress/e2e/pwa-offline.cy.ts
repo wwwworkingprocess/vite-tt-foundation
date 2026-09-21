@@ -174,14 +174,14 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-save-id="legacy-slot"]').should('not.exist');
     openControls();
     expectWorkerReady();
-    cy.contains('label', 'Vehicle route').find('select').select('legacy-A');
-    cy.contains('button', 'Create demo vehicle').click();
-    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
-    cy.contains('label', 'Vehicle route').find('select').select('legacy-B');
-    cy.contains('button', 'Create demo vehicle').click();
-    cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
-    cy.contains('label', 'Vehicle route').find('select').select('legacy-C');
-    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[role="dialog"] button[aria-label^="Close "]').click();
+    cy.get('[aria-label="Routes"] [data-route-id="legacy-A"]').click();
+    cy.contains('button', 'Add bus').click();
+    cy.get('[aria-label="Routes"] [data-route-id="legacy-B"]').click();
+    cy.contains('button', 'Add bus').click();
+    cy.get('[aria-label="Routes"] [data-route-id="legacy-C"]').click();
+    cy.contains('button', 'Add bus').click();
+    openControls();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '3');
     cy.get('[data-testid="vehicle-movement-svg"]').should('be.visible');
     cy.contains('button', 'Start browser-demo-vehicle-001').click();
@@ -252,9 +252,11 @@ describe('built foundation PWA offline lifecycle', () => {
       'data-scenario-id',
       'torrevieja-legacy-east-v1',
     );
-    cy.contains('button', 'Create demo vehicle').click();
-    cy.get('[data-testid="vehicle-count"]').should('contain.text', '1');
-    cy.contains('button', 'Create demo vehicle').click();
+    cy.get('[role="dialog"] button[aria-label^="Close "]').click();
+    cy.get('[aria-label="Routes"] [data-route-id]').first().click();
+    cy.contains('button', 'Add bus').click();
+    cy.contains('button', 'Add bus').click();
+    openControls();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
     cy.contains('button', 'Start browser-demo-vehicle-001').click();
     cy.contains('button', /^Normal /).click();

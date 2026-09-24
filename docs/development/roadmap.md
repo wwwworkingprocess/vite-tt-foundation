@@ -176,12 +176,25 @@ Completed:
   Canvas2D Map, and D3D Main identity across primary, mini, and inactive
   placement, forming the foundation for a later D3D Map without introducing
   generic view-switch UI now.
+- shared, ephemeral full-network/selected-Route viewport focus for DOM2D and
+  Canvas2D Map, derived once from canonical directed-edge topology with no
+  arbitrary pan/zoom or persistence.
+- shared normal/mini transport-entity presentation metrics, with DOM2D
+  viewport-aware SVG materialization and Canvas2D CSS-space drawing so Route
+  focus does not enlarge StopPlace, Vehicle, passenger-label, or selection
+  glyphs while geographic Route/population geometry continues to scale.
 
 Remaining product visualization work:
 
 - production graph rendering and styling;
 - smooth display interpolation;
 - performance acceptance for richer scenes.
+
+The intended next representation milestone is **D3D Map and interaction
+parity**: bring D3D toward the canonical Map projection, topology and direction,
+StopPlace/Vehicle selection, population/passenger context, whole-Route
+highlighting, shared viewport focus, and Map actions where architecturally
+appropriate. That milestone is not implemented here; D3D remains Main-only.
 
 ## Completed — Live passenger diagnostic/game UI
 

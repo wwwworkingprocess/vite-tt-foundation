@@ -262,6 +262,28 @@ describe('foundation screen', () => {
     addBus('legacy-A');
     addBus('legacy-B');
     addBus('legacy-C');
+    cy.contains('button', 'Focus route').click();
+    cy.get('[data-testid="vehicle-movement-svg"]').should(
+      'have.attr',
+      'data-map-viewport',
+      'route',
+    );
+    cy.get('[aria-label="Transport routes"]').should(
+      'have.attr',
+      'data-focused-route-id',
+      'legacy-C',
+    );
+    cy.contains('button', 'Show full network').click();
+    cy.get('[data-testid="vehicle-movement-svg"]').should(
+      'have.attr',
+      'data-map-viewport',
+      'full',
+    );
+    cy.get('[aria-label="Routes"] [data-route-id="legacy-C"]').should(
+      'have.attr',
+      'aria-pressed',
+      'true',
+    );
     openSimulationControls();
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '3');
     cy.get('[role="dialog"]').contains('button', 'Pause').click();

@@ -1,11 +1,22 @@
 import { memo, useLayoutEffect, useMemo } from 'react';
-import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
-import { createScenarioSvgPositionProjector } from './vehicle-svg-projection.js';
+import type {
+  CanonicalScenario,
+  RouteId,
+} from '@torrevieja-tycoon/transport-domain';
+import {
+  createScenarioSvgPositionProjector,
+  transportMapViewportSvgViewBox,
+} from './vehicle-svg-projection.js';
 import {
   beginRepresentationProfile,
   finishRepresentationProfile,
   recordRepresentationProfile,
 } from '../performance/representation-profiler.js';
+import {
+  fullTransportMapViewport,
+  createTransportMapProjection,
+  resolveTransportMapViewport,
+} from '../representation/transport-map-projection.js';
 
 interface PopulationCell {
   readonly cellId: string;
@@ -24,12 +35,23 @@ function PopulationGridOverlay(props: {
   readonly scenario?: CanonicalScenario;
   readonly project?: (position: PopulationCell['center']) => SvgPoint;
   readonly visible?: boolean;
+  readonly focusedRouteId?: RouteId | undefined;
 }) {
   const renderProfile = beginRepresentationProfile(
     'population.render-to-commit',
   );
   recordRepresentationProfile('population.render');
   const visible = props.visible ?? true;
+  const viewport = useMemo(
+    () =>
+      props.scenario
+        ? resolveTransportMapViewport(
+            createTransportMapProjection(props.scenario),
+            props.focusedRouteId,
+          )
+        : fullTransportMapViewport,
+    [props.focusedRouteId, props.scenario],
+  );
   const scenarioProject = useMemo(
     () =>
       props.scenario
@@ -121,7 +143,10 @@ function PopulationGridOverlay(props: {
         <svg
           role="img"
           aria-label="Operational population grid"
-          viewBox="0 0 100 100"
+          viewBox={transportMapViewportSvgViewBox(viewport)}
+          data-map-viewport={
+            viewport === fullTransportMapViewport ? 'full' : 'route'
+          }
           data-population-cell-count={props.cells.length}
           data-population-primitive-count={geometry.length}
           data-authoritative-scenario-id={props.scenario?.manifest.scenarioId}

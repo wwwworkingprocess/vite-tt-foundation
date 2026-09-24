@@ -7,9 +7,12 @@ import type {
 import {
   createTransportMapProjection,
   projectTransportMapVehicles,
+  fullTransportMapViewport,
   type TransportMapPoint,
   type TransportMapProjection,
+  type TransportMapViewport,
 } from './transport-map-projection.js';
+import { transportMapEntityHitMetrics } from './transport-map-visual-metrics.js';
 
 type CanvasPosition = Readonly<{ x: number; y: number }>;
 
@@ -72,6 +75,7 @@ export interface Canvas2dSelectionSnapshot {
   readonly scenario: CanonicalScenario;
   readonly width: number;
   readonly height: number;
+  readonly viewport: TransportMapViewport;
   readonly routeEdges: readonly Canvas2dRouteEdge[];
   readonly stopPoints: readonly Extract<
     Canvas2dSelectablePoint,
@@ -84,8 +88,9 @@ export interface Canvas2dSelectionSnapshot {
   readonly keyboardCandidates: readonly Canvas2dSelectablePoint[];
 }
 
-export const canvas2dStopHitRadius = 10;
-export const canvas2dVehicleHitRadius = 12;
+export const canvas2dStopHitRadius = transportMapEntityHitMetrics.stopRadius;
+export const canvas2dVehicleHitRadius =
+  transportMapEntityHitMetrics.vehicleRadius;
 
 const freeze = <T>(value: T): Readonly<T> => Object.freeze(value);
 
@@ -185,11 +190,16 @@ export function projectCanvas2dPosition(
   point: TransportMapPoint,
   width: number,
   height: number,
+  viewport: TransportMapViewport = fullTransportMapViewport,
 ): CanvasPosition {
   const margin = Math.min(16, width / 4, height / 4);
+  const normalizedX =
+    (point.x - viewport.minX) / (viewport.maxX - viewport.minX);
+  const normalizedY =
+    (point.y - viewport.minY) / (viewport.maxY - viewport.minY);
   return freeze({
-    x: margin + point.x * (width - margin * 2),
-    y: margin + point.y * (height - margin * 2),
+    x: margin + normalizedX * (width - margin * 2),
+    y: margin + normalizedY * (height - margin * 2),
   });
 }
 
@@ -199,6 +209,7 @@ export function createCanvas2dSelectionSnapshot(
   width: number,
   height: number,
   previous?: Canvas2dSelectionSnapshot,
+  viewport: TransportMapViewport = fullTransportMapViewport,
 ): Canvas2dSelectionSnapshot {
   if (
     !Number.isFinite(width) ||
@@ -210,7 +221,7 @@ export function createCanvas2dSelectionSnapshot(
       'Canvas selection requires positive finite CSS dimensions.',
     );
   const project = (point: TransportMapPoint) =>
-    projectCanvas2dPosition(point, width, height);
+    projectCanvas2dPosition(point, width, height, viewport);
   const stopPoint = (stop: MapStop) =>
     freeze({
       kind: 'stop' as const,
@@ -221,7 +232,8 @@ export function createCanvas2dSelectionSnapshot(
   const reusable =
     previous?.scenario === index.scenario &&
     previous.width === width &&
-    previous.height === height;
+    previous.height === height &&
+    previous.viewport === viewport;
   const stopPoints = reusable
     ? previous.stopPoints
     : freeze(index.stopOccurrences.map(stopPoint));
@@ -265,6 +277,7 @@ export function createCanvas2dSelectionSnapshot(
     scenario: index.scenario,
     width,
     height,
+    viewport,
     routeEdges,
     stopPoints,
     vehiclePoints: freeze(vehiclePoints),
@@ -275,11 +288,9 @@ export function createCanvas2dSelectionSnapshot(
 const identifier = (point: Canvas2dSelectablePoint) =>
   point.kind === 'vehicle' ? point.vehicleId : point.stopPlaceId;
 
-export function hitTestCanvas2dSelection(
-  snapshot: Canvas2dSelectionSnapshot,
-  x: number,
-  y: number,
-): Canvas2dSelectablePoint | undefined {
+export function hitTestCanvas2dSelection<
+  T extends Pick<Canvas2dSelectionSnapshot, 'stopPoints' | 'vehiclePoints'>,
+>(snapshot: T, x: number, y: number): Canvas2dSelectablePoint | undefined {
   if (!Number.isFinite(x) || !Number.isFinite(y)) return undefined;
   const nearest = (
     points: readonly Canvas2dSelectablePoint[],

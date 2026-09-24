@@ -5,6 +5,15 @@ import { join } from 'node:path';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import StaticScenarioSvgLayer from './StaticScenarioSvgLayer.js';
 import { projectVehicleMovementSvg } from './vehicle-svg-projection.js';
+import { materializeSvgTransportMapEntityScale } from '../representation/transport-map-visual-metrics.js';
+import { fullTransportMapViewport } from '../representation/transport-map-projection.js';
+
+const entityScale = materializeSvgTransportMapEntityScale(
+  'normal',
+  fullTransportMapViewport,
+  400,
+  300,
+);
 
 const fixture = join(
   import.meta.dirname,
@@ -64,6 +73,7 @@ it('does not rerender the static scenario layer for a vehicle-only parent update
         nodes={projection.nodes}
         selection={null}
         onSelectionChange={onSelectionChange}
+        entityScale={entityScale}
       />
     </svg>
   );
@@ -92,6 +102,7 @@ it('keeps degenerate and uncoloured edges decorative', () => {
         nodes={[]}
         selection={null}
         onSelectionChange={vi.fn()}
+        entityScale={entityScale}
       />
     </svg>,
   );
@@ -116,6 +127,7 @@ it('retains physical StopPlace pointer and keyboard activation', () => {
         nodes={[node]}
         selection={null}
         onSelectionChange={onSelectionChange}
+        entityScale={entityScale}
       />
     </svg>,
   );
@@ -138,6 +150,7 @@ it('retains physical StopPlace pointer and keyboard activation', () => {
         nodes={[node]}
         selection={{ kind: 'stop', stopPlaceId: node.stopPlaceId! }}
         onSelectionChange={onSelectionChange}
+        entityScale={entityScale}
       />
     </svg>,
   );
@@ -154,6 +167,7 @@ it('highlights every edge of the selected route without making edges interactive
         nodes={[]}
         selection={{ kind: 'route', routeId }}
         onSelectionChange={vi.fn()}
+        entityScale={entityScale}
       />
     </svg>,
   );

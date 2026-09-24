@@ -456,11 +456,20 @@ summary {
 }
 
 .passenger-map-diagnostics text {
-  font-size: 3px;
   font-weight: 700;
   paint-order: stroke;
   stroke: white;
-  stroke-width: 0.5px;
+}
+
+[data-testid='vehicle-position'] {
+  filter:
+    drop-shadow(0 0 1px white)
+    drop-shadow(0 0 1.5px #102e3c);
+}
+
+[data-stop-node-id][data-selected='true'],
+[data-testid='vehicle-position'][data-selected='true'] {
+  filter: drop-shadow(0 0 2px #ffd400) drop-shadow(0 0 2px #ffd400);
 }
 
 .population-grid-overlay {

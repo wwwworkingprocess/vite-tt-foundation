@@ -10,6 +10,9 @@ import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import { expect, it } from 'vitest';
 import {
   createTransportMapProjection,
+  deriveTransportRouteViewport,
+  fullTransportMapViewport,
+  resolveTransportMapViewport,
   projectTransportMapVehicles,
 } from './transport-map-projection.js';
 import {
@@ -172,4 +175,86 @@ it('rejects foreign projection objects and preserves optional route-cycle identi
     routeLegIndex: 0,
     completedRouteCycles: 0,
   });
+});
+
+it('derives deterministic padded Route viewports from every canonical directed edge', () => {
+  const projection = createTransportMapProjection(scenario);
+  const route = scenario.routes.routes.find(
+    ({ patterns }) => patterns.length > 1,
+  )!;
+  const routeEdges = projection.edges.filter(
+    ({ routeId }) => routeId === route.routeId,
+  );
+  const viewport = deriveTransportRouteViewport(projection, route.routeId)!;
+
+  expect(fullTransportMapViewport).toEqual({
+    minX: 0,
+    minY: 0,
+    maxX: 1,
+    maxY: 1,
+  });
+  expect(deriveTransportRouteViewport(projection, route.routeId)).toEqual(
+    viewport,
+  );
+  expect(Object.isFrozen(viewport)).toBe(true);
+  expect(new Set(routeEdges.map(({ patternId }) => patternId))).toEqual(
+    new Set(route.patterns.map(({ patternId }) => patternId)),
+  );
+  for (const edge of routeEdges)
+    for (const point of [edge.from, edge.to]) {
+      expect(point.x).toBeGreaterThanOrEqual(viewport.minX);
+      expect(point.x).toBeLessThanOrEqual(viewport.maxX);
+      expect(point.y).toBeGreaterThanOrEqual(viewport.minY);
+      expect(point.y).toBeLessThanOrEqual(viewport.maxY);
+    }
+  expect(viewport.minX).toBeGreaterThanOrEqual(0);
+  expect(viewport.minY).toBeGreaterThanOrEqual(0);
+  expect(viewport.maxX).toBeLessThanOrEqual(1);
+  expect(viewport.maxY).toBeLessThanOrEqual(1);
+});
+
+it('keeps Route viewport geometry finite for horizontal, vertical, and collapsed topology', () => {
+  const projection = createTransportMapProjection(scenario);
+  const routeId = projection.edges[0]!.routeId;
+  const viewportFor = (from: { x: number; y: number }, to = from) =>
+    deriveTransportRouteViewport(
+      {
+        ...projection,
+        edges: [
+          {
+            ...projection.edges[0]!,
+            routeId,
+            from,
+            to,
+          },
+        ],
+      },
+      routeId,
+    )!;
+
+  for (const viewport of [
+    viewportFor({ x: 0.2, y: 0.5 }, { x: 0.8, y: 0.5 }),
+    viewportFor({ x: 0.5, y: 0.2 }, { x: 0.5, y: 0.8 }),
+    viewportFor({ x: 0, y: 1 }),
+  ]) {
+    expect(viewport.maxX - viewport.minX).toBeGreaterThan(0);
+    expect(viewport.maxY - viewport.minY).toBeGreaterThan(0);
+    expect(Object.values(viewport).every(Number.isFinite)).toBe(true);
+    expect(viewport.minX).toBeGreaterThanOrEqual(0);
+    expect(viewport.minY).toBeGreaterThanOrEqual(0);
+    expect(viewport.maxX).toBeLessThanOrEqual(1);
+    expect(viewport.maxY).toBeLessThanOrEqual(1);
+  }
+  expect(
+    deriveTransportRouteViewport(projection, 'missing-route' as never),
+  ).toBeUndefined();
+  expect(resolveTransportMapViewport(projection)).toBe(
+    fullTransportMapViewport,
+  );
+  expect(resolveTransportMapViewport(projection, routeId)).not.toBe(
+    fullTransportMapViewport,
+  );
+  expect(
+    resolveTransportMapViewport(projection, 'missing-route' as never),
+  ).toBe(fullTransportMapViewport);
 });

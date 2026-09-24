@@ -19,7 +19,10 @@ import {
   type VehiclePatternRunState,
   type VehicleState,
 } from '@torrevieja-tycoon/simulation';
-import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
+import type {
+  CanonicalScenario,
+  RouteId,
+} from '@torrevieja-tycoon/transport-domain';
 import {
   lazy,
   Suspense,
@@ -153,6 +156,23 @@ const useAuthorityScopedVisibility = (scopeKey: string | undefined) => {
   return [
     visibility.scopeKey === scopeKey ? visibility.visible : true,
     setVisible,
+  ] as const;
+};
+
+const useAuthorityScopedRouteFocus = (scopeKey: string | undefined) => {
+  const [focus, setFocus] = useState<
+    Readonly<{
+      scopeKey: string | undefined;
+      routeId: RouteId | undefined;
+    }>
+  >({ scopeKey, routeId: undefined });
+  const setRouteId = useCallback(
+    (routeId: RouteId | undefined) => setFocus({ scopeKey, routeId }),
+    [scopeKey],
+  );
+  return [
+    focus.scopeKey === scopeKey ? focus.routeId : undefined,
+    setRouteId,
   ] as const;
 };
 
@@ -516,6 +536,9 @@ export function App() {
         authoritativeTimelineKey ?? null,
       ]),
     );
+  const [focusedRouteId, setFocusedRouteId] = useAuthorityScopedRouteFocus(
+    authoritativeCoordinateKey,
+  );
   const cachedAuthoritativeScenario = authoritativeCoordinateKey
     ? scenarioCache.current.get(authoritativeCoordinateKey)
     : undefined;
@@ -525,6 +548,13 @@ export function App() {
     authoritativePackageState.coordinateKey === authoritativeCoordinateKey
       ? authoritativePackageState.scenario
       : undefined);
+  const validFocusedRouteId =
+    focusedRouteId &&
+    authoritativeScenarioPackage?.routes.routes.some(
+      ({ routeId }) => routeId === focusedRouteId,
+    )
+      ? focusedRouteId
+      : undefined;
   const currentAuthoritativePackageState =
     authoritativePackageState.coordinateKey === authoritativeCoordinateKey
       ? authoritativePackageState
@@ -641,6 +671,7 @@ export function App() {
   useEffect(() => {
     if (!authoritativeScenarioPackage || !fleet) {
       setGameSelection(null);
+      setFocusedRouteId(undefined);
       setOpenSelectionDetails(undefined);
       return;
     }
@@ -660,6 +691,7 @@ export function App() {
       })
     ) {
       setGameSelection(null);
+      setFocusedRouteId(undefined);
       setOpenSelectionDetails(undefined);
     }
   }, [
@@ -667,11 +699,17 @@ export function App() {
     authoritativeScenarioPackage,
     fleet,
     gameSelection,
+    setFocusedRouteId,
   ]);
   const action = (operation: (() => Promise<void>) | undefined) => () => {
     void operation?.();
   };
   const selectGameObject = (selection: GameSelection) => {
+    setFocusedRouteId(
+      selection?.kind === 'route' && validFocusedRouteId
+        ? selection.routeId
+        : validFocusedRouteId,
+    );
     setGameSelection(selection);
     setOpenSelectionDetails(
       selection?.kind === 'stop' || selection?.kind === 'vehicle'
@@ -680,6 +718,7 @@ export function App() {
     );
   };
   const clearGameSelection = () => {
+    setFocusedRouteId(undefined);
     setOpenSelectionDetails(undefined);
     setGameSelection(null);
   };
@@ -992,6 +1031,7 @@ export function App() {
                         .demandModelContentHash
                     }
                     visible={populationVisible}
+                    focusedRouteId={validFocusedRouteId}
                   />
                 </Suspense>
               ) : null}
@@ -1011,6 +1051,7 @@ export function App() {
                 simulationTick={application?.authoritative?.simulationTick}
                 showPassengerArrivalPulse={false}
                 passengersVisible={passengersVisible}
+                focusedRouteId={validFocusedRouteId}
               />
             </div>
           ) : (
@@ -1056,6 +1097,7 @@ export function App() {
                 simulationTick={application?.authoritative?.simulationTick}
                 showPassengerArrivalPulse={false}
                 passengersVisible={passengersVisible}
+                focusedRouteId={validFocusedRouteId}
               />
             </div>
           ) : null}
@@ -1129,6 +1171,9 @@ export function App() {
             ready={ready}
             onSelectionChange={selectGameObject}
             onAddBus={() => void addBusToSelectedRoute()}
+            focusedRouteId={validFocusedRouteId}
+            onFocusRoute={setFocusedRouteId}
+            onShowFullNetwork={() => setFocusedRouteId(undefined)}
           />
         ) : null
       }

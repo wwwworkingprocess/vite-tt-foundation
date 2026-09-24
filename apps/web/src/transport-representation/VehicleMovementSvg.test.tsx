@@ -6,7 +6,7 @@ import {
   screen,
 } from '@testing-library/react';
 import { StrictMode } from 'react';
-import { afterEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
@@ -21,16 +21,36 @@ import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import { VehicleMovementSvg } from './VehicleMovementSvg.js';
 import { RepresentationModeProvider } from '../representation/RepresentationModeContext.js';
 import {
+  createTransportMapProjection,
+  deriveTransportRouteViewport,
+  fullTransportMapViewport,
+} from '../representation/transport-map-projection.js';
+import { materializeSvgTransportMapEntityScale } from '../representation/transport-map-visual-metrics.js';
+import {
   clearRepresentationProfiles,
   configureRepresentationProfiling,
   representationProfilePrefix,
 } from '../performance/representation-profiler.js';
 
+let resize: ResizeObserverCallback;
+beforeEach(() => {
+  vi.stubGlobal(
+    'ResizeObserver',
+    class {
+      constructor(callback: ResizeObserverCallback) {
+        resize = callback;
+      }
+      observe() {}
+      disconnect() {}
+    },
+  );
+});
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
   configureRepresentationProfiling(false);
   clearRepresentationProfiles();
+  vi.unstubAllGlobals();
 });
 const root = join(
   import.meta.dirname,
@@ -71,6 +91,77 @@ const selectionScenario = parseScenarioPackage({
   routes: selectionJson('routes.json'),
   presentation: selectionJson('presentation.json'),
   provenance: selectionJson('provenance.json'),
+});
+
+it('applies one focused Route viewport without filtering the DOM2D Map', () => {
+  const routeId = selectionScenario.routes.routes[0]!.routeId;
+  const view = render(
+    <VehicleMovementSvg
+      scenario={selectionScenario}
+      fleet={[]}
+      selection={{ kind: 'route', routeId }}
+      focusedRouteId={routeId}
+    />,
+  );
+  const svg = screen.getByTestId('vehicle-movement-svg');
+  act(() => resize([], {} as ResizeObserver));
+  act(() =>
+    resize(
+      [{ contentRect: { width: 0, height: 0 } } as ResizeObserverEntry],
+      {} as ResizeObserver,
+    ),
+  );
+  act(() =>
+    resize(
+      [{ contentRect: { width: 500, height: 300 } } as ResizeObserverEntry],
+      {} as ResizeObserver,
+    ),
+  );
+  act(() =>
+    resize(
+      [{ contentRect: { width: 500, height: 300 } } as ResizeObserverEntry],
+      {} as ResizeObserver,
+    ),
+  );
+  const focusedScale = materializeSvgTransportMapEntityScale(
+    'normal',
+    deriveTransportRouteViewport(
+      createTransportMapProjection(selectionScenario),
+      routeId,
+    )!,
+    500,
+    300,
+  );
+  expect(svg).toHaveAttribute('data-map-viewport', 'route');
+  expect(svg).not.toHaveAttribute('viewBox', '0 0 100 100');
+  expect(screen.getAllByTestId('edge-direction')).toHaveLength(
+    createTransportMapProjection(selectionScenario).edges.length,
+  );
+  expect(
+    Number(
+      screen
+        .getAllByRole('button', { name: /Select stop/ })[0]!
+        .getAttribute('r'),
+    ),
+  ).toBeCloseTo(3 * focusedScale);
+  view.rerender(<VehicleMovementSvg scenario={selectionScenario} fleet={[]} />);
+  expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+    'viewBox',
+    '0 0 100 100',
+  );
+  const fullScale = materializeSvgTransportMapEntityScale(
+    'normal',
+    fullTransportMapViewport,
+    500,
+    300,
+  );
+  expect(
+    Number(
+      screen
+        .getAllByRole('button', { name: /Select stop/ })[0]!
+        .getAttribute('r'),
+    ),
+  ).toBeCloseTo(3 * fullScale);
 });
 
 it('renders authoritative stop, edge, and changing vehicle projections accessibly', async () => {
@@ -486,6 +577,10 @@ it('adapts pointer and keyboard input into renderer-independent selections', asy
   expect(
     onSelectionChange.mock.calls.map(([selection]) => selection.kind),
   ).toEqual(['stop', 'stop']);
+  expect(stop).toHaveAttribute('vector-effect', 'non-scaling-stroke');
+  expect(Number(stop.getAttribute('stroke-width'))).toBeGreaterThan(
+    Number(stop.getAttribute('r')) * 2,
+  );
 
   const pattern = selectionScenario.routes.routes[0]!.patterns[0]!;
   const withVehicle = applyTransportVehicleCommand(state, {
@@ -524,6 +619,12 @@ it('adapts pointer and keyboard input into renderer-independent selections', asy
   expect(
     view.container.querySelector(`[data-stop-place-id="${stopPlaceId(stop)}"]`),
   ).toHaveAttribute('data-selected', 'true');
+  expect(
+    view.container.querySelector(`[data-stop-place-id="${stopPlaceId(stop)}"]`),
+  ).toHaveAttribute('data-selected', 'true');
+  expect(
+    view.container.querySelector(`[data-stop-place-id="${stopPlaceId(stop)}"]`),
+  ).toHaveAttribute('vector-effect', 'non-scaling-stroke');
   const vehicle = await screen.findByTestId('vehicle-position');
   fireEvent.click(vehicle);
   fireEvent.keyDown(vehicle, { key: 'Enter' });
@@ -546,6 +647,15 @@ it('adapts pointer and keyboard input into renderer-independent selections', asy
   expect(screen.getByTestId('vehicle-position')).toHaveAttribute(
     'data-selected',
     'true',
+  );
+  expect(screen.getByTestId('vehicle-position')).toHaveAttribute(
+    'data-selected',
+    'true',
+  );
+  expect(
+    Number(screen.getByTestId('vehicle-position').getAttribute('stroke-width')),
+  ).toBeGreaterThan(
+    Number(screen.getByTestId('vehicle-position').getAttribute('r')) * 2,
   );
   fireEvent.click(screen.getByTestId('vehicle-position'));
   fireEvent.keyDown(screen.getByTestId('vehicle-position'), { key: 'Enter' });
@@ -602,7 +712,23 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
       ]}
       simulationTick={10}
       showPassengerArrivalPulse
+      focusedRouteId={selectionScenario.routes.routes[0]!.routeId}
     />,
+  );
+  act(() =>
+    resize(
+      [{ contentRect: { width: 400, height: 300 } } as ResizeObserverEntry],
+      {} as ResizeObserver,
+    ),
+  );
+  const focusedScale = materializeSvgTransportMapEntityScale(
+    'normal',
+    deriveTransportRouteViewport(
+      createTransportMapProjection(selectionScenario),
+      selectionScenario.routes.routes[0]!.routeId,
+    )!,
+    400,
+    300,
   );
   expect(screen.getByTestId('stop-waiting-passenger-count')).toHaveTextContent(
     '5',
@@ -629,6 +755,14 @@ it('renders bounded physical-stop and vehicle passenger diagnostics with tick pu
   expect(onboardCount).toHaveAttribute('text-anchor', 'middle');
   expect(onboardCount).toHaveAttribute('pointer-events', 'none');
   expect(screen.getByTestId('passenger-arrival-pulse')).toBeVisible();
+  expect(screen.getByTestId('stop-waiting-passenger-count')).toHaveAttribute(
+    'font-size',
+    String(11 * focusedScale),
+  );
+  expect(screen.getByTestId('vehicle-onboard-passenger-count')).toHaveAttribute(
+    'font-size',
+    String(11 * focusedScale),
+  );
   view.rerender(
     <VehicleMovementSvg
       scenario={selectionScenario}

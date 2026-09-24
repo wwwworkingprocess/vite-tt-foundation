@@ -590,7 +590,10 @@ describe('foundation screen', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open details' }));
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
     fireEvent.click(
-      within(screen.getByRole('dialog')).getByRole('button', { name: 'Close' }),
+      within(screen.getByRole('dialog', { name: 'Cruz Roja' })).getByRole(
+        'button',
+        { name: 'Close' },
+      ),
     );
     fireEvent.click(stop);
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
@@ -1163,6 +1166,84 @@ describe('foundation screen', () => {
     expect(
       screen.getByTestId('vehicle-row-browser-demo-vehicle-001'),
     ).toHaveAttribute('data-movement-kind', 'parked-at-stop');
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-map-viewport',
+      'full',
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Focus route' }));
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-map-viewport',
+      'route',
+    );
+    expect(
+      screen.getByRole('button', { name: 'Show full network' }),
+    ).toBeInTheDocument();
+    fireEvent.click(
+      screen
+        .getByRole('group', { name: 'Routes' })
+        .querySelector('[data-route-id="legacy-C"]')!,
+    );
+    expect(screen.getByLabelText('Transport routes')).toHaveAttribute(
+      'data-focused-route-id',
+      'legacy-C',
+    );
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-map-viewport',
+      'route',
+    );
+    const selectedStop = screen.getAllByRole('button', {
+      name: /Select stop/,
+    })[0]!;
+    fireEvent.click(selectedStop);
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-map-viewport',
+      'route',
+    );
+    expect(
+      screen
+        .getByRole('group', { name: 'Routes' })
+        .querySelector('[data-route-id="legacy-C"]'),
+    ).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Cruz Roja' })).getByRole(
+        'button',
+        { name: 'Close' },
+      ),
+    );
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-map-viewport',
+      'route',
+    );
+    expect(selectedStop).toHaveAttribute('data-selected', 'true');
+    fireEvent.click(screen.getByTestId('vehicle-position'));
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-map-viewport',
+      'route',
+    );
+    fireEvent.click(
+      within(
+        screen.getByRole('dialog', {
+          name: 'Vehicle browser-demo-vehicle-001',
+        }),
+      ).getByRole('button', { name: 'Close' }),
+    );
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-map-viewport',
+      'route',
+    );
+    expect(screen.getByTestId('vehicle-position')).toHaveAttribute(
+      'data-selected',
+      'true',
+    );
+    fireEvent.click(
+      screen
+        .getByRole('group', { name: 'Routes' })
+        .querySelector('[data-route-id="legacy-B"]')!,
+    );
+    expect(screen.getByLabelText('Transport routes')).toHaveAttribute(
+      'data-focused-route-id',
+      'legacy-B',
+    );
     fireEvent.click(
       screen.getByRole('button', { name: 'Close Simulation controls' }),
     );
@@ -1173,6 +1254,20 @@ describe('foundation screen', () => {
     );
     fireEvent.click(
       screen.getByRole('button', { name: 'Swap visualizations' }),
+    );
+    expect(
+      screen
+        .getByRole('group', { name: 'Routes' })
+        .querySelector('[data-route-id="legacy-B"]'),
+    ).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-map-viewport',
+      'route',
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Show full network' }));
+    expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
+      'data-map-viewport',
+      'full',
     );
     expect(
       screen

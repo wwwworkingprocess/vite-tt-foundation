@@ -4,7 +4,10 @@ import type {
   VehiclePassengerLoadProjection,
   VehicleState,
 } from '@torrevieja-tycoon/simulation';
-import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
+import type {
+  CanonicalScenario,
+  RouteId,
+} from '@torrevieja-tycoon/transport-domain';
 import {
   memo,
   useCallback,
@@ -20,9 +23,20 @@ import {
   finishRepresentationProfile,
   recordRepresentationProfile,
 } from '../performance/representation-profiler.js';
-import { useLatestRepresentationValue } from '../representation/RepresentationModeContext.js';
+import {
+  useLatestRepresentationValue,
+  useRepresentationMode,
+} from '../representation/RepresentationModeContext.js';
 import { updatePassengerArrivalTicks } from '../representation/passenger-map-diagnostics.js';
+import {
+  fullTransportMapViewport,
+  createTransportMapProjection,
+  resolveTransportMapViewport,
+  type TransportMapViewport,
+} from '../representation/transport-map-projection.js';
 import { selectVehicle, type GameSelection } from '../ui/game-selection.js';
+import { materializeSvgTransportMapEntityScale } from '../representation/transport-map-visual-metrics.js';
+import type { RepresentationMode } from '../representation/representation-cadence.js';
 import StaticScenarioSvgLayer from './StaticScenarioSvgLayer.js';
 import PassengerStopDiagnostics, {
   stableWaitingTotals,
@@ -51,11 +65,28 @@ interface SvgProps extends AuthorityProps {
   readonly selection?: GameSelection | undefined;
   readonly onSelectionChange?: ((selection: GameSelection) => void) | undefined;
   readonly passengersVisible?: boolean | undefined;
+  readonly focusedRouteId?: RouteId | undefined;
+}
+interface CommittedSvgProps extends AuthorityProps {
+  readonly selection?: GameSelection | undefined;
+  readonly onSelectionChange?: ((selection: GameSelection) => void) | undefined;
+  readonly passengersVisible?: boolean | undefined;
+  readonly viewport: TransportMapViewport;
+  readonly mode: RepresentationMode;
 }
 
 export function VehicleMovementSvg(props: Readonly<SvgProps>) {
   recordRepresentationProfile('svg.wrapper.render');
+  const mode = useRepresentationMode();
   const { selection = null, onSelectionChange, passengersVisible } = props;
+  const viewport = useMemo(
+    () =>
+      resolveTransportMapViewport(
+        createTransportMapProjection(props.scenario),
+        props.focusedRouteId,
+      ),
+    [props.focusedRouteId, props.scenario],
+  );
   const authority = useMemo<AuthorityProps>(
     () => ({
       scenario: props.scenario,
@@ -89,6 +120,8 @@ export function VehicleMovementSvg(props: Readonly<SvgProps>) {
       selection={selection}
       onSelectionChange={select}
       passengersVisible={passengersVisible}
+      viewport={viewport}
+      mode={mode}
     />
   );
 }
@@ -111,7 +144,9 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
   simulationTick = 0,
   showPassengerArrivalPulse = false,
   passengersVisible = true,
-}: Readonly<SvgProps>) {
+  viewport = fullTransportMapViewport,
+  mode,
+}: Readonly<CommittedSvgProps>) {
   recordRepresentationProfile('svg.committed.render');
   const renderProfile = beginRepresentationProfile(
     'svg.committed.render-to-commit',
@@ -120,11 +155,36 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
     ReadonlyMap<string, number>
   >(() => new Map());
   const priorWaiting = useRef<ReadonlyMap<string, number>>(new Map());
-  const staticProjection = useMemo(
-    () => projectVehicleMovementSvg(scenario, []),
-    [scenario],
+  const svg = useRef<SVGSVGElement>(null);
+  const [cssSize, setCssSize] = useState<readonly [number, number]>([400, 300]);
+  useLayoutEffect(() => {
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry)
+        setCssSize([
+          entry.contentRect.width || 1,
+          entry.contentRect.height || 1,
+        ]);
+    });
+    const element = svg.current!;
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  const entityScale = materializeSvgTransportMapEntityScale(
+    mode,
+    viewport,
+    cssSize[0],
+    cssSize[1],
   );
-  const vehicles = projectVehicleMovementSvg(scenario, fleet).vehicles;
+  const staticProjection = useMemo(
+    () => projectVehicleMovementSvg(scenario, [], viewport),
+    [scenario, viewport],
+  );
+  const vehicles = projectVehicleMovementSvg(
+    scenario,
+    fleet,
+    viewport,
+  ).vehicles;
   useEffect(() => {
     if (!showPassengerArrivalPulse) return;
     setLastArrivalTicks((previous) =>
@@ -168,12 +228,16 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
   return (
     <section className="passenger-map-diagnostics">
       <svg
+        ref={svg}
         data-testid="vehicle-movement-svg"
         data-scenario-id={scenario.manifest.scenarioId}
         data-content-hash={scenario.manifest.contentHash}
         data-node-count={staticProjection.nodes.length}
         data-directed-edge-count={staticProjection.edges.length}
         viewBox={staticProjection.viewBox}
+        data-map-viewport={
+          viewport === fullTransportMapViewport ? 'full' : 'route'
+        }
         role="group"
         aria-label="Authoritative vehicle movement"
       >
@@ -186,6 +250,7 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
               : null
           }
           onSelectionChange={onSelectionChange}
+          entityScale={entityScale}
         />
         {passengersVisible ? (
           <PassengerStopDiagnostics
@@ -194,6 +259,7 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
             waiting={waiting}
             arrivals={lastArrivalTicks}
             pulseTick={showPassengerArrivalPulse ? simulationTick : undefined}
+            entityScale={entityScale}
           />
         ) : null}
         <g aria-label="Authoritative vehicles">
@@ -213,20 +279,11 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
                 aria-label={`${vehicle.label}: ${vehicle.movementKind}`}
                 cx={vehicle.cx}
                 cy={vehicle.cy}
-                r="2.7"
+                r={6 * entityScale}
                 fill={vehicle.color}
-                stroke={
-                  selection?.kind === 'vehicle' &&
-                  selection.vehicleId === vehicle.vehicleId
-                    ? '#ffd400'
-                    : '#102e3c'
-                }
-                strokeWidth={
-                  selection?.kind === 'vehicle' &&
-                  selection.vehicleId === vehicle.vehicleId
-                    ? '0.8'
-                    : '0.3'
-                }
+                stroke="transparent"
+                strokeWidth="16"
+                vectorEffect="non-scaling-stroke"
                 role="button"
                 tabIndex={0}
                 data-selected={
@@ -252,6 +309,8 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
                   textAnchor="middle"
                   dominantBaseline="central"
                   pointerEvents="none"
+                  fontSize={11 * entityScale}
+                  strokeWidth={0.5 * entityScale}
                 >
                   {loads.get(vehicle.vehicleId)?.onboardPassengerCount ?? 0}
                 </text>

@@ -4,7 +4,10 @@ import type {
   VehiclePassengerLoadProjection,
   VehicleState,
 } from '@torrevieja-tycoon/simulation';
-import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
+import type {
+  CanonicalScenario,
+  RouteId,
+} from '@torrevieja-tycoon/transport-domain';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   beginRepresentationProfile,
@@ -30,12 +33,18 @@ import {
   createRepresentationFrameDriver,
   representationCadence,
 } from './representation-cadence.js';
-import { projectTransportMapPoint } from './transport-map-projection.js';
+import {
+  fullTransportMapViewport,
+  projectTransportMapPoint,
+  resolveTransportMapViewport,
+  type TransportMapViewport,
+} from './transport-map-projection.js';
 import type { ScenarioPopulationView } from '../population/population-field-loader.js';
 import {
   passengerWaitingTotals,
   updatePassengerArrivalTicks,
 } from './passenger-map-diagnostics.js';
+import { transportMapEntityVisualMetrics } from './transport-map-visual-metrics.js';
 
 const validDpr = () =>
   Number.isFinite(window.devicePixelRatio) && window.devicePixelRatio > 0
@@ -72,26 +81,36 @@ export function materializeCanvas2dPopulationCells(
     populationCells: readonly Canvas2dPopulationCell[];
     width: number;
     height: number;
+    viewport: TransportMapViewport;
     rectangles: readonly Canvas2dPopulationCell[];
   }>,
+  viewport: TransportMapViewport = fullTransportMapViewport,
 ) {
   if (
     previous?.populationCells === populationCells &&
     previous.width === width &&
-    previous.height === height
+    previous.height === height &&
+    previous.viewport === viewport
   )
     return previous;
   return Object.freeze({
     populationCells,
     width,
     height,
+    viewport,
     rectangles: Object.freeze(
       populationCells.map((cell) => {
-        const northWest = projectCanvas2dPosition(cell, width, height);
+        const northWest = projectCanvas2dPosition(
+          cell,
+          width,
+          height,
+          viewport,
+        );
         const southEast = projectCanvas2dPosition(
           { x: cell.x + cell.width, y: cell.y + cell.height },
           width,
           height,
+          viewport,
         );
         return Object.freeze({
           x: Math.min(northWest.x, southEast.x),
@@ -118,6 +137,7 @@ export function Canvas2dRepresentation({
   simulationTick = 0,
   showPassengerArrivalPulse = false,
   passengersVisible = true,
+  focusedRouteId,
 }: Readonly<{
   scenario: CanonicalScenario;
   fleet: readonly VehicleState[];
@@ -132,15 +152,21 @@ export function Canvas2dRepresentation({
   simulationTick?: number | undefined;
   showPassengerArrivalPulse?: boolean | undefined;
   passengersVisible?: boolean | undefined;
+  focusedRouteId?: RouteId | undefined;
 }>) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const size = useRef({ width: 0, height: 0 });
   const mode = useRepresentationMode();
+  const visualMetrics = transportMapEntityVisualMetrics(mode);
   const interactive = mode === 'normal';
   const modeRef = useRef(mode);
   const index = useMemo(
     () => createCanvas2dSelectionIndex(scenario),
     [scenario],
+  );
+  const viewport = useMemo(
+    () => resolveTransportMapViewport(index.map, focusedRouteId),
+    [focusedRouteId, index.map],
   );
   const populationCells = useMemo(() => {
     if (!population) return [];
@@ -207,6 +233,8 @@ export function Canvas2dRepresentation({
     arrivals,
     simulationTick,
     showPassengerArrivalPulse,
+    viewport,
+    visualMetrics,
   });
   const lastDrawn = useRef<Canvas2dSelectionSnapshot | undefined>(undefined);
   const populationMaterialization = useRef<
@@ -225,6 +253,8 @@ export function Canvas2dRepresentation({
     arrivals,
     simulationTick,
     showPassengerArrivalPulse,
+    viewport,
+    visualMetrics,
   };
   const driverRef = useRef<
     ReturnType<typeof createRepresentationFrameDriver> | undefined
@@ -282,6 +312,7 @@ export function Canvas2dRepresentation({
             width,
             height,
             populationMaterialization.current,
+            currentInput.viewport,
           );
           populationMaterialization.current = materialization;
           context.fillStyle = '#e88424';
@@ -297,6 +328,7 @@ export function Canvas2dRepresentation({
           width,
           height,
           lastDrawn.current,
+          currentInput.viewport,
         );
         context.lineWidth = 1.5;
         let routeArrowheads = 0;
@@ -326,7 +358,13 @@ export function Canvas2dRepresentation({
             const count = currentInput.waiting.get(point.stopPlaceId) ?? 0;
             context.fillStyle = count > 0 ? 'black' : 'silver';
             context.beginPath();
-            context.arc(point.x, point.y, 4, 0, Math.PI * 2);
+            context.arc(
+              point.x,
+              point.y,
+              currentInput.visualMetrics.passengerStatusRadius,
+              0,
+              Math.PI * 2,
+            );
             context.fill();
           }
           for (const point of snapshot.keyboardCandidates)
@@ -341,7 +379,13 @@ export function Canvas2dRepresentation({
               ) {
                 context.strokeStyle = 'gold';
                 context.beginPath();
-                context.arc(point.x, point.y, 8, 0, Math.PI * 2);
+                context.arc(
+                  point.x,
+                  point.y,
+                  currentInput.visualMetrics.passengerArrivalPulseRadius,
+                  0,
+                  Math.PI * 2,
+                );
                 context.stroke();
               }
             }
@@ -349,20 +393,35 @@ export function Canvas2dRepresentation({
         context.fillStyle = '#c0c7ca';
         for (const point of snapshot.stopPoints) {
           context.beginPath();
-          context.arc(point.x, point.y, 3, 0, Math.PI * 2);
+          context.arc(
+            point.x,
+            point.y,
+            currentInput.visualMetrics.stopRadius,
+            0,
+            Math.PI * 2,
+          );
           context.fill();
         }
         context.fillStyle = '#ef6a4c';
         for (const point of snapshot.vehiclePoints)
-          context.fillRect(point.x - 4, point.y - 4, 8, 8);
+          context.fillRect(
+            point.x - currentInput.visualMetrics.vehicleRadius,
+            point.y - currentInput.visualMetrics.vehicleRadius,
+            currentInput.visualMetrics.vehicleRadius * 2,
+            currentInput.visualMetrics.vehicleRadius * 2,
+          );
         if (currentInput.passengersVisible) {
           context.fillStyle = 'black';
-          context.font = '700 11px sans-serif';
+          context.font = `700 ${currentInput.visualMetrics.passengerLabelFontSize}px sans-serif`;
           for (const point of snapshot.keyboardCandidates) {
             if (point.kind !== 'stop') continue;
             const count = currentInput.waiting.get(point.stopPlaceId) ?? 0;
             if (count > 0)
-              context.fillText(String(count), point.x + 5, point.y - 5);
+              context.fillText(
+                String(count),
+                point.x + currentInput.visualMetrics.passengerLabelOffset,
+                point.y - currentInput.visualMetrics.passengerLabelOffset,
+              );
           }
           context.textAlign = 'center';
           for (const point of snapshot.vehiclePoints) {
@@ -370,21 +429,36 @@ export function Canvas2dRepresentation({
               currentInput.vehicleLoads.get(point.vehicleId)
                 ?.onboardPassengerCount ?? 0;
             if (count > 0)
-              context.fillText(String(count), point.x, point.y + 4);
+              context.fillText(
+                String(count),
+                point.x,
+                point.y + currentInput.visualMetrics.passengerLabelOffset * 0.8,
+              );
           }
           context.textAlign = 'start';
         }
         context.strokeStyle = '#ffd166';
-        context.lineWidth = 3;
+        context.lineWidth = currentInput.visualMetrics.selectionStrokeWidth;
         for (const point of snapshot.stopPoints)
           if (matchesSelection(point, currentInput.selection)) {
             context.beginPath();
-            context.arc(point.x, point.y, 7, 0, Math.PI * 2);
+            context.arc(
+              point.x,
+              point.y,
+              currentInput.visualMetrics.selectionRadius,
+              0,
+              Math.PI * 2,
+            );
             context.stroke();
           }
         for (const point of snapshot.vehiclePoints)
           if (matchesSelection(point, currentInput.selection))
-            context.strokeRect(point.x - 7, point.y - 7, 14, 14);
+            context.strokeRect(
+              point.x - currentInput.visualMetrics.selectionRadius,
+              point.y - currentInput.visualMetrics.selectionRadius,
+              currentInput.visualMetrics.selectionRadius * 2,
+              currentInput.visualMetrics.selectionRadius * 2,
+            );
         lastDrawn.current = snapshot;
         const selectionDetail = {
           directedRouteEdges: snapshot.routeEdges.length,
@@ -434,6 +508,9 @@ export function Canvas2dRepresentation({
         className="canvas2d-representation"
         data-testid="canvas2d-representation"
         data-interactive={interactive}
+        data-map-viewport={
+          viewport === fullTransportMapViewport ? 'full' : 'route'
+        }
         role={interactive ? 'group' : 'img'}
         aria-label="Canvas 2D transport Map with StopPlace and Vehicle selection"
         aria-describedby={interactive ? 'canvas2d-selection-status' : undefined}

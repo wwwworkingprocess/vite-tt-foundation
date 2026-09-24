@@ -339,3 +339,38 @@ it('shows DOM2D view actions only while primary and preserves their external sta
   fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
   expect(screen.getByRole('button', { name: 'Show layer' })).toBeVisible();
 });
+
+it('preserves one external Map viewport across DOM2D and Canvas2D family swaps', () => {
+  render(
+    <RepresentationWorkspace
+      domTwoDimensional={<div data-testid="dom-map-viewport">route B</div>}
+      canvasTwoDimensional={
+        <div data-testid="canvas-map-viewport">route B</div>
+      }
+      threeDimensional={<div>3D scene</div>}
+    />,
+  );
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Use Canvas 2D in mini' }),
+  );
+  expect(screen.getByTestId('secondary-minimap')).toContainElement(
+    screen.getByTestId('canvas-map-viewport'),
+  );
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
+  expect(screen.getByTestId('primary-visualization')).toContainElement(
+    screen.getByTestId('canvas-map-viewport'),
+  );
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Select mini representation for swap' }),
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Swap visualizations' }));
+  expect(screen.getByTestId('primary-visualization')).toContainElement(
+    screen.getByTestId('dom-map-viewport'),
+  );
+});

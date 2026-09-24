@@ -30,11 +30,13 @@ function StaticScenarioSvgLayer({
   nodes,
   selection,
   onSelectionChange,
+  entityScale,
 }: Readonly<{
   edges: VehicleSvgProjection['edges'];
   nodes: VehicleSvgProjection['nodes'];
   selection: GameSelection;
   onSelectionChange: ((selection: GameSelection) => void) | undefined;
+  entityScale: number;
 }>) {
   return (
     <g data-testid="static-scenario-svg-layer">
@@ -82,37 +84,42 @@ function StaticScenarioSvgLayer({
         })}
       </g>
       <g aria-label="Canonical stops">
-        {nodes.map((node) => (
-          <circle
-            key={node.stopNodeId}
-            data-stop-node-id={node.stopNodeId}
-            cx={node.cx}
-            cy={node.cy}
-            r="0.8"
-            fill="currentColor"
-            role={node.stopPlaceId ? 'button' : undefined}
-            tabIndex={node.stopPlaceId ? 0 : undefined}
-            aria-label={
-              node.stopPlaceId ? `Select stop ${node.name}` : undefined
-            }
-            data-stop-place-id={node.stopPlaceId}
-            data-selected={
-              selection?.kind === 'stop' &&
-              selection.stopPlaceId === node.stopPlaceId
-            }
-            onClick={() =>
-              node.stopPlaceId &&
-              onSelectionChange?.(selectStop(node.stopPlaceId))
-            }
-            onKeyDown={
-              node.stopPlaceId
-                ? activate(() =>
-                    onSelectionChange?.(selectStop(node.stopPlaceId!)),
-                  )
-                : undefined
-            }
-          />
-        ))}
+        {nodes.map((node) => {
+          const selected =
+            selection?.kind === 'stop' &&
+            selection.stopPlaceId === node.stopPlaceId;
+          return (
+            <circle
+              key={node.stopNodeId}
+              data-stop-node-id={node.stopNodeId}
+              cx={node.cx}
+              cy={node.cy}
+              r={3 * entityScale}
+              fill="currentColor"
+              stroke="transparent"
+              strokeWidth="14"
+              vectorEffect="non-scaling-stroke"
+              role={node.stopPlaceId ? 'button' : undefined}
+              tabIndex={node.stopPlaceId ? 0 : undefined}
+              aria-label={
+                node.stopPlaceId ? `Select stop ${node.name}` : undefined
+              }
+              data-stop-place-id={node.stopPlaceId}
+              data-selected={selected}
+              onClick={() =>
+                node.stopPlaceId &&
+                onSelectionChange?.(selectStop(node.stopPlaceId))
+              }
+              onKeyDown={
+                node.stopPlaceId
+                  ? activate(() =>
+                      onSelectionChange?.(selectStop(node.stopPlaceId!)),
+                    )
+                  : undefined
+              }
+            />
+          );
+        })}
       </g>
     </g>
   );

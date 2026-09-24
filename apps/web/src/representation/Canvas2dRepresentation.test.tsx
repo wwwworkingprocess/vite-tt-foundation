@@ -25,6 +25,11 @@ import {
   createCanvas2dSelectionSnapshot,
   projectCanvas2dPosition,
 } from './canvas2d-selection-model.js';
+import {
+  createTransportMapProjection,
+  deriveTransportRouteViewport,
+} from './transport-map-projection.js';
+import { transportMapEntityVisualMetrics } from './transport-map-visual-metrics.js';
 
 const context = {
   setTransform: vi.fn(),
@@ -132,7 +137,10 @@ it('owns strict-mode resize, cadence, DPR backing store, profiling, and cleanup'
   const { unmount } = render(
     <StrictMode>
       <RepresentationModeProvider mode="mini">
-        <Canvas2dRepresentation {...props} />
+        <Canvas2dRepresentation
+          {...props}
+          focusedRouteId={scenario.routes.routes[0]!.routeId}
+        />
       </RepresentationModeProvider>
     </StrictMode>,
   );
@@ -140,6 +148,7 @@ it('owns strict-mode resize, cadence, DPR backing store, profiling, and cleanup'
     name: 'Canvas 2D transport Map with StopPlace and Vehicle selection',
   });
   expect(canvas).not.toHaveAttribute('tabindex');
+  expect(canvas).toHaveAttribute('data-map-viewport', 'route');
   resize(
     [{ contentRect: { width: 100, height: 50 } } as ResizeObserverEntry],
     {} as ResizeObserver,
@@ -163,6 +172,80 @@ it('owns strict-mode resize, cadence, DPR backing store, profiling, and cleanup'
   vi.advanceTimersByTime(1_000);
   expect(context.fillRect).toHaveBeenCalledTimes(draws);
   expect(disconnect).toHaveBeenCalled();
+});
+
+it('uses shared CSS-space entity metrics independently of full or focused viewport geometry', () => {
+  const firstNode = pattern.stopNodeIds[0]!;
+  const fleet = [vehicleAt(firstNode)];
+  const routeId = scenario.routes.routes[0]!.routeId;
+  const normal = transportMapEntityVisualMetrics('normal');
+  const view = render(
+    <RepresentationModeProvider mode="normal">
+      <Canvas2dRepresentation {...props} fleet={fleet} />
+    </RepresentationModeProvider>,
+  );
+  resize(
+    [{ contentRect: { width: 200, height: 100 } } as ResizeObserverEntry],
+    {} as ResizeObserver,
+  );
+  vi.advanceTimersByTime(1000 / 60);
+  expect(
+    context.arc.mock.calls.some((call) => call[2] === normal.stopRadius),
+  ).toBe(true);
+  expect(
+    context.fillRect.mock.calls.some(
+      (call) =>
+        call[2] === normal.vehicleRadius * 2 &&
+        call[3] === normal.vehicleRadius * 2,
+    ),
+  ).toBe(true);
+
+  context.arc.mockClear();
+  context.fillRect.mockClear();
+  view.rerender(
+    <RepresentationModeProvider mode="normal">
+      <Canvas2dRepresentation
+        {...props}
+        fleet={fleet}
+        focusedRouteId={routeId}
+      />
+    </RepresentationModeProvider>,
+  );
+  vi.advanceTimersByTime(1000 / 60);
+  expect(
+    context.arc.mock.calls.some((call) => call[2] === normal.stopRadius),
+  ).toBe(true);
+  expect(
+    context.fillRect.mock.calls.some(
+      (call) =>
+        call[2] === normal.vehicleRadius * 2 &&
+        call[3] === normal.vehicleRadius * 2,
+    ),
+  ).toBe(true);
+
+  const mini = transportMapEntityVisualMetrics('mini');
+  context.arc.mockClear();
+  context.fillRect.mockClear();
+  view.rerender(
+    <RepresentationModeProvider mode="mini">
+      <Canvas2dRepresentation
+        {...props}
+        fleet={fleet}
+        focusedRouteId={routeId}
+      />
+    </RepresentationModeProvider>,
+  );
+  vi.advanceTimersByTime(200);
+  expect(
+    context.arc.mock.calls.some((call) => call[2] === mini.stopRadius),
+  ).toBe(true);
+  expect(
+    context.fillRect.mock.calls.some(
+      (call) =>
+        call[2] === mini.vehicleRadius * 2 &&
+        call[3] === mini.vehicleRadius * 2,
+    ),
+  ).toBe(true);
 });
 
 it('handles unavailable drawing state, invalid DPR, and mode changes deterministically', () => {
@@ -484,6 +567,24 @@ it('reuses Canvas-space population geometry until its materialization inputs cha
     100,
     first,
   );
+  const viewport = deriveTransportRouteViewport(
+    createTransportMapProjection(scenario),
+    scenario.routes.routes[0]!.routeId,
+  )!;
+  const focused = materializeCanvas2dPopulationCells(
+    cells,
+    200,
+    100,
+    first,
+    viewport,
+  );
+  const focusedAgain = materializeCanvas2dPopulationCells(
+    cells,
+    200,
+    100,
+    focused,
+    viewport,
+  );
 
   expect(first.rectangles).toHaveLength(1);
   expect(first.rectangles[0]).toMatchObject({ x: 58, y: 43.2, opacity: 0.5 });
@@ -495,6 +596,8 @@ it('reuses Canvas-space population geometry until its materialization inputs cha
   expect(widthChanged).not.toBe(first);
   expect(heightChanged).not.toBe(first);
   expect(replacement).not.toBe(first);
+  expect(focused).not.toBe(first);
+  expect(focusedAgain).toBe(focused);
 });
 
 it('keeps collocated directed edges as presentation geometry without arrowheads', () => {

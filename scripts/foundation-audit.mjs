@@ -604,6 +604,7 @@ for (const canvasRepresentationFile of [
   'apps/web/src/representation/Canvas2dRepresentation.tsx',
   'apps/web/src/representation/canvas2d-selection-model.ts',
   'apps/web/src/representation/transport-map-projection.ts',
+  'apps/web/src/representation/transport-map-visual-metrics.ts',
 ]) {
   const canvasViolations = canvasRepresentationViolations(
     await source(canvasRepresentationFile),
@@ -633,6 +634,15 @@ if (
   )
 )
   fail('renderer-neutral passenger Map diagnostics import renderer authority.');
+const transportMapVisualMetricsSource = await source(
+  'apps/web/src/representation/transport-map-visual-metrics.ts',
+);
+if (
+  /from\s+['"](?:react|three|@react-three(?:\/[^'"]*)?)[^'"]*['"]|\b(?:window|document|CanvasRenderingContext2D|SVGElement|HTMLElement)\b/.test(
+    transportMapVisualMetricsSource,
+  )
+)
+  fail('transport Map visual metrics import renderer or browser authority.');
 const representationCapabilityFile =
   'apps/web/src/representation/representation-view-capabilities.ts';
 const representationCapabilitySource = await source(
@@ -684,6 +694,9 @@ for (const file of [...simulation, ...protocol, ...web]) {
     ) ||
     normalized.endsWith(
       'apps/web/src/representation/transport-map-projection.ts',
+    ) ||
+    normalized.endsWith(
+      'apps/web/src/representation/transport-map-visual-metrics.ts',
     ) ||
     normalized.endsWith(
       'apps/web/src/representation/passenger-map-diagnostics.ts',

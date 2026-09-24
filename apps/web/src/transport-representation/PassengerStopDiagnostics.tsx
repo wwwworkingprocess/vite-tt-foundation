@@ -27,12 +27,14 @@ export default memo(function PassengerStopDiagnostics({
   waiting,
   arrivals,
   pulseTick,
+  entityScale,
 }: Readonly<{
   nodes: VehicleSvgProjection['nodes'];
   representatives: ReadonlyMap<string, (typeof nodes)[number]>;
   waiting: ReadonlyMap<string, number>;
   arrivals: ReadonlyMap<string, number>;
   pulseTick: number | undefined;
+  entityScale: number;
 }>) {
   recordRepresentationProfile('passengerStops.render');
   useLayoutEffect(() => recordRepresentationProfile('passengerStops.commit'));
@@ -51,7 +53,7 @@ export default memo(function PassengerStopDiagnostics({
             data-has-waiting-passengers={count > 0}
             cx={node.cx}
             cy={node.cy}
-            r="1.15"
+            r={4 * entityScale}
             fill={count > 0 ? 'black' : 'silver'}
           />
         ) : null;
@@ -71,7 +73,7 @@ export default memo(function PassengerStopDiagnostics({
                 data-last-arrival-tick={arrivalTick}
                 cx={node.cx}
                 cy={node.cy}
-                r="3.2"
+                r={8 * entityScale}
                 fill="none"
                 stroke="gold"
               />
@@ -80,8 +82,10 @@ export default memo(function PassengerStopDiagnostics({
               <text
                 data-testid="stop-waiting-passenger-count"
                 data-waiting-passenger-count={count}
-                x={node.cx + 2}
-                y={node.cy - 2}
+                x={node.cx + 5 * entityScale}
+                y={node.cy - 5 * entityScale}
+                fontSize={11 * entityScale}
+                strokeWidth={0.5 * entityScale}
               >
                 {count}
               </text>

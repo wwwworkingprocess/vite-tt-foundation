@@ -1,4 +1,7 @@
-import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
+import type {
+  CanonicalScenario,
+  RouteId,
+} from '@torrevieja-tycoon/transport-domain';
 import { selectRoute, type GameSelection } from './game-selection.js';
 
 export function TransportRouteDock({
@@ -7,12 +10,18 @@ export function TransportRouteDock({
   ready,
   onSelectionChange,
   onAddBus,
+  focusedRouteId,
+  onFocusRoute,
+  onShowFullNetwork,
 }: Readonly<{
   scenario: CanonicalScenario;
   selection: GameSelection;
   ready: boolean;
   onSelectionChange: (selection: GameSelection) => void;
   onAddBus: () => void;
+  focusedRouteId?: RouteId | undefined;
+  onFocusRoute: (routeId: RouteId) => void;
+  onShowFullNetwork: () => void;
 }>) {
   const selectedRouteId =
     selection?.kind === 'route' ? selection.routeId : undefined;
@@ -20,7 +29,11 @@ export function TransportRouteDock({
     (route) => route.routeId === selectedRouteId,
   );
   return (
-    <section className="transport-route-dock" aria-label="Transport routes">
+    <section
+      className="transport-route-dock"
+      aria-label="Transport routes"
+      data-focused-route-id={focusedRouteId}
+    >
       <div
         className="transport-route-selector"
         role="group"
@@ -50,6 +63,18 @@ export function TransportRouteDock({
           <button type="button" disabled={!ready} onClick={onAddBus}>
             Add bus
           </button>
+          {focusedRouteId === selectedRoute.routeId ? (
+            <button type="button" onClick={onShowFullNetwork}>
+              Show full network
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => onFocusRoute(selectedRoute.routeId)}
+            >
+              Focus route
+            </button>
+          )}
         </div>
       ) : null}
     </section>

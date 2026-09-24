@@ -9,6 +9,12 @@ import {
 } from '@torrevieja-tycoon/transport-domain';
 
 export type TransportMapPoint = Readonly<{ x: number; y: number }>;
+export type TransportMapViewport = Readonly<{
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}>;
 export type TransportMapBounds = Readonly<{
   south: number;
   north: number;
@@ -75,6 +81,54 @@ const deepFreeze = <T>(value: T): T => {
   for (const child of Object.values(value)) deepFreeze(child);
   return Object.freeze(value);
 };
+
+export const fullTransportMapViewport: TransportMapViewport = Object.freeze({
+  minX: 0,
+  minY: 0,
+  maxX: 1,
+  maxY: 1,
+});
+
+const routeViewportPadding = 0.04;
+const routeViewportMinimumSpan = 0.04;
+
+const paddedAxis = (minimum: number, maximum: number) => {
+  const centre = (minimum + maximum) / 2;
+  const span = Math.max(maximum - minimum, routeViewportMinimumSpan);
+  const desiredMinimum = centre - span / 2 - routeViewportPadding;
+  const desiredMaximum = centre + span / 2 + routeViewportPadding;
+  const desiredSpan = Math.min(1, desiredMaximum - desiredMinimum);
+  const clampedMinimum = Math.max(0, Math.min(desiredMinimum, 1 - desiredSpan));
+  return [clampedMinimum, clampedMinimum + desiredSpan] as const;
+};
+
+export function deriveTransportRouteViewport(
+  projection: Pick<TransportMapProjection, 'edges'>,
+  routeId: RouteId,
+): TransportMapViewport | undefined {
+  const edges = projection.edges.filter((edge) => edge.routeId === routeId);
+  if (edges.length === 0) return undefined;
+  const points = edges.flatMap((edge) => [edge.from, edge.to]);
+  const [minX, maxX] = paddedAxis(
+    Math.min(...points.map((point) => point.x)),
+    Math.max(...points.map((point) => point.x)),
+  );
+  const [minY, maxY] = paddedAxis(
+    Math.min(...points.map((point) => point.y)),
+    Math.max(...points.map((point) => point.y)),
+  );
+  return deepFreeze({ minX, minY, maxX, maxY });
+}
+
+export function resolveTransportMapViewport(
+  projection: Pick<TransportMapProjection, 'edges'>,
+  routeId?: RouteId,
+): TransportMapViewport {
+  return routeId
+    ? (deriveTransportRouteViewport(projection, routeId) ??
+        fullTransportMapViewport)
+    : fullTransportMapViewport;
+}
 
 export function projectTransportMapPoint(
   bounds: TransportMapBounds,

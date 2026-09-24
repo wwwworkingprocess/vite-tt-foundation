@@ -15,6 +15,7 @@ import {
   hitTestCanvas2dSelection,
   projectCanvas2dPosition,
 } from './canvas2d-selection-model.js';
+import { deriveTransportRouteViewport } from './transport-map-projection.js';
 
 const root = join(
   import.meta.dirname,
@@ -34,6 +35,45 @@ const scenario = parseScenarioPackage({
   routes: json('routes.json'),
   presentation: json('presentation.json'),
   provenance: json('provenance.json'),
+});
+
+it('materializes and hit-tests the last drawn focused Route viewport', () => {
+  const index = createCanvas2dSelectionIndex(scenario);
+  const routeId = scenario.routes.routes[0]!.routeId;
+  const viewport = deriveTransportRouteViewport(index.map, routeId)!;
+  const full = createCanvas2dSelectionSnapshot(index, [], 200, 100);
+  const focused = createCanvas2dSelectionSnapshot(
+    index,
+    [],
+    200,
+    100,
+    undefined,
+    viewport,
+  );
+  const routeEdge = index.map.edges.find((edge) => edge.routeId === routeId)!;
+  const fullPoint = projectCanvas2dPosition(routeEdge.from, 200, 100);
+  const focusedPoint = projectCanvas2dPosition(
+    routeEdge.from,
+    200,
+    100,
+    viewport,
+  );
+  expect(focusedPoint).not.toEqual(fullPoint);
+  expect(
+    focused.routeEdges.find(({ edgeId }) => edgeId === routeEdge.edgeId)!.from,
+  ).toEqual(focusedPoint);
+  expect(focused.viewport).toBe(viewport);
+  expect(full.viewport).not.toBe(viewport);
+  const focusedStop = focused.stopPoints.find(
+    ({ stopPlaceId }) =>
+      stopPlaceId ===
+      index.map.nodes.find(
+        ({ stopNodeId }) => stopNodeId === routeEdge.fromStopNodeId,
+      )!.stopPlaceId,
+  )!;
+  expect(
+    hitTestCanvas2dSelection(focused, focusedStop.x, focusedStop.y),
+  ).toMatchObject({ kind: 'stop', stopPlaceId: focusedStop.stopPlaceId });
 });
 
 const loadScenario = (scenarioRoot: string) => {

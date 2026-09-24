@@ -9,14 +9,16 @@ import {
   createTransportMapProjection,
   projectTransportMapPoint,
   projectTransportMapVehicles,
+  fullTransportMapViewport,
   type TransportMapPoint,
+  type TransportMapViewport,
 } from '../representation/transport-map-projection.js';
 
 type GeographicPosition = Readonly<{ latitude: number; longitude: number }>;
 type SvgPosition = Readonly<{ cx: number; cy: number }>;
 
 export interface VehicleSvgProjection {
-  readonly viewBox: '0 0 100 100';
+  readonly viewBox: string;
   readonly nodes: readonly Readonly<
     SvgPosition &
       GeographicPosition & {
@@ -67,9 +69,18 @@ export function createScenarioSvgPositionProjector(
   return (position) => svgPoint(projectTransportMapPoint(map.bounds, position));
 }
 
+export function transportMapViewportSvgViewBox(
+  viewport: TransportMapViewport = fullTransportMapViewport,
+) {
+  return viewport === fullTransportMapViewport
+    ? '0 0 100 100'
+    : `${5 + viewport.minX * 90} ${5 + viewport.minY * 90} ${(viewport.maxX - viewport.minX) * 90} ${(viewport.maxY - viewport.minY) * 90}`;
+}
+
 export function projectVehicleMovementSvg(
   scenario: CanonicalScenario,
   fleet: readonly VehicleState[],
+  viewport: TransportMapViewport = fullTransportMapViewport,
 ): VehicleSvgProjection {
   const map = createTransportMapProjection(scenario);
   let staticProjection = staticProjections.get(scenario);
@@ -125,7 +136,7 @@ export function projectVehicleMovementSvg(
     ...svgPoint(vehicle.point),
   }));
   return freeze({
-    viewBox: '0 0 100 100',
+    viewBox: transportMapViewportSvgViewBox(viewport),
     nodes: staticProjection.nodes,
     edges: staticProjection.edges,
     vehicles: freeze(vehicles),

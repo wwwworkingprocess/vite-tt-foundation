@@ -194,7 +194,26 @@ the existing command boundary. Route selection and highlighting survive family
 swaps, while stale selection is cleared on authoritative scenario replacement.
 DOM2D and Canvas highlight every directed edge of the selected route without
 making edges focusable or selectable. D3D exposes no empty action bar. Multi-view
-selection UX and D3D Map remain deferred representation milestones.
+selection UX and D3D Map remain deferred representation milestones. Selected
+Routes now offer an ephemeral shared Map viewport action: DOM2D and Canvas2D
+can fit the complete canonical multi-pattern Route topology or return to the
+exact full-network viewport without changing `GameSelection` or filtering Map
+content. Renderer-neutral directed-edge bounds use deterministic normalized
+padding and safe minimum spans; each renderer retains its own established
+materialization. Focus follows a replacement Route selection, survives StopPlace and Vehicle
+selection and their detail-modal open/close lifecycle, clears on explicit
+Show full network, clear selection, or authoritative scenario replacement,
+survives same-scenario timeline changes and family swaps, and is never
+persisted. This is a bounded
+full-network/selected-Route choice, not arbitrary pan or zoom. D3D remains
+Main-only and does not materialize Map focus.
+
+DOM2D and Canvas2D share deliberate normal/mini presentation metrics for Map
+entities. Geographic Route and population geometry continues to scale with the
+viewport, while StopPlace, Vehicle, passenger-label, and selection glyphs remain
+stable in screen space through Route focus and renderer resize. Vehicle glyphs
+are deliberately more prominent than StopPlace glyphs while retaining the
+existing renderer-independent selection and interaction semantics.
 
 A future D3D Map adds `map` to D3D's supported views; it does not create a new
 renderer family. No view-switch control exists while every family supports only
@@ -218,8 +237,9 @@ the same cadence policy rather than browser display refresh. The expanded inform
 uses one compact five-metric row and can collapse to its accessible heading row.
 
 Passenger StopPlace diagnostics use silver for empty and black for waiting;
-vehicle markers use canonical route presentation colours with a separate
-selection outline and centered onboard counts. The diagnostic command
+vehicle markers use canonical route presentation colours with distinct
+screen-space prominence, separate selection feedback, and centered onboard
+counts. The diagnostic command
 `yarn benchmark:scenario-startup` separates production startup-path work from
 standalone diagnostic decomposition without machine-dependent timing thresholds.
 StopPlace catchments and the passenger-demand plan are application preparation;

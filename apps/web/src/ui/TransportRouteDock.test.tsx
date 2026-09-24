@@ -35,6 +35,8 @@ const styles = readFileSync(
 it('uses GameSelection for route choice and exposes Add bus only for that route', () => {
   const onSelectionChange = vi.fn();
   const onAddBus = vi.fn();
+  const onFocusRoute = vi.fn();
+  const onShowFullNetwork = vi.fn();
   const view = render(
     <TransportRouteDock
       scenario={scenario}
@@ -42,6 +44,8 @@ it('uses GameSelection for route choice and exposes Add bus only for that route'
       ready
       onSelectionChange={onSelectionChange}
       onAddBus={onAddBus}
+      onFocusRoute={onFocusRoute}
+      onShowFullNetwork={onShowFullNetwork}
     />,
   );
   expect(screen.queryByRole('button', { name: 'Add bus' })).toBeNull();
@@ -64,6 +68,8 @@ it('uses GameSelection for route choice and exposes Add bus only for that route'
       ready={false}
       onSelectionChange={onSelectionChange}
       onAddBus={onAddBus}
+      onFocusRoute={onFocusRoute}
+      onShowFullNetwork={onShowFullNetwork}
     />,
   );
   expect(routeButton).toHaveAttribute('aria-pressed', 'true');
@@ -91,6 +97,8 @@ it('uses GameSelection for route choice and exposes Add bus only for that route'
     /\.selected-route-actions\s*\{[^}]*flex:\s*0 0 auto;/s,
   );
   expect(screen.getByRole('button', { name: 'Add bus' })).toBeDisabled();
+  fireEvent.click(screen.getByRole('button', { name: 'Focus route' }));
+  expect(onFocusRoute).toHaveBeenCalledWith(routeB.routeId);
   view.rerender(
     <TransportRouteDock
       scenario={scenario}
@@ -98,8 +106,14 @@ it('uses GameSelection for route choice and exposes Add bus only for that route'
       ready
       onSelectionChange={onSelectionChange}
       onAddBus={onAddBus}
+      focusedRouteId={routeB.routeId}
+      onFocusRoute={onFocusRoute}
+      onShowFullNetwork={onShowFullNetwork}
     />,
   );
   fireEvent.click(screen.getByRole('button', { name: 'Add bus' }));
   expect(onAddBus).toHaveBeenCalledOnce();
+  expect(screen.queryByRole('button', { name: 'Focus route' })).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Show full network' }));
+  expect(onShowFullNetwork).toHaveBeenCalledOnce();
 });

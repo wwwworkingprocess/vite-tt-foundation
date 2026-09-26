@@ -1,3 +1,4 @@
+import { ControlIcon } from './ControlIcon.js';
 import {
   lazy,
   type MouseEvent as ReactMouseEvent,
@@ -106,26 +107,51 @@ export function GameShell({
   return (
     <main className="game-shell" data-testid="game-shell">
       <nav className="top-navigation" data-testid="top-navigation">
-        <h1 className="brand">Torrevieja Tycoon</h1>
+        <h1 className="brand">
+          Torrevieja <span>Tycoon</span>
+        </h1>
         <div className="navigation-scenario">{scenarioControl}</div>
         <div className="navigation-actions">
-          <button onClick={open('project')}>Project info</button>
-          <button onClick={open('simulation')}>Simulation controls</button>
-          <button onClick={open('session')}>Load</button>
+          <button onClick={open('project')}>
+            <ControlIcon name="info" />
+            Project info
+          </button>
+          <button onClick={open('simulation')}>
+            <ControlIcon name="controls" />
+            Simulation controls
+          </button>
+          <button onClick={open('session')}>
+            <ControlIcon name="folder" />
+            Load
+          </button>
           <button disabled={saveDisabled} onClick={() => void save()}>
+            <ControlIcon name="save" />
             Save
           </button>
-          <button disabled={restartDisabled} onClick={onRestart}>
+          <button
+            className="button-disruptive"
+            disabled={restartDisabled}
+            onClick={onRestart}
+          >
+            <ControlIcon name="restart" />
             Restart
           </button>
-          <button onClick={onPauseResume}>
+          <button className="button-primary" onClick={onPauseResume}>
+            <ControlIcon name={pacingStatus === 'paused' ? 'play' : 'pause'} />
             {pacingStatus === 'paused' ? 'Resume' : 'Pause'}
           </button>
         </div>
         <div className="navigation-status" aria-live="polite">
-          Session: {status} · Pacing: {pacingStatus} · Persistence:{' '}
-          {persistenceStatus}
-          {saveFeedback ? ` · ${saveFeedback}` : ''}
+          <span>
+            Session: <b>{status}</b>
+          </span>
+          <span>
+            Pacing: <b>{pacingStatus}</b>
+          </span>
+          <span>
+            Persistence: <b>{persistenceStatus}</b>
+          </span>
+          {saveFeedback ? <span>{saveFeedback}</span> : null}
         </div>
       </nav>
       <RepresentationWorkspace
@@ -148,6 +174,7 @@ export function GameShell({
               aria-expanded={dockExpanded}
               onClick={() => setDockExpanded((current) => !current)}
             >
+              <ControlIcon name={dockExpanded ? 'collapse' : 'expand'} />
               {dockExpanded ? 'Collapse information' : 'Expand information'}
             </button>
           </div>

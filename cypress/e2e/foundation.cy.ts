@@ -486,3 +486,50 @@ describe('foundation screen', () => {
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
   });
 });
+
+describe('responsive visual shell', () => {
+  it('keeps the mini, route controls, and detail close action usable across viewports', () => {
+    cy.visit('/');
+    startDefaultGame();
+    for (const [width, height] of [
+      [1000, 660],
+      [390, 844],
+      [768, 800],
+      [1440, 900],
+    ] as const) {
+      cy.viewport(width, height);
+      cy.get('[aria-label="Routes"] [data-route-id="legacy-B"]').click();
+      cy.get('[data-testid="secondary-minimap"]').should(($mini) => {
+        const rect = $mini[0]!.getBoundingClientRect();
+        expect(rect.left).to.be.at.least(0);
+        expect(rect.right).to.be.at.most(width + 1);
+        expect(rect.width / rect.height).to.be.closeTo(4 / 3, 0.02);
+      });
+      cy.get('[aria-label="Routes"]').should(($routes) => {
+        expect($routes[0]!.getBoundingClientRect().height).to.be.at.least(32);
+      });
+      cy.contains('button', 'Focus route').click();
+      cy.get('[data-testid="vehicle-movement-svg"]').should(
+        'have.attr',
+        'data-map-viewport',
+        'route',
+      );
+      cy.get('[aria-label="Select stop San Luis"]')
+        .focus()
+        .should('have.focus');
+      cy.press(Cypress.Keyboard.Keys.ENTER);
+      cy.get('[role="dialog"]')
+        .should('be.visible')
+        .contains('button', 'Close')
+        .click();
+      cy.get('[data-testid="vehicle-movement-svg"]').should(
+        'have.attr',
+        'data-map-viewport',
+        'route',
+      );
+      cy.get('[aria-label="Routes"] [data-route-id="legacy-B"]').click();
+      cy.contains('button', 'Show full network').click();
+      cy.screenshot(`visual-shell-${width}x${height}`);
+    }
+  });
+});

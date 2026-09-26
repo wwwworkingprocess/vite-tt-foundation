@@ -35,6 +35,12 @@ it('composes both shared Map actions under the primary-only boundary', () => {
       />
     </RepresentationModeProvider>,
   );
+  expect(
+    screen.getByRole('button', { name: 'Hide population' }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  expect(
+    screen.getByRole('button', { name: 'Show passengers' }),
+  ).toHaveAttribute('aria-pressed', 'false');
   fireEvent.click(screen.getByRole('button', { name: 'Hide population' }));
   fireEvent.click(screen.getByRole('button', { name: 'Show passengers' }));
   expect(population).toHaveBeenCalledWith(false);

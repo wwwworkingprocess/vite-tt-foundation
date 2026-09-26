@@ -1,3 +1,4 @@
+import { ControlIcon } from './ControlIcon.js';
 import type { ReactNode } from 'react';
 import type { TransportSaveSummary } from '../transport-simulation/transport-save-record.js';
 import { formatLastPlayed } from './open-screen-model.js';
@@ -34,41 +35,65 @@ export default function OpenScreen({
     state === 'booting' || state === 'creating' || state === 'restoring';
   return (
     <main className="open-screen" data-testid="open-screen" data-state={state}>
-      <h1>Torrevieja Tycoon</h1>
-      <p>Choose a city and transport scenario, or continue your saved game.</p>
-      {resumableSave ? (
-        <section aria-labelledby="continue-heading">
-          <h2 id="continue-heading">Continue</h2>
-          <p>{resumableSave.label ?? resumableSave.scenarioId}</p>
-          <p>Saved at simulation tick {resumableSave.sourceSimulationTick}</p>
-          <p>{formatLastPlayed(resumableSave.updatedAtUtcMs, nowUtcMs)}</p>
-          <button
-            disabled={busy || !resolverReady}
-            onClick={() => onContinue(resumableSave)}
+      <header className="open-screen-heading">
+        <p className="eyebrow">City transport simulation</p>
+        <h1>
+          Torrevieja <span>Tycoon</span>
+        </h1>
+        <p>
+          Choose a city and transport scenario, or continue your saved game.
+        </p>
+        <div className="entry-network" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+        </div>
+      </header>
+      <div className="open-screen-sessions">
+        {resumableSave ? (
+          <section
+            className="continue-session"
+            aria-labelledby="continue-heading"
           >
-            Continue saved game
+            <h2 id="continue-heading">Continue</h2>
+            <p>{resumableSave.label ?? resumableSave.scenarioId}</p>
+            <p>Saved at simulation tick {resumableSave.sourceSimulationTick}</p>
+            <p>{formatLastPlayed(resumableSave.updatedAtUtcMs, nowUtcMs)}</p>
+            <button
+              disabled={busy || !resolverReady}
+              onClick={() => onContinue(resumableSave)}
+            >
+              <ControlIcon name="play" />
+              Continue saved game
+            </button>
+          </section>
+        ) : null}
+        {unavailableSaveMessage ? (
+          <p role="status">{unavailableSaveMessage}</p>
+        ) : null}
+        <section className="new-session" aria-labelledby="new-game-heading">
+          <h2 id="new-game-heading">New game</h2>
+          {scenarioChooser}
+          <button
+            className="button-primary"
+            disabled={busy || !selectedScenarioReady}
+            onClick={onCreate}
+          >
+            <ControlIcon name="plus" />
+            Start new game
           </button>
         </section>
-      ) : null}
-      {unavailableSaveMessage ? (
-        <p role="status">{unavailableSaveMessage}</p>
-      ) : null}
-      <section aria-labelledby="new-game-heading">
-        <h2 id="new-game-heading">New game</h2>
-        {scenarioChooser}
-        <button disabled={busy || !selectedScenarioReady} onClick={onCreate}>
-          Start new game
-        </button>
-      </section>
-      {message ? <p role="alert">{message}</p> : null}
-      {state === 'recoverable-failure' && onRetryBootstrap ? (
-        <button onClick={onRetryBootstrap}>Retry loading</button>
-      ) : null}
-      {state === 'booting' ? (
-        <p>Loading saved sessions and scenarios...</p>
-      ) : null}
-      {state === 'creating' ? <p>Creating authoritative game...</p> : null}
-      {state === 'restoring' ? <p>Restoring authoritative game...</p> : null}
+        {message ? <p role="alert">{message}</p> : null}
+        {state === 'recoverable-failure' && onRetryBootstrap ? (
+          <button onClick={onRetryBootstrap}>Retry loading</button>
+        ) : null}
+        {state === 'booting' ? (
+          <p>Loading saved sessions and scenarios...</p>
+        ) : null}
+        {state === 'creating' ? <p>Creating authoritative game...</p> : null}
+        {state === 'restoring' ? <p>Restoring authoritative game...</p> : null}
+      </div>
     </main>
   );
 }

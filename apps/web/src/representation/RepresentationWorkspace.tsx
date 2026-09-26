@@ -1,3 +1,4 @@
+import { ControlIcon } from '../ui/ControlIcon.js';
 import {
   type FocusEvent,
   type ReactNode,
@@ -167,6 +168,9 @@ export function RepresentationWorkspace({
               {renderFamily(secondaryFamily)}
             </RepresentationModeProvider>
           </section>
+          <span className="mini-representation-caption" aria-hidden="true">
+            {labelForFamily(secondaryFamily)} · {labelForView(secondaryView)}
+          </span>
           <button
             type="button"
             className="mini-representation-selector"
@@ -181,6 +185,7 @@ export function RepresentationWorkspace({
                 className="swap-visualizations"
                 onClick={confirmSwap}
               >
+                <ControlIcon name="swap" />
                 Swap visualizations
               </button>
               <button type="button" onClick={replaceMini}>
@@ -245,6 +250,7 @@ function RepresentationModalLayer({
         <header className="representation-modal-header">
           <h2 id={titleId}>{title}</h2>
           <button ref={close} type="button" onClick={onClose}>
+            <ControlIcon name="close" />
             Close
           </button>
         </header>

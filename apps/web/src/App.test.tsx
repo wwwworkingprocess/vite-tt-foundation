@@ -1133,6 +1133,7 @@ describe('foundation screen', () => {
       ),
     );
     await pauseSimulation();
+    const routeControls = within(screen.getByLabelText('Transport routes'));
     expect(
       within(screen.getByTestId('route-list')).getByText(
         'A — Torrevieja - La Mata',
@@ -1154,7 +1155,7 @@ describe('foundation screen', () => {
     ).toBeNull();
     await addBus('legacy-B');
     expect(
-      screen
+      routeControls
         .getByRole('group', { name: 'Routes' })
         .querySelector('[data-route-id="legacy-B"]'),
     ).toHaveAttribute('aria-pressed', 'true');
@@ -1170,16 +1171,16 @@ describe('foundation screen', () => {
       'data-map-viewport',
       'full',
     );
-    fireEvent.click(screen.getByRole('button', { name: 'Focus route' }));
+    fireEvent.click(routeControls.getByRole('button', { name: 'Focus route' }));
     expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
       'data-map-viewport',
       'route',
     );
     expect(
-      screen.getByRole('button', { name: 'Show full network' }),
+      routeControls.getByRole('button', { name: 'Show full network' }),
     ).toBeInTheDocument();
     fireEvent.click(
-      screen
+      routeControls
         .getByRole('group', { name: 'Routes' })
         .querySelector('[data-route-id="legacy-C"]')!,
     );
@@ -1191,7 +1192,9 @@ describe('foundation screen', () => {
       'data-map-viewport',
       'route',
     );
-    const selectedStop = screen.getAllByRole('button', {
+    const selectedStop = within(
+      screen.getByTestId('vehicle-movement-svg'),
+    ).getAllByRole('button', {
       name: /Select stop/,
     })[0]!;
     fireEvent.click(selectedStop);
@@ -1200,7 +1203,7 @@ describe('foundation screen', () => {
       'route',
     );
     expect(
-      screen
+      routeControls
         .getByRole('group', { name: 'Routes' })
         .querySelector('[data-route-id="legacy-C"]'),
     ).toHaveAttribute('aria-pressed', 'false');
@@ -1236,7 +1239,7 @@ describe('foundation screen', () => {
       'true',
     );
     fireEvent.click(
-      screen
+      routeControls
         .getByRole('group', { name: 'Routes' })
         .querySelector('[data-route-id="legacy-B"]')!,
     );
@@ -1256,7 +1259,7 @@ describe('foundation screen', () => {
       screen.getByRole('button', { name: 'Swap visualizations' }),
     );
     expect(
-      screen
+      routeControls
         .getByRole('group', { name: 'Routes' })
         .querySelector('[data-route-id="legacy-B"]'),
     ).toHaveAttribute('aria-pressed', 'true');
@@ -1264,13 +1267,15 @@ describe('foundation screen', () => {
       'data-map-viewport',
       'route',
     );
-    fireEvent.click(screen.getByRole('button', { name: 'Show full network' }));
+    fireEvent.click(
+      routeControls.getByRole('button', { name: 'Show full network' }),
+    );
     expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
       'data-map-viewport',
       'full',
     );
     expect(
-      screen
+      routeControls
         .getByRole('group', { name: 'Routes' })
         .querySelector('[data-route-id="legacy-B"]'),
     ).toHaveAttribute('aria-pressed', 'true');

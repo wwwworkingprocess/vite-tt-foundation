@@ -318,8 +318,10 @@ A production passenger-aware visualization is not complete. The dock exposes
 the exact global five-metric summary and compact selected-object context; rich
 StopPlace and Vehicle modal projections expose exact waiting, onboard, capacity,
 alighting, destination-access, completion, and bounded current-tick authority as
-applicable. Smooth vehicle interpolation, final visual design, and performance
-acceptance remain product work.
+applicable. The browser shell uses a shared Mediterranean cartographic visual
+system: maritime navigation, paper surfaces, compact route controls, responsive
+entry and detail layouts, and consistent DOM2D/Canvas2D Map chrome. Smooth vehicle
+interpolation and richer-scene performance acceptance remain product work.
 
 ## Validation command tiers
 

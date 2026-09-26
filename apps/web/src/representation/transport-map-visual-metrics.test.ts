@@ -35,7 +35,7 @@ describe('transport Map entity visual metrics', () => {
         );
         expect((3 * full) / fullUserUnit).toBeCloseTo(metrics.stopRadius);
         expect((3 * route) / routeUserUnit).toBeCloseTo(metrics.stopRadius);
-        expect((5 * full) / fullUserUnit).toBeCloseTo(metrics.vehicleRadius);
+        expect((6 * full) / fullUserUnit).toBeCloseTo(metrics.vehicleRadius);
         expect((6 * route) / routeUserUnit).toBeCloseTo(metrics.vehicleRadius);
         expect((11 * route) / routeUserUnit).toBeCloseTo(
           metrics.passengerLabelFontSize,

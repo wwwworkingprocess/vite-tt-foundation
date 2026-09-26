@@ -46,6 +46,22 @@ const readSave = (win: Window, saveId: string) =>
     };
   });
 type VehicleSvgState = readonly Readonly<Record<string, string | null>>[];
+type VehicleMovementState = Readonly<{
+  vehicleId: string | null;
+  movementKind: string | null;
+  edgeId: string | null;
+  progressNumerator: string | null;
+  progressDenominator: string | null;
+}>;
+
+const vehicleMovementState = (element: Element): VehicleMovementState => ({
+  vehicleId: element.getAttribute('data-vehicle-id'),
+  movementKind: element.getAttribute('data-movement-kind'),
+  edgeId: element.getAttribute('data-edge-id'),
+  progressNumerator: element.getAttribute('data-progress-numerator'),
+  progressDenominator: element.getAttribute('data-progress-denominator'),
+});
+
 const vehicleSvgState = (): Cypress.Chainable<VehicleSvgState> =>
   cy.get('[data-testid="vehicle-position"]').then(($vehicles) =>
     [...$vehicles].map((vehicle) => ({
@@ -73,6 +89,26 @@ const expectVehicleSvgToChange = (expected: VehicleSvgState) =>
     }));
     expect(current).not.to.deep.equal(expected);
   });
+const expectVehicleSvgToMatchAuthority = () =>
+  cy.get('[data-testid^="vehicle-row-"]').then(($rows) => {
+    const authoritative = new Map(
+      [...$rows].map((row) => {
+        const state = vehicleMovementState(row);
+        return [state.vehicleId, state] as const;
+      }),
+    );
+
+    return cy.get('[data-testid="vehicle-position"]').should(($vehicles) => {
+      expect($vehicles).to.have.length($rows.length);
+      for (const vehicle of $vehicles) {
+        const state = vehicleMovementState(vehicle);
+        expect(authoritative.get(state.vehicleId)).to.deep.equal(state);
+      }
+    });
+  });
+
+const vehicleSvgStateAtAuthority = (): Cypress.Chainable<VehicleSvgState> =>
+  expectVehicleSvgToMatchAuthority().then(() => vehicleSvgState());
 const restoreScenario = (scenarioId: string) => {
   openSessionControls();
   cy.contains('[data-save-id]', scenarioId)
@@ -201,7 +237,7 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="scenario-coordinate"]').then(($coordinate) => {
       savedCoordinate = $coordinate.text();
     });
-    vehicleSvgState().then((snapshot) => {
+    vehicleSvgStateAtAuthority().then((snapshot) => {
       savedSvg = snapshot;
       cy.wait(350);
       expectVehicleSvg(snapshot);
@@ -273,7 +309,7 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.get('[data-testid="scenario-coordinate"]').then(($coordinate) => {
       secondarySavedCoordinate = $coordinate.text();
     });
-    vehicleSvgState().then((snapshot) => {
+    vehicleSvgStateAtAuthority().then((snapshot) => {
       secondarySavedSvg = snapshot;
       cy.wait(350);
       expectVehicleSvg(snapshot);
@@ -456,7 +492,7 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.then(() => expectVehicleSvgToChange(secondarySavedSvg));
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
-    vehicleSvgState().then((snapshot) => {
+    vehicleSvgStateAtAuthority().then((snapshot) => {
       cy.wait(350);
       expectVehicleSvg(snapshot);
     });

@@ -1,3 +1,4 @@
+import { ControlIcon } from './ControlIcon.js';
 import {
   type KeyboardEvent,
   type ReactNode,
@@ -74,6 +75,7 @@ export default function AccessibleDialog({
             onClick={onClose}
             aria-label={`Close ${title}`}
           >
+            <ControlIcon name="close" />
             Close
           </button>
         </header>

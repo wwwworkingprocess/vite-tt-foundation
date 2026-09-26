@@ -30,7 +30,7 @@ export function ScenarioPanel(props: {
     selectedDescriptor?.primarySettlementId ?? groups[0]?.cityId;
   const selectedGroup = groups.find(({ cityId }) => cityId === selectedCityId);
   return (
-    <section aria-labelledby="scenario-title">
+    <section className="scenario-panel" aria-labelledby="scenario-title">
       <h2 id="scenario-title">Transport scenario</h2>
       <p data-testid="scenario-status">
         Scenario status: {state.status}

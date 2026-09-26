@@ -303,7 +303,7 @@ export function Canvas2dRepresentation({
         const token = beginRepresentationProfile('canvas2d.draw');
         context.setTransform(dpr, 0, 0, dpr, 0, 0);
         context.clearRect(0, 0, width, height);
-        context.fillStyle = '#0b2533';
+        context.fillStyle = '#faf8f2';
         context.fillRect(0, 0, width, height);
         const currentInput = input.current;
         if (currentInput.populationVisible) {
@@ -315,9 +315,9 @@ export function Canvas2dRepresentation({
             currentInput.viewport,
           );
           populationMaterialization.current = materialization;
-          context.fillStyle = '#e88424';
+          context.fillStyle = '#c6a66b';
           for (const cell of materialization.rectangles) {
-            context.globalAlpha = cell.opacity;
+            context.globalAlpha = cell.opacity * 0.55;
             context.fillRect(cell.x, cell.y, cell.width, cell.height);
           }
           context.globalAlpha = 1;
@@ -330,14 +330,15 @@ export function Canvas2dRepresentation({
           lastDrawn.current,
           currentInput.viewport,
         );
-        context.lineWidth = 1.5;
+        context.lineWidth = 1.75;
+        context.lineCap = 'round';
         let routeArrowheads = 0;
         for (const edge of snapshot.routeEdges) {
           const selected =
             currentInput.selection?.kind === 'route' &&
             currentInput.selection.routeId === edge.routeId;
           context.strokeStyle = selected ? '#ffd166' : edge.color;
-          context.lineWidth = selected ? 4 : 1.5;
+          context.lineWidth = selected ? 4 : 1.75;
           context.beginPath();
           context.moveTo(edge.from.x, edge.from.y);
           context.lineTo(edge.to.x, edge.to.y);
@@ -356,7 +357,7 @@ export function Canvas2dRepresentation({
         if (currentInput.passengersVisible) {
           for (const point of snapshot.stopPoints) {
             const count = currentInput.waiting.get(point.stopPlaceId) ?? 0;
-            context.fillStyle = count > 0 ? 'black' : 'silver';
+            context.fillStyle = count > 0 ? '#183842' : '#6c8589';
             context.beginPath();
             context.arc(
               point.x,
@@ -390,7 +391,9 @@ export function Canvas2dRepresentation({
               }
             }
         }
-        context.fillStyle = '#c0c7ca';
+        context.fillStyle = '#faf8f2';
+        context.strokeStyle = '#6c8589';
+        context.lineWidth = currentInput.visualMetrics.entityStrokeWidth;
         for (const point of snapshot.stopPoints) {
           context.beginPath();
           context.arc(
@@ -401,17 +404,26 @@ export function Canvas2dRepresentation({
             Math.PI * 2,
           );
           context.fill();
+          context.stroke();
         }
-        context.fillStyle = '#ef6a4c';
-        for (const point of snapshot.vehiclePoints)
+        context.fillStyle = '#c6533b';
+        context.strokeStyle = '#183842';
+        for (const point of snapshot.vehiclePoints) {
           context.fillRect(
             point.x - currentInput.visualMetrics.vehicleRadius,
             point.y - currentInput.visualMetrics.vehicleRadius,
             currentInput.visualMetrics.vehicleRadius * 2,
             currentInput.visualMetrics.vehicleRadius * 2,
           );
+          context.strokeRect(
+            point.x - currentInput.visualMetrics.vehicleRadius,
+            point.y - currentInput.visualMetrics.vehicleRadius,
+            currentInput.visualMetrics.vehicleRadius * 2,
+            currentInput.visualMetrics.vehicleRadius * 2,
+          );
+        }
         if (currentInput.passengersVisible) {
-          context.fillStyle = 'black';
+          context.fillStyle = '#183842';
           context.font = `700 ${currentInput.visualMetrics.passengerLabelFontSize}px sans-serif`;
           for (const point of snapshot.keyboardCandidates) {
             if (point.kind !== 'stop') continue;

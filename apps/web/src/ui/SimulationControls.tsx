@@ -54,6 +54,44 @@ export default function SimulationControls({
       aria-label="Authoritative transport Worker status"
       data-testid="simulation-controls-content"
     >
+      <section
+        className="pacing-controls"
+        aria-labelledby="pacing-heading"
+        aria-label="Foundation pacing controls"
+      >
+        <h3 id="pacing-heading">Pacing</h3>
+        {(['paused', 'normal', 'fast', 'maximum'] as const).map((mode) => (
+          <button
+            key={mode}
+            disabled={!ready}
+            onClick={run(() => onMode?.(mode) ?? Promise.resolve())}
+          >
+            {mode === 'paused'
+              ? 'Pause'
+              : mode === 'normal'
+                ? 'Normal 20×'
+                : mode === 'fast'
+                  ? 'Fast 50×'
+                  : 'Maximum 60×'}
+          </button>
+        ))}
+        <button disabled={!ready} onClick={run(onBonus)}>
+          Grant demo 2× bonus
+        </button>
+        <p data-testid="pacing-rate">
+          Effective rate: {pacing?.effectiveRate ?? 0}×
+        </p>
+        <p data-testid="pacing-status">
+          Pacing status: {pacing?.status ?? 'idle'}
+          {pacing?.message ? `: ${pacing.message}` : ''}
+        </p>
+        <p data-testid="bonus-ticks">
+          Bonus ticks remaining: {pacing?.remainingDoubleSpeedBonusTicks ?? 0}
+        </p>
+        <p data-testid="pacing-credit">
+          Pacing credit: {pacing?.creditGameMicroseconds ?? 0}
+        </p>
+      </section>
       <section aria-labelledby="authority-status-heading">
         <h3 id="authority-status-heading">Authority status</h3>
         <p data-testid="worker-status">Worker status: {status}</p>
@@ -221,43 +259,6 @@ export default function SimulationControls({
       {authoritativePackageStatus === 'failed' ? (
         <p role="alert">{authoritativePackageMessage}</p>
       ) : null}
-      <section
-        aria-labelledby="pacing-heading"
-        aria-label="Foundation pacing controls"
-      >
-        <h3 id="pacing-heading">Pacing</h3>
-        {(['paused', 'normal', 'fast', 'maximum'] as const).map((mode) => (
-          <button
-            key={mode}
-            disabled={!ready}
-            onClick={run(() => onMode?.(mode) ?? Promise.resolve())}
-          >
-            {mode === 'paused'
-              ? 'Pause'
-              : mode === 'normal'
-                ? 'Normal 20×'
-                : mode === 'fast'
-                  ? 'Fast 50×'
-                  : 'Maximum 60×'}
-          </button>
-        ))}
-        <button disabled={!ready} onClick={run(onBonus)}>
-          Grant demo 2× bonus
-        </button>
-        <p data-testid="pacing-rate">
-          Effective rate: {pacing?.effectiveRate ?? 0}×
-        </p>
-        <p data-testid="pacing-status">
-          Pacing status: {pacing?.status ?? 'idle'}
-          {pacing?.message ? `: ${pacing.message}` : ''}
-        </p>
-        <p data-testid="bonus-ticks">
-          Bonus ticks remaining: {pacing?.remainingDoubleSpeedBonusTicks ?? 0}
-        </p>
-        <p data-testid="pacing-credit">
-          Pacing credit: {pacing?.creditGameMicroseconds ?? 0}
-        </p>
-      </section>
     </div>
   );
 }

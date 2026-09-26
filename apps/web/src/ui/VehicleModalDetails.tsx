@@ -66,9 +66,15 @@ export default function VehicleModalDetails({
       <p>Completed cycles {vehicle.completedRouteCycles ?? 0}</p>
       <p>Pattern run {operation?.patternRunSequence ?? 'unavailable'}</p>
       <p>Stop call {operation?.stopCallSequence ?? 'unavailable'}</p>
-      <p>Capacity {load?.passengerCapacity ?? 0}</p>
-      <p>Occupancy {load?.onboardPassengerCount ?? 0}</p>
-      <p>Remaining {load?.remainingPassengerCapacity ?? 0}</p>
+      <p className="vehicle-load-metric">
+        Capacity <strong>{load?.passengerCapacity ?? 0}</strong>
+      </p>
+      <p className="vehicle-load-metric">
+        Occupancy <strong>{load?.onboardPassengerCount ?? 0}</strong>
+      </p>
+      <p className="vehicle-load-metric">
+        Remaining <strong>{load?.remainingPassengerCapacity ?? 0}</strong>
+      </p>
       <p>
         Onboard groups:{' '}
         {onboard

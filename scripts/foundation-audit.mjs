@@ -322,6 +322,32 @@ export function canvasRepresentationViolations(text) {
     violations.push('renderer-coupling');
   return violations;
 }
+export function d3dRepresentationViolations(text) {
+  const violations = [];
+  const runtimeText = text.replace(
+    /import\s+type[\s\S]*?from\s+['"][^'"]+['"];?/g,
+    '',
+  );
+  if (/\bDate\b/.test(text)) violations.push('date-authority');
+  if (/Math\.random/.test(text)) violations.push('randomness');
+  if (/\brequestAnimationFrame\b/.test(text))
+    violations.push('private-animation-loop');
+  if (/\b(?:setInterval|clearInterval)\b/.test(text))
+    violations.push('private-interval');
+  if (
+    /from\s+['"][^'"]*(?:@torrevieja-tycoon\/simulation|transport-simulation|packages\/simulation)[^'"]*['"]/.test(
+      runtimeText,
+    )
+  )
+    violations.push('simulation-import');
+  if (
+    /from\s+['"][^'"]*(?:persistence|transport-representation)[^'"]*['"]/.test(
+      runtimeText,
+    )
+  )
+    violations.push('adapter-coupling');
+  return violations;
+}
 export function nodeBuiltinImports(text) {
   const sourceFile = parse(text);
   const builtins = new Set(
@@ -614,6 +640,18 @@ for (const canvasRepresentationFile of [
       `${canvasRepresentationFile} violates Canvas representation ownership: ${canvasViolations.join(', ')}.`,
     );
 }
+for (const d3dRepresentationFile of [
+  'apps/web/src/representation/D3dMapRepresentation.tsx',
+  'apps/web/src/representation/d3d-map-model.ts',
+]) {
+  const violations = d3dRepresentationViolations(
+    await source(d3dRepresentationFile),
+  );
+  if (violations.length)
+    fail(
+      `${d3dRepresentationFile} violates D3D representation ownership: ${violations.join(', ')}.`,
+    );
+}
 const transportMapProjectionSource = await source(
   'apps/web/src/representation/transport-map-projection.ts',
 );
@@ -714,6 +752,10 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('apps/web/src/ui/TransportRouteDock.tsx') ||
     normalized.endsWith('apps/web/src/ui/stop-place-details-model.ts') ||
     normalized.endsWith('apps/web/src/ui/game-selection.ts') ||
+    normalized.endsWith('apps/web/src/representation/d3d-map-model.ts') ||
+    normalized.endsWith(
+      'apps/web/src/representation/D3dMapRepresentation.tsx',
+    ) ||
     normalized.endsWith('packages/simulation/src/transport-simulation.ts') ||
     normalized.endsWith('packages/simulation/src/passenger-demand.ts') ||
     normalized.endsWith(
@@ -859,6 +901,12 @@ const canvasRepresentationForbiddenFixture = await source(
 const canvasRepresentationAllowedFixture = await source(
   'scripts/fixtures/architecture/canvas-representation-allowed.txt',
 );
+const d3dRepresentationForbiddenFixture = await source(
+  'scripts/fixtures/architecture/d3d-representation-forbidden.txt',
+);
+const d3dRepresentationAllowedFixture = await source(
+  'scripts/fixtures/architecture/d3d-representation-allowed.txt',
+);
 const populationExtensionFixture = await source(
   'scripts/fixtures/architecture/population-extension-allowed.txt',
 );
@@ -922,6 +970,10 @@ if (
   fail('Canvas representation negative fixture was not fully detected.');
 if (canvasRepresentationViolations(canvasRepresentationAllowedFixture).length)
   fail('legitimate Canvas representation fixture was rejected.');
+if (d3dRepresentationViolations(d3dRepresentationForbiddenFixture).length !== 6)
+  fail('D3D representation negative fixture was not fully detected.');
+if (d3dRepresentationViolations(d3dRepresentationAllowedFixture).length)
+  fail('legitimate D3D representation fixture was rejected.');
 
 const representationBenchmarkSource = await source(
   'cypress/performance/representation-runtime.cy.ts',

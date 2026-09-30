@@ -1,0 +1,6 @@
+import { createSimulation } from '@torrevieja-tycoon/simulation';
+import { save } from '../persistence/save.js';
+const now = Date.now();
+const random = Math.random();
+requestAnimationFrame(() => {});
+setInterval(() => {}, 100);

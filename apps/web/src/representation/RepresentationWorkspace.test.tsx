@@ -132,7 +132,7 @@ it('mounts exactly two families and replaces only the mini with the inactive fam
   );
   expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
     'data-view',
-    'main',
+    'map',
   );
   expect(screen.getByTestId('visualization-workspace')).toHaveAttribute(
     'data-inactive-view',
@@ -200,7 +200,7 @@ it('mounts exactly two families and replaces only the mini with the inactive fam
   );
   expect(screen.getByTestId('visualization-workspace')).toHaveAttribute(
     'data-inactive-view',
-    'main',
+    'map',
   );
   expectWorkspacePairsSupported();
   fireEvent.click(
@@ -212,7 +212,7 @@ it('mounts exactly two families and replaces only the mini with the inactive fam
   fireEvent.click(screen.getByRole('button', { name: 'Use 3D in mini' }));
   expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
     'data-view',
-    'main',
+    'map',
   );
   expectWorkspacePairsSupported();
   fireEvent.click(

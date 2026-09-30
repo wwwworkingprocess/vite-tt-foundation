@@ -11,7 +11,7 @@ describe('representation view capabilities', () => {
   it.each([
     ['dom2d', 'map'],
     ['canvas2d', 'map'],
-    ['d3d', 'main'],
+    ['d3d', 'map'],
   ] as const)('%s supports its canonical %s view', (family, view) => {
     expect(representationViewsForFamily(family)).toEqual([view]);
     expect(defaultRepresentationViewForFamily(family)).toBe(view);
@@ -22,12 +22,12 @@ describe('representation view capabilities', () => {
   it.each([
     ['dom2d', 'main'],
     ['canvas2d', 'main'],
-    ['d3d', 'map'],
+    ['d3d', 'main'],
   ] as const)('%s rejects unsupported %s', (family, view) => {
     expect(supportsRepresentationView(family, view)).toBe(false);
-    expect(() => assertSupportedRepresentationView(family, view)).toThrow(
-      `Representation family ${family} does not support view ${view}.`,
-    );
+    expect(() =>
+      assertSupportedRepresentationView(family, view as 'map'),
+    ).toThrow(`Representation family ${family} does not support view ${view}.`);
   });
 
   it('fails closed for unknown runtime values', () => {

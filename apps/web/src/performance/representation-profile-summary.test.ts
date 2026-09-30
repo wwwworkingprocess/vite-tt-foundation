@@ -77,7 +77,7 @@ it('creates a stable structural browser-profile result', () => {
     miniFamily: 'd3d',
     inactiveFamily: 'canvas2d',
     primaryView: 'map',
-    miniView: 'main',
+    miniView: 'map',
     inactiveView: 'map',
     targetFramesPerSecond: 5,
   });
@@ -100,7 +100,7 @@ it('creates a stable structural browser-profile result', () => {
     primitiveCount: 8,
   });
   expect(result.r3f).toMatchObject({
-    view: 'main',
+    view: 'map',
     slot: 'mini',
     mode: 'mini',
     targetFramesPerSecond: 5,
@@ -181,7 +181,7 @@ it.each([
       miniView: defaultRepresentationViewForFamily(miniFamily),
       inactiveView: defaultRepresentationViewForFamily(inactiveFamily),
     });
-    expect(result.r3f).toMatchObject({ view: 'main', ...d3d });
+    expect(result.r3f).toMatchObject({ view: 'map', ...d3d });
     expect(result.canvas2d).toMatchObject({ view: 'map', ...canvas });
   },
 );

@@ -1,5 +1,5 @@
 export type RepresentationFamily = 'dom2d' | 'canvas2d' | 'd3d';
-export type RepresentationView = 'map' | 'main';
+export type RepresentationView = 'map';
 
 export const representationFamilies = Object.freeze([
   'dom2d',
@@ -22,8 +22,8 @@ const representationViewCapabilities = Object.freeze({
     defaultView: 'map',
   }),
   d3d: Object.freeze({
-    supportedViews: Object.freeze(['main'] as const),
-    defaultView: 'main',
+    supportedViews: Object.freeze(['map'] as const),
+    defaultView: 'map',
   }),
 } satisfies Readonly<
   Record<RepresentationFamily, RepresentationViewCapability>

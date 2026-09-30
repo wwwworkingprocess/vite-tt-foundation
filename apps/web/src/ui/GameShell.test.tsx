@@ -104,7 +104,7 @@ it('renders a viewport shell with compact navigation and paired stable views', (
   );
   expect(screen.getByTestId('svg-identity')).toBeInTheDocument();
   expect(screen.getByTestId('r3f-identity')).toBeInTheDocument();
-  expect(screen.getByRole('tab', { name: 'Main' })).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Map' })).toBeInTheDocument();
   expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
     'data-view',
     'map',
@@ -116,7 +116,7 @@ it('renders a viewport shell with compact navigation and paired stable views', (
   expect(screen.getByRole('tab', { name: 'Map' })).toBeInTheDocument();
   expect(screen.getByTestId('secondary-minimap')).toHaveAttribute(
     'data-view',
-    'main',
+    'map',
   );
 });
 

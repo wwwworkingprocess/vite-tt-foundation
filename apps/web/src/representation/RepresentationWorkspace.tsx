@@ -35,8 +35,7 @@ interface RepresentationWorkspaceProps {
 
 const labelForFamily = (family: RepresentationFamily) =>
   family === 'dom2d' ? 'DOM 2D' : family === 'canvas2d' ? 'Canvas 2D' : '3D';
-const labelForView = (view: RepresentationView) =>
-  view === 'map' ? 'Map' : 'Main';
+const labelForView = (view: RepresentationView) => ({ map: 'Map' })[view];
 
 export function RepresentationWorkspace({
   domTwoDimensional,

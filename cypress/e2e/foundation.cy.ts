@@ -120,6 +120,155 @@ const startDefaultGame = () => {
 };
 
 describe('foundation screen', () => {
+  it('renders the D3D Map as a selectable isometric transport view', () => {
+    cy.visit('/');
+    startDefaultGame();
+    addBus('legacy-A');
+    cy.get('[data-testid="secondary-minimap"]')
+      .should('have.attr', 'data-family', 'd3d')
+      .and('have.attr', 'data-view', 'map');
+    cy.get('[data-testid="d3d-map-representation"]')
+      .should('have.attr', 'data-representation-mode', 'mini')
+      .and('have.attr', 'data-target-frames-per-second', '5');
+    cy.get('button[aria-label="Select mini representation for swap"]').click();
+    cy.get('[data-testid="d3d-map-representation"]').should(
+      'have.attr',
+      'data-selected-kind',
+      'route',
+    );
+    cy.get('[role="dialog"]').should('not.exist');
+    cy.contains('button', 'Swap visualizations').click();
+    cy.get('[data-testid="d3d-map-representation"]')
+      .should('have.attr', 'data-representation-mode', 'normal')
+      .and('have.attr', 'data-target-frames-per-second', '60')
+      .and('have.attr', 'data-camera-mode', 'full');
+    cy.get('[data-testid="d3d-map-representation"] canvas').should(
+      'be.visible',
+    );
+    const clickTarget = (kind: 'stop' | 'vehicle' | 'route') =>
+      cy
+        .get('[data-testid="d3d-map-representation"]')
+        .should(($map) => {
+          expect($map.attr(`data-pointer-${kind}-x`)).not.to.equal(undefined);
+          expect($map.attr(`data-pointer-${kind}-y`)).not.to.equal(undefined);
+        })
+        .find('canvas')
+        .then(($canvas) => {
+          const map = $canvas.closest(
+            '[data-testid="d3d-map-representation"]',
+          )[0]!;
+          cy.wrap($canvas).click(
+            Number(map.getAttribute(`data-pointer-${kind}-x`)),
+            Number(map.getAttribute(`data-pointer-${kind}-y`)),
+          );
+        });
+    clickTarget('stop');
+    cy.get('[data-testid="d3d-map-representation"]').should(
+      'have.attr',
+      'data-selected-kind',
+      'stop',
+    );
+    cy.get('[role="dialog"]').should('be.visible');
+    cy.get('[role="dialog"]').contains('button', 'Close').click();
+    cy.get('[data-testid="stop-inspector"]')
+      .invoke('text')
+      .then((selectedStop) => {
+        cy.get(
+          'button[aria-label="Select mini representation for swap"]',
+        ).click();
+        cy.contains('button', 'Swap visualizations').click();
+        cy.get('[data-testid="d3d-map-representation"]')
+          .should('have.attr', 'data-representation-mode', 'mini')
+          .and('have.attr', 'data-selected-kind', 'stop');
+        cy.get(
+          'button[aria-label="Select mini representation for swap"]',
+        ).click();
+        cy.contains('button', 'Swap visualizations').click();
+        cy.get('[data-testid="d3d-map-representation"]').should(
+          'have.attr',
+          'data-selected-kind',
+          'stop',
+        );
+        cy.get('[data-testid="stop-inspector"]').should(
+          'have.text',
+          selectedStop,
+        );
+      });
+    clickTarget('vehicle');
+    cy.get('[data-testid="d3d-map-representation"]').should(
+      'have.attr',
+      'data-selected-kind',
+      'vehicle',
+    );
+    cy.get('[role="dialog"]')
+      .should('be.visible')
+      .contains('button', 'Close')
+      .click();
+    clickTarget('route');
+    cy.get('[data-testid="d3d-map-representation"]').should(
+      'have.attr',
+      'data-selected-kind',
+      'vehicle',
+    );
+    cy.get('[role="dialog"]').should('not.exist');
+    cy.get('[data-testid="d3d-map-representation"]').then(($map) => {
+      const beforeX = Number($map.attr('data-camera-target-x'));
+      const beforeZ = Number($map.attr('data-camera-target-z'));
+      cy.get('[data-testid="d3d-map-representation"] canvas').then(
+        ($canvas) => {
+          const rect = $canvas[0]!.getBoundingClientRect();
+          const x = rect.left + rect.width / 2;
+          const y = rect.top + rect.height / 2;
+          cy.wrap($canvas).trigger('pointerdown', {
+            pointerId: 1,
+            clientX: x,
+            clientY: y,
+          });
+          cy.wrap($canvas).trigger('pointermove', {
+            pointerId: 1,
+            clientX: x + 50,
+            clientY: y + 20,
+          });
+          cy.wrap($canvas).trigger('pointerup', {
+            pointerId: 1,
+            clientX: x + 50,
+            clientY: y + 20,
+          });
+        },
+      );
+      cy.get('[data-testid="d3d-map-representation"]').should(($updated) => {
+        const movedX = Number($updated.attr('data-camera-target-x'));
+        const movedZ = Number($updated.attr('data-camera-target-z'));
+        expect(movedX !== beforeX || movedZ !== beforeZ).to.equal(true);
+      });
+    });
+    cy.get('[data-testid="d3d-map-representation"]').should(
+      'have.attr',
+      'data-camera-mode',
+      'manual',
+    );
+    cy.get('[data-testid="d3d-map-representation"]').then(($map) => {
+      const before = Number($map.attr('data-camera-zoom'));
+      cy.get('[data-testid="d3d-map-representation"] canvas').trigger('wheel', {
+        deltaY: -200,
+      });
+      cy.get('[data-testid="d3d-map-representation"]').should(($updated) => {
+        const zoom = Number($updated.attr('data-camera-zoom'));
+        expect(zoom).to.be.greaterThan(before);
+        expect(zoom).to.be.at.most(before * 25);
+      });
+    });
+    cy.get('[aria-label="Routes"] [data-route-id="legacy-B"]').click();
+    cy.contains('button', 'Focus route').click();
+    cy.get('[data-testid="d3d-map-representation"]')
+      .should('have.attr', 'data-camera-mode', 'route-fit')
+      .and('have.attr', 'data-focused-route-id', 'legacy-B');
+    cy.contains('button', 'Show full network').click();
+    cy.get('[data-testid="d3d-map-representation"]')
+      .should('have.attr', 'data-camera-mode', 'full')
+      .and('have.attr', 'data-focused-route-id', '');
+  });
+
   it('renders without a fatal application error', () => {
     cy.visit('/');
     cy.contains('h1', 'Torrevieja Tycoon').should('be.visible');
@@ -132,7 +281,7 @@ describe('foundation screen', () => {
       .and('have.attr', 'data-view', 'map');
     cy.get('[data-testid="secondary-minimap"]')
       .should('have.attr', 'data-family', 'd3d')
-      .and('have.attr', 'data-view', 'main');
+      .and('have.attr', 'data-view', 'map');
     cy.get('[data-testid="canvas2d-representation"]').should('not.exist');
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.get('.scenario-menu-panel').then(($menu) => {
@@ -184,7 +333,9 @@ describe('foundation screen', () => {
     cy.get('[data-testid="canvas2d-representation"]')
       .should('have.attr', 'tabindex', '0')
       .focus()
-      .type('{home}{enter}');
+      .type('{home}');
+    cy.get('#canvas2d-selection-status').should('contain.text', 'StopPlace:');
+    cy.get('[data-testid="canvas2d-representation"]').type('{enter}');
     cy.get('[role="dialog"]')
       .should('contain.text', 'Stop overview')
       .find('button')
@@ -208,10 +359,15 @@ describe('foundation screen', () => {
     cy.get('[data-testid="simulation-controls-content"]').should('exist');
     cy.get('[data-testid="save-library"]').should('not.exist');
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
-    cy.get('[data-testid="worker-tick"]').should('contain.text', '0');
-    cy.contains('button', 'Normal 20×').click();
-    cy.get('[data-testid="worker-tick"]').should(($tick) => {
-      expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(0);
+    cy.get('[data-testid="worker-tick"]').then(($tick) => {
+      const before = Number($tick.text().split(': ')[1]);
+      expect(before).to.be.at.least(0);
+      cy.contains('button', 'Normal 20×').click();
+      cy.get('[data-testid="worker-tick"]').should(($updated) => {
+        expect(Number($updated.text().split(': ')[1])).to.be.greaterThan(
+          before,
+        );
+      });
     });
     cy.contains('button', 'Grant demo 2× bonus').click();
     cy.get('[data-testid="pacing-rate"]').should('contain.text', '40×');

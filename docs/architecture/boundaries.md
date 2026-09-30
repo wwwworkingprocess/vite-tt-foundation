@@ -146,15 +146,15 @@ world position, orientation, interpolation, meshes, labels, and camera framing.
 
 Representation family, view, and mode are orthogonal application concepts.
 Family names renderer/materialization technology (`dom2d`, `canvas2d`, `d3d`),
-view names an application capability (`map`, `main`), and mode names slot
+view names an application capability (`map`), and mode names slot
 presentation (`normal`, `mini`). One pure capability boundary owns the current
 supported pairs and defaults:
 
-| Family    | Map | Main | Default |
-| --------- | --- | ---- | ------- |
-| DOM 2D    | yes | no   | Map     |
-| Canvas 2D | yes | no   | Map     |
-| D3D       | no  | yes  | Main    |
+| Family    | Map | Default |
+| --------- | --- | ------- |
+| DOM 2D    | yes | Map     |
+| Canvas 2D | yes | Map     |
+| D3D       | yes | Map     |
 
 Primary, mini, and inactive placement do not grant capabilities. Swapping a
 family changes its slot and mode, not its view. Renderer materialization remains
@@ -165,8 +165,9 @@ explicit rather than becoming a plugin registry or generic renderer factory.
 authoritative Vehicle positions into immutable normalized west-to-east,
 north-to-south Map coordinates. It owns no React, DOM, SVG, Canvas, Three.js,
 interaction, cadence, population, or passenger-diagnostic materialization.
-DOM2D and Canvas2D independently materialize that projection in their own
-coordinate spaces.
+DOM2D, Canvas2D, and D3D independently materialize that projection in their own
+coordinate spaces. D3D adds presentational elevation and an orthographic camera
+without becoming a source of transport authority.
 
 Scene interpolation is visual only. It cannot become authoritative movement.
 

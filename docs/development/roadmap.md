@@ -172,10 +172,11 @@ Completed:
   Canvas2D, with renderer-specific materialization and interaction retained;
 - primary-only representation view actions, currently used by DOM2D Map's
   population and passenger toggles without exposing controls in the mini slot.
-- a renderer-independent family/view capability table that retains DOM2D Map,
-  Canvas2D Map, and D3D Main identity across primary, mini, and inactive
-  placement, forming the foundation for a later D3D Map without introducing
-  generic view-switch UI now.
+- a renderer-independent family/view capability table with Map as the single
+  view for DOM2D, Canvas2D, and D3D across primary, mini, and inactive placement;
+- D3D Map V0: orthographic isometric flat-tile terrain, canonical route ribbons,
+  physical Stops, low-poly Vehicles, camera pan/zoom/Route fit, selection, and
+  screen-scale LOD under the shared manual frame cadence.
 - shared, ephemeral full-network/selected-Route viewport focus for DOM2D and
   Canvas2D Map, derived once from canonical directed-edge topology with no
   arbitrary pan/zoom or persistence.
@@ -190,11 +191,8 @@ Remaining product visualization work:
 - smooth display interpolation;
 - performance acceptance for richer scenes.
 
-The intended next representation milestone is **D3D Map and interaction
-parity**: bring D3D toward the canonical Map projection, topology and direction,
-StopPlace/Vehicle selection, population/passenger context, whole-Route
-highlighting, shared viewport focus, and Map actions where architecturally
-appropriate. That milestone is not implemented here; D3D remains Main-only.
+The next bounded representation step is D3D population/passenger presentation
+parity and measured large-scenario performance, after D3D Map V0 acceptance.
 
 ## Completed — Live passenger diagnostic/game UI
 
@@ -255,10 +253,9 @@ occurrences, selected calls, loop status, and topology-derived interchange
 badges without recomputing static topology on live passenger updates. The dock
 retains compact selection context and reopens the details modal. DOM 2D `Map`,
 Canvas 2D `Map` with directed route context, canonical StopPlace/Vehicle
-selection, population, and passenger diagnostics, and D3D `Main` establish the three-family,
+selection, population, and passenger diagnostics, and D3D `Map` establish the three-family,
 two-mounted-slot lifecycle; mini swapping remains an explicit arm/confirm
-interaction. Whole-route interaction, multi-view selection UX, D3D Map, and additional D3D scenes
-remain deferred. Canonical
+interaction. Multi-view selection UX and additional D3D scenes remain deferred. Canonical
 timetable/service-calendar authority remains a separate future data/schema
 milestone. Phase 4F remains deferred.
 

@@ -78,8 +78,7 @@ and further modal information design are separate product decisions.
 ## Representation host contract
 
 The workspace distinguishes a representation slot, a representation family,
-and a family-owned active view. DOM 2D has `Map` (the existing SVG), Canvas 2D
-has a foundation `Main` canvas, and D3D has `Main` (the existing R3F scene).
+and a family-owned active view. DOM 2D, Canvas 2D, and D3D each have `Map`.
 Exactly two of these three families are mounted. The primary slot shows
 its active-view tab and owns the modal layer. The secondary slot owns a common
 transparent mini-selection overlay, independent of renderer implementation.

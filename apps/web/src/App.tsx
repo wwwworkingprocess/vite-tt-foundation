@@ -1061,7 +1061,18 @@ export function App() {
       }
       secondaryVisualization={
         <Suspense fallback={<p>Loading representation…</p>}>
-          <FoundationScene />
+          {authoritativeScenarioPackage && fleet ? (
+            <D3dMapRepresentation
+              key={authoritativeCoordinateKey}
+              scenario={authoritativeScenarioPackage}
+              fleet={fleet}
+              selection={gameSelection}
+              onSelectionChange={selectGameObject}
+              focusedRouteId={validFocusedRouteId}
+            />
+          ) : (
+            <p>Authoritative scenario representation loading.</p>
+          )}
         </Suspense>
       }
       canvasVisualization={
@@ -1218,7 +1229,9 @@ export function App() {
   );
 }
 
-const FoundationScene = lazy(() => import('./foundation-scene.js'));
+const D3dMapRepresentation = lazy(
+  () => import('./representation/D3dMapRepresentation.js'),
+);
 const Canvas2dRepresentation = lazy(() =>
   import('./representation/Canvas2dRepresentation.js').then((module) => ({
     default: module.Canvas2dRepresentation,

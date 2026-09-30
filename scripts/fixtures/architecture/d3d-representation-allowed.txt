@@ -1,0 +1,7 @@
+import { Canvas } from '@react-three/fiber';
+import { Vector3 } from 'three';
+import type { VehicleState } from '@torrevieja-tycoon/simulation';
+import { createTransportMapProjection } from '../representation/transport-map-projection.js';
+const vehicle: VehicleState | undefined = undefined;
+const point = new Vector3();
+const canvas = Canvas;

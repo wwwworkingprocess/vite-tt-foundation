@@ -583,6 +583,33 @@ summary {
   background: #0b2533;
 }
 
+.d3d-map-representation {
+  position: relative;
+  background: #d9d6c9;
+}
+
+.d3d-keyboard-control {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  max-width: min(25rem, calc(100% - 1.5rem));
+  padding: 0.4rem 0.65rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--ink);
+  background: var(--surface);
+  font-size: var(--text-small);
+}
+
+.d3d-keyboard-control:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
 .mini-representation-selector {
   position: absolute;
   z-index: var(--layer-mini-interaction);

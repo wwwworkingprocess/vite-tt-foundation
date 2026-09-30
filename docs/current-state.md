@@ -156,11 +156,10 @@ The workspace distinguishes primary/mini slots, three representation families,
 and family-owned active views. Family identifies renderer/materialization
 technology, view identifies an application representation capability, and mode
 (`normal` or `mini`) identifies slot presentation without changing the view.
-One renderer-independent capability table defines the current matrix: DOM 2D
-and Canvas 2D support only `Map`; D3D supports only `Main`. Unsupported pairs
-fail closed. DOM 2D exposes `Map` through SVG, Canvas 2D
-exposes `Map` through Canvas-native materialization, and D3D exposes its
-existing `Main` scene. Exactly two families are mounted; the third remains
+One renderer-independent capability table defines the current matrix: DOM 2D,
+Canvas 2D, and D3D support only `Map`. Unsupported pairs fail closed. DOM 2D
+exposes SVG, Canvas 2D uses Canvas-native materialization, and D3D uses a
+low-poly orthographic isometric world. Exactly two families are mounted; the third remains
 inactive while retaining its canonical view identity until an armed mini action
 explicitly installs it. Swap remains a
 separate confirmation that exchanges the visible families without changing the
@@ -192,9 +191,9 @@ mini slot selects canonical routes through `GameSelection`; its separate
 selected-route action bar creates an unstarted bus on exactly that route through
 the existing command boundary. Route selection and highlighting survive family
 swaps, while stale selection is cleared on authoritative scenario replacement.
-DOM2D and Canvas highlight every directed edge of the selected route without
-making edges focusable or selectable. D3D exposes no empty action bar. Multi-view
-selection UX and D3D Map remain deferred representation milestones. Selected
+DOM2D, Canvas2D, and D3D highlight every directed edge of the selected route without
+making edges focusable or selectable. D3D has no population/passenger action bar
+because those layers are not yet implemented there. Selected
 Routes now offer an ephemeral shared Map viewport action: DOM2D and Canvas2D
 can fit the complete canonical multi-pattern Route topology or return to the
 exact full-network viewport without changing `GameSelection` or filtering Map
@@ -204,9 +203,23 @@ materialization. Focus follows a replacement Route selection, survives StopPlace
 selection and their detail-modal open/close lifecycle, clears on explicit
 Show full network, clear selection, or authoritative scenario replacement,
 survives same-scenario timeline changes and family swaps, and is never
-persisted. This is a bounded
-full-network/selected-Route choice, not arbitrary pan or zoom. D3D remains
-Main-only and does not materialize Map focus.
+persisted. DOM2D/Canvas2D use a bounded full-network/selected-Route viewport;
+D3D treats Route focus as a deterministic camera fit and permits local pan/zoom
+afterward. D3D camera state is ephemeral and is never saved.
+The normal camera is restored after a mini transition only while the model,
+focused Route, and viewport size still match its saved context; otherwise D3D
+fits the current Route or full network.
+
+D3D reuses the canonical normalized transport Map projection. It renders flat
+deterministic decorative terrain tiles (not real elevation), canonical directed
+route ribbons and direction wedges, physical StopPlace platforms, and exact
+published Vehicle positions as low-poly buses. Normal mode has bounded pan and
+zoom with far/medium/near detail based on world units per CSS pixel; mini mode
+uses a full-network far-detail overview. StopPlace and Vehicle selection use
+the shared `GameSelection` and primary-slot detail-modal lifecycle. A compact
+keyboard selection surface orders candidates by stable identity. D3D keeps the
+shared manual 60/5 fps frame cadence; population density, passenger labels,
+and richer terrain remain later presentation work.
 
 DOM2D and Canvas2D share deliberate normal/mini presentation metrics for Map
 entities. Geographic Route and population geometry continues to scale with the
@@ -215,9 +228,8 @@ stable in screen space through Route focus and renderer resize. Vehicle glyphs
 are deliberately more prominent than StopPlace glyphs while retaining the
 existing renderer-independent selection and interaction semantics.
 
-A future D3D Map adds `map` to D3D's supported views; it does not create a new
-renderer family. No view-switch control exists while every family supports only
-one view.
+D3D `Map` is the family's sole current view. No view-switch control exists while
+every family supports only one view.
 
 Build budgets account for renderer-specific emitted artifacts independently
 from shared production architecture. The shared transport Map projection has a

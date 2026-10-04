@@ -210,16 +210,49 @@ The normal camera is restored after a mini transition only while the model,
 focused Route, and viewport size still match its saved context; otherwise D3D
 fits the current Route or full network.
 
-D3D reuses the canonical normalized transport Map projection. It renders flat
-deterministic decorative terrain tiles (not real elevation), canonical directed
-route ribbons and direction wedges, physical StopPlace platforms, and exact
-published Vehicle positions as low-poly buses. Normal mode has bounded pan and
-zoom with far/medium/near detail based on world units per CSS pixel; mini mode
-uses a full-network far-detail overview. StopPlace and Vehicle selection use
-the shared `GameSelection` and primary-slot detail-modal lifecycle. A compact
-keyboard selection surface orders candidates by stable identity. D3D keeps the
-shared manual 60/5 fps frame cadence; population density, passenger labels,
-and richer terrain remain later presentation work.
+D3D Procedural City / Settlement V0 reuses the canonical normalized transport
+Map projection and immutable population crop. Population is a neighboring density
+field, not one visible building per occupied cell. A source adapter deduplicates
+collinear/shared/reverse canonical route segments into narrow provisional urban
+corridors. These streets are presentation heuristics, never road or simulation
+authority. Future route or actual road GeoJSON can replace that adapter through
+its source-independent UrbanCorridor descriptors.
+
+A conservative three-by-three mask within each supported population cell reserves
+primary corridors and finds disconnected settlement zones. Longest-axis bisection
+bounds blocks to three native cells in denser zones and four in sparse zones.
+Staggered parcels use local nine-cell density, support taper, deterministic open
+lots, block setbacks, corridor tangent orientation and physical StopPlace plazas.
+Whole parcel envelopes remain in supported blocks and clear primary corridors.
+Greedy ground patches retain support holes and street gaps without visible cell
+outlines. Pale stone/stucco walls and restrained roof colours materialize five
+geometric archetypes: gabled detached houses, stepped pitched terraces, apartment
+slabs with parapets, two-wing L corners and three-wing U courtyard blocks.
+Storeys are discrete (houses 1–2, terraces 2–3, larger blocks 3–7); one visual
+storey is 0.16 of the shorter native-cell axis. Placement has a separate flat
+base Y for later terrain sampling; elevation remains deferred.
+
+The pure, deeply frozen city model is cached by static map/population identities.
+Fleet, selection, camera and frame updates never rebuild it. Existing screen-scale
+LOD/hysteresis selects one-sixth simple low masses at far, half the body prototypes
+at medium, and all body/roof prototypes near. Mini keeps one twenty-fourth simple
+masses and one cheap ground batch. At most five body and five roof instance groups
+are mounted, plus two surface batches; no React tree exists per building. Three.js
+prototype/surface resources are disposed on replacement or unmount. Full-network
+framing uses the full canonical crop extent, including empty land; Route focus
+retains canonical transport extents. No city geometry has interaction semantics.
+
+Narrow ground-level route ribbons retain canonical colours, selected-route
+highlighting, and medium/near direction wedges. Compact physical StopPlace
+platforms/posts and route-coloured low-poly buses use restrained selection
+halos and separate invisible hit targets retaining the previous interaction
+footprints. Soft ambient and directional Lambert shading reveals form without
+textures, external assets, shadow maps, or a decorative grid. Normal mode retains bounded
+pan/zoom and screen-scale LOD; mini remains a full-network far-detail overview.
+Selection, keyboard access, detail modals, Route focus, and manual 60/5 fps
+cadence retain their existing ownership. Full terrain/elevation height-maps,
+passenger D3D presentation, detailed city assets, and final Route-system visual
+redesign remain deferred.
 
 DOM2D and Canvas2D share deliberate normal/mini presentation metrics for Map
 entities. Geographic Route and population geometry continues to scale with the
@@ -236,7 +269,11 @@ from shared production architecture. The shared transport Map projection has a
 4,500-byte hard coordinate and the DOM2D projection adapter has a 2,500-byte
 hard coordinate. The build audit also reports Canvas, DOM2D, and population Map
 logical compositions including their mandatory shared dependencies, while the
-total-emitted-JavaScript budget remains the global no-hiding backstop. These
+total-emitted-JavaScript budget remains the global no-hiding backstop. The owner
+approved its rebaseline from 1,750,000 to 2,000,000 bytes: the previous aggregate
+ceiling predates production D3D. D3D remains lazy-loaded and independently bounded
+at 1,200,000 bytes; application entry, Worker, persistence and every other
+renderer/component isolation budget remain unchanged. These
 report-only compositions are not compared with the historical exclusive
 renderer ceilings.
 

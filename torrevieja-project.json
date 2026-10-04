@@ -45,7 +45,9 @@
       "apps/web/src/representation/passenger-map-diagnostics.ts",
       "apps/web/src/population/population-field-loader.ts",
       "apps/web/src/population/population-demand-plan.ts",
-      "apps/web/src/transport-representation/PopulationGridOverlay.tsx"
+      "apps/web/src/transport-representation/PopulationGridOverlay.tsx",
+      "apps/web/src/representation/d3d-city-model.ts",
+      "apps/web/src/representation/d3d-city-geometry.ts"
     ]
   },
   "simulationCriticalCoverage": {
@@ -93,6 +95,6 @@
     "persistenceRuntime": 260000,
     "representation": 1200000,
     "transportWorker": 200000,
-    "totalEmittedJavaScript": 1750000
+    "totalEmittedJavaScript": 2000000
   }
 }

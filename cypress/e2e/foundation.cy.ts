@@ -142,6 +142,18 @@ describe('foundation screen', () => {
       .should('have.attr', 'data-representation-mode', 'normal')
       .and('have.attr', 'data-target-frames-per-second', '60')
       .and('have.attr', 'data-camera-mode', 'full');
+    cy.get('[data-testid="d3d-map-representation"]')
+      .should(($map) => {
+        expect(Number($map.attr('data-city-building-count'))).to.be.greaterThan(
+          0,
+        );
+      })
+      .and('have.attr', 'data-city-archetype-count', '5')
+      .should(($map) => {
+        expect(
+          Number($map.attr('data-city-building-instances')),
+        ).to.be.lessThan(Number($map.attr('data-city-building-count')) / 4);
+      });
     cy.get('[data-testid="d3d-map-representation"] canvas').should(
       'be.visible',
     );
@@ -170,6 +182,7 @@ describe('foundation screen', () => {
     );
     cy.get('[role="dialog"]').should('be.visible');
     cy.get('[role="dialog"]').contains('button', 'Close').click();
+    cy.screenshot('d3d-overview', { capture: 'viewport' });
     cy.get('[data-testid="stop-inspector"]')
       .invoke('text')
       .then((selectedStop) => {
@@ -211,6 +224,27 @@ describe('foundation screen', () => {
       'vehicle',
     );
     cy.get('[role="dialog"]').should('not.exist');
+    // Hold the workspace geometry steady while testing camera input.
+    cy.contains('button', 'Collapse information').click();
+    cy.get('[data-testid="d3d-map-representation"] canvas').should(
+      ($canvas) => {
+        const canvas = $canvas[0] as HTMLCanvasElement;
+        const ratio = Math.min(
+          2,
+          canvas.ownerDocument.defaultView!.devicePixelRatio,
+        );
+        expect(canvas.height).to.equal(
+          Math.floor(canvas.getBoundingClientRect().height * ratio),
+        );
+        const map = canvas.closest('[data-testid="d3d-map-representation"]')!;
+        expect(
+          Number(map.getAttribute('data-camera-viewport-height')),
+        ).to.equal(canvas.getBoundingClientRect().height);
+        expect(Number(map.getAttribute('data-camera-viewport-width'))).to.equal(
+          canvas.getBoundingClientRect().width,
+        );
+      },
+    );
     cy.get('[data-testid="d3d-map-representation"]').then(($map) => {
       const beforeX = Number($map.attr('data-camera-target-x'));
       const beforeZ = Number($map.attr('data-camera-target-z'));
@@ -220,16 +254,19 @@ describe('foundation screen', () => {
           const x = rect.left + rect.width / 2;
           const y = rect.top + rect.height / 2;
           cy.wrap($canvas).trigger('pointerdown', {
+            eventConstructor: 'PointerEvent',
             pointerId: 1,
             clientX: x,
             clientY: y,
           });
           cy.wrap($canvas).trigger('pointermove', {
+            eventConstructor: 'PointerEvent',
             pointerId: 1,
             clientX: x + 50,
             clientY: y + 20,
           });
           cy.wrap($canvas).trigger('pointerup', {
+            eventConstructor: 'PointerEvent',
             pointerId: 1,
             clientX: x + 50,
             clientY: y + 20,
@@ -263,10 +300,98 @@ describe('foundation screen', () => {
     cy.get('[data-testid="d3d-map-representation"]')
       .should('have.attr', 'data-camera-mode', 'route-fit')
       .and('have.attr', 'data-focused-route-id', 'legacy-B');
+    cy.screenshot('d3d-route-focus', { capture: 'viewport' });
     cy.contains('button', 'Show full network').click();
     cy.get('[data-testid="d3d-map-representation"]')
       .should('have.attr', 'data-camera-mode', 'full')
       .and('have.attr', 'data-focused-route-id', '');
+    cy.get('[data-testid="d3d-map-representation"] canvas').trigger('wheel', {
+      deltaY: -2300,
+    });
+    cy.get('[data-testid="d3d-map-representation"]')
+      .should('have.attr', 'data-lod', 'near')
+      .and('have.attr', 'data-city-lod', 'near')
+      .should(($map) => {
+        expect(Number($map.attr('data-city-building-instances'))).to.equal(
+          Number($map.attr('data-city-building-count')),
+        );
+      });
+    cy.get('[aria-label^="3D Map selection."]').type('{home}{enter}');
+    cy.get('[data-testid="d3d-map-representation"]').should(
+      'have.attr',
+      'data-selected-kind',
+      'stop',
+    );
+    cy.get('[role="dialog"]').contains('button', 'Close').click();
+    cy.get('[data-testid="d3d-map-representation"]').should(
+      'have.attr',
+      'data-lod',
+      'near',
+    );
+    cy.screenshot('d3d-near', { capture: 'viewport' });
+    // Bring each exact projected hit target into the detailed viewport using ordinary pan input.
+    for (const kind of ['stop', 'vehicle'] as const) {
+      cy.get('[data-testid="d3d-map-representation"]').then(($map) => {
+        const canvas = $map.find('canvas')[0]!;
+        const rect = canvas.getBoundingClientRect();
+        const x = rect.left + rect.width / 2,
+          y = rect.top + rect.height / 2;
+        const dx = rect.width / 2 - Number($map.attr(`data-pointer-${kind}-x`));
+        const dy =
+          rect.height / 2 - Number($map.attr(`data-pointer-${kind}-y`));
+        const Pointer = canvas.ownerDocument.defaultView!.PointerEvent;
+        canvas.dispatchEvent(
+          new Pointer('pointerdown', {
+            pointerId: 1,
+            clientX: x,
+            clientY: y,
+            bubbles: true,
+          }),
+        );
+        canvas.dispatchEvent(
+          new Pointer('pointermove', {
+            pointerId: 1,
+            clientX: x + dx,
+            clientY: y + dy,
+            bubbles: true,
+          }),
+        );
+        canvas.dispatchEvent(
+          new Pointer('pointerup', {
+            pointerId: 1,
+            clientX: x + dx,
+            clientY: y + dy,
+            bubbles: true,
+          }),
+        );
+      });
+      clickTarget(kind);
+      cy.get('[data-testid="d3d-map-representation"]')
+        .should('have.attr', 'data-selected-kind', kind)
+        .and('have.attr', 'data-city-lod', 'near');
+      cy.get('[role="dialog"]').contains('button', 'Close').click();
+    }
+    cy.get('[data-testid="d3d-map-representation"] canvas').trigger('wheel', {
+      deltaY: 3000,
+    });
+    cy.get('[data-testid="d3d-map-representation"]')
+      .should('have.attr', 'data-city-lod', 'far')
+      .and('have.attr', 'data-city-roof-instances', '0')
+      .should(($map) => {
+        expect(
+          Number($map.attr('data-city-building-instances')),
+        ).to.be.lessThan(Number($map.attr('data-city-building-count')) / 4);
+      });
+    cy.get('button[aria-label="Select mini representation for swap"]').click();
+    cy.contains('button', 'Swap visualizations').click();
+    cy.get('[data-testid="d3d-map-representation"]')
+      .should('have.attr', 'data-representation-mode', 'mini')
+      .and('have.attr', 'data-city-roof-instances', '0')
+      .should(($map) => {
+        expect(
+          Number($map.attr('data-city-building-instances')),
+        ).to.be.lessThan(Number($map.attr('data-city-building-count')) / 20);
+      });
   });
 
   it('renders without a fatal application error', () => {
@@ -551,6 +676,11 @@ describe('foundation screen', () => {
     cy.contains('button', 'Start new transport session').should('be.disabled');
     cy.wait('@loadSecondarySelection');
     openSimulationControls();
+    // The manifest response precedes the remaining assets and integrity checks.
+    cy.get('[data-testid="requested-scenario"]', { timeout: 20_000 }).should(
+      'contain.text',
+      'torrevieja-legacy-east-v1 (ready)',
+    );
     cy.get('[data-testid="selected-scenario"]').should(
       'contain.text',
       'torrevieja-legacy-east-v1',

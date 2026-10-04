@@ -174,9 +174,15 @@ Completed:
   population and passenger toggles without exposing controls in the mini slot.
 - a renderer-independent family/view capability table with Map as the single
   view for DOM2D, Canvas2D, and D3D across primary, mini, and inactive placement;
-- D3D Map V0: orthographic isometric flat-tile terrain, canonical route ribbons,
+- D3D Map V0: orthographic isometric flat terrain, canonical route ribbons,
   physical Stops, low-poly Vehicles, camera pan/zoom/Route fit, selection, and
   screen-scale LOD under the shared manual frame cadence.
+- D3D Procedural City / Settlement V0: canonical population is a density field;
+  provisional route-derived corridors reserve streets, disconnected zones split
+  into bounded blocks, and deterministic parcels materialize five geometric
+  building archetypes with genuine roofs. Cached, batched geometry retains
+  StopPlace clearance, selection and focus; far/medium/near and mini materially
+  reduce complexity. Route/road GeoJSON may later replace the corridor adapter.
 - shared, ephemeral full-network/selected-Route viewport focus for DOM2D and
   Canvas2D Map, derived once from canonical directed-edge topology with no
   arbitrary pan/zoom or persistence.
@@ -191,8 +197,9 @@ Remaining product visualization work:
 - smooth display interpolation;
 - performance acceptance for richer scenes.
 
-The next bounded representation step is D3D population/passenger presentation
-parity and measured large-scenario performance, after D3D Map V0 acceptance.
+The next bounded representation step is D3D terrain/elevation height-map
+foundation. Passenger presentation and measured large-scenario performance
+remain later work.
 
 ## Completed — Live passenger diagnostic/game UI
 

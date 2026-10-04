@@ -40,7 +40,6 @@ export type D3dMapModel = Readonly<{
     x: number;
     z: number;
   }>[];
-  tiles: readonly Readonly<{ x: number; z: number; tone: number }>[];
 }>;
 
 const models = new WeakMap<object, D3dMapModel>();
@@ -96,20 +95,26 @@ export function createD3dMapModel(
       }),
     ),
   );
-  const tiles = frozen(
-    Array.from({ length: 16 * 16 }, (_, index) => {
-      const column = index % 16;
-      const row = Math.floor(index / 16);
-      return frozen({
-        x: ((column + 0.5 - 8) * bounds.width) / 16,
-        z: ((row + 0.5 - 8) * bounds.depth) / 16,
-        tone: (column * 17 + row * 31) % 4,
-      });
-    }),
-  );
-  const model = frozen({ projection, bounds, routes, stops, tiles });
+  const model = frozen({ projection, bounds, routes, stops });
   models.set(projection, model);
   return model;
+}
+
+export function d3dSceneBounds(
+  model: D3dMapModel,
+  populationBounds?: Readonly<{
+    minX: number;
+    maxX: number;
+    minZ: number;
+    maxZ: number;
+  }>,
+) {
+  return frozen({
+    minX: Math.min(-model.bounds.width / 2, populationBounds?.minX ?? 0),
+    maxX: Math.max(model.bounds.width / 2, populationBounds?.maxX ?? 0),
+    minZ: Math.min(-model.bounds.depth / 2, populationBounds?.minZ ?? 0),
+    maxZ: Math.max(model.bounds.depth / 2, populationBounds?.maxZ ?? 0),
+  });
 }
 
 export type D3dVehicle = Readonly<{
@@ -196,18 +201,17 @@ export function fitD3dCamera(
   routeId: RouteId | undefined,
   cssWidth: number,
   cssHeight: number,
+  sceneBounds = d3dSceneBounds(model),
 ): D3dCameraFit {
   const viewport = routeId
     ? deriveTransportRouteViewport(model.projection, routeId)
     : undefined;
-  const minimum = d3dWorldPoint(model.bounds, {
-    x: viewport?.minX ?? 0,
-    y: viewport?.minY ?? 0,
-  });
-  const maximum = d3dWorldPoint(model.bounds, {
-    x: viewport?.maxX ?? 1,
-    y: viewport?.maxY ?? 1,
-  });
+  const minimum = viewport
+    ? d3dWorldPoint(model.bounds, { x: viewport.minX, y: viewport.minY })
+    : { x: sceneBounds.minX, z: sceneBounds.minZ };
+  const maximum = viewport
+    ? d3dWorldPoint(model.bounds, { x: viewport.maxX, y: viewport.maxY })
+    : { x: sceneBounds.maxX, z: sceneBounds.maxZ };
   const halfX = (maximum.x - minimum.x) / 2;
   const halfZ = (maximum.z - minimum.z) / 2;
   const projectedHalfWidth = cosAzimuth * halfX + sinAzimuth * halfZ;

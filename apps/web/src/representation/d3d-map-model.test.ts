@@ -8,6 +8,7 @@ import {
   d3dKeyboardCandidates,
   projectD3dVehicles,
   selectD3dCandidate,
+  d3dSceneBounds,
 } from './d3d-map-model.js';
 
 const routeId = 'route-a' as RouteId;
@@ -43,6 +44,19 @@ it('materializes aspect-preserving world coordinates, directed routes, and physi
   expect(model.stops[0]!.stopPlaceId).toBe(stopPlaceId);
   expect(model.stops[0]!.x).toBeLessThan(0);
   expect(createD3dMapModel(projection)).toBe(model);
+  const uncoloured = createD3dMapModel({
+    ...projection,
+    edges: projection.edges.map((edge) => ({
+      edgeId: edge.edgeId,
+      routeId: edge.routeId,
+      patternId: edge.patternId,
+      fromStopNodeId: edge.fromStopNodeId,
+      toStopNodeId: edge.toStopNodeId,
+      from: edge.from,
+      to: edge.to,
+    })),
+  });
+  expect(uncoloured.routes[0]!.color).toBe('#477d89');
 });
 
 it('fits full and route extents with resize-aware orthographic zoom and bounded controls', () => {
@@ -156,4 +170,21 @@ it('orders keyboard candidates by canonical identity and activates exact shared 
     'bus-a',
     'bus-z',
   ]);
+});
+
+it('frames the full canonical crop even where no buildings are occupied', () => {
+  const model = createD3dMapModel(projection);
+  const extent = d3dSceneBounds(model, {
+    minX: -100,
+    maxX: 150,
+    minZ: -125,
+    maxZ: 125,
+  });
+  expect(fitD3dCamera(model, undefined, 1000, 660, extent).zoom).toBeLessThan(
+    fitD3dCamera(model, undefined, 1000, 660).zoom,
+  );
+  expect(fitD3dCamera(model, routeId, 1000, 660, extent)).toEqual(
+    fitD3dCamera(model, routeId, 1000, 660),
+  );
+  expect(d3dSceneBounds(model).minX).toBe(-model.bounds.width / 2);
 });

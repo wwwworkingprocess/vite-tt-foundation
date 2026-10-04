@@ -51,7 +51,7 @@ const manifest = z
       persistenceRuntime: z.number().int().positive(),
       representation: z.number().int().positive(),
       transportWorker: z.number().int().positive(),
-      totalEmittedJavaScript: z.number().int().positive(),
+      totalEmittedJavaScript: z.literal(2000000),
     }),
   })
   .parse(JSON.parse(await read('torrevieja-project.json')));
@@ -77,6 +77,8 @@ const requiredCriticalFiles = [
   'apps/web/src/transport-representation/vehicle-svg-projection.ts',
   'apps/web/src/transport-representation/demo-vehicle-command.ts',
   'apps/web/src/representation/passenger-map-diagnostics.ts',
+  'apps/web/src/representation/d3d-city-model.ts',
+  'apps/web/src/representation/d3d-city-geometry.ts',
   'apps/web/src/representation/representation-view-capabilities.ts',
   'apps/web/src/transport-simulation/scenario-save-target.ts',
 ];

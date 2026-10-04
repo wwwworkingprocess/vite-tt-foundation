@@ -1069,6 +1069,13 @@ export function App() {
               selection={gameSelection}
               onSelectionChange={selectGameObject}
               focusedRouteId={validFocusedRouteId}
+              population={
+                authoritativePopulationState.status === 'ready' &&
+                authoritativePopulationState.coordinateKey ===
+                  authoritativeCoordinateKey
+                  ? authoritativePopulationState.population
+                  : undefined
+              }
             />
           ) : (
             <p>Authoritative scenario representation loading.</p>

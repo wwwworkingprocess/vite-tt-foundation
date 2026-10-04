@@ -51,6 +51,7 @@ import {
   d3dLodBand,
   fitD3dCamera,
   projectD3dVehicles,
+  d3dSceneBounds,
   selectD3dCandidate,
   type D3dLodBand,
   type D3dMapModel,
@@ -61,6 +62,19 @@ import {
   selectVehicle,
   type GameSelection,
 } from '../ui/game-selection.js';
+import {
+  buildProceduralCity,
+  cityLodBuildings,
+  buildingArchetypes,
+  type ProceduralCity,
+  type CityBuilding,
+  type BuildingArchetype,
+} from './d3d-city-model.js';
+import {
+  createCityPrototypeGeometry,
+  createCitySurfaceGeometry,
+} from './d3d-city-geometry.js';
+import type { ScenarioPopulationView } from '../population/population-field-loader.js';
 
 type MapProps = Readonly<{
   scenario: CanonicalScenario;
@@ -68,6 +82,7 @@ type MapProps = Readonly<{
   selection: GameSelection;
   onSelectionChange: (selection: GameSelection) => void;
   focusedRouteId?: RouteId | undefined;
+  population?: ScenarioPopulationView | undefined;
 }>;
 
 const d3dPointerEvents = (state: Parameters<typeof createPointerEvents>[0]) => {
@@ -112,8 +127,17 @@ const cameraDirection = [
   Math.cos((Math.PI * 35) / 180) * Math.SQRT1_2,
 ] as const;
 
+/** Read-only diagnostics can be published while R3F is detaching its host. */
+export function writeD3dDiagnostics(
+  element: HTMLElement | null,
+  values: Record<string, string>,
+) {
+  if (element) Object.assign(element.dataset, values);
+}
+
 function CameraController({
   model,
+  sceneBounds,
   vehicles,
   focusedRouteId,
   mode,
@@ -121,6 +145,7 @@ function CameraController({
   onLod,
 }: Readonly<{
   model: D3dMapModel;
+  sceneBounds: ReturnType<typeof d3dSceneBounds>;
   vehicles: readonly D3dVehicle[];
   focusedRouteId?: RouteId | undefined;
   mode: RepresentationMode;
@@ -163,12 +188,13 @@ function CameraController({
         mode === 'mini' ? undefined : focusedRouteId,
         size.width,
         size.height,
+        sceneBounds,
       ),
-    [model, focusedRouteId, mode, size.width, size.height],
+    [model, focusedRouteId, mode, size.width, size.height, sceneBounds],
   );
   const fullFit = useMemo(
-    () => fitD3dCamera(model, undefined, size.width, size.height),
-    [model, size.width, size.height],
+    () => fitD3dCamera(model, undefined, size.width, size.height, sceneBounds),
+    [model, size.width, size.height, sceneBounds],
   );
   const orthographic = camera as OrthographicCamera;
   const publishTargets = useCallback(() => {
@@ -189,16 +215,20 @@ function CameraController({
     const vehicle = vehiclesRef.current[0];
     const edge = model.routes[0];
     if (stop) {
-      const point = locate(stop.x, 0.65, stop.z);
-      wrapper.current!.dataset.pointerStopId = stop.stopPlaceId;
-      wrapper.current!.dataset.pointerStopX = String(point.x);
-      wrapper.current!.dataset.pointerStopY = String(point.y);
+      const point = locate(stop.x, 0.3, stop.z);
+      writeD3dDiagnostics(wrapper.current, {
+        pointerStopId: stop.stopPlaceId,
+        pointerStopX: String(point.x),
+        pointerStopY: String(point.y),
+      });
     }
     if (vehicle) {
       const point = locate(vehicle.x, 0.8, vehicle.z);
-      wrapper.current!.dataset.pointerVehicleId = vehicle.vehicleId;
-      wrapper.current!.dataset.pointerVehicleX = String(point.x);
-      wrapper.current!.dataset.pointerVehicleY = String(point.y);
+      writeD3dDiagnostics(wrapper.current, {
+        pointerVehicleId: vehicle.vehicleId,
+        pointerVehicleX: String(point.x),
+        pointerVehicleY: String(point.y),
+      });
     }
     if (edge) {
       const point = locate(
@@ -206,17 +236,23 @@ function CameraController({
         0.1,
         (edge.from.z + edge.to.z) / 2,
       );
-      wrapper.current!.dataset.pointerRouteX = String(point.x);
-      wrapper.current!.dataset.pointerRouteY = String(point.y);
+      writeD3dDiagnostics(wrapper.current, {
+        pointerRouteX: String(point.x),
+        pointerRouteY: String(point.y),
+      });
     }
   }, [model, orthographic, size.width, size.height, wrapper]);
   const publish = useCallback(
     (kind: 'full' | 'route-fit' | 'manual') => {
       cameraKind.current = kind;
-      wrapper.current!.dataset.cameraMode = kind;
-      wrapper.current!.dataset.cameraZoom = String(orthographic.zoom);
-      wrapper.current!.dataset.cameraTargetX = String(target.current.x);
-      wrapper.current!.dataset.cameraTargetZ = String(target.current.z);
+      writeD3dDiagnostics(wrapper.current, {
+        cameraMode: kind,
+        cameraZoom: String(orthographic.zoom),
+        cameraTargetX: String(target.current.x),
+        cameraTargetZ: String(target.current.z),
+        cameraViewportWidth: String(size.width),
+        cameraViewportHeight: String(size.height),
+      });
       publishTargets();
       const next = d3dLodBand(
         20 / (Math.max(1, size.height) * orthographic.zoom),
@@ -225,11 +261,19 @@ function CameraController({
       );
       if (next !== lod.current) {
         lod.current = next;
-        wrapper.current!.dataset.lod = next;
+        writeD3dDiagnostics(wrapper.current, { lod: next });
         onLod(next);
       }
     },
-    [wrapper, orthographic, size.height, mode, onLod, publishTargets],
+    [
+      wrapper,
+      orthographic,
+      size.width,
+      size.height,
+      mode,
+      onLod,
+      publishTargets,
+    ],
   );
   useEffect(() => publishTargets(), [vehicles, publishTargets]);
   const apply = (
@@ -315,7 +359,12 @@ function CameraController({
   ]);
 
   const pan = (dx: number, dy: number) => {
-    const limit = fullFit.panBounds;
+    const limit = {
+      minX: Math.min(fullFit.panBounds.minX, sceneBounds.minX * 1.4),
+      maxX: Math.max(fullFit.panBounds.maxX, sceneBounds.maxX * 1.4),
+      minZ: Math.min(fullFit.panBounds.minZ, sceneBounds.minZ * 1.4),
+      maxZ: Math.max(fullFit.panBounds.maxZ, sceneBounds.maxZ * 1.4),
+    };
     const units = 20 / (Math.max(1, size.height) * orthographic.zoom);
     const x = Math.max(
       limit.minX,
@@ -398,54 +447,182 @@ function CameraController({
       canvas.removeEventListener('pointercancel', up);
       canvas.removeEventListener('wheel', wheel);
     };
-  }, [gl, mode, fullFit, size.height, orthographic, publish]);
+  }, [gl, mode, fullFit, sceneBounds, size.height, orthographic, publish]);
   return null;
 }
 
-function Terrain({ model, lod }: { model: D3dMapModel; lod: D3dLodBand }) {
-  const tiles = useRef<import('three').InstancedMesh>(null);
+function Terrain({
+  sceneBounds,
+}: {
+  sceneBounds: ReturnType<typeof d3dSceneBounds>;
+}) {
+  return (
+    <mesh
+      position={[
+        (sceneBounds.minX + sceneBounds.maxX) / 2,
+        -0.18,
+        (sceneBounds.minZ + sceneBounds.maxZ) / 2,
+      ]}
+      raycast={() => null}
+    >
+      <boxGeometry
+        args={[
+          (sceneBounds.maxX - sceneBounds.minX) * 1.04,
+          0.36,
+          (sceneBounds.maxZ - sceneBounds.minZ) * 1.04,
+        ]}
+      />
+      <meshLambertMaterial color="#a7b88d" />
+    </mesh>
+  );
+}
+
+function CityBatch({
+  buildings,
+  kind,
+  layer,
+  simple,
+}: {
+  buildings: readonly CityBuilding[];
+  kind: BuildingArchetype;
+  layer: 'body' | 'roof';
+  simple: boolean;
+}) {
+  const instances = useRef<import('three').InstancedMesh>(null);
+  const geometry = useMemo(
+    () =>
+      simple
+        ? new BoxGeometry(1, 1, 1).translate(0, 0.5, 0)
+        : createCityPrototypeGeometry(kind, layer),
+    [kind, layer, simple],
+  );
+  useEffect(() => () => geometry.dispose(), [geometry]);
   useEffect(() => {
-    const mesh = tiles.current!;
+    const mesh = instances.current!;
     const object = new Object3D();
-    const tones = ['#d9d6c9', '#ddd9cb', '#d3d5c8', '#e1dccc'];
-    for (let i = 0; i < model.tiles.length; i++) {
-      const tile = model.tiles[i]!;
-      object.position.set(tile.x, -0.2, tile.z);
+    const walls = [
+      '#d6cbb4',
+      '#c8bca6',
+      '#e2d8c0',
+      '#c7b6a3',
+      '#bfa998',
+      '#d9c5a6',
+    ];
+    const roofs = ['#a97559', '#986653', '#b28666', '#727b79', '#9b9180'];
+    for (let i = 0; i < buildings.length; i++) {
+      const b = buildings[i]!;
+      object.position.set(b.x, b.baseY, b.z);
+      object.rotation.set(0, b.rotation, 0);
+      object.scale.set(b.width, simple ? b.height * 0.35 : b.height, b.depth);
       object.updateMatrix();
       mesh.setMatrixAt(i, object.matrix);
-      mesh.setColorAt(i, new Color(tones[tile.tone]));
+      mesh.setColorAt(
+        i,
+        new Color(
+          layer === 'roof' ? roofs[b.roofVariant]! : walls[b.wallVariant]!,
+        ),
+      );
     }
     mesh.instanceMatrix.needsUpdate = true;
     mesh.instanceColor!.needsUpdate = true;
-  }, [model]);
+    mesh.computeBoundingSphere();
+  }, [buildings, layer, simple]);
   return (
-    <group>
-      <mesh position={[0, -0.5, 0]} raycast={() => null}>
-        <boxGeometry
-          args={[model.bounds.width * 1.04, 0.55, model.bounds.depth * 1.04]}
-        />
-        <meshLambertMaterial color="#b5beb1" />
-      </mesh>
-      <instancedMesh
-        ref={tiles}
-        args={[undefined, undefined, model.tiles.length]}
+    <instancedMesh
+      name={'city-' + kind + '-' + layer}
+      ref={instances}
+      args={[geometry, undefined, buildings.length]}
+      raycast={() => null}
+    >
+      <meshLambertMaterial color="#ffffff" />
+    </instancedMesh>
+  );
+}
+
+function City({
+  city,
+  lod,
+  mode,
+}: {
+  city: ProceduralCity;
+  lod: D3dLodBand;
+  mode: RepresentationMode;
+}) {
+  const buildings = cityLodBuildings(city, lod, mode);
+  const simple = mode === 'mini' || lod === 'far';
+  const groups = useMemo(
+    () =>
+      simple
+        ? buildings.length
+          ? [{ kind: 'house' as const, buildings }]
+          : []
+        : buildingArchetypes
+            .map((kind) => ({
+              kind,
+              buildings: buildings.filter((b) => b.archetype === kind),
+            }))
+            .filter((group) => group.buildings.length > 0),
+    [buildings, simple],
+  );
+  const surfaces = useMemo(
+    () => ({
+      street: createCitySurfaceGeometry(city, 'street'),
+      ground: createCitySurfaceGeometry(city, 'ground'),
+    }),
+    [city],
+  );
+  useEffect(
+    () => () => {
+      surfaces.street.dispose();
+      surfaces.ground.dispose();
+    },
+    [surfaces],
+  );
+  return (
+    <group name="procedural-city">
+      <mesh
+        name="settlement-ground"
+        geometry={surfaces.ground}
         raycast={() => null}
       >
-        <boxGeometry
-          args={[
-            (model.bounds.width / 16) * (lod === 'far' ? 1 : 0.985),
-            0.12,
-            (model.bounds.depth / 16) * (lod === 'far' ? 1 : 0.985),
-          ]}
-        />
-        <meshLambertMaterial color="#ffffff" />
-      </instancedMesh>
+        <meshLambertMaterial vertexColors side={DoubleSide} />
+      </mesh>
+      {mode === 'normal' ? (
+        <mesh
+          name="provisional-streets"
+          geometry={surfaces.street}
+          raycast={() => null}
+        >
+          <meshBasicMaterial vertexColors side={DoubleSide} />
+        </mesh>
+      ) : null}
+      {groups.map((group) => (
+        <group key={group.kind}>
+          <CityBatch
+            buildings={group.buildings}
+            kind={group.kind}
+            layer="body"
+            simple={simple}
+          />
+          {!simple && lod === 'near' ? (
+            <CityBatch
+              buildings={group.buildings}
+              kind={group.kind}
+              layer="roof"
+              simple={false}
+            />
+          ) : null}
+        </group>
+      ))}
     </group>
   );
 }
 
 export function createD3dRibbonGeometry(
-  edges: readonly D3dMapModel['routes'][number][],
+  edges: readonly Pick<
+    D3dMapModel['routes'][number],
+    'from' | 'to' | 'length'
+  >[],
   width: number,
   arrows: boolean,
 ) {
@@ -465,7 +642,7 @@ export function createD3dRibbonGeometry(
     if (arrows) {
       const midX = (edge.from.x + edge.to.x) / 2;
       const midZ = (edge.from.z + edge.to.z) / 2;
-      const length = Math.min(1.2, edge.length * 0.25);
+      const length = Math.min(0.55, edge.length * 0.25);
       addTriangle(
         [midX + dx * length, y, midZ + dz * length],
         [midX - dx * length - sideX, y, midZ - dz * length - sideZ],
@@ -508,9 +685,9 @@ function Routes({
     return [...edgesByRoute].map(([routeId, edges]) => ({
       routeId,
       color: edges[0]!.color,
-      ribbon: createD3dRibbonGeometry(edges, 0.65, false),
-      selected: createD3dRibbonGeometry(edges, 1.2, false),
-      arrows: createD3dRibbonGeometry(edges, 0.9, true),
+      ribbon: createD3dRibbonGeometry(edges, 0.22, false),
+      selected: createD3dRibbonGeometry(edges, 0.42, false),
+      arrows: createD3dRibbonGeometry(edges, 0.36, true),
     }));
   }, [model]);
   useEffect(
@@ -579,19 +756,27 @@ function Stops({
 }>) {
   const platforms = useRef<import('three').InstancedMesh>(null);
   const posts = useRef<import('three').InstancedMesh>(null);
+  const targets = useRef<import('three').InstancedMesh>(null);
   useEffect(() => {
     const dummy = new Object3D();
     for (let i = 0; i < model.stops.length; i++) {
       const stop = model.stops[i]!;
-      dummy.position.set(stop.x, 0.31, stop.z);
+      dummy.position.set(stop.x, 0.14, stop.z);
       dummy.updateMatrix();
       platforms.current?.setMatrixAt(i, dummy.matrix);
-      dummy.position.set(stop.x, 0.65, stop.z);
+      dummy.position.set(stop.x, 0.3, stop.z);
       dummy.updateMatrix();
       posts.current?.setMatrixAt(i, dummy.matrix);
+      targets.current!.setMatrixAt(i, dummy.matrix);
     }
     platforms.current!.instanceMatrix.needsUpdate = true;
-    if (posts.current) posts.current.instanceMatrix.needsUpdate = true;
+    platforms.current!.computeBoundingSphere();
+    if (posts.current) {
+      posts.current.instanceMatrix.needsUpdate = true;
+      posts.current.computeBoundingSphere();
+    }
+    targets.current!.instanceMatrix.needsUpdate = true;
+    targets.current!.computeBoundingSphere();
   }, [model, lod]);
   const selected =
     selection?.kind === 'stop'
@@ -612,11 +797,7 @@ function Stops({
         onClick={choose}
       >
         <boxGeometry
-          args={[
-            lod === 'far' ? 0.95 : 1.25,
-            0.24,
-            lod === 'far' ? 0.95 : 1.25,
-          ]}
+          args={[lod === 'far' ? 0.5 : 0.65, 0.12, lod === 'far' ? 0.5 : 0.65]}
         />
         <meshLambertMaterial color="#5a777c" />
       </instancedMesh>
@@ -626,16 +807,25 @@ function Stops({
           args={[undefined, undefined, model.stops.length]}
           onClick={choose}
         >
-          <boxGeometry args={[0.22, 0.58, 0.22]} />
+          <boxGeometry args={[0.12, 0.38, 0.12]} />
           <meshLambertMaterial color="#f4f0e2" />
         </instancedMesh>
       ) : null}
       {selected ? (
         <mesh position={[selected.x, 0.17, selected.z]} raycast={() => null}>
-          <cylinderGeometry args={[1.25, 1.25, 0.09, 8]} />
+          <cylinderGeometry args={[0.65, 0.65, 0.04, 8]} />
           <meshBasicMaterial color="#f2bc56" />
         </mesh>
       ) : null}
+      <instancedMesh
+        name="stop-hit-targets"
+        ref={targets}
+        args={[undefined, undefined, model.stops.length]}
+        onClick={choose}
+      >
+        <boxGeometry args={[1.25, 0.8, 1.25]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </instancedMesh>
     </group>
   );
 }
@@ -653,8 +843,8 @@ function Vehicles({
   lod: D3dLodBand;
   mode: RepresentationMode;
 }>) {
-  const body = useMemo(() => new BoxGeometry(1.15, 0.7, 2.2), []);
-  const windows = useMemo(() => new BoxGeometry(1.17, 0.3, 1.15), []);
+  const body = useMemo(() => new BoxGeometry(0.42, 0.3, 0.95), []);
+  const windows = useMemo(() => new BoxGeometry(0.43, 0.12, 0.65), []);
   useEffect(
     () => () => {
       body.dispose();
@@ -676,23 +866,31 @@ function Vehicles({
         return (
           <group
             key={vehicle.vehicleId}
-            position={[vehicle.x, 0.8, vehicle.z]}
+            position={[vehicle.x, 0.32, vehicle.z]}
             rotation={[0, vehicle.headingRadians, 0]}
           >
             {chosen ? (
-              <mesh position={[0, -0.45, 0]} raycast={() => null}>
-                <cylinderGeometry args={[1.55, 1.55, 0.1, 8]} />
+              <mesh position={[0, -0.15, 0]} raycast={() => null}>
+                <cylinderGeometry args={[0.8, 0.8, 0.04, 8]} />
                 <meshBasicMaterial color="#f2bc56" />
               </mesh>
             ) : null}
             <mesh geometry={body} dispose={null} onClick={choose}>
               <meshLambertMaterial color={vehicle.color} />
             </mesh>
+            <mesh
+              name="vehicle-hit-target"
+              position={[0, 0.48, 0]}
+              onClick={choose}
+            >
+              <boxGeometry args={[1.15, 0.7, 2.2]} />
+              <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+            </mesh>
             {lod !== 'far' ? (
               <mesh
                 geometry={windows}
                 dispose={null}
-                position={[0, 0.39, 0]}
+                position={[0, 0.13, 0]}
                 onClick={choose}
               >
                 <meshLambertMaterial color="#183842" />
@@ -707,6 +905,8 @@ function Vehicles({
 
 function D3dWorld({
   model,
+  sceneBounds,
+  city,
   vehicles,
   selection,
   onSelectionChange,
@@ -714,6 +914,8 @@ function D3dWorld({
   mode,
 }: Readonly<{
   model: D3dMapModel;
+  sceneBounds: ReturnType<typeof d3dSceneBounds>;
+  city: ProceduralCity | undefined;
   vehicles: readonly D3dVehicle[];
   selection: GameSelection;
   onSelectionChange: MapProps['onSelectionChange'];
@@ -722,9 +924,11 @@ function D3dWorld({
 }>) {
   return (
     <>
-      <ambientLight intensity={1.7} />
-      <directionalLight position={[50, 100, 30]} intensity={1.2} />
-      <Terrain model={model} lod={lod} />
+      <color attach="background" args={['#e3e9dc']} />
+      <ambientLight intensity={0.85} />
+      <directionalLight position={[-40, 80, 30]} intensity={1.6} />
+      <Terrain sceneBounds={sceneBounds} />
+      {city ? <City city={city} lod={lod} mode={mode} /> : null}
       <Routes model={model} selection={selection} lod={lod} />
       <Stops
         model={model}
@@ -750,6 +954,7 @@ export default function D3dMapRepresentation({
   selection,
   onSelectionChange,
   focusedRouteId,
+  population,
 }: MapProps) {
   const mode = useRepresentationMode();
   const wrapper = useRef<HTMLElement>(null);
@@ -758,6 +963,14 @@ export default function D3dMapRepresentation({
     [scenario],
   );
   const model = useMemo(() => createD3dMapModel(projection), [projection]);
+  const city = useMemo(
+    () => (population ? buildProceduralCity(model, population) : undefined),
+    [model, population],
+  );
+  const sceneBounds = useMemo(
+    () => d3dSceneBounds(model, city?.bounds),
+    [model, city],
+  );
   const acceptedFleet = useLatestRepresentationValue(fleet);
   const vehicles = useMemo(
     () =>
@@ -809,6 +1022,25 @@ export default function D3dMapRepresentation({
       data-directed-edge-count={model.routes.length}
       data-stop-place-count={model.stops.length}
       data-vehicle-count={vehicles.length}
+      data-city-zone-count={city?.zones.length ?? 0}
+      data-city-block-count={city?.blocks.length ?? 0}
+      data-city-building-count={city?.buildings.length ?? 0}
+      data-city-archetype-count={
+        new Set(city?.buildings.map((b) => b.archetype)).size
+      }
+      data-city-lod={mode === 'mini' ? 'far' : lod}
+      data-city-building-instances={
+        city ? cityLodBuildings(city, lod, mode).length : 0
+      }
+      data-city-mesh-instances={
+        city
+          ? cityLodBuildings(city, lod, mode).length *
+            (mode === 'normal' && lod === 'near' ? 2 : 1)
+          : 0
+      }
+      data-city-roof-instances={
+        city && mode === 'normal' && lod === 'near' ? city.buildings.length : 0
+      }
       data-selected-kind={selection?.kind ?? ''}
       data-focused-route-id={focusedRouteId ?? ''}
       data-lod="far"
@@ -836,6 +1068,7 @@ export default function D3dMapRepresentation({
         <RepresentationFrameDriver mode={mode} />
         <CameraController
           model={model}
+          sceneBounds={sceneBounds}
           vehicles={vehicles}
           focusedRouteId={focusedRouteId}
           mode={mode}
@@ -844,6 +1077,8 @@ export default function D3dMapRepresentation({
         />
         <D3dWorld
           model={model}
+          sceneBounds={sceneBounds}
+          city={city}
           vehicles={vehicles}
           selection={selection}
           onSelectionChange={onSelectionChange}

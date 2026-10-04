@@ -131,7 +131,18 @@ vi.mock('./population/population-field-loader.js', () => ({
       const failure = populationFailureMessages.shift();
       if (failure) throw new Error(failure);
       const population = {
-        grid: { resolutionDegrees: 0.001 },
+        grid: {
+          schemaVersion: '1.0.0',
+          cityId: 'Q36730',
+          gridVersion: '1.0.0',
+          resolutionDegrees: 0.001,
+          originCellCenter: populationScenario.stops.stopNodes[0]!.position,
+          rows: 1,
+          columns: 1,
+          rowDirection: 'north-to-south',
+          columnDirection: 'west-to-east',
+          populationWeights: [[1]],
+        },
         crop: { rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 1 },
         canonicalCells: [
           {

@@ -348,6 +348,26 @@ export function d3dRepresentationViolations(text) {
     violations.push('adapter-coupling');
   return violations;
 }
+export function urbanCityModelViolations(text) {
+  const violations = d3dRepresentationViolations(text);
+  const runtimeText = text.replace(
+    /import\s+type[\s\S]*?from\s+['"][^'"]+['"];?/g,
+    '',
+  );
+  if (
+    /from\s+['"](?:react|react-dom|three|@react-three)(?:\/[^'"]*)?['"]/.test(
+      runtimeText,
+    )
+  )
+    violations.push('renderer-import');
+  if (
+    /\b(?:window|document|performance|CanvasRenderingContext2D|setTimeout|clearTimeout)\b/.test(
+      runtimeText,
+    )
+  )
+    violations.push('browser-runtime');
+  return violations;
+}
 export function nodeBuiltinImports(text) {
   const sourceFile = parse(text);
   const builtins = new Set(
@@ -643,6 +663,8 @@ for (const canvasRepresentationFile of [
 for (const d3dRepresentationFile of [
   'apps/web/src/representation/D3dMapRepresentation.tsx',
   'apps/web/src/representation/d3d-map-model.ts',
+  'apps/web/src/representation/d3d-city-model.ts',
+  'apps/web/src/representation/d3d-city-geometry.ts',
 ]) {
   const violations = d3dRepresentationViolations(
     await source(d3dRepresentationFile),
@@ -652,6 +674,13 @@ for (const d3dRepresentationFile of [
       `${d3dRepresentationFile} violates D3D representation ownership: ${violations.join(', ')}.`,
     );
 }
+const cityModelViolations = urbanCityModelViolations(
+  await source('apps/web/src/representation/d3d-city-model.ts'),
+);
+if (cityModelViolations.length)
+  fail(
+    `Pure city model violates presentation ownership: ${cityModelViolations.join(', ')}.`,
+  );
 const transportMapProjectionSource = await source(
   'apps/web/src/representation/transport-map-projection.ts',
 );
@@ -753,6 +782,8 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('apps/web/src/ui/stop-place-details-model.ts') ||
     normalized.endsWith('apps/web/src/ui/game-selection.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-map-model.ts') ||
+    normalized.endsWith('apps/web/src/representation/d3d-city-model.ts') ||
+    normalized.endsWith('apps/web/src/representation/d3d-city-geometry.ts') ||
     normalized.endsWith(
       'apps/web/src/representation/D3dMapRepresentation.tsx',
     ) ||
@@ -974,6 +1005,18 @@ if (d3dRepresentationViolations(d3dRepresentationForbiddenFixture).length !== 6)
   fail('D3D representation negative fixture was not fully detected.');
 if (d3dRepresentationViolations(d3dRepresentationAllowedFixture).length)
   fail('legitimate D3D representation fixture was rejected.');
+if (
+  urbanCityModelViolations(
+    'import { Color } from "three"; window.setTimeout(() => Math.random(), 1);',
+  ).length !== 3
+)
+  fail('pure city model negative fixture was not fully detected.');
+if (
+  urbanCityModelViolations(
+    'import type { ScenarioPopulationView } from "../population/population-field-loader.js"; const density = 0.5;',
+  ).length
+)
+  fail('legitimate pure city model fixture was rejected.');
 
 const representationBenchmarkSource = await source(
   'cypress/performance/representation-runtime.cy.ts',

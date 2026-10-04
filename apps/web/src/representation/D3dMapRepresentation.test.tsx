@@ -9,7 +9,11 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, expect, it, vi } from 'vitest';
 import * as r3f from '@react-three/fiber';
-import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
+import {
+  listActivePopulationCells,
+  parseCityPopulationGrid,
+  parseScenarioPackage,
+} from '@torrevieja-tycoon/transport-domain';
 import {
   parseVehicleId,
   type VehicleState,
@@ -17,11 +21,14 @@ import {
 import { RepresentationModeProvider } from './RepresentationModeContext.js';
 import D3dMapRepresentation, {
   createD3dRibbonGeometry,
+  writeD3dDiagnostics,
 } from './D3dMapRepresentation.js';
 import { createTransportMapProjection } from './transport-map-projection.js';
 import { createD3dMapModel } from './d3d-map-model.js';
 import { fitD3dCamera } from './d3d-map-model.js';
+import type { ScenarioPopulationView } from '../population/population-field-loader.js';
 import { BoxGeometry, BufferGeometry } from 'three';
+import { buildProceduralCity } from './d3d-city-model.js';
 import {
   selectRoute,
   selectStop,
@@ -70,6 +77,40 @@ const fleet: VehicleState[] = [
 ];
 const onSelectionChange = vi.fn();
 const model = createD3dMapModel(createTransportMapProjection(scenario));
+const populationGrid = parseCityPopulationGrid({
+  schemaVersion: '1.0.0',
+  cityId: 'Q36730',
+  gridVersion: '1.0.0',
+  originCellCenter: {
+    latitude:
+      (model.projection.bounds.north + model.projection.bounds.south) / 2,
+    longitude:
+      (model.projection.bounds.west + model.projection.bounds.east) / 2,
+  },
+  resolutionDegrees: 0.001,
+  rowDirection: 'north-to-south',
+  columnDirection: 'west-to-east',
+  rows: 12,
+  columns: 12,
+  populationWeights: Array.from({ length: 12 }, (_, r) =>
+    Array.from({ length: 12 }, (_, c) => 1 + r * 8 + c * 4),
+  ),
+});
+const canonicalCells = listActivePopulationCells(populationGrid);
+const population: ScenarioPopulationView = {
+  grid: populationGrid,
+  crop: { rowStart: 0, rowEnd: 12, columnStart: 0, columnEnd: 12 },
+  canonicalCells,
+  totalPopulationWeight: canonicalCells.reduce(
+    (sum, cell) => sum + cell.populationWeight,
+    0,
+  ),
+  nonzeroCellCount: canonicalCells.length,
+  gridSha256: 'a'.repeat(64),
+  cropSha256: 'b'.repeat(64),
+  demandModelContentHash: 'c'.repeat(64),
+  operationalCropPolicy: { maxAccessDistanceCells: 5 },
+};
 const controls = (
   r3f as unknown as {
     __testControls: {
@@ -97,6 +138,7 @@ afterEach(() => {
     'setColorAt',
     'instanceMatrix',
     'instanceColor',
+    'computeBoundingSphere',
   ])
     Reflect.deleteProperty(HTMLElement.prototype, property);
   cleanup();
@@ -133,21 +175,34 @@ const enableWorld = () => {
   controls.renderWorld = true;
   const setMatrixAt = vi.fn();
   const setColorAt = vi.fn();
+  const computeBoundingSphere = vi.fn();
   Object.assign(HTMLElement.prototype, {
     setMatrixAt,
     setColorAt,
+    computeBoundingSphere,
     instanceMatrix: { needsUpdate: false },
     instanceColor: { needsUpdate: false },
   });
-  return { setMatrixAt, setColorAt };
+  return { setMatrixAt, setColorAt, computeBoundingSphere };
 };
 
+it('publishes read-only diagnostics when mounted and tolerates R3F host teardown', () => {
+  const element = document.createElement('section');
+  writeD3dDiagnostics(element, { cameraMode: 'full' });
+  expect(element).toHaveAttribute('data-camera-mode', 'full');
+  expect(() =>
+    writeD3dDiagnostics(null, { cameraMode: 'manual' }),
+  ).not.toThrow();
+  expect(element).toHaveAttribute('data-camera-mode', 'full');
+});
+
 it('materializes route, terrain, StopPlace, and Vehicle geometry through the scene boundary', () => {
-  const { setMatrixAt, setColorAt } = enableWorld();
+  const { setMatrixAt, setColorAt, computeBoundingSphere } = enableWorld();
   render(scene('normal'));
   expect(document.querySelectorAll('instancedmesh')).toHaveLength(3);
   expect(setMatrixAt).toHaveBeenCalled();
-  expect(setColorAt).toHaveBeenCalled();
+  expect(computeBoundingSphere).toHaveBeenCalled();
+  expect(setColorAt).not.toHaveBeenCalled();
   const map = screen.getByTestId('d3d-map-representation');
   expect(map).toHaveAttribute(
     'data-pointer-stop-id',
@@ -158,13 +213,124 @@ it('materializes route, terrain, StopPlace, and Vehicle geometry through the sce
   expect(Number(map.getAttribute('data-pointer-vehicle-y'))).toBeGreaterThan(0);
   expect(Number(map.getAttribute('data-pointer-route-x'))).toBeGreaterThan(0);
   onSelectionChange.mockClear();
-  const stopMesh = document.querySelectorAll('instancedmesh')[1]!;
+  const stopMesh = document.querySelectorAll('instancedmesh')[0]!;
   expect(
     chooseSceneObject(stopMesh, { instanceId: 0, delta: 0 }),
   ).toHaveBeenCalled();
   expect(onSelectionChange).toHaveBeenCalledWith(
     selectStop(model.stops[0]!.stopPlaceId),
   );
+});
+
+it('batches five city silhouettes with near roofs and cheap far/mini geometry without stealing selection', () => {
+  const { setMatrixAt, setColorAt, computeBoundingSphere } = enableWorld();
+  onSelectionChange.mockClear();
+  const dispose = vi.spyOn(BufferGeometry.prototype, 'dispose');
+  const city = buildProceduralCity(model, population);
+  const { rerender, unmount } = render(
+    scene('normal', null, undefined, scenario, population),
+  );
+  const map = screen.getByTestId('d3d-map-representation');
+  expect(map).toHaveAttribute(
+    'data-city-building-count',
+    String(city.buildings.length),
+  );
+  expect(city.buildings.length).toBeGreaterThan(0);
+  expect(setColorAt).toHaveBeenCalled();
+  fireEvent.wheel(controls.canvas, { deltaY: -3000 });
+  expect(map).toHaveAttribute('data-city-lod', 'near');
+  expect(map).toHaveAttribute(
+    'data-city-building-instances',
+    String(city.buildings.length),
+  );
+  expect(map).toHaveAttribute(
+    'data-city-roof-instances',
+    String(city.buildings.length),
+  );
+  const buildings = document.querySelector('instancedmesh[name^="city-"]')!;
+  expect(sceneProps(buildings).raycast?.()).toBeNull();
+  expect(
+    chooseSceneObject(buildings, { instanceId: 0, delta: 0 }),
+  ).not.toHaveBeenCalled();
+  const streets = document.querySelector('mesh[name="provisional-streets"]')!;
+  expect(sceneProps(streets).raycast?.()).toBeNull();
+  expect(
+    sceneProps(
+      document.querySelector('mesh[name="settlement-ground"]')!,
+    ).raycast?.(),
+  ).toBeNull();
+  expect(chooseSceneObject(streets, { delta: 0 })).not.toHaveBeenCalled();
+  expect(onSelectionChange).not.toHaveBeenCalled();
+  expect(
+    chooseSceneObject(
+      document.querySelector('instancedmesh[name="stop-hit-targets"]')!,
+      { instanceId: 0, delta: 0 },
+    ),
+  ).toHaveBeenCalled();
+  expect(onSelectionChange).toHaveBeenCalledWith(
+    selectStop(model.stops[0]!.stopPlaceId),
+  );
+  const staticCalls = setMatrixAt.mock.calls.length;
+  const staticBounds = computeBoundingSphere.mock.calls.length;
+  rerender(scene('normal', null, undefined, scenario, population, [...fleet]));
+  expect(setMatrixAt).toHaveBeenCalledTimes(staticCalls);
+  expect(computeBoundingSphere).toHaveBeenCalledTimes(staticBounds);
+  fireEvent.wheel(controls.canvas, { deltaY: 10000 });
+  expect(map).toHaveAttribute('data-city-lod', 'far');
+  expect(map).toHaveAttribute(
+    'data-city-building-instances',
+    String(city.far.length),
+  );
+  expect(map).toHaveAttribute('data-city-roof-instances', '0');
+  rerender(scene('mini', null, undefined, scenario, population));
+  expect(map).toHaveAttribute(
+    'data-city-building-instances',
+    String(city.mini.length),
+  );
+  expect(map).toHaveAttribute('data-city-roof-instances', '0');
+  expect(document.querySelector('mesh[name="provisional-streets"]')).toBeNull();
+  const replacementPopulation = {
+    ...population,
+    canonicalCells: population.canonicalCells.filter((c) => c.column < 5),
+  };
+  const replacementScenario = {
+    ...scenario,
+    manifest: { ...scenario.manifest, scenarioId: 'population-replacement' },
+  } as typeof scenario;
+  rerender(
+    scene(
+      'normal',
+      null,
+      undefined,
+      replacementScenario,
+      replacementPopulation,
+    ),
+  );
+  expect(map).toHaveAttribute('data-scenario-id', 'population-replacement');
+  expect(Number(map.getAttribute('data-city-building-count'))).toBeLessThan(
+    city.buildings.length,
+  );
+  fireEvent.wheel(controls.canvas, { deltaY: -3000 });
+  expect(map).toHaveAttribute(
+    'data-city-roof-instances',
+    map.getAttribute('data-city-building-count'),
+  );
+  unmount();
+  expect(dispose).toHaveBeenCalled();
+});
+
+it('keeps an empty population crop as cheap land context with no zero-capacity instance batch', () => {
+  enableWorld();
+  render(
+    scene('mini', null, undefined, scenario, {
+      ...population,
+      canonicalCells: [],
+    }),
+  );
+  const map = screen.getByTestId('d3d-map-representation');
+  expect(map).toHaveAttribute('data-city-building-count', '0');
+  expect(map).toHaveAttribute('data-city-building-instances', '0');
+  expect(document.querySelector('instancedmesh[name^="city-"]')).toBeNull();
 });
 
 it('keeps route ribbons nonselectable and highlights only the selected canonical Route', () => {
@@ -198,7 +364,7 @@ it('rejects invalid, dragged, and mini StopPlace clicks but accepts exact instan
   enableWorld();
   onSelectionChange.mockClear();
   const { rerender } = render(scene('normal'));
-  let platform = document.querySelectorAll('instancedmesh')[1]!;
+  let platform = document.querySelectorAll('instancedmesh')[0]!;
   expect(chooseSceneObject(platform, { delta: 0 })).not.toHaveBeenCalled();
   expect(
     chooseSceneObject(platform, { instanceId: 0, delta: 6 }),
@@ -214,7 +380,7 @@ it('rejects invalid, dragged, and mini StopPlace clicks but accepts exact instan
     selectStop(model.stops[1]!.stopPlaceId),
   );
   rerender(scene('mini'));
-  platform = document.querySelectorAll('instancedmesh')[1]!;
+  platform = document.querySelectorAll('instancedmesh')[0]!;
   onSelectionChange.mockClear();
   expect(
     chooseSceneObject(platform, { instanceId: 0, delta: 0 }),
@@ -273,7 +439,9 @@ it('keeps terrain and selected markers nonselectable in detailed and far LOD', (
       .filter((element) => sceneProps(element).raycast)
       .some((element) => sceneProps(element).raycast?.() === null),
   ).toBe(true);
-  const terrain = document.querySelector('instancedmesh')!;
+  const terrain = [...document.querySelectorAll('mesh')].find(
+    (element) => sceneProps(element).raycast,
+  )!;
   expect(sceneProps(terrain).raycast?.()).toBeNull();
   rerender(scene('normal', selectVehicle(fleet[0]!.vehicleId)));
   const vehicleMarker = [...document.querySelectorAll('mesh')].find((element) =>
@@ -377,14 +545,17 @@ const scene = (
   selection = null as ReturnType<typeof selectStop>,
   focusedRouteId?: typeof route.routeId,
   currentScenario = scenario,
+  currentPopulation?: ScenarioPopulationView,
+  currentFleet = fleet,
 ) => (
   <RepresentationModeProvider mode={mode}>
     <D3dMapRepresentation
       scenario={currentScenario}
-      fleet={fleet}
+      fleet={currentFleet}
       selection={selection}
       onSelectionChange={onSelectionChange}
       focusedRouteId={focusedRouteId}
+      population={currentPopulation}
     />
   </RepresentationModeProvider>
 );

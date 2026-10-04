@@ -210,49 +210,69 @@ The normal camera is restored after a mini transition only while the model,
 focused Route, and viewport size still match its saved context; otherwise D3D
 fits the current Route or full network.
 
-D3D Procedural City / Settlement V0 reuses the canonical normalized transport
-Map projection and immutable population crop. Population is a neighboring density
-field, not one visible building per occupied cell. A source adapter deduplicates
-collinear/shared/reverse canonical route segments into narrow provisional urban
-corridors. These streets are presentation heuristics, never road or simulation
-authority. Future route or actual road GeoJSON can replace that adapter through
-its source-independent UrbanCorridor descriptors.
+D3D Settlement Metadata Integration V0 enriches the accepted procedural-city
+foundation with unchanged, checksum-pinned Torrevieja research: 13 districts,
+31 morphology zones, 11 urban profiles, 10 building profiles, 22 landmarks and
+six landscape regions. Schema `0.1.0` remains `needs-review`, with approximate
+polygons rather than official neighborhood or regulatory boundaries. The runtime
+catalogue maps `es-torrevieja` to research city `torrevieja`; the public JSON stays
+outside emitted JavaScript and is precached for root/subpath offline use.
 
-A conservative three-by-three mask within each supported population cell reserves
-primary corridors and finds disconnected settlement zones. Longest-axis bisection
-bounds blocks to three native cells in denser zones and four in sparse zones.
-Staggered parcels use local nine-cell density, support taper, deterministic open
-lots, block setbacks, corridor tangent orientation and physical StopPlace plazas.
-Whole parcel envelopes remain in supported blocks and clear primary corridors.
-Greedy ground patches retain support holes and street gaps without visible cell
-outlines. Pale stone/stucco walls and restrained roof colours materialize five
-geometric archetypes: gabled detached houses, stepped pitched terraces, apartment
-slabs with parapets, two-wing L corners and three-wing U courtyard blocks.
-Storeys are discrete (houses 1–2, terraces 2–3, larger blocks 3–7); one visual
-storey is 0.16 of the shorter native-cell axis. Placement has a separate flat
-base Y for later terrain sampling; elevation remains deferred.
+Population remains quantitative authority. The immutable overlay retains exact
+canonical cell identities, coordinates, weights, grid and half-open crop. Primary
+zone assignment uses cell centers, smallest polygon area then lexical ID; all
+overlaps remain available, districts derive from primary zones, and gaps stay
+unassigned. Landscape precedence is `none`, then `strongly-constrained`, then
+ordinary buildability. Whole ordinary building envelopes and local-street
+segments avoid hard masks; constrained areas sharply reduce occupancy. Canonical
+routes remain authoritative and are not removed by approximate landscape masks.
 
-The pure, deeply frozen city model is cached by static map/population identities.
-Fleet, selection, camera and frame updates never rebuild it. Existing screen-scale
-LOD/hysteresis selects one-sixth simple low masses at far, half the body prototypes
-at medium, and all body/roof prototypes near. Mini keeps one twenty-fourth simple
-masses and one cheap ground batch. At most five body and five roof instance groups
-are mounted, plus two surface batches; no React tree exists per building. Three.js
-prototype/surface resources are disposed on replacement or unmount. Full-network
-framing uses the full canonical crop extent, including empty land; Route focus
-retains canonical transport extents. No city geometry has interaction semantics.
+Landmark district/zone references are semantic associations. Existence and zone
+ownership by the referenced district are hard invariants; geometric containment
+is diagnostic. The supplied Eras de la Sal, Palacio de Deportes and Hospital
+Quirón points fall outside their associated coarse zones and are accepted V0
+research errata. Their explicit coordinates govern reservations; semantic zone
+profiles still inform their scale. There are no ID-specific runtime exceptions.
+The JSON, original report and source register remain unchanged; see
+[the integration record](research/torrevieja/integration-v0.md).
 
-Narrow ground-level route ribbons retain canonical colours, selected-route
-highlighting, and medium/near direction wedges. Compact physical StopPlace
-platforms/posts and route-coloured low-poly buses use restrained selection
-halos and separate invisible hit targets retaining the previous interaction
-footprints. Soft ambient and directional Lambert shading reveals form without
-textures, external assets, shadow maps, or a decorative grid. Normal mode retains bounded
-pan/zoom and screen-scale LOD; mini remains a full-network far-detail overview.
-Selection, keyboard access, detail modals, Route focus, and manual 60/5 fps
-cadence retain their existing ownership. Full terrain/elevation height-maps,
-passenger D3D presentation, detailed city assets, and final Route-system visual
-redesign remain deferred.
+A pure static city model applies morphology orientation and metre-based block,
+street, parcel, setback, coverage and open-space ranges. Weighted family choice
+occurs at development scale, with bounded local repetition and known muted
+Mediterranean palette tokens. Population modulates residential occupancy and
+storeys within those profiles; nonresidential form can exist without population.
+Fragmented frontiers retain planned streets but have much lower occupancy.
+Generated connected settlement components have identities distinct from research
+morphology zones. Canonical route corridors reserve provisional primary streets;
+local streets remain presentation geometry without routing or simulation meaning.
+Future road/route GeoJSON can replace that source adapter.
+
+Twelve bounded prototypes provide compact apartments, perimeter courts, L corners,
+U courts, midrise slabs, tower/podiums, detached and paired houses, terrace rows,
+retail boxes, industrial sheds and stepped civic masses. Generic population-only
+presentation remains available for other settlements and research gaps. Optional
+acquisition renders transport immediately while metadata is pending and falls
+back to generic city geometry on failure without changing camera framing. Quiet
+zone tints and flat landscape surfaces integrate settlements with the terrain;
+route ribbons retain a small far/medium readability floor over metre-scale roads.
+Runtime cropped-grid offsets preserve canonical cell alignment. One storey is 3.1 metres;
+Torrevieja buses are 11 × 2.8 × 3.3 metres and platforms are 7 × 3 × 0.4 metres.
+Comfortable invisible hit targets, keyboard selection and selected-state cues
+retain existing semantics.
+
+Static cache identity includes map/population, metadata object and checksum;
+fleet, selection, focus, camera and frames do not rebuild the city. Metadata
+far/medium/near LOD keeps one-eighth simple masses, half body prototypes, then all
+bodies/roofs; mini keeps one thirty-second simple masses. Generic fallback retains
+its previous one-sixth/half/all/one-twenty-fourth policy. At most twelve body and
+twelve roof instance groups plus four merged surface batches are mounted; there
+is no React tree per parcel. Resources are disposed on replacement/unmount and
+city surfaces never intercept entity selection. Full-network framing includes
+empty crop land; focused routes retain canonical extents, bounded pan/zoom and
+normal-view restoration after mini coexistence. Manual frame cadence remains
+60/5 fps. Terrain is flat, softly lit and texture-free. Full elevation, detailed
+landmarks, passenger D3D, district gameplay and final route-system art remain
+deferred. No simulation/protocol/persistence or population authority changed.
 
 DOM2D and Canvas2D share deliberate normal/mini presentation metrics for Map
 entities. Geographic Route and population geometry continues to scale with the

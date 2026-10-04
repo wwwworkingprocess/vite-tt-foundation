@@ -1,5 +1,9 @@
 import type { VehicleId } from '@torrevieja-tycoon/simulation';
-import type { RouteId, StopPlaceId } from '@torrevieja-tycoon/transport-domain';
+import type {
+  RouteId,
+  StopPlaceId,
+  Wgs84Position,
+} from '@torrevieja-tycoon/transport-domain';
 import {
   selectStop,
   selectVehicle,
@@ -7,6 +11,7 @@ import {
 } from '../ui/game-selection.js';
 import {
   deriveTransportRouteViewport,
+  projectTransportMapPoint,
   type TransportMapPoint,
   type TransportMapProjection,
   type TransportMapVehicle,
@@ -44,6 +49,38 @@ export type D3dMapModel = Readonly<{
 
 const models = new WeakMap<object, D3dMapModel>();
 const frozen = <T>(value: T): Readonly<T> => Object.freeze(value);
+
+/** Same local equirectangular approximation and cosine clamp as world normalization. */
+export function d3dMetreScale(model: D3dMapModel) {
+  const { north, south, east, west } = model.projection.bounds;
+  const cosine = Math.max(0.01, Math.cos(((north + south) * Math.PI) / 360));
+  const spanDegrees = Math.max(
+    Math.abs(east - west) * cosine,
+    Math.abs(north - south),
+    0.000001,
+  );
+  const worldUnitsPerMetre = worldSpan / (spanDegrees * 111320);
+  return frozen({
+    worldUnitsPerMetre,
+    metresPerWorldUnit: 1 / worldUnitsPerMetre,
+  });
+}
+export function d3dProjectedPoint(model: D3dMapModel, point: Wgs84Position) {
+  return d3dWorldPoint(
+    model.bounds,
+    projectTransportMapPoint(model.projection.bounds, point),
+  );
+}
+export function d3dGeographicPoint(
+  model: D3dMapModel,
+  point: D3dWorldPoint,
+): Wgs84Position {
+  const { west, east, north, south } = model.projection.bounds;
+  return frozen({
+    longitude: west + (point.x / model.bounds.width + 0.5) * (east - west),
+    latitude: north - (point.z / model.bounds.depth + 0.5) * (north - south),
+  });
+}
 
 /** X is east, Z is south, Y is visual layering only. */
 export function d3dWorldPoint(

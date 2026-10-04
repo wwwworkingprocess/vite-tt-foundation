@@ -14,7 +14,6 @@ import {
   generateUrbanCity,
   cityLodBuildings,
   distanceToCorridor,
-  buildingArchetypes,
 } from './d3d-city-model.js';
 
 const model = createD3dMapModel({
@@ -89,7 +88,7 @@ it('generates bounded, subdivided non-raster parcels deterministically without m
   expect(population).toEqual(before);
   expect(structuredClone(city)).toEqual(city);
   expect(Object.isFrozen(city.buildings)).toBe(true);
-  expect(city.zones).toHaveLength(1);
+  expect(city.components).toHaveLength(1);
   expect(city.blocks.length).toBeGreaterThan(4);
   for (const block of city.blocks) {
     expect(block.maxX - block.minX).toBeLessThanOrEqual(
@@ -100,7 +99,13 @@ it('generates bounded, subdivided non-raster parcels deterministically without m
     );
   }
   expect(new Set(city.buildings.map((b) => b.archetype))).toEqual(
-    new Set(buildingArchetypes),
+    new Set([
+      'detached-house',
+      'terrace-row',
+      'midrise-slab',
+      'corner-l',
+      'courtyard-u',
+    ]),
   );
   expect(city.buildings.length).not.toBe(population.canonicalCells.length);
   expect(new Set(city.buildings.map((b) => b.rotation)).size).toBeGreaterThan(
@@ -148,7 +153,7 @@ it('reserves deduplicated corridors and StopPlace plazas and separates disconnec
   expect(Object.isFrozen(corridors)).toBe(false);
   expect(Object.isFrozen(corridors[0])).toBe(false);
   expect(Object.isFrozen(corridors[0]!.from)).toBe(false);
-  expect(city.zones.length).toBeGreaterThan(1);
+  expect(city.components.length).toBeGreaterThan(1);
   for (const b of city.buildings) {
     const radius = Math.hypot(b.width, b.depth) / 2;
     expect(distanceToCorridor(b, corridors[0]!)).toBeGreaterThanOrEqual(
@@ -171,13 +176,19 @@ it('reserves deduplicated corridors and StopPlace plazas and separates disconnec
     ),
   ).toEqual([{ from: { x: -1, z: 0 }, to: { x: 2, z: 0 }, width: 0.3 }]);
   expect(Object.isFrozen(edge.from)).toBe(false);
+  expect(
+    distanceToCorridor(
+      { x: 4, z: 5 },
+      { from: { x: 1, z: 1 }, to: { x: 1, z: 1 }, width: 0 },
+    ),
+  ).toBe(5);
   const fragments = {
     ...population,
     canonicalCells: population.canonicalCells.filter(
       (c) => c.column < 3 || c.column > 16,
     ),
   };
-  expect(buildProceduralCity(model, fragments).zones).toHaveLength(2);
+  expect(buildProceduralCity(model, fragments).components).toHaveLength(2);
   expect(
     buildProceduralCity(model, { ...population, canonicalCells: [] }).buildings,
   ).toEqual([]);
@@ -189,7 +200,7 @@ it('reserves deduplicated corridors and StopPlace plazas and separates disconnec
   );
 });
 
-it('uses all five archetypes in the real Torrevieja crop, with materially reduced LOD counts', () => {
+const realTorrevieja = (() => {
   const publicRoot = join(import.meta.dirname, '..', '..', 'public');
   const json = (path: string) =>
     JSON.parse(readFileSync(join(publicRoot, path), 'utf8')) as unknown;
@@ -226,8 +237,19 @@ it('uses all five archetypes in the real Torrevieja crop, with materially reduce
   };
   const map = createD3dMapModel(createTransportMapProjection(scenario));
   const city = buildProceduralCity(map, view);
+  return { map, city };
+})();
+
+it('uses all five archetypes in the real Torrevieja crop, with materially reduced LOD counts', () => {
+  const { map, city } = realTorrevieja;
   const counts = Object.fromEntries(
-    buildingArchetypes.map((kind) => [
+    [
+      'detached-house',
+      'terrace-row',
+      'midrise-slab',
+      'corner-l',
+      'courtyard-u',
+    ].map((kind) => [
       kind,
       city.buildings.filter((b) => b.archetype === kind).length,
     ]),
@@ -251,7 +273,7 @@ it('uses all five archetypes in the real Torrevieja crop, with materially reduce
     ).toBeGreaterThanOrEqual(radius + city.stopClearance);
   }
   expect({
-    zones: city.zones.length,
+    components: city.components.length,
     blocks: city.blocks.length,
     archetypes: counts,
     far: city.far.length,
@@ -259,12 +281,12 @@ it('uses all five archetypes in the real Torrevieja crop, with materially reduce
     near: city.buildings.length,
     mini: city.mini.length,
   }).toEqual({
-    zones: 53,
+    components: 53,
     blocks: 435,
     archetypes: {
-      house: 401,
-      terrace: 216,
-      slab: 20,
+      'detached-house': 401,
+      'terrace-row': 216,
+      'midrise-slab': 20,
       'corner-l': 131,
       'courtyard-u': 16,
     },
@@ -273,4 +295,33 @@ it('uses all five archetypes in the real Torrevieja crop, with materially reduce
     near: 784,
     mini: 33,
   });
+});
+
+it('aligns canonical cells identically in full and cropped runtime grids without double-applying crop offsets', () => {
+  const crop = { rowStart: 4, rowEnd: 10, columnStart: 3, columnEnd: 12 };
+  const cropped = parseCityPopulationGrid({
+    ...grid,
+    originCellCenter: {
+      latitude:
+        grid.originCellCenter.latitude - crop.rowStart * grid.resolutionDegrees,
+      longitude:
+        grid.originCellCenter.longitude +
+        crop.columnStart * grid.resolutionDegrees,
+    },
+    rows: crop.rowEnd - crop.rowStart,
+    columns: crop.columnEnd - crop.columnStart,
+    populationWeights: grid.populationWeights
+      .slice(crop.rowStart, crop.rowEnd)
+      .map((row) => row.slice(crop.columnStart, crop.columnEnd)),
+  });
+  const canonicalCells = population.canonicalCells.filter(
+    (c) =>
+      c.row >= crop.rowStart &&
+      c.row < crop.rowEnd &&
+      c.column >= crop.columnStart &&
+      c.column < crop.columnEnd,
+  );
+  expect(
+    buildProceduralCity(model, { grid: cropped, crop, canonicalCells }),
+  ).toEqual(buildProceduralCity(model, { grid, crop, canonicalCells }));
 });

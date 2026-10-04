@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "0.1.0",
+  "cities": [
+    {
+      "primarySettlementId": "es-torrevieja",
+      "cityId": "torrevieja",
+      "path": "torrevieja/torrevieja-settlement-metadata.v0.json",
+      "sha256": "703d6aa93e3dcfbc8e3da9b85a4cc466b64401ce39a4f727abf7ff4e8fc2dd9c",
+      "metadataSchemaVersion": "0.1.0",
+      "readiness": "needs-review"
+    }
+  ]
+}

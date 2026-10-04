@@ -9,10 +9,48 @@ import {
   projectD3dVehicles,
   selectD3dCandidate,
   d3dSceneBounds,
+  d3dMetreScale,
+  d3dGeographicPoint,
+  d3dProjectedPoint,
 } from './d3d-map-model.js';
 
 const routeId = 'route-a' as RouteId;
 const stopPlaceId = 'place-a' as StopPlaceId;
+
+it('converts local metres and WGS84 through the same latitude-adjusted D3D projection', () => {
+  const map = createD3dMapModel({
+    bounds: { west: -0.72, east: -0.64, south: 37.94, north: 38.04 },
+    edges: [],
+    stopPlaces: [],
+  });
+  const scale = d3dMetreScale(map);
+  expect(scale.worldUnitsPerMetre * scale.metresPerWorldUnit).toBeCloseTo(1);
+  expect(scale.worldUnitsPerMetre * 11132).toBeCloseTo(100);
+  const origin = { longitude: -0.68, latitude: 37.99 };
+  const p = d3dProjectedPoint(map, origin);
+  expect(d3dGeographicPoint(map, p)).toEqual(origin);
+  const east = d3dProjectedPoint(map, {
+    ...origin,
+    longitude: origin.longitude + 0.001,
+  });
+  const north = d3dProjectedPoint(map, {
+    ...origin,
+    latitude: origin.latitude + 0.001,
+  });
+  expect((east.x - p.x) / scale.worldUnitsPerMetre).toBeCloseTo(
+    111.32 * Math.cos((37.99 * Math.PI) / 180),
+  );
+  expect((p.z - north.z) / scale.worldUnitsPerMetre).toBeCloseTo(111.32);
+  expect(
+    d3dMetreScale(
+      createD3dMapModel({
+        bounds: { west: 0, east: 0, south: 0, north: 0 },
+        edges: [],
+        stopPlaces: [],
+      }),
+    ).worldUnitsPerMetre,
+  ).toBeGreaterThan(0);
+});
 const projection = {
   bounds: { west: -1, east: 1, south: 0, north: 1 },
   edges: [

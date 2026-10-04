@@ -29,6 +29,11 @@ import { fitD3dCamera } from './d3d-map-model.js';
 import type { ScenarioPopulationView } from '../population/population-field-loader.js';
 import { BoxGeometry, BufferGeometry } from 'three';
 import { buildProceduralCity } from './d3d-city-model.js';
+import { useSettlementMetadata } from '../settlement/use-settlement-metadata.js';
+import { parseSettlementMetadata } from '../settlement/settlement-metadata.js';
+vi.mock('../settlement/use-settlement-metadata.js', () => ({
+  useSettlementMetadata: vi.fn(() => ({ status: 'unavailable' })),
+}));
 import {
   selectRoute,
   selectStop,
@@ -146,6 +151,7 @@ afterEach(() => {
   vi.useRealTimers();
   configureRepresentationProfiling(false);
   clearRepresentationProfiles();
+  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'unavailable' });
 });
 
 it('connects R3F pointer events only to a mounted canvas target', () => {
@@ -319,6 +325,79 @@ it('batches five city silhouettes with near roofs and cheap far/mini geometry wi
   expect(dispose).toHaveBeenCalled();
 });
 
+const readyMetadata = parseSettlementMetadata(
+  JSON.parse(
+    readFileSync(
+      join(
+        root,
+        '../../../settlement-metadata/torrevieja/torrevieja-settlement-metadata.v0.json',
+      ),
+      'utf8',
+    ),
+  ) as unknown,
+);
+const readyView = {
+  status: 'ready',
+  metadata: readyMetadata,
+  sha256: 'research',
+  primarySettlementId: 'es-torrevieja',
+} as const;
+// Static fixture acquisition is exercised independently by the city-model tests.
+buildProceduralCity(model, population, readyView);
+
+it('exposes research diagnostics and keeps scaled city surfaces outside entity hit targets', () => {
+  enableWorld();
+  vi.mocked(useSettlementMetadata).mockReturnValue(readyView);
+  const { rerender, unmount } = render(
+    scene('normal', null, undefined, scenario, population),
+  );
+  const map = screen.getByTestId('d3d-map-representation');
+  expect(map).toHaveAttribute('data-settlement-metadata-status', 'ready');
+  expect(map).toHaveAttribute('data-research-district-count', '13');
+  expect(map).toHaveAttribute('data-morphology-zone-count', '31');
+  expect(map).toHaveAttribute('data-landmark-zone-mismatch-count', '3');
+  expect(
+    document.querySelector('mesh[name="research-landscape"]'),
+  ).not.toBeNull();
+  for (const name of ['research-landscape', 'landmark-reservations'])
+    expect(
+      sceneProps(document.querySelector(`mesh[name="${name}"]`)!).raycast!(),
+    ).toBeNull();
+  chooseSceneObject(
+    document.querySelector('instancedmesh[name="stop-hit-targets"]')!,
+    { instanceId: 0, delta: 0 },
+  );
+  expect(onSelectionChange).toHaveBeenCalled();
+  const unitsPerPixel = 20 / (660 * cameraState().zoom);
+  fireEvent.wheel(controls.canvas, {
+    deltaY: -Math.log(unitsPerPixel / 0.07) * 1000,
+  });
+  expect(map).toHaveAttribute('data-city-lod', 'medium');
+  fireEvent.wheel(controls.canvas, { deltaY: -1550 });
+  rerender(
+    scene(
+      'normal',
+      selectStop(stop.stopPlaceId),
+      undefined,
+      scenario,
+      population,
+    ),
+  );
+  rerender(
+    scene(
+      'normal',
+      selectVehicle(fleet[0]!.vehicleId),
+      undefined,
+      scenario,
+      population,
+    ),
+  );
+  rerender(scene('mini', null, undefined, scenario, population));
+  expect(map).toHaveAttribute('data-city-roof-instances', '0');
+  unmount();
+  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'unavailable' });
+});
+
 it('keeps an empty population crop as cheap land context with no zero-capacity instance batch', () => {
   enableWorld();
   render(
@@ -331,6 +410,23 @@ it('keeps an empty population crop as cheap land context with no zero-capacity i
   expect(map).toHaveAttribute('data-city-building-count', '0');
   expect(map).toHaveAttribute('data-city-building-instances', '0');
   expect(document.querySelector('instancedmesh[name^="city-"]')).toBeNull();
+});
+
+it('renders transport immediately while metadata loads, then retains generic fallback and stable framing', () => {
+  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'loading' });
+  const { rerender } = render(
+    scene('normal', null, undefined, scenario, population),
+  );
+  const map = screen.getByTestId('d3d-map-representation');
+  expect(map).toHaveAttribute('data-city-building-count', '0');
+  const camera = cameraState();
+  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'failed' });
+  rerender(scene('normal', null, undefined, scenario, population));
+  expect(Number(map.getAttribute('data-city-building-count'))).toBeGreaterThan(
+    0,
+  );
+  expect(cameraState()).toEqual(camera);
+  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'unavailable' });
 });
 
 it('keeps route ribbons nonselectable and highlights only the selected canonical Route', () => {

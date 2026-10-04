@@ -183,6 +183,12 @@ Completed:
   building archetypes with genuine roofs. Cached, batched geometry retains
   StopPlace clearance, selection and focus; far/medium/near and mini materially
   reduce complexity. Route/road GeoJSON may later replace the corridor adapter.
+- Torrevieja settlement-metadata integration V0: unchanged checksum-pinned
+  `needs-review` research (13 districts/31 morphology zones), diagnostic landmark
+  containment, immutable population enrichment, approximate landscape exclusions,
+  metre-based profile streets/blocks/parcels and twelve instanced building
+  families. Unsupported settlements keep generic presentation; no authority or
+  save contract changed. See the research integration erratum.
 - shared, ephemeral full-network/selected-Route viewport focus for DOM2D and
   Canvas2D Map, derived once from canonical directed-edge topology with no
   arbitrary pan/zoom or persistence.

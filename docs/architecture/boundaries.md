@@ -171,6 +171,19 @@ without becoming a source of transport authority.
 
 Scene interpolation is visual only. It cannot become authoritative movement.
 
+`apps/web/src/settlement` acquires checksum-pinned public V0 research metadata and
+provides immutable semantic enrichment for canonical population. Parser, spatial
+lookup, overlay and injected loader are renderer/environment neutral; the React
+acquisition hook owns browser I/O and graceful fallback. Research districts,
+morphology zones, landscape masks and landmark associations are presentation
+context, never simulation zoning, demand or persistence authority. Landmark-zone
+containment is diagnostic, while reference existence and district ownership are
+hard invariants. D3D consumes this context through a pure, static metre-based city
+model. Generated components/local streets are presentation descriptors, distinct
+from research zones and canonical transport topology. No package imports this
+web boundary. See `docs/research/torrevieja/integration-v0.md` for the accepted
+research erratum and overlap policy.
+
 ## Enforcement
 
 TypeScript project references/package exports, ESLint restrictions, and the

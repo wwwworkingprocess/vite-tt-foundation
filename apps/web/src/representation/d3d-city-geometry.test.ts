@@ -12,12 +12,11 @@ import {
   listActivePopulationCells,
 } from '@torrevieja-tycoon/transport-domain';
 
-it('has five distinct body plans and real roof silhouettes with bounded nonoverlapping wings', () => {
+it('has twelve distinct body plans and real roof silhouettes with bounded nonoverlapping wings', () => {
   const plans = buildingArchetypes.map((kind) =>
     cityPrototypeParts(kind, 'body'),
   );
-  expect(new Set(plans.map((plan) => JSON.stringify(plan))).size).toBe(5);
-  expect(plans.map((plan) => plan.length)).toEqual([1, 3, 1, 2, 3]);
+  expect(new Set(plans.map((plan) => JSON.stringify(plan))).size).toBe(12);
   const occupied = (kind: 'corner-l' | 'courtyard-u', x: number, z: number) =>
     cityPrototypeParts(kind, 'body').some(
       (part) =>
@@ -34,7 +33,7 @@ it('has five distinct body plans and real roof silhouettes with bounded nonoverl
   expect(occupied('courtyard-u', 0, -0.49)).toBe(false);
   expect(
     new Set(
-      cityPrototypeParts('terrace', 'roof').map(
+      cityPrototypeParts('terrace-row', 'roof').map(
         (part) => part.y + part.height / 2,
       ),
     ).size,
@@ -42,7 +41,7 @@ it('has five distinct body plans and real roof silhouettes with bounded nonoverl
   for (const kind of buildingArchetypes) {
     const roof = cityPrototypeParts(kind, 'roof');
     expect(roof.length).toBeGreaterThan(0);
-    if (kind === 'house' || kind === 'terrace')
+    if (kind === 'detached-house' || kind === 'terrace-row')
       expect(roof.some((part) => part.shape === 'gable')).toBe(true);
     for (const layer of ['body', 'roof'] as const) {
       const parts = cityPrototypeParts(kind, layer);
@@ -126,6 +125,53 @@ it('batches support patches and consumes independent source corridor widths bene
       expect(Math.abs(position.getX(6) - position.getX(7))).toBeCloseTo(0.8);
       expect(position.getY(0)).toBeLessThan(0.1);
     }
+    geometry.dispose();
+  }
+});
+
+it('merges local streets, clips landscape polygons to the crop, and reserves landmark coordinates in noninteractive surfaces', () => {
+  const city = {
+    cellWidth: 1,
+    cellDepth: 1,
+    storeyHeight: 1,
+    stopClearance: 1,
+    components: [],
+    blocks: [],
+    buildings: [],
+    far: [],
+    medium: [],
+    mini: [],
+    bounds: { minX: -1, maxX: 1, minZ: -1, maxZ: 1 },
+    ground: [],
+    corridors: [],
+    localStreets: [
+      { from: { x: -0.5, z: 0 }, to: { x: 0.5, z: 0 }, width: 0.1 },
+    ],
+    landscapes: [
+      {
+        color: '#8fb8bb',
+        rings: [
+          [
+            { x: -2, z: -2 },
+            { x: 2, z: -2 },
+            { x: 2, z: 2 },
+            { x: -2, z: 2 },
+            { x: -2, z: -2 },
+          ],
+        ],
+      },
+    ],
+    reservations: [{ id: 'research-landmark', x: 0, z: 0, radius: 0.2 }],
+  } satisfies Parameters<typeof createCitySurfaceGeometry>[0];
+  for (const layer of ['landscape', 'street', 'reservation'] as const) {
+    const geometry = createCitySurfaceGeometry(city, layer);
+    const positions = geometry.getAttribute('position');
+    expect(positions.count).toBeGreaterThan(0);
+    geometry.computeBoundingBox();
+    expect(geometry.boundingBox!.min.x).toBeGreaterThanOrEqual(-1);
+    expect(geometry.boundingBox!.max.x).toBeLessThanOrEqual(1);
+    expect(geometry.boundingBox!.min.z).toBeGreaterThanOrEqual(-1);
+    expect(geometry.boundingBox!.max.z).toBeLessThanOrEqual(1);
     geometry.dispose();
   }
 });

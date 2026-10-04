@@ -29,6 +29,7 @@ export default defineConfig({
         'icons/*.png',
         'scenarios/**/*.json',
         'population-fields/**/*',
+        'settlement-metadata/**/*.json',
       ],
       registerType: 'autoUpdate',
       manifest: {

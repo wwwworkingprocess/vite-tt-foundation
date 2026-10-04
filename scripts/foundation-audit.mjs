@@ -674,12 +674,31 @@ for (const d3dRepresentationFile of [
       `${d3dRepresentationFile} violates D3D representation ownership: ${violations.join(', ')}.`,
     );
 }
-const cityModelViolations = urbanCityModelViolations(
-  await source('apps/web/src/representation/d3d-city-model.ts'),
+for (const purePresentationFile of [
+  'apps/web/src/representation/d3d-city-model.ts',
+  'apps/web/src/representation/d3d-city-spatial.ts',
+  'apps/web/src/representation/d3d-metadata-city.ts',
+  'apps/web/src/settlement/settlement-metadata.ts',
+  'apps/web/src/settlement/settlement-metadata-spatial.ts',
+  'apps/web/src/settlement/settlement-population-overlay.ts',
+  'apps/web/src/settlement/settlement-metadata-loader.ts',
+]) {
+  const text = await source(purePresentationFile);
+  const violations = urbanCityModelViolations(text);
+  if (nodeBuiltinImports(text).length) violations.push('node-runtime');
+  if (/\b(?:Worker|indexedDB|localStorage|sessionStorage)\b/.test(text))
+    violations.push('host-authority');
+  if (violations.length)
+    fail(
+      `${purePresentationFile} violates pure presentation ownership: ${violations.join(', ')}.`,
+    );
+}
+const settlementHookViolations = d3dRepresentationViolations(
+  await source('apps/web/src/settlement/use-settlement-metadata.ts'),
 );
-if (cityModelViolations.length)
+if (settlementHookViolations.length)
   fail(
-    `Pure city model violates presentation ownership: ${cityModelViolations.join(', ')}.`,
+    `Settlement acquisition hook violates presentation ownership: ${settlementHookViolations.join(', ')}.`,
   );
 const transportMapProjectionSource = await source(
   'apps/web/src/representation/transport-map-projection.ts',
@@ -749,6 +768,7 @@ for (const file of [...simulation, ...protocol, ...web]) {
   const normalized = file.replaceAll('\\', '/');
   const transportExtension =
     normalized.includes('apps/web/src/population') ||
+    normalized.includes('apps/web/src/settlement/') ||
     normalized.includes('apps/web/src/performance') ||
     normalized.includes('apps/web/src/scenarios') ||
     normalized.includes('apps/web/src/transport-simulation') ||
@@ -784,6 +804,8 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('apps/web/src/representation/d3d-map-model.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-city-model.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-city-geometry.ts') ||
+    normalized.endsWith('apps/web/src/representation/d3d-city-spatial.ts') ||
+    normalized.endsWith('apps/web/src/representation/d3d-metadata-city.ts') ||
     normalized.endsWith(
       'apps/web/src/representation/D3dMapRepresentation.tsx',
     ) ||
@@ -1017,6 +1039,12 @@ if (
   ).length
 )
   fail('legitimate pure city model fixture was rejected.');
+if (
+  urbanCityModelViolations(
+    'import React from "react"; import { authority } from "../transport-simulation/client.js"; import { save } from "../persistence/save.js"; const now = Date.now(); setTimeout(() => Math.random(), 1);',
+  ).length !== 6
+)
+  fail('settlement pure-model authority fixture was not fully detected.');
 
 const representationBenchmarkSource = await source(
   'cypress/performance/representation-runtime.cy.ts',

@@ -532,6 +532,10 @@ const waitForAuthoritativeScenario = (scenarioId: string) =>
 
 beforeEach(async () => {
   await deleteTransportSaveDatabase(testSaveDatabase);
+  // Prepare code fixtures independently of mount/authority assertions; Cypress covers cold loading.
+  await import('./representation/D3dMapRepresentation.js');
+  await import('./ui/StopPlaceModalDetails.js');
+  await import('./ui/VehicleModalDetails.js');
 });
 
 afterEach(async () => {

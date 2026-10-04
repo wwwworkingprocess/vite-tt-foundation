@@ -7,3 +7,6 @@ yarn.lock
 apps/web/public/scenarios
 packages/transport-domain/fixtures
 apps/web/public/population-fields/*-v1/*.json
+apps/web/public/settlement-metadata/torrevieja/torrevieja-settlement-metadata.v0.json
+docs/research/torrevieja/urban-morphology-report.md
+docs/research/torrevieja/settlement-metadata-sources.md

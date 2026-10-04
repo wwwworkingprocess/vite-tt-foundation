@@ -1,5 +1,43 @@
-import { BoxGeometry, BufferAttribute, BufferGeometry, Color } from 'three';
-import type { BuildingArchetype, ProceduralCity } from './d3d-city-model.js';
+import {
+  BoxGeometry,
+  BufferAttribute,
+  BufferGeometry,
+  Color,
+  ShapeUtils,
+  Vector2,
+} from 'three';
+import type {
+  BuildingArchetype,
+  CityBounds,
+  ProceduralCity,
+} from './d3d-city-model.js';
+
+/** Clip only emitted flat presentation triangles; research geometry remains untouched. */
+export function clipCityPolygon(
+  polygon: readonly Vector2[],
+  bounds: CityBounds,
+): readonly Vector2[] {
+  let result = [...polygon];
+  for (const [axis, limit, sign] of [
+    ['x', bounds.minX, 1],
+    ['x', bounds.maxX, -1],
+    ['y', bounds.minZ, 1],
+    ['y', bounds.maxZ, -1],
+  ] as const) {
+    const input = result;
+    result = [];
+    for (let i = 0; i < input.length; i++) {
+      const a = input[i]!,
+        b = input[(i + 1) % input.length]!;
+      const insideA = (a[axis] - limit) * sign >= 0,
+        insideB = (b[axis] - limit) * sign >= 0;
+      if (insideA) result.push(a);
+      if (insideA !== insideB)
+        result.push(a.clone().lerp(b, (limit - a[axis]) / (b[axis] - a[axis])));
+    }
+  }
+  return result;
+}
 
 type Part = Readonly<{
   x: number;
@@ -19,13 +57,44 @@ const box = (
   y = height / 2,
 ): Part => ({ x, y, z, width, depth, height, shape: 'box' });
 const wings: Record<BuildingArchetype, readonly Part[]> = {
-  house: [box(0, 0, 0.82, 0.82)],
-  terrace: [
+  'detached-house': [box(0, 0, 0.82, 0.82)],
+  'semi-detached': [
+    box(-0.22, 0, 0.44, 0.82),
+    box(0.22, 0.04, 0.44, 0.74, 0.92),
+  ],
+  'terrace-row': [
     box(-1 / 3, 0, 1 / 3, 1, 0.86),
     box(0, 0, 1 / 3, 1, 1),
     box(1 / 3, 0, 1 / 3, 1, 0.92),
   ],
-  slab: [box(0, 0, 1, 0.8)],
+  'small-apartment': [
+    box(0, 0.05, 0.84, 0.9, 0.9),
+    box(0, -0.3, 0.6, 0.2, 0.1, 0.95),
+  ],
+  'midrise-slab': [box(0, 0, 1, 0.8)],
+  'perimeter-block': [
+    box(-0.37, 0, 0.26, 1),
+    box(0.37, 0, 0.26, 1),
+    box(0, -0.37, 0.48, 0.26),
+    box(0, 0.37, 0.48, 0.26),
+  ],
+  'tower-podium': [
+    box(0, 0, 1, 0.9, 0.24),
+    box(0.06, 0.03, 0.42, 0.42, 0.76, 0.62),
+  ],
+  'commercial-box': [
+    box(0, 0.08, 1, 0.84, 0.8),
+    box(0, -0.43, 0.7, 0.14, 0.28),
+  ],
+  'industrial-shed': [
+    box(0, 0.09, 1, 0.82, 0.85),
+    box(-0.2, -0.43, 0.6, 0.14, 0.5),
+  ],
+  'civic-special': [
+    box(-0.34, 0, 0.32, 0.74, 0.72),
+    box(0.34, 0.06, 0.32, 0.62, 0.62),
+    box(0, 0, 0.36, 1),
+  ],
   'corner-l': [box(-0.32, 0, 0.36, 1), box(0.18, 0.32, 0.64, 0.36)],
   'courtyard-u': [
     box(-0.34, 0, 0.32, 1),
@@ -40,14 +109,19 @@ export function cityPrototypeParts(
   layer: 'body' | 'roof',
 ): readonly Part[] {
   if (layer === 'body') return wings[kind];
-  if (kind === 'house' || kind === 'terrace')
+  if (
+    kind === 'detached-house' ||
+    kind === 'terrace-row' ||
+    kind === 'semi-detached' ||
+    kind === 'industrial-shed'
+  )
     return wings[kind].map((part) => ({
       ...part,
       height: 0.3,
       y: part.height + 0.15,
       shape: 'gable',
     }));
-  if (kind === 'slab')
+  if (kind === 'midrise-slab')
     return [
       box(0, 0, 1, 0.8, 0.045, 1.0225),
       box(-0.47, 0, 0.06, 0.8, 0.12, 1.105),
@@ -55,7 +129,11 @@ export function cityPrototypeParts(
       box(0, -0.37, 0.88, 0.06, 0.12, 1.105),
       box(0, 0.37, 0.88, 0.06, 0.12, 1.105),
     ];
-  return wings[kind].map((part) => ({ ...part, height: 0.07, y: 1.035 }));
+  return wings[kind].map((part) => ({
+    ...part,
+    height: 0.07,
+    y: part.y + part.height / 2 + 0.035,
+  }));
 }
 
 /** Small bounded prototypes, merged once per batch, rather than a React tree per parcel. */
@@ -113,7 +191,7 @@ export function createCityPrototypeGeometry(
 /** One quiet surface batch per layer. Corridor widths belong to the source descriptors. */
 export function createCitySurfaceGeometry(
   city: ProceduralCity,
-  layer: 'ground' | 'street',
+  layer: 'ground' | 'street' | 'landscape' | 'reservation',
 ) {
   const positions: number[] = [],
     colors: number[] = [];
@@ -139,8 +217,8 @@ export function createCitySurfaceGeometry(
         color,
       );
     }
-  } else {
-    for (const road of city.corridors) {
+  } else if (layer === 'street') {
+    for (const road of [...city.corridors, ...(city.localStreets ?? [])]) {
       const length = Math.hypot(
         road.to.x - road.from.x,
         road.to.z - road.from.z,
@@ -154,8 +232,51 @@ export function createCitySurfaceGeometry(
           [road.to.x - dx, 0.045, road.to.z - dz],
           [road.to.x + dx, 0.045, road.to.z + dz],
         ],
-        new Color('#777b70'),
+        new Color('#92988c'),
       );
+    }
+  } else {
+    const polygons =
+      layer === 'landscape'
+        ? (city.landscapes ?? []).map((region) => ({
+            rings: region.rings,
+            color: region.color,
+            surfaceY: region.surfaceY ?? 0.025,
+          }))
+        : (city.reservations ?? []).map((reservation) => ({
+            color: '#c5c3a2',
+            surfaceY: 0.032,
+            rings: [
+              Array.from({ length: 17 }, (_, i) => ({
+                x:
+                  reservation.x +
+                  Math.cos((i * Math.PI) / 8) * reservation.radius,
+                z:
+                  reservation.z +
+                  Math.sin((i * Math.PI) / 8) * reservation.radius,
+              })),
+            ],
+          }));
+    for (const polygon of polygons) {
+      const rings = polygon.rings.map((ring) =>
+        ring.slice(0, -1).map((point) => new Vector2(point.x, point.z)),
+      );
+      const flat = rings.flat();
+      for (const face of ShapeUtils.triangulateShape(
+        rings[0]!,
+        rings.slice(1),
+      )) {
+        const clipped = clipCityPolygon(
+          face.map((index) => flat[index]!),
+          city.bounds,
+        );
+        const color = new Color(polygon.color);
+        for (let i = 1; i < clipped.length - 1; i++)
+          for (const point of [clipped[0]!, clipped[i]!, clipped[i + 1]!]) {
+            positions.push(point.x, polygon.surfaceY, point.y);
+            colors.push(color.r, color.g, color.b);
+          }
+      }
     }
   }
   const geometry = new BufferGeometry();

@@ -1,26 +1,30 @@
+import {
+  citySeed as hash,
+  distanceToCorridor,
+  type UrbanCorridor,
+} from './d3d-city-spatial.js';
+export { distanceToCorridor } from './d3d-city-spatial.js';
 import type { ScenarioPopulationView } from '../population/population-field-loader.js';
 import {
   d3dWorldPoint,
+  d3dMetreScale,
   type D3dMapModel,
   type D3dWorldPoint,
   type D3dLodBand,
 } from './d3d-map-model.js';
 import { projectTransportMapPoint } from './transport-map-projection.js';
 import type { RepresentationMode } from './representation-cadence.js';
+import { semanticBuildingArchetypes } from '../settlement/settlement-metadata.js';
+import type { SettlementMetadataView } from '../settlement/settlement-metadata-loader.js';
+import {
+  enrichSettlementPopulation,
+  type SettlementPopulationOverlay,
+} from '../settlement/settlement-population-overlay.js';
+import { generateMetadataCity } from './d3d-metadata-city.js';
 
-export const buildingArchetypes = [
-  'house',
-  'terrace',
-  'slab',
-  'corner-l',
-  'courtyard-u',
-] as const;
+export const buildingArchetypes = semanticBuildingArchetypes;
 export type BuildingArchetype = (typeof buildingArchetypes)[number];
-export type UrbanCorridor = Readonly<{
-  from: D3dWorldPoint;
-  to: D3dWorldPoint;
-  width: number;
-}>;
+export type { UrbanCorridor } from './d3d-city-spatial.js';
 export type CityBounds = Readonly<{
   minX: number;
   maxX: number;
@@ -28,9 +32,22 @@ export type CityBounds = Readonly<{
   maxZ: number;
 }>;
 type Tile = Readonly<{ r: number; c: number; density: number }>;
-export type UrbanZone = Readonly<{ id: string; tiles: readonly Tile[] }>;
+export type GeneratedSettlementComponent = Readonly<{
+  id: string;
+  tiles: readonly Tile[];
+}>;
 export type UrbanBlock = CityBounds &
-  Readonly<{ id: string; zoneId: string; density: number }>;
+  Readonly<{
+    id: string;
+    componentId: string;
+    density: number;
+    zoneId?: string;
+    urbanProfileId?: string;
+    widthM?: number;
+    depthM?: number;
+    layoutRow?: number;
+    layoutColumn?: number;
+  }>;
 export type CityBuilding = D3dWorldPoint &
   Readonly<{
     id: string;
@@ -45,6 +62,10 @@ export type CityBuilding = D3dWorldPoint &
     wallVariant: number;
     roofVariant: number;
     density: number;
+    zoneId?: string;
+    buildingProfileId?: string;
+    wallColor?: string;
+    roofColor?: string;
   }>;
 export type ProceduralCity = Readonly<{
   bounds: CityBounds;
@@ -53,13 +74,24 @@ export type ProceduralCity = Readonly<{
   storeyHeight: number;
   stopClearance: number;
   corridors: readonly UrbanCorridor[];
-  zones: readonly UrbanZone[];
+  components: readonly GeneratedSettlementComponent[];
   blocks: readonly UrbanBlock[];
   ground: readonly (CityBounds & { readonly density: number })[];
   buildings: readonly CityBuilding[];
   far: readonly CityBuilding[];
   medium: readonly CityBuilding[];
   mini: readonly CityBuilding[];
+  settlement?: SettlementPopulationOverlay;
+  localStreets?: readonly UrbanCorridor[];
+  reservations?: readonly (D3dWorldPoint & {
+    readonly id: string;
+    readonly radius: number;
+  })[];
+  landscapes?: readonly Readonly<{
+    color: string;
+    surfaceY?: number;
+    rings: readonly (readonly D3dWorldPoint[])[];
+  }>[];
 }>;
 type Population = Pick<
   ScenarioPopulationView,
@@ -72,32 +104,6 @@ const freeze = <T>(value: T): T => {
   }
   return value;
 };
-const hash = (text: string) => {
-  let value = 2166136261;
-  for (let i = 0; i < text.length; i++)
-    value = Math.imul(value ^ text.charCodeAt(i), 16777619);
-  return value >>> 0;
-};
-
-export function distanceToCorridor(
-  point: D3dWorldPoint,
-  corridor: UrbanCorridor,
-) {
-  const dx = corridor.to.x - corridor.from.x;
-  const dz = corridor.to.z - corridor.from.z;
-  const t = Math.max(
-    0,
-    Math.min(
-      1,
-      ((point.x - corridor.from.x) * dx + (point.z - corridor.from.z) * dz) /
-        (dx * dx + dz * dz),
-    ),
-  );
-  return Math.hypot(
-    point.x - corridor.from.x - t * dx,
-    point.z - corridor.from.z - t * dz,
-  );
-}
 
 /** Source adapter only. Collinear shared/reverse service edges reserve one street. */
 export function buildUrbanCorridors(
@@ -162,8 +168,23 @@ export function buildUrbanCorridors(
   );
 }
 
-function populationSpace(model: D3dMapModel, population: Population) {
-  const origin = population.grid.originCellCenter;
+export function populationSpace(model: D3dMapModel, population: Population) {
+  // Runtime grids are cropped, while source-cell row/column identities remain canonical.
+  const croppedRows =
+    population.grid.rows === population.crop.rowEnd - population.crop.rowStart;
+  const croppedColumns =
+    population.grid.columns ===
+    population.crop.columnEnd - population.crop.columnStart;
+  const origin = {
+    latitude:
+      population.grid.originCellCenter.latitude +
+      (croppedRows ? population.crop.rowStart : 0) *
+        population.grid.resolutionDegrees,
+    longitude:
+      population.grid.originCellCenter.longitude -
+      (croppedColumns ? population.crop.columnStart : 0) *
+        population.grid.resolutionDegrees,
+  };
   const resolution = population.grid.resolutionDegrees;
   const point = (r: number, c: number) =>
     d3dWorldPoint(
@@ -199,10 +220,56 @@ function populationSpace(model: D3dMapModel, population: Population) {
 }
 
 const cache = new WeakMap<D3dMapModel, WeakMap<object, ProceduralCity>>();
+const metadataCache = new WeakMap<
+  D3dMapModel,
+  WeakMap<object, WeakMap<object, Map<string, ProceduralCity>>>
+>();
 export function buildProceduralCity(
   model: D3dMapModel,
   population: Population,
+  metadata?: SettlementMetadataView,
 ): ProceduralCity {
+  if (metadata?.status === 'ready') {
+    let byPopulation = metadataCache.get(model);
+    if (!byPopulation) {
+      byPopulation = new WeakMap();
+      metadataCache.set(model, byPopulation);
+    }
+    let byMetadata = byPopulation.get(population);
+    if (!byMetadata) {
+      byMetadata = new WeakMap();
+      byPopulation.set(population, byMetadata);
+    }
+    let byHash = byMetadata.get(metadata.metadata);
+    if (!byHash) {
+      byHash = new Map();
+      byMetadata.set(metadata.metadata, byHash);
+    }
+    const previous = byHash.get(metadata.sha256);
+    if (previous) return previous;
+    const overlay = enrichSettlementPopulation(population, metadata.metadata);
+    const corridors = buildUrbanCorridors(
+      model.routes,
+      12 * d3dMetreScale(model).worldUnitsPerMetre,
+    );
+    // Generate generic parcels only for research gaps, retaining the full crop extent.
+    const generic = generateUrbanCity(
+      model,
+      {
+        ...population,
+        canonicalCells: overlay.cells
+          .filter(
+            (cell) => cell.zoneId === undefined && cell.buildability !== 'none',
+          )
+          .map((cell) => cell.cell),
+      },
+      corridors,
+      model.stops,
+    );
+    const city = generateMetadataCity(model, overlay, generic);
+    byHash.set(metadata.sha256, city);
+    return city;
+  }
   const previous = cache.get(model)?.get(population);
   if (previous) return previous;
   const space = populationSpace(model, population);
@@ -280,7 +347,7 @@ export function generateUrbanCity(
         tiles.set(key(r, c), { r, c, density });
       }
   }
-  const zones: UrbanZone[] = [];
+  const components: GeneratedSettlementComponent[] = [];
   const remaining = new Map(tiles);
   for (const [start, tile] of tiles) {
     if (!remaining.delete(start)) continue;
@@ -300,12 +367,16 @@ export function generateUrbanCity(
         }
       }
     }
-    zones.push({ id: `zone-${start}`, tiles: connected });
+    components.push({ id: `zone-${start}`, tiles: connected });
   }
   const blocks: UrbanBlock[] = [];
   const ground: (CityBounds & { density: number })[] = [];
   const buildings: CityBuilding[] = [];
-  const subdivide = (zoneId: string, subset: readonly Tile[], id: string) => {
+  const subdivide = (
+    componentId: string,
+    subset: readonly Tile[],
+    id: string,
+  ) => {
     const minR = subset.reduce((a, t) => Math.min(a, t.r), Infinity),
       maxR = subset.reduce((a, t) => Math.max(a, t.r), -Infinity) + 1;
     const minC = subset.reduce((a, t) => Math.min(a, t.c), Infinity),
@@ -317,12 +388,12 @@ export function generateUrbanCity(
       const horizontal = maxC - minC >= maxR - minR;
       const cut = Math.floor((horizontal ? minC + maxC : minR + maxR) / 2);
       subdivide(
-        zoneId,
+        componentId,
         subset.filter((t) => (horizontal ? t.c : t.r) < cut),
         `${id}a`,
       );
       subdivide(
-        zoneId,
+        componentId,
         subset.filter((t) => (horizontal ? t.c : t.r) >= cut),
         `${id}b`,
       );
@@ -330,7 +401,7 @@ export function generateUrbanCity(
     }
     const block: UrbanBlock = {
       id,
-      zoneId,
+      componentId,
       density,
       minX: nw.x + minC * stepX,
       maxX: nw.x + maxC * stepX,
@@ -409,13 +480,14 @@ export function generateUrbanCity(
               ((variation % 2) * Math.PI) / 2;
         const band = local < 0.28 ? 0 : local < 0.5 ? 1 : local < 0.7 ? 2 : 3;
         const choices: readonly BuildingArchetype[][] = [
-          ['house', 'house', 'terrace'],
-          ['house', 'terrace', 'corner-l'],
-          ['terrace', 'slab', 'corner-l'],
-          ['slab', 'corner-l', 'courtyard-u'],
+          ['detached-house', 'detached-house', 'terrace-row'],
+          ['detached-house', 'terrace-row', 'corner-l'],
+          ['terrace-row', 'midrise-slab', 'corner-l'],
+          ['midrise-slab', 'corner-l', 'courtyard-u'],
         ];
         const archetype = choices[band]![variation % 3]!;
-        const elongated = archetype === 'terrace' || archetype === 'slab';
+        const elongated =
+          archetype === 'terrace-row' || archetype === 'midrise-slab';
         const width =
           unit * (elongated ? 0.69 : 0.49) * (0.9 + (variation % 7) / 35);
         const depth =
@@ -464,9 +536,9 @@ export function generateUrbanCity(
         )
           continue;
         const storeys =
-          archetype === 'house'
+          archetype === 'detached-house'
             ? 1 + (variation % 2)
-            : archetype === 'terrace'
+            : archetype === 'terrace-row'
               ? 2 + (variation % 2)
               : 3 + Math.floor(local * 3) + (variation % 2);
         buildings.push({
@@ -487,7 +559,7 @@ export function generateUrbanCity(
       }
     }
   };
-  for (const zone of zones) subdivide(zone.id, zone.tiles, zone.id);
+  for (const zone of components) subdivide(zone.id, zone.tiles, zone.id);
   const far = buildings.filter((_, i) => i % 6 === 0);
   return freeze({
     bounds,
@@ -500,7 +572,7 @@ export function generateUrbanCity(
       from: { ...road.from },
       to: { ...road.to },
     })),
-    zones,
+    components,
     blocks,
     ground,
     buildings,

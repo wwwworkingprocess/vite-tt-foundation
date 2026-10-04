@@ -327,6 +327,9 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.then(() => network(true));
     cy.reload();
     startDefaultGame();
+    cy.get('[data-testid="d3d-map-representation"]')
+      .should('have.attr', 'data-settlement-metadata-status', 'ready')
+      .and('have.attr', 'data-landmark-zone-mismatch-count', '3');
     openControls();
     expectWorkerReady();
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
@@ -423,6 +426,8 @@ describe('built foundation PWA offline lifecycle', () => {
       for (const path of [
         'icons/foundation-192.png',
         'icons/foundation-512.png',
+        'settlement-metadata/catalog.json',
+        'settlement-metadata/torrevieja/torrevieja-settlement-metadata.v0.json',
       ]) {
         const response = await win.fetch(new URL(path, win.document.baseURI));
         expect(response.ok).to.equal(true);

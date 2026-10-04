@@ -79,6 +79,13 @@ const requiredCriticalFiles = [
   'apps/web/src/representation/passenger-map-diagnostics.ts',
   'apps/web/src/representation/d3d-city-model.ts',
   'apps/web/src/representation/d3d-city-geometry.ts',
+  'apps/web/src/representation/d3d-city-spatial.ts',
+  'apps/web/src/representation/d3d-metadata-city.ts',
+  'apps/web/src/settlement/settlement-metadata.ts',
+  'apps/web/src/settlement/settlement-metadata-spatial.ts',
+  'apps/web/src/settlement/settlement-population-overlay.ts',
+  'apps/web/src/settlement/settlement-metadata-loader.ts',
+  'apps/web/src/settlement/use-settlement-metadata.ts',
   'apps/web/src/representation/representation-view-capabilities.ts',
   'apps/web/src/transport-simulation/scenario-save-target.ts',
 ];

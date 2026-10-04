@@ -148,7 +148,10 @@ describe('foundation screen', () => {
           0,
         );
       })
-      .and('have.attr', 'data-city-archetype-count', '5')
+      .and('have.attr', 'data-settlement-metadata-status', 'ready')
+      .and('have.attr', 'data-morphology-zone-count', '31')
+      .and('have.attr', 'data-landmark-zone-mismatch-count', '3')
+      .and('have.attr', 'data-city-archetype-count', '12')
       .should(($map) => {
         expect(
           Number($map.attr('data-city-building-instances')),

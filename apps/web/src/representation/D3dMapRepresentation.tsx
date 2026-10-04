@@ -52,6 +52,7 @@ import {
   fitD3dCamera,
   projectD3dVehicles,
   d3dSceneBounds,
+  d3dMetreScale,
   selectD3dCandidate,
   type D3dLodBand,
   type D3dMapModel,
@@ -66,6 +67,7 @@ import {
   buildProceduralCity,
   cityLodBuildings,
   buildingArchetypes,
+  populationSpace,
   type ProceduralCity,
   type CityBuilding,
   type BuildingArchetype,
@@ -75,6 +77,7 @@ import {
   createCitySurfaceGeometry,
 } from './d3d-city-geometry.js';
 import type { ScenarioPopulationView } from '../population/population-field-loader.js';
+import { useSettlementMetadata } from '../settlement/use-settlement-metadata.js';
 
 type MapProps = Readonly<{
   scenario: CanonicalScenario;
@@ -513,13 +516,19 @@ function CityBatch({
       const b = buildings[i]!;
       object.position.set(b.x, b.baseY, b.z);
       object.rotation.set(0, b.rotation, 0);
-      object.scale.set(b.width, simple ? b.height * 0.35 : b.height, b.depth);
+      object.scale.set(
+        b.width,
+        simple && !b.buildingProfileId ? b.height * 0.35 : b.height,
+        b.depth,
+      );
       object.updateMatrix();
       mesh.setMatrixAt(i, object.matrix);
       mesh.setColorAt(
         i,
         new Color(
-          layer === 'roof' ? roofs[b.roofVariant]! : walls[b.wallVariant]!,
+          layer === 'roof'
+            ? (b.roofColor ?? roofs[b.roofVariant]!)
+            : (b.wallColor ?? walls[b.wallVariant]!),
         ),
       );
     }
@@ -554,7 +563,7 @@ function City({
     () =>
       simple
         ? buildings.length
-          ? [{ kind: 'house' as const, buildings }]
+          ? [{ kind: 'detached-house' as const, buildings }]
           : []
         : buildingArchetypes
             .map((kind) => ({
@@ -568,6 +577,8 @@ function City({
     () => ({
       street: createCitySurfaceGeometry(city, 'street'),
       ground: createCitySurfaceGeometry(city, 'ground'),
+      landscape: createCitySurfaceGeometry(city, 'landscape'),
+      reservation: createCitySurfaceGeometry(city, 'reservation'),
     }),
     [city],
   );
@@ -575,11 +586,27 @@ function City({
     () => () => {
       surfaces.street.dispose();
       surfaces.ground.dispose();
+      surfaces.landscape.dispose();
+      surfaces.reservation.dispose();
     },
     [surfaces],
   );
   return (
     <group name="procedural-city">
+      <mesh
+        name="research-landscape"
+        geometry={surfaces.landscape}
+        raycast={() => null}
+      >
+        <meshLambertMaterial vertexColors side={DoubleSide} />
+      </mesh>
+      <mesh
+        name="landmark-reservations"
+        geometry={surfaces.reservation}
+        raycast={() => null}
+      >
+        <meshLambertMaterial vertexColors side={DoubleSide} />
+      </mesh>
       <mesh
         name="settlement-ground"
         geometry={surfaces.ground}
@@ -625,6 +652,7 @@ export function createD3dRibbonGeometry(
   >[],
   width: number,
   arrows: boolean,
+  surfaceY = 0.1,
 ) {
   const vertices: number[] = [];
   const addTriangle = (
@@ -638,11 +666,11 @@ export function createD3dRibbonGeometry(
     const dz = (edge.to.z - edge.from.z) / edge.length;
     const sideX = (dz * width) / 2;
     const sideZ = (-dx * width) / 2;
-    const y = arrows ? 0.16 : 0.1;
+    const y = arrows ? surfaceY + Math.min(0.06, width * 0.2) : surfaceY;
     if (arrows) {
       const midX = (edge.from.x + edge.to.x) / 2;
       const midZ = (edge.from.z + edge.to.z) / 2;
-      const length = Math.min(0.55, edge.length * 0.25);
+      const length = Math.min(width * 1.6, edge.length * 0.25);
       addTriangle(
         [midX + dx * length, y, midZ + dz * length],
         [midX - dx * length - sideX, y, midZ - dz * length - sideZ],
@@ -670,11 +698,16 @@ function Routes({
   model,
   selection,
   lod,
+  metre,
 }: {
   model: D3dMapModel;
   selection: GameSelection;
   lod: D3dLodBand;
+  metre: number | undefined;
 }) {
+  const ribbonWidth = metre
+    ? Math.max(3 * metre, lod === 'far' ? 0.24 : lod === 'medium' ? 0.09 : 0)
+    : 0.22;
   const groups = useMemo(() => {
     const edgesByRoute = new Map<RouteId, D3dMapModel['routes'][number][]>();
     for (const edge of model.routes) {
@@ -685,11 +718,26 @@ function Routes({
     return [...edgesByRoute].map(([routeId, edges]) => ({
       routeId,
       color: edges[0]!.color,
-      ribbon: createD3dRibbonGeometry(edges, 0.22, false),
-      selected: createD3dRibbonGeometry(edges, 0.42, false),
-      arrows: createD3dRibbonGeometry(edges, 0.36, true),
+      ribbon: createD3dRibbonGeometry(
+        edges,
+        ribbonWidth,
+        false,
+        metre ? 0.052 : 0.1,
+      ),
+      selected: createD3dRibbonGeometry(
+        edges,
+        metre ? Math.max(6 * metre, ribbonWidth * 1.6) : 0.42,
+        false,
+        metre ? 0.052 : 0.1,
+      ),
+      arrows: createD3dRibbonGeometry(
+        edges,
+        metre ? 5 * metre : 0.36,
+        true,
+        metre ? 0.052 : 0.1,
+      ),
     }));
-  }, [model]);
+  }, [model, metre, ribbonWidth]);
   useEffect(
     () => () => {
       for (const group of groups) {
@@ -747,12 +795,14 @@ function Stops({
   onSelectionChange,
   lod,
   mode,
+  metre,
 }: Readonly<{
   model: D3dMapModel;
   selection: GameSelection;
   onSelectionChange: MapProps['onSelectionChange'];
   lod: D3dLodBand;
   mode: RepresentationMode;
+  metre: number | undefined;
 }>) {
   const platforms = useRef<import('three').InstancedMesh>(null);
   const posts = useRef<import('three').InstancedMesh>(null);
@@ -761,12 +811,13 @@ function Stops({
     const dummy = new Object3D();
     for (let i = 0; i < model.stops.length; i++) {
       const stop = model.stops[i]!;
-      dummy.position.set(stop.x, 0.14, stop.z);
+      dummy.position.set(stop.x, metre ? 0.045 + 0.2 * metre : 0.14, stop.z);
       dummy.updateMatrix();
       platforms.current?.setMatrixAt(i, dummy.matrix);
-      dummy.position.set(stop.x, 0.3, stop.z);
+      dummy.position.set(stop.x, metre ? 0.045 + 1.3 * metre : 0.3, stop.z);
       dummy.updateMatrix();
       posts.current?.setMatrixAt(i, dummy.matrix);
+      dummy.position.set(stop.x, 0.3, stop.z);
       targets.current!.setMatrixAt(i, dummy.matrix);
     }
     platforms.current!.instanceMatrix.needsUpdate = true;
@@ -777,7 +828,7 @@ function Stops({
     }
     targets.current!.instanceMatrix.needsUpdate = true;
     targets.current!.computeBoundingSphere();
-  }, [model, lod]);
+  }, [model, lod, metre]);
   const selected =
     selection?.kind === 'stop'
       ? model.stops.find((stop) => stop.stopPlaceId === selection.stopPlaceId)
@@ -797,7 +848,11 @@ function Stops({
         onClick={choose}
       >
         <boxGeometry
-          args={[lod === 'far' ? 0.5 : 0.65, 0.12, lod === 'far' ? 0.5 : 0.65]}
+          args={
+            metre
+              ? [7 * metre, 0.4 * metre, 3 * metre]
+              : [lod === 'far' ? 0.5 : 0.65, 0.12, lod === 'far' ? 0.5 : 0.65]
+          }
         />
         <meshLambertMaterial color="#5a777c" />
       </instancedMesh>
@@ -807,13 +862,24 @@ function Stops({
           args={[undefined, undefined, model.stops.length]}
           onClick={choose}
         >
-          <boxGeometry args={[0.12, 0.38, 0.12]} />
+          <boxGeometry
+            args={
+              metre
+                ? [0.45 * metre, 2.6 * metre, 0.45 * metre]
+                : [0.12, 0.38, 0.12]
+            }
+          />
           <meshLambertMaterial color="#f4f0e2" />
         </instancedMesh>
       ) : null}
       {selected ? (
-        <mesh position={[selected.x, 0.17, selected.z]} raycast={() => null}>
-          <cylinderGeometry args={[0.65, 0.65, 0.04, 8]} />
+        <mesh
+          position={[selected.x, metre ? 0.065 : 0.17, selected.z]}
+          raycast={() => null}
+        >
+          <cylinderGeometry
+            args={[metre ? 8 * metre : 0.65, metre ? 8 * metre : 0.65, 0.04, 8]}
+          />
           <meshBasicMaterial color="#f2bc56" />
         </mesh>
       ) : null}
@@ -836,15 +902,29 @@ function Vehicles({
   onSelectionChange,
   lod,
   mode,
+  metre,
 }: Readonly<{
   vehicles: readonly D3dVehicle[];
   selection: GameSelection;
   onSelectionChange: MapProps['onSelectionChange'];
   lod: D3dLodBand;
   mode: RepresentationMode;
+  metre: number | undefined;
 }>) {
-  const body = useMemo(() => new BoxGeometry(0.42, 0.3, 0.95), []);
-  const windows = useMemo(() => new BoxGeometry(0.43, 0.12, 0.65), []);
+  const body = useMemo(
+    () =>
+      metre
+        ? new BoxGeometry(2.8 * metre, 3.3 * metre, 11 * metre)
+        : new BoxGeometry(0.42, 0.3, 0.95),
+    [metre],
+  );
+  const windows = useMemo(
+    () =>
+      metre
+        ? new BoxGeometry(2.82 * metre, 1.1 * metre, 8 * metre)
+        : new BoxGeometry(0.43, 0.12, 0.65),
+    [metre],
+  );
   useEffect(
     () => () => {
       body.dispose();
@@ -866,12 +946,26 @@ function Vehicles({
         return (
           <group
             key={vehicle.vehicleId}
-            position={[vehicle.x, 0.32, vehicle.z]}
+            position={[
+              vehicle.x,
+              metre ? 0.052 + 1.65 * metre : 0.32,
+              vehicle.z,
+            ]}
             rotation={[0, vehicle.headingRadians, 0]}
           >
             {chosen ? (
-              <mesh position={[0, -0.15, 0]} raycast={() => null}>
-                <cylinderGeometry args={[0.8, 0.8, 0.04, 8]} />
+              <mesh
+                position={[0, metre ? 0.016 - 1.65 * metre : -0.15, 0]}
+                raycast={() => null}
+              >
+                <cylinderGeometry
+                  args={[
+                    metre ? 10 * metre : 0.8,
+                    metre ? 10 * metre : 0.8,
+                    0.04,
+                    8,
+                  ]}
+                />
                 <meshBasicMaterial color="#f2bc56" />
               </mesh>
             ) : null}
@@ -890,7 +984,7 @@ function Vehicles({
               <mesh
                 geometry={windows}
                 dispose={null}
-                position={[0, 0.13, 0]}
+                position={[0, metre ? 1.1 * metre : 0.13, 0]}
                 onClick={choose}
               >
                 <meshLambertMaterial color="#183842" />
@@ -922,6 +1016,9 @@ function D3dWorld({
   lod: D3dLodBand;
   mode: RepresentationMode;
 }>) {
+  const metre = city?.settlement
+    ? d3dMetreScale(model).worldUnitsPerMetre
+    : undefined;
   return (
     <>
       <color attach="background" args={['#e3e9dc']} />
@@ -929,13 +1026,14 @@ function D3dWorld({
       <directionalLight position={[-40, 80, 30]} intensity={1.6} />
       <Terrain sceneBounds={sceneBounds} />
       {city ? <City city={city} lod={lod} mode={mode} /> : null}
-      <Routes model={model} selection={selection} lod={lod} />
+      <Routes model={model} selection={selection} lod={lod} metre={metre} />
       <Stops
         model={model}
         selection={selection}
         onSelectionChange={onSelectionChange}
         lod={lod}
         mode={mode}
+        metre={metre}
       />
       <Vehicles
         vehicles={vehicles}
@@ -943,6 +1041,7 @@ function D3dWorld({
         onSelectionChange={onSelectionChange}
         lod={lod}
         mode={mode}
+        metre={metre}
       />
     </>
   );
@@ -963,13 +1062,25 @@ export default function D3dMapRepresentation({
     [scenario],
   );
   const model = useMemo(() => createD3dMapModel(projection), [projection]);
+  const metadata = useSettlementMetadata(scenario.manifest.primarySettlementId);
   const city = useMemo(
-    () => (population ? buildProceduralCity(model, population) : undefined),
-    [model, population],
+    () =>
+      population && metadata.status !== 'loading'
+        ? buildProceduralCity(
+            model,
+            population,
+            metadata.status === 'ready' ? metadata : undefined,
+          )
+        : undefined,
+    [model, population, metadata],
   );
   const sceneBounds = useMemo(
-    () => d3dSceneBounds(model, city?.bounds),
-    [model, city],
+    () =>
+      d3dSceneBounds(
+        model,
+        population ? populationSpace(model, population).bounds : undefined,
+      ),
+    [model, population],
   );
   const acceptedFleet = useLatestRepresentationValue(fleet);
   const vehicles = useMemo(
@@ -1022,7 +1133,30 @@ export default function D3dMapRepresentation({
       data-directed-edge-count={model.routes.length}
       data-stop-place-count={model.stops.length}
       data-vehicle-count={vehicles.length}
-      data-city-zone-count={city?.zones.length ?? 0}
+      data-settlement-metadata-status={metadata.status}
+      data-settlement-metadata-version={
+        city?.settlement?.metadata.schemaVersion ?? ''
+      }
+      data-research-district-count={
+        city?.settlement?.metadata.districts.length ?? 0
+      }
+      data-morphology-zone-count={city?.settlement?.metadata.zones.length ?? 0}
+      data-population-cells-with-zone={
+        city?.settlement?.diagnostics.cellsWithZone ?? 0
+      }
+      data-population-cells-without-zone={
+        city?.settlement?.diagnostics.cellsWithoutZone ?? 0
+      }
+      data-population-cells-with-zone-overlap={
+        city?.settlement?.diagnostics.cellsWithZoneOverlap ?? 0
+      }
+      data-landscape-suppressed-count={
+        city?.settlement?.diagnostics.landscapeSuppressedCells ?? 0
+      }
+      data-landmark-zone-mismatch-count={
+        city?.settlement?.diagnostics.landmarkZoneMismatches.length ?? 0
+      }
+      data-city-component-count={city?.components.length ?? 0}
       data-city-block-count={city?.blocks.length ?? 0}
       data-city-building-count={city?.buildings.length ?? 0}
       data-city-archetype-count={

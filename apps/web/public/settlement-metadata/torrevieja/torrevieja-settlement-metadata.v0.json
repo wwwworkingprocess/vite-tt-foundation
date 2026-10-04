@@ -1,0 +1,5662 @@
+{
+  "schemaVersion": "0.1.0",
+  "city": {
+    "id": "torrevieja",
+    "name": "Torrevieja",
+    "country": "Spain",
+    "province": "Alicante",
+    "autonomousCommunity": "Valencian Community",
+    "coordinateReferenceSystem": "EPSG:4326",
+    "centroid": [
+      -0.688,
+      37.989
+    ],
+    "centroidGeometryQuality": "research-approximation",
+    "centroidConfidence": "medium",
+    "researchBounds": {
+      "west": -0.81,
+      "south": 37.935,
+      "east": -0.635,
+      "north": 38.065
+    },
+    "urbanCharacterSummary": "A compact orthogonal center and harbor are surrounded by heterogeneous apartment belts, large planned villa/terrace urbanizations, linear coastal apartment districts, road-oriented commercial/industrial areas and an actively developing northern frontier; the entire system is sharply shaped by the Mediterranean and the two salt lagoons/protected landscape.",
+    "proceduralGenerationSummary": "Use strong between-zone variation and restrained within-zone repetition: central fine-grain blocks, locally repetitive villa/terrace modules, coastal slabs with open gaps, large commercial/industrial parcels, explicit institutional/landmark reservations, and hard masks for water/protected land. Population remains the quantitative density authority and should modulate each zone grammar rather than replace it."
+  },
+  "sourceRegistry": [
+    {
+      "id": "SRC-001",
+      "title": "Fichas Urbanísticas",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/fichas-urbanisticas",
+      "sourceType": "official",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "district-boundary",
+        "land-use",
+        "other"
+      ],
+      "notes": "Municipal index of partial plans, enclaves and sectors. Strong evidence for established planning-area names; the index is not treated as a neighborhood-boundary dataset."
+    },
+    {
+      "id": "SRC-002",
+      "title": "Normas Urbanísticas — Título X",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/titulo10",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "land-use",
+        "building-character",
+        "other"
+      ],
+      "notes": "Municipal planning rules and area-of-distribution nomenclature. Used for broad central/port land-use distinctions and to confirm the multiplicity of planned growth areas."
+    },
+    {
+      "id": "SRC-003",
+      "title": "Plan Parcial 8/17 — Los Balcones",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/pp8",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "building-character",
+        "land-use"
+      ],
+      "notes": "Municipal planning ficha: approximately 1.456 million m²; minimum parcel 800 m², max occupancy 40%, max two storeys. Used as strong evidence for a large-plot low-rise grammar."
+    },
+    {
+      "id": "SRC-004",
+      "title": "Plan Parcial 10 — La Torreta",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/pp10",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "building-character",
+        "land-use"
+      ],
+      "notes": "Municipal planning ficha: approximately 1.195 million m²; max occupancy 25%, two storeys/6.2 m, minimum parcel 800 m² and 5 m setbacks. Strong morphology evidence for the planned area."
+    },
+    {
+      "id": "SRC-005",
+      "title": "Plan Parcial 11 — El Chaparral",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/pp11",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "building-character",
+        "land-use"
+      ],
+      "notes": "Municipal planning ficha: approximately 1.419 million m²; max occupancy 30%, two storeys/6 m and 5 m setbacks. Strong evidence for low-rise detached-lot morphology."
+    },
+    {
+      "id": "SRC-006",
+      "title": "Plan Parcial 16 — San Luis",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/pp16",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "building-character",
+        "land-use"
+      ],
+      "notes": "Municipal planning ficha: residential, max occupancy 30%, two storeys/6 m and 5 m setbacks. Used to characterize the northwestern villa belt."
+    },
+    {
+      "id": "SRC-007",
+      "title": "Plan Parcial 6 — La Veleta",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/pp6",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "building-character",
+        "land-use",
+        "street-pattern"
+      ],
+      "notes": "Municipal planning ficha distinguishes chalet areas, grouped residential forms and isolated blocks, including much taller permitted blocks. Direct evidence that La Veleta is internally heterogeneous."
+    },
+    {
+      "id": "SRC-008",
+      "title": "Plan Parcial 4 — Molino Blanco",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/pp4",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "building-character",
+        "land-use"
+      ],
+      "notes": "Municipal planning ficha distinguishes apartment areas up to roughly five–six storeys and isolated dwellings around two storeys. Used for mixed north-coastal morphology."
+    },
+    {
+      "id": "SRC-009",
+      "title": "Plan Parcial 7 — Nueva Torrevieja",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/va/node/4153",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "building-character",
+        "land-use"
+      ],
+      "notes": "Municipal plan page records low-, medium- and high-residential categories plus industrial use in the planning area. Used as evidence of internal heterogeneity."
+    },
+    {
+      "id": "SRC-010",
+      "title": "Informe técnico-económico de la tasa de residuos 2024 — ámbitos territoriales homogéneos",
+      "publisher": "Ayuntamiento de Torrevieja / SUMA",
+      "url": "https://torrevieja.es/sites/default/files/repositorio-archivos/20241004_Otros_DESCARGADO_3445972233879478068_59220102_0059220102_INFORME_TECNICO_TASA_DE_RESIDUOS_2024_Torrevieja_firmado%20(1).pdf",
+      "sourceType": "official",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "district-boundary",
+        "other"
+      ],
+      "notes": "Municipal technical report groups cadastral/reference-value areas into ten territorially homogeneous zones, including Casco Urbano, Los Altos, Aguas Nuevas, La Mata, La Manguilla, El Hondo, La Siesta, Pozo Dulce and Zona Urbana Sur. These are tax/value-analysis zones, not official neighborhoods; used only as a spatial scaffold."
+    },
+    {
+      "id": "SRC-011",
+      "title": "Plan Parcial 18 — Torreblanca",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/en/node/4171",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "land-use",
+        "building-character"
+      ],
+      "notes": "Municipal planning ficha for Torreblanca; confirms the named plan and consolidated urbanization context."
+    },
+    {
+      "id": "SRC-012",
+      "title": "Plan Parcial 19 — Cabo Cervera",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/pp19",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "land-use",
+        "building-character"
+      ],
+      "notes": "Municipal planning ficha for Cabo Cervera; used with map/imagery evidence to distinguish the coastal apartment/tower edge."
+    },
+    {
+      "id": "SRC-013",
+      "title": "Sector 4 — Lago Jardín",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/s4",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "land-use",
+        "building-character"
+      ],
+      "notes": "Municipal sector ficha: residential with AS/AP/AL typology families and low gross buildability. Used for the planned compound/terrace grammar."
+    },
+    {
+      "id": "SRC-014",
+      "title": "Plan Parcial 22 — Casagrande",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/pp22",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "land-use",
+        "building-character"
+      ],
+      "notes": "Municipal planning ficha identifies Casagrande as industrial urbanization. Used for the western industrial morphology."
+    },
+    {
+      "id": "SRC-015",
+      "title": "Sector 8 — Industrial Salinas",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/urbanismo/s8",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "land-use",
+        "building-character"
+      ],
+      "notes": "Municipal sector ficha: industrial/specialty-commercial use, min parcel about 1,000 m², max occupancy 50%, max two storeys/10 m and 5 m setbacks. Strong industrial-grammar evidence."
+    },
+    {
+      "id": "SRC-016",
+      "title": "Parque Natural de las Lagunas de La Mata y Torrevieja — protected-area layer",
+      "publisher": "Generalitat Valenciana / Institut Cartogràfic Valencià",
+      "url": "https://carto.icv.gva.es/arcgis/rest/services/tm_medio_ambiente/espacios_protegidos_inst/MapServer/121",
+      "sourceType": "official",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landscape",
+        "district-boundary",
+        "other"
+      ],
+      "notes": "Official spatial service for the protected area. Used to establish the protected-lagoon context; V0 polygons are deliberately coarsened rather than copied as authoritative boundaries."
+    },
+    {
+      "id": "SRC-017",
+      "title": "Parque Natural de las Lagunas de La Mata y Torrevieja — visitor brochure",
+      "publisher": "Generalitat Valenciana",
+      "url": "https://parquesnaturales.gva.es/estatico/parques/folletos_electronicos/lamata/cas/files/mata_torrevieja_2008cas.pdf",
+      "sourceType": "institutional",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landscape",
+        "other"
+      ],
+      "notes": "Official park brochure: about 3,700 ha total, including roughly 1,400 ha Torrevieja lagoon and 700 ha La Mata lagoon; explains the two-lagoon system, El Chaparral separation and protected-status context."
+    },
+    {
+      "id": "SRC-018",
+      "title": "Urban Atlas",
+      "publisher": "Copernicus Land Monitoring Service",
+      "url": "https://land.copernicus.eu/en/products/urban-atlas",
+      "sourceType": "satellite",
+      "accessed": "2026-10-04",
+      "supports": [
+        "land-use",
+        "street-pattern",
+        "landscape",
+        "other"
+      ],
+      "notes": "Current Copernicus Urban Atlas product family. Used as a regional land-use/morphology cross-check, not as a parcel-precision source."
+    },
+    {
+      "id": "SRC-019",
+      "title": "OpenStreetMap",
+      "publisher": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/",
+      "sourceType": "open-map",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "street-pattern",
+        "landmark",
+        "landscape",
+        "zone-boundary"
+      ],
+      "notes": "Open geospatial cross-check for street topology, named localities and POIs. Community-maintained; no named polygon is treated as official solely because it appears here."
+    },
+    {
+      "id": "SRC-020",
+      "title": "Cartografia bàsica CV05 93551 Torrevieja",
+      "publisher": "Institut Cartogràfic Valencià / Generalitat Valenciana",
+      "url": "https://descargas.icv.gva.es/dcd/01_cartografia/basica/CV05/CV05_93551.pdf",
+      "sourceType": "official",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "street-pattern",
+        "landscape",
+        "landmark",
+        "other"
+      ],
+      "notes": "Official base cartography used to cross-check major roads, coastline, named urbanizations and the lagoon/settlement relationship."
+    },
+    {
+      "id": "SRC-021",
+      "title": "Plano oficial de la nueva red de transporte urbano de Torrevieja",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/noticias/2026-07-13-presentado-plano-oficial-nueva-red-transporte-urbano-torrevieja-ocho-lineas",
+      "sourceType": "official",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "landmark",
+        "other"
+      ],
+      "notes": "July 2026 municipal transport map/article confirms contemporary service relationships among the center, Los Altos, Punta Prima, Rocío del Mar, Los Balcones, Lago Jardín, Torretas, San Luis, Cabo Cervera, La Mata, hospitals, sport facilities and commercial centers."
+    },
+    {
+      "id": "SRC-022",
+      "title": "Aprobación inicial de la Modificación del Plan Parcial Sector 20 — La Hoya",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/aprobacion-inicial-del-plan-parcial-sector-20",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "land-use",
+        "other"
+      ],
+      "notes": "December 2025 initial approval of the modified Sector 20 plan. Shows La Hoya remains a live planning/development area rather than settled historical fabric."
+    },
+    {
+      "id": "SRC-023",
+      "title": "Modificación del proyecto de urbanización del Sector 20 — La Hoya",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/node/9966",
+      "sourceType": "planning",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "zone-boundary",
+        "street-pattern",
+        "other"
+      ],
+      "notes": "November 2025 publication of the modified urbanization project. Used to mark La Hoya as an active development frontier; exact future built form remains uncertain."
+    },
+    {
+      "id": "SRC-024",
+      "title": "Torrevieja activa el Plan Vive en La Manguilla (La Mata)",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/noticias/2026-06-12-torrevieja-activa-plan-vive-inicio-obras-primeras-36-viviendas-protegidas",
+      "sourceType": "official",
+      "accessed": "2026-10-04",
+      "supports": [
+        "district-name",
+        "land-use",
+        "building-character",
+        "other"
+      ],
+      "notes": "June 2026 municipal announcement for a 36-home protected-housing project on a 3,608 m² municipal parcel in La Manguilla; evidence that the zone is evolving."
+    },
+    {
+      "id": "SRC-025",
+      "title": "Inicio de las obras de reurbanización del Paseo de Playa de Los Locos",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/noticias/2026-09-23-ayuntamiento-inicia-corte-primer-tramo-obras-reurbanizacion-paseo-playa-locos",
+      "sourceType": "official",
+      "accessed": "2026-10-04",
+      "supports": [
+        "street-pattern",
+        "landmark",
+        "other"
+      ],
+      "notes": "September 2026 municipal update: active promenade reconstruction along Playa de Los Locos. Used to flag current public-realm change without assuming a different building morphology."
+    },
+    {
+      "id": "SRC-026",
+      "title": "Transformación de las Eras de la Sal",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/noticias/2026-06-26-torrevieja-impulsa-transformacion-definitiva-eras-sal-aprobacion-proyecto",
+      "sourceType": "official",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landmark",
+        "land-use",
+        "other"
+      ],
+      "notes": "June 2026 municipal project for the cultural/public-space transformation of Eras de la Sal. Used to reserve the site explicitly and flag its changing public-realm role."
+    },
+    {
+      "id": "SRC-027",
+      "title": "Plaza de la Constitución, Torrevieja",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/visitas-interes/plaza-constitucion-torrevieja",
+      "sourceType": "tourism",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landmark",
+        "district-name"
+      ],
+      "notes": "Official municipal visitor page describes the square as the geographic/civic heart of Torrevieja and locates it with the town hall and church."
+    },
+    {
+      "id": "SRC-028",
+      "title": "Imagen aérea término de Torrevieja",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/documentos/imagen-aerea-termino-torrevieja",
+      "sourceType": "satellite",
+      "accessed": "2026-10-04",
+      "supports": [
+        "street-pattern",
+        "building-character",
+        "land-use",
+        "landscape"
+      ],
+      "notes": "Municipal aerial-image resource. Used for visual inference only: settlement continuity, central compactness, coastal strips, villa repetition and lagoon-constrained edges. No imagery is reproduced in the deliverable files."
+    },
+    {
+      "id": "SRC-029",
+      "title": "Parque de La Siesta",
+      "publisher": "PST Torrevieja / Ayuntamiento de Torrevieja",
+      "url": "https://turismo.torrevieja.es/es/poi/parque-de-la-siesta",
+      "sourceType": "tourism",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landmark",
+        "land-use"
+      ],
+      "notes": "Official tourism page describes a 44,000 m² multi-sport/open-space park between Henri Matisse, Ravel and Guridi streets."
+    },
+    {
+      "id": "SRC-030",
+      "title": "Centro Comercial las Habaneras",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/visitas-interes/centro-comercial-habaneras",
+      "sourceType": "tourism",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landmark",
+        "land-use"
+      ],
+      "notes": "Official municipal visitor page confirms the shopping center and its location on Avenida Rosa Mazón Valero."
+    },
+    {
+      "id": "SRC-031",
+      "title": "Ampliación del Hospital Universitario de Torrevieja",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/noticias/2026-07-06-ayuntamiento-torrevieja-impulsa-ampliacion-hospital-universitario-inicio",
+      "sourceType": "official",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landmark",
+        "land-use",
+        "other"
+      ],
+      "notes": "July 2026 municipal update on land for future hospital expansion. Used to reserve the hospital as a major institutional anchor and to flag a changing edge."
+    },
+    {
+      "id": "SRC-032",
+      "title": "Auditorio Internacional de Torrevieja",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/auditorios/auditorio-internacional-torrevieja",
+      "sourceType": "institutional",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landmark",
+        "land-use"
+      ],
+      "notes": "Official municipal venue page. Used to reserve the auditorium within the northern institutional/sports cluster."
+    },
+    {
+      "id": "SRC-033",
+      "title": "Estación de Autobuses de Torrevieja",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/es/otros-lugares-interes/estacion-autobuses-torrevieja",
+      "sourceType": "official",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landmark",
+        "other"
+      ],
+      "notes": "Official municipal page for the interurban bus station at Calle del Mar / Antonio Machado."
+    },
+    {
+      "id": "SRC-034",
+      "title": "Parque del Molino del Agua",
+      "publisher": "Ayuntamiento de Torrevieja",
+      "url": "https://torrevieja.es/en/other-places-of-interest/water-mill-park",
+      "sourceType": "tourism",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landmark",
+        "landscape",
+        "land-use"
+      ],
+      "notes": "Official municipal page describing the coastal pine/open-space park between Torrevieja and La Mata, a few metres from La Mata beach."
+    },
+    {
+      "id": "SRC-035",
+      "title": "Playa de Los Locos",
+      "publisher": "PST Torrevieja / Ayuntamiento de Torrevieja",
+      "url": "https://turismo.torrevieja.es/es/poi/playa-de-los-locos-0",
+      "sourceType": "tourism",
+      "accessed": "2026-10-04",
+      "supports": [
+        "landmark",
+        "land-use",
+        "other"
+      ],
+      "notes": "Official tourism page identifies the urban beach and its relationship to Avenida Dr. Mariano Ruiz Cánovas; used as a coastal activity anchor."
+    }
+  ],
+  "urbanProfiles": [
+    {
+      "id": "up-dense-central-grid",
+      "name": "Dense orthogonal central grid",
+      "description": "Compact urban fabric around the historic/civic core: short-to-medium blocks, high frontage continuity, little private setback and a mix of apartment and mixed-use buildings.",
+      "streetPattern": "orthogonal",
+      "streetRegularity": 0.88,
+      "orientationBehavior": "dual-axis",
+      "typicalBlockWidthM": {
+        "min": 55,
+        "max": 95
+      },
+      "typicalBlockDepthM": {
+        "min": 55,
+        "max": 115
+      },
+      "typicalStreetWidthM": {
+        "min": 8,
+        "max": 17
+      },
+      "parcelPattern": "fine-grain",
+      "typicalParcelFrontageM": {
+        "min": 5,
+        "max": 14
+      },
+      "typicalParcelDepthM": {
+        "min": 18,
+        "max": 38
+      },
+      "plotCoverageRatio": {
+        "min": 0.55,
+        "max": 0.85
+      },
+      "openSpaceRatio": {
+        "min": 0.05,
+        "max": 0.2
+      },
+      "setbackM": {
+        "frontMin": 0,
+        "frontMax": 2,
+        "sideMin": 0,
+        "sideMax": 2
+      },
+      "urbanEdgeBehavior": "hard",
+      "proceduralNotes": "Keep street axes stable over several blocks. Reuse a limited family of party-wall/perimeter and compact apartment forms; vary corners and heights more than footprints. Population intensity may increase storey selection and infill probability, but should not turn the grammar into towers or villas.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-002",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "up-midrise-apartment-grid",
+      "name": "Mid-rise apartment grid",
+      "description": "Semi-orthogonal or orthogonal residential fabric with apartment blocks, occasional continuous frontages, wider streets than the old center and moderate courtyards/setbacks.",
+      "streetPattern": "semi-orthogonal",
+      "streetRegularity": 0.76,
+      "orientationBehavior": "dual-axis",
+      "typicalBlockWidthM": {
+        "min": 70,
+        "max": 135
+      },
+      "typicalBlockDepthM": {
+        "min": 55,
+        "max": 105
+      },
+      "typicalStreetWidthM": {
+        "min": 10,
+        "max": 20
+      },
+      "parcelPattern": "medium-grain",
+      "typicalParcelFrontageM": {
+        "min": 10,
+        "max": 32
+      },
+      "typicalParcelDepthM": {
+        "min": 25,
+        "max": 65
+      },
+      "plotCoverageRatio": {
+        "min": 0.35,
+        "max": 0.7
+      },
+      "openSpaceRatio": {
+        "min": 0.15,
+        "max": 0.38
+      },
+      "setbackM": {
+        "frontMin": 0,
+        "frontMax": 5,
+        "sideMin": 0,
+        "sideMax": 4
+      },
+      "urbanEdgeBehavior": "mixed",
+      "proceduralNotes": "Generate repeated mid-rise blocks with intermittent setbacks and small private/communal courts. Use density to alter occupancy and height within the family rather than changing the street grammar.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-009",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "up-villa-grid",
+      "name": "Low-rise villa grid",
+      "description": "Planned low-rise residential fabric dominated by detached or semi-detached plots, garden setbacks and relatively regular local streets.",
+      "streetPattern": "semi-orthogonal",
+      "streetRegularity": 0.72,
+      "orientationBehavior": "locally-adaptive",
+      "typicalBlockWidthM": {
+        "min": 80,
+        "max": 185
+      },
+      "typicalBlockDepthM": {
+        "min": 55,
+        "max": 105
+      },
+      "typicalStreetWidthM": {
+        "min": 8,
+        "max": 15
+      },
+      "parcelPattern": "detached-lot",
+      "typicalParcelFrontageM": {
+        "min": 12,
+        "max": 28
+      },
+      "typicalParcelDepthM": {
+        "min": 22,
+        "max": 48
+      },
+      "plotCoverageRatio": {
+        "min": 0.18,
+        "max": 0.42
+      },
+      "openSpaceRatio": {
+        "min": 0.38,
+        "max": 0.68
+      },
+      "setbackM": {
+        "frontMin": 3,
+        "frontMax": 7,
+        "sideMin": 2,
+        "sideMax": 6
+      },
+      "urbanEdgeBehavior": "tapered",
+      "proceduralNotes": "Repeat a small palette of one- and two-storey villas, semi-detached forms and walls/hedges. Preserve plot rhythm. Higher population values should increase plot occupancy or semi-detached selection modestly, not erase gardens.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-003",
+        "SRC-004",
+        "SRC-005",
+        "SRC-006",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "up-terrace-compound",
+      "name": "Terrace and residential-compound fabric",
+      "description": "Planned low-rise residential urbanization with terrace rows, small apartment courts and communal open space/pools, commonly arranged in repeated development modules.",
+      "streetPattern": "semi-orthogonal",
+      "streetRegularity": 0.7,
+      "orientationBehavior": "locally-adaptive",
+      "typicalBlockWidthM": {
+        "min": 90,
+        "max": 210
+      },
+      "typicalBlockDepthM": {
+        "min": 60,
+        "max": 140
+      },
+      "typicalStreetWidthM": {
+        "min": 9,
+        "max": 17
+      },
+      "parcelPattern": "mixed",
+      "typicalParcelFrontageM": {
+        "min": 6,
+        "max": 18
+      },
+      "typicalParcelDepthM": {
+        "min": 18,
+        "max": 38
+      },
+      "plotCoverageRatio": {
+        "min": 0.3,
+        "max": 0.58
+      },
+      "openSpaceRatio": {
+        "min": 0.28,
+        "max": 0.55
+      },
+      "setbackM": {
+        "frontMin": 1,
+        "frontMax": 5,
+        "sideMin": 1,
+        "sideMax": 5
+      },
+      "urbanEdgeBehavior": "landscaped",
+      "proceduralNotes": "Favor repeated row/cluster modules, shared courts and internal pedestrian or private-space patterns. Variation should happen between development clusters, not house-by-house.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-013",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "up-mixed-planned-residential",
+      "name": "Mixed planned villa–apartment district",
+      "description": "Planned urbanization where detached/terrace housing and low-to-mid-rise apartment buildings coexist on larger blocks.",
+      "streetPattern": "mixed",
+      "streetRegularity": 0.62,
+      "orientationBehavior": "locally-adaptive",
+      "typicalBlockWidthM": {
+        "min": 100,
+        "max": 230
+      },
+      "typicalBlockDepthM": {
+        "min": 70,
+        "max": 155
+      },
+      "typicalStreetWidthM": {
+        "min": 10,
+        "max": 19
+      },
+      "parcelPattern": "mixed",
+      "typicalParcelFrontageM": {
+        "min": 8,
+        "max": 32
+      },
+      "typicalParcelDepthM": {
+        "min": 22,
+        "max": 55
+      },
+      "plotCoverageRatio": {
+        "min": 0.25,
+        "max": 0.56
+      },
+      "openSpaceRatio": {
+        "min": 0.25,
+        "max": 0.58
+      },
+      "setbackM": {
+        "frontMin": 1,
+        "frontMax": 7,
+        "sideMin": 1,
+        "sideMax": 6
+      },
+      "urbanEdgeBehavior": "mixed",
+      "proceduralNotes": "Assign coherent sub-blocks to one family at a time: villa, terrace/compound or apartment. Avoid random interleaving on every parcel. Major roads can carry taller apartment forms.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-007",
+        "SRC-008",
+        "SRC-009",
+        "SRC-011",
+        "SRC-012",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "up-coastal-apartment-strip",
+      "name": "Coastal apartment/slab strip",
+      "description": "Coast-facing residential/tourism fabric with slabs or towers, larger plots, sea-oriented gaps and stronger building-height contrast than inland grids.",
+      "streetPattern": "semi-orthogonal",
+      "streetRegularity": 0.58,
+      "orientationBehavior": "locally-adaptive",
+      "typicalBlockWidthM": {
+        "min": 85,
+        "max": 190
+      },
+      "typicalBlockDepthM": {
+        "min": 60,
+        "max": 130
+      },
+      "typicalStreetWidthM": {
+        "min": 10,
+        "max": 22
+      },
+      "parcelPattern": "large-plot",
+      "typicalParcelFrontageM": {
+        "min": 18,
+        "max": 55
+      },
+      "typicalParcelDepthM": {
+        "min": 30,
+        "max": 85
+      },
+      "plotCoverageRatio": {
+        "min": 0.2,
+        "max": 0.48
+      },
+      "openSpaceRatio": {
+        "min": 0.32,
+        "max": 0.65
+      },
+      "setbackM": {
+        "frontMin": 2,
+        "frontMax": 9,
+        "sideMin": 2,
+        "sideMax": 9
+      },
+      "urbanEdgeBehavior": "water-bounded",
+      "proceduralNotes": "Align the dominant massing rhythm to the coastal corridor rather than forcing inland-grid continuity. Keep meaningful gaps and communal open space around slabs/towers. Density changes can select taller variants but should not remove the coastal setback/open-space logic.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-007",
+        "SRC-008",
+        "SRC-012",
+        "SRC-019",
+        "SRC-025",
+        "SRC-028",
+        "SRC-035"
+      ]
+    },
+    {
+      "id": "up-la-mata-village-grid",
+      "name": "La Mata village-scale grid",
+      "description": "Fine-grain northern settlement fabric: smaller blocks and parcels than the surrounding planned urbanizations, with a compact low-to-mid-rise street relationship near the historic seafront settlement.",
+      "streetPattern": "semi-orthogonal",
+      "streetRegularity": 0.72,
+      "orientationBehavior": "dual-axis",
+      "typicalBlockWidthM": {
+        "min": 45,
+        "max": 95
+      },
+      "typicalBlockDepthM": {
+        "min": 40,
+        "max": 85
+      },
+      "typicalStreetWidthM": {
+        "min": 7,
+        "max": 15
+      },
+      "parcelPattern": "fine-grain",
+      "typicalParcelFrontageM": {
+        "min": 5,
+        "max": 14
+      },
+      "typicalParcelDepthM": {
+        "min": 15,
+        "max": 32
+      },
+      "plotCoverageRatio": {
+        "min": 0.4,
+        "max": 0.72
+      },
+      "openSpaceRatio": {
+        "min": 0.1,
+        "max": 0.32
+      },
+      "setbackM": {
+        "frontMin": 0,
+        "frontMax": 3,
+        "sideMin": 0,
+        "sideMax": 2
+      },
+      "urbanEdgeBehavior": "water-bounded",
+      "proceduralNotes": "Use compact low/mid-rise building families and frequent attached or nearly attached frontages. Preserve the perceptible distinction from nearby villa/compound urbanizations.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "up-commercial-arterial",
+      "name": "Arterial big-box commercial",
+      "description": "Large retail parcels, surface parking/service areas and road-oriented access, with buildings much larger than residential footprints.",
+      "streetPattern": "arterial-superblock",
+      "streetRegularity": 0.5,
+      "orientationBehavior": "single-axis",
+      "typicalBlockWidthM": {
+        "min": 150,
+        "max": 360
+      },
+      "typicalBlockDepthM": {
+        "min": 100,
+        "max": 260
+      },
+      "typicalStreetWidthM": {
+        "min": 14,
+        "max": 30
+      },
+      "parcelPattern": "superblock",
+      "typicalParcelFrontageM": {
+        "min": 45,
+        "max": 130
+      },
+      "typicalParcelDepthM": {
+        "min": 60,
+        "max": 170
+      },
+      "plotCoverageRatio": {
+        "min": 0.2,
+        "max": 0.52
+      },
+      "openSpaceRatio": {
+        "min": 0.25,
+        "max": 0.58
+      },
+      "setbackM": {
+        "frontMin": 8,
+        "frontMax": 28,
+        "sideMin": 5,
+        "sideMax": 18
+      },
+      "urbanEdgeBehavior": "infrastructure-bounded",
+      "proceduralNotes": "Generate a few large boxes per superblock with parking/service courts and strong arterial address. Do not subdivide into residential parcel rhythm.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-030",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "up-industrial-sheds",
+      "name": "Industrial access / shed fabric",
+      "description": "Large industrial or logistics parcels with sheds, yards, service roads and low building heights.",
+      "streetPattern": "industrial-access",
+      "streetRegularity": 0.55,
+      "orientationBehavior": "single-axis",
+      "typicalBlockWidthM": {
+        "min": 170,
+        "max": 420
+      },
+      "typicalBlockDepthM": {
+        "min": 120,
+        "max": 290
+      },
+      "typicalStreetWidthM": {
+        "min": 12,
+        "max": 25
+      },
+      "parcelPattern": "large-plot",
+      "typicalParcelFrontageM": {
+        "min": 40,
+        "max": 130
+      },
+      "typicalParcelDepthM": {
+        "min": 70,
+        "max": 190
+      },
+      "plotCoverageRatio": {
+        "min": 0.32,
+        "max": 0.7
+      },
+      "openSpaceRatio": {
+        "min": 0.15,
+        "max": 0.42
+      },
+      "setbackM": {
+        "frontMin": 5,
+        "frontMax": 16,
+        "sideMin": 3,
+        "sideMax": 12
+      },
+      "urbanEdgeBehavior": "infrastructure-bounded",
+      "proceduralNotes": "Repeat shed/warehouse families with loading yards and occasional office-front portions. Variation should come from footprint length, yard position and roof bay rhythm, not decorative uniqueness.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-014",
+        "SRC-015",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "up-institutional-campus",
+      "name": "Institutional and sports campus",
+      "description": "Large civic, health or sport parcels separated by open space, parking, service access and landscape buffers.",
+      "streetPattern": "arterial-superblock",
+      "streetRegularity": 0.42,
+      "orientationBehavior": "locally-adaptive",
+      "typicalBlockWidthM": {
+        "min": 170,
+        "max": 500
+      },
+      "typicalBlockDepthM": {
+        "min": 130,
+        "max": 380
+      },
+      "typicalStreetWidthM": {
+        "min": 12,
+        "max": 28
+      },
+      "parcelPattern": "superblock",
+      "typicalParcelFrontageM": {
+        "min": 50,
+        "max": 180
+      },
+      "typicalParcelDepthM": {
+        "min": 70,
+        "max": 220
+      },
+      "plotCoverageRatio": {
+        "min": 0.1,
+        "max": 0.38
+      },
+      "openSpaceRatio": {
+        "min": 0.45,
+        "max": 0.78
+      },
+      "setbackM": {
+        "frontMin": 8,
+        "frontMax": 30,
+        "sideMin": 6,
+        "sideMax": 20
+      },
+      "urbanEdgeBehavior": "landscaped",
+      "proceduralNotes": "Reserve major facilities explicitly before ordinary generation. Fill residual parcels with campus-scale open space, parking/service yards and low-frequency civic buildings.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-021",
+        "SRC-029",
+        "SRC-031",
+        "SRC-032",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "up-emerging-development",
+      "name": "Emerging development frontier",
+      "description": "Partly built or actively urbanizing land where approved street/parcel structure may be clearer than the final building fabric.",
+      "streetPattern": "mixed",
+      "streetRegularity": 0.45,
+      "orientationBehavior": "locally-adaptive",
+      "typicalBlockWidthM": {
+        "min": 120,
+        "max": 320
+      },
+      "typicalBlockDepthM": {
+        "min": 80,
+        "max": 220
+      },
+      "typicalStreetWidthM": {
+        "min": 10,
+        "max": 24
+      },
+      "parcelPattern": "mixed",
+      "typicalParcelFrontageM": {
+        "min": 15,
+        "max": 55
+      },
+      "typicalParcelDepthM": {
+        "min": 28,
+        "max": 90
+      },
+      "plotCoverageRatio": {
+        "min": 0.15,
+        "max": 0.5
+      },
+      "openSpaceRatio": {
+        "min": 0.35,
+        "max": 0.72
+      },
+      "setbackM": {
+        "frontMin": 2,
+        "frontMax": 9,
+        "sideMin": 2,
+        "sideMax": 8
+      },
+      "urbanEdgeBehavior": "fragmented",
+      "proceduralNotes": "Represent completed streets and reserved plots separately from vacant/construction parcels. Use conservative future-building families and keep a high vacancy/open-land probability until better current geometry is available.",
+      "confidence": "low",
+      "sourceIds": [
+        "SRC-022",
+        "SRC-023",
+        "SRC-024",
+        "SRC-019",
+        "SRC-028"
+      ]
+    }
+  ],
+  "buildingProfiles": [
+    {
+      "id": "bp-central-mixed",
+      "name": "Central mixed-use urban block",
+      "description": "Attached or near-attached apartment/mixed-use fabric for the compact center, including corners and short perimeter/courtyard segments.",
+      "dominantUses": [
+        "residential",
+        "mixed-use"
+      ],
+      "allowedArchetypes": [
+        "small-apartment",
+        "perimeter-block",
+        "corner-l",
+        "courtyard-u"
+      ],
+      "storeys": {
+        "min": 2,
+        "typicalMin": 3,
+        "typicalMax": 6,
+        "max": 8
+      },
+      "footprintScale": "medium",
+      "roofFamilies": [
+        "flat",
+        "parapet",
+        "terrace"
+      ],
+      "wallPalette": [
+        "white render",
+        "warm cream render",
+        "pale sand render",
+        "light stone/ceramic accents"
+      ],
+      "roofPalette": [
+        "light concrete",
+        "white parapet",
+        "terrace finish"
+      ],
+      "repetitionBehavior": "locally-repetitive",
+      "variationNotes": "Reuse façade widths, balcony rhythms and corner forms across a block. Vary storeys and ground-floor activation selectively rather than randomizing every building.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-002",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "bp-midrise-apartment",
+      "name": "Mid-rise apartment block",
+      "description": "Freestanding or attached apartment buildings common in inner suburban and coastal residential areas.",
+      "dominantUses": [
+        "residential",
+        "tourism"
+      ],
+      "allowedArchetypes": [
+        "small-apartment",
+        "midrise-slab",
+        "corner-l",
+        "courtyard-u"
+      ],
+      "storeys": {
+        "min": 2,
+        "typicalMin": 3,
+        "typicalMax": 6,
+        "max": 9
+      },
+      "footprintScale": "medium",
+      "roofFamilies": [
+        "flat",
+        "parapet",
+        "terrace"
+      ],
+      "wallPalette": [
+        "white render",
+        "cream render",
+        "pale ochre render",
+        "light masonry accents"
+      ],
+      "roofPalette": [
+        "flat light roof",
+        "terrace finish"
+      ],
+      "repetitionBehavior": "locally-repetitive",
+      "variationNotes": "Within one development, repeat balcony, parapet and bay patterns; vary massing between developments.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-008",
+        "SRC-009",
+        "SRC-011",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "bp-coastal-slab-tower",
+      "name": "Coastal slab / tower apartment",
+      "description": "Larger apartment slabs and towers on larger plots, typically with communal open space and strong visibility from the coast.",
+      "dominantUses": [
+        "residential",
+        "tourism"
+      ],
+      "allowedArchetypes": [
+        "midrise-slab",
+        "tower-podium"
+      ],
+      "storeys": {
+        "min": 5,
+        "typicalMin": 7,
+        "typicalMax": 12,
+        "max": 18
+      },
+      "footprintScale": "large",
+      "roofFamilies": [
+        "flat",
+        "parapet",
+        "terrace"
+      ],
+      "wallPalette": [
+        "white render",
+        "light beige render",
+        "pale grey render"
+      ],
+      "roofPalette": [
+        "flat light roof",
+        "terrace finish"
+      ],
+      "repetitionBehavior": "locally-repetitive",
+      "variationNotes": "Use a small family of slab/tower proportions per coastal zone. Preserve gaps and shared open space rather than filling the block edge.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-007",
+        "SRC-008",
+        "SRC-012",
+        "SRC-019",
+        "SRC-028",
+        "SRC-035"
+      ]
+    },
+    {
+      "id": "bp-detached-villa",
+      "name": "Detached Mediterranean villa",
+      "description": "One- to two-storey detached houses on garden plots, with a mix of hipped/gabled and flat/terrace roofs.",
+      "dominantUses": [
+        "residential"
+      ],
+      "allowedArchetypes": [
+        "detached-house"
+      ],
+      "storeys": {
+        "min": 1,
+        "typicalMin": 1,
+        "typicalMax": 2,
+        "max": 2
+      },
+      "footprintScale": "small",
+      "roofFamilies": [
+        "hip",
+        "gable",
+        "flat",
+        "terrace"
+      ],
+      "wallPalette": [
+        "white stucco",
+        "warm cream render",
+        "pale sand render"
+      ],
+      "roofPalette": [
+        "terracotta red",
+        "warm clay",
+        "light concrete"
+      ],
+      "repetitionBehavior": "highly-repetitive",
+      "variationNotes": "Repeat plot setbacks, footprint scale and roof family locally. Allow modest color/roof/porch variation; private pools and garden hardscape should be optional rather than universal.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-003",
+        "SRC-004",
+        "SRC-005",
+        "SRC-006",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "bp-terrace-bungalow",
+      "name": "Terrace / semi-detached bungalow family",
+      "description": "Low-rise attached and semi-detached housing used in planned urbanizations, often repeated in rows or small clusters around shared open space.",
+      "dominantUses": [
+        "residential"
+      ],
+      "allowedArchetypes": [
+        "semi-detached",
+        "terrace-row"
+      ],
+      "storeys": {
+        "min": 1,
+        "typicalMin": 1,
+        "typicalMax": 2,
+        "max": 3
+      },
+      "footprintScale": "small",
+      "roofFamilies": [
+        "gable",
+        "hip",
+        "flat",
+        "terrace"
+      ],
+      "wallPalette": [
+        "white stucco",
+        "cream render",
+        "pale sand render"
+      ],
+      "roofPalette": [
+        "terracotta red",
+        "warm clay",
+        "flat light roof"
+      ],
+      "repetitionBehavior": "highly-repetitive",
+      "variationNotes": "Generate development-scale modules: repeated row lengths, party-wall spacing and related roof treatments, with limited unit-level variation.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-013",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "bp-lowrise-compound",
+      "name": "Low-rise apartment / communal compound",
+      "description": "Two- to five-storey apartment or courtyard clusters with communal gardens/pools, frequent in planned suburban residential areas.",
+      "dominantUses": [
+        "residential",
+        "tourism"
+      ],
+      "allowedArchetypes": [
+        "small-apartment",
+        "corner-l",
+        "courtyard-u",
+        "midrise-slab"
+      ],
+      "storeys": {
+        "min": 2,
+        "typicalMin": 2,
+        "typicalMax": 4,
+        "max": 5
+      },
+      "footprintScale": "medium",
+      "roofFamilies": [
+        "flat",
+        "parapet",
+        "terrace",
+        "hip"
+      ],
+      "wallPalette": [
+        "white render",
+        "cream render",
+        "pale ochre render"
+      ],
+      "roofPalette": [
+        "flat light roof",
+        "terracotta accents",
+        "terrace finish"
+      ],
+      "repetitionBehavior": "locally-repetitive",
+      "variationNotes": "Repeat the same building family across a compound, then change family at the next compound. Keep shared-open-space geometry as a first-class part of the parcel.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-007",
+        "SRC-008",
+        "SRC-011",
+        "SRC-013",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "bp-commercial-box",
+      "name": "Large-format retail box",
+      "description": "Large low-rise retail or leisure boxes with service areas and extensive parking/access space.",
+      "dominantUses": [
+        "commercial"
+      ],
+      "allowedArchetypes": [
+        "commercial-box"
+      ],
+      "storeys": {
+        "min": 1,
+        "typicalMin": 1,
+        "typicalMax": 2,
+        "max": 3
+      },
+      "footprintScale": "large",
+      "roofFamilies": [
+        "flat",
+        "industrial"
+      ],
+      "wallPalette": [
+        "light render panels",
+        "neutral cladding",
+        "glazed entrance zones"
+      ],
+      "roofPalette": [
+        "flat membrane roof",
+        "industrial roof"
+      ],
+      "repetitionBehavior": "locally-repetitive",
+      "variationNotes": "Vary footprint length, entrance canopy and service-yard position. Keep the building-to-parking relationship consistent within the retail cluster.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-030",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "bp-industrial-shed",
+      "name": "Industrial shed / warehouse",
+      "description": "Low industrial buildings and warehouses with large spans, yards and service access.",
+      "dominantUses": [
+        "industrial",
+        "commercial"
+      ],
+      "allowedArchetypes": [
+        "industrial-shed",
+        "commercial-box"
+      ],
+      "storeys": {
+        "min": 1,
+        "typicalMin": 1,
+        "typicalMax": 2,
+        "max": 2
+      },
+      "footprintScale": "large",
+      "roofFamilies": [
+        "industrial",
+        "gable",
+        "flat"
+      ],
+      "wallPalette": [
+        "light metal panel",
+        "neutral render",
+        "concrete block"
+      ],
+      "roofPalette": [
+        "industrial metal",
+        "flat membrane roof"
+      ],
+      "repetitionBehavior": "highly-repetitive",
+      "variationNotes": "Use repeated shed bays and simple roof spans; vary shed length, yard depth and office-front insertions.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-014",
+        "SRC-015",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "bp-civic-special",
+      "name": "Civic / health / sports special",
+      "description": "Non-residential special buildings requiring explicit parcel reservation: hospitals, sports halls, auditoria and major civic facilities.",
+      "dominantUses": [
+        "institutional",
+        "other"
+      ],
+      "allowedArchetypes": [
+        "civic-special"
+      ],
+      "storeys": {
+        "min": 1,
+        "typicalMin": 1,
+        "typicalMax": 3,
+        "max": 6
+      },
+      "footprintScale": "large",
+      "roofFamilies": [
+        "flat",
+        "parapet",
+        "industrial"
+      ],
+      "wallPalette": [
+        "project-specific neutral façade",
+        "light render",
+        "glass/metal accents"
+      ],
+      "roofPalette": [
+        "flat roof",
+        "industrial roof"
+      ],
+      "repetitionBehavior": "landmark-driven",
+      "variationNotes": "Do not synthesize these from ordinary residential rules. Reserve parcels and use simplified bespoke masses until landmark-specific assets exist.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-021",
+        "SRC-029",
+        "SRC-031",
+        "SRC-032"
+      ]
+    },
+    {
+      "id": "bp-emerging-midrise",
+      "name": "Emerging planned residential block",
+      "description": "Conservative placeholder family for newly urbanizing sectors where approved streets/parcels are known but final built form is still changing.",
+      "dominantUses": [
+        "residential",
+        "mixed-use"
+      ],
+      "allowedArchetypes": [
+        "small-apartment",
+        "midrise-slab",
+        "courtyard-u"
+      ],
+      "storeys": {
+        "min": 2,
+        "typicalMin": 3,
+        "typicalMax": 5,
+        "max": 6
+      },
+      "footprintScale": "medium",
+      "roofFamilies": [
+        "flat",
+        "parapet",
+        "terrace"
+      ],
+      "wallPalette": [
+        "white render",
+        "light cream render",
+        "pale grey render"
+      ],
+      "roofPalette": [
+        "flat light roof",
+        "terrace finish"
+      ],
+      "repetitionBehavior": "mixed",
+      "variationNotes": "Use only where development status is current and uncertain. Keep vacancy/construction probability high; replace with observed building families as the sector builds out.",
+      "confidence": "low",
+      "sourceIds": [
+        "SRC-022",
+        "SRC-023",
+        "SRC-024"
+      ]
+    }
+  ],
+  "districts": [
+    {
+      "id": "d-central-harbor",
+      "name": "Central grid and harbor",
+      "aliases": [
+        "Casco urbano",
+        "Centro",
+        "Puerto"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.697,
+              37.97
+            ],
+            [
+              -0.686,
+              37.968
+            ],
+            [
+              -0.673,
+              37.972
+            ],
+            [
+              -0.67,
+              37.985
+            ],
+            [
+              -0.679,
+              37.99
+            ],
+            [
+              -0.694,
+              37.987
+            ],
+            [
+              -0.697,
+              37.97
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.683167,
+        37.978667
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "The compact civic/commercial core and immediate harbor edge: the city's strongest continuous street grid, most persistent building frontage and most intense mixture of residential, retail, civic and waterfront functions.",
+      "dominantLandUses": [
+        "mixed-use",
+        "residential",
+        "commercial",
+        "institutional",
+        "tourism"
+      ],
+      "zoneIds": [
+        "z-central-grid",
+        "z-center-seafront",
+        "z-port-eras"
+      ],
+      "landmarkIds": [
+        "lm-plaza-constitucion",
+        "lm-eras-sal",
+        "lm-port",
+        "lm-bus-station",
+        "lm-parque-naciones",
+        "lm-museo-mar-sal"
+      ],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "retail",
+        "tourism",
+        "civic",
+        "transport-hub",
+        "nightlife",
+        "coastal"
+      ],
+      "researchNotes": "Research-defined to bind the source-supported casco urbano and port/civic core into a generator-scale district. The boundary is not an official barrio boundary; it deliberately follows the compact urban fabric rather than a legal unit.",
+      "sourceIds": [
+        "SRC-002",
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-027",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "d-los-locos-rosaleda",
+      "name": "Los Locos and La Rosaleda coast",
+      "aliases": [
+        "Playa de Los Locos",
+        "La Rosaleda",
+        "Curva del Palangre"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.68,
+              37.983
+            ],
+            [
+              -0.659,
+              37.979
+            ],
+            [
+              -0.651,
+              37.987
+            ],
+            [
+              -0.654,
+              37.997
+            ],
+            [
+              -0.67,
+              38.001
+            ],
+            [
+              -0.68,
+              37.994
+            ],
+            [
+              -0.68,
+              37.983
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.665667,
+        37.990167
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "A north-of-center coastal apartment belt where mid-rise/high-rise residential frontage and the promenade create a distinct linear seaside morphology, backed by lower and more mixed residential fabric.",
+      "dominantLandUses": [
+        "residential",
+        "tourism",
+        "mixed-use"
+      ],
+      "zoneIds": [
+        "z-los-locos-promenade",
+        "z-rosaleda-inner"
+      ],
+      "landmarkIds": [
+        "lm-playa-locos"
+      ],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "tourism",
+        "coastal",
+        "nightlife"
+      ],
+      "researchNotes": "Research-defined from the urban beach/promenade, open-map street pattern and visual morphology. The September 2026 promenade works mean public-realm geometry is actively changing even though the building grain remains recognizable.",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-020",
+        "SRC-025",
+        "SRC-028",
+        "SRC-035"
+      ]
+    },
+    {
+      "id": "d-acequion-naufragos",
+      "name": "Acequión and Los Náufragos",
+      "aliases": [
+        "El Acequión",
+        "Playa de los Náufragos"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.708,
+              37.963
+            ],
+            [
+              -0.69,
+              37.963
+            ],
+            [
+              -0.682,
+              37.97
+            ],
+            [
+              -0.686,
+              37.979
+            ],
+            [
+              -0.7,
+              37.981
+            ],
+            [
+              -0.709,
+              37.973
+            ],
+            [
+              -0.708,
+              37.963
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.695833,
+        37.9715
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "South-central urban fabric between the harbor approaches and the southern beaches, combining compact apartment streets with coastal strips and transport/health links.",
+      "dominantLandUses": [
+        "residential",
+        "mixed-use",
+        "tourism"
+      ],
+      "zoneIds": [
+        "z-acequion-grid",
+        "z-naufragos-coast"
+      ],
+      "landmarkIds": [
+        "lm-playa-naufragos"
+      ],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "coastal",
+        "tourism",
+        "health"
+      ],
+      "researchNotes": "Research-defined around commonly named Acequión/Náufragos areas. The coastal edge is strong; inland transition to the center and La Veleta is gradual and therefore approximate.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "d-nueva-losangeles-calas",
+      "name": "Nueva Torrevieja, Los Ángeles and Calas Blancas",
+      "aliases": [
+        "Nueva Torrevieja",
+        "Los Ángeles",
+        "Calas Blancas"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.695,
+              37.986
+            ],
+            [
+              -0.67,
+              37.985
+            ],
+            [
+              -0.665,
+              37.996
+            ],
+            [
+              -0.672,
+              38.003
+            ],
+            [
+              -0.691,
+              38.003
+            ],
+            [
+              -0.698,
+              37.995
+            ],
+            [
+              -0.695,
+              37.986
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.681833,
+        37.994667
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "An inner northern residential belt with a mix of villas, terrace/compound housing and apartment blocks; less continuous than the center and strongly structured by the northward arterial network.",
+      "dominantLandUses": [
+        "residential",
+        "mixed-use"
+      ],
+      "zoneIds": [
+        "z-nueva-torrevieja",
+        "z-los-angeles-villa-apartment",
+        "z-calas-blancas"
+      ],
+      "landmarkIds": [],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "retail"
+      ],
+      "researchNotes": "The names are established planning/urbanization names, but their union is a research district. The municipal Nueva Torrevieja plan itself records multiple residential intensity categories, supporting a multi-zone treatment.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-009",
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "d-aguas-torremoro",
+      "name": "Aguas Nuevas, Torre del Moro and Cabo Cervera",
+      "aliases": [
+        "Aguas Nuevas",
+        "Torre del Moro",
+        "Cabo Cervera"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.677,
+              37.995
+            ],
+            [
+              -0.648,
+              37.994
+            ],
+            [
+              -0.644,
+              38.005
+            ],
+            [
+              -0.65,
+              38.012
+            ],
+            [
+              -0.669,
+              38.013
+            ],
+            [
+              -0.679,
+              38.005
+            ],
+            [
+              -0.677,
+              37.995
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.661167,
+        38.004
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "Northeastern planned residential fabric that shifts from repeated low-rise compounds and villas inland to more vertically pronounced coastal apartment forms around Cabo Cervera and Torre del Moro.",
+      "dominantLandUses": [
+        "residential",
+        "tourism",
+        "institutional"
+      ],
+      "zoneIds": [
+        "z-aguas-nuevas-compounds",
+        "z-cabo-cervera-torremoro",
+        "z-north-sports-campus"
+      ],
+      "landmarkIds": [
+        "lm-torre-moro",
+        "lm-palacio-deportes",
+        "lm-hospital-quiron",
+        "lm-auditorio-internacional"
+      ],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "tourism",
+        "coastal",
+        "sports",
+        "health",
+        "civic"
+      ],
+      "researchNotes": "Research district joining recognized urbanizations and coastal landmarks. It is deliberately heterogeneous: planned compounds inland, coastal slabs/towers east, and a large institutional/sports cluster toward the western side.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-010",
+        "SRC-012",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028",
+        "SRC-032"
+      ]
+    },
+    {
+      "id": "d-torreblanca-molino-manguilla",
+      "name": "Torreblanca, Molino Blanco and La Manguilla",
+      "aliases": [
+        "Torreblanca",
+        "Molino Blanco",
+        "La Manguilla"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.679,
+              38.007
+            ],
+            [
+              -0.65,
+              38.007
+            ],
+            [
+              -0.647,
+              38.02
+            ],
+            [
+              -0.655,
+              38.025
+            ],
+            [
+              -0.674,
+              38.024
+            ],
+            [
+              -0.682,
+              38.016
+            ],
+            [
+              -0.679,
+              38.007
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.6645,
+        38.0165
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "A northern transition district of mixed apartment/villa urbanizations, coastal pine/open-space influence and current infill/development activity at La Manguilla.",
+      "dominantLandUses": [
+        "residential",
+        "tourism",
+        "open-space"
+      ],
+      "zoneIds": [
+        "z-torreblanca-mixed",
+        "z-molino-blanco",
+        "z-la-manguilla-emerging"
+      ],
+      "landmarkIds": [
+        "lm-molino-agua"
+      ],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "coastal",
+        "tourism"
+      ],
+      "researchNotes": "Research grouping based on planning names and the municipal homogeneous-zone map. Molino Blanco has explicit apartment/isolated-house planning distinctions; La Manguilla is changing in 2026 and should not be treated as morphologically finished.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-008",
+        "SRC-010",
+        "SRC-011",
+        "SRC-019",
+        "SRC-020",
+        "SRC-024",
+        "SRC-028",
+        "SRC-034"
+      ]
+    },
+    {
+      "id": "d-la-mata",
+      "name": "La Mata",
+      "aliases": [
+        "Torre La Mata",
+        "La Mata"
+      ],
+      "classification": "named-neighborhood",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.664,
+              38.019
+            ],
+            [
+              -0.649,
+              38.018
+            ],
+            [
+              -0.646,
+              38.025
+            ],
+            [
+              -0.648,
+              38.035
+            ],
+            [
+              -0.659,
+              38.037
+            ],
+            [
+              -0.665,
+              38.029
+            ],
+            [
+              -0.664,
+              38.019
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.655167,
+        38.027167
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "The northern coastal settlement with a perceptible compact village-scale core, beach-facing apartment fabric and a strong edge against dunes/open space and the wider protected-landscape system.",
+      "dominantLandUses": [
+        "residential",
+        "tourism",
+        "mixed-use",
+        "open-space"
+      ],
+      "zoneIds": [
+        "z-la-mata-core",
+        "z-la-mata-beachfront"
+      ],
+      "landmarkIds": [
+        "lm-torre-la-mata",
+        "lm-playa-la-mata"
+      ],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "tourism",
+        "coastal",
+        "retail"
+      ],
+      "researchNotes": "La Mata is a well-established place name and is separately identified in municipal mapping and transport. This polygon remains a research approximation, not an assertion of an official neighborhood boundary.",
+      "sourceIds": [
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028",
+        "SRC-034"
+      ]
+    },
+    {
+      "id": "d-siesta-sanluis-chaparral",
+      "name": "La Siesta, San Luis and El Chaparral",
+      "aliases": [
+        "La Siesta",
+        "San Luis",
+        "El Chaparral"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.721,
+              38.005
+            ],
+            [
+              -0.696,
+              38.004
+            ],
+            [
+              -0.686,
+              38.016
+            ],
+            [
+              -0.69,
+              38.033
+            ],
+            [
+              -0.707,
+              38.037
+            ],
+            [
+              -0.72,
+              38.026
+            ],
+            [
+              -0.721,
+              38.005
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.703333,
+        38.020167
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "A broad northwestern low-rise villa/urbanization belt with large plots, garden setbacks, locally repetitive detached housing and hard constraints toward lagoon/protected land.",
+      "dominantLandUses": [
+        "residential",
+        "open-space"
+      ],
+      "zoneIds": [
+        "z-chaparral-villas",
+        "z-siesta-sanluis-villas"
+      ],
+      "landmarkIds": [
+        "lm-parque-siesta",
+        "lm-health-la-siesta"
+      ],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "sports",
+        "health"
+      ],
+      "researchNotes": "Research district joining several established urbanizations with closely related low-rise planning rules. Municipal plan fichas for El Chaparral and San Luis strongly support the detached-lot/two-storey grammar.",
+      "sourceIds": [
+        "SRC-005",
+        "SRC-006",
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028",
+        "SRC-029"
+      ]
+    },
+    {
+      "id": "d-torretas-limonar-hondo",
+      "name": "Torretas, El Limonar and El Hondo",
+      "aliases": [
+        "La Torreta",
+        "Torretas",
+        "El Limonar",
+        "El Hondo"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.728,
+              37.982
+            ],
+            [
+              -0.703,
+              37.981
+            ],
+            [
+              -0.694,
+              37.992
+            ],
+            [
+              -0.698,
+              38.007
+            ],
+            [
+              -0.716,
+              38.01
+            ],
+            [
+              -0.728,
+              37.998
+            ],
+            [
+              -0.728,
+              37.982
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.711167,
+        37.995
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "Western low-rise urbanizations and fringe fabric, generally less dense than the center and interrupted by arterial, commercial and undeveloped land.",
+      "dominantLandUses": [
+        "residential",
+        "open-space"
+      ],
+      "zoneIds": [
+        "z-torreta-villas",
+        "z-limonar-hondo-fringe"
+      ],
+      "landmarkIds": [],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "retail"
+      ],
+      "researchNotes": "Research grouping. La Torreta has strong plan-level evidence for low coverage, large minimum parcels and substantial setbacks; El Hondo and El Limonar are established planning/place names but their V0 morphology boundaries are more approximate.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-004",
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "d-balcones-lago-altos",
+      "name": "Los Balcones, Lago Jardín and Los Altos",
+      "aliases": [
+        "Los Balcones",
+        "Lago Jardín",
+        "Los Altos"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.748,
+              37.949
+            ],
+            [
+              -0.719,
+              37.946
+            ],
+            [
+              -0.706,
+              37.958
+            ],
+            [
+              -0.708,
+              37.971
+            ],
+            [
+              -0.725,
+              37.978
+            ],
+            [
+              -0.746,
+              37.97
+            ],
+            [
+              -0.748,
+              37.949
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.725333,
+        37.962
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "Southwestern residential urbanizations ranging from large-plot detached villas to dense terrace/compound housing and mixed apartment clusters, with the hospital/CV-95 corridor nearby.",
+      "dominantLandUses": [
+        "residential",
+        "institutional",
+        "open-space"
+      ],
+      "zoneIds": [
+        "z-los-balcones-villas",
+        "z-lago-jardin",
+        "z-los-altos-mixed"
+      ],
+      "landmarkIds": [
+        "lm-hospital-universitario"
+      ],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "health",
+        "coastal"
+      ],
+      "researchNotes": "Research district. Los Balcones has unusually strong plan evidence for large plots and low-rise form; Lago Jardín planning supports a different, more compact planned-residential family. Los Altos acts as a connective mixed-residential area.",
+      "sourceIds": [
+        "SRC-003",
+        "SRC-010",
+        "SRC-013",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028",
+        "SRC-031"
+      ]
+    },
+    {
+      "id": "d-south-coast",
+      "name": "La Veleta, Mar Azul, Rocío del Mar and Punta Prima",
+      "aliases": [
+        "La Veleta",
+        "Mar Azul",
+        "Rocío del Mar",
+        "Punta Prima"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.722,
+              37.943
+            ],
+            [
+              -0.701,
+              37.941
+            ],
+            [
+              -0.69,
+              37.949
+            ],
+            [
+              -0.689,
+              37.962
+            ],
+            [
+              -0.699,
+              37.971
+            ],
+            [
+              -0.716,
+              37.969
+            ],
+            [
+              -0.724,
+              37.958
+            ],
+            [
+              -0.722,
+              37.943
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.705857,
+        37.956143
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "The southern coastal ribbon where low-rise villas, grouped housing and apartment slabs/towers alternate across a relatively narrow band between inland roads and the Mediterranean.",
+      "dominantLandUses": [
+        "residential",
+        "tourism",
+        "mixed-use"
+      ],
+      "zoneIds": [
+        "z-la-veleta-mixed",
+        "z-south-coastal-apartments"
+      ],
+      "landmarkIds": [
+        "lm-rocio-coast"
+      ],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "tourism",
+        "coastal"
+      ],
+      "researchNotes": "Research grouping of established planning/urbanization names. La Veleta is explicitly heterogeneous in municipal planning, while the Rocío del Mar/Punta Prima edge is characterized procedurally as a stronger coastal-apartment strip.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-007",
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "d-commercial-industrial",
+      "name": "Habaneras, Casagrande and Salinas commercial-industrial belt",
+      "aliases": [
+        "Habaneras retail area",
+        "Casagrande",
+        "Industrial Salinas"
+      ],
+      "classification": "research-district",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.714,
+              37.973
+            ],
+            [
+              -0.694,
+              37.973
+            ],
+            [
+              -0.682,
+              37.985
+            ],
+            [
+              -0.686,
+              38.0
+            ],
+            [
+              -0.706,
+              38.003
+            ],
+            [
+              -0.718,
+              37.989
+            ],
+            [
+              -0.714,
+              37.973
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "centroid": [
+        -0.7,
+        37.987167
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "medium",
+      "urbanCharacter": "A west/northwest-of-center employment and retail belt of big-box commercial parcels, surface parking/service areas and low industrial sheds, strongly related to major road access rather than local residential streets.",
+      "dominantLandUses": [
+        "commercial",
+        "industrial"
+      ],
+      "zoneIds": [
+        "z-habaneras-retail",
+        "z-casagrande-industrial",
+        "z-salinas-industrial"
+      ],
+      "landmarkIds": [
+        "lm-habaneras",
+        "lm-saltworks"
+      ],
+      "gameSemanticsPotential": [
+        "employment",
+        "retail",
+        "transport-hub"
+      ],
+      "researchNotes": "Research-defined functional district rather than a single official neighborhood. It joins the Habaneras retail cluster with nearby industrial planning areas for procedural purposes, but keeps them as separate morphology zones.",
+      "sourceIds": [
+        "SRC-014",
+        "SRC-015",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028",
+        "SRC-030"
+      ]
+    },
+    {
+      "id": "d-la-hoya",
+      "name": "La Hoya development frontier",
+      "aliases": [
+        "Sector 20 La Hoya",
+        "La Hoya II"
+      ],
+      "classification": "planning-area",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.7,
+              38.0
+            ],
+            [
+              -0.684,
+              37.999
+            ],
+            [
+              -0.676,
+              38.006
+            ],
+            [
+              -0.679,
+              38.017
+            ],
+            [
+              -0.695,
+              38.019
+            ],
+            [
+              -0.704,
+              38.011
+            ],
+            [
+              -0.7,
+              38.0
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "low",
+      "centroid": [
+        -0.689667,
+        38.008667
+      ],
+      "centroidGeometryQuality": "research-approximation",
+      "centroidConfidence": "low",
+      "urbanCharacter": "A major northern/northwestern urbanization frontier where road/parcel infrastructure and approved development intentions are more reliable than the final built morphology.",
+      "dominantLandUses": [
+        "residential",
+        "mixed-use",
+        "open-space"
+      ],
+      "zoneIds": [
+        "z-la-hoya-active"
+      ],
+      "landmarkIds": [
+        "lm-la-hoya-reserve"
+      ],
+      "gameSemanticsPotential": [
+        "residential-origin",
+        "retail",
+        "health",
+        "other"
+      ],
+      "researchNotes": "District identity comes from municipal Sector 20 planning. The V0 boundary is only a research approximation around the current La Hoya development area; active project modification and build-out mean it is the least stable urban district in the package.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-019",
+        "SRC-020",
+        "SRC-022",
+        "SRC-023",
+        "SRC-024",
+        "SRC-028"
+      ]
+    }
+  ],
+  "zones": [
+    {
+      "id": "z-central-grid",
+      "districtId": "d-central-harbor",
+      "name": "Dense central civic/commercial grid",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.694,
+              37.974
+            ],
+            [
+              -0.681,
+              37.972
+            ],
+            [
+              -0.676,
+              37.979
+            ],
+            [
+              -0.678,
+              37.987
+            ],
+            [
+              -0.691,
+              37.986
+            ],
+            [
+              -0.696,
+              37.98
+            ],
+            [
+              -0.694,
+              37.974
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-dense-central-grid",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-central-mixed",
+          "weight": 0.7
+        },
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-civic-special",
+          "weight": 0.05
+        }
+      ],
+      "densityCharacter": "very-high",
+      "principalOrientationDeg": 10,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "local-grid",
+      "populationInterpretation": "Population should primarily modulate occupancy and storey choice inside the compact grid; morphology remains fine-grain and frontage-oriented.",
+      "proceduralGenerationNotes": "Prioritize continuous frontage, compact corner conditions and repeated 3–6-storey forms; reserve civic parcels before infill.",
+      "edgeTreatment": "Hard transition to harbor/waterfront and softer transition to inner apartment belts.",
+      "sourceIds": [
+        "SRC-002",
+        "SRC-019",
+        "SRC-020",
+        "SRC-027",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-center-seafront",
+      "districtId": "d-central-harbor",
+      "name": "Central seafront and promenade blocks",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.684,
+              37.97
+            ],
+            [
+              -0.674,
+              37.972
+            ],
+            [
+              -0.67,
+              37.98
+            ],
+            [
+              -0.676,
+              37.982
+            ],
+            [
+              -0.684,
+              37.977
+            ],
+            [
+              -0.684,
+              37.97
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-midrise-apartment-grid",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.55
+        },
+        {
+          "buildingProfileId": "bp-central-mixed",
+          "weight": 0.35
+        },
+        {
+          "buildingProfileId": "bp-coastal-slab-tower",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "very-high",
+      "principalOrientationDeg": 20,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "route-oriented",
+      "populationInterpretation": "Higher population values can favor upper-end mid-rise variants and active ground floors, but the seafront street wall/openings should remain.",
+      "proceduralGenerationNotes": "Keep the promenade-facing edge visually coherent and more varied in height than the deepest center blocks.",
+      "edgeTreatment": "Water-bounded on the east/southeast; hard urban tie into the center.",
+      "sourceIds": [
+        "SRC-002",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-port-eras",
+      "districtId": "d-central-harbor",
+      "name": "Port, marina and Eras de la Sal edge",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.694,
+              37.969
+            ],
+            [
+              -0.686,
+              37.968
+            ],
+            [
+              -0.679,
+              37.971
+            ],
+            [
+              -0.683,
+              37.975
+            ],
+            [
+              -0.693,
+              37.974
+            ],
+            [
+              -0.694,
+              37.969
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-institutional-campus",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-civic-special",
+          "weight": 0.55
+        },
+        {
+          "buildingProfileId": "bp-commercial-box",
+          "weight": 0.2
+        },
+        {
+          "buildingProfileId": "bp-central-mixed",
+          "weight": 0.25
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 15,
+      "orientationConfidence": "low",
+      "corridorRelationship": "route-oriented",
+      "populationInterpretation": "Population is not the primary generator signal here; explicit port/cultural reservations and public realm dominate.",
+      "proceduralGenerationNotes": "Reserve Eras de la Sal and port/marina parcels explicitly. Generate only residual support buildings and public-space edges.",
+      "edgeTreatment": "Harbor water forms a hard edge; city-facing edge should remain permeable and pedestrian-oriented.",
+      "sourceIds": [
+        "SRC-002",
+        "SRC-019",
+        "SRC-026",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-los-locos-promenade",
+      "districtId": "d-los-locos-rosaleda",
+      "name": "Los Locos apartment promenade",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.67,
+              37.981
+            ],
+            [
+              -0.659,
+              37.979
+            ],
+            [
+              -0.653,
+              37.986
+            ],
+            [
+              -0.655,
+              37.991
+            ],
+            [
+              -0.664,
+              37.991
+            ],
+            [
+              -0.672,
+              37.987
+            ],
+            [
+              -0.67,
+              37.981
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-coastal-apartment-strip",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-coastal-slab-tower",
+          "weight": 0.45
+        },
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.5
+        },
+        {
+          "buildingProfileId": "bp-central-mixed",
+          "weight": 0.05
+        }
+      ],
+      "densityCharacter": "high",
+      "principalOrientationDeg": 25,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "route-oriented",
+      "populationInterpretation": "Population should adjust apartment height/occupancy within the coastal family; it should not erase promenade setbacks or sea-facing gaps.",
+      "proceduralGenerationNotes": "Use repeated mid-rise/slab forms parallel or oblique to the coast. Account for the 2026–28 promenade works as public-realm change, not a building-fabric reset.",
+      "edgeTreatment": "Hard sea edge; active promenade edge; gradual inland transition.",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-025",
+        "SRC-028",
+        "SRC-035"
+      ]
+    },
+    {
+      "id": "z-rosaleda-inner",
+      "districtId": "d-los-locos-rosaleda",
+      "name": "La Rosaleda inner residential fabric",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.678,
+              37.989
+            ],
+            [
+              -0.663,
+              37.989
+            ],
+            [
+              -0.655,
+              37.994
+            ],
+            [
+              -0.669,
+              37.999
+            ],
+            [
+              -0.679,
+              37.995
+            ],
+            [
+              -0.678,
+              37.989
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-mixed-planned-residential",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.5
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 15,
+      "orientationConfidence": "low",
+      "corridorRelationship": "mixed",
+      "populationInterpretation": "Use population mainly to choose among low/mid-rise variants; retain mixed planned-residential character.",
+      "proceduralGenerationNotes": "Keep a development-cluster logic: local repetition within a block or compound, greater change between clusters.",
+      "edgeTreatment": "Fragmented transition to Aguas Nuevas/Nueva Torrevieja; coast-facing side becomes more apartment-dominant.",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-acequion-grid",
+      "districtId": "d-acequion-naufragos",
+      "name": "Acequión compact apartment grid",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.704,
+              37.968
+            ],
+            [
+              -0.69,
+              37.967
+            ],
+            [
+              -0.684,
+              37.972
+            ],
+            [
+              -0.689,
+              37.978
+            ],
+            [
+              -0.7,
+              37.979
+            ],
+            [
+              -0.706,
+              37.974
+            ],
+            [
+              -0.704,
+              37.968
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-midrise-apartment-grid",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.6
+        },
+        {
+          "buildingProfileId": "bp-central-mixed",
+          "weight": 0.3
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "high",
+      "principalOrientationDeg": 10,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "local-grid",
+      "populationInterpretation": "Higher population can increase upper-end apartment variants and frontage occupancy, while keeping the south-center block grammar.",
+      "proceduralGenerationNotes": "Use more discontinuous frontage than the central core, with apartment repetition and occasional courtyard/compound forms.",
+      "edgeTreatment": "Hard tie to central fabric northward; coastal and arterial edges are stronger south/east.",
+      "sourceIds": [
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-naufragos-coast",
+      "districtId": "d-acequion-naufragos",
+      "name": "Los Náufragos coastal strip",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.707,
+              37.963
+            ],
+            [
+              -0.691,
+              37.963
+            ],
+            [
+              -0.686,
+              37.968
+            ],
+            [
+              -0.688,
+              37.975
+            ],
+            [
+              -0.699,
+              37.978
+            ],
+            [
+              -0.706,
+              37.972
+            ],
+            [
+              -0.707,
+              37.963
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-coastal-apartment-strip",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.55
+        },
+        {
+          "buildingProfileId": "bp-coastal-slab-tower",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.2
+        }
+      ],
+      "densityCharacter": "high",
+      "principalOrientationDeg": 20,
+      "orientationConfidence": "low",
+      "corridorRelationship": "route-oriented",
+      "populationInterpretation": "Use density to modulate apartment height and compound infill without changing the seaward spacing logic.",
+      "proceduralGenerationNotes": "Keep a coastal corridor rhythm with more open gaps than the central grid and a clear relation to the beach/public realm.",
+      "edgeTreatment": "Water-bounded east/southeast; transitions inland to denser apartment fabric.",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-nueva-torrevieja",
+      "districtId": "d-nueva-losangeles-calas",
+      "name": "Nueva Torrevieja mixed apartment belt",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.692,
+              37.988
+            ],
+            [
+              -0.675,
+              37.987
+            ],
+            [
+              -0.67,
+              37.994
+            ],
+            [
+              -0.676,
+              38.0
+            ],
+            [
+              -0.69,
+              37.999
+            ],
+            [
+              -0.696,
+              37.994
+            ],
+            [
+              -0.692,
+              37.988
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-mixed-planned-residential",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.45
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.15
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 5,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "arterial-oriented",
+      "populationInterpretation": "Population can shift the mix toward apartment or lower-rise compound families but should preserve planned-block heterogeneity.",
+      "proceduralGenerationNotes": "Generate coherent subareas rather than random typology mixing; major streets may receive taller apartment blocks.",
+      "edgeTreatment": "Mixed, with arterial-bounded edges and permeable local transitions.",
+      "sourceIds": [
+        "SRC-009",
+        "SRC-010",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-los-angeles-villa-apartment",
+      "districtId": "d-nueva-losangeles-calas",
+      "name": "Los Ángeles villa–apartment transition",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.695,
+              37.993
+            ],
+            [
+              -0.683,
+              37.992
+            ],
+            [
+              -0.68,
+              38.001
+            ],
+            [
+              -0.691,
+              38.002
+            ],
+            [
+              -0.698,
+              37.997
+            ],
+            [
+              -0.695,
+              37.993
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-mixed-planned-residential",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.35
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.15
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 0,
+      "orientationConfidence": "low",
+      "corridorRelationship": "mixed",
+      "populationInterpretation": "Population should alter lot occupancy and apartment share modestly, not collapse the villa/compound transition into center-like density.",
+      "proceduralGenerationNotes": "Preserve strong local repetition in villa streets and compound clusters; use apartment blocks selectively on larger parcels.",
+      "edgeTreatment": "Soft residential transitions; harder arterial edge to commercial/institutional areas.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-calas-blancas",
+      "districtId": "d-nueva-losangeles-calas",
+      "name": "Calas Blancas terraced residential",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.681,
+              37.985
+            ],
+            [
+              -0.67,
+              37.985
+            ],
+            [
+              -0.667,
+              37.992
+            ],
+            [
+              -0.676,
+              37.995
+            ],
+            [
+              -0.684,
+              37.991
+            ],
+            [
+              -0.681,
+              37.985
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-terrace-compound",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.45
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.35
+        },
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.05
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 10,
+      "orientationConfidence": "low",
+      "corridorRelationship": "local-grid",
+      "populationInterpretation": "Population should affect occupancy and low-rise apartment share while retaining repeated terraced/compound modules.",
+      "proceduralGenerationNotes": "Favor repeated row-house and small compound families, with communal open space and consistent module geometry.",
+      "edgeTreatment": "Mostly residential, with gradual edges into Nueva Torrevieja and the coastal apartment belt.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-aguas-nuevas-compounds",
+      "districtId": "d-aguas-torremoro",
+      "name": "Aguas Nuevas planned compounds",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.675,
+              37.997
+            ],
+            [
+              -0.659,
+              37.996
+            ],
+            [
+              -0.655,
+              38.005
+            ],
+            [
+              -0.664,
+              38.01
+            ],
+            [
+              -0.676,
+              38.005
+            ],
+            [
+              -0.675,
+              37.997
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-terrace-compound",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.45
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.3
+        },
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 10,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "mixed",
+      "populationInterpretation": "Use population to raise or lower compound occupancy and apartment share while keeping communal open space and repeated development modules.",
+      "proceduralGenerationNotes": "Visual inference: repeated white low-rise groups and communal open space are more important than maximum building variety.",
+      "edgeTreatment": "Landscaped internal edges; arterial transitions toward the sports/institutional campus and coast.",
+      "sourceIds": [
+        "SRC-010",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-cabo-cervera-torremoro",
+      "districtId": "d-aguas-torremoro",
+      "name": "Cabo Cervera and Torre del Moro coastal heights",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.659,
+              37.995
+            ],
+            [
+              -0.648,
+              37.994
+            ],
+            [
+              -0.644,
+              38.003
+            ],
+            [
+              -0.649,
+              38.009
+            ],
+            [
+              -0.658,
+              38.008
+            ],
+            [
+              -0.659,
+              37.995
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-coastal-apartment-strip",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-coastal-slab-tower",
+          "weight": 0.5
+        },
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.35
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.1
+        },
+        {
+          "buildingProfileId": "bp-civic-special",
+          "weight": 0.05
+        }
+      ],
+      "densityCharacter": "high",
+      "principalOrientationDeg": 20,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "route-oriented",
+      "populationInterpretation": "Population should choose among apartment/slab/tower variants; retain large plots, gaps and coastal orientation.",
+      "proceduralGenerationNotes": "Reserve Torre del Moro explicitly. Use stronger height contrast than inland Aguas Nuevas, but avoid continuous high-rise frontage.",
+      "edgeTreatment": "Water-bounded east; steep/irregular local topography and roads create fragmented inland transitions.",
+      "sourceIds": [
+        "SRC-012",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-north-sports-campus",
+      "districtId": "d-aguas-torremoro",
+      "name": "Northern sports and institutional campus",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.676,
+              37.996
+            ],
+            [
+              -0.668,
+              37.996
+            ],
+            [
+              -0.665,
+              38.001
+            ],
+            [
+              -0.67,
+              38.008
+            ],
+            [
+              -0.677,
+              38.005
+            ],
+            [
+              -0.676,
+              37.996
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-institutional-campus",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-civic-special",
+          "weight": 0.75
+        },
+        {
+          "buildingProfileId": "bp-commercial-box",
+          "weight": 0.1
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.15
+        }
+      ],
+      "densityCharacter": "low",
+      "principalOrientationDeg": 5,
+      "orientationConfidence": "low",
+      "corridorRelationship": "arterial-oriented",
+      "populationInterpretation": "Population is secondary; explicit facility reservations, access and open-space ratios govern generation.",
+      "proceduralGenerationNotes": "Reserve the Palacio de Deportes, Quirón and Auditorium areas before ordinary fabric. Fill only residual campus parcels procedurally.",
+      "edgeTreatment": "Landscaped/superblock edges to adjacent housing; major roads provide hard access boundaries.",
+      "sourceIds": [
+        "SRC-021",
+        "SRC-032",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-torreblanca-mixed",
+      "districtId": "d-torreblanca-molino-manguilla",
+      "name": "Torreblanca mixed slope residential",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.678,
+              38.008
+            ],
+            [
+              -0.66,
+              38.008
+            ],
+            [
+              -0.656,
+              38.016
+            ],
+            [
+              -0.665,
+              38.021
+            ],
+            [
+              -0.679,
+              38.017
+            ],
+            [
+              -0.678,
+              38.008
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-mixed-planned-residential",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.35
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.3
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.2
+        },
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.15
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 15,
+      "orientationConfidence": "low",
+      "corridorRelationship": "mixed",
+      "populationInterpretation": "Population may shift the balance among apartment and low-rise families while preserving mixed planned-residential blocks.",
+      "proceduralGenerationNotes": "Use local cluster repetition and adapt streets/building orientation to the coastward slope rather than a single rigid grid.",
+      "edgeTreatment": "Fragmented inland edge; stronger coastal transition toward Molino Blanco/Molino del Agua.",
+      "sourceIds": [
+        "SRC-011",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-molino-blanco",
+      "districtId": "d-torreblanca-molino-manguilla",
+      "name": "Molino Blanco villa–apartment mosaic",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.664,
+              38.011
+            ],
+            [
+              -0.65,
+              38.009
+            ],
+            [
+              -0.648,
+              38.018
+            ],
+            [
+              -0.656,
+              38.023
+            ],
+            [
+              -0.666,
+              38.019
+            ],
+            [
+              -0.664,
+              38.011
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-mixed-planned-residential",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.35
+        },
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.15
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 20,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "mixed",
+      "populationInterpretation": "Population can favor apartments on larger sites, but villa and low-rise components must remain locally coherent.",
+      "proceduralGenerationNotes": "Municipal planning explicitly distinguishes apartment and isolated-dwelling forms; model this as sub-block mosaics rather than random parcel mixing.",
+      "edgeTreatment": "Coastal/open-space edge is landscaped; inland transition merges into Torreblanca.",
+      "sourceIds": [
+        "SRC-008",
+        "SRC-019",
+        "SRC-028",
+        "SRC-034"
+      ]
+    },
+    {
+      "id": "z-la-manguilla-emerging",
+      "districtId": "d-torreblanca-molino-manguilla",
+      "name": "La Manguilla infill and emerging residential",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.676,
+              38.017
+            ],
+            [
+              -0.661,
+              38.017
+            ],
+            [
+              -0.655,
+              38.024
+            ],
+            [
+              -0.671,
+              38.025
+            ],
+            [
+              -0.681,
+              38.021
+            ],
+            [
+              -0.676,
+              38.017
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-emerging-development",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-emerging-midrise",
+          "weight": 0.45
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.2
+        },
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "low",
+      "principalOrientationDeg": 10,
+      "orientationConfidence": "low",
+      "corridorRelationship": "arterial-oriented",
+      "populationInterpretation": "Treat current population as a weak signal because part of the land is actively developing; retain substantial vacant/reserved parcels.",
+      "proceduralGenerationNotes": "The 2026 Plan Vive project confirms active build-out. Use placeholder future residential blocks and mark this zone for frequent refresh.",
+      "edgeTreatment": "Fragmented construction/open-land edge, transitioning to La Mata and Torreblanca.",
+      "sourceIds": [
+        "SRC-010",
+        "SRC-019",
+        "SRC-024",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-la-mata-core",
+      "districtId": "d-la-mata",
+      "name": "La Mata compact core",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.662,
+              38.023
+            ],
+            [
+              -0.651,
+              38.021
+            ],
+            [
+              -0.648,
+              38.027
+            ],
+            [
+              -0.653,
+              38.033
+            ],
+            [
+              -0.661,
+              38.032
+            ],
+            [
+              -0.665,
+              38.027
+            ],
+            [
+              -0.662,
+              38.023
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-la-mata-village-grid",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-central-mixed",
+          "weight": 0.3
+        },
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.45
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-civic-special",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "high",
+      "principalOrientationDeg": 10,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "local-grid",
+      "populationInterpretation": "Population should modulate occupancy/storeys in a compact village-scale grid, not trigger central-Torrevieja superblocks or coastal towers everywhere.",
+      "proceduralGenerationNotes": "Preserve smaller block/parcel scale and a more compact street relationship than surrounding urbanizations.",
+      "edgeTreatment": "Hard/clear seaward edge and softer north/south settlement transitions.",
+      "sourceIds": [
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-la-mata-beachfront",
+      "districtId": "d-la-mata",
+      "name": "La Mata beachfront apartment edge",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.655,
+              38.019
+            ],
+            [
+              -0.648,
+              38.019
+            ],
+            [
+              -0.646,
+              38.026
+            ],
+            [
+              -0.65,
+              38.03
+            ],
+            [
+              -0.655,
+              38.027
+            ],
+            [
+              -0.655,
+              38.019
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-coastal-apartment-strip",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.5
+        },
+        {
+          "buildingProfileId": "bp-coastal-slab-tower",
+          "weight": 0.3
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.05
+        }
+      ],
+      "densityCharacter": "high",
+      "principalOrientationDeg": 25,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "route-oriented",
+      "populationInterpretation": "Use population to select apartment height and occupancy while preserving sea-oriented spacing and the promenade/open-space relationship.",
+      "proceduralGenerationNotes": "Avoid an unbroken wall: alternate mid-rise apartment blocks with larger-plot forms and public/coastal gaps.",
+      "edgeTreatment": "Water-bounded east; dune/open-space and Molino del Agua constraints become important southward.",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-020",
+        "SRC-028",
+        "SRC-034"
+      ]
+    },
+    {
+      "id": "z-chaparral-villas",
+      "districtId": "d-siesta-sanluis-chaparral",
+      "name": "El Chaparral large-plot villas",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.713,
+              38.009
+            ],
+            [
+              -0.697,
+              38.008
+            ],
+            [
+              -0.691,
+              38.018
+            ],
+            [
+              -0.699,
+              38.027
+            ],
+            [
+              -0.714,
+              38.024
+            ],
+            [
+              -0.713,
+              38.009
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-villa-grid",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.75
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "low",
+      "principalOrientationDeg": 5,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "local-grid",
+      "populationInterpretation": "Population should affect occupancy modestly but preserve large plots, low coverage and two-storey cap as the dominant identity.",
+      "proceduralGenerationNotes": "Use planning-backed setbacks and low coverage as hard grammar tendencies. Repetition should occur in parcel rhythm and villa family.",
+      "edgeTreatment": "Strong lagoon/protected-land edge; local streets taper toward non-buildable land.",
+      "sourceIds": [
+        "SRC-005",
+        "SRC-016",
+        "SRC-017",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-siesta-sanluis-villas",
+      "districtId": "d-siesta-sanluis-chaparral",
+      "name": "La Siesta and San Luis villa grid",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.721,
+              38.012
+            ],
+            [
+              -0.707,
+              38.007
+            ],
+            [
+              -0.698,
+              38.018
+            ],
+            [
+              -0.704,
+              38.035
+            ],
+            [
+              -0.716,
+              38.033
+            ],
+            [
+              -0.722,
+              38.025
+            ],
+            [
+              -0.721,
+              38.012
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-villa-grid",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.65
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.2
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.1
+        },
+        {
+          "buildingProfileId": "bp-civic-special",
+          "weight": 0.05
+        }
+      ],
+      "densityCharacter": "low",
+      "principalOrientationDeg": 0,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "mixed",
+      "populationInterpretation": "Population can increase occupied-lot share or semi-detached selection, but should not eliminate garden setbacks.",
+      "proceduralGenerationNotes": "Preserve repeated villa lots; reserve Parque La Siesta and health/civic facilities as breaks in the residential pattern.",
+      "edgeTreatment": "Hard or landscaped edge toward the protected lagoon system; arterial edges toward CV-905/N-332 connections.",
+      "sourceIds": [
+        "SRC-006",
+        "SRC-010",
+        "SRC-016",
+        "SRC-019",
+        "SRC-021",
+        "SRC-028",
+        "SRC-029"
+      ]
+    },
+    {
+      "id": "z-torreta-villas",
+      "districtId": "d-torretas-limonar-hondo",
+      "name": "La Torreta low-coverage villa grid",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.722,
+              37.985
+            ],
+            [
+              -0.705,
+              37.983
+            ],
+            [
+              -0.698,
+              37.992
+            ],
+            [
+              -0.704,
+              38.003
+            ],
+            [
+              -0.718,
+              38.005
+            ],
+            [
+              -0.726,
+              37.997
+            ],
+            [
+              -0.722,
+              37.985
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-villa-grid",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.75
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "low",
+      "principalOrientationDeg": 5,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "local-grid",
+      "populationInterpretation": "Use population as an occupancy modifier only; large lots, strong setbacks and low-rise form should remain dominant.",
+      "proceduralGenerationNotes": "The municipal La Torreta ficha gives unusually clear low-coverage and setback parameters; treat these as a strong procedural anchor.",
+      "edgeTreatment": "Infrastructure-bounded east; fragmented/open edge west.",
+      "sourceIds": [
+        "SRC-004",
+        "SRC-010",
+        "SRC-019",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-limonar-hondo-fringe",
+      "districtId": "d-torretas-limonar-hondo",
+      "name": "El Limonar–El Hondo fragmented fringe",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.727,
+              37.983
+            ],
+            [
+              -0.715,
+              37.982
+            ],
+            [
+              -0.705,
+              37.989
+            ],
+            [
+              -0.71,
+              38.008
+            ],
+            [
+              -0.723,
+              38.007
+            ],
+            [
+              -0.728,
+              37.995
+            ],
+            [
+              -0.727,
+              37.983
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-emerging-development",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.45
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.2
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-emerging-midrise",
+          "weight": 0.2
+        }
+      ],
+      "densityCharacter": "very-low",
+      "principalOrientationDeg": 0,
+      "orientationConfidence": "low",
+      "corridorRelationship": "weakly-corridor-related",
+      "populationInterpretation": "Sparse/fragmented population should not be filled uniformly. Use a high vacancy/open-parcel rate and preserve discontinuous settlement.",
+      "proceduralGenerationNotes": "Treat named planning/locality evidence as stronger than exact morphology boundaries. Avoid inventing continuous suburban fabric where imagery/map evidence is fragmented.",
+      "edgeTreatment": "Fragmented edge toward undeveloped/protected-context land.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-010",
+        "SRC-018",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-los-balcones-villas",
+      "districtId": "d-balcones-lago-altos",
+      "name": "Los Balcones large-plot villas",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.744,
+              37.951
+            ],
+            [
+              -0.724,
+              37.949
+            ],
+            [
+              -0.715,
+              37.958
+            ],
+            [
+              -0.721,
+              37.972
+            ],
+            [
+              -0.739,
+              37.971
+            ],
+            [
+              -0.748,
+              37.961
+            ],
+            [
+              -0.744,
+              37.951
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-villa-grid",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.8
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.1
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "low",
+      "principalOrientationDeg": 10,
+      "orientationConfidence": "high",
+      "corridorRelationship": "local-grid",
+      "populationInterpretation": "Population may increase occupancy and occasional semi-detached/compound share, but large detached plots must remain the zone signature.",
+      "proceduralGenerationNotes": "Anchor parcel sizing to the plan's 800 m² minimum and low-rise/coverage constraints; use a repeated villa rhythm with gardens and optional pools.",
+      "edgeTreatment": "Tapered/landscaped residential edge, with stronger road boundary toward the hospital/CV-95 side.",
+      "sourceIds": [
+        "SRC-003",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-lago-jardin",
+      "districtId": "d-balcones-lago-altos",
+      "name": "Lago Jardín terrace and compound urbanization",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.739,
+              37.962
+            ],
+            [
+              -0.723,
+              37.959
+            ],
+            [
+              -0.716,
+              37.968
+            ],
+            [
+              -0.725,
+              37.976
+            ],
+            [
+              -0.74,
+              37.971
+            ],
+            [
+              -0.739,
+              37.962
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-terrace-compound",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.45
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.35
+        },
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.1
+        },
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 20,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "local-grid",
+      "populationInterpretation": "Population should alter occupied-unit density and low-rise apartment share while preserving compound/open-space patterns.",
+      "proceduralGenerationNotes": "Use repeated rows/cluster modules and shared open space rather than independent bespoke houses.",
+      "edgeTreatment": "Landscaped internal edges; merges into Los Balcones/Los Altos through planned-residential transitions.",
+      "sourceIds": [
+        "SRC-013",
+        "SRC-019",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-los-altos-mixed",
+      "districtId": "d-balcones-lago-altos",
+      "name": "Los Altos mixed planned residential",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.728,
+              37.949
+            ],
+            [
+              -0.712,
+              37.948
+            ],
+            [
+              -0.706,
+              37.957
+            ],
+            [
+              -0.711,
+              37.966
+            ],
+            [
+              -0.724,
+              37.966
+            ],
+            [
+              -0.733,
+              37.957
+            ],
+            [
+              -0.728,
+              37.949
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-mixed-planned-residential",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.35
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.15
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 15,
+      "orientationConfidence": "low",
+      "corridorRelationship": "arterial-oriented",
+      "populationInterpretation": "Population can shift development clusters among apartment/compound/villa families, but each local cluster should remain coherent.",
+      "proceduralGenerationNotes": "Model a suburban mosaic with stronger density along major routes and lower-rise housing inside local streets.",
+      "edgeTreatment": "Arterial edge to the south/east; gradual residential transition west/north.",
+      "sourceIds": [
+        "SRC-010",
+        "SRC-019",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-la-veleta-mixed",
+      "districtId": "d-south-coast",
+      "name": "La Veleta villa–apartment mix",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.719,
+              37.955
+            ],
+            [
+              -0.704,
+              37.953
+            ],
+            [
+              -0.694,
+              37.961
+            ],
+            [
+              -0.7,
+              37.97
+            ],
+            [
+              -0.715,
+              37.968
+            ],
+            [
+              -0.723,
+              37.962
+            ],
+            [
+              -0.719,
+              37.955
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-mixed-planned-residential",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.3
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.25
+        },
+        {
+          "buildingProfileId": "bp-coastal-slab-tower",
+          "weight": 0.2
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 20,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "route-oriented",
+      "populationInterpretation": "Population should alter the balance of villa/compound/apartment types but preserve the plan-supported coexistence of low villas and taller isolated blocks.",
+      "proceduralGenerationNotes": "Treat the zone as explicitly heterogeneous: coherent low-rise subareas plus selected larger/taller apartment parcels.",
+      "edgeTreatment": "Water-influenced edge east; arterial transition inland.",
+      "sourceIds": [
+        "SRC-007",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-south-coastal-apartments",
+      "districtId": "d-south-coast",
+      "name": "Mar Azul–Rocío del Mar–Punta Prima coastal apartment strip",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.712,
+              37.943
+            ],
+            [
+              -0.7,
+              37.941
+            ],
+            [
+              -0.69,
+              37.949
+            ],
+            [
+              -0.69,
+              37.959
+            ],
+            [
+              -0.699,
+              37.962
+            ],
+            [
+              -0.714,
+              37.956
+            ],
+            [
+              -0.712,
+              37.943
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-coastal-apartment-strip",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-midrise-apartment",
+          "weight": 0.4
+        },
+        {
+          "buildingProfileId": "bp-coastal-slab-tower",
+          "weight": 0.35
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.2
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.05
+        }
+      ],
+      "densityCharacter": "high",
+      "principalOrientationDeg": 25,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "route-oriented",
+      "populationInterpretation": "Higher population may select taller apartment variants, but the generator should retain larger plots, coastal gaps and communal open space.",
+      "proceduralGenerationNotes": "Use repeated apartment/slab families by development parcel. Avoid center-like perimeter blocks or universal towers.",
+      "edgeTreatment": "Water-bounded southeast; sharp municipal/urbanized-settlement transition toward Orihuela Costa beyond research scope.",
+      "sourceIds": [
+        "SRC-001",
+        "SRC-010",
+        "SRC-019",
+        "SRC-020",
+        "SRC-021",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-habaneras-retail",
+      "districtId": "d-commercial-industrial",
+      "name": "Habaneras big-box retail cluster",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.701,
+              37.984
+            ],
+            [
+              -0.684,
+              37.984
+            ],
+            [
+              -0.682,
+              37.993
+            ],
+            [
+              -0.694,
+              37.998
+            ],
+            [
+              -0.704,
+              37.993
+            ],
+            [
+              -0.701,
+              37.984
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-commercial-arterial",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-commercial-box",
+          "weight": 0.75
+        },
+        {
+          "buildingProfileId": "bp-civic-special",
+          "weight": 0.1
+        },
+        {
+          "buildingProfileId": "bp-industrial-shed",
+          "weight": 0.15
+        }
+      ],
+      "densityCharacter": "medium",
+      "principalOrientationDeg": 10,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "arterial-oriented",
+      "populationInterpretation": "Population is an indirect signal only; retail parcel geometry, road access and parking/service space govern generation.",
+      "proceduralGenerationNotes": "Reserve Habaneras explicitly as an activity anchor; generate surrounding commercial boxes and parking/service parcels at superblock scale.",
+      "edgeTreatment": "Hard arterial edges and abrupt transition to nearby residential blocks.",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-021",
+        "SRC-028",
+        "SRC-030"
+      ]
+    },
+    {
+      "id": "z-casagrande-industrial",
+      "districtId": "d-commercial-industrial",
+      "name": "Casagrande industrial sheds",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.713,
+              37.984
+            ],
+            [
+              -0.699,
+              37.982
+            ],
+            [
+              -0.694,
+              37.99
+            ],
+            [
+              -0.7,
+              37.998
+            ],
+            [
+              -0.712,
+              37.996
+            ],
+            [
+              -0.717,
+              37.99
+            ],
+            [
+              -0.713,
+              37.984
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-industrial-sheds",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-industrial-shed",
+          "weight": 0.8
+        },
+        {
+          "buildingProfileId": "bp-commercial-box",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-civic-special",
+          "weight": 0.05
+        }
+      ],
+      "densityCharacter": "low",
+      "principalOrientationDeg": 5,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "arterial-oriented",
+      "populationInterpretation": "Population should not generate residential infill here; the zone semantics override density-field pressure.",
+      "proceduralGenerationNotes": "Use large sheds/warehouses, service yards and repetitive industrial access geometry. Residential generation should be suppressed except where later authoritative land-use data says otherwise.",
+      "edgeTreatment": "Infrastructure-bounded, with hard transitions to roads and adjoining urbanizations.",
+      "sourceIds": [
+        "SRC-014",
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-salinas-industrial",
+      "districtId": "d-commercial-industrial",
+      "name": "Industrial Salinas / specialty-commercial edge",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.712,
+              37.974
+            ],
+            [
+              -0.696,
+              37.974
+            ],
+            [
+              -0.688,
+              37.982
+            ],
+            [
+              -0.695,
+              37.99
+            ],
+            [
+              -0.708,
+              37.987
+            ],
+            [
+              -0.715,
+              37.98
+            ],
+            [
+              -0.712,
+              37.974
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-industrial-sheds",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-industrial-shed",
+          "weight": 0.65
+        },
+        {
+          "buildingProfileId": "bp-commercial-box",
+          "weight": 0.3
+        },
+        {
+          "buildingProfileId": "bp-civic-special",
+          "weight": 0.05
+        }
+      ],
+      "densityCharacter": "low",
+      "principalOrientationDeg": 15,
+      "orientationConfidence": "medium",
+      "corridorRelationship": "arterial-oriented",
+      "populationInterpretation": "Population is subordinate to industrial/specialty-commercial land use; do not backfill with housing because a population raster is nonzero nearby.",
+      "proceduralGenerationNotes": "Respect plan-backed large parcels, low storeys and yard/service access; use the 1,000 m² minimum-parcel signal only as order-of-magnitude guidance.",
+      "edgeTreatment": "Hard infrastructure and salt-industry context edges; transition to protected/salina landscape should be constrained.",
+      "sourceIds": [
+        "SRC-015",
+        "SRC-016",
+        "SRC-017",
+        "SRC-019",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "z-la-hoya-active",
+      "districtId": "d-la-hoya",
+      "name": "La Hoya active urbanization sector",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.699,
+              38.001
+            ],
+            [
+              -0.685,
+              38.0
+            ],
+            [
+              -0.678,
+              38.007
+            ],
+            [
+              -0.681,
+              38.015
+            ],
+            [
+              -0.694,
+              38.017
+            ],
+            [
+              -0.702,
+              38.01
+            ],
+            [
+              -0.699,
+              38.001
+            ]
+          ]
+        ]
+      },
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "urbanProfileId": "up-emerging-development",
+      "buildingProfileMix": [
+        {
+          "buildingProfileId": "bp-emerging-midrise",
+          "weight": 0.45
+        },
+        {
+          "buildingProfileId": "bp-lowrise-compound",
+          "weight": 0.2
+        },
+        {
+          "buildingProfileId": "bp-terrace-bungalow",
+          "weight": 0.15
+        },
+        {
+          "buildingProfileId": "bp-detached-villa",
+          "weight": 0.1
+        },
+        {
+          "buildingProfileId": "bp-commercial-box",
+          "weight": 0.1
+        }
+      ],
+      "densityCharacter": "low",
+      "principalOrientationDeg": 10,
+      "orientationConfidence": "low",
+      "corridorRelationship": "arterial-oriented",
+      "populationInterpretation": "Current population should not be interpreted as completed urban fabric. Represent construction/vacancy explicitly and keep the population field authoritative only for quantitative demand/density.",
+      "proceduralGenerationNotes": "Use current planning as a reservation framework, not a prediction of exact buildings. Refresh this zone frequently as urbanization and housing projects progress.",
+      "edgeTreatment": "Fragmented/construction edge; major-road boundaries and protected/open-land context are critical.",
+      "sourceIds": [
+        "SRC-022",
+        "SRC-023",
+        "SRC-024",
+        "SRC-019",
+        "SRC-028"
+      ]
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "lm-plaza-constitucion",
+      "name": "Plaza de la Constitución",
+      "category": "civic",
+      "coordinate": [
+        -0.68285,
+        37.97749
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-central-harbor",
+      "zoneId": "z-central-grid",
+      "importance": "city",
+      "proceduralRole": "district-anchor",
+      "description": "Civic/geographic center with the town hall and historic church; a strong anchor for the dense central grid.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-027",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-eras-sal",
+      "name": "Eras de la Sal",
+      "category": "cultural",
+      "coordinate": [
+        -0.68523,
+        37.97557
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-central-harbor",
+      "zoneId": "z-port-eras",
+      "importance": "city",
+      "proceduralRole": "parcel-reservation",
+      "description": "Historic salt-loading/cultural waterfront site undergoing a major approved public-space/cultural transformation; should be reserved explicitly.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-026",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-port",
+      "name": "Puerto de Torrevieja",
+      "category": "marina",
+      "coordinate": [
+        -0.6855,
+        37.9722
+      ],
+      "geometryQuality": "research-approximation",
+      "districtId": "d-central-harbor",
+      "zoneId": "z-port-eras",
+      "importance": "city",
+      "proceduralRole": "district-anchor",
+      "description": "Harbor/marina water and port edge defining the center's southern waterfront and a major navigation/tourism anchor.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-002",
+        "SRC-019",
+        "SRC-020"
+      ]
+    },
+    {
+      "id": "lm-bus-station",
+      "name": "Estación de Autobuses de Torrevieja",
+      "category": "transport",
+      "coordinate": [
+        -0.6757,
+        37.9794
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-central-harbor",
+      "zoneId": "z-center-seafront",
+      "importance": "city",
+      "proceduralRole": "activity-anchor",
+      "description": "Interurban bus terminal; useful transport anchor at the east/northeast side of the central area.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-033",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-parque-naciones",
+      "name": "Parque de las Naciones",
+      "category": "park",
+      "coordinate": [
+        -0.692,
+        37.9813
+      ],
+      "geometryQuality": "research-approximation",
+      "districtId": "d-central-harbor",
+      "zoneId": "z-central-grid",
+      "importance": "district",
+      "proceduralRole": "parcel-reservation",
+      "description": "Large central urban park that should interrupt ordinary block generation and provide a recognizable open-space anchor.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-museo-mar-sal",
+      "name": "Museo del Mar y de la Sal",
+      "category": "cultural",
+      "coordinate": [
+        -0.682,
+        37.9766
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-central-harbor",
+      "zoneId": "z-central-grid",
+      "importance": "district",
+      "proceduralRole": "activity-anchor",
+      "description": "Cultural anchor tied to Torrevieja's maritime and salt identity; reserve as a small special parcel rather than generating as ordinary frontage.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-playa-locos",
+      "name": "Playa de Los Locos",
+      "category": "tourism",
+      "coordinate": [
+        -0.66094,
+        37.98244
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-los-locos-rosaleda",
+      "zoneId": "z-los-locos-promenade",
+      "importance": "city",
+      "proceduralRole": "district-anchor",
+      "description": "Major urban beach and promenade activity edge; current public-realm reconstruction makes it an important explicit contextual feature.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-025",
+        "SRC-035",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-playa-naufragos",
+      "name": "Playa de los Náufragos",
+      "category": "tourism",
+      "coordinate": [
+        -0.6894,
+        37.97495
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-acequion-naufragos",
+      "zoneId": "z-naufragos-coast",
+      "importance": "city",
+      "proceduralRole": "district-anchor",
+      "description": "Major southern urban beach anchoring the Acequión/Náufragos coastal morphology.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-020"
+      ]
+    },
+    {
+      "id": "lm-torre-moro",
+      "name": "Torre del Moro",
+      "category": "tourism",
+      "coordinate": [
+        -0.65141,
+        38.00107
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-aguas-torremoro",
+      "zoneId": "z-cabo-cervera-torremoro",
+      "importance": "city",
+      "proceduralRole": "visual-landmark",
+      "description": "Highly recognizable coastal watchtower/viewpoint; reserve its immediate parcel/open-space context.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-020"
+      ]
+    },
+    {
+      "id": "lm-palacio-deportes",
+      "name": "Palacio de los Deportes de Torrevieja",
+      "category": "sports",
+      "coordinate": [
+        -0.67554,
+        37.99559
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-aguas-torremoro",
+      "zoneId": "z-north-sports-campus",
+      "importance": "city",
+      "proceduralRole": "parcel-reservation",
+      "description": "Major sports hall/campus anchor; should be placed explicitly before generating surrounding campus fabric.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-021",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-hospital-quiron",
+      "name": "Hospital Quirónsalud Torrevieja",
+      "category": "health",
+      "coordinate": [
+        -0.67312,
+        38.00673
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-aguas-torremoro",
+      "zoneId": "z-north-sports-campus",
+      "importance": "city",
+      "proceduralRole": "parcel-reservation",
+      "description": "Major private hospital and transport destination within the northern institutional cluster.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-021",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-auditorio-internacional",
+      "name": "Auditorio Internacional de Torrevieja",
+      "category": "cultural",
+      "coordinate": [
+        -0.6754,
+        38.0047
+      ],
+      "geometryQuality": "research-approximation",
+      "districtId": "d-aguas-torremoro",
+      "zoneId": "z-north-sports-campus",
+      "importance": "city",
+      "proceduralRole": "parcel-reservation",
+      "description": "Large auditorium/institutional venue near the northern health/sports cluster; generate as a reserved civic-special parcel.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-032",
+        "SRC-021",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-torre-la-mata",
+      "name": "Torre de La Mata",
+      "category": "cultural",
+      "coordinate": [
+        -0.65253,
+        38.02634
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-la-mata",
+      "zoneId": "z-la-mata-core",
+      "importance": "district",
+      "proceduralRole": "visual-landmark",
+      "description": "Historic tower/settlement marker in La Mata; useful as a visual and navigational anchor for the northern core.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-020"
+      ]
+    },
+    {
+      "id": "lm-playa-la-mata",
+      "name": "Playa de La Mata",
+      "category": "tourism",
+      "coordinate": [
+        -0.65222,
+        38.02611
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-la-mata",
+      "zoneId": "z-la-mata-beachfront",
+      "importance": "city",
+      "proceduralRole": "district-anchor",
+      "description": "Long northern beach whose promenade/open-space edge organizes La Mata's coastal activity and morphology.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-020",
+        "SRC-034"
+      ]
+    },
+    {
+      "id": "lm-molino-agua",
+      "name": "Parque del Molino del Agua",
+      "category": "park",
+      "coordinate": [
+        -0.65527,
+        38.01479
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-torreblanca-molino-manguilla",
+      "zoneId": "z-molino-blanco",
+      "importance": "city",
+      "proceduralRole": "parcel-reservation",
+      "description": "Coastal pine/open-space park between Torrevieja and La Mata; important break in continuous coastal development.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-034",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-parque-siesta",
+      "name": "Parque de La Siesta",
+      "category": "park",
+      "coordinate": [
+        -0.7065,
+        38.022
+      ],
+      "geometryQuality": "research-approximation",
+      "districtId": "d-siesta-sanluis-chaparral",
+      "zoneId": "z-siesta-sanluis-villas",
+      "importance": "district",
+      "proceduralRole": "parcel-reservation",
+      "description": "Large 44,000 m² multi-sport/open-space park providing a strong local break within the northwestern villa belt.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-029",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-habaneras",
+      "name": "Centro Comercial Habaneras",
+      "category": "retail",
+      "coordinate": [
+        -0.68673,
+        37.99004
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-commercial-industrial",
+      "zoneId": "z-habaneras-retail",
+      "importance": "city",
+      "proceduralRole": "activity-anchor",
+      "description": "Large shopping center and road-oriented retail anchor; should be explicitly reserved within the big-box commercial zone.",
+      "confidence": "high",
+      "sourceIds": [
+        "SRC-030",
+        "SRC-019",
+        "SRC-021"
+      ]
+    },
+    {
+      "id": "lm-hospital-universitario",
+      "name": "Hospital Universitario de Torrevieja",
+      "category": "health",
+      "coordinate": [
+        -0.71548,
+        37.96334
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-balcones-lago-altos",
+      "zoneId": null,
+      "importance": "city",
+      "proceduralRole": "parcel-reservation",
+      "description": "Major public hospital on the southwestern corridor; current expansion planning reinforces the need for explicit parcel reservation.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-031",
+        "SRC-021",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-saltworks",
+      "name": "Salinas de Torrevieja industrial salt works",
+      "category": "industrial",
+      "coordinate": [
+        -0.7045,
+        37.9745
+      ],
+      "geometryQuality": "research-approximation",
+      "districtId": "d-commercial-industrial",
+      "zoneId": "z-salinas-industrial",
+      "importance": "city",
+      "proceduralRole": "context-only",
+      "description": "Salt-industry interface between urban/industrial land and the lagoon system. Represent as contextual industrial/salina massing rather than ordinary urban fabric.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-015",
+        "SRC-016",
+        "SRC-017",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "lm-health-la-siesta",
+      "name": "Centro de Salud La Siesta",
+      "category": "health",
+      "coordinate": [
+        -0.7085,
+        38.0155
+      ],
+      "geometryQuality": "research-approximation",
+      "districtId": "d-siesta-sanluis-chaparral",
+      "zoneId": "z-siesta-sanluis-villas",
+      "importance": "district",
+      "proceduralRole": "activity-anchor",
+      "description": "Health-service anchor explicitly connected by the municipal transport network; useful as a local destination within the villa belt.",
+      "confidence": "low",
+      "sourceIds": [
+        "SRC-021",
+        "SRC-019"
+      ]
+    },
+    {
+      "id": "lm-rocio-coast",
+      "name": "Rocío del Mar coastal access",
+      "category": "tourism",
+      "coordinate": [
+        -0.70434,
+        37.94929
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-south-coast",
+      "zoneId": "z-south-coastal-apartments",
+      "importance": "district",
+      "proceduralRole": "activity-anchor",
+      "description": "Southern coastal access/activity point that helps anchor the Rocío del Mar–Punta Prima apartment strip.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-021",
+        "SRC-019",
+        "SRC-020"
+      ]
+    },
+    {
+      "id": "lm-la-hoya-reserve",
+      "name": "La Hoya development reserve / public-housing parcels",
+      "category": "other",
+      "coordinate": [
+        -0.68637,
+        38.00682
+      ],
+      "geometryQuality": "open-data-derived",
+      "districtId": "d-la-hoya",
+      "zoneId": "z-la-hoya-active",
+      "importance": "district",
+      "proceduralRole": "context-only",
+      "description": "Representative anchor for the actively urbanizing Sector 20 area; not a single landmark building. Used to prevent the generator from treating the sector as mature urban fabric.",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-022",
+        "SRC-023",
+        "SRC-024",
+        "SRC-019"
+      ]
+    }
+  ],
+  "landscapeRegions": [
+    {
+      "id": "lr-mediterranean",
+      "name": "Mediterranean coastal water context",
+      "type": "sea",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.648,
+              38.04
+            ],
+            [
+              -0.635,
+              38.04
+            ],
+            [
+              -0.675,
+              37.935
+            ],
+            [
+              -0.7,
+              37.935
+            ],
+            [
+              -0.69,
+              37.95
+            ],
+            [
+              -0.67,
+              37.98
+            ],
+            [
+              -0.648,
+              38.04
+            ]
+          ]
+        ]
+      },
+      "buildability": "none",
+      "urbanEffect": "Forms the hard eastern/southeastern settlement edge and drives promenade, coastal-apartment and marina morphologies. The polygon is only contextual water, not a shoreline-precision dataset.",
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-019",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "lr-laguna-torrevieja",
+      "name": "Laguna de Torrevieja",
+      "type": "lagoon",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.79,
+              37.95
+            ],
+            [
+              -0.752,
+              37.943
+            ],
+            [
+              -0.716,
+              37.955
+            ],
+            [
+              -0.699,
+              37.978
+            ],
+            [
+              -0.713,
+              38.0
+            ],
+            [
+              -0.751,
+              38.008
+            ],
+            [
+              -0.785,
+              37.992
+            ],
+            [
+              -0.79,
+              37.95
+            ]
+          ]
+        ]
+      },
+      "buildability": "none",
+      "urbanEffect": "Large salt lagoon that prevents westward continuous urbanization, creates hard ecological/salina edges and channels settlement into eastern and southern urbanized bands.",
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-016",
+        "SRC-017",
+        "SRC-018",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "lr-laguna-mata",
+      "name": "Laguna de La Mata",
+      "type": "lagoon",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.756,
+              38.016
+            ],
+            [
+              -0.72,
+              38.007
+            ],
+            [
+              -0.685,
+              38.017
+            ],
+            [
+              -0.673,
+              38.039
+            ],
+            [
+              -0.706,
+              38.056
+            ],
+            [
+              -0.75,
+              38.05
+            ],
+            [
+              -0.756,
+              38.016
+            ]
+          ]
+        ]
+      },
+      "buildability": "none",
+      "urbanEffect": "Northern lagoon that constrains La Mata/La Hoya/Chaparral growth and creates a strong open-land boundary behind the northern coastal settlement.",
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-016",
+        "SRC-017",
+        "SRC-018",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "lr-natural-park",
+      "name": "Parque Natural de las Lagunas de La Mata y Torrevieja — coarse protected-land envelope",
+      "type": "protected-land",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.803,
+              37.94
+            ],
+            [
+              -0.742,
+              37.936
+            ],
+            [
+              -0.7,
+              37.953
+            ],
+            [
+              -0.686,
+              37.983
+            ],
+            [
+              -0.681,
+              38.018
+            ],
+            [
+              -0.7,
+              38.059
+            ],
+            [
+              -0.76,
+              38.065
+            ],
+            [
+              -0.804,
+              38.02
+            ],
+            [
+              -0.803,
+              37.94
+            ]
+          ]
+        ]
+      },
+      "buildability": "strongly-constrained",
+      "urbanEffect": "Protected-land context is a generator mask and urban-edge constraint, not a generic low-density growth area. This V0 envelope is deliberately coarse and must be replaced by the official polygon before authoritative masking.",
+      "geometryQuality": "research-approximation",
+      "confidence": "medium",
+      "sourceIds": [
+        "SRC-016",
+        "SRC-017"
+      ]
+    },
+    {
+      "id": "lr-salt-industry-fringe",
+      "name": "Salt-industry / salina operational fringe",
+      "type": "wetland",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.728,
+              37.952
+            ],
+            [
+              -0.706,
+              37.951
+            ],
+            [
+              -0.695,
+              37.968
+            ],
+            [
+              -0.699,
+              37.983
+            ],
+            [
+              -0.716,
+              37.991
+            ],
+            [
+              -0.733,
+              37.978
+            ],
+            [
+              -0.728,
+              37.952
+            ]
+          ]
+        ]
+      },
+      "buildability": "strongly-constrained",
+      "urbanEffect": "Creates a non-residential industrial/wetland interface west and southwest of the core; the generator should avoid ordinary residential infill and preserve broad open/operational spaces.",
+      "geometryQuality": "research-approximation",
+      "confidence": "low",
+      "sourceIds": [
+        "SRC-015",
+        "SRC-016",
+        "SRC-017",
+        "SRC-020",
+        "SRC-028"
+      ]
+    },
+    {
+      "id": "lr-n332-corridor",
+      "name": "N-332 / major bypass infrastructure corridor",
+      "type": "infrastructure",
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -0.679,
+              38.034
+            ],
+            [
+              -0.669,
+              38.019
+            ],
+            [
+              -0.673,
+              38.0
+            ],
+            [
+              -0.686,
+              37.982
+            ],
+            [
+              -0.7,
+              37.962
+            ],
+            [
+              -0.71,
+              37.945
+            ],
+            [
+              -0.705,
+              37.942
+            ],
+            [
+              -0.693,
+              37.96
+            ],
+            [
+              -0.681,
+              37.98
+            ],
+            [
+              -0.667,
+              37.999
+            ],
+            [
+              -0.663,
+              38.02
+            ],
+            [
+              -0.673,
+              38.036
+            ],
+            [
+              -0.679,
+              38.034
+            ]
+          ]
+        ]
+      },
+      "buildability": "none",
+      "urbanEffect": "Major road infrastructure acts as a barrier and access spine, producing hard edges, retail/industrial orientation and crossings between residential districts. Geometry is a broad corridor, not a road centerline.",
+      "geometryQuality": "research-approximation",
+      "confidence": "low",
+      "sourceIds": [
+        "SRC-020",
+        "SRC-021",
+        "SRC-019"
+      ]
+    }
+  ],
+  "researchAssessment": {
+    "coverageSummary": "V0 covers the compact center/harbor, north and south coastal apartment belts, La Mata, major northern/western/southwestern residential urbanizations, the Habaneras/Casagrande/Salinas employment belt, the active La Hoya frontier, key institutional anchors and the lagoon/protected-land context. It is intentionally a coarse semantic overlay rather than a complete legal or cadastral partition.",
+    "strongestEvidence": [
+      "Municipal planning fichas give direct low-rise/coverage/setback evidence for Los Balcones, La Torreta, El Chaparral and San Luis.",
+      "Municipal planning documents explicitly support heterogeneous typologies in La Veleta, Molino Blanco, Nueva Torrevieja and Lago Jardín.",
+      "Official Generalitat sources establish the two-lagoon natural-park system and its protected-land significance.",
+      "Municipal 2026 transport, public-works and development publications confirm contemporary district names, activity anchors and active-change areas."
+    ],
+    "weakestEvidence": [
+      "Most V0 district and morphology-zone polygon boundaries are research approximations, not digitized official neighborhood or planning polygons.",
+      "Block/parcel/street-width ranges are morphology estimates intended for procedural scale control, not cadastral measurements.",
+      "Some transition areas (El Hondo/El Limonar, La Manguilla, La Hoya and boundaries between Aguas Nuevas/Torreblanca) are changing or lack a single authoritative neighborhood boundary."
+    ],
+    "importantUncertainties": [
+      "Exact boundaries among named urbanizations, cadastral value zones and morphological transitions do not coincide cleanly.",
+      "Active 2025–2026 projects in La Hoya, La Manguilla, Los Locos and Eras de la Sal mean current ground conditions can change faster than static V0 metadata.",
+      "Coarse natural-park/lagoon polygons in this package must not be used for regulatory buildability decisions."
+    ],
+    "recommendedManualReview": [
+      "Overlay every district/zone polygon against current ICV/PNOA imagery and official municipal planning GIS before project integration.",
+      "Resolve overlaps/gaps at district interfaces and decide whether the application requires a strict partition or allows layered/overlapping semantics.",
+      "Check La Hoya and La Manguilla against the latest urbanization/building progress immediately before using them for generation.",
+      "Sample real blocks/parcels in each profile to calibrate width/depth ranges and storey distributions."
+    ],
+    "recommendedNextResearch": [
+      "Acquire or digitize official planning-area polygon geometry where downloadable.",
+      "Replace V0 route/corridor approximations with current road GeoJSON and later real street data.",
+      "Use current orthophoto/Urban Atlas layers to compute objective built-up/open-space statistics for profile calibration.",
+      "Create a versioned crosswalk between population raster cells, district polygons and morphology zones."
+    ],
+    "generatorReadiness": "needs-review",
+    "generatorReadinessReason": "The semantic hierarchy, typology families, relative scale ranges, landmark strategy and landscape constraints are strong enough for a prototype, but polygon geometry is intentionally approximate and several development-frontier areas are changing. Manual GIS review is required before treating the package as production spatial truth."
+  }
+}

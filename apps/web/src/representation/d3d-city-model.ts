@@ -24,6 +24,12 @@ import { generateMetadataCity } from './d3d-metadata-city.js';
 
 export const buildingArchetypes = semanticBuildingArchetypes;
 export type BuildingArchetype = (typeof buildingArchetypes)[number];
+export const buildingPrototypeKinds = [
+  ...buildingArchetypes,
+  'detached-villa',
+  'landmark-placeholder',
+] as const;
+export type BuildingPrototypeKind = (typeof buildingPrototypeKinds)[number];
 export type { UrbanCorridor } from './d3d-city-spatial.js';
 export type CityBounds = Readonly<{
   minX: number;
@@ -56,6 +62,7 @@ export type CityBuilding = D3dWorldPoint &
     depth: number;
     rotation: number;
     archetype: BuildingArchetype;
+    prototype?: 'detached-villa';
     storeys: number;
     height: number;
     baseY: number;
@@ -86,8 +93,10 @@ export type ProceduralCity = Readonly<{
   reservations?: readonly (D3dWorldPoint & {
     readonly id: string;
     readonly radius: number;
+    readonly anchorHeight?: number;
   })[];
   landscapes?: readonly Readonly<{
+    kind?: 'land' | 'water';
     color: string;
     surfaceY?: number;
     rings: readonly (readonly D3dWorldPoint[])[];

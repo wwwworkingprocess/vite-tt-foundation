@@ -7,7 +7,7 @@ import {
   Vector2,
 } from 'three';
 import type {
-  BuildingArchetype,
+  BuildingPrototypeKind,
   CityBounds,
   ProceduralCity,
 } from './d3d-city-model.js';
@@ -56,7 +56,17 @@ const box = (
   height = 1,
   y = height / 2,
 ): Part => ({ x, y, z, width, depth, height, shape: 'box' });
-const wings: Record<BuildingArchetype, readonly Part[]> = {
+const wings: Record<BuildingPrototypeKind, readonly Part[]> = {
+  'detached-villa': [
+    box(0.12, -0.06, 0.62, 0.72, 0.85),
+    box(-0.33, -0.15, 0.28, 0.48, 0.65),
+    box(0.05, 0.39, 0.8, 0.18, 0.12),
+  ],
+  'landmark-placeholder': [
+    box(0, 0, 1, 0.8, 0.2),
+    box(0, 0, 0.7, 0.5, 0.5, 0.45),
+    box(0, 0, 0.25, 0.25, 0.3, 0.85),
+  ],
   'detached-house': [box(0, 0, 0.82, 0.82)],
   'semi-detached': [
     box(-0.22, 0, 0.44, 0.82),
@@ -105,12 +115,13 @@ const wings: Record<BuildingArchetype, readonly Part[]> = {
 
 /** Unit parcel prototypes: bodies start at Y=0; roof coordinates share the same origin. */
 export function cityPrototypeParts(
-  kind: BuildingArchetype,
+  kind: BuildingPrototypeKind,
   layer: 'body' | 'roof',
 ): readonly Part[] {
   if (layer === 'body') return wings[kind];
   if (
     kind === 'detached-house' ||
+    kind === 'detached-villa' ||
     kind === 'terrace-row' ||
     kind === 'semi-detached' ||
     kind === 'industrial-shed'
@@ -138,7 +149,7 @@ export function cityPrototypeParts(
 
 /** Small bounded prototypes, merged once per batch, rather than a React tree per parcel. */
 export function createCityPrototypeGeometry(
-  kind: BuildingArchetype,
+  kind: BuildingPrototypeKind,
   layer: 'body' | 'roof',
 ) {
   const positions: number[] = [];
@@ -238,11 +249,13 @@ export function createCitySurfaceGeometry(
   } else {
     const polygons =
       layer === 'landscape'
-        ? (city.landscapes ?? []).map((region) => ({
-            rings: region.rings,
-            color: region.color,
-            surfaceY: region.surfaceY ?? 0.025,
-          }))
+        ? (city.landscapes ?? [])
+            .filter((region) => region.kind !== 'water')
+            .map((region) => ({
+              rings: region.rings,
+              color: region.color,
+              surfaceY: region.surfaceY ?? 0.025,
+            }))
         : (city.reservations ?? []).map((reservation) => ({
             color: '#c5c3a2',
             surfaceY: 0.032,
@@ -278,6 +291,30 @@ export function createCitySurfaceGeometry(
           }
       }
     }
+  }
+  if (layer === 'reservation') {
+    const anchor = createCityPrototypeGeometry('landmark-placeholder', 'body');
+    const vertices = anchor.getAttribute('position');
+    const color = new Color('#ded8c6');
+    for (const reservation of city.reservations ?? []) {
+      if (
+        !reservation.anchorHeight ||
+        reservation.x - reservation.radius < city.bounds.minX ||
+        reservation.x + reservation.radius > city.bounds.maxX ||
+        reservation.z - reservation.radius < city.bounds.minZ ||
+        reservation.z + reservation.radius > city.bounds.maxZ
+      )
+        continue;
+      for (let i = 0; i < vertices.count; i++) {
+        positions.push(
+          reservation.x + vertices.getX(i) * reservation.radius * 0.9,
+          0.035 + vertices.getY(i) * reservation.anchorHeight,
+          reservation.z + vertices.getZ(i) * reservation.radius * 0.9,
+        );
+        colors.push(color.r, color.g, color.b);
+      }
+    }
+    anchor.dispose();
   }
   const geometry = new BufferGeometry();
   geometry.setAttribute(

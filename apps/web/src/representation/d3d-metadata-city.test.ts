@@ -19,6 +19,7 @@ import { buildProceduralCity, distanceToCorridor } from './d3d-city-model.js';
 import {
   settlementPaletteColor,
   selectDevelopmentProfile,
+  urbanParcelLayout,
 } from './d3d-metadata-city.js';
 
 it('maps known palettes and chooses weighted families deterministically', () => {
@@ -103,6 +104,46 @@ const regeneratedResearchCity = buildProceduralCity(
   view,
 );
 
+it('retains inhabited fabric at every main-map zoom and substantially increases smaller parcel buildings', () => {
+  expect(city.buildings.length).toBeGreaterThan(5998);
+  expect(city.far).toEqual(city.buildings);
+  expect(city.medium).toEqual(city.buildings);
+  expect(city.buildings.some((b) => b.prototype === 'detached-villa')).toBe(
+    true,
+  );
+  expect(
+    city.reservations!.some(
+      (reservation) => reservation.anchorHeight !== undefined,
+    ),
+  ).toBe(true);
+  const central = city.buildings.filter(
+    (b) => b.buildingProfileId === 'bp-central-mixed',
+  );
+  expect(central.length).toBeGreaterThan(720);
+  expect(
+    city.buildings.filter(
+      (b) =>
+        b.buildingProfileId === 'bp-industrial-shed' ||
+        b.buildingProfileId === 'bp-commercial-box',
+    ).length,
+  ).toBeGreaterThanOrEqual(24);
+  const metre = d3dMetreScale(map).worldUnitsPerMetre;
+  const meanFootprint =
+    city.buildings.reduce(
+      (sum, building) => sum + building.width * building.depth,
+      0,
+    ) /
+    (city.buildings.length * metre * metre);
+  const meanStoreys =
+    city.buildings.reduce((sum, building) => sum + building.storeys, 0) /
+    city.buildings.length;
+  expect(meanFootprint).toBeLessThan(156); // Below 65% of the accepted 240 m² baseline envelope.
+  expect(meanStoreys).toBeLessThan(2.8);
+  expect(central.every((b) => Math.min(b.width, b.depth) / metre < 20)).toBe(
+    true,
+  );
+});
+
 it('records the real dataset population, morphology and bounded LOD summary', () => {
   const countBy = (
     keys: readonly string[],
@@ -164,65 +205,65 @@ it('records the real dataset population, morphology and bounded LOD summary', ()
   }).toMatchInlineSnapshot(`
     {
       "blocks": 1096,
-      "buildings": 2999,
+      "buildings": 8873,
       "byArchetype": {
-        "civic-special": 62,
-        "commercial-box": 11,
-        "corner-l": 430,
-        "courtyard-u": 454,
-        "detached-house": 275,
-        "industrial-shed": 1,
-        "midrise-slab": 446,
-        "perimeter-block": 97,
-        "semi-detached": 257,
-        "small-apartment": 456,
-        "terrace-row": 494,
-        "tower-podium": 16,
+        "civic-special": 111,
+        "commercial-box": 24,
+        "corner-l": 1438,
+        "courtyard-u": 1312,
+        "detached-house": 932,
+        "industrial-shed": 3,
+        "midrise-slab": 1243,
+        "perimeter-block": 275,
+        "semi-detached": 772,
+        "small-apartment": 1331,
+        "terrace-row": 1355,
+        "tower-podium": 77,
       },
       "byProfile": {
-        "bp-central-mixed": 360,
-        "bp-civic-special": 62,
-        "bp-coastal-slab-tower": 39,
-        "bp-commercial-box": 9,
-        "bp-detached-villa": 264,
-        "bp-emerging-midrise": 10,
-        "bp-industrial-shed": 3,
-        "bp-lowrise-compound": 732,
-        "bp-midrise-apartment": 754,
-        "bp-terrace-bungalow": 741,
+        "bp-central-mixed": 1115,
+        "bp-civic-special": 111,
+        "bp-coastal-slab-tower": 160,
+        "bp-commercial-box": 19,
+        "bp-detached-villa": 921,
+        "bp-emerging-midrise": 60,
+        "bp-industrial-shed": 8,
+        "bp-lowrise-compound": 1706,
+        "bp-midrise-apartment": 2631,
+        "bp-terrace-bungalow": 2117,
       },
       "byZone": {
-        "z-acequion-grid": 28,
-        "z-aguas-nuevas-compounds": 656,
-        "z-cabo-cervera-torremoro": 7,
-        "z-calas-blancas": 714,
-        "z-casagrande-industrial": 1,
-        "z-center-seafront": 262,
-        "z-central-grid": 228,
-        "z-chaparral-villas": 0,
-        "z-habaneras-retail": 7,
-        "z-la-hoya-active": 15,
-        "z-la-manguilla-emerging": 0,
-        "z-la-mata-beachfront": 1,
-        "z-la-mata-core": 302,
-        "z-la-veleta-mixed": 32,
+        "z-acequion-grid": 123,
+        "z-aguas-nuevas-compounds": 1469,
+        "z-cabo-cervera-torremoro": 62,
+        "z-calas-blancas": 1574,
+        "z-casagrande-industrial": 2,
+        "z-center-seafront": 1085,
+        "z-central-grid": 594,
+        "z-chaparral-villas": 6,
+        "z-habaneras-retail": 17,
+        "z-la-hoya-active": 61,
+        "z-la-manguilla-emerging": 11,
+        "z-la-mata-beachfront": 13,
+        "z-la-mata-core": 1035,
+        "z-la-veleta-mixed": 126,
         "z-lago-jardin": 0,
         "z-limonar-hondo-fringe": 0,
-        "z-los-altos-mixed": 28,
-        "z-los-angeles-villa-apartment": 121,
-        "z-los-balcones-villas": 1,
-        "z-los-locos-promenade": 11,
-        "z-molino-blanco": 207,
-        "z-naufragos-coast": 5,
-        "z-north-sports-campus": 3,
-        "z-nueva-torrevieja": 155,
-        "z-port-eras": 1,
-        "z-rosaleda-inner": 107,
-        "z-salinas-industrial": 0,
-        "z-siesta-sanluis-villas": 1,
-        "z-south-coastal-apartments": 20,
-        "z-torreblanca-mixed": 55,
-        "z-torreta-villas": 6,
+        "z-los-altos-mixed": 127,
+        "z-los-angeles-villa-apartment": 475,
+        "z-los-balcones-villas": 4,
+        "z-los-locos-promenade": 36,
+        "z-molino-blanco": 718,
+        "z-naufragos-coast": 12,
+        "z-north-sports-campus": 9,
+        "z-nueva-torrevieja": 511,
+        "z-port-eras": 2,
+        "z-rosaleda-inner": 372,
+        "z-salinas-industrial": 2,
+        "z-siesta-sanluis-villas": 0,
+        "z-south-coastal-apartments": 76,
+        "z-torreblanca-mixed": 269,
+        "z-torreta-villas": 57,
       },
       "components": 51,
       "diagnostics": {
@@ -268,12 +309,12 @@ it('records the real dataset population, morphology and bounded LOD summary', ()
         },
       ],
       "fallback": 25,
-      "localStreetSegments": 21458,
+      "localStreetSegments": 37601,
       "lod": {
-        "far": 375,
-        "medium": 1500,
-        "mini": 94,
-        "near": 2999,
+        "far": 8873,
+        "medium": 8873,
+        "mini": 278,
+        "near": 8873,
       },
       "unitsPerMetre": 0.017359206757909404,
     }
@@ -379,8 +420,34 @@ it('contrasts central, villa and industrial blocks and keeps families coherent w
     families.set(building.blockId, set);
   }
   expect([...families.values()].every((set) => set.size <= 1)).toBe(true);
-  expect(city.far.length).toBeLessThan(city.medium.length / 2);
+  expect(city.far).toEqual(city.buildings);
+  expect(city.medium).toEqual(city.buildings);
   expect(city.mini.length).toBeLessThan(city.far.length / 2);
+});
+
+it('places compact frontage bands around a clear court and bounds detached and service parcels', () => {
+  const compact = urbanParcelLayout(80, 70, 8, 24, 'fine-grain');
+  expect(compact.parcels.length).toBeGreaterThan(20);
+  expect(compact.parcels.some((p) => p.corner)).toBe(true);
+  expect(compact.parcels.some((p) => p.rotation === Math.PI / 2)).toBe(true);
+  expect(
+    compact.parcels.every((p) => Math.abs(p.u) > 10 || Math.abs(p.v) > 10),
+  ).toBe(true);
+  const shallow = urbanParcelLayout(12, 10, 20, 3, 'fine-grain');
+  expect(shallow.parcels).toHaveLength(2);
+  for (const pattern of [
+    'medium-grain',
+    'detached-lot',
+    'mixed',
+    'large-plot',
+    'superblock',
+  ] as const) {
+    const layout = urbanParcelLayout(100, 80, 16, 20, pattern);
+    expect(layout.parcels.every((p) => p.depth <= 20 && p.rotation === 0)).toBe(
+      true,
+    );
+    expect(layout.rows).toBe(pattern === 'superblock' ? 1 : 4);
+  }
 });
 
 it('separates overlapping terrain surfaces deterministically, with specific zones and water above broad land', () => {
@@ -576,6 +643,33 @@ it('hard landscape masks beat arbitrary population and also suppress ordinary lo
     buildProceduralCity(fixture.model, fixture.population, fixture.view)
       .buildings.length * 0.2,
   );
+});
+
+it('does not invent residential support when a whole crop has zero population', () => {
+  const fixture = compactFixture();
+  const grid = parseCityPopulationGrid({
+    ...fixture.population.grid,
+    populationWeights: Array.from({ length: 5 }, () =>
+      Array.from({ length: 5 }, () => 0),
+    ),
+  });
+  const metadata = parseSettlementMetadata({
+    ...fixture.view.metadata,
+    zones: fixture.view.metadata.zones.map((zone) => ({
+      ...zone,
+      buildingProfileMix: [
+        { buildingProfileId: 'bp-detached-villa', weight: 1 },
+      ],
+    })),
+  });
+  const empty = buildProceduralCity(
+    fixture.model,
+    { ...fixture.population, grid, canonicalCells: [] },
+    { ...fixture.view, metadata },
+  );
+  expect(empty.buildings).toEqual([]);
+  expect(empty.localStreets!.length).toBeGreaterThan(0);
+  expect(empty.settlement!.population.grid).toBe(grid);
 });
 
 it('uses orientation confidence and parcel grammar to bound local adaptation and preserve large plots', () => {

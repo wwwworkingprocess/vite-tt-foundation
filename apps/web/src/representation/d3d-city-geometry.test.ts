@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
-import { buildingArchetypes } from './d3d-city-model.js';
+
+import { buildingPrototypeKinds } from './d3d-city-model.js';
 import {
   cityPrototypeParts,
   createCityPrototypeGeometry,
@@ -12,11 +13,20 @@ import {
   listActivePopulationCells,
 } from '@torrevieja-tycoon/transport-domain';
 
-it('has twelve distinct body plans and real roof silhouettes with bounded nonoverlapping wings', () => {
-  const plans = buildingArchetypes.map((kind) =>
+it('distinguishes a villa wing from a small house and a stepped landmark placeholder', () => {
+  expect(cityPrototypeParts('detached-villa', 'body')).not.toEqual(
+    cityPrototypeParts('detached-house', 'body'),
+  );
+  expect(cityPrototypeParts('landmark-placeholder', 'body')).not.toEqual(
+    cityPrototypeParts('civic-special', 'body'),
+  );
+});
+
+it('has fourteen distinct body plans and real roof silhouettes with bounded nonoverlapping wings', () => {
+  const plans = buildingPrototypeKinds.map((kind) =>
     cityPrototypeParts(kind, 'body'),
   );
-  expect(new Set(plans.map((plan) => JSON.stringify(plan))).size).toBe(12);
+  expect(new Set(plans.map((plan) => JSON.stringify(plan))).size).toBe(14);
   const occupied = (kind: 'corner-l' | 'courtyard-u', x: number, z: number) =>
     cityPrototypeParts(kind, 'body').some(
       (part) =>
@@ -38,7 +48,7 @@ it('has twelve distinct body plans and real roof silhouettes with bounded nonove
       ),
     ).size,
   ).toBe(3);
-  for (const kind of buildingArchetypes) {
+  for (const kind of buildingPrototypeKinds) {
     const roof = cityPrototypeParts(kind, 'roof');
     expect(roof.length).toBeGreaterThan(0);
     if (kind === 'detached-house' || kind === 'terrace-row')
@@ -163,6 +173,49 @@ it('merges local streets, clips landscape polygons to the crop, and reserves lan
     ],
     reservations: [{ id: 'research-landmark', x: 0, z: 0, radius: 0.2 }],
   } satisfies Parameters<typeof createCitySurfaceGeometry>[0];
+  const water = createCitySurfaceGeometry(
+    {
+      ...city,
+      landscapes: city.landscapes.map((region) => ({
+        ...region,
+        kind: 'water' as const,
+      })),
+    },
+    'landscape',
+  );
+  expect(water.getAttribute('position').count).toBe(0);
+  water.dispose();
+  const anchored = createCitySurfaceGeometry(
+    {
+      ...city,
+      reservations: [
+        { id: 'anchor', x: 0, z: 0, radius: 0.2, anchorHeight: 0.15 },
+        ...[
+          [-2, 0],
+          [2, 0],
+          [0, -2],
+          [0, 2],
+        ].map(([x, z]) => ({
+          id: 'outside',
+          x: x!,
+          z: z!,
+          radius: 0.2,
+          anchorHeight: 0.15,
+        })),
+      ],
+    },
+    'reservation',
+  );
+  anchored.computeBoundingBox();
+  expect(anchored.boundingBox!.max.y).toBeCloseTo(0.185);
+  expect(anchored.boundingBox!.min.x).toBeGreaterThanOrEqual(-1);
+  expect(anchored.boundingBox!.max.x).toBeLessThanOrEqual(1);
+  expect(anchored.boundingBox!.min.z).toBeGreaterThanOrEqual(-1);
+  expect(anchored.boundingBox!.max.z).toBeLessThanOrEqual(1);
+  expect(anchored.getAttribute('color').count).toBe(
+    anchored.getAttribute('position').count,
+  );
+  anchored.dispose();
   for (const layer of ['landscape', 'street', 'reservation'] as const) {
     const geometry = createCitySurfaceGeometry(city, layer);
     const positions = geometry.getAttribute('position');

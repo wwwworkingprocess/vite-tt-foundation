@@ -189,6 +189,11 @@ Completed:
   metre-based profile streets/blocks/parcels and twelve instanced building
   families. Unsupported settlements keep generic presentation; no authority or
   save contract changed. See the research integration erratum.
+- D3D urbanism follow-up: smaller frontage parcels and courts, denser supported
+  urban fabrics, service/campus differentiation, villa and landmark prototypes,
+  and detail-based main-map LOD that retains settlement silhouettes. Water
+  rendering is disabled until a dedicated land/water mask layer is introduced;
+  internal research masks and transport authority remain unchanged.
 - shared, ephemeral full-network/selected-Route viewport focus for DOM2D and
   Canvas2D Map, derived once from canonical directed-edge topology with no
   arbitrary pan/zoom or persistence.

@@ -241,20 +241,30 @@ street, parcel, setback, coverage and open-space ranges. Weighted family choice
 occurs at development scale, with bounded local repetition and known muted
 Mediterranean palette tokens. Population modulates residential occupancy and
 storeys within those profiles; nonresidential form can exist without population.
-Fragmented frontiers retain planned streets but have much lower occupancy.
+Presentation support is smoothed over at most one neighboring population cell,
+without changing source weights. Fine-grain parcels line all four block edges
+around an interior court; bounded-depth lot rows and secondary access lanes keep
+suburban and service parcels smaller. Mature supported parcels have higher fill,
+while fragmented frontiers retain planned streets with much lower occupancy.
 Generated connected settlement components have identities distinct from research
 morphology zones. Canonical route corridors reserve provisional primary streets;
 local streets remain presentation geometry without routing or simulation meaning.
 Future road/route GeoJSON can replace that source adapter.
 
-Twelve bounded prototypes provide compact apartments, perimeter courts, L corners,
+Twelve semantic families provide compact apartments, perimeter courts, L corners,
 U courts, midrise slabs, tower/podiums, detached and paired houses, terrace rows,
-retail boxes, industrial sheds and stepped civic masses. Generic population-only
+retail boxes, industrial sheds and stepped civic masses. A winged villa variant
+and a generic stepped landmark placeholder bring the bounded prototype set to
+fourteen. Landmark placeholders remain noninteractive and use existing geographic
+reservations; parks and context-only anchors remain open. Generic population-only
 presentation remains available for other settlements and research gaps. Optional
 acquisition renders transport immediately while metadata is pending and falls
 back to generic city geometry on failure without changing camera framing. Quiet
-zone tints and flat landscape surfaces integrate settlements with the terrain;
-route ribbons retain a small far/medium readability floor over metre-scale roads.
+zone tints and flat land surfaces integrate settlements with the terrain.
+Water rendering is disabled until a dedicated land/water mask layer is introduced.
+Internal research water geometry and buildability exclusions remain intact;
+the current blue sea/lagoon surfaces are omitted from emitted scene geometry.
+Route ribbons retain a small far/medium readability floor over metre-scale roads.
 Runtime cropped-grid offsets preserve canonical cell alignment. One storey is 3.1 metres;
 Torrevieja buses are 11 × 2.8 × 3.3 metres and platforms are 7 × 3 × 0.4 metres.
 Comfortable invisible hit targets, keyboard selection and selected-state cues
@@ -262,11 +272,13 @@ retain existing semantics.
 
 Static cache identity includes map/population, metadata object and checksum;
 fleet, selection, focus, camera and frames do not rebuild the city. Metadata
-far/medium/near LOD keeps one-eighth simple masses, half body prototypes, then all
-bodies/roofs; mini keeps one thirty-second simple masses. Generic fallback retains
-its previous one-sixth/half/all/one-twenty-fourth policy. At most twelve body and
-twelve roof instance groups plus four merged surface batches are mounted; there
-is no React tree per parcel. Resources are disposed on replacement/unmount and
+far/medium/near LOD retains all building silhouettes: one simple instance batch,
+body prototypes, then bodies/roofs. Detail changes no longer hollow out inhabited
+fabric. Mini keeps one thirty-second simple masses. Generic fallback retains
+its previous one-sixth/half/all/one-twenty-fourth policy. At most thirteen body and
+thirteen roof instance groups plus four merged surface batches are mounted;
+generic landmark volumes join the reservation surface batch. There is no React
+tree per parcel. Resources are disposed on replacement/unmount and
 city surfaces never intercept entity selection. Full-network framing includes
 empty crop land; focused routes retain canonical extents, bounded pan/zoom and
 normal-view restoration after mini coexistence. Manual frame cadence remains

@@ -166,7 +166,11 @@ it('connects R3F pointer events only to a mounted canvas target', () => {
 const sceneProps = (element: Element) =>
   (element as unknown as Record<string, unknown>)[
     Object.keys(element).find((key) => key.startsWith('__reactProps$'))!
-  ] as { onClick?: (event: unknown) => void; raycast?: () => unknown };
+  ] as {
+    onClick?: (event: unknown) => void;
+    raycast?: () => unknown;
+    geometry?: BufferGeometry;
+  };
 
 const chooseSceneObject = (
   element: Element,
@@ -356,6 +360,15 @@ it('exposes research diagnostics and keeps scaled city surfaces outside entity h
   expect(map).toHaveAttribute('data-research-district-count', '13');
   expect(map).toHaveAttribute('data-morphology-zone-count', '31');
   expect(map).toHaveAttribute('data-landmark-zone-mismatch-count', '3');
+  const landscape = sceneProps(
+    document.querySelector('mesh[name="research-landscape"]')!,
+  ).geometry!;
+  expect(landscape.getAttribute('position').count).toBeGreaterThan(0);
+  expect(
+    buildProceduralCity(model, population, readyView).landscapes!.some(
+      (surface) => surface.kind === 'water',
+    ),
+  ).toBe(true);
   expect(
     document.querySelector('mesh[name="research-landscape"]'),
   ).not.toBeNull();

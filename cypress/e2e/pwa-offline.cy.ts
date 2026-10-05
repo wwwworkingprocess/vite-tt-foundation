@@ -122,6 +122,11 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
     if (close.length) cy.wrap(close).click();
   });
   cy.contains('button', name).click();
+  cy.get('[role="dialog"]', { timeout: 15_000 }).should('be.visible');
+  cy.get(
+    `[data-testid="${name === 'Simulation controls' ? 'simulation-controls-content' : 'session-controls-content'}"]`,
+    { timeout: 15_000 },
+  ).should('exist');
 };
 const openControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
@@ -488,7 +493,12 @@ describe('built foundation PWA offline lifecycle', () => {
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
     cy.then(() => expectVehicleSvg(secondarySavedSvg));
-    cy.contains('button', 'Normal 20×').click();
+    cy.get('[role="dialog"]').contains('button', 'Normal 20×').scrollIntoView();
+    cy.get('[role="dialog"]')
+      .contains('button', 'Normal 20×')
+      .should('be.visible')
+      .and('not.be.disabled')
+      .click();
     cy.get('[data-testid="worker-tick"]').should(($tick) =>
       expect(Number($tick.text().split(': ')[1])).to.be.greaterThan(
         secondarySavedTick,

@@ -66,11 +66,11 @@ import {
 import {
   buildProceduralCity,
   cityLodBuildings,
-  buildingArchetypes,
+  buildingPrototypeKinds,
   populationSpace,
   type ProceduralCity,
   type CityBuilding,
-  type BuildingArchetype,
+  type BuildingPrototypeKind,
 } from './d3d-city-model.js';
 import {
   createCityPrototypeGeometry,
@@ -487,7 +487,7 @@ function CityBatch({
   simple,
 }: {
   buildings: readonly CityBuilding[];
-  kind: BuildingArchetype;
+  kind: BuildingPrototypeKind;
   layer: 'body' | 'roof';
   simple: boolean;
 }) {
@@ -565,10 +565,12 @@ function City({
         ? buildings.length
           ? [{ kind: 'detached-house' as const, buildings }]
           : []
-        : buildingArchetypes
+        : buildingPrototypeKinds
             .map((kind) => ({
               kind,
-              buildings: buildings.filter((b) => b.archetype === kind),
+              buildings: buildings.filter(
+                (b) => (b.prototype ?? b.archetype) === kind,
+              ),
             }))
             .filter((group) => group.buildings.length > 0),
     [buildings, simple],

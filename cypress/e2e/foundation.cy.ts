@@ -85,6 +85,11 @@ const openDialog = (name: 'Simulation controls' | 'Load') => {
     if (close.length) cy.wrap(close).click();
   });
   cy.contains('button', name).click();
+  cy.get('[role="dialog"]', { timeout: 15_000 }).should('be.visible');
+  cy.get(
+    `[data-testid="${name === 'Simulation controls' ? 'simulation-controls-content' : 'session-controls-content'}"]`,
+    { timeout: 15_000 },
+  ).should('exist');
 };
 const openSimulationControls = () => openDialog('Simulation controls');
 const openSessionControls = () => openDialog('Load');
@@ -138,14 +143,15 @@ describe('foundation screen', () => {
     );
     cy.get('[role="dialog"]').should('not.exist');
     cy.contains('button', 'Swap visualizations').click();
-    cy.get('[data-testid="d3d-map-representation"]')
+    // A new canvas initializes asynchronously after a representation swap.
+    cy.get('[data-testid="d3d-map-representation"]', { timeout: 15_000 })
       .should('have.attr', 'data-representation-mode', 'normal')
       .and('have.attr', 'data-target-frames-per-second', '60')
       .and('have.attr', 'data-camera-mode', 'full');
     cy.get('[data-testid="d3d-map-representation"]')
       .should(($map) => {
         expect(Number($map.attr('data-city-building-count'))).to.be.greaterThan(
-          0,
+          5998,
         );
       })
       .and('have.attr', 'data-settlement-metadata-status', 'ready')
@@ -153,9 +159,9 @@ describe('foundation screen', () => {
       .and('have.attr', 'data-landmark-zone-mismatch-count', '3')
       .and('have.attr', 'data-city-archetype-count', '12')
       .should(($map) => {
-        expect(
-          Number($map.attr('data-city-building-instances')),
-        ).to.be.lessThan(Number($map.attr('data-city-building-count')) / 4);
+        expect(Number($map.attr('data-city-building-instances'))).to.equal(
+          Number($map.attr('data-city-building-count')),
+        );
       });
     cy.get('[data-testid="d3d-map-representation"] canvas').should(
       'be.visible',
@@ -381,9 +387,9 @@ describe('foundation screen', () => {
       .should('have.attr', 'data-city-lod', 'far')
       .and('have.attr', 'data-city-roof-instances', '0')
       .should(($map) => {
-        expect(
-          Number($map.attr('data-city-building-instances')),
-        ).to.be.lessThan(Number($map.attr('data-city-building-count')) / 4);
+        expect(Number($map.attr('data-city-building-instances'))).to.equal(
+          Number($map.attr('data-city-building-count')),
+        );
       });
     cy.get('button[aria-label="Select mini representation for swap"]').click();
     cy.contains('button', 'Swap visualizations').click();

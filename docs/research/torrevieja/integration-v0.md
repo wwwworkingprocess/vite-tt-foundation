@@ -55,10 +55,17 @@ Profile dimensions use the same local geographic projection as transport, with
 111,320 metres per latitude degree and its existing midpoint-cosine clamp.
 Oriented local streets and blocks follow morphology profiles. Each development
 uses confidence-bounded orientation drift and parcel grammar: fine grain keeps
-two street-facing rows, while large plots and superblocks keep a single deep
-plot row. Quiet zone tints separate settlement ground from flat landscape masks.
-Bounded, deterministic surface heights keep specific zone tints above broader
-zones and water above land, avoiding depth striping across approximate overlaps.
+four frontage bands around an interior court; detached and compound fabrics use
+bounded-depth rows with secondary access where needed. Large plots use service
+rows; superblocks retain a single open-yard band. Smaller parcels and higher
+mature fill improve urban grain. A one-cell neighborhood kernel smooths derived
+presentation support without modifying population values or joining unrelated
+zones. Sparse frontiers, constrained land and civic campuses retain open space.
+Quiet zone tints separate settlement ground from flat landscape masks.
+Bounded, deterministic surface heights avoid depth striping across overlaps.
+Water rendering is disabled until a dedicated land/water mask layer is introduced.
+The scene emits no blue sea/lagoon surfaces; internal geometry, landscape lookup
+and hard buildability masks remain unchanged for future mask integration.
 Transport ribbons retain a small symbolic readability floor at far/medium zoom.
 Optional metadata acquisition renders transport before city geometry and uses
 generic fallback on failure, with population-based framing stable throughout.
@@ -71,9 +78,12 @@ edges retain planned streets with much lower occupancy.
 Generated settlement components are connected presentation blocks with their own
 identities, distinct from research morphology zones. Canonical routes provide
 provisional primary street reservations; generated local streets are geometry
-only, with no graph or routing semantics. Twelve distinct low-poly prototypes
-are instanced, with far/medium/near and mini reduction and explicit disposal.
-Landmarks reserve simple open placeholders, not detailed assets.
+only, with no graph or routing semantics. Twelve semantic families plus a winged
+villa and a stepped landmark placeholder use fourteen bounded low-poly prototypes.
+Far and medium retain all ordinary buildings while reducing geometry detail;
+near adds roofs, and mini retains its one-thirty-second reduction. All resources
+have explicit disposal. Generic landmark volumes are merged into the reservation
+surface; parks/context-only anchors remain open. These are not detailed assets.
 
 Static cache identity includes map, population, metadata object and checksum.
 Fleet, selection, focus, camera and frames do not seed generation. No simulation,

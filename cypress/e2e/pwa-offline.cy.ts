@@ -334,7 +334,10 @@ describe('built foundation PWA offline lifecycle', () => {
     startDefaultGame();
     cy.get('[data-testid="d3d-map-representation"]')
       .should('have.attr', 'data-settlement-metadata-status', 'ready')
-      .and('have.attr', 'data-landmark-zone-mismatch-count', '3');
+      .and('have.attr', 'data-landmark-zone-mismatch-count', '3')
+      .and('have.attr', 'data-terrain-status', 'ready')
+      .and('have.attr', 'data-terrain-native-samples', '161680');
+
     openControls();
     expectWorkerReady();
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
@@ -427,6 +430,28 @@ describe('built foundation PWA offline lifecycle', () => {
       expect($value.text()).to.equal(currentTick),
     );
     cy.window().then((win) => writeSave(win, exactSave));
+    cy.window().then(async (win) => {
+      const response = await win.fetch(
+        new URL('terrain/catalog.json', win.document.baseURI),
+      );
+      expect(response.ok, 'offline terrain catalog').to.equal(true);
+      const catalog = (await response.json()) as {
+        settlements: Record<
+          string,
+          { products: Record<string, { path: string; byteLength: number }> }
+        >;
+      };
+      for (const entry of Object.values(catalog.settlements))
+        for (const product of Object.values(entry.products)) {
+          const response = await win.fetch(
+            new URL('terrain/' + product.path, win.document.baseURI),
+          );
+          expect(response.ok, product.path).to.equal(true);
+          expect((await response.blob()).size, product.path).to.equal(
+            product.byteLength,
+          );
+        }
+    });
     cy.window().then(async (win) => {
       for (const path of [
         'icons/foundation-192.png',

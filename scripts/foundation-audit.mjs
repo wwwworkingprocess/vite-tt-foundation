@@ -665,6 +665,8 @@ for (const d3dRepresentationFile of [
   'apps/web/src/representation/d3d-map-model.ts',
   'apps/web/src/representation/d3d-city-model.ts',
   'apps/web/src/representation/d3d-city-geometry.ts',
+  'apps/web/src/representation/d3d-terrain-geometry.ts',
+  'apps/web/src/terrain/use-terrain.ts',
 ]) {
   const violations = d3dRepresentationViolations(
     await source(d3dRepresentationFile),
@@ -675,6 +677,12 @@ for (const d3dRepresentationFile of [
     );
 }
 for (const purePresentationFile of [
+  'apps/web/src/terrain/terrain-catalog.ts',
+  'apps/web/src/terrain/terrain-runtime.ts',
+  'apps/web/src/terrain/terrain-projection.ts',
+  'apps/web/src/terrain/terrain-json-decoder.ts',
+  'apps/web/src/terrain/terrain-loader.ts',
+  'apps/web/src/representation/d3d-terrain-model.ts',
   'apps/web/src/representation/route-presentation-view.ts',
   'apps/web/src/representation/transport-map-space.ts',
   'apps/web/src/representation/route-presentation.ts',
@@ -776,6 +784,8 @@ for (const file of [...simulation, ...protocol, ...web]) {
     ) ||
     normalized.includes('apps/web/src/population') ||
     normalized.includes('apps/web/src/settlement/') ||
+    normalized.includes('apps/web/src/terrain/') ||
+    /apps\/web\/src\/representation\/d3d-terrain-/.test(normalized) ||
     normalized.includes('apps/web/src/performance') ||
     normalized.includes('apps/web/src/scenarios') ||
     normalized.includes('apps/web/src/transport-simulation') ||

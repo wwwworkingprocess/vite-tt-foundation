@@ -260,10 +260,9 @@ reservations; parks and context-only anchors remain open. Generic population-onl
 presentation remains available for other settlements and research gaps. Optional
 acquisition renders transport immediately while metadata is pending and falls
 back to generic city geometry on failure without changing camera framing. Quiet
-zone tints and flat land surfaces integrate settlements with the terrain.
-Water rendering is disabled until a dedicated land/water mask layer is introduced.
-Internal research water geometry and buildability exclusions remain intact;
-the current blue sea/lagoon surfaces are omitted from emitted scene geometry.
+zone tints integrate settlements with the terrain. Research water geometry and
+buildability exclusions remain intact; metadata sea/lagoon surfaces remain
+omitted because the native terrain surface mask now owns visible water.
 Route ribbons retain a small far/medium readability floor over metre-scale roads.
 Runtime cropped-grid offsets preserve canonical cell alignment. One storey is 3.1 metres;
 Torrevieja buses are 11 × 2.8 × 3.3 metres and platforms are 7 × 3 × 0.4 metres.
@@ -282,9 +281,8 @@ tree per parcel. Resources are disposed on replacement/unmount and
 city surfaces never intercept entity selection. Full-network framing includes
 empty crop land; focused routes use enriched extents where available, bounded pan/zoom and
 normal-view restoration after mini coexistence. Manual frame cadence remains
-60/5 fps. Terrain is flat, softly lit and texture-free. Full elevation, detailed
-landmarks, passenger D3D, district gameplay and final route-system art remain
-deferred. No simulation/protocol/persistence or population authority changed.
+60/5 fps. Terrain is softly lit and texture-free. Detailed landmarks, passenger
+D3D, district gameplay and final route-system art remain deferred. No simulation/protocol/persistence or population authority changed.
 
 DOM2D and Canvas2D share deliberate normal/mini presentation metrics for Map
 entities. Geographic Route and population geometry continues to scale with the
@@ -306,6 +304,89 @@ projection, independently of enriched transport ribbons. D3D camera-facing
 vehicle HUDs provide screen-sized LOD cues above physically small buses; mini
 keeps simple markers. 2D stops have 9-pixel visible diameter and separate generous
 hit targets. See the [integration record](research/torrevieja/route-presentation-integration-v0.md).
+
+Terrain V0 is optional web presentation data indexed by `terrain/catalog.json`.
+All five Torrevieja scenarios share one EPSG:3035 376 × 430 viewport at native
+25 × 25 metres. A base-aware loader caches immutable terrain by settlement,
+version, viewport and product hashes; loading/unavailable/error states never
+block simulation readiness. JSON decoding is separate from the semantic native
+query interface, with closure-private Float64 heights and a Uint8 surface mask.
+Every finite source value is preserved exactly, including negative land; null
+remains NoData/WATER. The mask, not elevation sign or metadata polygons, owns
+classification. Coastline and coverage-edge features remain distinct; the
+real-data regression verifies both against the raster without rewriting assets.
+
+A narrow GRS80 ellipsoidal LAEA adapter implements EPSG:3035 through the existing
+geographic/D3D map space. It uses the published EPSG:1149 ETRS89/WGS84 null
+operation (one-metre nominal accuracy for these epoch-free European coordinates)
+and is checked against the EPSG 9820 worked point and local corner round trips.
+Native DEM samples are cell centers; raster bounds are cell coverage edges.
+Queries use bilinear interpolation only with valid supporting land samples,
+nearest supporting land at NoData edges, then a bounded two-cell local land
+search for ground objects on water. Outside coverage or no nearby land uses an
+explicit diagnostic flat fallback; zero is never substituted into the DEM.
+
+D3D now emits indexed land and separate calm water patches. Main retains every
+native land sample as a center vertex with shared interpolated corners; mini
+uses a temporary four-cell render stride and shares the same loaded runtime.
+Native mini keeps terrain, settlement ground, simplified buildings and landmark
+anchors; it skips expensive research-landscape and street drape preparation/draw.
+Main retains those independent layers. This reduces thumbnail CPU/GPU cost
+without changing native queries or the fallback mini scene.
+Main has 278,634 vertices / 553,692 triangles; mini has 17,810 / 34,772, each in
+two terrain meshes. Typed render buffers are separate from native authority.
+The patch-array planner permits future spatial subdivision. Plans are cached by
+terrain and map-transform identity/mode; fleet, selection and focus do not
+rebuild them. Scenario replacement that changes map origin/scale legitimately
+requires new world-space buffers. GPU geometries are disposed on replacement.
+
+Buildings retain their generated footprints/heights and receive sampled anchor
+bases. Routes and independent ground/street/landscape surfaces are subdivided
+and draped in presentation space; landmarks keep one sampled anchor rather than
+deforming their volume. Stops, vehicles, selection cues and camera diagnostic
+pick coordinates use the same ground query with small named metre offsets.
+D3D placement samples the same native-center triangle fans as its main terrain
+mesh, preventing bilinear-versus-mesh differences from burying objects; native
+query interpolation remains bilinear. Corner support is a private lazy render
+cache shared across map transforms. Ground tints are emitted only on mask land. Terrain relief is unexaggerated;
+framing allows for its height range, and pan targets stay within its coverage
+bounds. Manual pan/zoom survives ordinary workspace viewport resizing; explicit
+scenario, focus and mode changes retain their fit/restore behavior.
+Canonical horizontal route/progress, population, settlement, selection,
+simulation, Worker and save authority remain unchanged. Read-only DOM diagnostics
+expose terrain readiness, dimensions/resolution, sample and mesh counts, extrema
+and geometry builds; completed-frame camera acknowledgement supports visual
+acceptance without sleeps; native source readiness is acknowledged by the actual
+terrain mesh after drawing, separately from asset decode readiness. Camera diagnostics replay after a detached DOM host
+reattaches during slot swaps; unchanged frames avoid repeated DOM writes.
+The fallback-to-native source transition reinitializes the Canvas, so asynchronous
+initial configuration cannot retain the discarded fallback root. Selection/fleet
+changes retain the same native Canvas and terrain geometry; normal/mini mode
+changes alone retain the camera fit/restore path. Camera world matrices update
+synchronously after fit/pan, so CPU entity picking does not wait for a draw.
+City surface offsets remain below transport ribbons. Subdivision reuses vertex
+height queries within each preparation. Weakly cached CPU surface templates are
+keyed by immutable city, terrain/map transform and layer, avoiding repeated
+polygon draping across StrictMode and canvas remounts. Each mounted renderer
+owns fresh attribute identities and disposal; shared CPU arrays are not mutated.
+Hidden StopPlace targets update their final matrices and
+retain a horizontal screen-scale pick floor under the wider terrain framing.
+Vehicle body/HUD/hit intersections take presentation pick priority at overlaps,
+so broad terrain-height Stop targets cannot steal visible Vehicle clicks;
+canonical entity identities and selection callbacks remain unchanged. Public catalog/products are precached under root/subpath
+URLs and checked for byte/hash integrity by the build audit.
+
+Only Torrevieja terrain is integrated. Current JSON transport and monolithic V0
+patches are temporary: binary/compressed decoders, visible spatial chunks,
+worker preparation, large-viewport LOD/culling and GPU buffer reuse remain
+future work. More than one million cells would make full-file JSON decoding and
+full-resolution cell fans too costly. Coarse research-polygon drapes also produce
+large presentation buffers in this V0 and need spatial subdivision/LOD alongside
+the native terrain; caching removes repeat preparation, not that geometry cost.
+The decoder/query/planner seams support
+that later optimization without changing geographic authority. The remaining
+six settlements, complex foundations, bridges/tunnels, terrain editing and
+advanced water/art remain deferred.
 
 D3D `Map` is the family's sole current view. No view-switch control exists while
 every family supports only one view.

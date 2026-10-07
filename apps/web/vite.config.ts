@@ -34,6 +34,8 @@ export default defineConfig({
         'population-fields/**/*',
         'settlement-metadata/**/*.json',
         'route-presentation/**/*.json',
+        'terrain/**/*.json',
+        'terrain/**/*.geojson',
       ],
       registerType: 'autoUpdate',
       manifest: {

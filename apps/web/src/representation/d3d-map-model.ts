@@ -145,6 +145,14 @@ export function createD3dMapModel(
   return model;
 }
 
+export type D3dSceneBounds = Readonly<{
+  minX: number;
+  maxX: number;
+  minZ: number;
+  maxZ: number;
+  minY?: number;
+  maxY?: number;
+}>;
 export function d3dSceneBounds(
   model: D3dMapModel,
   populationBounds?: Readonly<{
@@ -153,7 +161,7 @@ export function d3dSceneBounds(
     minZ: number;
     maxZ: number;
   }>,
-) {
+): D3dSceneBounds {
   return frozen({
     minX: Math.min(-model.bounds.width / 2, populationBounds?.minX ?? 0),
     maxX: Math.max(model.bounds.width / 2, populationBounds?.maxX ?? 0),
@@ -263,7 +271,9 @@ export function fitD3dCamera(
   const halfZ = (maximum.z - minimum.z) / 2;
   const projectedHalfWidth = cosAzimuth * halfX + sinAzimuth * halfZ;
   const projectedHalfHeight =
-    sinElevation * (sinAzimuth * halfX + cosAzimuth * halfZ);
+    sinElevation * (sinAzimuth * halfX + cosAzimuth * halfZ) +
+    Math.max(Math.abs(sceneBounds.minY ?? 0), Math.abs(sceneBounds.maxY ?? 0)) *
+      Math.cos(elevation);
   const aspect = Math.max(1, cssWidth) / Math.max(1, cssHeight);
   const zoom =
     0.85 *
@@ -299,4 +309,11 @@ export function d3dLodBand(
   if (worldUnitsPerCssPixel >= 0.22) return 'far';
   if (worldUnitsPerCssPixel <= 0.045) return 'near';
   return 'medium';
+}
+
+/** Preserve the vertical pick volume so far-view Stop targets do not obscure
+ * Vehicle targets; only the horizontal footprint gets a CSS-scale floor. */
+export function d3dStopHitScale(worldUnitsPerCssPixel: number) {
+  const horizontal = Math.max(1.25, 12 * worldUnitsPerCssPixel) / 1.25;
+  return frozen({ x: horizontal, y: 1, z: horizontal });
 }

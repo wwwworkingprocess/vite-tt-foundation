@@ -174,7 +174,7 @@ Completed:
   population and passenger toggles without exposing controls in the mini slot.
 - a renderer-independent family/view capability table with Map as the single
   view for DOM2D, Canvas2D, and D3D across primary, mini, and inactive placement;
-- D3D Map V0: orthographic isometric flat terrain, canonical route ribbons,
+- D3D Map V0: orthographic isometric initial flat terrain (superseded by Terrain V0), canonical route ribbons,
   physical Stops, low-poly Vehicles, camera pan/zoom/Route fit, selection, and
   screen-scale LOD under the shared manual frame cadence.
 - D3D Procedural City / Settlement V0: canonical population is a density field;
@@ -191,8 +191,8 @@ Completed:
   save contract changed. See the research integration erratum.
 - D3D urbanism follow-up: smaller frontage parcels and courts, denser supported
   urban fabrics, service/campus differentiation, villa and landmark prototypes,
-  and detail-based main-map LOD that retains settlement silhouettes. Water
-  rendering is disabled until a dedicated land/water mask layer is introduced;
+  and detail-based main-map LOD that retains settlement silhouettes. Its deferred
+  water rendering is now supplied by Terrain V0's native surface mask;
   internal research masks and transport authority remain unchanged.
 - shared, ephemeral full-network/selected-Route viewport focus for DOM2D and
   Canvas2D Map, derived once from canonical directed-edge topology with no
@@ -207,8 +207,8 @@ for the exact Torrevieja all-lines coordinate: shared road-shaped geometry, sour
 colors, enriched focus and canonical-progress arc interpolation across all three
 renderers. Stops retain generous interaction targets; small D3D buses gain
 screen-readable LOD HUD cues. Canonical transport and city authority are unchanged.
-The 39 canonical-chord fallbacks, general road GIS, route elevation draping and
-text-rich badges remain deferred.
+The 39 canonical-chord fallbacks, general road GIS and text-rich badges remain
+deferred. Terrain V0 now supplies presentation-only route elevation draping.
 
 Remaining product visualization work:
 
@@ -216,9 +216,18 @@ Remaining product visualization work:
 - smooth display interpolation;
 - performance acceptance for richer scenes.
 
-The next bounded representation step is D3D terrain/elevation height-map
-foundation. Passenger presentation and measured large-scenario performance
-remain later work.
+Terrain V0 integrates the unchanged Torrevieja catalog and native height/mask/
+coastline products through an optional cached loader, JSON decoder and immutable
+native query boundary. Main/mini indexed land/water plans and all geographic D3D
+layers follow native terrain without changing horizontal transport or simulation
+authority. Root/subpath PWA precaching includes these public assets; JSON and
+full-resolution V0 meshes are temporary transport/rendering choices.
+
+The next bounded milestone is: **Complete all settlement terrain products, then
+optimize multi-city / large-viewport terrain rendering and delivery.** The
+remaining six settlements, binary/compressed/chunked delivery, visible-chunk
+LOD/culling, worker preparation and million-plus-sample optimization are not
+implemented. Passenger presentation remains later work.
 
 ## Completed — Live passenger diagnostic/game UI
 

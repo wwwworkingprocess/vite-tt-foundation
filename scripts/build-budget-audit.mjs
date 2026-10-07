@@ -234,6 +234,26 @@ for (const entry of routeCatalogue.scenarios) {
 for (const asset of routeAssets)
   if (!serviceWorkerSource.includes(`url:${JSON.stringify(asset)}`))
     throw new Error(`Service Worker does not precache ${asset}.`);
+const terrainCatalogAsset = 'terrain/catalog.json';
+const terrainCatalog = JSON.parse(
+  await readFile(new URL(terrainCatalogAsset, dist), 'utf8'),
+);
+const terrainAssets = [terrainCatalogAsset];
+for (const entry of Object.values(terrainCatalog.settlements)) {
+  for (const product of Object.values(entry.products)) {
+    const asset = 'terrain/' + product.path;
+    const bytes = await readFile(new URL(asset, dist));
+    if (
+      bytes.length !== product.byteLength ||
+      createHash('sha256').update(bytes).digest('hex') !== product.sha256
+    )
+      throw new Error('Built terrain asset integrity mismatch: ' + asset);
+    terrainAssets.push(asset);
+  }
+}
+for (const asset of terrainAssets)
+  if (!serviceWorkerSource.includes('url:' + JSON.stringify(asset)))
+    throw new Error('Service Worker does not precache ' + asset + '.');
 console.log(
   `Build and installability audit passed: ${JSON.stringify({ javascript, hardBudgetCoordinates: sizes, budgets: configured, reportOnlySharedArchitecture, reportOnlyLogicalCompositions: logicalCompositions })}.`,
 );

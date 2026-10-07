@@ -1,3 +1,5 @@
+import { drapeD3dGeometry } from './d3d-terrain-geometry.js';
+import { terrainLayerOffsets, type D3dTerrain } from './d3d-terrain-model.js';
 import {
   BoxGeometry,
   BufferAttribute,
@@ -200,9 +202,10 @@ export function createCityPrototypeGeometry(
 }
 
 /** One quiet surface batch per layer. Corridor widths belong to the source descriptors. */
-export function createCitySurfaceGeometry(
+function buildCitySurfaceGeometry(
   city: ProceduralCity,
   layer: 'ground' | 'street' | 'landscape' | 'reservation',
+  terrain?: D3dTerrain,
 ) {
   const positions: number[] = [],
     colors: number[] = [];
@@ -292,6 +295,27 @@ export function createCitySurfaceGeometry(
       }
     }
   }
+  const surface = new BufferGeometry();
+  surface.setAttribute(
+    'position',
+    new BufferAttribute(new Float32Array(positions), 3),
+  );
+  surface.setAttribute(
+    'color',
+    new BufferAttribute(new Float32Array(colors), 3),
+  );
+  if (terrain) {
+    drapeD3dGeometry(surface, terrain, terrainLayerOffsets.surface, true);
+    positions.length = 0;
+    colors.length = 0;
+    const pos = surface.getAttribute('position'),
+      rgb = surface.getAttribute('color');
+    for (let i = 0; i < pos.count; i++) {
+      positions.push(pos.getX(i), pos.getY(i), pos.getZ(i));
+      colors.push(rgb.getX(i), rgb.getY(i), rgb.getZ(i));
+    }
+  }
+  surface.dispose();
   if (layer === 'reservation') {
     const anchor = createCityPrototypeGeometry('landmark-placeholder', 'body');
     const vertices = anchor.getAttribute('position');
@@ -308,7 +332,11 @@ export function createCitySurfaceGeometry(
       for (let i = 0; i < vertices.count; i++) {
         positions.push(
           reservation.x + vertices.getX(i) * reservation.radius * 0.9,
-          0.035 + vertices.getY(i) * reservation.anchorHeight,
+          (terrain
+            ? terrain.ground(reservation.x, reservation.z).y +
+              terrainLayerOffsets.surface * terrain.metre
+            : 0.035) +
+            vertices.getY(i) * reservation.anchorHeight,
           reservation.z + vertices.getZ(i) * reservation.radius * 0.9,
         );
         colors.push(color.r, color.g, color.b);
@@ -326,5 +354,44 @@ export function createCitySurfaceGeometry(
     new BufferAttribute(new Float32Array(colors), 3),
   );
   geometry.computeVertexNormals();
+  return geometry;
+}
+
+/** Cache only CPU templates by immutable city/world/layer. Each renderer owns fresh
+ * attribute identities and disposal; shared arrays are never mutated. This avoids
+ * repeating polygon subdivision during StrictMode and mini/main canvas mounts. */
+const terrainSurfaces = new WeakMap<
+  ProceduralCity,
+  WeakMap<D3dTerrain, Map<string, BufferGeometry>>
+>();
+export function createCitySurfaceGeometry(
+  city: ProceduralCity,
+  layer: 'ground' | 'street' | 'landscape' | 'reservation',
+  terrain?: D3dTerrain,
+) {
+  if (!terrain) return buildCitySurfaceGeometry(city, layer);
+  let worlds = terrainSurfaces.get(city);
+  if (!worlds) {
+    worlds = new WeakMap();
+    terrainSurfaces.set(city, worlds);
+  }
+  let layers = worlds.get(terrain);
+  if (!layers) {
+    layers = new Map();
+    worlds.set(terrain, layers);
+  }
+  let template = layers.get(layer);
+  if (!template) {
+    template = buildCitySurfaceGeometry(city, layer, terrain);
+    layers.set(layer, template);
+  }
+  const geometry = new BufferGeometry();
+  for (const name of ['position', 'color', 'normal']) {
+    const attribute = template.getAttribute(name);
+    geometry.setAttribute(
+      name,
+      new BufferAttribute(attribute.array, attribute.itemSize),
+    );
+  }
   return geometry;
 }

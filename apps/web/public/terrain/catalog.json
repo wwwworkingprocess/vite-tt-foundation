@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "0.0.0",
+  "purpose": "Runtime catalog for settlement terrain products",
+  "pathSemantics": "product paths are relative to this catalog file",
+  "settlements": {
+    "es-torrevieja": {
+      "terrainVersion": "v0",
+      "crs": "EPSG:3035",
+      "resolutionMeters": {
+        "x": 25,
+        "y": 25
+      },
+      "scenarioIds": [
+        "torrevieja-legacy-abc-v1",
+        "torrevieja-legacy-all-v1",
+        "torrevieja-legacy-east-v1",
+        "torrevieja-legacy-north-v1",
+        "torrevieja-legacy-south-v1"
+      ],
+      "scenarioViewportMap": {
+        "torrevieja-legacy-abc-v1": "tv-epsg3035-25-w134932-s68669-c376-r430",
+        "torrevieja-legacy-all-v1": "tv-epsg3035-25-w134932-s68669-c376-r430",
+        "torrevieja-legacy-east-v1": "tv-epsg3035-25-w134932-s68669-c376-r430",
+        "torrevieja-legacy-north-v1": "tv-epsg3035-25-w134932-s68669-c376-r430",
+        "torrevieja-legacy-south-v1": "tv-epsg3035-25-w134932-s68669-c376-r430"
+      },
+      "viewports": [
+        {
+          "terrainViewportId": "tv-epsg3035-25-w134932-s68669-c376-r430",
+          "width": 376,
+          "height": 430,
+          "rasterBounds3035": {
+            "west": 3373300,
+            "south": 1716725,
+            "east": 3382700,
+            "north": 1727475
+          }
+        }
+      ],
+      "products": {
+        "height": {
+          "path": "es-torrevieja/es-torrevieja.terrain-height.v0.json",
+          "mediaType": "application/json",
+          "schemaVersion": "0.0.0",
+          "byteLength": 3319041,
+          "sha256": "07147e8cb0dad393aa837a47ea8fab599b0ecc2179177be3721b257575186038"
+        },
+        "surfaceMask": {
+          "path": "es-torrevieja/es-torrevieja.terrain-surface-mask.v0.json",
+          "mediaType": "application/json",
+          "schemaVersion": "0.0.0",
+          "byteLength": 1779752,
+          "sha256": "1d4f2b652cb1b78a490b51a7d92afea02feabd797eb01394fbfed7b3d83caadd"
+        },
+        "coastline": {
+          "path": "es-torrevieja/es-torrevieja.terrain-coastline.v0.geojson",
+          "mediaType": "application/geo+json",
+          "schemaVersion": "0.0.0",
+          "byteLength": 466427,
+          "sha256": "b7c7ef4d060050e7431ac567ae12748e4985f15aa1e4d4b8a88fa06cf31f8d1f"
+        }
+      }
+    }
+  }
+}

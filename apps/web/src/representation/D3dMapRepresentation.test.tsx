@@ -22,15 +22,35 @@ import { RepresentationModeProvider } from './RepresentationModeContext.js';
 import D3dMapRepresentation, {
   createD3dRibbonGeometry,
   writeD3dDiagnostics,
+  writeD3dRenderedTerrain,
+  createD3dCameraAcknowledgement,
+  prioritiseD3dEntityHits,
 } from './D3dMapRepresentation.js';
 import { createTransportMapProjection } from './transport-map-projection.js';
-import { createD3dMapModel } from './d3d-map-model.js';
+import { d3dMetreScale, createD3dMapModel } from './d3d-map-model.js';
 import { fitD3dCamera } from './d3d-map-model.js';
 import type { ScenarioPopulationView } from '../population/population-field-loader.js';
-import { BoxGeometry, BufferGeometry, OrthographicCamera } from 'three';
+import {
+  BoxGeometry,
+  BufferGeometry,
+  OrthographicCamera,
+  Raycaster,
+  Vector2,
+  Vector3,
+} from 'three';
 import { parseRoutePresentation } from './route-presentation.js';
 import { createRoutePresentationView } from './route-presentation-view.js';
 import { buildProceduralCity } from './d3d-city-model.js';
+import { useTerrain } from '../terrain/use-terrain.js';
+import { terrainFixture } from '../test/terrain-fixture.js';
+import {
+  parseTerrainCatalog,
+  resolveTerrainViewport,
+} from '../terrain/terrain-catalog.js';
+import { terrainJsonDecoder } from '../terrain/terrain-json-decoder.js';
+vi.mock('../terrain/use-terrain.js', () => ({
+  useTerrain: vi.fn(() => ({ status: 'unavailable' })),
+}));
 import { useSettlementMetadata } from '../settlement/use-settlement-metadata.js';
 import { parseSettlementMetadata } from '../settlement/settlement-metadata.js';
 vi.mock('../settlement/use-settlement-metadata.js', () => ({
@@ -124,6 +144,7 @@ const controls = (
       camera: { zoom: number; position: { x: number; z: number } };
       canvas: HTMLCanvasElement;
       renderWorld: boolean;
+      frame?: (() => void) | undefined;
       eventConnect: ReturnType<typeof vi.fn>;
       eventManager?: { connect: (element: HTMLElement | null) => void };
     };
@@ -139,6 +160,7 @@ const pointer = (kind: string, x: number, y: number, pointerId = 1) => {
 
 afterEach(() => {
   controls.renderWorld = false;
+  controls.frame = undefined;
   controls.eventConnect.mockClear();
   for (const property of [
     'setMatrixAt',
@@ -154,6 +176,7 @@ afterEach(() => {
   vi.useRealTimers();
   configureRepresentationProfiling(false);
   clearRepresentationProfiles();
+  vi.mocked(useTerrain).mockReturnValue({ status: 'unavailable' });
   vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'unavailable' });
 });
 
@@ -287,6 +310,7 @@ const sceneProps = (element: Element) =>
     onClick?: (event: unknown) => void;
     raycast?: () => unknown;
     geometry?: BufferGeometry;
+    onBeforeRender?: () => void;
   };
 
 const chooseSceneObject = (
@@ -1022,4 +1046,417 @@ it('builds directed route ribbons and arrows while skipping degenerate edges', (
   ).toBe(true);
   ribbon.dispose();
   arrows.dispose();
+});
+
+it('uses a terrain-ready native scene while retaining entity selection and static geometry on fleet/selection updates', () => {
+  const { setMatrixAt } = enableWorld();
+  const f = terrainFixture();
+  const resolved = resolveTerrainViewport(
+    parseTerrainCatalog(f.catalog),
+    'test',
+    'a',
+  )!;
+  const terrain = terrainJsonDecoder.decode(f, resolved);
+  vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
+  const dispose = vi.spyOn(BufferGeometry.prototype, 'dispose');
+  const view = render(scene('normal'));
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-terrain-status',
+    'ready',
+  );
+  expect(
+    document.querySelectorAll('mesh[name="native-terrain-land"]'),
+  ).toHaveLength(1);
+  expect(
+    document.querySelectorAll('mesh[name="native-terrain-water"]'),
+  ).toHaveLength(1);
+  expect(setMatrixAt).toHaveBeenCalled();
+  for (const mesh of document.querySelectorAll('mesh[name^="native-terrain-"]'))
+    sceneProps(mesh).onBeforeRender?.();
+  const count = dispose.mock.calls.length;
+  view.rerender(scene('normal', selectVehicle(fleet[0]!.vehicleId)));
+  expect(dispose.mock.calls.length).toBe(count);
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-terrain-geometry-builds',
+    '1',
+  );
+});
+
+it('grounds transport and selection on ready terrain while preserving pan/focus and replacing the cheap mini plan', () => {
+  const { setMatrixAt } = enableWorld();
+  const f = terrainFixture();
+  const b = f.catalog.settlements.test.viewports[0]!.rasterBounds3035;
+  Object.assign(b, {
+    west: 3300000,
+    south: 1650000,
+    east: 3450000,
+    north: 1800000,
+  });
+  f.catalog.settlements.test.resolutionMeters = { x: 50000, y: 50000 };
+  for (const product of [f.height, f.surfaceMask]) {
+    product.resolutionMetersX = 50000;
+    product.resolutionMetersY = 50000;
+  }
+  f.height.viewports[0]!.elevations.fill(10);
+  f.surfaceMask.viewports[0]!.cells.fill(1);
+  const terrain = terrainJsonDecoder.decode(
+    f,
+    resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
+  );
+  vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
+  const view = render(
+    scene(
+      'normal',
+      selectStop(stop.stopPlaceId),
+      undefined,
+      scenario,
+      population,
+    ),
+  );
+  const ground = 10 * d3dMetreScale(model).worldUnitsPerMetre;
+  expect(
+    setMatrixAt.mock.calls.some(
+      ([, matrix]) => Math.abs(matrix.elements[13] - ground) < 1e-7,
+    ),
+  ).toBe(true);
+  const ribbon = [...document.querySelectorAll('mesh')]
+    .map((m) => sceneProps(m).geometry)
+    .find((g) => g && !g.index && !g.getAttribute('color'))!;
+  expect(ribbon.getAttribute('position').getY(0)).toBeGreaterThan(ground);
+  expect(
+    [...document.querySelectorAll('mesh')]
+      .filter((m) => sceneProps(m).raycast)
+      .every((m) => sceneProps(m).raycast?.() === null),
+  ).toBe(true);
+  act(() => {
+    pointer('pointerdown', 10, 10);
+    pointer('pointermove', 25, 25);
+    pointer('pointerup', 25, 25);
+  });
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-camera-mode',
+    'manual',
+  );
+  view.rerender(
+    scene(
+      'normal',
+      selectRoute(route.routeId),
+      route.routeId,
+      scenario,
+      population,
+    ),
+  );
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-terrain-geometry-builds',
+    '1',
+  );
+  view.rerender(
+    scene(
+      'normal',
+      selectVehicle(fleet[0]!.vehicleId),
+      route.routeId,
+      scenario,
+      population,
+    ),
+  );
+  const vehicleBody = [...document.querySelectorAll('mesh')].find(
+    (m) => sceneProps(m).onClick,
+  )!;
+  const groupProps = sceneProps(vehicleBody.parentElement!) as unknown as {
+    position: readonly number[];
+  };
+  expect(groupProps.position[1]).toBeGreaterThan(ground);
+  view.rerender(
+    scene('normal', null, undefined, scenario, population, [...fleet]),
+  );
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-terrain-geometry-builds',
+    '1',
+  );
+  view.rerender(scene('mini', null, undefined, scenario, population));
+  expect(document.querySelector('mesh[name="research-landscape"]')).toBeNull();
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-terrain-geometry-builds',
+    '2',
+  );
+  view.unmount();
+});
+it('exposes optional terrain failure without removing transport selection', () => {
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'error',
+    message: 'Terrain raster rejected',
+  });
+  render(scene('normal'));
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-terrain-error',
+    'Terrain raster rejected',
+  );
+  expect(
+    screen.getByRole('group', { name: /3D Map selection/ }),
+  ).toBeInTheDocument();
+});
+
+it('retains canonical Vehicle pick priority over overlapping terrain-height Stop targets without mutating hit identities or distance order', () => {
+  const stopHit = { object: { name: 'stop-hit-targets' }, distance: 1 };
+  const hudHit = { object: { name: 'vehicle-hud' }, distance: 2 };
+  const bodyHit = { object: { name: 'vehicle-body' }, distance: 3 };
+  const stopPlatform = { object: { name: 'stop-platform' }, distance: 4 };
+  const hits = [stopHit, hudHit, bodyHit, stopPlatform];
+  expect(prioritiseD3dEntityHits(hits)).toEqual([
+    hudHit,
+    bodyHit,
+    stopHit,
+    stopPlatform,
+  ]);
+  expect(hits).toEqual([stopHit, hudHit, bodyHit, stopPlatform]);
+  expect(prioritiseD3dEntityHits([])).toEqual([]);
+});
+
+it('preserves a manual camera and active drag across LOD, selection and fleet updates', () => {
+  const view = render(scene('normal'));
+  act(() => {
+    pointer('pointerdown', 10, 10);
+    pointer('pointermove', 30, 20);
+  });
+  const moved = cameraState();
+  view.rerender(
+    scene(
+      'normal',
+      selectVehicle(fleet[0]!.vehicleId),
+      undefined,
+      scenario,
+      undefined,
+      [...fleet],
+    ),
+  );
+  expect(cameraState()).toEqual(moved);
+  act(() => {
+    pointer('pointermove', 50, 30);
+    pointer('pointerup', 50, 30);
+    fireEvent.wheel(controls.canvas, { deltaY: -1000 });
+  });
+  expect(cameraState().targetX).not.toBe(moved.targetX);
+  expect(cameraState().zoom).toBeGreaterThan(moved.zoom);
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-camera-mode',
+    'manual',
+  );
+  view.unmount();
+});
+
+it('retains manual terrain pan/zoom when the workspace viewport resizes after input', () => {
+  const state = r3f.useThree();
+  let height = state.size.height;
+  vi.spyOn(r3f, 'useThree').mockImplementation((selector) => {
+    const resized = { ...state, size: { ...state.size, height } };
+    return selector ? selector(resized) : resized;
+  });
+  const view = render(scene('normal'));
+  const automatic = cameraState();
+  height += 20;
+  view.rerender(scene('normal'));
+  expect(cameraState().zoom).toBeLessThan(automatic.zoom);
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-camera-mode',
+    'full',
+  );
+  act(() => {
+    pointer('pointerdown', 10, 10);
+    pointer('pointermove', 40, 25);
+    pointer('pointerup', 40, 25);
+    fireEvent.wheel(controls.canvas, { deltaY: -200 });
+  });
+  const manual = cameraState();
+  height += 100;
+  view.rerender(scene('normal'));
+  expect(cameraState()).toEqual(manual);
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-camera-mode',
+    'manual',
+  );
+  const f = terrainFixture();
+  const terrain = terrainJsonDecoder.decode(
+    f,
+    resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
+  );
+  vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
+  view.rerender(scene('normal'));
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-camera-mode',
+    'full',
+  );
+  expect(cameraState()).not.toEqual(manual);
+  view.unmount();
+});
+
+it('publishes read-only completed-frame camera coordinates through the existing cadence', () => {
+  onSelectionChange.mockClear();
+  vi.useFakeTimers();
+  render(scene('normal'));
+  act(() => {
+    pointer('pointerdown', 10, 10);
+    pointer('pointermove', 40, 25);
+    pointer('pointerup', 40, 25);
+    fireEvent.wheel(controls.canvas, { deltaY: -200 });
+    vi.advanceTimersByTime(1000 / 60 + 1);
+  });
+  const map = screen.getByTestId('d3d-map-representation');
+  for (const coordinate of ['zoom', 'target-x', 'target-z'])
+    expect(
+      Number(map.getAttribute('data-rendered-camera-' + coordinate)),
+    ).toBeCloseTo(Number(map.getAttribute('data-camera-' + coordinate)), 10);
+  expect(onSelectionChange).not.toHaveBeenCalled();
+});
+
+it('replays camera diagnostics on the first frame after the DOM host is reattached, retaining manual intent', () => {
+  vi.useFakeTimers();
+  const view = render(scene('normal'));
+  const map = screen.getByTestId('d3d-map-representation');
+  map.removeAttribute('data-camera-mode');
+  act(() => vi.advanceTimersByTime(1000 / 60 + 1));
+  expect(map).toHaveAttribute('data-camera-mode', 'full');
+  act(() => {
+    pointer('pointerdown', 10, 10);
+    pointer('pointermove', 40, 25);
+    pointer('pointerup', 40, 25);
+  });
+  const manual = cameraState();
+  map.removeAttribute('data-camera-mode');
+  act(() => vi.advanceTimersByTime(1000 / 60 + 1));
+  expect(map).toHaveAttribute('data-camera-mode', 'manual');
+  expect(cameraState()).toEqual(manual);
+  const detachedFrame = controls.frame;
+  view.unmount();
+  expect(() => detachedFrame?.()).not.toThrow();
+});
+
+it('acknowledges an attached or replaced host even when rendered camera coordinates stay unchanged', () => {
+  const acknowledge = createD3dCameraAcknowledgement();
+  const camera = { zoom: 2, position: { x: 10, z: 20 } };
+  const first = document.createElement('section');
+  const second = document.createElement('section');
+  acknowledge(null, camera);
+  acknowledge(first, camera);
+  expect(first).toHaveAttribute('data-rendered-camera-zoom', '2');
+  acknowledge(first, camera);
+  expect(first).toHaveAttribute('data-rendered-camera-zoom', '2');
+  camera.zoom = 3;
+  acknowledge(first, camera);
+  expect(first).toHaveAttribute('data-rendered-camera-zoom', '3');
+  acknowledge(second, camera);
+  expect(second).toHaveAttribute('data-rendered-camera-zoom', '3');
+  acknowledge(null, camera);
+  acknowledge(second, camera);
+  expect(second).toHaveAttribute(
+    'data-rendered-camera-target-x',
+    first.getAttribute('data-rendered-camera-target-x'),
+  );
+});
+
+it('reinitializes the Canvas only when native terrain replaces fallback, retaining canonical selection and static native geometry', () => {
+  vi.mocked(useTerrain).mockReturnValue({ status: 'loading' });
+  const view = render(scene('normal', selectVehicle(fleet[0]!.vehicleId)));
+  const fallbackCanvas = screen.getByTestId('r3f-canvas');
+  act(() => fireEvent.wheel(controls.canvas, { deltaY: -4000 }));
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-city-lod',
+    'near',
+  );
+  const f = terrainFixture();
+  Object.assign(f.catalog.settlements.test.viewports[0]!.rasterBounds3035, {
+    west: 3300000,
+    south: 1650000,
+    east: 3450000,
+    north: 1800000,
+  });
+  f.catalog.settlements.test.resolutionMeters = { x: 50000, y: 50000 };
+  for (const product of [f.height, f.surfaceMask]) {
+    product.resolutionMetersX = 50000;
+    product.resolutionMetersY = 50000;
+  }
+  const terrain = terrainJsonDecoder.decode(
+    f,
+    resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
+  );
+  vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
+  view.rerender(scene('normal', selectVehicle(fleet[0]!.vehicleId)));
+  const nativeCanvas = screen.getByTestId('r3f-canvas');
+  expect(nativeCanvas).not.toBe(fallbackCanvas);
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-city-lod',
+    'far',
+  );
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-selected-kind',
+    'vehicle',
+  );
+  view.rerender(scene('normal', selectStop(stop.stopPlaceId)));
+  expect(screen.getByTestId('r3f-canvas')).toBe(nativeCanvas);
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-terrain-geometry-builds',
+    '1',
+  );
+});
+
+it('keeps CPU raycasting aligned with published Stop targets before the first draw and immediately after pan', () => {
+  const state = r3f.useThree();
+  const camera = new OrthographicCamera();
+  vi.spyOn(r3f, 'useThree').mockImplementation((selector) => {
+    const realCameraState = { ...state, camera };
+    return selector ? selector(realCameraState) : realCameraState;
+  });
+  const view = render(scene('normal'));
+  const stop = model.stops.at(-1)!;
+  const map = screen.getByTestId('d3d-map-representation');
+  const check = () => {
+    const raycaster = new Raycaster();
+    raycaster.setFromCamera(
+      new Vector2(
+        Number(map.getAttribute('data-pointer-stop-x')) / 500 - 1,
+        1 - Number(map.getAttribute('data-pointer-stop-y')) / 330,
+      ),
+      camera,
+    );
+    expect(
+      raycaster.ray.distanceToPoint(new Vector3(stop.x, 0.3, stop.z)),
+    ).toBeLessThan(1e-8);
+  };
+  check();
+  act(() => {
+    pointer('pointerdown', 10, 10);
+    pointer('pointermove', 40, 25);
+    pointer('pointerup', 40, 25);
+  });
+  check();
+  view.unmount();
+});
+
+it('marks a native terrain source only after its mesh draws and safely skips repeated or detached hosts', () => {
+  enableWorld();
+  const f = terrainFixture();
+  const terrain = terrainJsonDecoder.decode(
+    f,
+    resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
+  );
+  vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
+  const view = render(scene('normal'));
+  const map = screen.getByTestId('d3d-map-representation');
+  expect(map).not.toHaveAttribute('data-rendered-terrain-identity');
+  const draw = sceneProps(
+    document.querySelector('mesh[name="native-terrain-land"]')!,
+  ) as unknown as { onAfterRender: () => void };
+  draw.onAfterRender();
+  draw.onAfterRender();
+  expect(map).toHaveAttribute(
+    'data-rendered-terrain-identity',
+    terrain.identity,
+  );
+  expect(map).toHaveAttribute(
+    'data-rendered-terrain-viewport',
+    terrain.viewport.terrainViewportId,
+  );
+  writeD3dRenderedTerrain(map, 'replacement', 'another-viewport');
+  expect(map).toHaveAttribute('data-rendered-terrain-identity', 'replacement');
+  view.unmount();
+  expect(() => draw.onAfterRender()).not.toThrow();
 });

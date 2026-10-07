@@ -3,6 +3,7 @@ import {
   Canvas,
   events as createPointerEvents,
   useThree,
+  useFrame,
   type ThreeEvent,
 } from '@react-three/fiber';
 import {
@@ -51,6 +52,7 @@ import {
   projectD3dVehicles,
   d3dSceneBounds,
   d3dMetreScale,
+  d3dStopHitScale,
   selectD3dCandidate,
   type D3dLodBand,
   type D3dMapModel,
@@ -83,6 +85,19 @@ import {
   type RoutePresentationView,
 } from './route-presentation-view.js';
 
+import { useTerrain } from '../terrain/use-terrain.js';
+import {
+  createD3dTerrain,
+  planD3dTerrain,
+  groundCity,
+  terrainLayerOffsets,
+  type D3dTerrain,
+} from './d3d-terrain-model.js';
+import {
+  createD3dTerrainGeometry,
+  drapeD3dGeometry,
+} from './d3d-terrain-geometry.js';
+
 type MapProps = Readonly<{
   routePresentation?: RoutePresentationView | undefined;
   scenario: CanonicalScenario;
@@ -93,19 +108,39 @@ type MapProps = Readonly<{
   population?: ScenarioPopulationView | undefined;
 }>;
 
+/** Visible Vehicle units keep pick priority over broad Stop targets at overlaps.
+ * Stable ordering within each tier preserves R3F's distance/instance ordering. */
+export function prioritiseD3dEntityHits<T extends { object: { name: string } }>(
+  hits: readonly T[],
+): T[] {
+  return [...hits].sort(
+    (a, b) =>
+      Number(!a.object.name.startsWith('vehicle-')) -
+      Number(!b.object.name.startsWith('vehicle-')),
+  );
+}
 const d3dPointerEvents = (state: Parameters<typeof createPointerEvents>[0]) => {
   const pointerEvents = createPointerEvents(state);
   return {
     ...pointerEvents,
+    filter: prioritiseD3dEntityHits,
     connect: (element: HTMLElement) => {
       if (element) pointerEvents.connect?.(element);
     },
   };
 };
 
-function RepresentationFrameDriver({ mode }: { mode: RepresentationMode }) {
+function RepresentationFrameDriver({
+  mode,
+  wrapper,
+}: {
+  mode: RepresentationMode;
+  wrapper: React.RefObject<HTMLElement | null>;
+}) {
+  const camera = useThree(({ camera }) => camera) as OrthographicCamera;
   const advance = useThree(({ advance }) => advance);
   useEffect(() => {
+    const acknowledgeCamera = createD3dCameraAcknowledgement();
     const driver = createRepresentationFrameDriver({
       mode,
       now: () => performance.now(),
@@ -114,6 +149,7 @@ function RepresentationFrameDriver({ mode }: { mode: RepresentationMode }) {
       frame: (time) => {
         const profile = beginRepresentationProfile('r3f.advance');
         advance(time);
+        acknowledgeCamera(wrapper.current, camera);
         if (profile) {
           const detail = {
             targetFramesPerSecond:
@@ -125,7 +161,7 @@ function RepresentationFrameDriver({ mode }: { mode: RepresentationMode }) {
       },
     });
     return () => driver.close();
-  }, [advance, mode]);
+  }, [advance, mode, camera, wrapper]);
   return null;
 }
 
@@ -143,6 +179,49 @@ export function writeD3dDiagnostics(
   if (element) Object.assign(element.dataset, values);
 }
 
+/** Cache belongs to the diagnostic publisher; a newly attached host must receive
+ * the current camera even when its coordinates did not change. */
+export function createD3dCameraAcknowledgement() {
+  let coordinates = '';
+  let host: HTMLElement | null = null;
+  return (
+    element: HTMLElement | null,
+    camera: Readonly<{
+      zoom: number;
+      position: Readonly<{ x: number; z: number }>;
+    }>,
+  ) => {
+    const next =
+      camera.zoom + ':' + camera.position.x + ':' + camera.position.z;
+    if (next !== coordinates || element !== host) {
+      writeD3dDiagnostics(element, {
+        renderedCameraZoom: String(camera.zoom),
+        renderedCameraTargetX: String(
+          camera.position.x - cameraDirection[0] * 150,
+        ),
+        renderedCameraTargetZ: String(
+          camera.position.z - cameraDirection[2] * 150,
+        ),
+      });
+      coordinates = next;
+      host = element;
+    }
+  };
+}
+
+/** A native source is ready for visual acceptance only after a terrain mesh draws. */
+export function writeD3dRenderedTerrain(
+  element: HTMLElement | null,
+  identity: string,
+  viewportId: string,
+) {
+  if (element && element.dataset.renderedTerrainIdentity !== identity)
+    writeD3dDiagnostics(element, {
+      renderedTerrainIdentity: identity,
+      renderedTerrainViewport: viewportId,
+    });
+}
+
 function CameraController({
   model,
   sceneBounds,
@@ -151,6 +230,8 @@ function CameraController({
   mode,
   wrapper,
   onLod,
+  initialLod,
+  terrain,
 }: Readonly<{
   model: D3dMapModel;
   sceneBounds: ReturnType<typeof d3dSceneBounds>;
@@ -159,6 +240,8 @@ function CameraController({
   mode: RepresentationMode;
   wrapper: React.RefObject<HTMLElement | null>;
   onLod: (band: D3dLodBand) => void;
+  initialLod: D3dLodBand;
+  terrain?: D3dTerrain | undefined;
 }>) {
   const { camera, size, gl } = useThree();
   const target = useRef(new Vector3());
@@ -169,6 +252,7 @@ function CameraController({
         model: D3dMapModel;
         route: RouteId | undefined;
         mode: RepresentationMode;
+        sceneBounds: ReturnType<typeof d3dSceneBounds>;
         width: number;
         height: number;
       }
@@ -188,7 +272,7 @@ function CameraController({
     | undefined
   >(undefined);
   const cameraKind = useRef<'full' | 'route-fit' | 'manual'>('full');
-  const lod = useRef<D3dLodBand>('far');
+  const lod = useRef<D3dLodBand>(initialLod);
   const fit = useMemo(
     () =>
       fitD3dCamera(
@@ -223,7 +307,11 @@ function CameraController({
     const vehicle = vehiclesRef.current[0];
     const edge = model.routes[0];
     if (stop) {
-      const point = locate(stop.x, 0.3, stop.z);
+      const point = locate(
+        stop.x,
+        (terrain?.ground(stop.x, stop.z).y ?? 0) + 0.3,
+        stop.z,
+      );
       writeD3dDiagnostics(wrapper.current, {
         pointerStopId: stop.stopPlaceId,
         pointerStopX: String(point.x),
@@ -231,7 +319,11 @@ function CameraController({
       });
     }
     if (vehicle) {
-      const point = locate(vehicle.x, 0.8, vehicle.z);
+      const point = locate(
+        vehicle.x,
+        (terrain?.ground(vehicle.x, vehicle.z).y ?? 0) + 0.8,
+        vehicle.z,
+      );
       writeD3dDiagnostics(wrapper.current, {
         pointerVehicleId: vehicle.vehicleId,
         pointerVehicleX: String(point.x),
@@ -241,7 +333,10 @@ function CameraController({
     if (edge) {
       const point = locate(
         (edge.from.x + edge.to.x) / 2,
-        0.1,
+        (terrain?.ground(
+          (edge.from.x + edge.to.x) / 2,
+          (edge.from.z + edge.to.z) / 2,
+        ).y ?? 0) + 0.1,
         (edge.from.z + edge.to.z) / 2,
       );
       writeD3dDiagnostics(wrapper.current, {
@@ -249,7 +344,7 @@ function CameraController({
         pointerRouteY: String(point.y),
       });
     }
-  }, [model, orthographic, size.width, size.height, wrapper]);
+  }, [model, orthographic, size.width, size.height, wrapper, terrain]);
   const publish = useCallback(
     (kind: 'full' | 'route-fit' | 'manual') => {
       cameraKind.current = kind;
@@ -283,6 +378,14 @@ function CameraController({
       publishTargets,
     ],
   );
+  // R3F may commit while the DOM host is detached during a slot swap.
+  useFrame(() => {
+    if (
+      wrapper.current &&
+      wrapper.current.dataset.cameraMode !== cameraKind.current
+    )
+      publish(cameraKind.current);
+  });
   useEffect(() => publishTargets(), [vehicles, publishTargets]);
   const apply = (
     targetX: number,
@@ -299,6 +402,7 @@ function CameraController({
     orthographic.zoom = zoom;
     orthographic.updateProjectionMatrix();
     orthographic.lookAt(target.current);
+    orthographic.updateMatrixWorld();
     publish(kind);
   };
   useEffect(() => {
@@ -341,6 +445,15 @@ function CameraController({
             ? 'route-fit'
             : 'full',
       );
+    else if (
+      prior &&
+      !changedModel &&
+      !changedMode &&
+      prior.route === focusedRouteId &&
+      prior.sceneBounds === sceneBounds &&
+      cameraKind.current === 'manual'
+    )
+      apply(target.current.x, target.current.z, orthographic.zoom, 'manual');
     else
       apply(
         fit.targetX,
@@ -352,6 +465,7 @@ function CameraController({
       model,
       route: focusedRouteId,
       mode,
+      sceneBounds,
       width: size.width,
       height: size.height,
     };
@@ -362,16 +476,25 @@ function CameraController({
     size.width,
     size.height,
     fit,
+    sceneBounds,
     orthographic,
     publish,
   ]);
 
   const pan = (dx: number, dy: number) => {
     const limit = {
-      minX: Math.min(fullFit.panBounds.minX, sceneBounds.minX * 1.4),
-      maxX: Math.max(fullFit.panBounds.maxX, sceneBounds.maxX * 1.4),
-      minZ: Math.min(fullFit.panBounds.minZ, sceneBounds.minZ * 1.4),
-      maxZ: Math.max(fullFit.panBounds.maxZ, sceneBounds.maxZ * 1.4),
+      minX: terrain
+        ? terrain.bounds.minX
+        : Math.min(fullFit.panBounds.minX, sceneBounds.minX * 1.4),
+      maxX: terrain
+        ? terrain.bounds.maxX
+        : Math.max(fullFit.panBounds.maxX, sceneBounds.maxX * 1.4),
+      minZ: terrain
+        ? terrain.bounds.minZ
+        : Math.min(fullFit.panBounds.minZ, sceneBounds.minZ * 1.4),
+      maxZ: terrain
+        ? terrain.bounds.maxZ
+        : Math.max(fullFit.panBounds.maxZ, sceneBounds.maxZ * 1.4),
     };
     const units = 20 / (Math.max(1, size.height) * orthographic.zoom);
     const x = Math.max(
@@ -398,6 +521,7 @@ function CameraController({
     orthographic.position.z += z - target.current.z;
     target.current.set(x, 0, z);
     orthographic.lookAt(target.current);
+    orthographic.updateMatrixWorld();
     publish('manual');
   };
   const zoom = (factor: number) => {
@@ -455,8 +579,57 @@ function CameraController({
       canvas.removeEventListener('pointercancel', up);
       canvas.removeEventListener('wheel', wheel);
     };
-  }, [gl, mode, fullFit, sceneBounds, size.height, orthographic, publish]);
+  }, [
+    gl,
+    mode,
+    fullFit,
+    sceneBounds,
+    size.height,
+    orthographic,
+    publish,
+    terrain,
+  ]);
   return null;
+}
+
+type D3dTerrainMeshes = readonly Readonly<{
+  kind: 'land' | 'water';
+  geometry: BufferGeometry;
+}>[];
+function NativeTerrain({
+  meshes,
+  source,
+  wrapper,
+}: {
+  meshes: D3dTerrainMeshes;
+  source: D3dTerrain['terrain'];
+  wrapper: React.RefObject<HTMLElement | null>;
+}) {
+  return (
+    <group name="native-terrain">
+      {meshes.map((p) => (
+        <mesh
+          key={p.kind}
+          name={'native-terrain-' + p.kind}
+          onAfterRender={() =>
+            writeD3dRenderedTerrain(
+              wrapper.current,
+              source.identity,
+              source.viewport.terrainViewportId,
+            )
+          }
+          geometry={p.geometry}
+          dispose={null}
+          raycast={() => null}
+        >
+          <meshLambertMaterial
+            color={p.kind === 'land' ? '#a7b88d' : '#729ea5'}
+            side={DoubleSide}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
 }
 
 function Terrain({
@@ -557,11 +730,14 @@ function City({
   city,
   lod,
   mode,
+  terrain,
 }: {
+  terrain?: D3dTerrain | undefined;
   city: ProceduralCity;
   lod: D3dLodBand;
   mode: RepresentationMode;
 }) {
+  const nativeMini = mode === 'mini' && terrain !== undefined;
   const buildings = cityLodBuildings(city, lod, mode);
   const simple = mode === 'mini' || lod === 'far';
   const groups = useMemo(
@@ -582,12 +758,16 @@ function City({
   );
   const surfaces = useMemo(
     () => ({
-      street: createCitySurfaceGeometry(city, 'street'),
-      ground: createCitySurfaceGeometry(city, 'ground'),
-      landscape: createCitySurfaceGeometry(city, 'landscape'),
-      reservation: createCitySurfaceGeometry(city, 'reservation'),
+      street: nativeMini
+        ? new BufferGeometry()
+        : createCitySurfaceGeometry(city, 'street', terrain),
+      ground: createCitySurfaceGeometry(city, 'ground', terrain),
+      landscape: nativeMini
+        ? new BufferGeometry()
+        : createCitySurfaceGeometry(city, 'landscape', terrain),
+      reservation: createCitySurfaceGeometry(city, 'reservation', terrain),
     }),
-    [city],
+    [city, terrain, nativeMini],
   );
   useEffect(
     () => () => {
@@ -600,13 +780,15 @@ function City({
   );
   return (
     <group name="procedural-city">
-      <mesh
-        name="research-landscape"
-        geometry={surfaces.landscape}
-        raycast={() => null}
-      >
-        <meshLambertMaterial vertexColors side={DoubleSide} />
-      </mesh>
+      {!nativeMini ? (
+        <mesh
+          name="research-landscape"
+          geometry={surfaces.landscape}
+          raycast={() => null}
+        >
+          <meshLambertMaterial vertexColors side={DoubleSide} />
+        </mesh>
+      ) : null}
       <mesh
         name="landmark-reservations"
         geometry={surfaces.reservation}
@@ -714,7 +896,9 @@ function Routes({
   selection,
   lod,
   metre,
+  terrain,
 }: {
+  terrain?: D3dTerrain | undefined;
   model: D3dMapModel;
   selection: GameSelection;
   lod: D3dLodBand;
@@ -730,34 +914,43 @@ function Routes({
       list.push(edge);
       edgesByRoute.set(edge.routeId, list);
     }
+    const drape = (
+      geometry: BufferGeometry,
+      offset: number = terrainLayerOffsets.route,
+    ) =>
+      terrain
+        ? drapeD3dGeometry(geometry, terrain, offset, false, terrain.step / 2)
+        : geometry;
     return [...edgesByRoute].map(([routeId, edges]) => ({
       routeId,
       color: edges[0]!.color,
       enriched: edges[0]!.enriched,
-      ribbon: createD3dRibbonGeometry(
-        edges,
-        ribbonWidth,
-        false,
-        metre ? 0.052 : 0.1,
+      ribbon: drape(
+        createD3dRibbonGeometry(edges, ribbonWidth, false, metre ? 0.052 : 0.1),
       ),
-      selected: createD3dRibbonGeometry(
-        edges,
-        edges[0]!.enriched
-          ? ribbonWidth * 1.2
-          : metre
-            ? Math.max(6 * metre, ribbonWidth * 1.6)
-            : 0.42,
-        false,
-        metre ? 0.052 : 0.1,
+      selected: drape(
+        createD3dRibbonGeometry(
+          edges,
+          edges[0]!.enriched
+            ? ribbonWidth * 1.2
+            : metre
+              ? Math.max(6 * metre, ribbonWidth * 1.6)
+              : 0.42,
+          false,
+          metre ? 0.052 : 0.1,
+        ),
       ),
-      arrows: createD3dRibbonGeometry(
-        edges,
-        metre ? 5 * metre : 0.36,
-        true,
-        metre ? 0.052 : 0.1,
+      arrows: drape(
+        createD3dRibbonGeometry(
+          edges,
+          metre ? 5 * metre : 0.36,
+          true,
+          metre ? 0.052 : 0.1,
+        ),
+        terrainLayerOffsets.selection,
       ),
     }));
-  }, [model, metre, ribbonWidth]);
+  }, [model, metre, ribbonWidth, terrain]);
   useEffect(
     () => () => {
       for (const group of groups) {
@@ -804,7 +997,15 @@ function Routes({
                   geometry={route.ribbon}
                   dispose={null}
                   raycast={() => null}
-                  position={[0, 0.022, 0]}
+                  position={[
+                    0,
+                    terrain
+                      ? (terrainLayerOffsets.selection -
+                          terrainLayerOffsets.route) *
+                        terrain.metre
+                      : 0.022,
+                    0,
+                  ]}
                 >
                   <meshBasicMaterial
                     color="#fff0bd"
@@ -837,7 +1038,9 @@ function Stops({
   lod,
   mode,
   metre,
+  terrain,
 }: Readonly<{
+  terrain?: D3dTerrain | undefined;
   model: D3dMapModel;
   selection: GameSelection;
   onSelectionChange: MapProps['onSelectionChange'];
@@ -848,17 +1051,34 @@ function Stops({
   const platforms = useRef<import('three').InstancedMesh>(null);
   const posts = useRef<import('three').InstancedMesh>(null);
   const targets = useRef<import('three').InstancedMesh>(null);
+  const { camera, size } = useThree();
   useEffect(() => {
     const dummy = new Object3D();
     for (let i = 0; i < model.stops.length; i++) {
       const stop = model.stops[i]!;
-      dummy.position.set(stop.x, metre ? 0.045 + 0.2 * metre : 0.14, stop.z);
+      const ground = terrain?.ground(stop.x, stop.z).y ?? 0;
+      const offset = terrain ? terrainLayerOffsets.stop * terrain.metre : 0.045;
+      dummy.scale.set(1, 1, 1);
+      dummy.position.set(
+        stop.x,
+        ground + (metre ? offset + 0.2 * metre : 0.14),
+        stop.z,
+      );
       dummy.updateMatrix();
       platforms.current?.setMatrixAt(i, dummy.matrix);
-      dummy.position.set(stop.x, metre ? 0.045 + 1.3 * metre : 0.3, stop.z);
+      dummy.position.set(
+        stop.x,
+        ground + (metre ? offset + 1.3 * metre : 0.3),
+        stop.z,
+      );
       dummy.updateMatrix();
       posts.current?.setMatrixAt(i, dummy.matrix);
-      dummy.position.set(stop.x, 0.3, stop.z);
+      dummy.position.set(stop.x, ground + 0.3, stop.z);
+      const hitScale = d3dStopHitScale(
+        20 / (Math.max(1, size.height) * (camera as OrthographicCamera).zoom),
+      );
+      dummy.scale.set(hitScale.x, hitScale.y, hitScale.z);
+      dummy.updateMatrix();
       targets.current!.setMatrixAt(i, dummy.matrix);
     }
     platforms.current!.instanceMatrix.needsUpdate = true;
@@ -869,7 +1089,7 @@ function Stops({
     }
     targets.current!.instanceMatrix.needsUpdate = true;
     targets.current!.computeBoundingSphere();
-  }, [model, lod, metre]);
+  }, [model, lod, metre, terrain, camera, size.height]);
   const selected =
     selection?.kind === 'stop'
       ? model.stops.find((stop) => stop.stopPlaceId === selection.stopPlaceId)
@@ -915,11 +1135,25 @@ function Stops({
       ) : null}
       {selected ? (
         <mesh
-          position={[selected.x, metre ? 0.065 : 0.17, selected.z]}
+          position={[
+            selected.x,
+            terrain
+              ? terrain.ground(selected.x, selected.z).y +
+                terrainLayerOffsets.selection * terrain.metre
+              : metre
+                ? 0.065
+                : 0.17,
+            selected.z,
+          ]}
           raycast={() => null}
         >
           <cylinderGeometry
-            args={[metre ? 8 * metre : 0.65, metre ? 8 * metre : 0.65, 0.04, 8]}
+            args={[
+              metre ? 8 * metre : 0.65,
+              metre ? 8 * metre : 0.65,
+              terrain ? 0.1 * terrain.metre : 0.04,
+              8,
+            ]}
           />
           <meshBasicMaterial color="#f2bc56" />
         </mesh>
@@ -986,7 +1220,9 @@ function Vehicles({
   lod,
   mode,
   metre,
+  terrain,
 }: Readonly<{
+  terrain?: D3dTerrain | undefined;
   vehicles: readonly D3dVehicle[];
   selection: GameSelection;
   onSelectionChange: MapProps['onSelectionChange'];
@@ -1031,28 +1267,49 @@ function Vehicles({
             key={vehicle.vehicleId}
             position={[
               vehicle.x,
-              metre ? 0.052 + 1.65 * metre : 0.32,
+              terrain
+                ? terrain.ground(vehicle.x, vehicle.z).y +
+                  (terrainLayerOffsets.vehicle + 1.65) * terrain.metre
+                : metre
+                  ? 0.052 + 1.65 * metre
+                  : 0.32,
               vehicle.z,
             ]}
             rotation={[0, vehicle.headingRadians, 0]}
           >
             {chosen ? (
               <mesh
-                position={[0, metre ? 0.016 - 1.65 * metre : -0.15, 0]}
+                position={[
+                  0,
+                  terrain
+                    ? (terrainLayerOffsets.selection -
+                        terrainLayerOffsets.vehicle -
+                        1.65) *
+                      terrain.metre
+                    : metre
+                      ? 0.016 - 1.65 * metre
+                      : -0.15,
+                  0,
+                ]}
                 raycast={() => null}
               >
                 <cylinderGeometry
                   args={[
                     metre ? 10 * metre : 0.8,
                     metre ? 10 * metre : 0.8,
-                    0.04,
+                    terrain ? 0.1 * terrain.metre : 0.04,
                     8,
                   ]}
                 />
                 <meshBasicMaterial color="#f2bc56" />
               </mesh>
             ) : null}
-            <mesh geometry={body} dispose={null} onClick={choose}>
+            <mesh
+              name="vehicle-body"
+              geometry={body}
+              dispose={null}
+              onClick={choose}
+            >
               <meshLambertMaterial color={vehicle.color} />
             </mesh>
             <VehicleHud
@@ -1072,6 +1329,7 @@ function Vehicles({
             </mesh>
             {lod !== 'far' ? (
               <mesh
+                name="vehicle-windows"
                 geometry={windows}
                 dispose={null}
                 position={[0, metre ? 1.1 * metre : 0.13, 0]}
@@ -1096,7 +1354,13 @@ function D3dWorld({
   onSelectionChange,
   lod,
   mode,
+  terrain,
+  terrainMeshes,
+  wrapper,
 }: Readonly<{
+  wrapper: React.RefObject<HTMLElement | null>;
+  terrain?: D3dTerrain | undefined;
+  terrainMeshes: D3dTerrainMeshes | undefined;
   model: D3dMapModel;
   sceneBounds: ReturnType<typeof d3dSceneBounds>;
   city: ProceduralCity | undefined;
@@ -1106,17 +1370,33 @@ function D3dWorld({
   lod: D3dLodBand;
   mode: RepresentationMode;
 }>) {
-  const metre = city?.settlement
-    ? d3dMetreScale(model).worldUnitsPerMetre
-    : undefined;
+  const metre =
+    terrain?.metre ??
+    (city?.settlement ? d3dMetreScale(model).worldUnitsPerMetre : undefined);
   return (
     <>
       <color attach="background" args={['#e3e9dc']} />
       <ambientLight intensity={0.85} />
       <directionalLight position={[-40, 80, 30]} intensity={1.6} />
-      <Terrain sceneBounds={sceneBounds} />
-      {city ? <City city={city} lod={lod} mode={mode} /> : null}
-      <Routes model={model} selection={selection} lod={lod} metre={metre} />
+      {terrainMeshes ? (
+        <NativeTerrain
+          meshes={terrainMeshes}
+          source={terrain!.terrain}
+          wrapper={wrapper}
+        />
+      ) : (
+        <Terrain sceneBounds={sceneBounds} />
+      )}
+      {city ? (
+        <City city={city} lod={lod} mode={mode} terrain={terrain} />
+      ) : null}
+      <Routes
+        model={model}
+        selection={selection}
+        lod={lod}
+        metre={metre}
+        terrain={terrain}
+      />
       <Stops
         model={model}
         selection={selection}
@@ -1124,6 +1404,7 @@ function D3dWorld({
         lod={lod}
         mode={mode}
         metre={metre}
+        terrain={terrain}
       />
       <Vehicles
         vehicles={vehicles}
@@ -1132,6 +1413,7 @@ function D3dWorld({
         lod={lod}
         mode={mode}
         metre={metre}
+        terrain={terrain}
       />
     </>
   );
@@ -1161,8 +1443,36 @@ export default function D3dMapRepresentation({
       routeAsset,
     );
   const transportModel = useMemo(() => createD3dMapModel(view.map), [view]);
+  const terrainState = useTerrain(
+    scenario.manifest.primarySettlementId,
+    scenario.manifest.scenarioId,
+  );
+  const terrain = useMemo(
+    () =>
+      terrainState.status === 'ready'
+        ? createD3dTerrain(terrainState.terrain, model)
+        : undefined,
+    [terrainState, model],
+  );
+  const terrainPlan = terrain ? planD3dTerrain(terrain, mode) : undefined;
+  const terrainMeshes = useMemo(
+    () =>
+      terrainPlan?.patches.map((p) => ({
+        kind: p.kind,
+        geometry: createD3dTerrainGeometry(p),
+      })),
+    [terrainPlan],
+  );
+  const [terrainGeometryBuilds, setTerrainGeometryBuilds] = useState(0);
+  useEffect(() => {
+    if (!terrainMeshes) return;
+    setTerrainGeometryBuilds((count) => count + 1);
+    return () => {
+      for (const mesh of terrainMeshes) mesh.geometry.dispose();
+    };
+  }, [terrainMeshes]);
   const metadata = useSettlementMetadata(scenario.manifest.primarySettlementId);
-  const city = useMemo(
+  const generatedCity = useMemo(
     () =>
       population && metadata.status !== 'loading'
         ? buildProceduralCity(
@@ -1173,13 +1483,22 @@ export default function D3dMapRepresentation({
         : undefined,
     [model, population, metadata],
   );
+  const city = useMemo(
+    () =>
+      generatedCity && terrain
+        ? groundCity(generatedCity, terrain)
+        : generatedCity,
+    [generatedCity, terrain],
+  );
   const sceneBounds = useMemo(
     () =>
-      d3dSceneBounds(
-        model,
-        population ? populationSpace(model, population).bounds : undefined,
-      ),
-    [model, population],
+      terrain
+        ? terrain.bounds
+        : d3dSceneBounds(
+            model,
+            population ? populationSpace(model, population).bounds : undefined,
+          ),
+    [model, population, terrain],
   );
   const acceptedFleet = useLatestRepresentationValue(fleet);
   const vehicles = useMemo(
@@ -1239,6 +1558,31 @@ export default function D3dMapRepresentation({
         view.map.edges.filter((edge) => edge.enriched).length
       }
       data-vehicle-hud-count={vehicles.length}
+      data-terrain-geometry-builds={terrainGeometryBuilds}
+      data-terrain-status={terrainState.status}
+      data-terrain-error={
+        terrainState.status === 'error' ? terrainState.message : ''
+      }
+      data-terrain-identity={terrain?.terrain.identity ?? ''}
+      data-terrain-viewport={terrain?.terrain.viewport.terrainViewportId ?? ''}
+      data-terrain-width={terrain?.terrain.viewport.width ?? 0}
+      data-terrain-height={terrain?.terrain.viewport.height ?? 0}
+      data-terrain-resolution-x={terrain?.terrain.resolution.x ?? 0}
+      data-terrain-resolution-y={terrain?.terrain.resolution.y ?? 0}
+      data-terrain-min-elevation={
+        terrain?.terrain.statistics.minElevation ?? ''
+      }
+      data-terrain-max-elevation={
+        terrain?.terrain.statistics.maxElevation ?? ''
+      }
+      data-terrain-native-samples={
+        terrain?.terrain.statistics.nativeSamples ?? 0
+      }
+      data-terrain-land-samples={terrain?.terrain.statistics.landSamples ?? 0}
+      data-terrain-water-samples={terrain?.terrain.statistics.waterSamples ?? 0}
+      data-terrain-vertices={terrainPlan?.vertices ?? 0}
+      data-terrain-triangles={terrainPlan?.triangles ?? 0}
+      data-terrain-meshes={terrainPlan?.patches.length ?? 0}
       data-settlement-metadata-status={metadata.status}
       data-settlement-metadata-version={
         city?.settlement?.metadata.schemaVersion ?? ''
@@ -1286,6 +1630,7 @@ export default function D3dMapRepresentation({
       data-lod="far"
     >
       <Canvas
+        key={terrain?.terrain.identity ?? 'fallback'}
         frameloop="never"
         events={d3dPointerEvents}
         orthographic
@@ -1305,7 +1650,7 @@ export default function D3dMapRepresentation({
           </p>
         }
       >
-        <RepresentationFrameDriver mode={mode} />
+        <RepresentationFrameDriver mode={mode} wrapper={wrapper} />
         <CameraController
           model={transportModel}
           sceneBounds={sceneBounds}
@@ -1314,11 +1659,16 @@ export default function D3dMapRepresentation({
           mode={mode}
           wrapper={wrapper}
           onLod={setLod}
+          initialLod={lod}
+          terrain={terrain}
         />
         <D3dWorld
           model={transportModel}
           sceneBounds={sceneBounds}
           city={city}
+          terrain={terrain}
+          terrainMeshes={terrainMeshes}
+          wrapper={wrapper}
           vehicles={vehicles}
           selection={selection}
           onSelectionChange={onSelectionChange}

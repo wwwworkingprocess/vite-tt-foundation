@@ -59,7 +59,15 @@
       "apps/web/src/representation/route-presentation-loader.ts",
       "apps/web/src/representation/use-route-presentation.ts",
       "apps/web/src/representation/route-presentation-view.ts",
-      "apps/web/src/representation/transport-map-space.ts"
+      "apps/web/src/representation/transport-map-space.ts",
+      "apps/web/src/terrain/terrain-catalog.ts",
+      "apps/web/src/terrain/terrain-runtime.ts",
+      "apps/web/src/terrain/terrain-projection.ts",
+      "apps/web/src/terrain/terrain-json-decoder.ts",
+      "apps/web/src/terrain/terrain-loader.ts",
+      "apps/web/src/terrain/use-terrain.ts",
+      "apps/web/src/representation/d3d-terrain-model.ts",
+      "apps/web/src/representation/d3d-terrain-geometry.ts"
     ]
   },
   "simulationCriticalCoverage": {

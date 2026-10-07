@@ -147,11 +147,19 @@ describe('foundation screen', () => {
     );
     cy.get('[role="dialog"]').should('not.exist');
     cy.contains('button', 'Swap visualizations').click();
-    // A new canvas initializes asynchronously after a representation swap.
-    cy.get('[data-testid="d3d-map-representation"]', { timeout: 15_000 })
-      .should('have.attr', 'data-representation-mode', 'normal')
-      .and('have.attr', 'data-target-frames-per-second', '60')
-      .and('have.attr', 'data-camera-mode', 'full');
+    // Native acquisition can remount the canvas while this query retries.
+    cy.get('[data-testid="d3d-map-representation"]', {
+      timeout: 15_000,
+    }).should(($map) => {
+      expect($map).to.have.attr('data-representation-mode', 'normal');
+      expect($map).to.have.attr('data-target-frames-per-second', '60');
+      expect($map).to.have.attr('data-camera-mode', 'full');
+      expect($map).to.have.attr('data-terrain-status', 'ready');
+      expect(
+        $map.attr('data-rendered-terrain-identity'),
+        'current native terrain has drawn',
+      ).to.equal($map.attr('data-terrain-identity'));
+    });
     cy.get('[data-testid="d3d-map-representation"]')
       .should(($map) => {
         expect(Number($map.attr('data-city-building-count'))).to.be.greaterThan(

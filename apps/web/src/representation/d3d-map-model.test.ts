@@ -12,6 +12,7 @@ import {
   d3dMetreScale,
   d3dGeographicPoint,
   d3dProjectedPoint,
+  d3dStopHitScale,
 } from './d3d-map-model.js';
 
 const routeId = 'route-a' as RouteId;
@@ -225,4 +226,12 @@ it('frames the full canonical crop even where no buildings are occupied', () => 
     fitD3dCamera(model, routeId, 1000, 660),
   );
   expect(d3dSceneBounds(model).minX).toBe(-model.bounds.width / 2);
+});
+
+it('keeps far Stop footprints pickable without enlarging vertical occlusion over Vehicles', () => {
+  expect(d3dStopHitScale(0.01)).toEqual({ x: 1, y: 1, z: 1 });
+  const far = d3dStopHitScale(0.4);
+  expect((far.x * 1.25) / 0.4).toBeCloseTo(12, 12);
+  expect(far.z).toBe(far.x);
+  expect(far.y * 0.8).toBe(0.8);
 });

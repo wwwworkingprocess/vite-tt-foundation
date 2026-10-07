@@ -10,3 +10,5 @@ apps/web/public/population-fields/*-v1/*.json
 apps/web/public/settlement-metadata/torrevieja/torrevieja-settlement-metadata.v0.json
 docs/research/torrevieja/urban-morphology-report.md
 docs/research/torrevieja/settlement-metadata-sources.md
+apps/web/public/route-presentation/torrevieja/torrevieja-route-presentation.v0.json
+docs/research/torrevieja/route-presentation-validation.md

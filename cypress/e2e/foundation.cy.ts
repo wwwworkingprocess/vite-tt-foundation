@@ -111,6 +111,10 @@ const expectRestoredAuthority = (scenarioId: string) => {
   cy.get('[data-testid="worker-status"]', {
     timeout: restoreReadyTimeoutMs,
   }).should('contain.text', 'ready');
+  // Worker publication can precede completion of the enclosing restore operation.
+  cy.contains('button', /^Normal /, {
+    timeout: restoreReadyTimeoutMs,
+  }).should('be.enabled');
 };
 const startDefaultGame = () => {
   cy.get('[data-testid="open-screen"]', { timeout: 15_000 }).should(

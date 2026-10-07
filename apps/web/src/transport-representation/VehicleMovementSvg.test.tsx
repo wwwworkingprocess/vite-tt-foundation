@@ -137,13 +137,11 @@ it('applies one focused Route viewport without filtering the DOM2D Map', () => {
   expect(screen.getAllByTestId('edge-direction')).toHaveLength(
     createTransportMapProjection(selectionScenario).edges.length,
   );
-  expect(
-    Number(
-      screen
-        .getAllByRole('button', { name: /Select stop/ })[0]!
-        .getAttribute('r'),
-    ),
-  ).toBeCloseTo(3 * focusedScale);
+  const marker = svg.querySelector<SVGCircleElement>(
+    'circle[role="button"][data-stop-place-id]',
+  )!;
+  expect(marker.getAttribute('aria-label')).toMatch(/^Select stop/);
+  expect(Number(marker.getAttribute('r'))).toBeCloseTo(4.5 * focusedScale);
   view.rerender(<VehicleMovementSvg scenario={selectionScenario} fleet={[]} />);
   expect(screen.getByTestId('vehicle-movement-svg')).toHaveAttribute(
     'viewBox',
@@ -155,13 +153,8 @@ it('applies one focused Route viewport without filtering the DOM2D Map', () => {
     500,
     300,
   );
-  expect(
-    Number(
-      screen
-        .getAllByRole('button', { name: /Select stop/ })[0]!
-        .getAttribute('r'),
-    ),
-  ).toBeCloseTo(3 * fullScale);
+  expect(svg).toContainElement(marker);
+  expect(Number(marker.getAttribute('r'))).toBeCloseTo(4.5 * fullScale);
 });
 
 it('renders authoritative stop, edge, and changing vehicle projections accessibly', async () => {

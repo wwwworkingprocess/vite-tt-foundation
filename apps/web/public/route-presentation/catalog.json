@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "0.1.0",
+  "scenarios": [
+    {
+      "scenarioId": "torrevieja-legacy-all-v1",
+      "scenarioVersion": "1.0.0",
+      "contentHash": "b6891aeb3bff38dcc037d21314f3d623fba83e86150dbd5a6564e7aaf8310c3f",
+      "path": "torrevieja/torrevieja-route-presentation.v0.json",
+      "sha256": "fa0a66fefae89bfd47fca4589b0348b5904a79ff5871b4cde21f82748e637c66"
+    }
+  ]
+}

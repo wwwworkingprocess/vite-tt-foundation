@@ -202,6 +202,14 @@ Completed:
   focus does not enlarge StopPlace, Vehicle, passenger-label, or selection
   glyphs while geographic Route/population geometry continues to scale.
 
+Route Presentation Enrichment V0 adds one optional validated public-data adapter
+for the exact Torrevieja all-lines coordinate: shared road-shaped geometry, source
+colors, enriched focus and canonical-progress arc interpolation across all three
+renderers. Stops retain generous interaction targets; small D3D buses gain
+screen-readable LOD HUD cues. Canonical transport and city authority are unchanged.
+The 39 canonical-chord fallbacks, general road GIS, route elevation draping and
+text-rich badges remain deferred.
+
 Remaining product visualization work:
 
 - production graph rendering and styling;

@@ -34,6 +34,8 @@ export type D3dMapModel = Readonly<{
     edgeId: string;
     routeId: RouteId;
     color: string;
+    points?: readonly D3dWorldPoint[];
+    enriched?: boolean;
     from: D3dWorldPoint;
     to: D3dWorldPoint;
     length: number;
@@ -116,6 +118,12 @@ export function createD3dMapModel(
         edgeId: edge.edgeId,
         routeId: edge.routeId,
         color: edge.color ?? '#477d89',
+        ...(edge.points
+          ? {
+              points: frozen(edge.points.map((p) => d3dWorldPoint(bounds, p))),
+              enriched: edge.enriched,
+            }
+          : {}),
         from,
         to,
         length: Math.hypot(to.x - from.x, to.z - from.z),
@@ -175,9 +183,11 @@ export function projectD3dVehicles(
         label: vehicle.label,
         ...d3dWorldPoint(model.bounds, vehicle.point),
         color: vehicle.color ?? '#b44b34',
-        headingRadians: vehicle.edgeId
-          ? (edges.get(vehicle.edgeId)?.headingRadians ?? 0)
-          : 0,
+        headingRadians:
+          vehicle.headingRadians ??
+          (vehicle.edgeId
+            ? (edges.get(vehicle.edgeId)?.headingRadians ?? 0)
+            : 0),
       }),
     ),
   );

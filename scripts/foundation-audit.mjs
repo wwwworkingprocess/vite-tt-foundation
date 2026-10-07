@@ -675,6 +675,10 @@ for (const d3dRepresentationFile of [
     );
 }
 for (const purePresentationFile of [
+  'apps/web/src/representation/route-presentation-view.ts',
+  'apps/web/src/representation/transport-map-space.ts',
+  'apps/web/src/representation/route-presentation.ts',
+  'apps/web/src/representation/route-presentation-loader.ts',
   'apps/web/src/representation/d3d-city-model.ts',
   'apps/web/src/representation/d3d-city-spatial.ts',
   'apps/web/src/representation/d3d-metadata-city.ts',
@@ -767,6 +771,9 @@ for (const file of [...simulation, ...protocol, ...web]) {
   const text = await source(file);
   const normalized = file.replaceAll('\\', '/');
   const transportExtension =
+    /apps\/web\/src\/representation\/(?:route-presentation|use-route-presentation|transport-map-space)/.test(
+      normalized,
+    ) ||
     normalized.includes('apps/web/src/population') ||
     normalized.includes('apps/web/src/settlement/') ||
     normalized.includes('apps/web/src/performance') ||

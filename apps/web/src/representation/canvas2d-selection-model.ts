@@ -1,3 +1,5 @@
+import { projectTransportMapVehicles } from './transport-map-projection.js';
+import { createTransportMapProjection } from './transport-map-projection.js';
 import type { VehicleId, VehicleState } from '@torrevieja-tycoon/simulation';
 import type {
   CanonicalScenario,
@@ -5,14 +7,17 @@ import type {
   StopPlaceId,
 } from '@torrevieja-tycoon/transport-domain';
 import {
-  createTransportMapProjection,
-  projectTransportMapVehicles,
   fullTransportMapViewport,
   type TransportMapPoint,
   type TransportMapProjection,
   type TransportMapViewport,
 } from './transport-map-projection.js';
 import { transportMapEntityHitMetrics } from './transport-map-visual-metrics.js';
+import {
+  createRoutePresentationView,
+  projectRoutePresentationVehicles,
+  type RoutePresentationView,
+} from './route-presentation-view.js';
 
 type CanvasPosition = Readonly<{ x: number; y: number }>;
 
@@ -28,6 +33,7 @@ export type Canvas2dSelectablePoint =
       CanvasPosition & {
         kind: 'vehicle';
         vehicleId: VehicleId;
+        color: string;
         label: string;
       }
     >;
@@ -40,6 +46,8 @@ type MapStop = Readonly<{
 }>;
 
 type MapRouteEdge = Readonly<{
+  points: readonly TransportMapPoint[];
+  enriched: boolean;
   edgeId: string;
   routeId: string;
   patternId: string;
@@ -49,6 +57,8 @@ type MapRouteEdge = Readonly<{
 }>;
 
 export type Canvas2dRouteEdge = Readonly<{
+  points: readonly CanvasPosition[];
+  enriched: boolean;
   edgeId: string;
   routeId: string;
   patternId: string;
@@ -59,6 +69,7 @@ export type Canvas2dRouteEdge = Readonly<{
 }>;
 
 export interface Canvas2dSelectionIndex {
+  readonly view: RoutePresentationView;
   readonly scenario: CanonicalScenario;
   readonly map: TransportMapProjection;
   readonly stopOccurrences: readonly MapStop[];
@@ -72,6 +83,7 @@ export interface Canvas2dSelectionIndex {
 }
 
 export interface Canvas2dSelectionSnapshot {
+  readonly view: RoutePresentationView;
   readonly scenario: CanonicalScenario;
   readonly width: number;
   readonly height: number;
@@ -96,8 +108,11 @@ const freeze = <T>(value: T): Readonly<T> => Object.freeze(value);
 
 export function createCanvas2dSelectionIndex(
   scenario: CanonicalScenario,
+  view: RoutePresentationView = createRoutePresentationView(
+    createTransportMapProjection(scenario),
+  ),
 ): Canvas2dSelectionIndex {
-  const map = createTransportMapProjection(scenario);
+  const map = view.map;
   const nodes = new Map(map.nodes.map((node) => [node.stopNodeId, node.point]));
   const placeNames = new Map(
     map.stopPlaces.map((stop) => [stop.stopPlaceId, stop.name]),
@@ -130,6 +145,8 @@ export function createCanvas2dSelectionIndex(
   const routeEdges = map.edges.map((edge) =>
     freeze({
       edgeId: edge.edgeId,
+      points: edge.points ?? [edge.from, edge.to],
+      enriched: edge.enriched === true,
       routeId: edge.routeId,
       patternId: edge.patternId,
       color: edge.color ?? '#67bed6',
@@ -139,6 +156,7 @@ export function createCanvas2dSelectionIndex(
   );
   return freeze({
     scenario,
+    view,
     map,
     stopOccurrences: freeze(stopOccurrences),
     keyboardStops: freeze(keyboardStops),
@@ -231,6 +249,7 @@ export function createCanvas2dSelectionSnapshot(
     });
   const reusable =
     previous?.scenario === index.scenario &&
+    previous.view === index.view &&
     previous.width === width &&
     previous.height === height &&
     previous.viewport === viewport;
@@ -251,17 +270,23 @@ export function createCanvas2dSelectionSnapshot(
             routeId: edge.routeId,
             patternId: edge.patternId,
             color: edge.color,
+            points: freeze(edge.points.map(project)),
+            enriched: edge.enriched,
             from,
             to,
-            arrowhead: routeArrowhead(from, to),
+            arrowhead: edge.enriched ? undefined : routeArrowhead(from, to),
           });
         }),
       );
-  const vehiclePoints = projectTransportMapVehicles(index.map, fleet)
+  const vehiclePoints = projectRoutePresentationVehicles(
+    index.view,
+    projectTransportMapVehicles(index.view.source, fleet),
+  )
     .map((vehicle) =>
       freeze({
         kind: 'vehicle' as const,
         vehicleId: vehicle.vehicleId,
+        color: vehicle.color ?? '#c6533b',
         label: vehicle.label,
         ...project(vehicle.point),
       }),
@@ -275,6 +300,7 @@ export function createCanvas2dSelectionSnapshot(
     );
   return freeze({
     scenario: index.scenario,
+    view: index.view,
     width,
     height,
     viewport,

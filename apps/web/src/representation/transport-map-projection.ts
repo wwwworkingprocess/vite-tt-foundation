@@ -1,3 +1,5 @@
+import { projectTransportMapPoint } from './transport-map-space.js';
+export { projectTransportMapPoint } from './transport-map-space.js';
 import type { VehicleId, VehicleState } from '@torrevieja-tycoon/simulation';
 import {
   buildDirectedScenarioGraph,
@@ -46,6 +48,8 @@ export interface TransportMapProjection {
     fromStopNodeId: StopNodeId;
     toStopNodeId: StopNodeId;
     color?: string;
+    points?: readonly TransportMapPoint[];
+    enriched?: boolean;
     from: TransportMapPoint;
     to: TransportMapPoint;
   }>[];
@@ -58,6 +62,7 @@ export type TransportMapVehicle = Readonly<{
   routeId?: RouteId;
   patternId: RoutePatternId;
   color?: string;
+  headingRadians?: number;
   routeLegIndex?: number;
   completedRouteCycles?: number;
   edgeId?: string;
@@ -92,11 +97,12 @@ export const fullTransportMapViewport: TransportMapViewport = Object.freeze({
 const routeViewportPadding = 0.04;
 const routeViewportMinimumSpan = 0.04;
 
-const paddedAxis = (minimum: number, maximum: number) => {
+const paddedAxis = (minimum: number, maximum: number, bounded = true) => {
   const centre = (minimum + maximum) / 2;
   const span = Math.max(maximum - minimum, routeViewportMinimumSpan);
   const desiredMinimum = centre - span / 2 - routeViewportPadding;
   const desiredMaximum = centre + span / 2 + routeViewportPadding;
+  if (!bounded) return [desiredMinimum, desiredMaximum] as const;
   const desiredSpan = Math.min(1, desiredMaximum - desiredMinimum);
   const clampedMinimum = Math.max(0, Math.min(desiredMinimum, 1 - desiredSpan));
   return [clampedMinimum, clampedMinimum + desiredSpan] as const;
@@ -108,14 +114,17 @@ export function deriveTransportRouteViewport(
 ): TransportMapViewport | undefined {
   const edges = projection.edges.filter((edge) => edge.routeId === routeId);
   if (edges.length === 0) return undefined;
-  const points = edges.flatMap((edge) => [edge.from, edge.to]);
+  const points = edges.flatMap((edge) => edge.points ?? [edge.from, edge.to]);
+  const bounded = !edges.some((edge) => edge.enriched);
   const [minX, maxX] = paddedAxis(
     Math.min(...points.map((point) => point.x)),
     Math.max(...points.map((point) => point.x)),
+    bounded,
   );
   const [minY, maxY] = paddedAxis(
     Math.min(...points.map((point) => point.y)),
     Math.max(...points.map((point) => point.y)),
+    bounded,
   );
   return deepFreeze({ minX, minY, maxX, maxY });
 }
@@ -128,24 +137,6 @@ export function resolveTransportMapViewport(
     ? (deriveTransportRouteViewport(projection, routeId) ??
         fullTransportMapViewport)
     : fullTransportMapViewport;
-}
-
-export function projectTransportMapPoint(
-  bounds: TransportMapBounds,
-  position: GeographicPosition,
-): TransportMapPoint {
-  const longitudeSpan = bounds.east - bounds.west;
-  const latitudeSpan = bounds.north - bounds.south;
-  return deepFreeze({
-    x:
-      longitudeSpan === 0
-        ? 0.5
-        : (position.longitude - bounds.west) / longitudeSpan,
-    y:
-      latitudeSpan === 0
-        ? 0.5
-        : (bounds.north - position.latitude) / latitudeSpan,
-  });
 }
 
 export function createTransportMapProjection(

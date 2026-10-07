@@ -13,6 +13,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Keep the audited canonical projection boundary independent of optional enrichment.
+          if (id.endsWith('/representation/transport-map-projection.ts'))
+            return 'transport-map-projection';
           if (
             id.includes('/node_modules/dexie/') ||
             id.endsWith('/transport-simulation/transport-save-repository.ts')
@@ -30,6 +33,7 @@ export default defineConfig({
         'scenarios/**/*.json',
         'population-fields/**/*',
         'settlement-metadata/**/*.json',
+        'route-presentation/**/*.json',
       ],
       registerType: 'autoUpdate',
       manifest: {

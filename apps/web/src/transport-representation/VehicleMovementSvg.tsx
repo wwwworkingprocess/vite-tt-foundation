@@ -1,3 +1,4 @@
+import { createTransportMapProjection } from '../representation/transport-map-projection.js';
 import type {
   PassengerDemandProjection,
   PassengerOriginStopArrivalEvent,
@@ -30,7 +31,6 @@ import {
 import { updatePassengerArrivalTicks } from '../representation/passenger-map-diagnostics.js';
 import {
   fullTransportMapViewport,
-  createTransportMapProjection,
   resolveTransportMapViewport,
   type TransportMapViewport,
 } from '../representation/transport-map-projection.js';
@@ -42,6 +42,11 @@ import PassengerStopDiagnostics, {
   stableWaitingTotals,
 } from './PassengerStopDiagnostics.js';
 import { projectVehicleMovementSvg } from './vehicle-svg-projection.js';
+import {
+  createRoutePresentationView,
+  type RoutePresentationView,
+} from '../representation/route-presentation-view.js';
+import { useRoutePresentation } from '../representation/use-route-presentation.js';
 
 const noPassengerLoads = Object.freeze(
   [],
@@ -51,6 +56,7 @@ const noArrivalEvents = Object.freeze(
 ) as readonly PassengerOriginStopArrivalEvent[];
 
 interface AuthorityProps {
+  readonly routePresentation?: RoutePresentationView | undefined;
   readonly scenario: CanonicalScenario;
   readonly fleet: readonly VehicleState[];
   readonly passengerDemand?: PassengerDemandProjection | undefined;
@@ -78,18 +84,22 @@ interface CommittedSvgProps extends AuthorityProps {
 export function VehicleMovementSvg(props: Readonly<SvgProps>) {
   recordRepresentationProfile('svg.wrapper.render');
   const mode = useRepresentationMode();
+  const routeAsset = useRoutePresentation(props.scenario);
+  const view =
+    props.routePresentation ??
+    createRoutePresentationView(
+      createTransportMapProjection(props.scenario),
+      routeAsset,
+    );
   const { selection = null, onSelectionChange, passengersVisible } = props;
   const viewport = useMemo(
-    () =>
-      resolveTransportMapViewport(
-        createTransportMapProjection(props.scenario),
-        props.focusedRouteId,
-      ),
-    [props.focusedRouteId, props.scenario],
+    () => resolveTransportMapViewport(view.map, props.focusedRouteId),
+    [props.focusedRouteId, view],
   );
   const authority = useMemo<AuthorityProps>(
     () => ({
       scenario: props.scenario,
+      routePresentation: view,
       fleet: props.fleet,
       passengerDemand: props.passengerDemand,
       vehiclePassengerLoads: props.vehiclePassengerLoads,
@@ -102,6 +112,7 @@ export function VehicleMovementSvg(props: Readonly<SvgProps>) {
       props.passengerDemand,
       props.passengerOriginStopArrivalEvents,
       props.scenario,
+      view,
       props.showPassengerArrivalPulse,
       props.simulationTick,
       props.vehiclePassengerLoads,
@@ -134,6 +145,7 @@ const activate = (callback: () => void) => (event: KeyboardEvent) => {
 };
 
 const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
+  routePresentation,
   scenario,
   fleet,
   selection,
@@ -177,13 +189,14 @@ const CommittedVehicleMovementSvg = memo(function CommittedVehicleMovementSvg({
     cssSize[1],
   );
   const staticProjection = useMemo(
-    () => projectVehicleMovementSvg(scenario, [], viewport),
-    [scenario, viewport],
+    () => projectVehicleMovementSvg(scenario, [], viewport, routePresentation),
+    [scenario, viewport, routePresentation],
   );
   const vehicles = projectVehicleMovementSvg(
     scenario,
     fleet,
     viewport,
+    routePresentation,
   ).vehicles;
   useEffect(() => {
     if (!showPassengerArrivalPulse) return;

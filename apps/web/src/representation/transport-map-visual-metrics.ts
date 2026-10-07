@@ -20,7 +20,7 @@ export type TransportMapEntityVisualMetrics = Readonly<{
 }>;
 
 const normalMetrics: TransportMapEntityVisualMetrics = Object.freeze({
-  stopRadius: 3,
+  stopRadius: 4.5,
   vehicleRadius: 6,
   passengerStatusRadius: 4,
   passengerArrivalPulseRadius: 8,

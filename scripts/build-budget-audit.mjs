@@ -35,6 +35,20 @@ const populationOverlay = one(/^PopulationGridOverlay-[\w-]+\.js$/);
 const transportMapProjection = one(/^transport-map-projection-[\w-]+\.js$/);
 const dom2dProjectionAdapter = one(/^vehicle-svg-projection-[\w-]+\.js$/);
 const passengerMapDiagnostics = one(/^passenger-map-diagnostics-[\w-]+\.js$/);
+const routePresentationView = one(/^route-presentation-view-[\w-]+\.js$/);
+const routePresentationAcquisition = one(/^use-route-presentation-[\w-]+\.js$/);
+// The bundler may merge these boundaries when their lazy consumers coincide.
+const routePresentationShared = [
+  ...routePresentationView,
+  ...routePresentationAcquisition,
+];
+if (
+  routePresentationAcquisition.length !== 1 ||
+  routePresentationView.length > 1
+)
+  throw new Error(
+    'Expected deterministic shared route presentation artifacts.',
+  );
 const openScreen = one(/^OpenScreen-[\w-]+\.js$/);
 const gameInspector = one(/^GameInspector-[\w-]+\.js$/);
 const persistenceRuntime = one(/^persistence-runtime-[\w-]+\.js$/);
@@ -54,6 +68,7 @@ for (const [name, matches] of Object.entries({
   transportMapProjection,
   dom2dProjectionAdapter,
   passengerMapDiagnostics,
+  routePresentationAcquisition,
   openScreen,
   gameInspector,
   persistenceRuntime,
@@ -79,6 +94,9 @@ const configured = JSON.parse(
   ),
 ).buildBudgetsBytes;
 const size = async (file) => (await stat(new URL(file, dist))).size;
+const routePresentationBytes = (
+  await Promise.all(routePresentationShared.map(size))
+).reduce((sum, bytes) => sum + bytes, 0);
 const sizes = {
   applicationEntry: await size(entry[0]),
   dialogShell: await size(dialogShell[0]),
@@ -104,19 +122,23 @@ const logicalCompositions = {
   canvasTransportRepresentation:
     sizes.canvas2dRepresentation +
     sizes.transportMapProjection +
-    (await size(passengerMapDiagnostics[0])),
+    (await size(passengerMapDiagnostics[0])) +
+    routePresentationBytes,
   dom2dTransportRepresentation:
     sizes.svgRepresentation +
     sizes.dom2dProjectionAdapter +
     sizes.transportMapProjection +
-    (await size(passengerMapDiagnostics[0])),
+    (await size(passengerMapDiagnostics[0])) +
+    routePresentationBytes,
   populationMap:
     sizes.populationOverlay +
     sizes.dom2dProjectionAdapter +
-    sizes.transportMapProjection,
+    sizes.transportMapProjection +
+    routePresentationBytes,
 };
 const reportOnlySharedArchitecture = {
   passengerMapDiagnostics: await size(passengerMapDiagnostics[0]),
+  routePresentation: routePresentationBytes,
 };
 for (const [name, budget] of Object.entries(configured))
   if (sizes[name] > budget)
@@ -195,6 +217,21 @@ for (const city of populationCatalogue.cities ?? []) {
   }
 }
 for (const asset of populationAssets)
+  if (!serviceWorkerSource.includes(`url:${JSON.stringify(asset)}`))
+    throw new Error(`Service Worker does not precache ${asset}.`);
+const routeCatalogueAsset = 'route-presentation/catalog.json';
+const routeCatalogue = JSON.parse(
+  await readFile(new URL(routeCatalogueAsset, dist), 'utf8'),
+);
+const routeAssets = [routeCatalogueAsset];
+for (const entry of routeCatalogue.scenarios) {
+  const asset = `route-presentation/${entry.path}`;
+  const bytes = await readFile(new URL(asset, dist));
+  if (createHash('sha256').update(bytes).digest('hex') !== entry.sha256)
+    throw new Error(`Built route presentation integrity mismatch: ${asset}.`);
+  routeAssets.push(asset);
+}
+for (const asset of routeAssets)
   if (!serviceWorkerSource.includes(`url:${JSON.stringify(asset)}`))
     throw new Error(`Service Worker does not precache ${asset}.`);
 console.log(

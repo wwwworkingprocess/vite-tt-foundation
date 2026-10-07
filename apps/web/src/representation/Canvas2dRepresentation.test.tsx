@@ -30,6 +30,8 @@ import {
   deriveTransportRouteViewport,
 } from './transport-map-projection.js';
 import { transportMapEntityVisualMetrics } from './transport-map-visual-metrics.js';
+import { parseRoutePresentation } from './route-presentation.js';
+import { createRoutePresentationView } from './route-presentation-view.js';
 
 const context = {
   setTransform: vi.fn(),
@@ -129,6 +131,90 @@ afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
   vi.useRealTimers();
+});
+
+it('draws source curves with supplied color and alpha, and keeps canonical selection emphasis as fallback', () => {
+  const directory = join(root, '..', 'torrevieja-legacy-all-v1');
+  const data = (name: string) =>
+    JSON.parse(readFileSync(join(directory, name), 'utf8')) as unknown;
+  const all = parseScenarioPackage({
+    manifest: data('scenario.json'),
+    settlements: data('settlements.json'),
+    stops: data('stops.json'),
+    routes: data('routes.json'),
+  });
+  const asset = parseRoutePresentation(
+    JSON.parse(
+      readFileSync(
+        join(
+          root,
+          '../../../route-presentation/torrevieja/torrevieja-route-presentation.v0.json',
+        ),
+        'utf8',
+      ),
+    ) as unknown,
+    all,
+  );
+  const view = createRoutePresentationView(
+    createTransportMapProjection(all),
+    asset,
+  );
+  const strokes: { color: string; alpha: number; width: number }[] = [];
+  context.stroke.mockImplementation(() => {
+    strokes.push({
+      color: context.strokeStyle,
+      alpha: context.globalAlpha,
+      width: context.lineWidth,
+    });
+  });
+  const rendered = render(
+    <Canvas2dRepresentation
+      {...props}
+      scenario={all}
+      routePresentation={view}
+      passengersVisible={false}
+    />,
+  );
+  resize(
+    [{ contentRect: { width: 400, height: 300 } } as ResizeObserverEntry],
+    {} as ResizeObserver,
+  );
+  vi.advanceTimersByTime(1000 / 60);
+  expect(
+    strokes.some(
+      (s) => s.color === '#D32F2F' && s.alpha === 0.8 && s.width === 1.75,
+    ),
+  ).toBe(true);
+  const count = context.lineTo.mock.calls.length;
+  expect(count).toBeGreaterThan(244);
+  strokes.length = 0;
+  rendered.rerender(
+    <Canvas2dRepresentation
+      {...props}
+      scenario={all}
+      routePresentation={view}
+      selection={selectRoute(all.routes.routes[0]!.routeId)}
+      passengersVisible={false}
+    />,
+  );
+  vi.advanceTimersByTime(1000 / 60);
+  expect(
+    strokes.some(
+      (s) => s.color === '#D32F2F' && s.alpha === 1 && s.width === 2.1,
+    ),
+  ).toBe(true);
+  strokes.length = 0;
+  rendered.rerender(
+    <Canvas2dRepresentation
+      {...props}
+      selection={selectRoute(scenario.routes.routes[0]!.routeId)}
+      passengersVisible={false}
+    />,
+  );
+  vi.advanceTimersByTime(1000 / 60);
+  expect(strokes.some((s) => s.color === '#ffd166' && s.width === 4)).toBe(
+    true,
+  );
 });
 
 it('owns strict-mode resize, cadence, DPR backing store, profiling, and cleanup', () => {

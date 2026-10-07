@@ -27,7 +27,9 @@ import { createTransportMapProjection } from './transport-map-projection.js';
 import { createD3dMapModel } from './d3d-map-model.js';
 import { fitD3dCamera } from './d3d-map-model.js';
 import type { ScenarioPopulationView } from '../population/population-field-loader.js';
-import { BoxGeometry, BufferGeometry } from 'three';
+import { BoxGeometry, BufferGeometry, OrthographicCamera } from 'three';
+import { parseRoutePresentation } from './route-presentation.js';
+import { createRoutePresentationView } from './route-presentation-view.js';
 import { buildProceduralCity } from './d3d-city-model.js';
 import { useSettlementMetadata } from '../settlement/use-settlement-metadata.js';
 import { parseSettlementMetadata } from '../settlement/settlement-metadata.js';
@@ -144,6 +146,7 @@ afterEach(() => {
     'instanceMatrix',
     'instanceColor',
     'computeBoundingSphere',
+    'scale',
   ])
     Reflect.deleteProperty(HTMLElement.prototype, property);
   cleanup();
@@ -152,6 +155,120 @@ afterEach(() => {
   configureRepresentationProfiling(false);
   clearRepresentationProfiles();
   vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'unavailable' });
+});
+
+it('uses screen-sized vehicle HUDs at far, medium and near LOD and preserves canonical click authority', () => {
+  enableWorld();
+  const set = vi.fn();
+  Object.assign(HTMLElement.prototype, { scale: { set } });
+  const rendered = render(scene('normal'));
+  const check = (pixels: number, ratio: number) => {
+    const hud = document.querySelector('sprite[name="vehicle-hud"]')!;
+    const properties = sceneProps(hud) as {
+      onBeforeRender: (
+        renderer: unknown,
+        scene: unknown,
+        camera: OrthographicCamera,
+      ) => void;
+    };
+    properties.onBeforeRender(
+      undefined,
+      undefined,
+      new OrthographicCamera(-10, 10, 10, -10),
+    );
+    expect(set).toHaveBeenLastCalledWith(
+      (pixels * 20) / 660,
+      ((pixels * 20) / 660) * ratio,
+      1,
+    );
+    onSelectionChange.mockClear();
+    chooseSceneObject(hud, { delta: 0 });
+    expect(onSelectionChange).toHaveBeenCalledWith(
+      selectVehicle(fleet[0]!.vehicleId),
+    );
+  };
+  check(12, 0.7);
+  fireEvent.wheel(controls.canvas, { deltaY: -3000 });
+  rendered.rerender(scene('normal', selectVehicle(fleet[0]!.vehicleId)));
+  check(14, 0.7);
+  fireEvent.wheel(controls.canvas, { deltaY: 10000 });
+  check(6, 1);
+  rendered.rerender(scene('mini'));
+  const hud = document.querySelector('sprite[name="vehicle-hud"]')!;
+  const properties = sceneProps(hud) as {
+    onBeforeRender: (
+      renderer: unknown,
+      scene: unknown,
+      camera: OrthographicCamera,
+    ) => void;
+  };
+  properties.onBeforeRender(
+    undefined,
+    undefined,
+    new OrthographicCamera(-10, 10, 10, -10),
+  );
+  expect(set).toHaveBeenLastCalledWith((6 * 20) / 660, (6 * 20) / 660, 1);
+  onSelectionChange.mockClear();
+  expect(chooseSceneObject(hud, { delta: 0 })).not.toHaveBeenCalled();
+});
+
+it('projects every source vertex into low ground ribbons with selected alpha and disposes cached geometry', () => {
+  enableWorld();
+  const directory = join(root, '..', 'torrevieja-legacy-all-v1');
+  const data = (name: string) =>
+    JSON.parse(readFileSync(join(directory, name), 'utf8')) as unknown;
+  const all = parseScenarioPackage({
+    manifest: data('scenario.json'),
+    settlements: data('settlements.json'),
+    routes: data('routes.json'),
+    stops: data('stops.json'),
+  });
+  const asset = parseRoutePresentation(
+    JSON.parse(
+      readFileSync(
+        join(
+          root,
+          '../../../route-presentation/torrevieja/torrevieja-route-presentation.v0.json',
+        ),
+        'utf8',
+      ),
+    ) as unknown,
+    all,
+  );
+  const view = createRoutePresentationView(
+    createTransportMapProjection(all),
+    asset,
+  );
+  const props = {
+    scenario: all,
+    fleet,
+    selection: null,
+    onSelectionChange,
+    routePresentation: view,
+  };
+  const dispose = vi.spyOn(BufferGeometry.prototype, 'dispose');
+  const rendered = render(<D3dMapRepresentation {...props} />);
+  const materials = [...document.querySelectorAll('meshbasicmaterial')].filter(
+    (m) => m.getAttribute('color') === '#D32F2F',
+  );
+  expect(materials[0]).toHaveAttribute('opacity', '0.8');
+  const geometry = sceneProps(materials[0]!.parentElement!).geometry!;
+  const positions = geometry.getAttribute('position');
+  expect(positions.count).toBeGreaterThan(6 * 42);
+  expect(positions.getY(0)).toBeCloseTo(0.1);
+  rendered.rerender(
+    <D3dMapRepresentation
+      {...props}
+      selection={selectRoute(all.routes.routes[0]!.routeId)}
+    />,
+  );
+  expect(
+    [...document.querySelectorAll('meshbasicmaterial')].find(
+      (m) => m.getAttribute('color') === '#D32F2F',
+    ),
+  ).toHaveAttribute('opacity', '1');
+  rendered.unmount();
+  expect(dispose).toHaveBeenCalled();
 });
 
 it('connects R3F pointer events only to a mounted canvas target', () => {

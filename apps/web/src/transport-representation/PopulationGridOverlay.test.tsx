@@ -5,6 +5,11 @@ import { join } from 'node:path';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import PopulationGridOverlay from './PopulationGridOverlay.js';
 import {
+  createTransportMapProjection,
+  resolveTransportMapViewport,
+} from '../representation/transport-map-projection.js';
+import { transportMapViewportSvgViewBox } from './vehicle-svg-projection.js';
+import {
   clearRepresentationProfiles,
   configureRepresentationProfiling,
   representationProfilePrefix,
@@ -36,6 +41,62 @@ afterEach(() => {
   cleanup();
   configureRepresentationProfiling(false);
   clearRepresentationProfiles();
+});
+
+it('keeps population registered with enriched route focus without changing cell geometry', () => {
+  const source = createTransportMapProjection(scenario);
+  const edge = source.edges[0]!;
+  const view = {
+    source,
+    map: {
+      ...source,
+      edges: source.edges.map((entry) =>
+        entry.routeId === edge.routeId
+          ? {
+              ...entry,
+              enriched: true,
+              points: [entry.from, { x: -1, y: -1 }, entry.to],
+            }
+          : entry,
+      ),
+    },
+  };
+  const cells = [
+    {
+      cellId: 'focus',
+      center: scenario.stops.stopNodes[0]!.position,
+      populationWeight: 1,
+    },
+  ];
+  const rendered = render(
+    <PopulationGridOverlay
+      scenario={scenario}
+      cells={cells}
+      resolutionDegrees={0.001}
+      focusedRouteId={edge.routeId}
+    />,
+  );
+  const geometry = screen.getByTestId('population-band').getAttribute('d');
+  const canonicalBox = screen.getByRole('img').getAttribute('viewBox');
+  rendered.rerender(
+    <PopulationGridOverlay
+      scenario={scenario}
+      cells={cells}
+      resolutionDegrees={0.001}
+      focusedRouteId={edge.routeId}
+      routePresentation={view}
+    />,
+  );
+  expect(screen.getByRole('img')).toHaveAttribute(
+    'viewBox',
+    transportMapViewportSvgViewBox(
+      resolveTransportMapViewport(view.map, edge.routeId),
+    ),
+  );
+  expect(screen.getByRole('img').getAttribute('viewBox')).not.toBe(
+    canonicalBox,
+  );
+  expect(screen.getByTestId('population-band')).toHaveAttribute('d', geometry);
 });
 
 it('distinguishes profiled renders, geometry rebuilds, and commits', () => {

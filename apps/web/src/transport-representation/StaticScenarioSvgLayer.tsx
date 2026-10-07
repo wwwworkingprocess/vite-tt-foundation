@@ -1,28 +1,14 @@
 import { memo, type KeyboardEvent } from 'react';
 import { selectStop, type GameSelection } from '../ui/game-selection.js';
 import type { VehicleSvgProjection } from './vehicle-svg-projection.js';
+import { transportMapEntityVisualMetrics } from '../representation/transport-map-visual-metrics.js';
+import { routePresentationDrawOrder } from '../representation/route-presentation-view.js';
 
 const activate = (callback: () => void) => (event: KeyboardEvent) => {
   if (event.key === 'Enter' || event.key === ' ') {
     event.preventDefault();
     callback();
   }
-};
-
-const arrow = (edge: VehicleSvgProjection['edges'][number]) => {
-  const dx = edge.x2 - edge.x1;
-  const dy = edge.y2 - edge.y1;
-  const distance = Math.hypot(dx, dy);
-  if (distance === 0) return undefined;
-  const x = dx / distance;
-  const y = dy / distance;
-  const midpointX = (edge.x1 + edge.x2) / 2;
-  const midpointY = (edge.y1 + edge.y2) / 2;
-  const halfLength = Math.min(1.2, distance * 0.18);
-  const halfWidth = Math.min(0.8, distance * 0.12);
-  const baseX = midpointX - x * halfLength;
-  const baseY = midpointY - y * halfLength;
-  return `${midpointX + x * halfLength},${midpointY + y * halfLength} ${baseX - y * halfWidth},${baseY + x * halfWidth} ${baseX + y * halfWidth},${baseY - x * halfWidth}`;
 };
 
 function StaticScenarioSvgLayer({
@@ -41,11 +27,15 @@ function StaticScenarioSvgLayer({
   return (
     <g data-testid="static-scenario-svg-layer">
       <g aria-label="Directed route edges">
-        {edges.map((edge) => {
+        {routePresentationDrawOrder(
+          edges,
+          selection?.kind === 'route' ? selection.routeId : undefined,
+        ).map((edge) => {
           const color = edge.color ?? 'currentColor';
           const selected =
             selection?.kind === 'route' && selection.routeId === edge.routeId;
-          const points = arrow(edge);
+          const points = edge.arrowhead;
+          const Edge = edge.enriched ? 'polyline' : 'line';
           return (
             <g
               key={edge.edgeId}
@@ -53,17 +43,22 @@ function StaticScenarioSvgLayer({
               data-route-id={edge.routeId}
               data-pattern-id={edge.patternId}
               data-selected={selected}
+              opacity={edge.enriched && !selected ? 0.8 : 1}
             >
-              <line
+              <Edge
                 data-edge-id={edge.edgeId}
                 data-route-id={edge.routeId}
                 data-pattern-id={edge.patternId}
+                points={edge.points}
                 x1={edge.x1}
                 y1={edge.y1}
                 x2={edge.x2}
                 y2={edge.y2}
-                stroke={selected ? '#ffd166' : color}
-                strokeWidth={selected ? '1.5' : '0.6'}
+                fill="none"
+                stroke={selected && !edge.enriched ? '#ffd166' : color}
+                strokeWidth={
+                  selected ? (edge.enriched ? '0.72' : '1.5') : '0.6'
+                }
                 pointerEvents="none"
                 aria-hidden="true"
               />
@@ -94,10 +89,13 @@ function StaticScenarioSvgLayer({
               data-stop-node-id={node.stopNodeId}
               cx={node.cx}
               cy={node.cy}
-              r={3 * entityScale}
+              r={
+                transportMapEntityVisualMetrics('normal').stopRadius *
+                entityScale
+              }
               fill="currentColor"
               stroke="transparent"
-              strokeWidth="14"
+              strokeWidth="11"
               vectorEffect="non-scaling-stroke"
               role={node.stopPlaceId ? 'button' : undefined}
               tabIndex={node.stopPlaceId ? 0 : undefined}

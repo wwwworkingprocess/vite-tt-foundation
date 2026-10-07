@@ -17,6 +17,11 @@ import {
   createTransportMapProjection,
   resolveTransportMapViewport,
 } from '../representation/transport-map-projection.js';
+import {
+  createRoutePresentationView,
+  type RoutePresentationView,
+} from '../representation/route-presentation-view.js';
+import { useRoutePresentation } from '../representation/use-route-presentation.js';
 
 interface PopulationCell {
   readonly cellId: string;
@@ -36,21 +41,28 @@ function PopulationGridOverlay(props: {
   readonly project?: (position: PopulationCell['center']) => SvgPoint;
   readonly visible?: boolean;
   readonly focusedRouteId?: RouteId | undefined;
+  readonly routePresentation?: RoutePresentationView;
 }) {
   const renderProfile = beginRepresentationProfile(
     'population.render-to-commit',
   );
   recordRepresentationProfile('population.render');
   const visible = props.visible ?? true;
+  const asset = useRoutePresentation(props.scenario);
+  const view =
+    props.routePresentation ??
+    (props.scenario
+      ? createRoutePresentationView(
+          createTransportMapProjection(props.scenario),
+          asset,
+        )
+      : undefined);
   const viewport = useMemo(
     () =>
-      props.scenario
-        ? resolveTransportMapViewport(
-            createTransportMapProjection(props.scenario),
-            props.focusedRouteId,
-          )
+      view
+        ? resolveTransportMapViewport(view.map, props.focusedRouteId)
         : fullTransportMapViewport,
-    [props.focusedRouteId, props.scenario],
+    [props.focusedRouteId, view],
   );
   const scenarioProject = useMemo(
     () =>

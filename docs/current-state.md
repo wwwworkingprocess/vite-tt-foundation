@@ -280,7 +280,7 @@ thirteen roof instance groups plus four merged surface batches are mounted;
 generic landmark volumes join the reservation surface batch. There is no React
 tree per parcel. Resources are disposed on replacement/unmount and
 city surfaces never intercept entity selection. Full-network framing includes
-empty crop land; focused routes retain canonical extents, bounded pan/zoom and
+empty crop land; focused routes use enriched extents where available, bounded pan/zoom and
 normal-view restoration after mini coexistence. Manual frame cadence remains
 60/5 fps. Terrain is flat, softly lit and texture-free. Full elevation, detailed
 landmarks, passenger D3D, district gameplay and final route-system art remain
@@ -293,6 +293,20 @@ stable in screen space through Route focus and renderer resize. Vehicle glyphs
 are deliberately more prominent than StopPlace glyphs while retaining the
 existing renderer-independent selection and interaction semantics.
 
+Optional Route Presentation Enrichment V0 is available for the exact all-lines
+Torrevieja scenario coordinate. A checksum-verified public asset preserves 205
+road-shaped legs and 39 canonical chords across 8 Routes and 16 Patterns. One
+pure cached view supplies geometry, source colors, curve bounds and geographic
+arc-length interpolation to DOM2D, Canvas2D and D3D. Canonical Stop positions,
+edge/progress authority, route focus, selection, simulation and save contracts
+remain unchanged. Enriched ordinary routes use 0.8 opacity; selected routes retain
+their color at 1.0 and draw later. Unsupported scenarios and asset failures retain
+immediate canonical rendering. The city remains based on its canonical
+projection, independently of enriched transport ribbons. D3D camera-facing
+vehicle HUDs provide screen-sized LOD cues above physically small buses; mini
+keeps simple markers. 2D stops have 9-pixel visible diameter and separate generous
+hit targets. See the [integration record](research/torrevieja/route-presentation-integration-v0.md).
+
 D3D `Map` is the family's sole current view. No view-switch control exists while
 every family supports only one view.
 
@@ -300,7 +314,8 @@ Build budgets account for renderer-specific emitted artifacts independently
 from shared production architecture. The shared transport Map projection has a
 4,500-byte hard coordinate and the DOM2D projection adapter has a 2,500-byte
 hard coordinate. The build audit also reports Canvas, DOM2D, and population Map
-logical compositions including their mandatory shared dependencies, while the
+logical compositions including their mandatory shared dependencies and optional route-presentation
+acquisition/geometry, while the
 total-emitted-JavaScript budget remains the global no-hiding backstop. The owner
 approved its rebaseline from 1,750,000 to 2,000,000 bytes: the previous aggregate
 ceiling predates production D3D. D3D remains lazy-loaded and independently bounded

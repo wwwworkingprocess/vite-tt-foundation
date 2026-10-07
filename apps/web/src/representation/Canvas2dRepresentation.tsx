@@ -1,3 +1,4 @@
+import { createTransportMapProjection } from './transport-map-projection.js';
 import type {
   PassengerDemandProjection,
   PassengerOriginStopArrivalEvent,
@@ -45,6 +46,11 @@ import {
   updatePassengerArrivalTicks,
 } from './passenger-map-diagnostics.js';
 import { transportMapEntityVisualMetrics } from './transport-map-visual-metrics.js';
+import {
+  createRoutePresentationView,
+  type RoutePresentationView,
+} from './route-presentation-view.js';
+import { useRoutePresentation } from './use-route-presentation.js';
 
 const validDpr = () =>
   Number.isFinite(window.devicePixelRatio) && window.devicePixelRatio > 0
@@ -125,6 +131,7 @@ export function materializeCanvas2dPopulationCells(
 }
 
 export function Canvas2dRepresentation({
+  routePresentation,
   scenario,
   fleet,
   selection,
@@ -139,6 +146,7 @@ export function Canvas2dRepresentation({
   passengersVisible = true,
   focusedRouteId,
 }: Readonly<{
+  routePresentation?: RoutePresentationView | undefined;
   scenario: CanonicalScenario;
   fleet: readonly VehicleState[];
   selection: GameSelection;
@@ -160,9 +168,16 @@ export function Canvas2dRepresentation({
   const visualMetrics = transportMapEntityVisualMetrics(mode);
   const interactive = mode === 'normal';
   const modeRef = useRef(mode);
+  const routeAsset = useRoutePresentation(scenario);
+  const view =
+    routePresentation ??
+    createRoutePresentationView(
+      createTransportMapProjection(scenario),
+      routeAsset,
+    );
   const index = useMemo(
-    () => createCanvas2dSelectionIndex(scenario),
-    [scenario],
+    () => createCanvas2dSelectionIndex(scenario, view),
+    [scenario, view],
   );
   const viewport = useMemo(
     () => resolveTransportMapViewport(index.map, focusedRouteId),
@@ -333,15 +348,28 @@ export function Canvas2dRepresentation({
         context.lineWidth = 1.75;
         context.lineCap = 'round';
         let routeArrowheads = 0;
-        for (const edge of snapshot.routeEdges) {
+        for (const edge of [...snapshot.routeEdges].sort(
+          (a, b) =>
+            Number(
+              currentInput.selection?.kind === 'route' &&
+                currentInput.selection.routeId === a.routeId,
+            ) -
+            Number(
+              currentInput.selection?.kind === 'route' &&
+                currentInput.selection.routeId === b.routeId,
+            ),
+        )) {
           const selected =
             currentInput.selection?.kind === 'route' &&
             currentInput.selection.routeId === edge.routeId;
-          context.strokeStyle = selected ? '#ffd166' : edge.color;
-          context.lineWidth = selected ? 4 : 1.75;
+          context.globalAlpha = edge.enriched && !selected ? 0.8 : 1;
+          context.strokeStyle =
+            selected && !edge.enriched ? '#ffd166' : edge.color;
+          context.lineWidth = selected ? (edge.enriched ? 2.1 : 4) : 1.75;
           context.beginPath();
           context.moveTo(edge.from.x, edge.from.y);
-          context.lineTo(edge.to.x, edge.to.y);
+          for (const point of edge.points.slice(1))
+            context.lineTo(point.x, point.y);
           context.stroke();
           if (edge.arrowhead) {
             routeArrowheads += 1;
@@ -354,6 +382,7 @@ export function Canvas2dRepresentation({
             context.fill();
           }
         }
+        context.globalAlpha = 1;
         if (currentInput.passengersVisible) {
           for (const point of snapshot.stopPoints) {
             const count = currentInput.waiting.get(point.stopPlaceId) ?? 0;
@@ -409,6 +438,7 @@ export function Canvas2dRepresentation({
         context.fillStyle = '#c6533b';
         context.strokeStyle = '#183842';
         for (const point of snapshot.vehiclePoints) {
+          context.fillStyle = point.color;
           context.fillRect(
             point.x - currentInput.visualMetrics.vehicleRadius,
             point.y - currentInput.visualMetrics.vehicleRadius,

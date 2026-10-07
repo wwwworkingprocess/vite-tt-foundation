@@ -1,3 +1,4 @@
+import { projectTransportMapVehicles } from './transport-map-projection.js';
 import {
   Canvas,
   events as createPointerEvents,
@@ -41,10 +42,7 @@ import {
   finishRepresentationProfile,
   recordRepresentationProfile,
 } from '../performance/representation-profiler.js';
-import {
-  createTransportMapProjection,
-  projectTransportMapVehicles,
-} from './transport-map-projection.js';
+import { createTransportMapProjection } from './transport-map-projection.js';
 import {
   createD3dMapModel,
   d3dKeyboardCandidates,
@@ -78,8 +76,15 @@ import {
 } from './d3d-city-geometry.js';
 import type { ScenarioPopulationView } from '../population/population-field-loader.js';
 import { useSettlementMetadata } from '../settlement/use-settlement-metadata.js';
+import { useRoutePresentation } from './use-route-presentation.js';
+import {
+  createRoutePresentationView,
+  projectRoutePresentationVehicles,
+  type RoutePresentationView,
+} from './route-presentation-view.js';
 
 type MapProps = Readonly<{
+  routePresentation?: RoutePresentationView | undefined;
   scenario: CanonicalScenario;
   fleet: readonly VehicleState[];
   selection: GameSelection;
@@ -650,7 +655,7 @@ function City({
 export function createD3dRibbonGeometry(
   edges: readonly Pick<
     D3dMapModel['routes'][number],
-    'from' | 'to' | 'length'
+    'from' | 'to' | 'length' | 'points'
   >[],
   width: number,
   arrows: boolean,
@@ -662,7 +667,15 @@ export function createD3dRibbonGeometry(
     b: readonly number[],
     c: readonly number[],
   ) => vertices.push(...a, ...b, ...c);
-  for (const edge of edges) {
+  const segments = edges.flatMap((edge) =>
+    edge.points
+      ? edge.points.slice(1).map((to, i) => {
+          const from = edge.points![i]!;
+          return { from, to, length: Math.hypot(to.x - from.x, to.z - from.z) };
+        })
+      : [edge],
+  );
+  for (const edge of segments) {
     if (edge.length < 0.00001) continue;
     const dx = (edge.to.x - edge.from.x) / edge.length;
     const dz = (edge.to.z - edge.from.z) / edge.length;
@@ -720,6 +733,7 @@ function Routes({
     return [...edgesByRoute].map(([routeId, edges]) => ({
       routeId,
       color: edges[0]!.color,
+      enriched: edges[0]!.enriched,
       ribbon: createD3dRibbonGeometry(
         edges,
         ribbonWidth,
@@ -728,7 +742,11 @@ function Routes({
       ),
       selected: createD3dRibbonGeometry(
         edges,
-        metre ? Math.max(6 * metre, ribbonWidth * 1.6) : 0.42,
+        edges[0]!.enriched
+          ? ribbonWidth * 1.2
+          : metre
+            ? Math.max(6 * metre, ribbonWidth * 1.6)
+            : 0.42,
         false,
         metre ? 0.052 : 0.1,
       ),
@@ -752,41 +770,62 @@ function Routes({
   );
   return (
     <group>
-      {groups.map((route) => {
-        const chosen =
-          selection?.kind === 'route' && selection.routeId === route.routeId;
-        return (
-          <group key={route.routeId}>
-            <mesh
-              geometry={chosen ? route.selected : route.ribbon}
-              dispose={null}
-              raycast={() => null}
-            >
-              <meshBasicMaterial color={route.color} side={DoubleSide} />
-            </mesh>
-            {chosen ? (
+      {[...groups]
+        .sort(
+          (a, b) =>
+            Number(
+              selection?.kind === 'route' && selection.routeId === a.routeId,
+            ) -
+            Number(
+              selection?.kind === 'route' && selection.routeId === b.routeId,
+            ),
+        )
+        .map((route) => {
+          const chosen =
+            selection?.kind === 'route' && selection.routeId === route.routeId;
+          return (
+            <group key={route.routeId}>
               <mesh
-                geometry={route.ribbon}
+                geometry={chosen ? route.selected : route.ribbon}
                 dispose={null}
                 raycast={() => null}
-                position={[0, 0.022, 0]}
+                renderOrder={chosen ? 2 : 1}
               >
                 <meshBasicMaterial
-                  color="#fff0bd"
+                  color={route.color}
                   side={DoubleSide}
-                  transparent
-                  opacity={0.7}
+                  transparent={route.enriched === true}
+                  opacity={route.enriched && !chosen ? 0.8 : 1}
+                  depthWrite={!route.enriched}
                 />
               </mesh>
-            ) : null}
-            {lod !== 'far' ? (
-              <mesh geometry={route.arrows} dispose={null} raycast={() => null}>
-                <meshBasicMaterial color="#183842" side={DoubleSide} />
-              </mesh>
-            ) : null}
-          </group>
-        );
-      })}
+              {chosen && !route.enriched ? (
+                <mesh
+                  geometry={route.ribbon}
+                  dispose={null}
+                  raycast={() => null}
+                  position={[0, 0.022, 0]}
+                >
+                  <meshBasicMaterial
+                    color="#fff0bd"
+                    side={DoubleSide}
+                    transparent
+                    opacity={0.7}
+                  />
+                </mesh>
+              ) : null}
+              {lod !== 'far' && !route.enriched ? (
+                <mesh
+                  geometry={route.arrows}
+                  dispose={null}
+                  raycast={() => null}
+                >
+                  <meshBasicMaterial color="#183842" side={DoubleSide} />
+                </mesh>
+              ) : null}
+            </group>
+          );
+        })}
     </group>
   );
 }
@@ -898,6 +937,48 @@ function Stops({
   );
 }
 
+function VehicleHud({
+  color,
+  lod,
+  mode,
+  height,
+  choose,
+}: Readonly<{
+  color: string;
+  lod: D3dLodBand;
+  mode: RepresentationMode;
+  height: number;
+  choose: (event: ThreeEvent<MouseEvent>) => void;
+}>) {
+  const hud = useRef<import('three').Sprite>(null);
+  const cssHeight = useThree(({ size }) => size.height);
+  return (
+    <sprite
+      ref={hud}
+      name="vehicle-hud"
+      position={[0, height, 0]}
+      onBeforeRender={(_renderer, _scene, camera) => {
+        const orthographic = camera as OrthographicCamera;
+        const unit =
+          (orthographic.top - orthographic.bottom) /
+          orthographic.zoom /
+          Math.max(1, cssHeight);
+        const pixels =
+          mode === 'mini' || lod === 'far' ? 6 : lod === 'medium' ? 12 : 14;
+        hud.current!.scale.set(
+          pixels * unit,
+          pixels * unit * (lod === 'far' ? 1 : 0.7),
+          1,
+        );
+      }}
+      onClick={choose}
+      renderOrder={3}
+    >
+      <spriteMaterial color={color} depthTest={false} depthWrite={false} />
+    </sprite>
+  );
+}
+
 function Vehicles({
   vehicles,
   selection,
@@ -974,6 +1055,13 @@ function Vehicles({
             <mesh geometry={body} dispose={null} onClick={choose}>
               <meshLambertMaterial color={vehicle.color} />
             </mesh>
+            <VehicleHud
+              color={vehicle.color}
+              lod={lod}
+              mode={mode}
+              height={metre ? 5 * metre + 0.12 : 0.7}
+              choose={choose}
+            />
             <mesh
               name="vehicle-hit-target"
               position={[0, 0.48, 0]}
@@ -1050,6 +1138,7 @@ function D3dWorld({
 }
 
 export default function D3dMapRepresentation({
+  routePresentation,
   scenario,
   fleet,
   selection,
@@ -1064,6 +1153,14 @@ export default function D3dMapRepresentation({
     [scenario],
   );
   const model = useMemo(() => createD3dMapModel(projection), [projection]);
+  const routeAsset = useRoutePresentation(scenario);
+  const view =
+    routePresentation ??
+    createRoutePresentationView(
+      createTransportMapProjection(scenario),
+      routeAsset,
+    );
+  const transportModel = useMemo(() => createD3dMapModel(view.map), [view]);
   const metadata = useSettlementMetadata(scenario.manifest.primarySettlementId);
   const city = useMemo(
     () =>
@@ -1089,9 +1186,12 @@ export default function D3dMapRepresentation({
     () =>
       projectD3dVehicles(
         model,
-        projectTransportMapVehicles(projection, acceptedFleet),
+        projectRoutePresentationVehicles(
+          view,
+          projectTransportMapVehicles(view.source, acceptedFleet),
+        ),
       ),
-    [model, projection, acceptedFleet],
+    [model, view, acceptedFleet],
   );
   const candidates = useMemo(
     () => d3dKeyboardCandidates(model, vehicles),
@@ -1135,6 +1235,10 @@ export default function D3dMapRepresentation({
       data-directed-edge-count={model.routes.length}
       data-stop-place-count={model.stops.length}
       data-vehicle-count={vehicles.length}
+      data-enriched-edge-count={
+        view.map.edges.filter((edge) => edge.enriched).length
+      }
+      data-vehicle-hud-count={vehicles.length}
       data-settlement-metadata-status={metadata.status}
       data-settlement-metadata-version={
         city?.settlement?.metadata.schemaVersion ?? ''
@@ -1203,7 +1307,7 @@ export default function D3dMapRepresentation({
       >
         <RepresentationFrameDriver mode={mode} />
         <CameraController
-          model={model}
+          model={transportModel}
           sceneBounds={sceneBounds}
           vehicles={vehicles}
           focusedRouteId={focusedRouteId}
@@ -1212,7 +1316,7 @@ export default function D3dMapRepresentation({
           onLod={setLod}
         />
         <D3dWorld
-          model={model}
+          model={transportModel}
           sceneBounds={sceneBounds}
           city={city}
           vehicles={vehicles}

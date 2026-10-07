@@ -33,8 +33,8 @@ describe('transport Map entity visual metrics', () => {
           ((focused.maxX - focused.minX) * 90) / size.width,
           ((focused.maxY - focused.minY) * 90) / size.height,
         );
-        expect((3 * full) / fullUserUnit).toBeCloseTo(metrics.stopRadius);
-        expect((3 * route) / routeUserUnit).toBeCloseTo(metrics.stopRadius);
+        expect((4.5 * full) / fullUserUnit).toBeCloseTo(metrics.stopRadius);
+        expect((4.5 * route) / routeUserUnit).toBeCloseTo(metrics.stopRadius);
         expect((6 * full) / fullUserUnit).toBeCloseTo(metrics.vehicleRadius);
         expect((6 * route) / routeUserUnit).toBeCloseTo(metrics.vehicleRadius);
         expect((11 * route) / routeUserUnit).toBeCloseTo(
@@ -54,7 +54,7 @@ describe('transport Map entity visual metrics', () => {
     expect(normal.vehicleRadius).toBe(6);
     expect(mini.vehicleRadius).toBeCloseTo(4.8);
     expect(normal.vehicleRadius).toBeGreaterThan(normal.stopRadius);
-    expect(normal.vehicleRadius).toBeGreaterThanOrEqual(normal.stopRadius * 2);
+    expect(normal.stopRadius * 2).toBe(9);
     expect(mini.stopRadius).toBeLessThanOrEqual(normal.stopRadius);
     expect(mini.vehicleRadius).toBeLessThanOrEqual(normal.vehicleRadius);
     expect(normal.stopHitRadius).toBeGreaterThan(normal.stopRadius);

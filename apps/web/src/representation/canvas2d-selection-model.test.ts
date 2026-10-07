@@ -315,6 +315,7 @@ it('resolves overlap by Vehicle priority, distance, then canonical identifier', 
   };
   const vehicleA = {
     kind: 'vehicle' as const,
+    color: '#c6533b',
     vehicleId: parseVehicleId('vehicle-a'),
     label: 'A',
     x: 20,

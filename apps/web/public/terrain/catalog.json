@@ -60,6 +60,262 @@
           "sha256": "b7c7ef4d060050e7431ac567ae12748e4985f15aa1e4d4b8a88fa06cf31f8d1f"
         }
       }
+    },
+    "es-alicante": {
+      "terrainVersion": "v0",
+      "crs": "EPSG:3035",
+      "resolutionMeters": {
+        "x": 25,
+        "y": 25
+      },
+      "scenarioIds": [
+        "alicante-legacy-all-v1",
+        "alicante-legacy-circular-v1",
+        "alicante-legacy-coast-v1",
+        "alicante-legacy-core-v1",
+        "alicante-legacy-north-v1",
+        "alicante-legacy-periphery-v1",
+        "alicante-legacy-west-v1"
+      ],
+      "scenarioViewportMap": {
+        "alicante-legacy-all-v1": "tv-epsg3035-25-w135555-s70041-c779-r580",
+        "alicante-legacy-circular-v1": "tv-epsg3035-25-w135966-s70317-c173-r152",
+        "alicante-legacy-coast-v1": "tv-epsg3035-25-w136018-s70313-c314-r237",
+        "alicante-legacy-core-v1": "tv-epsg3035-25-w135930-s70270-c188-r240",
+        "alicante-legacy-north-v1": "tv-epsg3035-25-w136007-s70342-c204-r221",
+        "alicante-legacy-periphery-v1": "tv-epsg3035-25-w135555-s70078-c486-r366",
+        "alicante-legacy-west-v1": "tv-epsg3035-25-w135892-s70323-c208-r201"
+      },
+      "viewports": [
+        {
+          "terrainViewportId": "tv-epsg3035-25-w135555-s70041-c779-r580",
+          "width": 779,
+          "height": 580,
+          "rasterBounds3035": {
+            "west": 3388875,
+            "south": 1751025,
+            "east": 3408350,
+            "north": 1765525
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w135555-s70078-c486-r366",
+          "width": 486,
+          "height": 366,
+          "rasterBounds3035": {
+            "west": 3388875,
+            "south": 1751950,
+            "east": 3401025,
+            "north": 1761100
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w135892-s70323-c208-r201",
+          "width": 208,
+          "height": 201,
+          "rasterBounds3035": {
+            "west": 3397300,
+            "south": 1758075,
+            "east": 3402500,
+            "north": 1763100
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w135930-s70270-c188-r240",
+          "width": 188,
+          "height": 240,
+          "rasterBounds3035": {
+            "west": 3398250,
+            "south": 1756750,
+            "east": 3402950,
+            "north": 1762750
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w135966-s70317-c173-r152",
+          "width": 173,
+          "height": 152,
+          "rasterBounds3035": {
+            "west": 3399150,
+            "south": 1757925,
+            "east": 3403475,
+            "north": 1761725
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w136007-s70342-c204-r221",
+          "width": 204,
+          "height": 221,
+          "rasterBounds3035": {
+            "west": 3400175,
+            "south": 1758550,
+            "east": 3405275,
+            "north": 1764075
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w136018-s70313-c314-r237",
+          "width": 314,
+          "height": 237,
+          "rasterBounds3035": {
+            "west": 3400450,
+            "south": 1757825,
+            "east": 3408300,
+            "north": 1763750
+          }
+        }
+      ],
+      "products": {
+        "height": {
+          "path": "es-alicante/es-alicante.terrain-height.v0.json",
+          "mediaType": "application/json",
+          "schemaVersion": "0.0.0",
+          "byteLength": 20777310,
+          "sha256": "d03fe14a6c4f8caa05a8acec3ab85cf9a442631a07b05204ddfc020420932724"
+        },
+        "surfaceMask": {
+          "path": "es-alicante/es-alicante.terrain-surface-mask.v0.json",
+          "mediaType": "application/json",
+          "schemaVersion": "0.0.0",
+          "byteLength": 9491807,
+          "sha256": "51c1c4272cd3db5268b29b6ed5ada039abc0b016f18da06dd2b98cf2fb6cf223"
+        },
+        "coastline": {
+          "path": "es-alicante/es-alicante.terrain-coastline.v0.geojson",
+          "mediaType": "application/geo+json",
+          "schemaVersion": "0.0.0",
+          "byteLength": 840994,
+          "sha256": "ca5e66613eb288510f35c7f526ebb6c65fd2aa88e6e4183850f62613f639e0ff"
+        }
+      }
+    },
+    "es-murcia": {
+      "terrainVersion": "v0",
+      "crs": "EPSG:3035",
+      "resolutionMeters": {
+        "x": 25,
+        "y": 25
+      },
+      "scenarioIds": [
+        "murcia-central-rail-v1",
+        "murcia-circular-13-v1",
+        "murcia-circular-24-v1",
+        "murcia-circular-legacy-all-v1",
+        "murcia-rayo-legacy-all-v1",
+        "murcia-rayo-north-v1",
+        "murcia-rayo-south-v1"
+      ],
+      "scenarioViewportMap": {
+        "murcia-central-rail-v1": "tv-epsg3035-25-w133571-s69041-c98-r139",
+        "murcia-circular-13-v1": "tv-epsg3035-25-w133545-s69037-c147-r123",
+        "murcia-circular-24-v1": "tv-epsg3035-25-w133543-s69039-c133-r124",
+        "murcia-circular-legacy-all-v1": "tv-epsg3035-25-w133543-s69037-c152-r147",
+        "murcia-rayo-legacy-all-v1": "tv-epsg3035-25-w133464-s68944-c303-r295",
+        "murcia-rayo-north-v1": "tv-epsg3035-25-w133486-s69067-c201-r163",
+        "murcia-rayo-south-v1": "tv-epsg3035-25-w133528-s68951-c225-r212"
+      },
+      "viewports": [
+        {
+          "terrainViewportId": "tv-epsg3035-25-w133464-s68944-c303-r295",
+          "width": 303,
+          "height": 295,
+          "rasterBounds3035": {
+            "west": 3336600,
+            "south": 1723600,
+            "east": 3344175,
+            "north": 1730975
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w133486-s69067-c201-r163",
+          "width": 201,
+          "height": 163,
+          "rasterBounds3035": {
+            "west": 3337150,
+            "south": 1726675,
+            "east": 3342175,
+            "north": 1730750
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w133528-s68951-c225-r212",
+          "width": 225,
+          "height": 212,
+          "rasterBounds3035": {
+            "west": 3338200,
+            "south": 1723775,
+            "east": 3343825,
+            "north": 1729075
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w133543-s69037-c152-r147",
+          "width": 152,
+          "height": 147,
+          "rasterBounds3035": {
+            "west": 3338575,
+            "south": 1725925,
+            "east": 3342375,
+            "north": 1729600
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w133543-s69039-c133-r124",
+          "width": 133,
+          "height": 124,
+          "rasterBounds3035": {
+            "west": 3338575,
+            "south": 1725975,
+            "east": 3341900,
+            "north": 1729075
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w133545-s69037-c147-r123",
+          "width": 147,
+          "height": 123,
+          "rasterBounds3035": {
+            "west": 3338625,
+            "south": 1725925,
+            "east": 3342300,
+            "north": 1729000
+          }
+        },
+        {
+          "terrainViewportId": "tv-epsg3035-25-w133571-s69041-c98-r139",
+          "width": 98,
+          "height": 139,
+          "rasterBounds3035": {
+            "west": 3339275,
+            "south": 1726025,
+            "east": 3341725,
+            "north": 1729500
+          }
+        }
+      ],
+      "products": {
+        "height": {
+          "path": "es-murcia/es-murcia.terrain-height.v0.json",
+          "mediaType": "application/json",
+          "schemaVersion": "0.0.0",
+          "byteLength": 6548042,
+          "sha256": "7b3c39b3cd14eedd6448946c3dd1f924167afdea4e1070a704da28753b7b9155"
+        },
+        "surfaceMask": {
+          "path": "es-murcia/es-murcia.terrain-surface-mask.v0.json",
+          "mediaType": "application/json",
+          "schemaVersion": "0.0.0",
+          "byteLength": 2649133,
+          "sha256": "d8eb82af782ab046d9fd37b5cc55938a24bbfffa1047f93284c5936fc842d778"
+        },
+        "coastline": {
+          "path": "es-murcia/es-murcia.terrain-coastline.v0.geojson",
+          "mediaType": "application/geo+json",
+          "schemaVersion": "0.0.0",
+          "byteLength": 295715,
+          "sha256": "829cff1897f76f20345f2ce73c04fa4d1d309ecd6f5658ddad3559c562fbde5e"
+        }
+      }
     }
   }
 }

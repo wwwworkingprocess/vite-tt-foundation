@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./catalog.v0.1.schema.json",
+  "title": "Asset Research Public Catalog v0.1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "authorityVersion",
+    "status",
+    "pathSemantics",
+    "schemas",
+    "cities",
+    "portfolio",
+    "notes"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1.0"
+    },
+    "authorityVersion": {
+      "type": "string"
+    },
+    "status": {
+      "const": "read-only-upstream-research-authority"
+    },
+    "pathSemantics": {
+      "type": "string"
+    },
+    "schemas": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "cities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "portfolio": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

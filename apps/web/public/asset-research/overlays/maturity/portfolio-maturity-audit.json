@@ -1,0 +1,278 @@
+{
+  "schemaVersion": "0.1.0",
+  "auditDate": "2026-10-07",
+  "basis": "Phase 2 Closeout v0.1 only; no new external research | Phase 3 applied exceptions: P3-001, P3-003, P3-004 and P3-005",
+  "portfolioResearchState": "phase3-exception-research-in-progress",
+  "cities": [
+    {
+      "cityId": "torrevieja",
+      "cityName": "Torrevieja",
+      "overallMaturity": "substantial-derivation-ready",
+      "zoneSummary": {
+        "total": 31,
+        "derivation-ready": 15,
+        "derivation-ready-with-nonblocking-gap": 16
+      },
+      "completionQuestions": {
+        "dominantFamiliesByMajorZone": true,
+        "repetitionBehaviorKnown": true,
+        "sharedVsCitySpecificReuseKnown": true,
+        "bespokeNamedStructuresIdentified": true,
+        "identityPoisIdentified": true,
+        "evidenceBackedTraitsAvailable": true,
+        "uncertaintiesExplicit": true
+      }
+    },
+    {
+      "cityId": "elche",
+      "cityName": "Elche",
+      "overallMaturity": "substantial-derivation-ready-with-exceptions",
+      "zoneSummary": {
+        "total": 38,
+        "derivation-ready": 19,
+        "state-guarded": 11,
+        "derivation-ready-with-nonblocking-gap": 7,
+        "derivation-ready-with-targeted-exception": 1
+      },
+      "completionQuestions": {
+        "dominantFamiliesByMajorZone": true,
+        "repetitionBehaviorKnown": true,
+        "sharedVsCitySpecificReuseKnown": true,
+        "bespokeNamedStructuresIdentified": true,
+        "identityPoisIdentified": true,
+        "evidenceBackedTraitsAvailable": true,
+        "uncertaintiesExplicit": true
+      }
+    },
+    {
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "overallMaturity": "substantial-derivation-ready-with-exceptions",
+      "zoneSummary": {
+        "total": 44,
+        "derivation-ready": 25,
+        "state-guarded": 6,
+        "derivation-ready-with-nonblocking-gap": 13
+      },
+      "completionQuestions": {
+        "dominantFamiliesByMajorZone": true,
+        "repetitionBehaviorKnown": true,
+        "sharedVsCitySpecificReuseKnown": true,
+        "bespokeNamedStructuresIdentified": true,
+        "identityPoisIdentified": true,
+        "evidenceBackedTraitsAvailable": true,
+        "uncertaintiesExplicit": true
+      }
+    },
+    {
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "overallMaturity": "substantial-derivation-ready-with-exceptions",
+      "zoneSummary": {
+        "total": 39,
+        "derivation-ready": 14,
+        "state-guarded": 7,
+        "derivation-ready-with-nonblocking-gap": 18
+      },
+      "completionQuestions": {
+        "dominantFamiliesByMajorZone": true,
+        "repetitionBehaviorKnown": true,
+        "sharedVsCitySpecificReuseKnown": true,
+        "bespokeNamedStructuresIdentified": true,
+        "identityPoisIdentified": true,
+        "evidenceBackedTraitsAvailable": true,
+        "uncertaintiesExplicit": true
+      }
+    },
+    {
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "overallMaturity": "substantial-derivation-ready-with-exceptions",
+      "zoneSummary": {
+        "total": 42,
+        "derivation-ready": 26,
+        "state-guarded": 4,
+        "derivation-ready-with-nonblocking-gap": 12
+      },
+      "completionQuestions": {
+        "dominantFamiliesByMajorZone": true,
+        "repetitionBehaviorKnown": true,
+        "sharedVsCitySpecificReuseKnown": true,
+        "bespokeNamedStructuresIdentified": true,
+        "identityPoisIdentified": true,
+        "evidenceBackedTraitsAvailable": true,
+        "uncertaintiesExplicit": true
+      }
+    },
+    {
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "overallMaturity": "substantial-derivation-ready-with-exceptions",
+      "zoneSummary": {
+        "total": 43,
+        "derivation-ready": 22,
+        "state-guarded": 5,
+        "derivation-ready-with-nonblocking-gap": 13,
+        "derivation-ready-with-targeted-exception": 3
+      },
+      "completionQuestions": {
+        "dominantFamiliesByMajorZone": true,
+        "repetitionBehaviorKnown": true,
+        "sharedVsCitySpecificReuseKnown": true,
+        "bespokeNamedStructuresIdentified": true,
+        "identityPoisIdentified": true,
+        "evidenceBackedTraitsAvailable": true,
+        "uncertaintiesExplicit": true
+      }
+    },
+    {
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "overallMaturity": "substantial-derivation-ready-with-exceptions",
+      "zoneSummary": {
+        "total": 59,
+        "derivation-ready": 26,
+        "state-guarded": 6,
+        "derivation-ready-with-nonblocking-gap": 15,
+        "derivation-ready-with-targeted-exception": 12
+      },
+      "completionQuestions": {
+        "dominantFamiliesByMajorZone": true,
+        "repetitionBehaviorKnown": true,
+        "sharedVsCitySpecificReuseKnown": true,
+        "bespokeNamedStructuresIdentified": true,
+        "identityPoisIdentified": true,
+        "evidenceBackedTraitsAvailable": true,
+        "uncertaintiesExplicit": true
+      }
+    }
+  ],
+  "zoneMaturityTotals": {
+    "derivation-ready-with-nonblocking-gap": 94,
+    "derivation-ready": 147,
+    "state-guarded": 39,
+    "derivation-ready-with-targeted-exception": 16
+  },
+  "sharedBuildingFamilyCount": 14,
+  "sharedPoiFamilyCount": 10,
+  "candidatePhase3FamilyDecisionZones": [
+    {
+      "cityId": "elche",
+      "zoneId": "z-nuevo-altabix-open",
+      "zoneName": "Nuevo Altabix open-block residential",
+      "issues": [
+        {
+          "type": "family-decision",
+          "severity": "high",
+          "note": "Exact current Ciudad Jardín villa grammar remains insufficiently calibrated for a final kit boundary.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "cityId": "malaga",
+      "zoneId": "z-cerrado",
+      "zoneName": "Cerrado de Calderón hillside",
+      "issues": [
+        {
+          "type": "family-decision",
+          "severity": "high",
+          "note": "Current villa/compound patterns remain insufficiently calibrated for final hillside-family boundaries.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "cityId": "malaga",
+      "zoneId": "z-pinares",
+      "zoneName": "Pinares de San Antón",
+      "issues": [
+        {
+          "type": "family-decision",
+          "severity": "high",
+          "note": "Current villa/compound patterns remain insufficiently calibrated for final hillside-family boundaries.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "cityId": "malaga",
+      "zoneId": "z-candado",
+      "zoneName": "El Candado / far-east hillside",
+      "issues": [
+        {
+          "type": "family-decision",
+          "severity": "high",
+          "note": "Current villa/compound patterns remain insufficiently calibrated for final hillside-family boundaries.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "cityId": "murcia",
+      "zoneId": "z-infante-infante-superblocks",
+      "zoneName": "Infante Don Juan Manuel planned apartment superblocks",
+      "issues": [
+        {
+          "type": "family-decision",
+          "severity": "high",
+          "note": "Infante and other postwar areas outside the three east estates need stronger typology calibration.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "cityId": "murcia",
+      "zoneId": "z-infante-buenos-aires",
+      "zoneName": "Buenos Aires / south-east mixed grid",
+      "issues": [
+        {
+          "type": "family-decision",
+          "severity": "high",
+          "note": "Infante and other postwar areas outside the three east estates need stronger typology calibration.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "cityId": "murcia",
+      "zoneId": "z-industrial-oeste-logistics",
+      "zoneName": "Industrial/logistics core",
+      "issues": [
+        {
+          "type": "family-decision",
+          "severity": "high",
+          "note": "Resort/industrial facade and plot sampling remains incomplete before final production-kit boundaries are frozen.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "cityId": "murcia",
+      "zoneId": "z-industrial-oeste-service-fringe",
+      "zoneName": "Industrial-service commercial fringe",
+      "issues": [
+        {
+          "type": "family-decision",
+          "severity": "high",
+          "note": "Resort/industrial facade and plot sampling remains incomplete before final production-kit boundaries are frozen.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "cityId": "murcia",
+      "zoneId": "z-sucina-gea-resort",
+      "zoneName": "Gea y Truyols / Sucina planned resort morphology",
+      "issues": [
+        {
+          "type": "family-decision",
+          "severity": "high",
+          "note": "Resort/industrial facade and plot sampling remains incomplete before final production-kit boundaries are frozen.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    }
+  ],
+  "conclusion": "Phase 3 exception research is in progress. P3-001, P3-003, P3-004 and P3-005 are resolved and applied; their former high family-boundary issues are now non-blocking calibration gaps where applicable. Five recommended Phase 3 exception questions remain active, with conditional and production-timed checks unchanged."
+}

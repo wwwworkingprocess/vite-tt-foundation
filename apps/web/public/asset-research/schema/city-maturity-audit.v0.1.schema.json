@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./city-maturity-audit.v0.1.schema.json",
+  "title": "City Asset Research Maturity Audit v0.1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "cityId",
+    "cityName",
+    "sourceResearchState",
+    "auditStage",
+    "overallMaturity",
+    "completionQuestions",
+    "zoneSummary",
+    "dominantRecurringFamilies",
+    "bespokeBuildingCount",
+    "bespokeBuildings",
+    "identityPoiCount",
+    "identityPois",
+    "zones"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1.0"
+    },
+    "cityId": {
+      "type": "string"
+    },
+    "cityName": {
+      "type": "string"
+    },
+    "sourceResearchState": {
+      "type": "object"
+    },
+    "auditStage": {
+      "type": "string"
+    },
+    "overallMaturity": {
+      "type": "string"
+    },
+    "completionQuestions": {
+      "type": "object"
+    },
+    "zoneSummary": {
+      "type": "object"
+    },
+    "dominantRecurringFamilies": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "bespokeBuildingCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "bespokeBuildings": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "identityPoiCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "identityPois": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "zoneId",
+          "zoneName",
+          "districtId",
+          "districtName",
+          "developmentStatus",
+          "geometryQuality",
+          "zoneConfidence",
+          "densityCharacter",
+          "dominantProfiles",
+          "linkedBuildingFamilies",
+          "namedOrInfrastructureBuildings",
+          "pois",
+          "decisionCoverage",
+          "maturity",
+          "remainingIssues"
+        ],
+        "properties": {
+          "zoneId": {
+            "type": "string"
+          },
+          "zoneName": {
+            "type": "string"
+          },
+          "districtId": {
+            "type": "string"
+          },
+          "districtName": {
+            "type": "string"
+          },
+          "developmentStatus": {
+            "type": "string"
+          },
+          "geometryQuality": {
+            "type": "string"
+          },
+          "zoneConfidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "densityCharacter": {
+            "type": "string"
+          },
+          "dominantProfiles": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "linkedBuildingFamilies": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "namedOrInfrastructureBuildings": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "pois": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "decisionCoverage": {
+            "type": "object"
+          },
+          "maturity": {
+            "type": "string",
+            "enum": [
+              "derivation-ready",
+              "derivation-ready-with-nonblocking-gap",
+              "derivation-ready-with-targeted-exception",
+              "state-guarded"
+            ]
+          },
+          "remainingIssues": {
+            "type": "array"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

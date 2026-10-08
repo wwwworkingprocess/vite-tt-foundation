@@ -1,0 +1,656 @@
+{
+  "schemaVersion": "0.1.0",
+  "settlementId": "es-torrevieja",
+  "cityResearchId": "torrevieja",
+  "kind": "building-assets",
+  "status": "production-candidate-catalog",
+  "items": [
+    {
+      "id": "ua-bldg-torrevieja-central-mixed",
+      "sourceResearchId": "bldg-torrevieja-central-mixed",
+      "sourceSettlementBuildingProfileIds": [
+        "bp-central-mixed"
+      ],
+      "sharedBuildingFamilyIds": [
+        "arch-central-mixed-midrise"
+      ],
+      "name": "Central mixed-use urban block",
+      "kind": "building-family",
+      "stage": "unmaterialized",
+      "instanceMode": "procedural-repeatable",
+      "placementMode": "procedural",
+      "recommendedTreatment": "shared-kit",
+      "assetPriority": "high",
+      "recognitionImportance": "supporting",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Baseline recommendation only; preserve the supplied variation/repetition guidance.",
+        "Reuse façade widths, balcony rhythms and corner forms across a block. Vary storeys and ground-floor activation selectively rather than randomizing every building."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-midrise-apartment",
+      "sourceResearchId": "bldg-torrevieja-midrise-apartment",
+      "sourceSettlementBuildingProfileIds": [
+        "bp-midrise-apartment"
+      ],
+      "sharedBuildingFamilyIds": [
+        "arch-neighborhood-midrise-apartment"
+      ],
+      "name": "Mid-rise apartment block",
+      "kind": "building-family",
+      "stage": "unmaterialized",
+      "instanceMode": "procedural-repeatable",
+      "placementMode": "procedural",
+      "recommendedTreatment": "shared-kit",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Baseline recommendation only; preserve the supplied variation/repetition guidance.",
+        "Within one development, repeat balcony, parapet and bay patterns; vary massing between developments."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-coastal-slab-tower",
+      "sourceResearchId": "bldg-torrevieja-coastal-slab-tower",
+      "sourceSettlementBuildingProfileIds": [
+        "bp-coastal-slab-tower"
+      ],
+      "sharedBuildingFamilyIds": [
+        "arch-coastal-apartment-slab-tower"
+      ],
+      "name": "Coastal slab / tower apartment",
+      "kind": "building-family",
+      "stage": "unmaterialized",
+      "instanceMode": "procedural-repeatable",
+      "placementMode": "procedural",
+      "recommendedTreatment": "regional-variant",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Baseline recommendation only; preserve the supplied variation/repetition guidance.",
+        "Use a small family of slab/tower proportions per coastal zone. Preserve gaps and shared open space rather than filling the block edge."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-detached-villa",
+      "sourceResearchId": "bldg-torrevieja-detached-villa",
+      "sourceSettlementBuildingProfileIds": [
+        "bp-detached-villa"
+      ],
+      "sharedBuildingFamilyIds": [
+        "arch-detached-mediterranean-house"
+      ],
+      "name": "Detached Mediterranean villa",
+      "kind": "building-family",
+      "stage": "unmaterialized",
+      "instanceMode": "procedural-repeatable",
+      "placementMode": "procedural",
+      "recommendedTreatment": "regional-variant",
+      "assetPriority": "high",
+      "recognitionImportance": "city-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Baseline recommendation only; preserve the supplied variation/repetition guidance.",
+        "Repeat plot setbacks, footprint scale and roof family locally. Allow modest color/roof/porch variation; private pools and garden hardscape should be optional rather than universal.",
+        "P3-001: retain arch-detached-mediterranean-house; use zone-specific parcel/site calibration and do not create facade-led Torrevieja villa families."
+      ],
+      "adapterConstraints": {
+        "sourceQuestionIds": [
+          "P3-001"
+        ],
+        "placementRules": [
+          "Use only in the linked supplied morphology zones during baseline derivation; extending distribution requires later evidence.",
+          "Respect zone-specific planning morphology: some established villa sectors use large plots and 5 m setbacks, while La Veleta chalet zones use materially different setback/occupancy rules. Do not collapse these into one global setback.",
+          "In villa-led sectors preserve meaningful setbacks/low plot coverage; in mixed urbanizations allow detached modules to coexist with AP/AL grouped forms rather than forcing a pure-villa reading."
+        ],
+        "exclusionRules": [
+          "Do not use this family to override landscape/protected/infrastructure constraints recorded in the source settlement metadata."
+        ],
+        "variationAxes": [
+          "storey selection",
+          "roof family",
+          "wall palette"
+        ],
+        "structuralFamilyVsSiteGrammarPolicy": "Treat structural family and site/development assembly as orthogonal. Do not infer the building structure merely from compound/open-space context."
+      }
+    },
+    {
+      "id": "ua-bldg-torrevieja-terrace-bungalow",
+      "sourceResearchId": "bldg-torrevieja-terrace-bungalow",
+      "sourceSettlementBuildingProfileIds": [
+        "bp-terrace-bungalow"
+      ],
+      "sharedBuildingFamilyIds": [
+        "arch-lowrise-rowhouse-townhouse"
+      ],
+      "name": "Terrace / semi-detached bungalow family",
+      "kind": "building-family",
+      "stage": "unmaterialized",
+      "instanceMode": "procedural-repeatable",
+      "placementMode": "procedural",
+      "recommendedTreatment": "regional-variant",
+      "assetPriority": "high",
+      "recognitionImportance": "city-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Baseline recommendation only; preserve the supplied variation/repetition guidance.",
+        "Generate development-scale modules: repeated row lengths, party-wall spacing and related roof treatments, with limited unit-level variation.",
+        "P3-001: shared rowhouse/townhouse structure remains valid; the adapter must not infer structure from the word “compound”."
+      ],
+      "adapterConstraints": {
+        "sourceQuestionIds": [
+          "P3-001"
+        ],
+        "placementRules": [
+          "Use only in the linked supplied morphology zones during baseline derivation; extending distribution requires later evidence.",
+          "In Aguas Nuevas, Calas Blancas, Lago Jardín, Los Altos and comparable urbanizations, allow repeated bungalow/townhouse modules to be assembled around communal gardens/pools without reclassifying them as the collective low-rise-compound family."
+        ],
+        "exclusionRules": [
+          "Do not use this family to override landscape/protected/infrastructure constraints recorded in the source settlement metadata."
+        ],
+        "variationAxes": [
+          "storey selection",
+          "roof family",
+          "wall palette"
+        ],
+        "structuralFamilyVsSiteGrammarPolicy": "Treat structural family and site/development assembly as orthogonal. Do not infer the building structure merely from compound/open-space context."
+      }
+    },
+    {
+      "id": "ua-bldg-torrevieja-lowrise-compound",
+      "sourceResearchId": "bldg-torrevieja-lowrise-compound",
+      "sourceSettlementBuildingProfileIds": [
+        "bp-lowrise-compound"
+      ],
+      "sharedBuildingFamilyIds": [],
+      "name": "Low-rise apartment / communal compound",
+      "kind": "building-family",
+      "stage": "unmaterialized",
+      "instanceMode": "procedural-repeatable",
+      "placementMode": "procedural",
+      "recommendedTreatment": "city-variant",
+      "assetPriority": "high",
+      "recognitionImportance": "supporting",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Baseline recommendation only; preserve the supplied variation/repetition guidance.",
+        "Repeat the same building family across a compound, then change family at the next compound. Keep shared-open-space geometry as a first-class part of the parcel.",
+        "P3-001 semantic boundary refinement: reserve the city-specific low-rise-compound candidate for collective low-rise apartment/open-block forms."
+      ],
+      "adapterConstraints": {
+        "sourceQuestionIds": [
+          "P3-001"
+        ],
+        "placementRules": [
+          "Use only in the linked supplied morphology zones during baseline derivation; extending distribution requires later evidence.",
+          "Use for collective low-rise apartment/open-block/courtyard compound structures; site-level communal space is insufficient by itself to select this family."
+        ],
+        "exclusionRules": [
+          "Do not use this family to override landscape/protected/infrastructure constraints recorded in the source settlement metadata.",
+          "Exclude one- or two-storey bungalow/townhouse compounds whose underlying structure belongs to bldg-torrevieja-terrace-bungalow."
+        ],
+        "variationAxes": [
+          "storey selection",
+          "roof family",
+          "wall palette"
+        ],
+        "structuralFamilyVsSiteGrammarPolicy": "Treat structural family and site/development assembly as orthogonal. Do not infer the building structure merely from compound/open-space context."
+      }
+    },
+    {
+      "id": "ua-bldg-torrevieja-commercial-box",
+      "sourceResearchId": "bldg-torrevieja-commercial-box",
+      "sourceSettlementBuildingProfileIds": [
+        "bp-commercial-box"
+      ],
+      "sharedBuildingFamilyIds": [
+        "arch-large-commercial-box"
+      ],
+      "name": "Large-format retail box",
+      "kind": "building-family",
+      "stage": "unmaterialized",
+      "instanceMode": "procedural-repeatable",
+      "placementMode": "procedural",
+      "recommendedTreatment": "shared-kit",
+      "assetPriority": "high",
+      "recognitionImportance": "supporting",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Baseline recommendation only; preserve the supplied variation/repetition guidance.",
+        "Vary footprint length, entrance canopy and service-yard position. Keep the building-to-parking relationship consistent within the retail cluster."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-industrial-shed",
+      "sourceResearchId": "bldg-torrevieja-industrial-shed",
+      "sourceSettlementBuildingProfileIds": [
+        "bp-industrial-shed"
+      ],
+      "sharedBuildingFamilyIds": [
+        "arch-industrial-logistics-shed"
+      ],
+      "name": "Industrial shed / warehouse",
+      "kind": "building-family",
+      "stage": "unmaterialized",
+      "instanceMode": "procedural-repeatable",
+      "placementMode": "procedural",
+      "recommendedTreatment": "shared-kit",
+      "assetPriority": "high",
+      "recognitionImportance": "supporting",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Baseline recommendation only; preserve the supplied variation/repetition guidance.",
+        "Use repeated shed bays and simple roof spans; vary shed length, yard depth and office-front insertions."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-civic-special",
+      "sourceResearchId": "bldg-torrevieja-civic-special",
+      "sourceSettlementBuildingProfileIds": [
+        "bp-civic-special"
+      ],
+      "sharedBuildingFamilyIds": [
+        "arch-institutional-campus-block"
+      ],
+      "name": "Civic / health / sports special",
+      "kind": "building-family",
+      "stage": "unmaterialized",
+      "instanceMode": "procedural-repeatable",
+      "placementMode": "reserved-site",
+      "recommendedTreatment": "procedural-assembly",
+      "assetPriority": "medium",
+      "recognitionImportance": "supporting",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Baseline recommendation only; preserve the supplied variation/repetition guidance.",
+        "Do not synthesize these from ordinary residential rules. Reserve parcels and use simplified bespoke masses until landmark-specific assets exist."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-emerging-midrise",
+      "sourceResearchId": "bldg-torrevieja-emerging-midrise",
+      "sourceSettlementBuildingProfileIds": [
+        "bp-emerging-midrise"
+      ],
+      "sharedBuildingFamilyIds": [],
+      "name": "Emerging planned residential block",
+      "kind": "building-family",
+      "stage": "unmaterialized",
+      "instanceMode": "procedural-repeatable",
+      "placementMode": "procedural",
+      "recommendedTreatment": "city-variant",
+      "assetPriority": "high",
+      "recognitionImportance": "supporting",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Baseline recommendation only; preserve the supplied variation/repetition guidance.",
+        "Use only where development status is current and uncertain. Keep vacancy/construction probability high; replace with observed building families as the sector builds out."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-plaza-constitucion",
+      "sourceResearchId": "bldg-torrevieja-landmark-plaza-constitucion",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Plaza de la Constitución",
+      "kind": "named-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "coarse-massing",
+      "assetPriority": "low",
+      "recognitionImportance": "background",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research.",
+        "Legacy baseline normalization record only. Do not model the plaza itself as one building; use the POI plus separately researched physical buildings."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-bus-station",
+      "sourceResearchId": "bldg-torrevieja-landmark-bus-station",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Estación de Autobuses de Torrevieja",
+      "kind": "infrastructure-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-museo-mar-sal",
+      "sourceResearchId": "bldg-torrevieja-landmark-museo-mar-sal",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Museo del Mar y de la Sal",
+      "kind": "named-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "medium",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-torre-moro",
+      "sourceResearchId": "bldg-torrevieja-landmark-torre-moro",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Torre del Moro",
+      "kind": "landmark-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "critical",
+      "recognitionImportance": "city-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-palacio-deportes",
+      "sourceResearchId": "bldg-torrevieja-landmark-palacio-deportes",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Palacio de los Deportes de Torrevieja",
+      "kind": "named-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-hospital-quiron",
+      "sourceResearchId": "bldg-torrevieja-landmark-hospital-quiron",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Hospital Quirónsalud Torrevieja",
+      "kind": "named-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-auditorio-internacional",
+      "sourceResearchId": "bldg-torrevieja-landmark-auditorio-internacional",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Auditorio Internacional de Torrevieja",
+      "kind": "named-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-habaneras",
+      "sourceResearchId": "bldg-torrevieja-landmark-habaneras",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Centro Comercial Habaneras",
+      "kind": "named-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-hospital-universitario",
+      "sourceResearchId": "bldg-torrevieja-landmark-hospital-universitario",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Hospital Universitario de Torrevieja",
+      "kind": "named-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-saltworks",
+      "sourceResearchId": "bldg-torrevieja-landmark-saltworks",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Salinas de Torrevieja industrial salt works",
+      "kind": "infrastructure-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "procedural-assembly",
+      "assetPriority": "critical",
+      "recognitionImportance": "city-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research.",
+        "Treat as a unique site/complex: use coarse or procedural industrial context plus bespoke salt-heap/lagoon identity, not a single repeated building mesh."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-health-la-siesta",
+      "sourceResearchId": "bldg-torrevieja-landmark-health-la-siesta",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Centro de Salud La Siesta",
+      "kind": "named-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "medium",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Bespoke recommendation is based on supplied unique-landmark semantics; exact geometry/appearance requires later targeted research."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-torre-la-mata",
+      "sourceResearchId": "bldg-torrevieja-landmark-torre-la-mata",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Torre de La Mata",
+      "kind": "landmark-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Research recommendation only; exact unsourced geometry should remain unresolved rather than inferred."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-inmaculada",
+      "sourceResearchId": "bldg-torrevieja-landmark-inmaculada",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Iglesia de la Inmaculada Concepción",
+      "kind": "landmark-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "critical",
+      "recognitionImportance": "city-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Research recommendation only; exact unsourced geometry should remain unresolved rather than inferred."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-rosario-la-mata",
+      "sourceResearchId": "bldg-torrevieja-landmark-rosario-la-mata",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Iglesia de Nuestra Señora del Rosario",
+      "kind": "landmark-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Research recommendation only; exact unsourced geometry should remain unresolved rather than inferred."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-sagrado-corazon",
+      "sourceResearchId": "bldg-torrevieja-landmark-sagrado-corazon",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Iglesia del Sagrado Corazón de Jesús",
+      "kind": "landmark-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Research recommendation only; exact unsourced geometry should remain unresolved rather than inferred."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-teatro-municipal",
+      "sourceResearchId": "bldg-torrevieja-landmark-teatro-municipal",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Teatro Municipal de Torrevieja",
+      "kind": "landmark-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "high",
+      "recognitionImportance": "district-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Research recommendation only; exact unsourced geometry should remain unresolved rather than inferred."
+      ]
+    },
+    {
+      "id": "ua-bldg-torrevieja-landmark-eras-caballete",
+      "sourceResearchId": "bldg-torrevieja-landmark-eras-caballete",
+      "sourceSettlementBuildingProfileIds": [],
+      "sharedBuildingFamilyIds": [],
+      "name": "Caballete de las Eras de la Sal",
+      "kind": "infrastructure-building",
+      "stage": "unmaterialized",
+      "instanceMode": "single",
+      "placementMode": "landmark-only",
+      "recommendedTreatment": "bespoke-model",
+      "assetPriority": "critical",
+      "recognitionImportance": "city-defining",
+      "geometry": null,
+      "materials": [],
+      "lods": [],
+      "productionNotes": [
+        "Research recommendation only; exact unsourced geometry should remain unresolved rather than inferred."
+      ]
+    }
+  ]
+}

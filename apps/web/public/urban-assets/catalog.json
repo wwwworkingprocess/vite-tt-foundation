@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "0.1.0",
+  "status": "production-facing-urban-asset-index",
+  "pathSemantics": "collection paths are relative to the catalog that declares them",
+  "upstreamCatalogs": {
+    "settlementMetadata": "../settlement-metadata/catalog.json",
+    "assetResearch": "../asset-research/catalog.json"
+  },
+  "shared": {
+    "catalog": "shared/catalog.json"
+  },
+  "settlements": {
+    "es-torrevieja": {
+      "cityId": "torrevieja",
+      "catalog": "es-torrevieja/catalog.json",
+      "stage": "production-candidate-scaffold"
+    }
+  },
+  "runtimeRule": "Normal game rendering should consume only materialized/proxy-ready urban assets; unmaterialized records are workbench/derivation candidates."
+}

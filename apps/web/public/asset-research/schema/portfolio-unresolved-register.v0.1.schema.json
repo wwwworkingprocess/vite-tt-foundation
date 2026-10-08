@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./portfolio-unresolved-register.v0.1.schema.json",
+  "title": "Portfolio Unresolved Question Register v0.1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "basis",
+    "portfolioResearchState",
+    "purpose",
+    "sourceIssueInstanceCount",
+    "sourceSharedFamilyUnresolvedStatementCount",
+    "summary",
+    "triagePrinciples",
+    "questions",
+    "phase3CandidateQueue",
+    "sourceIssueAssignments",
+    "sharedFamilyCaveatAssignments"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1.0"
+    },
+    "generatedAt": {
+      "type": "string"
+    },
+    "basis": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "portfolioResearchState": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "sourceIssueInstanceCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "sourceSharedFamilyUnresolvedStatementCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "summary": {
+      "type": "object"
+    },
+    "triagePrinciples": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "category",
+          "disposition",
+          "priority",
+          "phase3Rank",
+          "scope",
+          "unresolvedQuestion",
+          "whyItMatters",
+          "recommendedAction",
+          "acceptanceCriteria",
+          "sourceIssueIds",
+          "sourceIssueStatements",
+          "sourceIssueOrigins"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "appearance-calibration",
+              "current-state",
+              "family-decision",
+              "geometry-placement",
+              "portfolio-family-caveat"
+            ]
+          },
+          "disposition": {
+            "type": "string",
+            "enum": [
+              "conditional-phase3",
+              "documented-uncertainty",
+              "phase3-exception-research",
+              "production-closeout-check",
+              "production-preintegration-check"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "phase3Rank": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "scope": {
+            "type": "object"
+          },
+          "unresolvedQuestion": {
+            "type": "string"
+          },
+          "whyItMatters": {
+            "type": "string"
+          },
+          "recommendedAction": {
+            "type": "string"
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceIssueIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceIssueStatements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceIssueOrigins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sharedIndexUnresolvedStatements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "familyId",
+                "familyName",
+                "statement",
+                "assignedQuestionId"
+              ],
+              "properties": {
+                "familyId": {
+                  "type": "string"
+                },
+                "familyName": {
+                  "type": "string"
+                },
+                "statement": {
+                  "type": "string"
+                },
+                "assignedQuestionId": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "phase3CandidateQueue": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "sourceIssueAssignments": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "sharedFamilyCaveatAssignments": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "additionalProperties": false
+}

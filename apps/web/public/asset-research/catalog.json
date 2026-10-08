@@ -1,0 +1,193 @@
+{
+  "schemaVersion": "0.1.0",
+  "authorityVersion": "phase3-applied-v0.1",
+  "status": "read-only-upstream-research-authority",
+  "pathSemantics": "all paths are relative to this catalog file",
+  "schemas": {
+    "cityResearch": "schema/city-asset-research.v0.1.schema.json",
+    "sharedAssetFamilies": "schema/shared-asset-families.v0.1.schema.json",
+    "cityMaturityAudit": "schema/city-maturity-audit.v0.1.schema.json",
+    "portfolioMaturityAudit": "schema/portfolio-maturity-audit.v0.1.schema.json",
+    "unresolvedRegister": "schema/portfolio-unresolved-register.v0.1.schema.json",
+    "phase3CandidateQueue": "schema/phase3-candidate-queue.v0.1.schema.json",
+    "catalog": "schema/catalog.v0.1.schema.json"
+  },
+  "cities": {
+    "es-torrevieja": {
+      "cityResearchId": "torrevieja",
+      "name": "Torrevieja",
+      "researchSchemaVersion": "0.1.0",
+      "researchStage": "city-reviewed",
+      "completeness": "substantial",
+      "catalog": {
+        "path": "cities/torrevieja/torrevieja.asset-research.v0.json",
+        "sha256": "cd3e1973de039f61a4495ed081b2457d0f27e7d86d734bfe843874e976a641ed",
+        "byteLength": 301774,
+        "buildingCount": 27,
+        "poiCount": 28
+      },
+      "maturity": {
+        "path": "overlays/maturity/cities/torrevieja.maturity-audit.json",
+        "sha256": "29ba7f287b2d1b9d9cea801e5d9f2daf0a31e8a2ac58533f24befc186f53fed1",
+        "byteLength": 194418,
+        "overallMaturity": "substantial-derivation-ready",
+        "zoneCount": 31
+      }
+    },
+    "es-elche": {
+      "cityResearchId": "elche",
+      "name": "Elche",
+      "researchSchemaVersion": "0.1.0",
+      "researchStage": "city-reviewed",
+      "completeness": "substantial",
+      "catalog": {
+        "path": "cities/elche/elche.asset-research.v0.json",
+        "sha256": "fca89a589b439bfbf62958f5a36f3c110f7e7cc4abaddb90fbc1ca0392e00951",
+        "byteLength": 294365,
+        "buildingCount": 27,
+        "poiCount": 29
+      },
+      "maturity": {
+        "path": "overlays/maturity/cities/elche.maturity-audit.json",
+        "sha256": "0459f11614c34ad7dd8c57297eabcd31df73bac7c134a982d7ea39d125617540",
+        "byteLength": 211328,
+        "overallMaturity": "substantial-derivation-ready-with-exceptions",
+        "zoneCount": 38
+      }
+    },
+    "es-alicante": {
+      "cityResearchId": "alicante",
+      "name": "Alicante",
+      "researchSchemaVersion": "0.1.0",
+      "researchStage": "city-reviewed",
+      "completeness": "substantial",
+      "catalog": {
+        "path": "cities/alicante/alicante.asset-research.v0.json",
+        "sha256": "8a5760286e26a758393ce8aea986e0263f063c7214af3d4d3f55b2a76c86dfef",
+        "byteLength": 399828,
+        "buildingCount": 40,
+        "poiCount": 39
+      },
+      "maturity": {
+        "path": "overlays/maturity/cities/alicante.maturity-audit.json",
+        "sha256": "01c89467cd6bb1bb6c1e1216146274245d27f27574bb29282f227f72fcbeaf91",
+        "byteLength": 284887,
+        "overallMaturity": "substantial-derivation-ready-with-exceptions",
+        "zoneCount": 44
+      }
+    },
+    "es-benidorm": {
+      "cityResearchId": "benidorm",
+      "name": "Benidorm",
+      "researchSchemaVersion": "0.1.0",
+      "researchStage": "city-reviewed",
+      "completeness": "substantial",
+      "catalog": {
+        "path": "cities/benidorm/benidorm.asset-research.v0.json",
+        "sha256": "79d63221041b2aecdeffad15f8570c35cae06ee3d800e4d8cd2c2ab1dc37b607",
+        "byteLength": 299059,
+        "buildingCount": 27,
+        "poiCount": 33
+      },
+      "maturity": {
+        "path": "overlays/maturity/cities/benidorm.maturity-audit.json",
+        "sha256": "92dd48dfaa16c137cb92079e7d9886cbc8bf82b485edb615be72ea51fce401da",
+        "byteLength": 244877,
+        "overallMaturity": "substantial-derivation-ready-with-exceptions",
+        "zoneCount": 39
+      }
+    },
+    "es-cartagena": {
+      "cityResearchId": "cartagena",
+      "name": "Cartagena",
+      "researchSchemaVersion": "0.1.0",
+      "researchStage": "city-reviewed",
+      "completeness": "substantial",
+      "catalog": {
+        "path": "cities/cartagena/cartagena.asset-research.v0.json",
+        "sha256": "3c3bcb05acbe4991f1cddc2990b7b45cc04d7d4d20885c281ca80c6558149526",
+        "byteLength": 349291,
+        "buildingCount": 32,
+        "poiCount": 36
+      },
+      "maturity": {
+        "path": "overlays/maturity/cities/cartagena.maturity-audit.json",
+        "sha256": "fbe017620dd0244f8563f9d9c3aee393a84f5340fa6b15e63439e8aecfd3a711",
+        "byteLength": 256888,
+        "overallMaturity": "substantial-derivation-ready-with-exceptions",
+        "zoneCount": 42
+      }
+    },
+    "es-malaga": {
+      "cityResearchId": "malaga",
+      "name": "Málaga",
+      "researchSchemaVersion": "0.1.0",
+      "researchStage": "city-reviewed",
+      "completeness": "substantial",
+      "catalog": {
+        "path": "cities/malaga/malaga.asset-research.v0.json",
+        "sha256": "a723bfe8715b1754a068091411c8a78dcce8912f1a94a697175a8acc4f14e02d",
+        "byteLength": 363484,
+        "buildingCount": 37,
+        "poiCount": 42
+      },
+      "maturity": {
+        "path": "overlays/maturity/cities/malaga.maturity-audit.json",
+        "sha256": "6429d6be6768b12d0d293e28b7c9edf8766db058dc36289eea6710c2b6f289c3",
+        "byteLength": 223115,
+        "overallMaturity": "substantial-derivation-ready-with-exceptions",
+        "zoneCount": 43
+      }
+    },
+    "es-murcia": {
+      "cityResearchId": "murcia",
+      "name": "Murcia",
+      "researchSchemaVersion": "0.1.0",
+      "researchStage": "city-reviewed",
+      "completeness": "substantial",
+      "catalog": {
+        "path": "cities/murcia/murcia.asset-research.v0.json",
+        "sha256": "d058902d05a0b6fdb0dfa8480a186f06719327473f810291ad123d622e30ff9d",
+        "byteLength": 389106,
+        "buildingCount": 42,
+        "poiCount": 32
+      },
+      "maturity": {
+        "path": "overlays/maturity/cities/murcia.maturity-audit.json",
+        "sha256": "ec427f21e6cd0f0f656438800b5daf186467f07408e322b4b408a5950a98c31d",
+        "byteLength": 357483,
+        "overallMaturity": "substantial-derivation-ready-with-exceptions",
+        "zoneCount": 59
+      }
+    }
+  },
+  "portfolio": {
+    "sharedAssetFamilies": {
+      "path": "portfolio/shared-asset-families.v0.json",
+      "sha256": "2e5439fd13563be6284c02fe0dc68258d0f9e35c6d598c782be432f353f146c6",
+      "byteLength": 129549
+    },
+    "maturityAudit": {
+      "path": "overlays/maturity/portfolio-maturity-audit.json",
+      "sha256": "ae05672c6124625adb0a257c8fae5d1fc380818c5b2542bcd8476d58ebe2d857",
+      "byteLength": 9484
+    },
+    "unresolvedRegister": {
+      "path": "overlays/unresolved/portfolio-unresolved-question-register.json",
+      "sha256": "70c4f6912913daa579aeac99bf52f00999c19851fea571c9201b5dc27d40fb24",
+      "byteLength": 172950
+    },
+    "phase3CandidateQueue": {
+      "path": "overlays/unresolved/phase3-candidate-queue.json",
+      "sha256": "a07e39149d72aa3a908c6a7ac4f1bbe2469e4f55a4e3c9a55184c1dc1b2d9339",
+      "byteLength": 3552
+    }
+  },
+  "notes": [
+    "This directory is research/evidence authority, not a production D3D asset manifest.",
+    "Stable research IDs should be preserved by downstream adapters.",
+    "Production-facing geometry/material/LOD/runtime IDs belong in a separate urban-assets derivation layer.",
+    "This public package reflects the Phase 3 applied state for P3-001, P3-003, P3-004 and P3-005 without a schema migration.",
+    "Resolved-question history and research deltas remain in the Phase 3 handover archive; this public package exposes the current applied authority and active overlays."
+  ]
+}

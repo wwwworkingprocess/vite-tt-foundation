@@ -1,0 +1,5070 @@
+{
+  "schemaVersion": "0.1.0",
+  "cityId": "torrevieja",
+  "cityName": "Torrevieja",
+  "sourceResearchState": {
+    "stage": "city-reviewed",
+    "baselineCompleted": true,
+    "cityResearchCompleted": true,
+    "lastResearchDate": "2026-10-06",
+    "completeness": "substantial",
+    "openQuestions": [
+      "Exact boundaries among named urbanizations, cadastral value zones and morphological transitions still do not coincide cleanly; V0 district/zone polygons remain research approximations.",
+      "Current built-height distribution for coastal slabs/towers remains weak: planning maxima in La Veleta/Molino Blanco cannot substitute for a measured current-building survey.",
+      "Development-level facade/window/balcony rhythms and material palettes remain under-documented outside the broad municipal landscape descriptions.",
+      "Representative villa/terrace compound samples are still needed to quantify how roof, pool, garden-wall and porch treatments vary by individual urbanization without destroying local repetition.",
+      "La Hoya, La Manguilla, Los Locos and the port/Eras projects are changing during 2026; future-state planning must continue to be kept separate from completed current form.",
+      "The future Museo del Mar y de la Sal at Eras de la Sal is not current built form as of 5 October 2026; the current provisional museum remains at C. Patricio Pérez 10.",
+      "Completion and exact current appearance of the Muelle Mínguez recovery works were not independently confirmed in this pass.",
+      "The saltworks should be represented as a unique industrial landscape, but exact operational plant geometry/material details remain intentionally unresolved where not necessary for city-scale representation.",
+      "The retained baseline building ID bldg-torrevieja-landmark-plaza-constitucion is semantic legacy debt: it came from a place landmark rather than a discrete building. Schema v0.1 has no retired-record state, so it is retained and explicitly downgraded rather than silently deleted."
+    ]
+  },
+  "auditStage": "phase2-maturity-audit",
+  "overallMaturity": "substantial-derivation-ready",
+  "completionQuestions": {
+    "dominantFamiliesByMajorZone": true,
+    "repetitionBehaviorKnown": true,
+    "sharedVsCitySpecificReuseKnown": true,
+    "bespokeNamedStructuresIdentified": true,
+    "identityPoisIdentified": true,
+    "evidenceBackedTraitsAvailable": true,
+    "uncertaintiesExplicit": true
+  },
+  "zoneSummary": {
+    "total": 31,
+    "derivation-ready": 15,
+    "derivation-ready-with-nonblocking-gap": 16
+  },
+  "dominantRecurringFamilies": [
+    {
+      "buildingId": "bldg-torrevieja-lowrise-compound",
+      "name": "Low-rise apartment / communal compound",
+      "reuseScope": "city-specific",
+      "recommendedTreatment": "city-variant",
+      "repetitionBehavior": "locally-repetitive",
+      "frequency": "common",
+      "sharedFamilyId": null,
+      "sharedFamilyName": null,
+      "researchStage": "city-reresearch",
+      "confidence": "medium",
+      "linkedZoneCount": 23
+    },
+    {
+      "buildingId": "bldg-torrevieja-midrise-apartment",
+      "name": "Mid-rise apartment block",
+      "reuseScope": "shared",
+      "recommendedTreatment": "shared-kit",
+      "repetitionBehavior": "locally-repetitive",
+      "frequency": "dominant",
+      "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+      "sharedFamilyName": "Neighborhood mid-rise apartment block",
+      "researchStage": "city-reresearch",
+      "confidence": "medium",
+      "linkedZoneCount": 19
+    },
+    {
+      "buildingId": "bldg-torrevieja-terrace-bungalow",
+      "name": "Terrace / semi-detached bungalow family",
+      "reuseScope": "regional",
+      "recommendedTreatment": "regional-variant",
+      "repetitionBehavior": "highly-repetitive",
+      "frequency": "common",
+      "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+      "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+      "researchStage": "city-reresearch",
+      "confidence": "high",
+      "linkedZoneCount": 19
+    },
+    {
+      "buildingId": "bldg-torrevieja-detached-villa",
+      "name": "Detached Mediterranean villa",
+      "reuseScope": "regional",
+      "recommendedTreatment": "regional-variant",
+      "repetitionBehavior": "highly-repetitive",
+      "frequency": "dominant",
+      "sharedFamilyId": "arch-detached-mediterranean-house",
+      "sharedFamilyName": "Detached Mediterranean house / villa",
+      "researchStage": "city-reresearch",
+      "confidence": "high",
+      "linkedZoneCount": 17
+    },
+    {
+      "buildingId": "bldg-torrevieja-coastal-slab-tower",
+      "name": "Coastal slab / tower apartment",
+      "reuseScope": "regional",
+      "recommendedTreatment": "regional-variant",
+      "repetitionBehavior": "locally-repetitive",
+      "frequency": "common",
+      "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+      "sharedFamilyName": "Coastal apartment slab / tower",
+      "researchStage": "city-reresearch",
+      "confidence": "medium",
+      "linkedZoneCount": 7
+    },
+    {
+      "buildingId": "bldg-torrevieja-central-mixed",
+      "name": "Central mixed-use urban block",
+      "reuseScope": "shared",
+      "recommendedTreatment": "shared-kit",
+      "repetitionBehavior": "locally-repetitive",
+      "frequency": "common",
+      "sharedFamilyId": "arch-central-mixed-midrise",
+      "sharedFamilyName": "Central mixed-use mid-rise block",
+      "researchStage": "city-reresearch",
+      "confidence": "medium",
+      "linkedZoneCount": 6
+    },
+    {
+      "buildingId": "bldg-torrevieja-commercial-box",
+      "name": "Large-format retail box",
+      "reuseScope": "shared",
+      "recommendedTreatment": "shared-kit",
+      "repetitionBehavior": "locally-repetitive",
+      "frequency": "common",
+      "sharedFamilyId": "arch-large-commercial-box",
+      "sharedFamilyName": "Large-format commercial / retail box",
+      "researchStage": "baseline",
+      "confidence": "high",
+      "linkedZoneCount": 6
+    },
+    {
+      "buildingId": "bldg-torrevieja-emerging-midrise",
+      "name": "Emerging planned residential block",
+      "reuseScope": "city-specific",
+      "recommendedTreatment": "city-variant",
+      "repetitionBehavior": "mixed",
+      "frequency": "common",
+      "sharedFamilyId": null,
+      "sharedFamilyName": null,
+      "researchStage": "city-reresearch",
+      "confidence": "low",
+      "linkedZoneCount": 3
+    }
+  ],
+  "bespokeBuildingCount": 15,
+  "bespokeBuildings": [
+    {
+      "id": "bldg-torrevieja-landmark-bus-station",
+      "name": "Estación de Autobuses de Torrevieja",
+      "priority": "high"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-torre-moro",
+      "name": "Torre del Moro",
+      "priority": "critical"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-palacio-deportes",
+      "name": "Palacio de los Deportes de Torrevieja",
+      "priority": "high"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-hospital-quiron",
+      "name": "Hospital Quirónsalud Torrevieja",
+      "priority": "high"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-auditorio-internacional",
+      "name": "Auditorio Internacional de Torrevieja",
+      "priority": "high"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-habaneras",
+      "name": "Centro Comercial Habaneras",
+      "priority": "high"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-hospital-universitario",
+      "name": "Hospital Universitario de Torrevieja",
+      "priority": "high"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-torre-la-mata",
+      "name": "Torre de La Mata",
+      "priority": "high"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-inmaculada",
+      "name": "Iglesia de la Inmaculada Concepción",
+      "priority": "critical"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-rosario-la-mata",
+      "name": "Iglesia de Nuestra Señora del Rosario",
+      "priority": "high"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-sagrado-corazon",
+      "name": "Iglesia del Sagrado Corazón de Jesús",
+      "priority": "high"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-teatro-municipal",
+      "name": "Teatro Municipal de Torrevieja",
+      "priority": "high"
+    },
+    {
+      "id": "bldg-torrevieja-landmark-eras-caballete",
+      "name": "Caballete de las Eras de la Sal",
+      "priority": "critical"
+    }
+  ],
+  "identityPoiCount": 28,
+  "identityPois": [
+    {
+      "id": "poi-torrevieja-plaza-constitucion",
+      "name": "Plaza de la Constitución",
+      "type": "civic",
+      "importance": "characteristic",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-eras-sal",
+      "name": "Eras de la Sal",
+      "type": "heritage",
+      "importance": "city-defining",
+      "treatment": "bespoke-complex"
+    },
+    {
+      "id": "poi-torrevieja-port",
+      "name": "Puerto de Torrevieja",
+      "type": "port",
+      "importance": "city-defining",
+      "treatment": "bespoke-complex"
+    },
+    {
+      "id": "poi-torrevieja-bus-station",
+      "name": "Estación de Autobuses de Torrevieja",
+      "type": "transport",
+      "importance": "characteristic",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-parque-naciones",
+      "name": "Parque de las Naciones",
+      "type": "recreation",
+      "importance": "characteristic",
+      "treatment": "landscape-feature"
+    },
+    {
+      "id": "poi-torrevieja-museo-mar-sal",
+      "name": "Museo del Mar y de la Sal",
+      "type": "cultural",
+      "importance": "characteristic",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-playa-locos",
+      "name": "Playa de Los Locos",
+      "type": "tourism",
+      "importance": "characteristic",
+      "treatment": "landscape-feature"
+    },
+    {
+      "id": "poi-torrevieja-playa-naufragos",
+      "name": "Playa de los Náufragos",
+      "type": "tourism",
+      "importance": "characteristic",
+      "treatment": "landscape-feature"
+    },
+    {
+      "id": "poi-torrevieja-torre-moro",
+      "name": "Torre del Moro",
+      "type": "tourism",
+      "importance": "city-defining",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-palacio-deportes",
+      "name": "Palacio de los Deportes de Torrevieja",
+      "type": "sports",
+      "importance": "characteristic",
+      "treatment": "bespoke-complex"
+    },
+    {
+      "id": "poi-torrevieja-hospital-quiron",
+      "name": "Hospital Quirónsalud Torrevieja",
+      "type": "health",
+      "importance": "characteristic",
+      "treatment": "bespoke-complex"
+    },
+    {
+      "id": "poi-torrevieja-auditorio-internacional",
+      "name": "Auditorio Internacional de Torrevieja",
+      "type": "cultural",
+      "importance": "characteristic",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-torre-la-mata",
+      "name": "Torre de La Mata",
+      "type": "heritage",
+      "importance": "characteristic",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-playa-la-mata",
+      "name": "Playa de La Mata",
+      "type": "tourism",
+      "importance": "characteristic",
+      "treatment": "landscape-feature"
+    },
+    {
+      "id": "poi-torrevieja-molino-agua",
+      "name": "Parque del Molino del Agua",
+      "type": "natural",
+      "importance": "characteristic",
+      "treatment": "landscape-feature"
+    },
+    {
+      "id": "poi-torrevieja-parque-siesta",
+      "name": "Parque de La Siesta",
+      "type": "recreation",
+      "importance": "characteristic",
+      "treatment": "landscape-feature"
+    },
+    {
+      "id": "poi-torrevieja-habaneras",
+      "name": "Centro Comercial Habaneras",
+      "type": "commercial",
+      "importance": "characteristic",
+      "treatment": "bespoke-complex"
+    },
+    {
+      "id": "poi-torrevieja-hospital-universitario",
+      "name": "Hospital Universitario de Torrevieja",
+      "type": "health",
+      "importance": "characteristic",
+      "treatment": "bespoke-complex"
+    },
+    {
+      "id": "poi-torrevieja-saltworks",
+      "name": "Salinas de Torrevieja industrial salt works",
+      "type": "industrial",
+      "importance": "city-defining",
+      "treatment": "bespoke-complex"
+    },
+    {
+      "id": "poi-torrevieja-health-la-siesta",
+      "name": "Centro de Salud La Siesta",
+      "type": "health",
+      "importance": "characteristic",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-rocio-coast",
+      "name": "Rocío del Mar coastal access",
+      "type": "tourism",
+      "importance": "characteristic",
+      "treatment": "procedural-context"
+    },
+    {
+      "id": "poi-torrevieja-la-hoya-reserve",
+      "name": "La Hoya development reserve / public-housing parcels",
+      "type": "other",
+      "importance": "characteristic",
+      "treatment": "procedural-context"
+    },
+    {
+      "id": "poi-torrevieja-inmaculada",
+      "name": "Iglesia de la Inmaculada Concepción",
+      "type": "religious",
+      "importance": "city-defining",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-rosario-la-mata",
+      "name": "Iglesia de Nuestra Señora del Rosario",
+      "type": "religious",
+      "importance": "characteristic",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-sagrado-corazon",
+      "name": "Iglesia del Sagrado Corazón de Jesús",
+      "type": "religious",
+      "importance": "characteristic",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-teatro-municipal",
+      "name": "Teatro Municipal de Torrevieja",
+      "type": "cultural",
+      "importance": "characteristic",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-s61-delfin",
+      "name": "Submarino S-61 Delfín",
+      "type": "cultural",
+      "importance": "city-defining",
+      "treatment": "bespoke-object"
+    },
+    {
+      "id": "poi-torrevieja-muelle-minguez",
+      "name": "Muelle Mínguez",
+      "type": "heritage",
+      "importance": "characteristic",
+      "treatment": "bespoke-object"
+    }
+  ],
+  "zones": [
+    {
+      "zoneId": "z-central-grid",
+      "zoneName": "Dense central civic/commercial grid",
+      "districtId": "d-central-harbor",
+      "districtName": "Central grid and harbor",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "very-high",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-central-mixed",
+          "profileName": "Central mixed-use urban block",
+          "weight": 0.7,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-central-mixed",
+              "name": "Central mixed-use urban block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-central-mixed-midrise",
+              "sharedFamilyName": "Central mixed-use mid-rise block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-civic-special",
+          "profileName": "Civic / health / sports special",
+          "weight": 0.05,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-civic-special",
+              "name": "Civic / health / sports special",
+              "reuseScope": "shared",
+              "recommendedTreatment": "procedural-assembly",
+              "repetitionBehavior": "landmark-driven",
+              "frequency": "occasional",
+              "sharedFamilyId": "arch-institutional-campus-block",
+              "sharedFamilyName": "Institutional / civic campus block",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-central-mixed",
+          "name": "Central mixed-use urban block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-central-mixed-midrise",
+          "sharedFamilyName": "Central mixed-use mid-rise block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-civic-special",
+          "name": "Civic / health / sports special",
+          "reuseScope": "shared",
+          "recommendedTreatment": "procedural-assembly",
+          "repetitionBehavior": "landmark-driven",
+          "frequency": "occasional",
+          "sharedFamilyId": "arch-institutional-campus-block",
+          "sharedFamilyName": "Institutional / civic campus block",
+          "researchStage": "baseline",
+          "confidence": "high"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [
+        {
+          "id": "bldg-torrevieja-landmark-plaza-constitucion",
+          "name": "Plaza de la Constitución",
+          "kind": "named-building",
+          "treatment": "coarse-massing",
+          "priority": "low"
+        },
+        {
+          "id": "bldg-torrevieja-landmark-museo-mar-sal",
+          "name": "Museo del Mar y de la Sal",
+          "kind": "named-building",
+          "treatment": "bespoke-model",
+          "priority": "medium"
+        },
+        {
+          "id": "bldg-torrevieja-landmark-inmaculada",
+          "name": "Iglesia de la Inmaculada Concepción",
+          "kind": "landmark-building",
+          "treatment": "bespoke-model",
+          "priority": "critical"
+        }
+      ],
+      "pois": [
+        {
+          "id": "poi-torrevieja-plaza-constitucion",
+          "name": "Plaza de la Constitución",
+          "type": "civic",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-object"
+        },
+        {
+          "id": "poi-torrevieja-parque-naciones",
+          "name": "Parque de las Naciones",
+          "type": "recreation",
+          "identityImportance": "characteristic",
+          "treatment": "landscape-feature"
+        },
+        {
+          "id": "poi-torrevieja-museo-mar-sal",
+          "name": "Museo del Mar y de la Sal",
+          "type": "cultural",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-object"
+        },
+        {
+          "id": "poi-torrevieja-inmaculada",
+          "name": "Iglesia de la Inmaculada Concepción",
+          "type": "religious",
+          "identityImportance": "city-defining",
+          "treatment": "bespoke-object"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 3,
+        "poisLinked": 4
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-center-seafront",
+      "zoneName": "Central seafront and promenade blocks",
+      "districtId": "d-central-harbor",
+      "districtName": "Central grid and harbor",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "very-high",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.55,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-central-mixed",
+          "profileName": "Central mixed-use urban block",
+          "weight": 0.35,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-central-mixed",
+              "name": "Central mixed-use urban block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-central-mixed-midrise",
+              "sharedFamilyName": "Central mixed-use mid-rise block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-coastal-slab-tower",
+          "profileName": "Coastal slab / tower apartment",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-coastal-slab-tower",
+              "name": "Coastal slab / tower apartment",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+              "sharedFamilyName": "Coastal apartment slab / tower",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-central-mixed",
+          "name": "Central mixed-use urban block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-central-mixed-midrise",
+          "sharedFamilyName": "Central mixed-use mid-rise block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-coastal-slab-tower",
+          "name": "Coastal slab / tower apartment",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+          "sharedFamilyName": "Coastal apartment slab / tower",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [
+        {
+          "id": "bldg-torrevieja-landmark-bus-station",
+          "name": "Estación de Autobuses de Torrevieja",
+          "kind": "infrastructure-building",
+          "treatment": "bespoke-model",
+          "priority": "high"
+        }
+      ],
+      "pois": [
+        {
+          "id": "poi-torrevieja-bus-station",
+          "name": "Estación de Autobuses de Torrevieja",
+          "type": "transport",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-object"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 1,
+        "poisLinked": 1
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-port-eras",
+      "zoneName": "Port, marina and Eras de la Sal edge",
+      "districtId": "d-central-harbor",
+      "districtName": "Central grid and harbor",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-civic-special",
+          "profileName": "Civic / health / sports special",
+          "weight": 0.55,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-civic-special",
+              "name": "Civic / health / sports special",
+              "reuseScope": "shared",
+              "recommendedTreatment": "procedural-assembly",
+              "repetitionBehavior": "landmark-driven",
+              "frequency": "occasional",
+              "sharedFamilyId": "arch-institutional-campus-block",
+              "sharedFamilyName": "Institutional / civic campus block",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-central-mixed",
+          "profileName": "Central mixed-use urban block",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-central-mixed",
+              "name": "Central mixed-use urban block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-central-mixed-midrise",
+              "sharedFamilyName": "Central mixed-use mid-rise block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-commercial-box",
+          "profileName": "Large-format retail box",
+          "weight": 0.2,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-commercial-box",
+              "name": "Large-format retail box",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-large-commercial-box",
+              "sharedFamilyName": "Large-format commercial / retail box",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-central-mixed",
+          "name": "Central mixed-use urban block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-central-mixed-midrise",
+          "sharedFamilyName": "Central mixed-use mid-rise block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-commercial-box",
+          "name": "Large-format retail box",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-large-commercial-box",
+          "sharedFamilyName": "Large-format commercial / retail box",
+          "researchStage": "baseline",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-civic-special",
+          "name": "Civic / health / sports special",
+          "reuseScope": "shared",
+          "recommendedTreatment": "procedural-assembly",
+          "repetitionBehavior": "landmark-driven",
+          "frequency": "occasional",
+          "sharedFamilyId": "arch-institutional-campus-block",
+          "sharedFamilyName": "Institutional / civic campus block",
+          "researchStage": "baseline",
+          "confidence": "high"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [
+        {
+          "id": "bldg-torrevieja-landmark-eras-caballete",
+          "name": "Caballete de las Eras de la Sal",
+          "kind": "infrastructure-building",
+          "treatment": "bespoke-model",
+          "priority": "critical"
+        }
+      ],
+      "pois": [
+        {
+          "id": "poi-torrevieja-eras-sal",
+          "name": "Eras de la Sal",
+          "type": "heritage",
+          "identityImportance": "city-defining",
+          "treatment": "bespoke-complex"
+        },
+        {
+          "id": "poi-torrevieja-port",
+          "name": "Puerto de Torrevieja",
+          "type": "port",
+          "identityImportance": "city-defining",
+          "treatment": "bespoke-complex"
+        },
+        {
+          "id": "poi-torrevieja-s61-delfin",
+          "name": "Submarino S-61 Delfín",
+          "type": "cultural",
+          "identityImportance": "city-defining",
+          "treatment": "bespoke-object"
+        },
+        {
+          "id": "poi-torrevieja-muelle-minguez",
+          "name": "Muelle Mínguez",
+          "type": "heritage",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-object"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 1,
+        "poisLinked": 4
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-los-locos-promenade",
+      "zoneName": "Los Locos apartment promenade",
+      "districtId": "d-los-locos-rosaleda",
+      "districtName": "Los Locos and La Rosaleda coast",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "high",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.5,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-coastal-slab-tower",
+          "profileName": "Coastal slab / tower apartment",
+          "weight": 0.45,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-coastal-slab-tower",
+              "name": "Coastal slab / tower apartment",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+              "sharedFamilyName": "Coastal apartment slab / tower",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-central-mixed",
+          "profileName": "Central mixed-use urban block",
+          "weight": 0.05,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-central-mixed",
+              "name": "Central mixed-use urban block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-central-mixed-midrise",
+              "sharedFamilyName": "Central mixed-use mid-rise block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-central-mixed",
+          "name": "Central mixed-use urban block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-central-mixed-midrise",
+          "sharedFamilyName": "Central mixed-use mid-rise block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-coastal-slab-tower",
+          "name": "Coastal slab / tower apartment",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+          "sharedFamilyName": "Coastal apartment slab / tower",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [
+        {
+          "id": "poi-torrevieja-playa-locos",
+          "name": "Playa de Los Locos",
+          "type": "tourism",
+          "identityImportance": "characteristic",
+          "treatment": "landscape-feature"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 1
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-rosaleda-inner",
+      "zoneName": "La Rosaleda inner residential fabric",
+      "districtId": "d-los-locos-rosaleda",
+      "districtName": "Los Locos and La Rosaleda coast",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.5,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-acequion-grid",
+      "zoneName": "Acequión compact apartment grid",
+      "districtId": "d-acequion-naufragos",
+      "districtName": "Acequión and Los Náufragos",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "high",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.6,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-central-mixed",
+          "profileName": "Central mixed-use urban block",
+          "weight": 0.3,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-central-mixed",
+              "name": "Central mixed-use urban block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-central-mixed-midrise",
+              "sharedFamilyName": "Central mixed-use mid-rise block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-central-mixed",
+          "name": "Central mixed-use urban block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-central-mixed-midrise",
+          "sharedFamilyName": "Central mixed-use mid-rise block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-naufragos-coast",
+      "zoneName": "Los Náufragos coastal strip",
+      "districtId": "d-acequion-naufragos",
+      "districtName": "Acequión and Los Náufragos",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "high",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.55,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-coastal-slab-tower",
+          "profileName": "Coastal slab / tower apartment",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-coastal-slab-tower",
+              "name": "Coastal slab / tower apartment",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+              "sharedFamilyName": "Coastal apartment slab / tower",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.2,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-coastal-slab-tower",
+          "name": "Coastal slab / tower apartment",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+          "sharedFamilyName": "Coastal apartment slab / tower",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [
+        {
+          "id": "poi-torrevieja-playa-naufragos",
+          "name": "Playa de los Náufragos",
+          "type": "tourism",
+          "identityImportance": "characteristic",
+          "treatment": "landscape-feature"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 1
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-nueva-torrevieja",
+      "zoneName": "Nueva Torrevieja mixed apartment belt",
+      "districtId": "d-nueva-losangeles-calas",
+      "districtName": "Nueva Torrevieja, Los Ángeles and Calas Blancas",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.45,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-los-angeles-villa-apartment",
+      "zoneName": "Los Ángeles villa–apartment transition",
+      "districtId": "d-nueva-losangeles-calas",
+      "districtName": "Nueva Torrevieja, Los Ángeles and Calas Blancas",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.35,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "P3-001 resolved the family boundary; exact facade/material prevalence and development-by-development subtype frequency remain non-blocking.",
+          "origin": "Phase 3 P3-001 residual uncertainty"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-calas-blancas",
+      "zoneName": "Calas Blancas terraced residential",
+      "districtId": "d-nueva-losangeles-calas",
+      "districtName": "Nueva Torrevieja, Los Ángeles and Calas Blancas",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.45,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.35,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.05,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "P3-001 resolved the family boundary; exact facade/material prevalence and development-by-development subtype frequency remain non-blocking.",
+          "origin": "Phase 3 P3-001 residual uncertainty"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-aguas-nuevas-compounds",
+      "zoneName": "Aguas Nuevas planned compounds",
+      "districtId": "d-aguas-torremoro",
+      "districtName": "Aguas Nuevas, Torre del Moro and Cabo Cervera",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.45,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.3,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "P3-001 resolved the family boundary; exact facade/material prevalence and development-by-development subtype frequency remain non-blocking.",
+          "origin": "Phase 3 P3-001 residual uncertainty"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-cabo-cervera-torremoro",
+      "zoneName": "Cabo Cervera and Torre del Moro coastal heights",
+      "districtId": "d-aguas-torremoro",
+      "districtName": "Aguas Nuevas, Torre del Moro and Cabo Cervera",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "high",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-coastal-slab-tower",
+          "profileName": "Coastal slab / tower apartment",
+          "weight": 0.5,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-coastal-slab-tower",
+              "name": "Coastal slab / tower apartment",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+              "sharedFamilyName": "Coastal apartment slab / tower",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.35,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-civic-special",
+          "profileName": "Civic / health / sports special",
+          "weight": 0.05,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-civic-special",
+              "name": "Civic / health / sports special",
+              "reuseScope": "shared",
+              "recommendedTreatment": "procedural-assembly",
+              "repetitionBehavior": "landmark-driven",
+              "frequency": "occasional",
+              "sharedFamilyId": "arch-institutional-campus-block",
+              "sharedFamilyName": "Institutional / civic campus block",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-coastal-slab-tower",
+          "name": "Coastal slab / tower apartment",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+          "sharedFamilyName": "Coastal apartment slab / tower",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-civic-special",
+          "name": "Civic / health / sports special",
+          "reuseScope": "shared",
+          "recommendedTreatment": "procedural-assembly",
+          "repetitionBehavior": "landmark-driven",
+          "frequency": "occasional",
+          "sharedFamilyId": "arch-institutional-campus-block",
+          "sharedFamilyName": "Institutional / civic campus block",
+          "researchStage": "baseline",
+          "confidence": "high"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [
+        {
+          "id": "bldg-torrevieja-landmark-torre-moro",
+          "name": "Torre del Moro",
+          "kind": "landmark-building",
+          "treatment": "bespoke-model",
+          "priority": "critical"
+        }
+      ],
+      "pois": [
+        {
+          "id": "poi-torrevieja-torre-moro",
+          "name": "Torre del Moro",
+          "type": "tourism",
+          "identityImportance": "city-defining",
+          "treatment": "bespoke-object"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 1,
+        "poisLinked": 1
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-north-sports-campus",
+      "zoneName": "Northern sports and institutional campus",
+      "districtId": "d-aguas-torremoro",
+      "districtName": "Aguas Nuevas, Torre del Moro and Cabo Cervera",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "low",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-civic-special",
+          "profileName": "Civic / health / sports special",
+          "weight": 0.75,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-civic-special",
+              "name": "Civic / health / sports special",
+              "reuseScope": "shared",
+              "recommendedTreatment": "procedural-assembly",
+              "repetitionBehavior": "landmark-driven",
+              "frequency": "occasional",
+              "sharedFamilyId": "arch-institutional-campus-block",
+              "sharedFamilyName": "Institutional / civic campus block",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-commercial-box",
+          "profileName": "Large-format retail box",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-commercial-box",
+              "name": "Large-format retail box",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-large-commercial-box",
+              "sharedFamilyName": "Large-format commercial / retail box",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-commercial-box",
+          "name": "Large-format retail box",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-large-commercial-box",
+          "sharedFamilyName": "Large-format commercial / retail box",
+          "researchStage": "baseline",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-civic-special",
+          "name": "Civic / health / sports special",
+          "reuseScope": "shared",
+          "recommendedTreatment": "procedural-assembly",
+          "repetitionBehavior": "landmark-driven",
+          "frequency": "occasional",
+          "sharedFamilyId": "arch-institutional-campus-block",
+          "sharedFamilyName": "Institutional / civic campus block",
+          "researchStage": "baseline",
+          "confidence": "high"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [
+        {
+          "id": "bldg-torrevieja-landmark-palacio-deportes",
+          "name": "Palacio de los Deportes de Torrevieja",
+          "kind": "named-building",
+          "treatment": "bespoke-model",
+          "priority": "high"
+        },
+        {
+          "id": "bldg-torrevieja-landmark-hospital-quiron",
+          "name": "Hospital Quirónsalud Torrevieja",
+          "kind": "named-building",
+          "treatment": "bespoke-model",
+          "priority": "high"
+        },
+        {
+          "id": "bldg-torrevieja-landmark-auditorio-internacional",
+          "name": "Auditorio Internacional de Torrevieja",
+          "kind": "named-building",
+          "treatment": "bespoke-model",
+          "priority": "high"
+        }
+      ],
+      "pois": [
+        {
+          "id": "poi-torrevieja-palacio-deportes",
+          "name": "Palacio de los Deportes de Torrevieja",
+          "type": "sports",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-complex"
+        },
+        {
+          "id": "poi-torrevieja-hospital-quiron",
+          "name": "Hospital Quirónsalud Torrevieja",
+          "type": "health",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-complex"
+        },
+        {
+          "id": "poi-torrevieja-auditorio-internacional",
+          "name": "Auditorio Internacional de Torrevieja",
+          "type": "cultural",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-object"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 3,
+        "poisLinked": 3
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-torreblanca-mixed",
+      "zoneName": "Torreblanca mixed slope residential",
+      "districtId": "d-torreblanca-molino-manguilla",
+      "districtName": "Torreblanca, Molino Blanco and La Manguilla",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.35,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.3,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.2,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-molino-blanco",
+      "zoneName": "Molino Blanco villa–apartment mosaic",
+      "districtId": "d-torreblanca-molino-manguilla",
+      "districtName": "Torreblanca, Molino Blanco and La Manguilla",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.35,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [
+        {
+          "id": "poi-torrevieja-molino-agua",
+          "name": "Parque del Molino del Agua",
+          "type": "natural",
+          "identityImportance": "characteristic",
+          "treatment": "landscape-feature"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 1
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-la-manguilla-emerging",
+      "zoneName": "La Manguilla infill and emerging residential",
+      "districtId": "d-torreblanca-molino-manguilla",
+      "districtName": "Torreblanca, Molino Blanco and La Manguilla",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "low",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-emerging-midrise",
+          "profileName": "Emerging planned residential block",
+          "weight": 0.45,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-emerging-midrise",
+              "name": "Emerging planned residential block",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "mixed",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "low"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.2,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-emerging-midrise",
+          "name": "Emerging planned residential block",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "mixed",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "low"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-la-mata-core",
+      "zoneName": "La Mata compact core",
+      "districtId": "d-la-mata",
+      "districtName": "La Mata",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "high",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.45,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-central-mixed",
+          "profileName": "Central mixed-use urban block",
+          "weight": 0.3,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-central-mixed",
+              "name": "Central mixed-use urban block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-central-mixed-midrise",
+              "sharedFamilyName": "Central mixed-use mid-rise block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-civic-special",
+          "profileName": "Civic / health / sports special",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-civic-special",
+              "name": "Civic / health / sports special",
+              "reuseScope": "shared",
+              "recommendedTreatment": "procedural-assembly",
+              "repetitionBehavior": "landmark-driven",
+              "frequency": "occasional",
+              "sharedFamilyId": "arch-institutional-campus-block",
+              "sharedFamilyName": "Institutional / civic campus block",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-central-mixed",
+          "name": "Central mixed-use urban block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-central-mixed-midrise",
+          "sharedFamilyName": "Central mixed-use mid-rise block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-civic-special",
+          "name": "Civic / health / sports special",
+          "reuseScope": "shared",
+          "recommendedTreatment": "procedural-assembly",
+          "repetitionBehavior": "landmark-driven",
+          "frequency": "occasional",
+          "sharedFamilyId": "arch-institutional-campus-block",
+          "sharedFamilyName": "Institutional / civic campus block",
+          "researchStage": "baseline",
+          "confidence": "high"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [
+        {
+          "id": "bldg-torrevieja-landmark-torre-la-mata",
+          "name": "Torre de La Mata",
+          "kind": "landmark-building",
+          "treatment": "bespoke-model",
+          "priority": "high"
+        },
+        {
+          "id": "bldg-torrevieja-landmark-rosario-la-mata",
+          "name": "Iglesia de Nuestra Señora del Rosario",
+          "kind": "landmark-building",
+          "treatment": "bespoke-model",
+          "priority": "high"
+        }
+      ],
+      "pois": [
+        {
+          "id": "poi-torrevieja-torre-la-mata",
+          "name": "Torre de La Mata",
+          "type": "heritage",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-object"
+        },
+        {
+          "id": "poi-torrevieja-rosario-la-mata",
+          "name": "Iglesia de Nuestra Señora del Rosario",
+          "type": "religious",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-object"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 2,
+        "poisLinked": 2
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-la-mata-beachfront",
+      "zoneName": "La Mata beachfront apartment edge",
+      "districtId": "d-la-mata",
+      "districtName": "La Mata",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "high",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.5,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-coastal-slab-tower",
+          "profileName": "Coastal slab / tower apartment",
+          "weight": 0.3,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-coastal-slab-tower",
+              "name": "Coastal slab / tower apartment",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+              "sharedFamilyName": "Coastal apartment slab / tower",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.05,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-coastal-slab-tower",
+          "name": "Coastal slab / tower apartment",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+          "sharedFamilyName": "Coastal apartment slab / tower",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [
+        {
+          "id": "poi-torrevieja-playa-la-mata",
+          "name": "Playa de La Mata",
+          "type": "tourism",
+          "identityImportance": "characteristic",
+          "treatment": "landscape-feature"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 1
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-chaparral-villas",
+      "zoneName": "El Chaparral large-plot villas",
+      "districtId": "d-siesta-sanluis-chaparral",
+      "districtName": "La Siesta, San Luis and El Chaparral",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "low",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.75,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "P3-001 resolved the family boundary; exact facade/material prevalence and development-by-development subtype frequency remain non-blocking.",
+          "origin": "Phase 3 P3-001 residual uncertainty"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-siesta-sanluis-villas",
+      "zoneName": "La Siesta and San Luis villa grid",
+      "districtId": "d-siesta-sanluis-chaparral",
+      "districtName": "La Siesta, San Luis and El Chaparral",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "low",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.65,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.2,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-civic-special",
+          "profileName": "Civic / health / sports special",
+          "weight": 0.05,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-civic-special",
+              "name": "Civic / health / sports special",
+              "reuseScope": "shared",
+              "recommendedTreatment": "procedural-assembly",
+              "repetitionBehavior": "landmark-driven",
+              "frequency": "occasional",
+              "sharedFamilyId": "arch-institutional-campus-block",
+              "sharedFamilyName": "Institutional / civic campus block",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-civic-special",
+          "name": "Civic / health / sports special",
+          "reuseScope": "shared",
+          "recommendedTreatment": "procedural-assembly",
+          "repetitionBehavior": "landmark-driven",
+          "frequency": "occasional",
+          "sharedFamilyId": "arch-institutional-campus-block",
+          "sharedFamilyName": "Institutional / civic campus block",
+          "researchStage": "baseline",
+          "confidence": "high"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [
+        {
+          "id": "bldg-torrevieja-landmark-health-la-siesta",
+          "name": "Centro de Salud La Siesta",
+          "kind": "named-building",
+          "treatment": "bespoke-model",
+          "priority": "medium"
+        }
+      ],
+      "pois": [
+        {
+          "id": "poi-torrevieja-parque-siesta",
+          "name": "Parque de La Siesta",
+          "type": "recreation",
+          "identityImportance": "characteristic",
+          "treatment": "landscape-feature"
+        },
+        {
+          "id": "poi-torrevieja-health-la-siesta",
+          "name": "Centro de Salud La Siesta",
+          "type": "health",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-object"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 1,
+        "poisLinked": 2
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "P3-001 resolved the family boundary; exact facade/material prevalence and development-by-development subtype frequency remain non-blocking.",
+          "origin": "Phase 3 P3-001 residual uncertainty"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-torreta-villas",
+      "zoneName": "La Torreta low-coverage villa grid",
+      "districtId": "d-torretas-limonar-hondo",
+      "districtName": "Torretas, El Limonar and El Hondo",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "low",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.75,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "P3-001 resolved the family boundary; exact facade/material prevalence and development-by-development subtype frequency remain non-blocking.",
+          "origin": "Phase 3 P3-001 residual uncertainty"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-limonar-hondo-fringe",
+      "zoneName": "El Limonar–El Hondo fragmented fringe",
+      "districtId": "d-torretas-limonar-hondo",
+      "districtName": "Torretas, El Limonar and El Hondo",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "very-low",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.45,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.2,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-emerging-midrise",
+          "profileName": "Emerging planned residential block",
+          "weight": 0.2,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-emerging-midrise",
+              "name": "Emerging planned residential block",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "mixed",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "low"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-emerging-midrise",
+          "name": "Emerging planned residential block",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "mixed",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "low"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "P3-001 resolved the family boundary; exact facade/material prevalence and development-by-development subtype frequency remain non-blocking.",
+          "origin": "Phase 3 P3-001 residual uncertainty"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-los-balcones-villas",
+      "zoneName": "Los Balcones large-plot villas",
+      "districtId": "d-balcones-lago-altos",
+      "districtName": "Los Balcones, Lago Jardín and Los Altos",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "low",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.8,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "P3-001 resolved the family boundary; exact facade/material prevalence and development-by-development subtype frequency remain non-blocking.",
+          "origin": "Phase 3 P3-001 residual uncertainty"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-lago-jardin",
+      "zoneName": "Lago Jardín terrace and compound urbanization",
+      "districtId": "d-balcones-lago-altos",
+      "districtName": "Los Balcones, Lago Jardín and Los Altos",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.45,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.35,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "P3-001 resolved the family boundary; exact facade/material prevalence and development-by-development subtype frequency remain non-blocking.",
+          "origin": "Phase 3 P3-001 residual uncertainty"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-los-altos-mixed",
+      "zoneName": "Los Altos mixed planned residential",
+      "districtId": "d-balcones-lago-altos",
+      "districtName": "Los Balcones, Lago Jardín and Los Altos",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.35,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "P3-001 resolved the family boundary; exact facade/material prevalence and development-by-development subtype frequency remain non-blocking.",
+          "origin": "Phase 3 P3-001 residual uncertainty"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-la-veleta-mixed",
+      "zoneName": "La Veleta villa–apartment mix",
+      "districtId": "d-south-coast",
+      "districtName": "La Veleta, Mar Azul, Rocío del Mar and Punta Prima",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.3,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.25,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-coastal-slab-tower",
+          "profileName": "Coastal slab / tower apartment",
+          "weight": 0.2,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-coastal-slab-tower",
+              "name": "Coastal slab / tower apartment",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+              "sharedFamilyName": "Coastal apartment slab / tower",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-coastal-slab-tower",
+          "name": "Coastal slab / tower apartment",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+          "sharedFamilyName": "Coastal apartment slab / tower",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-south-coastal-apartments",
+      "zoneName": "Mar Azul–Rocío del Mar–Punta Prima coastal apartment strip",
+      "districtId": "d-south-coast",
+      "districtName": "La Veleta, Mar Azul, Rocío del Mar and Punta Prima",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "high",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-midrise-apartment",
+          "profileName": "Mid-rise apartment block",
+          "weight": 0.4,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-midrise-apartment",
+              "name": "Mid-rise apartment block",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+              "sharedFamilyName": "Neighborhood mid-rise apartment block",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-coastal-slab-tower",
+          "profileName": "Coastal slab / tower apartment",
+          "weight": 0.35,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-coastal-slab-tower",
+              "name": "Coastal slab / tower apartment",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+              "sharedFamilyName": "Coastal apartment slab / tower",
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.2,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.05,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-midrise-apartment",
+          "name": "Mid-rise apartment block",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-neighborhood-midrise-apartment",
+          "sharedFamilyName": "Neighborhood mid-rise apartment block",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-coastal-slab-tower",
+          "name": "Coastal slab / tower apartment",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-coastal-apartment-slab-tower",
+          "sharedFamilyName": "Coastal apartment slab / tower",
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [
+        {
+          "id": "poi-torrevieja-rocio-coast",
+          "name": "Rocío del Mar coastal access",
+          "type": "tourism",
+          "identityImportance": "characteristic",
+          "treatment": "procedural-context"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 1
+      },
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "remainingIssues": [
+        {
+          "type": "appearance-calibration",
+          "severity": "medium",
+          "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+          "origin": "Phase 2 remaining-gap statement"
+        }
+      ]
+    },
+    {
+      "zoneId": "z-habaneras-retail",
+      "zoneName": "Habaneras big-box retail cluster",
+      "districtId": "d-commercial-industrial",
+      "districtName": "Habaneras, Casagrande and Salinas commercial-industrial belt",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "medium",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-commercial-box",
+          "profileName": "Large-format retail box",
+          "weight": 0.75,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-commercial-box",
+              "name": "Large-format retail box",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-large-commercial-box",
+              "sharedFamilyName": "Large-format commercial / retail box",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-industrial-shed",
+          "profileName": "Industrial shed / warehouse",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-industrial-shed",
+              "name": "Industrial shed / warehouse",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-industrial-logistics-shed",
+              "sharedFamilyName": "Industrial / logistics shed",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-civic-special",
+          "profileName": "Civic / health / sports special",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-civic-special",
+              "name": "Civic / health / sports special",
+              "reuseScope": "shared",
+              "recommendedTreatment": "procedural-assembly",
+              "repetitionBehavior": "landmark-driven",
+              "frequency": "occasional",
+              "sharedFamilyId": "arch-institutional-campus-block",
+              "sharedFamilyName": "Institutional / civic campus block",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-commercial-box",
+          "name": "Large-format retail box",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-large-commercial-box",
+          "sharedFamilyName": "Large-format commercial / retail box",
+          "researchStage": "baseline",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-industrial-shed",
+          "name": "Industrial shed / warehouse",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-industrial-logistics-shed",
+          "sharedFamilyName": "Industrial / logistics shed",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-civic-special",
+          "name": "Civic / health / sports special",
+          "reuseScope": "shared",
+          "recommendedTreatment": "procedural-assembly",
+          "repetitionBehavior": "landmark-driven",
+          "frequency": "occasional",
+          "sharedFamilyId": "arch-institutional-campus-block",
+          "sharedFamilyName": "Institutional / civic campus block",
+          "researchStage": "baseline",
+          "confidence": "high"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [
+        {
+          "id": "bldg-torrevieja-landmark-habaneras",
+          "name": "Centro Comercial Habaneras",
+          "kind": "named-building",
+          "treatment": "bespoke-model",
+          "priority": "high"
+        }
+      ],
+      "pois": [
+        {
+          "id": "poi-torrevieja-habaneras",
+          "name": "Centro Comercial Habaneras",
+          "type": "commercial",
+          "identityImportance": "characteristic",
+          "treatment": "bespoke-complex"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 1,
+        "poisLinked": 1
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-casagrande-industrial",
+      "zoneName": "Casagrande industrial sheds",
+      "districtId": "d-commercial-industrial",
+      "districtName": "Habaneras, Casagrande and Salinas commercial-industrial belt",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "low",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-industrial-shed",
+          "profileName": "Industrial shed / warehouse",
+          "weight": 0.8,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-industrial-shed",
+              "name": "Industrial shed / warehouse",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-industrial-logistics-shed",
+              "sharedFamilyName": "Industrial / logistics shed",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-commercial-box",
+          "profileName": "Large-format retail box",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-commercial-box",
+              "name": "Large-format retail box",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-large-commercial-box",
+              "sharedFamilyName": "Large-format commercial / retail box",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-civic-special",
+          "profileName": "Civic / health / sports special",
+          "weight": 0.05,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-civic-special",
+              "name": "Civic / health / sports special",
+              "reuseScope": "shared",
+              "recommendedTreatment": "procedural-assembly",
+              "repetitionBehavior": "landmark-driven",
+              "frequency": "occasional",
+              "sharedFamilyId": "arch-institutional-campus-block",
+              "sharedFamilyName": "Institutional / civic campus block",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-commercial-box",
+          "name": "Large-format retail box",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-large-commercial-box",
+          "sharedFamilyName": "Large-format commercial / retail box",
+          "researchStage": "baseline",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-industrial-shed",
+          "name": "Industrial shed / warehouse",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-industrial-logistics-shed",
+          "sharedFamilyName": "Industrial / logistics shed",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-civic-special",
+          "name": "Civic / health / sports special",
+          "reuseScope": "shared",
+          "recommendedTreatment": "procedural-assembly",
+          "repetitionBehavior": "landmark-driven",
+          "frequency": "occasional",
+          "sharedFamilyId": "arch-institutional-campus-block",
+          "sharedFamilyName": "Institutional / civic campus block",
+          "researchStage": "baseline",
+          "confidence": "high"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 0
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-salinas-industrial",
+      "zoneName": "Industrial Salinas / specialty-commercial edge",
+      "districtId": "d-commercial-industrial",
+      "districtName": "Habaneras, Casagrande and Salinas commercial-industrial belt",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "low",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-industrial-shed",
+          "profileName": "Industrial shed / warehouse",
+          "weight": 0.65,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-industrial-shed",
+              "name": "Industrial shed / warehouse",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-industrial-logistics-shed",
+              "sharedFamilyName": "Industrial / logistics shed",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-commercial-box",
+          "profileName": "Large-format retail box",
+          "weight": 0.3,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-commercial-box",
+              "name": "Large-format retail box",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-large-commercial-box",
+              "sharedFamilyName": "Large-format commercial / retail box",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-civic-special",
+          "profileName": "Civic / health / sports special",
+          "weight": 0.05,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-civic-special",
+              "name": "Civic / health / sports special",
+              "reuseScope": "shared",
+              "recommendedTreatment": "procedural-assembly",
+              "repetitionBehavior": "landmark-driven",
+              "frequency": "occasional",
+              "sharedFamilyId": "arch-institutional-campus-block",
+              "sharedFamilyName": "Institutional / civic campus block",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-commercial-box",
+          "name": "Large-format retail box",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-large-commercial-box",
+          "sharedFamilyName": "Large-format commercial / retail box",
+          "researchStage": "baseline",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-industrial-shed",
+          "name": "Industrial shed / warehouse",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-industrial-logistics-shed",
+          "sharedFamilyName": "Industrial / logistics shed",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-civic-special",
+          "name": "Civic / health / sports special",
+          "reuseScope": "shared",
+          "recommendedTreatment": "procedural-assembly",
+          "repetitionBehavior": "landmark-driven",
+          "frequency": "occasional",
+          "sharedFamilyId": "arch-institutional-campus-block",
+          "sharedFamilyName": "Institutional / civic campus block",
+          "researchStage": "baseline",
+          "confidence": "high"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [
+        {
+          "id": "bldg-torrevieja-landmark-saltworks",
+          "name": "Salinas de Torrevieja industrial salt works",
+          "kind": "infrastructure-building",
+          "treatment": "procedural-assembly",
+          "priority": "critical"
+        }
+      ],
+      "pois": [
+        {
+          "id": "poi-torrevieja-saltworks",
+          "name": "Salinas de Torrevieja industrial salt works",
+          "type": "industrial",
+          "identityImportance": "city-defining",
+          "treatment": "bespoke-complex"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 1,
+        "poisLinked": 1
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    },
+    {
+      "zoneId": "z-la-hoya-active",
+      "zoneName": "La Hoya active urbanization sector",
+      "districtId": "d-la-hoya",
+      "districtName": "La Hoya development frontier",
+      "developmentStatus": "unspecified",
+      "geometryQuality": "research-approximation",
+      "zoneConfidence": "medium",
+      "densityCharacter": "low",
+      "dominantProfiles": [
+        {
+          "profileId": "bp-emerging-midrise",
+          "profileName": "Emerging planned residential block",
+          "weight": 0.45,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-emerging-midrise",
+              "name": "Emerging planned residential block",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "mixed",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "low"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-lowrise-compound",
+          "profileName": "Low-rise apartment / communal compound",
+          "weight": 0.2,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-lowrise-compound",
+              "name": "Low-rise apartment / communal compound",
+              "reuseScope": "city-specific",
+              "recommendedTreatment": "city-variant",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": null,
+              "sharedFamilyName": null,
+              "researchStage": "city-reresearch",
+              "confidence": "medium"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-terrace-bungalow",
+          "profileName": "Terrace / semi-detached bungalow family",
+          "weight": 0.15,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-terrace-bungalow",
+              "name": "Terrace / semi-detached bungalow family",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+              "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-detached-villa",
+          "profileName": "Detached Mediterranean villa",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-detached-villa",
+              "name": "Detached Mediterranean villa",
+              "reuseScope": "regional",
+              "recommendedTreatment": "regional-variant",
+              "repetitionBehavior": "highly-repetitive",
+              "frequency": "dominant",
+              "sharedFamilyId": "arch-detached-mediterranean-house",
+              "sharedFamilyName": "Detached Mediterranean house / villa",
+              "researchStage": "city-reresearch",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "profileId": "bp-commercial-box",
+          "profileName": "Large-format retail box",
+          "weight": 0.1,
+          "catalogFamilies": [
+            {
+              "buildingId": "bldg-torrevieja-commercial-box",
+              "name": "Large-format retail box",
+              "reuseScope": "shared",
+              "recommendedTreatment": "shared-kit",
+              "repetitionBehavior": "locally-repetitive",
+              "frequency": "common",
+              "sharedFamilyId": "arch-large-commercial-box",
+              "sharedFamilyName": "Large-format commercial / retail box",
+              "researchStage": "baseline",
+              "confidence": "high"
+            }
+          ]
+        }
+      ],
+      "linkedBuildingFamilies": [
+        {
+          "buildingId": "bldg-torrevieja-detached-villa",
+          "name": "Detached Mediterranean villa",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "dominant",
+          "sharedFamilyId": "arch-detached-mediterranean-house",
+          "sharedFamilyName": "Detached Mediterranean house / villa",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-terrace-bungalow",
+          "name": "Terrace / semi-detached bungalow family",
+          "reuseScope": "regional",
+          "recommendedTreatment": "regional-variant",
+          "repetitionBehavior": "highly-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-lowrise-rowhouse-townhouse",
+          "sharedFamilyName": "Low-rise terrace / townhouse / semi-detached family",
+          "researchStage": "city-reresearch",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-lowrise-compound",
+          "name": "Low-rise apartment / communal compound",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "medium"
+        },
+        {
+          "buildingId": "bldg-torrevieja-commercial-box",
+          "name": "Large-format retail box",
+          "reuseScope": "shared",
+          "recommendedTreatment": "shared-kit",
+          "repetitionBehavior": "locally-repetitive",
+          "frequency": "common",
+          "sharedFamilyId": "arch-large-commercial-box",
+          "sharedFamilyName": "Large-format commercial / retail box",
+          "researchStage": "baseline",
+          "confidence": "high"
+        },
+        {
+          "buildingId": "bldg-torrevieja-emerging-midrise",
+          "name": "Emerging planned residential block",
+          "reuseScope": "city-specific",
+          "recommendedTreatment": "city-variant",
+          "repetitionBehavior": "mixed",
+          "frequency": "common",
+          "sharedFamilyId": null,
+          "sharedFamilyName": null,
+          "researchStage": "city-reresearch",
+          "confidence": "low"
+        }
+      ],
+      "namedOrInfrastructureBuildings": [],
+      "pois": [
+        {
+          "id": "poi-torrevieja-la-hoya-reserve",
+          "name": "La Hoya development reserve / public-housing parcels",
+          "type": "other",
+          "identityImportance": "characteristic",
+          "treatment": "procedural-context"
+        }
+      ],
+      "decisionCoverage": {
+        "dominantFamiliesIdentified": true,
+        "repetitionSpecified": true,
+        "reuseTreatmentSpecified": true,
+        "namedStructuresLinked": 0,
+        "poisLinked": 1
+      },
+      "maturity": "derivation-ready",
+      "remainingIssues": []
+    }
+  ]
+}

@@ -1,0 +1,3991 @@
+{
+  "schemaVersion": "0.1.0",
+  "generatedAt": "2026-10-07",
+  "basis": [
+    "Phase 2 Closeout v0.1 frozen seven-city research state",
+    "Phase 2 Maturity Audit v0.1 across all 296 morphology zones",
+    "No new external research performed for this register",
+    "Phase 3 applied exception results P3-001, P3-003, P3-004 and P3-005; original Phase 2 unresolved register preserved in frozen input"
+  ],
+  "portfolioResearchState": "phase3-exception-research-in-progress",
+  "purpose": "Active unresolved-question register after applying completed Phase 3 exceptions, while preserving the Phase 2 register in the frozen input and resolved outcomes in the Phase 3 completion ledger.",
+  "sourceIssueInstanceCount": 176,
+  "sourceSharedFamilyUnresolvedStatementCount": 16,
+  "summary": {
+    "consolidatedQuestionCount": 15,
+    "phase3ExceptionResearchCount": 5,
+    "conditionalPhase3Count": 3,
+    "productionTimedCheckCount": 2,
+    "documentedUncertaintyCount": 5,
+    "phase3AffectedZoneCount": 9,
+    "conditionalPhase3AffectedZoneCount": 12
+  },
+  "triagePrinciples": [
+    "Research further only when uncertainty can materially change a structural family, city/regional variation, repetition rule, bespoke decision or defining spatial grammar.",
+    "Defer time-sensitive planned/transition/as-built questions to production freeze rather than manufacturing present certainty.",
+    "Treat authoritative geometry/buildability replacement as pre-integration work unless it changes morphology classification.",
+    "Do not research ordinary facade/material detail merely to increase completeness; reopen it only when prototyping demonstrates an identity failure.",
+    "Preserve shared-family caveats and intentional exclusions rather than forcing symmetric cross-city families."
+  ],
+  "questions": [
+    {
+      "id": "P3-002",
+      "title": "Elche Ciudad Jardín villa kit boundary",
+      "category": "family-decision",
+      "disposition": "phase3-exception-research",
+      "priority": "high",
+      "phase3Rank": 4,
+      "scope": {
+        "cityIds": [
+          "elche"
+        ],
+        "zonesByCity": {
+          "elche": [
+            "z-nuevo-altabix-open"
+          ]
+        },
+        "buildingIds": [
+          "bldg-elche-citygarden-detached-villa",
+          "bldg-elche-institutional",
+          "bldg-elche-openblock-apartment",
+          "bldg-elche-rowhouse-villa"
+        ],
+        "sharedFamilyIds": [
+          "arch-detached-mediterranean-house",
+          "arch-institutional-campus-block",
+          "arch-lowrise-rowhouse-townhouse",
+          "arch-open-block-apartment-slab"
+        ]
+      },
+      "unresolvedQuestion": "Is the Ciudad Jardín detached-house condition sufficiently represented by the shared Mediterranean-villa structure, or does its current plot/building grammar require a distinct Elche city-specific variation?",
+      "whyItMatters": "Phase 2 isolated Ciudad Jardín as a meaningful detached-house family, but its final kit boundary remains explicitly unresolved.",
+      "recommendedAction": "Sample current built plots and repeated house/site relationships in the affected zone, focusing on setbacks, parcel scale, party-wall incidence, roofs and street-edge treatment.",
+      "acceptanceCriteria": [
+        "Resolve shared-regional versus Elche-specific treatment.",
+        "Retain bounded qualitative ranges rather than false dimensional precision.",
+        "Do not generalize the result to Palmeral or pedanía housing."
+      ],
+      "sourceIssueIds": [
+        "issue-elche-z-nuevo-altabix-open-02"
+      ],
+      "sourceIssueStatements": [
+        "Exact current Ciudad Jardín villa grammar remains insufficiently calibrated for a final kit boundary."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement"
+      ]
+    },
+    {
+      "id": "P3-006",
+      "title": "Málaga eastern hillside villa / compound boundaries",
+      "category": "family-decision",
+      "disposition": "phase3-exception-research",
+      "priority": "high",
+      "phase3Rank": 1,
+      "scope": {
+        "cityIds": [
+          "malaga"
+        ],
+        "zonesByCity": {
+          "malaga": [
+            "z-candado",
+            "z-cerrado",
+            "z-pinares"
+          ]
+        },
+        "buildingIds": [
+          "bldg-malaga-coastal-lowrise",
+          "bldg-malaga-suburban-row",
+          "bldg-malaga-villa"
+        ],
+        "sharedFamilyIds": [
+          "arch-detached-mediterranean-house",
+          "arch-lowrise-rowhouse-townhouse"
+        ]
+      },
+      "unresolvedQuestion": "Do Cerrado, Pinares and Candado share one Málaga hillside-villa/compound variation, or do their plot, slope and building relationships justify multiple city-specific subprofiles?",
+      "whyItMatters": "The three zones represent a major topography-driven city condition that cannot be reduced to a flat-land villa palette.",
+      "recommendedAction": "Compare representative slope relationships, retaining walls, access, setbacks, compound organization, roof form and repeated development patterns across the three zones.",
+      "acceptanceCriteria": [
+        "Resolve one-versus-multiple Málaga hillside subprofiles.",
+        "State what remains shared with the regional detached-villa archetype.",
+        "Record slope/site grammar separately from facade styling."
+      ],
+      "sourceIssueIds": [
+        "issue-malaga-z-cerrado-01",
+        "issue-malaga-z-pinares-01",
+        "issue-malaga-z-candado-01"
+      ],
+      "sourceIssueStatements": [
+        "Current villa/compound patterns remain insufficiently calibrated for final hillside-family boundaries."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement"
+      ]
+    },
+    {
+      "id": "P3-007",
+      "title": "Murcia Infante and secondary postwar-estate calibration",
+      "category": "family-decision",
+      "disposition": "phase3-exception-research",
+      "priority": "high",
+      "phase3Rank": 2,
+      "scope": {
+        "cityIds": [
+          "murcia"
+        ],
+        "zonesByCity": {
+          "murcia": [
+            "z-infante-buenos-aires",
+            "z-infante-infante-superblocks"
+          ]
+        },
+        "buildingIds": [
+          "bldg-murcia-apartment-perimeter",
+          "bldg-murcia-apartment-slab",
+          "bldg-murcia-central-mixed-midrise",
+          "bldg-murcia-civic-landmark"
+        ],
+        "sharedFamilyIds": [
+          "arch-central-mixed-midrise",
+          "arch-open-block-apartment-slab",
+          "arch-perimeter-apartment-block"
+        ]
+      },
+      "unresolvedQuestion": "How should Infante and adjacent Buenos Aires postwar fabric be classified relative to Murcia’s already separated La Paz, La Fama and Vistabella subtypes and the shared open-block/perimeter families?",
+      "whyItMatters": "Phase 2 successfully decomposed Murcia’s best-known eastern estates; leaving Infante coarse could reintroduce a generic estate treatment into an important contiguous urban area.",
+      "recommendedAction": "Sample block/site organization, height bands, access/open space and repeated building forms in the two affected zones, explicitly comparing them with the three already researched east-estate profiles.",
+      "acceptanceCriteria": [
+        "Assign Infante/Buenos Aires to existing subtype(s) or justify one new city-specific subtype.",
+        "Avoid creating a new top-level shared family unless cross-city evidence requires it.",
+        "Document regeneration/infill separately from original estate grammar."
+      ],
+      "sourceIssueIds": [
+        "issue-murcia-z-infante-infante-superblocks-01",
+        "issue-murcia-z-infante-buenos-aires-01"
+      ],
+      "sourceIssueStatements": [
+        "Infante and other postwar areas outside the three east estates need stronger typology calibration."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement"
+      ]
+    },
+    {
+      "id": "P3-008",
+      "title": "Murcia resort-housing family placement",
+      "category": "family-decision",
+      "disposition": "phase3-exception-research",
+      "priority": "high",
+      "phase3Rank": 3,
+      "scope": {
+        "cityIds": [
+          "murcia"
+        ],
+        "zonesByCity": {
+          "murcia": [
+            "z-sucina-gea-resort"
+          ]
+        },
+        "buildingIds": [
+          "bldg-murcia-civic-landmark",
+          "bldg-murcia-commercial-box",
+          "bldg-murcia-resort-villa",
+          "bldg-murcia-villa-detached"
+        ],
+        "sharedFamilyIds": [
+          "arch-detached-mediterranean-house",
+          "arch-large-commercial-box"
+        ]
+      },
+      "unresolvedQuestion": "Which current Sucina–Gea y Truyols resort-housing forms belong back in the shared detached-villa or rowhouse/townhouse families, and which remain a distinct Murcia resort variation?",
+      "whyItMatters": "The closeout portfolio deliberately excludes Murcia resort housing from the shared low-rise family pending current subtype sampling.",
+      "recommendedAction": "Sample representative resort compounds and house types, focusing on attachment, plot/communal-space relationship, roof, facade rhythm and repetition by development.",
+      "acceptanceCriteria": [
+        "Resolve shared-family membership at subtype level.",
+        "Retain resort site grammar even where building structure is shared.",
+        "Do not treat all outer Campo housing as resort morphology."
+      ],
+      "sourceIssueIds": [
+        "issue-murcia-z-sucina-gea-resort-02"
+      ],
+      "sourceIssueStatements": [
+        "Resort/industrial facade and plot sampling remains incomplete before final production-kit boundaries are frozen."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement"
+      ],
+      "sharedIndexUnresolvedStatements": [
+        {
+          "familyId": "arch-lowrise-rowhouse-townhouse",
+          "familyName": "Low-rise terrace / townhouse / semi-detached family",
+          "statement": "Murcia resort housing is deliberately excluded pending current subtype/facade sampling; future comparison may place individual resort forms back into shared detached/rowhouse families.",
+          "assignedQuestionId": "P3-008"
+        }
+      ]
+    },
+    {
+      "id": "P3-009",
+      "title": "Murcia Polígono Industrial Oeste production-kit boundary",
+      "category": "family-decision",
+      "disposition": "phase3-exception-research",
+      "priority": "high",
+      "phase3Rank": 5,
+      "scope": {
+        "cityIds": [
+          "murcia"
+        ],
+        "zonesByCity": {
+          "murcia": [
+            "z-industrial-oeste-logistics",
+            "z-industrial-oeste-service-fringe"
+          ]
+        },
+        "buildingIds": [
+          "bldg-murcia-civic-landmark",
+          "bldg-murcia-commercial-box",
+          "bldg-murcia-industrial-shed"
+        ],
+        "sharedFamilyIds": [
+          "arch-industrial-logistics-shed",
+          "arch-large-commercial-box"
+        ]
+      },
+      "unresolvedQuestion": "What plot/building subtypes distinguish the logistics core from the service fringe of Polígono Industrial Oeste, and how much can remain within the shared industrial/logistics structural kit?",
+      "whyItMatters": "The structural industrial family is stable, but the final production-kit boundary between logistics sheds, service frontage and ancillary buildings remains explicitly unresolved.",
+      "recommendedAction": "Sample representative current plots in both zones, separating building form from yard/loading/parking/site grammar.",
+      "acceptanceCriteria": [
+        "Define a bounded industrial subtype set.",
+        "Confirm whether all subtypes remain parameterized variants of the shared industrial/logistics family.",
+        "Avoid promoting purely site-layout differences into unnecessary new structural families."
+      ],
+      "sourceIssueIds": [
+        "issue-murcia-z-industrial-oeste-logistics-01",
+        "issue-murcia-z-industrial-oeste-service-fringe-01"
+      ],
+      "sourceIssueStatements": [
+        "Resort/industrial facade and plot sampling remains incomplete before final production-kit boundaries are frozen."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement"
+      ]
+    },
+    {
+      "id": "P3-C01",
+      "title": "Elche business-park kit calibration",
+      "category": "family-decision",
+      "disposition": "conditional-phase3",
+      "priority": "medium",
+      "phase3Rank": 6,
+      "scope": {
+        "cityIds": [
+          "elche"
+        ],
+        "zonesByCity": {
+          "elche": [
+            "z-businesspark-e49",
+            "z-businesspark-existing"
+          ]
+        },
+        "buildingIds": [
+          "bldg-elche-bigbox",
+          "bldg-elche-businesspark",
+          "bldg-elche-industrial-shed"
+        ],
+        "sharedFamilyIds": [
+          "arch-business-technology-park-building",
+          "arch-industrial-logistics-shed",
+          "arch-large-commercial-box"
+        ]
+      },
+      "unresolvedQuestion": "Does Elche Parque Empresarial need a stronger Elche-specific variation within the shared Elche–Málaga business/technology-park family?",
+      "whyItMatters": "The cross-city family is already high-confidence, so further research is only valuable if production needs a more specific facade/roof/site kit boundary.",
+      "recommendedAction": "Research only if prototyping shows the current shared structure cannot reproduce Elche’s business-park identity. Sample a small set of representative office/logistics buildings rather than expanding general park facts.",
+      "acceptanceCriteria": [
+        "Either confirm the existing shared family plus parameterized city variation or document one bounded Elche-specific subtype.",
+        "Do not reopen Alicante membership without new evidence."
+      ],
+      "sourceIssueIds": [
+        "issue-elche-z-businesspark-existing-01",
+        "issue-elche-z-businesspark-e49-01"
+      ],
+      "sourceIssueStatements": [
+        "Business-park facade/roof typologies remain insufficiently sampled for final shared-versus-city-specific kit calibration."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement"
+      ]
+    },
+    {
+      "id": "P3-C02",
+      "title": "Alicante northern-estate subtype calibration",
+      "category": "family-decision",
+      "disposition": "conditional-phase3",
+      "priority": "medium",
+      "phase3Rank": 7,
+      "scope": {
+        "cityIds": [
+          "alicante"
+        ],
+        "zonesByCity": {
+          "alicante": [
+            "z-colonia-requena",
+            "z-juan-xxiii",
+            "z-lo-morant",
+            "z-virgen-remedio"
+          ]
+        },
+        "buildingIds": [
+          "bldg-alicante-civic-institutional",
+          "bldg-alicante-coastal-townhouse",
+          "bldg-alicante-compact-apartment",
+          "bldg-alicante-juanxxiii-comb-estate",
+          "bldg-alicante-openblock-slab",
+          "bldg-alicante-residential-tower",
+          "bldg-alicante-virgen-remedio-postwar-block"
+        ],
+        "sharedFamilyIds": [
+          "arch-coastal-apartment-slab-tower",
+          "arch-institutional-campus-block",
+          "arch-lowrise-rowhouse-townhouse",
+          "arch-neighborhood-midrise-apartment",
+          "arch-open-block-apartment-slab"
+        ]
+      },
+      "unresolvedQuestion": "Do Virgen del Remedio, Lo Morant, Juan XXIII and Colonia Requena need further production-facing subdivision within the shared open-block estate family?",
+      "whyItMatters": "Phase 2 already established the top-level family. Additional research should occur only if a prototype cannot express the meaningful estate-to-estate differences with existing subprofiles.",
+      "recommendedAction": "Compare representative blocks and site organization only where current subtype definitions prove insufficient in prototyping.",
+      "acceptanceCriteria": [
+        "Preserve the shared open-block family unless evidence requires a bounded Alicante subtype.",
+        "Do not make block-by-block cataloging a completeness goal."
+      ],
+      "sourceIssueIds": [
+        "issue-alicante-z-virgen-remedio-01",
+        "issue-alicante-z-lo-morant-01",
+        "issue-alicante-z-juan-xxiii-01",
+        "issue-alicante-z-colonia-requena-01"
+      ],
+      "sourceIssueStatements": [
+        "Northern-estate classification is improved but still not complete block by block."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement"
+      ]
+    },
+    {
+      "id": "P3-C03",
+      "title": "Benidorm peripheral low-density / villa grammar",
+      "category": "family-decision",
+      "disposition": "conditional-phase3",
+      "priority": "medium",
+      "phase3Rank": 8,
+      "scope": {
+        "cityIds": [
+          "benidorm"
+        ],
+        "zonesByCity": {
+          "benidorm": [
+            "almafra-mixed-fringe",
+            "coblanca-peripheral-residential",
+            "finca-barrina-transition",
+            "lhorta-lowdensity",
+            "mont-benidorm-hillside",
+            "west-resort-hotel-edge"
+          ]
+        },
+        "buildingIds": [
+          "bldg-benidorm-civic-education-sports",
+          "bldg-benidorm-detached-villa",
+          "bldg-benidorm-hotel-slab-midrise",
+          "bldg-benidorm-hotel-tower-highrise",
+          "bldg-benidorm-industrial-commercial-box",
+          "bldg-benidorm-leisure-pavilion",
+          "bldg-benidorm-lowrise-apartment-townhouse",
+          "bldg-benidorm-resident-midrise-apartment"
+        ],
+        "sharedFamilyIds": [
+          "arch-detached-mediterranean-house",
+          "arch-institutional-campus-block",
+          "arch-lowrise-rowhouse-townhouse",
+          "arch-neighborhood-midrise-apartment"
+        ]
+      },
+      "unresolvedQuestion": "Do Benidorm’s peripheral low-density zones require a city-specific villa/low-rise subtype, or can they remain regional detached/rowhouse structures with local site parameters?",
+      "whyItMatters": "These zones are secondary to Benidorm’s tower identity and the issue is medium severity, so research should be conditional on production need.",
+      "recommendedAction": "Sample representative low-density forms only if these peripheral zones are important to the playable/rendered extent or if current regional kits visibly misrepresent them.",
+      "acceptanceCriteria": [
+        "Resolve city-specific versus regional treatment without overfitting fringe morphology.",
+        "Keep boundary/transition uncertainty separate from building-form conclusions."
+      ],
+      "sourceIssueIds": [
+        "issue-benidorm-mont-benidorm-hillside-01",
+        "issue-benidorm-lhorta-lowdensity-01",
+        "issue-benidorm-finca-barrina-transition-01",
+        "issue-benidorm-coblanca-peripheral-residential-01",
+        "issue-benidorm-almafra-mixed-fringe-01",
+        "issue-benidorm-west-resort-hotel-edge-01"
+      ],
+      "sourceIssueStatements": [
+        "Peripheral villa/low-density facade, roof and site grammar remains weakly sampled."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement"
+      ]
+    },
+    {
+      "id": "PC-001",
+      "title": "Portfolio current-state and transition recheck",
+      "category": "current-state",
+      "disposition": "production-closeout-check",
+      "priority": "high",
+      "phase3Rank": null,
+      "scope": {
+        "cityIds": [
+          "elche",
+          "alicante",
+          "benidorm",
+          "cartagena",
+          "malaga",
+          "murcia"
+        ],
+        "zonesByCity": {
+          "elche": [
+            "z-altabix-commercial",
+            "z-arenales-apartments",
+            "z-arenales-edge",
+            "z-businesspark-e49",
+            "z-e16-transition",
+            "z-e18-planned",
+            "z-portalada-rowhouses",
+            "z-san-anton-regeneration",
+            "z-sector-v-southgrowth",
+            "z-travalon-openblock",
+            "z-travalon-rowhouse"
+          ],
+          "alicante": [
+            "z-babel-benalua-south",
+            "z-lomas-garbinet",
+            "z-nueva-albufereta",
+            "z-parque-central-rail-transition",
+            "z-pau5-sector2",
+            "z-sangueta-transition"
+          ],
+          "benidorm": [
+            "el-murtal-existing-edge",
+            "el-murtal-planned-sector",
+            "poniente-pp2-1-via-parque-towers",
+            "pp1-1-existing-enclave-transition",
+            "pp1-1-planned-open-building",
+            "pp3-1-incomplete-urbanization",
+            "pp3-1-industrial-built-part"
+          ],
+          "cartagena": [
+            "z-cabezo-industrial",
+            "z-camachos-occupied",
+            "z-camachos-transition",
+            "z-escombreras-expansion",
+            "z-escombreras-heavy",
+            "z-escombreras-quay",
+            "z-hondon-brownfield",
+            "z-hondon-edge"
+          ],
+          "malaga": [
+            "z-bigbox-west",
+            "z-guadalhorce-ind",
+            "z-maqueda-rosalia",
+            "z-martiricos",
+            "z-perchel",
+            "z-san-luis",
+            "z-teatinos-growth",
+            "z-techpark-core",
+            "z-techpark-extension"
+          ],
+          "murcia": [
+            "z-cabezo-monteagudo-cabezo",
+            "z-churra-condomina-churra-nucleus",
+            "z-conexion-sur-rail-corridor",
+            "z-north-growth-flota",
+            "z-north-growth-juan-carlos",
+            "z-north-growth-zaraiche-interface",
+            "z-puente-zarandona-east-interface",
+            "z-puente-zarandona-puente-core",
+            "z-puente-zarandona-zarandona",
+            "z-sucina-gea-resort"
+          ]
+        },
+        "buildingIds": [
+          "bldg-alicante-civic-institutional",
+          "bldg-alicante-coastal-townhouse",
+          "bldg-alicante-commercial-logistics-box",
+          "bldg-alicante-compact-apartment",
+          "bldg-alicante-industrial-shed",
+          "bldg-alicante-openblock-slab",
+          "bldg-alicante-residential-tower",
+          "bldg-benidorm-civic-education-sports",
+          "bldg-benidorm-detached-villa",
+          "bldg-benidorm-hotel-tower-highrise",
+          "bldg-benidorm-industrial-commercial-box",
+          "bldg-benidorm-leisure-pavilion",
+          "bldg-benidorm-lowrise-apartment-townhouse",
+          "bldg-benidorm-new-tower-compound",
+          "bldg-benidorm-resident-midrise-apartment",
+          "bldg-benidorm-residential-tower-standard",
+          "bldg-benidorm-tower-podium-highrise",
+          "bldg-cartagena-barrio-low-midrise",
+          "bldg-cartagena-campus-civic",
+          "bldg-cartagena-central-mixed-midrise",
+          "bldg-cartagena-heavy-industrial-coarse",
+          "bldg-cartagena-industrial-logistics",
+          "bldg-cartagena-port-warehouse",
+          "bldg-elche-bigbox",
+          "bldg-elche-businesspark",
+          "bldg-elche-coastal-apartment",
+          "bldg-elche-industrial-shed",
+          "bldg-elche-institutional",
+          "bldg-elche-midrise-mixed",
+          "bldg-elche-openblock-apartment",
+          "bldg-elche-publichousing",
+          "bldg-elche-rowhouse-villa",
+          "bldg-malaga-andalucia-tower-podium",
+          "bldg-malaga-campus-civic",
+          "bldg-malaga-coastal-tower",
+          "bldg-malaga-ensanche",
+          "bldg-malaga-historic-mixed",
+          "bldg-malaga-industrial-shed",
+          "bldg-malaga-midrise-apartment",
+          "bldg-malaga-openblock-apartment",
+          "bldg-malaga-retail-box",
+          "bldg-malaga-suburban-row",
+          "bldg-malaga-tech-office",
+          "bldg-malaga-villa",
+          "bldg-murcia-apartment-perimeter",
+          "bldg-murcia-apartment-slab",
+          "bldg-murcia-central-mixed-midrise",
+          "bldg-murcia-civic-landmark",
+          "bldg-murcia-commercial-box",
+          "bldg-murcia-huerta-house",
+          "bldg-murcia-modern-apartment",
+          "bldg-murcia-pedania-lowrise",
+          "bldg-murcia-resort-villa",
+          "bldg-murcia-villa-detached"
+        ],
+        "sharedFamilyIds": [
+          "arch-business-technology-park-building",
+          "arch-central-mixed-midrise",
+          "arch-coastal-apartment-slab-tower",
+          "arch-detached-mediterranean-house",
+          "arch-historic-attached-finegrain",
+          "arch-industrial-logistics-shed",
+          "arch-institutional-campus-block",
+          "arch-large-commercial-box",
+          "arch-lowrise-rowhouse-townhouse",
+          "arch-neighborhood-midrise-apartment",
+          "arch-open-block-apartment-slab",
+          "arch-perimeter-apartment-block",
+          "arch-port-operational-building"
+        ]
+      },
+      "unresolvedQuestion": "What is the as-built state of all planned, partially built, transition, regeneration, industrial-growth and infrastructure-change zones at the production freeze date?",
+      "whyItMatters": "These uncertainties are time-sensitive by definition. Researching them now would create stale certainty; they should be verified near production freeze while preserving current/future separation.",
+      "recommendedAction": "At production freeze, re-check only the listed zones against current authoritative/as-built evidence. Record changes as state updates, not retroactive corrections to the Phase 2 evidence history.",
+      "acceptanceCriteria": [
+        "Every affected zone has an explicit freeze-date state: existing, partially built, transition, planned, brownfield or other supported status.",
+        "Future proposals remain separate from current built form.",
+        "Conexión Sur and industrial/growth occupancy are checked with date-stamped evidence."
+      ],
+      "sourceIssueIds": [
+        "issue-elche-z-altabix-commercial-01",
+        "issue-elche-z-san-anton-regeneration-01",
+        "issue-elche-z-portalada-rowhouses-01",
+        "issue-elche-z-travalon-openblock-02",
+        "issue-elche-z-travalon-rowhouse-01",
+        "issue-elche-z-e16-transition-01",
+        "issue-elche-z-e18-planned-01",
+        "issue-elche-z-sector-v-southgrowth-01",
+        "issue-elche-z-businesspark-e49-02",
+        "issue-elche-z-arenales-apartments-02",
+        "issue-elche-z-arenales-edge-01",
+        "issue-alicante-z-babel-benalua-south-01",
+        "issue-alicante-z-parque-central-rail-transition-01",
+        "issue-alicante-z-lomas-garbinet-01",
+        "issue-alicante-z-sangueta-transition-01",
+        "issue-alicante-z-nueva-albufereta-02",
+        "issue-alicante-z-pau5-sector2-01",
+        "issue-benidorm-poniente-pp2-1-via-parque-towers-02",
+        "issue-benidorm-pp1-1-planned-open-building-01",
+        "issue-benidorm-pp1-1-existing-enclave-transition-01",
+        "issue-benidorm-el-murtal-existing-edge-01",
+        "issue-benidorm-el-murtal-planned-sector-01",
+        "issue-benidorm-pp3-1-industrial-built-part-01",
+        "issue-benidorm-pp3-1-incomplete-urbanization-01",
+        "issue-cartagena-z-hondon-brownfield-01",
+        "issue-cartagena-z-hondon-edge-01",
+        "issue-cartagena-z-cabezo-industrial-01",
+        "issue-cartagena-z-camachos-occupied-01",
+        "issue-cartagena-z-camachos-transition-01",
+        "issue-cartagena-z-camachos-transition-02",
+        "issue-cartagena-z-escombreras-quay-01",
+        "issue-cartagena-z-escombreras-heavy-01",
+        "issue-cartagena-z-escombreras-expansion-01",
+        "issue-cartagena-z-escombreras-expansion-02",
+        "issue-malaga-z-perchel-01",
+        "issue-malaga-z-martiricos-01",
+        "issue-malaga-z-teatinos-growth-01",
+        "issue-malaga-z-maqueda-rosalia-01",
+        "issue-malaga-z-techpark-core-01",
+        "issue-malaga-z-techpark-extension-01",
+        "issue-malaga-z-techpark-extension-02",
+        "issue-malaga-z-guadalhorce-ind-01",
+        "issue-malaga-z-san-luis-01",
+        "issue-malaga-z-bigbox-west-01",
+        "issue-murcia-z-conexion-sur-rail-corridor-01",
+        "issue-murcia-z-conexion-sur-rail-corridor-02",
+        "issue-murcia-z-north-growth-flota-02",
+        "issue-murcia-z-north-growth-juan-carlos-02",
+        "issue-murcia-z-north-growth-juan-carlos-03",
+        "issue-murcia-z-north-growth-zaraiche-interface-02",
+        "issue-murcia-z-north-growth-zaraiche-interface-03",
+        "issue-murcia-z-churra-condomina-churra-nucleus-01",
+        "issue-murcia-z-churra-condomina-churra-nucleus-02",
+        "issue-murcia-z-puente-zarandona-puente-core-02",
+        "issue-murcia-z-puente-zarandona-zarandona-02",
+        "issue-murcia-z-puente-zarandona-zarandona-03",
+        "issue-murcia-z-puente-zarandona-east-interface-02",
+        "issue-murcia-z-cabezo-monteagudo-cabezo-02",
+        "issue-murcia-z-cabezo-monteagudo-cabezo-03",
+        "issue-murcia-z-sucina-gea-resort-01"
+      ],
+      "sourceIssueStatements": [
+        "Current north/resort build-out edges remain time-sensitive.",
+        "Dated industrial occupancy/build-out remains incomplete and should be checked near production freeze.",
+        "Exact October 2026 as-built Conexión Sur geometry remains time-sensitive.",
+        "Outer TechPark/industrial growth and occupancy should be checked near production freeze.",
+        "Zone development status is 'brownfield'; retain current/future-state guardrails and re-check near production freeze.",
+        "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+        "Zone development status is 'planned'; retain current/future-state guardrails and re-check near production freeze.",
+        "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+        "Zone development status is 'uncertain'; retain current/future-state guardrails and re-check near production freeze.",
+        "Zone development status is 'under-development'; retain current/future-state guardrails and re-check near production freeze."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement",
+        "supplied settlement metadata"
+      ]
+    },
+    {
+      "id": "PC-002",
+      "title": "Authoritative geometry and buildability placement check",
+      "category": "geometry-placement",
+      "disposition": "production-preintegration-check",
+      "priority": "high",
+      "phase3Rank": null,
+      "scope": {
+        "cityIds": [
+          "elche",
+          "alicante",
+          "benidorm",
+          "murcia"
+        ],
+        "zonesByCity": {
+          "elche": [
+            "z-south-palmeral-interface"
+          ],
+          "alicante": [
+            "z-villafranqueza-dispersed"
+          ],
+          "benidorm": [
+            "almafra-mixed-fringe",
+            "coblanca-peripheral-residential",
+            "el-murtal-existing-edge",
+            "el-murtal-planned-sector",
+            "finca-barrina-transition",
+            "la-cala-beachfront-apartments",
+            "la-cala-finestrat-boundary-transition",
+            "lhorta-lowdensity",
+            "mont-benidorm-hillside",
+            "poniente-xixo-interface",
+            "pp1-1-existing-enclave-transition",
+            "pp1-1-planned-open-building",
+            "pp3-1-incomplete-urbanization",
+            "pp3-1-industrial-built-part",
+            "rincon-inner-residential",
+            "west-resort-hotel-edge"
+          ],
+          "murcia": [
+            "z-east-huerta-alquerias",
+            "z-east-huerta-casillas-llano",
+            "z-east-huerta-santacruz-raal",
+            "z-southwest-transition-regueron-edge",
+            "z-west-huerta-agri-mosaic",
+            "z-west-huerta-nuclei",
+            "z-west-huerta-ribbon"
+          ]
+        },
+        "buildingIds": [
+          "bldg-alicante-civic-institutional",
+          "bldg-alicante-coastal-townhouse",
+          "bldg-alicante-commercial-logistics-box",
+          "bldg-alicante-detached-villa",
+          "bldg-alicante-rural-island-house",
+          "bldg-benidorm-civic-education-sports",
+          "bldg-benidorm-detached-villa",
+          "bldg-benidorm-hotel-slab-midrise",
+          "bldg-benidorm-hotel-tower-highrise",
+          "bldg-benidorm-industrial-commercial-box",
+          "bldg-benidorm-leisure-pavilion",
+          "bldg-benidorm-lowrise-apartment-townhouse",
+          "bldg-benidorm-new-tower-compound",
+          "bldg-benidorm-resident-midrise-apartment",
+          "bldg-benidorm-residential-tower-standard",
+          "bldg-benidorm-tower-podium-highrise",
+          "bldg-elche-historic-attached",
+          "bldg-elche-institutional",
+          "bldg-elche-openblock-apartment",
+          "bldg-elche-rowhouse-villa",
+          "bldg-murcia-apartment-perimeter",
+          "bldg-murcia-civic-landmark",
+          "bldg-murcia-huerta-house",
+          "bldg-murcia-pedania-lowrise",
+          "bldg-murcia-villa-detached"
+        ],
+        "sharedFamilyIds": [
+          "arch-coastal-apartment-slab-tower",
+          "arch-detached-mediterranean-house",
+          "arch-historic-attached-finegrain",
+          "arch-institutional-campus-block",
+          "arch-large-commercial-box",
+          "arch-lowrise-rowhouse-townhouse",
+          "arch-neighborhood-midrise-apartment",
+          "arch-open-block-apartment-slab",
+          "arch-perimeter-apartment-block"
+        ]
+      },
+      "unresolvedQuestion": "Which coarse research geometries need authoritative GIS/hydraulic/boundary replacement before production placement, without changing the already-established morphology family decisions?",
+      "whyItMatters": "Several geometry uncertainties affect placement or buildability rather than asset-family identity—especially Murcia irrigation/flood constraints, Elche Palmeral boundaries and low-confidence peripheral zones.",
+      "recommendedAction": "Before production integration, replace or clip coarse research geometry with authoritative GIS where available; preserve the research catalog’s semantic links and confidence history.",
+      "acceptanceCriteria": [
+        "Murcia hydraulic/irrigation and municipal clipping is authoritative enough to prevent invalid buildable placement.",
+        "Palmeral and other protected/landscape boundaries are not inferred from coarse rectangles.",
+        "Low-confidence zone placement remains visibly flagged where authoritative geometry is unavailable."
+      ],
+      "sourceIssueIds": [
+        "issue-elche-z-south-palmeral-interface-01",
+        "issue-alicante-z-villafranqueza-dispersed-01",
+        "issue-benidorm-rincon-inner-residential-01",
+        "issue-benidorm-poniente-xixo-interface-01",
+        "issue-benidorm-la-cala-beachfront-apartments-02",
+        "issue-benidorm-mont-benidorm-hillside-02",
+        "issue-benidorm-la-cala-finestrat-boundary-transition-01",
+        "issue-benidorm-lhorta-lowdensity-02",
+        "issue-benidorm-finca-barrina-transition-02",
+        "issue-benidorm-coblanca-peripheral-residential-02",
+        "issue-benidorm-almafra-mixed-fringe-02",
+        "issue-benidorm-west-resort-hotel-edge-02",
+        "issue-benidorm-pp1-1-planned-open-building-02",
+        "issue-benidorm-pp1-1-existing-enclave-transition-02",
+        "issue-benidorm-el-murtal-existing-edge-02",
+        "issue-benidorm-el-murtal-planned-sector-02",
+        "issue-benidorm-pp3-1-industrial-built-part-02",
+        "issue-benidorm-pp3-1-incomplete-urbanization-02",
+        "issue-murcia-z-west-huerta-ribbon-02",
+        "issue-murcia-z-west-huerta-nuclei-02",
+        "issue-murcia-z-west-huerta-agri-mosaic-02",
+        "issue-murcia-z-southwest-transition-regueron-edge-01",
+        "issue-murcia-z-east-huerta-casillas-llano-02",
+        "issue-murcia-z-east-huerta-santacruz-raal-02",
+        "issue-murcia-z-east-huerta-alquerias-02"
+      ],
+      "sourceIssueStatements": [
+        "Authoritative Palmeral GIS boundaries remain unresolved; spatial treatment should remain conservative.",
+        "Parcel-scale irrigation/flood/municipal clipping remains unresolved and can affect buildable placement.",
+        "Supplied zone confidence is low; use conservatively for precise placement."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement",
+        "supplied settlement metadata"
+      ]
+    },
+    {
+      "id": "DU-001",
+      "title": "Ordinary facade / roof / material calibration backlog",
+      "category": "appearance-calibration",
+      "disposition": "documented-uncertainty",
+      "priority": "medium",
+      "phase3Rank": null,
+      "scope": {
+        "cityIds": [
+          "torrevieja",
+          "elche",
+          "alicante",
+          "benidorm",
+          "cartagena",
+          "malaga",
+          "murcia"
+        ],
+        "zonesByCity": {
+          "torrevieja": [
+            "z-cabo-cervera-torremoro",
+            "z-la-mata-beachfront",
+            "z-la-veleta-mixed",
+            "z-los-locos-promenade",
+            "z-molino-blanco",
+            "z-south-coastal-apartments"
+          ],
+          "elche": [
+            "z-arenales-apartments",
+            "z-carrus-east-grid",
+            "z-carrus-west-grid",
+            "z-nuevo-altabix-open",
+            "z-palmerales-publichousing",
+            "z-sector-v-openblock",
+            "z-toscar-openblock",
+            "z-travalon-openblock"
+          ],
+          "alicante": [
+            "z-raval-benacantil-foot",
+            "z-santa-cruz-historic",
+            "z-tabarca-walled-nucleus"
+          ],
+          "benidorm": [
+            "beniarda-jaime1-corridor",
+            "calvari-resident-midrise",
+            "colonia-madrid-finegrain",
+            "els-tolls-resident-grid",
+            "foietes-midrise",
+            "la-cala-beachfront-apartments",
+            "levante-first-line-hotel",
+            "levante-mediterraneo-spine",
+            "levante-second-line-tower-grid",
+            "poniente-old-first-line",
+            "poniente-pp2-1-via-parque-towers",
+            "poniente-second-line-openplots",
+            "rincon-beachfront-towers"
+          ],
+          "cartagena": [
+            "z-barreros-corridor",
+            "z-casco-commercial",
+            "z-concepcion-barrio",
+            "z-dolores-nucleus",
+            "z-dolores-outer",
+            "z-ensanche-grid",
+            "z-peral-small-parcel",
+            "z-san-anton-traditional"
+          ],
+          "malaga": [
+            "z-bailen",
+            "z-carretera-superblocks",
+            "z-cruz-carranque",
+            "z-huelin",
+            "z-malagueta",
+            "z-pacifico",
+            "z-palma-estates"
+          ],
+          "murcia": [
+            "z-cabezo-monteagudo-cabezo",
+            "z-cabezo-monteagudo-heritage-huerta-edge",
+            "z-cabezo-monteagudo-monteagudo",
+            "z-east-huerta-alquerias",
+            "z-east-huerta-casillas-llano",
+            "z-east-huerta-santacruz-raal",
+            "z-historic-core-civic",
+            "z-historic-core-medieval",
+            "z-north-central-ranero-open",
+            "z-north-central-smg-grid",
+            "z-north-growth-flota",
+            "z-north-growth-juan-carlos",
+            "z-north-growth-zaraiche-interface",
+            "z-puente-zarandona-east-interface",
+            "z-puente-zarandona-puente-core",
+            "z-puente-zarandona-zarandona",
+            "z-se-foothill-beniajan",
+            "z-se-foothill-garres-josevega",
+            "z-se-foothill-torreaguera-ramos",
+            "z-south-foothill-algezares",
+            "z-south-foothill-angel-alberca",
+            "z-south-foothill-foothill-villas",
+            "z-west-huerta-agri-mosaic",
+            "z-west-huerta-nuclei",
+            "z-west-huerta-ribbon"
+          ]
+        },
+        "buildingIds": [
+          "bldg-alicante-central-mixeduse",
+          "bldg-alicante-civic-institutional",
+          "bldg-alicante-historic-terrace",
+          "bldg-alicante-tabarca-traditional-house",
+          "bldg-benidorm-central-midrise-mixed",
+          "bldg-benidorm-civic-education-sports",
+          "bldg-benidorm-detached-villa",
+          "bldg-benidorm-historic-attached-lowmid",
+          "bldg-benidorm-hotel-slab-midrise",
+          "bldg-benidorm-hotel-tower-highrise",
+          "bldg-benidorm-lowrise-apartment-townhouse",
+          "bldg-benidorm-new-tower-compound",
+          "bldg-benidorm-resident-midrise-apartment",
+          "bldg-benidorm-residential-tower-standard",
+          "bldg-benidorm-tower-podium-highrise",
+          "bldg-cartagena-barrio-low-midrise",
+          "bldg-cartagena-campus-civic",
+          "bldg-cartagena-central-mixed-midrise",
+          "bldg-cartagena-detached-villa",
+          "bldg-cartagena-ensanche-apartment",
+          "bldg-cartagena-heritage-attached",
+          "bldg-cartagena-peripheral-house-row",
+          "bldg-cartagena-planned-slab",
+          "bldg-elche-bigbox",
+          "bldg-elche-citygarden-detached-villa",
+          "bldg-elche-coastal-apartment",
+          "bldg-elche-compact-apartment",
+          "bldg-elche-institutional",
+          "bldg-elche-midrise-mixed",
+          "bldg-elche-openblock-apartment",
+          "bldg-elche-publichousing",
+          "bldg-elche-rowhouse-villa",
+          "bldg-malaga-andalucia-tower-podium",
+          "bldg-malaga-coastal-lowrise",
+          "bldg-malaga-coastal-tower",
+          "bldg-malaga-ensanche",
+          "bldg-malaga-midrise-apartment",
+          "bldg-malaga-palmilla-walkup-block",
+          "bldg-malaga-retail-box",
+          "bldg-malaga-slab-estate",
+          "bldg-malaga-suburban-row",
+          "bldg-murcia-apartment-perimeter",
+          "bldg-murcia-apartment-slab",
+          "bldg-murcia-central-mixed-midrise",
+          "bldg-murcia-civic-landmark",
+          "bldg-murcia-commercial-box",
+          "bldg-murcia-historic-row",
+          "bldg-murcia-huerta-house",
+          "bldg-murcia-modern-apartment",
+          "bldg-murcia-pedania-lowrise",
+          "bldg-murcia-villa-detached",
+          "bldg-torrevieja-central-mixed",
+          "bldg-torrevieja-civic-special",
+          "bldg-torrevieja-coastal-slab-tower",
+          "bldg-torrevieja-detached-villa",
+          "bldg-torrevieja-lowrise-compound",
+          "bldg-torrevieja-midrise-apartment",
+          "bldg-torrevieja-terrace-bungalow"
+        ],
+        "sharedFamilyIds": [
+          "arch-central-mixed-midrise",
+          "arch-coastal-apartment-slab-tower",
+          "arch-detached-mediterranean-house",
+          "arch-historic-attached-finegrain",
+          "arch-institutional-campus-block",
+          "arch-large-commercial-box",
+          "arch-lowrise-rowhouse-townhouse",
+          "arch-neighborhood-midrise-apartment",
+          "arch-open-block-apartment-slab",
+          "arch-perimeter-apartment-block"
+        ]
+      },
+      "unresolvedQuestion": "How much additional facade, roof, balcony/window and material sampling is necessary for ordinary recurring families after structural prototyping?",
+      "whyItMatters": "The maturity audit shows these gaps do not currently change family, repetition or reuse decisions. Treating them as Phase 3 by default would accumulate detail without improving the research hierarchy.",
+      "recommendedAction": "Do not research now. During prototyping, reopen only the city/family slices whose current appearance parameters visibly fail to preserve identity.",
+      "acceptanceCriteria": [
+        "No new research is required solely to raise cosmetic confidence.",
+        "Any reopened sampling task must name the structural or identity decision it will improve.",
+        "Unreopened appearance uncertainty remains explicitly documented."
+      ],
+      "sourceIssueIds": [
+        "issue-torrevieja-z-los-locos-promenade-01",
+        "issue-torrevieja-z-cabo-cervera-torremoro-01",
+        "issue-torrevieja-z-molino-blanco-01",
+        "issue-torrevieja-z-la-mata-beachfront-01",
+        "issue-torrevieja-z-la-veleta-mixed-01",
+        "issue-torrevieja-z-south-coastal-apartments-01",
+        "issue-elche-z-carrus-east-grid-01",
+        "issue-elche-z-carrus-west-grid-01",
+        "issue-elche-z-toscar-openblock-01",
+        "issue-elche-z-nuevo-altabix-open-01",
+        "issue-elche-z-palmerales-publichousing-01",
+        "issue-elche-z-travalon-openblock-01",
+        "issue-elche-z-sector-v-openblock-01",
+        "issue-elche-z-arenales-apartments-01",
+        "issue-alicante-z-santa-cruz-historic-01",
+        "issue-alicante-z-raval-benacantil-foot-01",
+        "issue-alicante-z-tabarca-walled-nucleus-01",
+        "issue-benidorm-calvari-resident-midrise-01",
+        "issue-benidorm-levante-first-line-hotel-01",
+        "issue-benidorm-levante-second-line-tower-grid-01",
+        "issue-benidorm-levante-mediterraneo-spine-01",
+        "issue-benidorm-rincon-beachfront-towers-01",
+        "issue-benidorm-els-tolls-resident-grid-01",
+        "issue-benidorm-colonia-madrid-finegrain-01",
+        "issue-benidorm-foietes-midrise-01",
+        "issue-benidorm-beniarda-jaime1-corridor-01",
+        "issue-benidorm-poniente-old-first-line-01",
+        "issue-benidorm-poniente-pp2-1-via-parque-towers-01",
+        "issue-benidorm-poniente-second-line-openplots-01",
+        "issue-benidorm-la-cala-beachfront-apartments-01",
+        "issue-cartagena-z-casco-commercial-01",
+        "issue-cartagena-z-ensanche-grid-01",
+        "issue-cartagena-z-concepcion-barrio-01",
+        "issue-cartagena-z-san-anton-traditional-01",
+        "issue-cartagena-z-peral-small-parcel-01",
+        "issue-cartagena-z-barreros-corridor-01",
+        "issue-cartagena-z-dolores-nucleus-01",
+        "issue-cartagena-z-dolores-outer-01",
+        "issue-malaga-z-malagueta-01",
+        "issue-malaga-z-palma-estates-01",
+        "issue-malaga-z-bailen-01",
+        "issue-malaga-z-cruz-carranque-01",
+        "issue-malaga-z-huelin-01",
+        "issue-malaga-z-carretera-superblocks-01",
+        "issue-malaga-z-pacifico-01",
+        "issue-murcia-z-historic-core-medieval-01",
+        "issue-murcia-z-historic-core-civic-01",
+        "issue-murcia-z-north-central-smg-grid-01",
+        "issue-murcia-z-north-central-ranero-open-01",
+        "issue-murcia-z-north-growth-flota-01",
+        "issue-murcia-z-north-growth-juan-carlos-01",
+        "issue-murcia-z-north-growth-zaraiche-interface-01",
+        "issue-murcia-z-west-huerta-ribbon-01",
+        "issue-murcia-z-west-huerta-nuclei-01",
+        "issue-murcia-z-west-huerta-agri-mosaic-01",
+        "issue-murcia-z-puente-zarandona-puente-core-01",
+        "issue-murcia-z-puente-zarandona-zarandona-01",
+        "issue-murcia-z-puente-zarandona-east-interface-01",
+        "issue-murcia-z-cabezo-monteagudo-cabezo-01",
+        "issue-murcia-z-cabezo-monteagudo-monteagudo-01",
+        "issue-murcia-z-cabezo-monteagudo-heritage-huerta-edge-01",
+        "issue-murcia-z-east-huerta-casillas-llano-01",
+        "issue-murcia-z-east-huerta-santacruz-raal-01",
+        "issue-murcia-z-east-huerta-alquerias-01",
+        "issue-murcia-z-se-foothill-beniajan-01",
+        "issue-murcia-z-se-foothill-torreaguera-ramos-01",
+        "issue-murcia-z-se-foothill-garres-josevega-01",
+        "issue-murcia-z-south-foothill-algezares-01",
+        "issue-murcia-z-south-foothill-angel-alberca-01",
+        "issue-murcia-z-south-foothill-foothill-villas-01"
+      ],
+      "sourceIssueStatements": [
+        "Current Tabarca traditional-house material/storey samples remain incomplete.",
+        "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+        "Current facade/roof/balcony sampling for ordinary western/central apartment stock remains incomplete.",
+        "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+        "Facade/balcony/window-rhythm and building-by-building height sampling across tower generations remains incomplete.",
+        "Fine facade/roof material evidence remains incomplete in the historic hillside fabrics.",
+        "Ordinary facade/roof sampling remains incomplete; structural grammar is nevertheless established.",
+        "Representative facade/roof/window/balcony sampling remains incomplete for Carrús/open-block/Arenales families.",
+        "Representative resident mid-rise facade/roof/site samples remain incomplete."
+      ],
+      "sourceIssueOrigins": [
+        "Phase 2 remaining-gap statement"
+      ]
+    },
+    {
+      "id": "DU-002",
+      "title": "Shared-family envelope heterogeneity",
+      "category": "portfolio-family-caveat",
+      "disposition": "documented-uncertainty",
+      "priority": "low",
+      "phase3Rank": null,
+      "scope": {
+        "cityIds": [],
+        "zonesByCity": {},
+        "buildingIds": [],
+        "sharedFamilyIds": [
+          "arch-coastal-apartment-slab-tower",
+          "arch-lowrise-rowhouse-townhouse",
+          "arch-neighborhood-midrise-apartment",
+          "arch-open-block-apartment-slab"
+        ]
+      },
+      "unresolvedQuestion": "How should production interpret shared families whose member storey bands and supplied profile breadth do not have a strict universal overlap?",
+      "whyItMatters": "These are intentional structural envelopes with city variants, not claims that all members share identical dimensions.",
+      "recommendedAction": "Preserve the shared family as a structural reuse authority and express differences through subtype/parameter constraints; do not research merely to force a false universal typical range.",
+      "acceptanceCriteria": [
+        "Production documentation treats commonStructure as an envelope where explicitly stated.",
+        "City-specific variants remain available and are not averaged away."
+      ],
+      "sourceIssueIds": [],
+      "sourceIssueStatements": [],
+      "sourceIssueOrigins": [
+        "Phase 2 Closeout shared-family index"
+      ],
+      "sharedIndexUnresolvedStatements": [
+        {
+          "familyId": "arch-neighborhood-midrise-apartment",
+          "familyName": "Neighborhood mid-rise apartment block",
+          "statement": "Cartagena’s traditional barrio family includes more attached low-rise content than the other members.",
+          "assignedQuestionId": "DU-002"
+        },
+        {
+          "familyId": "arch-neighborhood-midrise-apartment",
+          "familyName": "Neighborhood mid-rise apartment block",
+          "statement": "Member typical-storey bands do not share a strict overlap; commonStructure.storeysTypical therefore records the supplied family envelope, not a universal typical range.",
+          "assignedQuestionId": "DU-002"
+        },
+        {
+          "familyId": "arch-open-block-apartment-slab",
+          "familyName": "Open-block apartment slab / estate",
+          "statement": "Member typical-storey bands do not share a strict overlap; commonStructure.storeysTypical therefore records the supplied family envelope, not a universal typical range.",
+          "assignedQuestionId": "DU-002"
+        },
+        {
+          "familyId": "arch-open-block-apartment-slab",
+          "familyName": "Open-block apartment slab / estate",
+          "statement": "Production-facing subdivision among walk-up, slab, tower/estate and regeneration-state variants still depends on uneven facade/material sampling; Phase 2 does not justify additional top-level cross-city research families.",
+          "assignedQuestionId": "DU-002"
+        },
+        {
+          "familyId": "arch-lowrise-rowhouse-townhouse",
+          "familyName": "Low-rise terrace / townhouse / semi-detached family",
+          "statement": "Member typical-storey bands do not share a strict overlap; commonStructure.storeysTypical therefore records the supplied family envelope, not a universal typical range.",
+          "assignedQuestionId": "DU-002"
+        },
+        {
+          "familyId": "arch-coastal-apartment-slab-tower",
+          "familyName": "Coastal apartment slab / tower",
+          "statement": "Benidorm’s open-plot tower grammar is materially different from compound/slab patterns elsewhere and must remain a strong city-specific variant.",
+          "assignedQuestionId": "DU-002"
+        },
+        {
+          "familyId": "arch-coastal-apartment-slab-tower",
+          "familyName": "Coastal apartment slab / tower",
+          "statement": "Cartagena coastal-residential profile is broader than a tower-only family.",
+          "assignedQuestionId": "DU-002"
+        },
+        {
+          "familyId": "arch-coastal-apartment-slab-tower",
+          "familyName": "Coastal apartment slab / tower",
+          "statement": "Member typical-storey bands do not share a strict overlap; commonStructure.storeysTypical therefore records the supplied family envelope, not a universal typical range.",
+          "assignedQuestionId": "DU-002"
+        }
+      ]
+    },
+    {
+      "id": "DU-003",
+      "title": "Intentional shared-family exclusions and absent profiles",
+      "category": "portfolio-family-caveat",
+      "disposition": "documented-uncertainty",
+      "priority": "low",
+      "phase3Rank": null,
+      "scope": {
+        "cityIds": [],
+        "zonesByCity": {},
+        "buildingIds": [],
+        "sharedFamilyIds": [
+          "arch-business-technology-park-building",
+          "arch-historic-attached-finegrain",
+          "arch-industrial-logistics-shed",
+          "arch-large-commercial-box",
+          "arch-port-operational-building"
+        ]
+      },
+      "unresolvedQuestion": "Should current absences/exclusions be interpreted as missing research, or as legitimate limits of the shared-family index?",
+      "whyItMatters": "Several closeout notes record deliberate non-membership or absence of a clean source profile rather than a failed research task.",
+      "recommendedAction": "Treat these as frozen portfolio boundaries unless future production evidence exposes a concrete reuse problem. Do not manufacture equivalent profiles just to make family membership symmetrical.",
+      "acceptanceCriteria": [
+        "Torrevieja is not forced into the historic-fine-grain family without a separate profile.",
+        "Benidorm industrial/commercial combination and Cartagena commercial absence remain explicit.",
+        "Naval/heavy-industrial exclusions and limited business-park membership remain intentional."
+      ],
+      "sourceIssueIds": [],
+      "sourceIssueStatements": [],
+      "sourceIssueOrigins": [
+        "Phase 2 Closeout shared-family index"
+      ],
+      "sharedIndexUnresolvedStatements": [
+        {
+          "familyId": "arch-historic-attached-finegrain",
+          "familyName": "Historic attached fine-grain frontage",
+          "statement": "Torrevieja has no separately defined historic-fine-grain building profile in the supplied baseline.",
+          "assignedQuestionId": "DU-003"
+        },
+        {
+          "familyId": "arch-industrial-logistics-shed",
+          "familyName": "Industrial / logistics shed",
+          "statement": "Benidorm combines industrial and commercial boxes in one supplied profile.",
+          "assignedQuestionId": "DU-003"
+        },
+        {
+          "familyId": "arch-large-commercial-box",
+          "familyName": "Large-format commercial / retail box",
+          "statement": "Cartagena has no clean standalone commercial-box profile in the supplied baseline.",
+          "assignedQuestionId": "DU-003"
+        },
+        {
+          "familyId": "arch-port-operational-building",
+          "familyName": "Port operational / passenger support building",
+          "statement": "Cartagena’s naval/shipyard and heavy-industrial families are intentionally excluded from this merge.",
+          "assignedQuestionId": "DU-003"
+        },
+        {
+          "familyId": "arch-business-technology-park-building",
+          "familyName": "Business / technology-park office-logistics building",
+          "statement": "Cross-city membership remains limited to Elche and Málaga; reviewed Alicante evidence did not isolate a defensible equivalent office/research-park family, so no Alicante member is added.",
+          "assignedQuestionId": "DU-003"
+        }
+      ]
+    },
+    {
+      "id": "DU-004",
+      "title": "Institutional and airport-support subtype detail",
+      "category": "portfolio-family-caveat",
+      "disposition": "documented-uncertainty",
+      "priority": "low",
+      "phase3Rank": null,
+      "scope": {
+        "cityIds": [],
+        "zonesByCity": {},
+        "buildingIds": [],
+        "sharedFamilyIds": [
+          "arch-airport-terminal-support",
+          "arch-institutional-campus-block"
+        ]
+      },
+      "unresolvedQuestion": "How much subtype detail is needed inside shared institutional-campus and airport-support families?",
+      "whyItMatters": "Phase 2 resolved the structural reuse decision and bespoke passenger-terminal separation; remaining uncertainty concerns service/facade subtype detail.",
+      "recommendedAction": "Keep this as a production-calibration backlog. Reopen targeted research only if procedural assembly cannot distinguish university, hospital, civic or airport-support contexts adequately.",
+      "acceptanceCriteria": [
+        "Passenger terminals remain bespoke authorities.",
+        "No separate hospital or airport-terminal structural family is created without new cross-city evidence."
+      ],
+      "sourceIssueIds": [],
+      "sourceIssueStatements": [],
+      "sourceIssueOrigins": [
+        "Phase 2 Closeout shared-family index"
+      ],
+      "sharedIndexUnresolvedStatements": [
+        {
+          "familyId": "arch-institutional-campus-block",
+          "familyName": "Institutional / civic campus block",
+          "statement": "Detailed facade/service-building typologies remain uneven across university, hospital and civic campuses; retain subtype variation without creating a separate hospital structural family at Phase 2 closeout.",
+          "assignedQuestionId": "DU-004"
+        },
+        {
+          "familyId": "arch-airport-terminal-support",
+          "familyName": "Airport ancillary / support building",
+          "statement": "Detailed support-building facade/roof typologies remain insufficiently described; the Elche passenger-terminal plan organization is now strong evidence but is intentionally excluded from procedural repetition.",
+          "assignedQuestionId": "DU-004"
+        }
+      ]
+    },
+    {
+      "id": "DU-005",
+      "title": "Settled city-variant constraints inside shared families",
+      "category": "portfolio-family-caveat",
+      "disposition": "documented-uncertainty",
+      "priority": "low",
+      "phase3Rank": null,
+      "scope": {
+        "cityIds": [],
+        "zonesByCity": {},
+        "buildingIds": [],
+        "sharedFamilyIds": []
+      },
+      "unresolvedQuestion": "Which shared-family caveats are already conclusions to preserve rather than questions to research?",
+      "whyItMatters": "Some closeout unresolved arrays contain guardrails such as Benidorm tower distinctiveness or broad Cartagena coastal profiles; they must survive production derivation even when no further research is warranted.",
+      "recommendedAction": "Carry these constraints into handoff documentation and do not normalize them away.",
+      "acceptanceCriteria": [
+        "All remaining shared-index caveats are traceable and assigned.",
+        "No caveat is silently converted into a universal shared-family rule."
+      ],
+      "sourceIssueIds": [],
+      "sourceIssueStatements": [],
+      "sourceIssueOrigins": [
+        "Phase 2 Closeout shared-family index"
+      ],
+      "sharedIndexUnresolvedStatements": []
+    }
+  ],
+  "phase3CandidateQueue": [
+    {
+      "rank": 1,
+      "questionId": "P3-006",
+      "title": "Málaga eastern hillside villa / compound boundaries",
+      "disposition": "phase3-exception-research",
+      "priority": "high",
+      "cityIds": [
+        "malaga"
+      ],
+      "zoneCount": 3,
+      "sharedFamilyIds": [
+        "arch-detached-mediterranean-house",
+        "arch-lowrise-rowhouse-townhouse"
+      ]
+    },
+    {
+      "rank": 2,
+      "questionId": "P3-007",
+      "title": "Murcia Infante and secondary postwar-estate calibration",
+      "disposition": "phase3-exception-research",
+      "priority": "high",
+      "cityIds": [
+        "murcia"
+      ],
+      "zoneCount": 2,
+      "sharedFamilyIds": [
+        "arch-central-mixed-midrise",
+        "arch-open-block-apartment-slab",
+        "arch-perimeter-apartment-block"
+      ]
+    },
+    {
+      "rank": 3,
+      "questionId": "P3-008",
+      "title": "Murcia resort-housing family placement",
+      "disposition": "phase3-exception-research",
+      "priority": "high",
+      "cityIds": [
+        "murcia"
+      ],
+      "zoneCount": 1,
+      "sharedFamilyIds": [
+        "arch-detached-mediterranean-house",
+        "arch-large-commercial-box"
+      ]
+    },
+    {
+      "rank": 4,
+      "questionId": "P3-002",
+      "title": "Elche Ciudad Jardín villa kit boundary",
+      "disposition": "phase3-exception-research",
+      "priority": "high",
+      "cityIds": [
+        "elche"
+      ],
+      "zoneCount": 1,
+      "sharedFamilyIds": [
+        "arch-detached-mediterranean-house",
+        "arch-institutional-campus-block",
+        "arch-lowrise-rowhouse-townhouse",
+        "arch-open-block-apartment-slab"
+      ]
+    },
+    {
+      "rank": 5,
+      "questionId": "P3-009",
+      "title": "Murcia Polígono Industrial Oeste production-kit boundary",
+      "disposition": "phase3-exception-research",
+      "priority": "high",
+      "cityIds": [
+        "murcia"
+      ],
+      "zoneCount": 2,
+      "sharedFamilyIds": [
+        "arch-industrial-logistics-shed",
+        "arch-large-commercial-box"
+      ]
+    },
+    {
+      "rank": 6,
+      "questionId": "P3-C01",
+      "title": "Elche business-park kit calibration",
+      "disposition": "conditional-phase3",
+      "priority": "medium",
+      "cityIds": [
+        "elche"
+      ],
+      "zoneCount": 2,
+      "sharedFamilyIds": [
+        "arch-business-technology-park-building",
+        "arch-industrial-logistics-shed",
+        "arch-large-commercial-box"
+      ]
+    },
+    {
+      "rank": 7,
+      "questionId": "P3-C02",
+      "title": "Alicante northern-estate subtype calibration",
+      "disposition": "conditional-phase3",
+      "priority": "medium",
+      "cityIds": [
+        "alicante"
+      ],
+      "zoneCount": 4,
+      "sharedFamilyIds": [
+        "arch-coastal-apartment-slab-tower",
+        "arch-institutional-campus-block",
+        "arch-lowrise-rowhouse-townhouse",
+        "arch-neighborhood-midrise-apartment",
+        "arch-open-block-apartment-slab"
+      ]
+    },
+    {
+      "rank": 8,
+      "questionId": "P3-C03",
+      "title": "Benidorm peripheral low-density / villa grammar",
+      "disposition": "conditional-phase3",
+      "priority": "medium",
+      "cityIds": [
+        "benidorm"
+      ],
+      "zoneCount": 6,
+      "sharedFamilyIds": [
+        "arch-detached-mediterranean-house",
+        "arch-institutional-campus-block",
+        "arch-lowrise-rowhouse-townhouse",
+        "arch-neighborhood-midrise-apartment"
+      ]
+    }
+  ],
+  "sourceIssueAssignments": [
+    {
+      "issueId": "issue-torrevieja-z-los-locos-promenade-01",
+      "cityId": "torrevieja",
+      "cityName": "Torrevieja",
+      "zoneId": "z-los-locos-promenade",
+      "zoneName": "Los Locos apartment promenade",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "unspecified",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-torrevieja-z-cabo-cervera-torremoro-01",
+      "cityId": "torrevieja",
+      "cityName": "Torrevieja",
+      "zoneId": "z-cabo-cervera-torremoro",
+      "zoneName": "Cabo Cervera and Torre del Moro coastal heights",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "unspecified",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-torrevieja-z-molino-blanco-01",
+      "cityId": "torrevieja",
+      "cityName": "Torrevieja",
+      "zoneId": "z-molino-blanco",
+      "zoneName": "Molino Blanco villa–apartment mosaic",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "unspecified",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-torrevieja-z-la-mata-beachfront-01",
+      "cityId": "torrevieja",
+      "cityName": "Torrevieja",
+      "zoneId": "z-la-mata-beachfront",
+      "zoneName": "La Mata beachfront apartment edge",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "unspecified",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-torrevieja-z-la-veleta-mixed-01",
+      "cityId": "torrevieja",
+      "cityName": "Torrevieja",
+      "zoneId": "z-la-veleta-mixed",
+      "zoneName": "La Veleta villa–apartment mix",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "unspecified",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-torrevieja-z-south-coastal-apartments-01",
+      "cityId": "torrevieja",
+      "cityName": "Torrevieja",
+      "zoneId": "z-south-coastal-apartments",
+      "zoneName": "Mar Azul–Rocío del Mar–Punta Prima coastal apartment strip",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "unspecified",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current observed height/facade distribution for coastal slabs/towers remains insufficiently sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-elche-z-carrus-east-grid-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-carrus-east-grid",
+      "zoneName": "Carrús East compact apartment grid",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative facade/roof/window/balcony sampling remains incomplete for Carrús/open-block/Arenales families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-elche-z-carrus-west-grid-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-carrus-west-grid",
+      "zoneName": "Carrús West dense regular grid",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative facade/roof/window/balcony sampling remains incomplete for Carrús/open-block/Arenales families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-elche-z-toscar-openblock-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-toscar-openblock",
+      "zoneName": "Toscar mixed/open-block edge",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative facade/roof/window/balcony sampling remains incomplete for Carrús/open-block/Arenales families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-elche-z-nuevo-altabix-open-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-nuevo-altabix-open",
+      "zoneName": "Nuevo Altabix open-block residential",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative facade/roof/window/balcony sampling remains incomplete for Carrús/open-block/Arenales families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-elche-z-nuevo-altabix-open-02",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-nuevo-altabix-open",
+      "zoneName": "Nuevo Altabix open-block residential",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "high",
+      "note": "Exact current Ciudad Jardín villa grammar remains insufficiently calibrated for a final kit boundary.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-002"
+    },
+    {
+      "issueId": "issue-elche-z-altabix-commercial-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-altabix-commercial",
+      "zoneName": "Altabix commercial-industrial transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-elche-z-san-anton-regeneration-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-san-anton-regeneration",
+      "zoneName": "San Antón regeneration area",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-elche-z-palmerales-publichousing-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-palmerales-publichousing",
+      "zoneName": "Los Palmerales public-housing blocks",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative facade/roof/window/balcony sampling remains incomplete for Carrús/open-block/Arenales families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-elche-z-portalada-rowhouses-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-portalada-rowhouses",
+      "zoneName": "Portalada rowhouse / villa enclave",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-elche-z-south-palmeral-interface-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-south-palmeral-interface",
+      "zoneName": "Southern Palmeral urban interface",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "medium",
+      "note": "Authoritative Palmeral GIS boundaries remain unresolved; spatial treatment should remain conservative.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-elche-z-travalon-openblock-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-travalon-openblock",
+      "zoneName": "Travalón apartment compounds",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative facade/roof/window/balcony sampling remains incomplete for Carrús/open-block/Arenales families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-elche-z-travalon-openblock-02",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-travalon-openblock",
+      "zoneName": "Travalón apartment compounds",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-elche-z-travalon-rowhouse-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-travalon-rowhouse",
+      "zoneName": "Travalón rowhouse transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-elche-z-e16-transition-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-e16-transition",
+      "zoneName": "Sector E-16 planned/transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "planned",
+      "type": "current-state",
+      "severity": "high",
+      "note": "Zone development status is 'planned'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-elche-z-e18-planned-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-e18-planned",
+      "zoneName": "Sector E-18 low-density planned",
+      "maturity": "state-guarded",
+      "developmentStatus": "planned",
+      "type": "current-state",
+      "severity": "high",
+      "note": "Zone development status is 'planned'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-elche-z-sector-v-openblock-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-sector-v-openblock",
+      "zoneName": "Sector V established open blocks",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative facade/roof/window/balcony sampling remains incomplete for Carrús/open-block/Arenales families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-elche-z-sector-v-southgrowth-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-sector-v-southgrowth",
+      "zoneName": "Sector V southern growth belt",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-elche-z-businesspark-existing-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-businesspark-existing",
+      "zoneName": "Elche Parque Empresarial existing",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Business-park facade/roof typologies remain insufficiently sampled for final shared-versus-city-specific kit calibration.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C01"
+    },
+    {
+      "issueId": "issue-elche-z-businesspark-e49-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-businesspark-e49",
+      "zoneName": "E-49 business-park expansion",
+      "maturity": "state-guarded",
+      "developmentStatus": "under-development",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Business-park facade/roof typologies remain insufficiently sampled for final shared-versus-city-specific kit calibration.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C01"
+    },
+    {
+      "issueId": "issue-elche-z-businesspark-e49-02",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-businesspark-e49",
+      "zoneName": "E-49 business-park expansion",
+      "maturity": "state-guarded",
+      "developmentStatus": "under-development",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'under-development'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-elche-z-arenales-apartments-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-arenales-apartments",
+      "zoneName": "Arenales coastal apartment fabric",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative facade/roof/window/balcony sampling remains incomplete for Carrús/open-block/Arenales families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-elche-z-arenales-apartments-02",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-arenales-apartments",
+      "zoneName": "Arenales coastal apartment fabric",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-elche-z-arenales-edge-01",
+      "cityId": "elche",
+      "cityName": "Elche",
+      "zoneId": "z-arenales-edge",
+      "zoneName": "Arenales dune / low-rise transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-alicante-z-santa-cruz-historic-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-santa-cruz-historic",
+      "zoneName": "Santa Cruz historic hillside core",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Fine facade/roof material evidence remains incomplete in the historic hillside fabrics.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-alicante-z-raval-benacantil-foot-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-raval-benacantil-foot",
+      "zoneName": "Raval Roig / Benacantil foot",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Fine facade/roof material evidence remains incomplete in the historic hillside fabrics.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-alicante-z-babel-benalua-south-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-babel-benalua-south",
+      "zoneName": "Babel / Benalúa Sur transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-alicante-z-parque-central-rail-transition-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-parque-central-rail-transition",
+      "zoneName": "Parque Central / rail-corridor transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-alicante-z-virgen-remedio-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-virgen-remedio",
+      "zoneName": "Virgen del Remedio open-block estate",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Northern-estate classification is improved but still not complete block by block.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C02"
+    },
+    {
+      "issueId": "issue-alicante-z-lo-morant-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-lo-morant",
+      "zoneName": "Lo Morant mixed open-block edge",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Northern-estate classification is improved but still not complete block by block.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C02"
+    },
+    {
+      "issueId": "issue-alicante-z-juan-xxiii-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-juan-xxiii",
+      "zoneName": "Juan XXIII large-estate superblocks",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Northern-estate classification is improved but still not complete block by block.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C02"
+    },
+    {
+      "issueId": "issue-alicante-z-colonia-requena-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-colonia-requena",
+      "zoneName": "Colonia Requena mixed apartment edge",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Northern-estate classification is improved but still not complete block by block.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C02"
+    },
+    {
+      "issueId": "issue-alicante-z-lomas-garbinet-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-lomas-garbinet",
+      "zoneName": "Lomas de Garbinet planned compact edge",
+      "maturity": "state-guarded",
+      "developmentStatus": "planned",
+      "type": "current-state",
+      "severity": "high",
+      "note": "Zone development status is 'planned'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-alicante-z-sangueta-transition-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-sangueta-transition",
+      "zoneName": "Sangueta infrastructure / regeneration edge",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-alicante-z-nueva-albufereta-02",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-nueva-albufereta",
+      "zoneName": "Nueva Albufereta planned sector",
+      "maturity": "state-guarded",
+      "developmentStatus": "planned",
+      "type": "current-state",
+      "severity": "high",
+      "note": "Zone development status is 'planned'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-alicante-z-pau5-sector2-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-pau5-sector2",
+      "zoneName": "PAU 5 Sector 2 growth area",
+      "maturity": "state-guarded",
+      "developmentStatus": "under-development",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'under-development'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-alicante-z-villafranqueza-dispersed-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-villafranqueza-dispersed",
+      "zoneName": "Villafranqueza dispersed edge",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-alicante-z-tabarca-walled-nucleus-01",
+      "cityId": "alicante",
+      "cityName": "Alicante",
+      "zoneId": "z-tabarca-walled-nucleus",
+      "zoneName": "Nueva Tabarca walled nucleus",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current Tabarca traditional-house material/storey samples remain incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-calvari-resident-midrise-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "calvari-resident-midrise",
+      "zoneName": "Calvari resident mid-rise fabric",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative resident mid-rise facade/roof/site samples remain incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-levante-first-line-hotel-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "levante-first-line-hotel",
+      "zoneName": "Levante first-line hotel / tower frontage",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Facade/balcony/window-rhythm and building-by-building height sampling across tower generations remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-levante-second-line-tower-grid-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "levante-second-line-tower-grid",
+      "zoneName": "Levante second-line open-plot tower grid",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Facade/balcony/window-rhythm and building-by-building height sampling across tower generations remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-levante-mediterraneo-spine-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "levante-mediterraneo-spine",
+      "zoneName": "Avenida del Mediterráneo mixed high-rise spine",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Facade/balcony/window-rhythm and building-by-building height sampling across tower generations remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-rincon-beachfront-towers-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "rincon-beachfront-towers",
+      "zoneName": "Rincón beachfront / second-line tower field",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Facade/balcony/window-rhythm and building-by-building height sampling across tower generations remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-rincon-inner-residential-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "rincon-inner-residential",
+      "zoneName": "Rincón inner residential pockets",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-els-tolls-resident-grid-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "els-tolls-resident-grid",
+      "zoneName": "Els Tolls resident apartment grid",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative resident mid-rise facade/roof/site samples remain incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-colonia-madrid-finegrain-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "colonia-madrid-finegrain",
+      "zoneName": "Colonia Madrid fine-grain resident fabric",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative resident mid-rise facade/roof/site samples remain incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-foietes-midrise-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "foietes-midrise",
+      "zoneName": "Foietes mid-rise / park-edge fabric",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative resident mid-rise facade/roof/site samples remain incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-beniarda-jaime1-corridor-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "beniarda-jaime1-corridor",
+      "zoneName": "Beniardá–Jaime I mixed corridor",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Representative resident mid-rise facade/roof/site samples remain incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-poniente-old-first-line-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "poniente-old-first-line",
+      "zoneName": "Poniente older beachfront frontage",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Facade/balcony/window-rhythm and building-by-building height sampling across tower generations remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-poniente-pp2-1-via-parque-towers-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "poniente-pp2-1-via-parque-towers",
+      "zoneName": "PP 2/1 / Vía Parque new tower compounds",
+      "maturity": "state-guarded",
+      "developmentStatus": "under-development",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Facade/balcony/window-rhythm and building-by-building height sampling across tower generations remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-poniente-pp2-1-via-parque-towers-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "poniente-pp2-1-via-parque-towers",
+      "zoneName": "PP 2/1 / Vía Parque new tower compounds",
+      "maturity": "state-guarded",
+      "developmentStatus": "under-development",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'under-development'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-benidorm-poniente-second-line-openplots-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "poniente-second-line-openplots",
+      "zoneName": "Poniente second-line open-plot mix",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Facade/balcony/window-rhythm and building-by-building height sampling across tower generations remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-poniente-xixo-interface-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "poniente-xixo-interface",
+      "zoneName": "Xixo / western drainage-residential interface",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-la-cala-beachfront-apartments-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "la-cala-beachfront-apartments",
+      "zoneName": "La Cala de Benidorm beachfront apartments",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Facade/balcony/window-rhythm and building-by-building height sampling across tower generations remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-benidorm-la-cala-beachfront-apartments-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "la-cala-beachfront-apartments",
+      "zoneName": "La Cala de Benidorm beachfront apartments",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-mont-benidorm-hillside-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "mont-benidorm-hillside",
+      "zoneName": "Mont Benidorm hillside residential",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Peripheral villa/low-density facade, roof and site grammar remains weakly sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C03"
+    },
+    {
+      "issueId": "issue-benidorm-mont-benidorm-hillside-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "mont-benidorm-hillside",
+      "zoneName": "Mont Benidorm hillside residential",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-la-cala-finestrat-boundary-transition-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "la-cala-finestrat-boundary-transition",
+      "zoneName": "Tossal / Finestrat municipal-edge transition",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-lhorta-lowdensity-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "lhorta-lowdensity",
+      "zoneName": "L’Horta low-density fabric",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Peripheral villa/low-density facade, roof and site grammar remains weakly sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C03"
+    },
+    {
+      "issueId": "issue-benidorm-lhorta-lowdensity-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "lhorta-lowdensity",
+      "zoneName": "L’Horta low-density fabric",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-finca-barrina-transition-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "finca-barrina-transition",
+      "zoneName": "Finca Barrina / La Silueta transition",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Peripheral villa/low-density facade, roof and site grammar remains weakly sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C03"
+    },
+    {
+      "issueId": "issue-benidorm-finca-barrina-transition-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "finca-barrina-transition",
+      "zoneName": "Finca Barrina / La Silueta transition",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-coblanca-peripheral-residential-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "coblanca-peripheral-residential",
+      "zoneName": "Coblanca peripheral residential nucleus",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Peripheral villa/low-density facade, roof and site grammar remains weakly sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C03"
+    },
+    {
+      "issueId": "issue-benidorm-coblanca-peripheral-residential-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "coblanca-peripheral-residential",
+      "zoneName": "Coblanca peripheral residential nucleus",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-almafra-mixed-fringe-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "almafra-mixed-fringe",
+      "zoneName": "L’Almafrà mixed fringe",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Peripheral villa/low-density facade, roof and site grammar remains weakly sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C03"
+    },
+    {
+      "issueId": "issue-benidorm-almafra-mixed-fringe-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "almafra-mixed-fringe",
+      "zoneName": "L’Almafrà mixed fringe",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-west-resort-hotel-edge-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "west-resort-hotel-edge",
+      "zoneName": "Western resort / hotel edge",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "medium",
+      "note": "Peripheral villa/low-density facade, roof and site grammar remains weakly sampled.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-C03"
+    },
+    {
+      "issueId": "issue-benidorm-west-resort-hotel-edge-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "west-resort-hotel-edge",
+      "zoneName": "Western resort / hotel edge",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-pp1-1-planned-open-building-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "pp1-1-planned-open-building",
+      "zoneName": "PP 1/1 planned open-building sector",
+      "maturity": "state-guarded",
+      "developmentStatus": "planned",
+      "type": "current-state",
+      "severity": "high",
+      "note": "Zone development status is 'planned'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-benidorm-pp1-1-planned-open-building-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "pp1-1-planned-open-building",
+      "zoneName": "PP 1/1 planned open-building sector",
+      "maturity": "state-guarded",
+      "developmentStatus": "planned",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-pp1-1-existing-enclave-transition-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "pp1-1-existing-enclave-transition",
+      "zoneName": "PP 1/1 existing-enclave / pre-urbanization transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-benidorm-pp1-1-existing-enclave-transition-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "pp1-1-existing-enclave-transition",
+      "zoneName": "PP 1/1 existing-enclave / pre-urbanization transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-el-murtal-existing-edge-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "el-murtal-existing-edge",
+      "zoneName": "El Murtal existing / serviced edge",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-benidorm-el-murtal-existing-edge-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "el-murtal-existing-edge",
+      "zoneName": "El Murtal existing / serviced edge",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-el-murtal-planned-sector-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "el-murtal-planned-sector",
+      "zoneName": "El Murtal unresolved planned sector",
+      "maturity": "state-guarded",
+      "developmentStatus": "uncertain",
+      "type": "current-state",
+      "severity": "high",
+      "note": "Zone development status is 'uncertain'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-benidorm-el-murtal-planned-sector-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "el-murtal-planned-sector",
+      "zoneName": "El Murtal unresolved planned sector",
+      "maturity": "state-guarded",
+      "developmentStatus": "uncertain",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-pp3-1-industrial-built-part-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "pp3-1-industrial-built-part",
+      "zoneName": "PP 3/1 partially urbanized industrial/commercial plots",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-benidorm-pp3-1-industrial-built-part-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "pp3-1-industrial-built-part",
+      "zoneName": "PP 3/1 partially urbanized industrial/commercial plots",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-benidorm-pp3-1-incomplete-urbanization-01",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "pp3-1-incomplete-urbanization",
+      "zoneName": "PP 3/1 incomplete urbanization / vacant superplots",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-benidorm-pp3-1-incomplete-urbanization-02",
+      "cityId": "benidorm",
+      "cityName": "Benidorm",
+      "zoneId": "pp3-1-incomplete-urbanization",
+      "zoneName": "PP 3/1 incomplete urbanization / vacant superplots",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "geometry-placement",
+      "severity": "low",
+      "note": "Supplied zone confidence is low; use conservatively for precise placement.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-cartagena-z-casco-commercial-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-casco-commercial",
+      "zoneName": "Historic commercial / monumental street wall",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "low",
+      "note": "Ordinary facade/roof sampling remains incomplete; structural grammar is nevertheless established.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-ensanche-grid-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-ensanche-grid",
+      "zoneName": "Orthogonal Ensanche apartment grid",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "low",
+      "note": "Ordinary facade/roof sampling remains incomplete; structural grammar is nevertheless established.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-concepcion-barrio-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-concepcion-barrio",
+      "zoneName": "Concepción traditional barrio fabric",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "low",
+      "note": "Ordinary facade/roof sampling remains incomplete; structural grammar is nevertheless established.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-san-anton-traditional-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-san-anton-traditional",
+      "zoneName": "San Antón traditional mixed residential fabric",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "low",
+      "note": "Ordinary facade/roof sampling remains incomplete; structural grammar is nevertheless established.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-peral-small-parcel-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-peral-small-parcel",
+      "zoneName": "Barrio Peral fine/medium parcel fabric",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "low",
+      "note": "Ordinary facade/roof sampling remains incomplete; structural grammar is nevertheless established.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-barreros-corridor-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-barreros-corridor",
+      "zoneName": "Los Barreros corridor apartment mix",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "low",
+      "note": "Ordinary facade/roof sampling remains incomplete; structural grammar is nevertheless established.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-dolores-nucleus-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-dolores-nucleus",
+      "zoneName": "Los Dolores / San Félix traditional extension",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "low",
+      "note": "Ordinary facade/roof sampling remains incomplete; structural grammar is nevertheless established.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-dolores-outer-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-dolores-outer",
+      "zoneName": "Northern detached / mixed suburban edge",
+      "maturity": "derivation-ready",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "low",
+      "note": "Ordinary facade/roof sampling remains incomplete; structural grammar is nevertheless established.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-hondon-brownfield-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-hondon-brownfield",
+      "zoneName": "El Hondón contaminated brownfield core",
+      "maturity": "state-guarded",
+      "developmentStatus": "brownfield",
+      "type": "current-state",
+      "severity": "high",
+      "note": "Zone development status is 'brownfield'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-hondon-edge-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-hondon-edge",
+      "zoneName": "El Hondón rail / road transition edge",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-cabezo-industrial-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-cabezo-industrial",
+      "zoneName": "Cabezo Beaza industrial/logistics fabric",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Dated industrial occupancy/build-out remains incomplete and should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-camachos-occupied-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-camachos-occupied",
+      "zoneName": "Los Camachos occupied industrial/logistics fabric",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Dated industrial occupancy/build-out remains incomplete and should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-camachos-transition-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-camachos-transition",
+      "zoneName": "Los Camachos serviced / ZAL transition land",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Dated industrial occupancy/build-out remains incomplete and should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-camachos-transition-02",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-camachos-transition",
+      "zoneName": "Los Camachos serviced / ZAL transition land",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-escombreras-quay-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-escombreras-quay",
+      "zoneName": "Escombreras port quay / logistics superblocks",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Dated industrial occupancy/build-out remains incomplete and should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-escombreras-heavy-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-escombreras-heavy",
+      "zoneName": "Escombreras tank / heavy-industrial valley",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Dated industrial occupancy/build-out remains incomplete and should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-escombreras-expansion-01",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-escombreras-expansion",
+      "zoneName": "Escombreras expansion / logistics transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "under-development",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Dated industrial occupancy/build-out remains incomplete and should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-cartagena-z-escombreras-expansion-02",
+      "cityId": "cartagena",
+      "cityName": "Cartagena",
+      "zoneId": "z-escombreras-expansion",
+      "zoneName": "Escombreras expansion / logistics transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "under-development",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'under-development'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-malaga-z-perchel-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-perchel",
+      "zoneName": "Perchel neighborhood fabric",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-malaga-z-malagueta-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-malagueta",
+      "zoneName": "La Malagueta apartment grid",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof/balcony sampling for ordinary western/central apartment stock remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-malaga-z-cerrado-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-cerrado",
+      "zoneName": "Cerrado de Calderón hillside",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "high",
+      "note": "Current villa/compound patterns remain insufficiently calibrated for final hillside-family boundaries.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-006"
+    },
+    {
+      "issueId": "issue-malaga-z-pinares-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-pinares",
+      "zoneName": "Pinares de San Antón",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "high",
+      "note": "Current villa/compound patterns remain insufficiently calibrated for final hillside-family boundaries.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-006"
+    },
+    {
+      "issueId": "issue-malaga-z-candado-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-candado",
+      "zoneName": "El Candado / far-east hillside",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "high",
+      "note": "Current villa/compound patterns remain insufficiently calibrated for final hillside-family boundaries.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-006"
+    },
+    {
+      "issueId": "issue-malaga-z-palma-estates-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-palma-estates",
+      "zoneName": "Palma-Palmilla estates",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof/balcony sampling for ordinary western/central apartment stock remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-malaga-z-martiricos-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-martiricos",
+      "zoneName": "Martiricos transition/high-rise edge",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-malaga-z-bailen-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-bailen",
+      "zoneName": "Bailén–Miraflores apartment grid",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof/balcony sampling for ordinary western/central apartment stock remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-malaga-z-cruz-carranque-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-cruz-carranque",
+      "zoneName": "Cruz de Humilladero / Carranque",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof/balcony sampling for ordinary western/central apartment stock remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-malaga-z-huelin-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-huelin",
+      "zoneName": "Huelin older grid",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof/balcony sampling for ordinary western/central apartment stock remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-malaga-z-carretera-superblocks-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-carretera-superblocks",
+      "zoneName": "Carretera de Cádiz slab/superblock belt",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof/balcony sampling for ordinary western/central apartment stock remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-malaga-z-pacifico-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-pacifico",
+      "zoneName": "Pacífico / western beachfront",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof/balcony sampling for ordinary western/central apartment stock remains incomplete.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-malaga-z-teatinos-growth-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-teatinos-growth",
+      "zoneName": "Teatinos outer growth/transition",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-malaga-z-maqueda-rosalia-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-maqueda-rosalia",
+      "zoneName": "Maqueda / Santa Rosalía nuclei",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-malaga-z-techpark-core-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-techpark-core",
+      "zoneName": "Málaga TechPark built campus",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Outer TechPark/industrial growth and occupancy should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-malaga-z-techpark-extension-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-techpark-extension",
+      "zoneName": "TechPark extension / development sectors",
+      "maturity": "state-guarded",
+      "developmentStatus": "planned",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Outer TechPark/industrial growth and occupancy should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-malaga-z-techpark-extension-02",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-techpark-extension",
+      "zoneName": "TechPark extension / development sectors",
+      "maturity": "state-guarded",
+      "developmentStatus": "planned",
+      "type": "current-state",
+      "severity": "high",
+      "note": "Zone development status is 'planned'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-malaga-z-guadalhorce-ind-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-guadalhorce-ind",
+      "zoneName": "Guadalhorce industrial estates",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Outer TechPark/industrial growth and occupancy should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-malaga-z-san-luis-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-san-luis",
+      "zoneName": "San Luis / Los Prados logistics",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Outer TechPark/industrial growth and occupancy should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-malaga-z-bigbox-west-01",
+      "cityId": "malaga",
+      "cityName": "Málaga",
+      "zoneId": "z-bigbox-west",
+      "zoneName": "Western big-box commercial/logistics edge",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Outer TechPark/industrial growth and occupancy should be checked near production freeze.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-historic-core-medieval-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-historic-core-medieval",
+      "zoneName": "Medieval / early-modern fine-grain core",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-historic-core-civic-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-historic-core-civic",
+      "zoneName": "Cathedral–Trapería civic-commercial spine",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-north-central-smg-grid-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-north-central-smg-grid",
+      "zoneName": "Santa María de Gracia apartment grid",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-north-central-ranero-open-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-north-central-ranero-open",
+      "zoneName": "El Ranero / San Basilio open-block fabric",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-infante-infante-superblocks-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-infante-infante-superblocks",
+      "zoneName": "Infante Don Juan Manuel planned apartment superblocks",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "high",
+      "note": "Infante and other postwar areas outside the three east estates need stronger typology calibration.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-007"
+    },
+    {
+      "issueId": "issue-murcia-z-infante-buenos-aires-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-infante-buenos-aires",
+      "zoneName": "Buenos Aires / south-east mixed grid",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "high",
+      "note": "Infante and other postwar areas outside the three east estates need stronger typology calibration.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-007"
+    },
+    {
+      "issueId": "issue-murcia-z-conexion-sur-rail-corridor-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-conexion-sur-rail-corridor",
+      "zoneName": "Buried railway / surface-regeneration corridor",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "high",
+      "note": "Exact October 2026 as-built Conexión Sur geometry remains time-sensitive.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-conexion-sur-rail-corridor-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-conexion-sur-rail-corridor",
+      "zoneName": "Buried railway / surface-regeneration corridor",
+      "maturity": "state-guarded",
+      "developmentStatus": "transition",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'transition'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-north-growth-flota-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-north-growth-flota",
+      "zoneName": "La Flota modern apartment blocks",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-north-growth-flota-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-north-growth-flota",
+      "zoneName": "La Flota modern apartment blocks",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Current north/resort build-out edges remain time-sensitive.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-north-growth-juan-carlos-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-north-growth-juan-carlos",
+      "zoneName": "Juan Carlos I / Juan de Borbón tram corridor",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-north-growth-juan-carlos-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-north-growth-juan-carlos",
+      "zoneName": "Juan Carlos I / Juan de Borbón tram corridor",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Current north/resort build-out edges remain time-sensitive.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-north-growth-juan-carlos-03",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-north-growth-juan-carlos",
+      "zoneName": "Juan Carlos I / Juan de Borbón tram corridor",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-north-growth-zaraiche-interface-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-north-growth-zaraiche-interface",
+      "zoneName": "Santiago y Zaraiche / El Puntal huerta interface",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-north-growth-zaraiche-interface-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-north-growth-zaraiche-interface",
+      "zoneName": "Santiago y Zaraiche / El Puntal huerta interface",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Current north/resort build-out edges remain time-sensitive.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-north-growth-zaraiche-interface-03",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-north-growth-zaraiche-interface",
+      "zoneName": "Santiago y Zaraiche / El Puntal huerta interface",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-churra-condomina-churra-nucleus-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-churra-condomina-churra-nucleus",
+      "zoneName": "Churra nucleus / residential growth",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Current north/resort build-out edges remain time-sensitive.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-churra-condomina-churra-nucleus-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-churra-condomina-churra-nucleus",
+      "zoneName": "Churra nucleus / residential growth",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-west-huerta-ribbon-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-west-huerta-ribbon",
+      "zoneName": "Western huerta camino ribbons",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-west-huerta-ribbon-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-west-huerta-ribbon",
+      "zoneName": "Western huerta camino ribbons",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "high",
+      "note": "Parcel-scale irrigation/flood/municipal clipping remains unresolved and can affect buildable placement.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-murcia-z-west-huerta-nuclei-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-west-huerta-nuclei",
+      "zoneName": "La Raya / Puebla de Soto / Rincón nuclei",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-west-huerta-nuclei-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-west-huerta-nuclei",
+      "zoneName": "La Raya / Puebla de Soto / Rincón nuclei",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "high",
+      "note": "Parcel-scale irrigation/flood/municipal clipping remains unresolved and can affect buildable placement.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-murcia-z-west-huerta-agri-mosaic-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-west-huerta-agri-mosaic",
+      "zoneName": "Embedded western huerta agricultural mosaic",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-west-huerta-agri-mosaic-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-west-huerta-agri-mosaic",
+      "zoneName": "Embedded western huerta agricultural mosaic",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "high",
+      "note": "Parcel-scale irrigation/flood/municipal clipping remains unresolved and can affect buildable placement.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-murcia-z-southwest-transition-regueron-edge-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-southwest-transition-regueron-edge",
+      "zoneName": "Reguerón-adjacent settlement edge",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "high",
+      "note": "Parcel-scale irrigation/flood/municipal clipping remains unresolved and can affect buildable placement.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-murcia-z-industrial-oeste-logistics-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-industrial-oeste-logistics",
+      "zoneName": "Industrial/logistics core",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "high",
+      "note": "Resort/industrial facade and plot sampling remains incomplete before final production-kit boundaries are frozen.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-009"
+    },
+    {
+      "issueId": "issue-murcia-z-industrial-oeste-service-fringe-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-industrial-oeste-service-fringe",
+      "zoneName": "Industrial-service commercial fringe",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "high",
+      "note": "Resort/industrial facade and plot sampling remains incomplete before final production-kit boundaries are frozen.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-009"
+    },
+    {
+      "issueId": "issue-murcia-z-puente-zarandona-puente-core-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-puente-zarandona-puente-core",
+      "zoneName": "Puente Tocinos compact nucleus",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-puente-zarandona-puente-core-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-puente-zarandona-puente-core",
+      "zoneName": "Puente Tocinos compact nucleus",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Current north/resort build-out edges remain time-sensitive.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-puente-zarandona-zarandona-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-puente-zarandona-zarandona",
+      "zoneName": "Zarandona urbanizing grid",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-puente-zarandona-zarandona-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-puente-zarandona-zarandona",
+      "zoneName": "Zarandona urbanizing grid",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Current north/resort build-out edges remain time-sensitive.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-puente-zarandona-zarandona-03",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-puente-zarandona-zarandona",
+      "zoneName": "Zarandona urbanizing grid",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-puente-zarandona-east-interface-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-puente-zarandona-east-interface",
+      "zoneName": "Eastern city–huerta interface",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-puente-zarandona-east-interface-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-puente-zarandona-east-interface",
+      "zoneName": "Eastern city–huerta interface",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Current north/resort build-out edges remain time-sensitive.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-cabezo-monteagudo-cabezo-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-cabezo-monteagudo-cabezo",
+      "zoneName": "Cabezo de Torres compact/suburban nucleus",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-cabezo-monteagudo-cabezo-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-cabezo-monteagudo-cabezo",
+      "zoneName": "Cabezo de Torres compact/suburban nucleus",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Current north/resort build-out edges remain time-sensitive.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-cabezo-monteagudo-cabezo-03",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-cabezo-monteagudo-cabezo",
+      "zoneName": "Cabezo de Torres compact/suburban nucleus",
+      "maturity": "state-guarded",
+      "developmentStatus": "partially-built",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Zone development status is 'partially-built'; retain current/future-state guardrails and re-check near production freeze.",
+      "origin": "supplied settlement metadata",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-cabezo-monteagudo-monteagudo-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-cabezo-monteagudo-monteagudo",
+      "zoneName": "Monteagudo settlement at hill foot",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-cabezo-monteagudo-heritage-huerta-edge-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-cabezo-monteagudo-heritage-huerta-edge",
+      "zoneName": "Monteagudo heritage/huerta transition",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-east-huerta-casillas-llano-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-east-huerta-casillas-llano",
+      "zoneName": "Casillas / Llano de Brujas nuclei",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-east-huerta-casillas-llano-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-east-huerta-casillas-llano",
+      "zoneName": "Casillas / Llano de Brujas nuclei",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "high",
+      "note": "Parcel-scale irrigation/flood/municipal clipping remains unresolved and can affect buildable placement.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-murcia-z-east-huerta-santacruz-raal-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-east-huerta-santacruz-raal",
+      "zoneName": "Santa Cruz / El Raal ribbon-nucleus chain",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-east-huerta-santacruz-raal-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-east-huerta-santacruz-raal",
+      "zoneName": "Santa Cruz / El Raal ribbon-nucleus chain",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "high",
+      "note": "Parcel-scale irrigation/flood/municipal clipping remains unresolved and can affect buildable placement.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-murcia-z-east-huerta-alquerias-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-east-huerta-alquerias",
+      "zoneName": "Alquerías compact eastern nucleus",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-east-huerta-alquerias-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-east-huerta-alquerias",
+      "zoneName": "Alquerías compact eastern nucleus",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "geometry-placement",
+      "severity": "high",
+      "note": "Parcel-scale irrigation/flood/municipal clipping remains unresolved and can affect buildable placement.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-002"
+    },
+    {
+      "issueId": "issue-murcia-z-se-foothill-beniajan-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-se-foothill-beniajan",
+      "zoneName": "Beniaján traditional compact center",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-se-foothill-torreaguera-ramos-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-se-foothill-torreaguera-ramos",
+      "zoneName": "Torreagüera / Los Ramos linear-compact fabric",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-se-foothill-garres-josevega-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-se-foothill-garres-josevega",
+      "zoneName": "Garres / San José de la Vega foothill edge",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-south-foothill-algezares-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-south-foothill-algezares",
+      "zoneName": "Algezares compact foothill nucleus",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-south-foothill-angel-alberca-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-south-foothill-angel-alberca",
+      "zoneName": "Santo Ángel / La Alberca suburban nuclei",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-south-foothill-foothill-villas-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-south-foothill-foothill-villas",
+      "zoneName": "Upper foothill villa / open edge",
+      "maturity": "derivation-ready-with-nonblocking-gap",
+      "developmentStatus": "existing",
+      "type": "appearance-calibration",
+      "severity": "medium",
+      "note": "Current facade/roof sampling remains incomplete for ordinary historic, northern, huerta and foothill families.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "DU-001"
+    },
+    {
+      "issueId": "issue-murcia-z-sucina-gea-resort-01",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-sucina-gea-resort",
+      "zoneName": "Gea y Truyols / Sucina planned resort morphology",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "current-state",
+      "severity": "medium",
+      "note": "Current north/resort build-out edges remain time-sensitive.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "PC-001"
+    },
+    {
+      "issueId": "issue-murcia-z-sucina-gea-resort-02",
+      "cityId": "murcia",
+      "cityName": "Murcia",
+      "zoneId": "z-sucina-gea-resort",
+      "zoneName": "Gea y Truyols / Sucina planned resort morphology",
+      "maturity": "derivation-ready-with-targeted-exception",
+      "developmentStatus": "existing",
+      "type": "family-decision",
+      "severity": "high",
+      "note": "Resort/industrial facade and plot sampling remains incomplete before final production-kit boundaries are frozen.",
+      "origin": "Phase 2 remaining-gap statement",
+      "consolidatedQuestionId": "P3-008"
+    }
+  ],
+  "sharedFamilyCaveatAssignments": [
+    {
+      "familyId": "arch-historic-attached-finegrain",
+      "familyName": "Historic attached fine-grain frontage",
+      "statement": "Torrevieja has no separately defined historic-fine-grain building profile in the supplied baseline.",
+      "assignedQuestionId": "DU-003"
+    },
+    {
+      "familyId": "arch-neighborhood-midrise-apartment",
+      "familyName": "Neighborhood mid-rise apartment block",
+      "statement": "Cartagena’s traditional barrio family includes more attached low-rise content than the other members.",
+      "assignedQuestionId": "DU-002"
+    },
+    {
+      "familyId": "arch-neighborhood-midrise-apartment",
+      "familyName": "Neighborhood mid-rise apartment block",
+      "statement": "Member typical-storey bands do not share a strict overlap; commonStructure.storeysTypical therefore records the supplied family envelope, not a universal typical range.",
+      "assignedQuestionId": "DU-002"
+    },
+    {
+      "familyId": "arch-open-block-apartment-slab",
+      "familyName": "Open-block apartment slab / estate",
+      "statement": "Member typical-storey bands do not share a strict overlap; commonStructure.storeysTypical therefore records the supplied family envelope, not a universal typical range.",
+      "assignedQuestionId": "DU-002"
+    },
+    {
+      "familyId": "arch-open-block-apartment-slab",
+      "familyName": "Open-block apartment slab / estate",
+      "statement": "Production-facing subdivision among walk-up, slab, tower/estate and regeneration-state variants still depends on uneven facade/material sampling; Phase 2 does not justify additional top-level cross-city research families.",
+      "assignedQuestionId": "DU-002"
+    },
+    {
+      "familyId": "arch-lowrise-rowhouse-townhouse",
+      "familyName": "Low-rise terrace / townhouse / semi-detached family",
+      "statement": "Member typical-storey bands do not share a strict overlap; commonStructure.storeysTypical therefore records the supplied family envelope, not a universal typical range.",
+      "assignedQuestionId": "DU-002"
+    },
+    {
+      "familyId": "arch-lowrise-rowhouse-townhouse",
+      "familyName": "Low-rise terrace / townhouse / semi-detached family",
+      "statement": "Murcia resort housing is deliberately excluded pending current subtype/facade sampling; future comparison may place individual resort forms back into shared detached/rowhouse families.",
+      "assignedQuestionId": "P3-008"
+    },
+    {
+      "familyId": "arch-coastal-apartment-slab-tower",
+      "familyName": "Coastal apartment slab / tower",
+      "statement": "Benidorm’s open-plot tower grammar is materially different from compound/slab patterns elsewhere and must remain a strong city-specific variant.",
+      "assignedQuestionId": "DU-002"
+    },
+    {
+      "familyId": "arch-coastal-apartment-slab-tower",
+      "familyName": "Coastal apartment slab / tower",
+      "statement": "Cartagena coastal-residential profile is broader than a tower-only family.",
+      "assignedQuestionId": "DU-002"
+    },
+    {
+      "familyId": "arch-coastal-apartment-slab-tower",
+      "familyName": "Coastal apartment slab / tower",
+      "statement": "Member typical-storey bands do not share a strict overlap; commonStructure.storeysTypical therefore records the supplied family envelope, not a universal typical range.",
+      "assignedQuestionId": "DU-002"
+    },
+    {
+      "familyId": "arch-industrial-logistics-shed",
+      "familyName": "Industrial / logistics shed",
+      "statement": "Benidorm combines industrial and commercial boxes in one supplied profile.",
+      "assignedQuestionId": "DU-003"
+    },
+    {
+      "familyId": "arch-large-commercial-box",
+      "familyName": "Large-format commercial / retail box",
+      "statement": "Cartagena has no clean standalone commercial-box profile in the supplied baseline.",
+      "assignedQuestionId": "DU-003"
+    },
+    {
+      "familyId": "arch-institutional-campus-block",
+      "familyName": "Institutional / civic campus block",
+      "statement": "Detailed facade/service-building typologies remain uneven across university, hospital and civic campuses; retain subtype variation without creating a separate hospital structural family at Phase 2 closeout.",
+      "assignedQuestionId": "DU-004"
+    },
+    {
+      "familyId": "arch-airport-terminal-support",
+      "familyName": "Airport ancillary / support building",
+      "statement": "Detailed support-building facade/roof typologies remain insufficiently described; the Elche passenger-terminal plan organization is now strong evidence but is intentionally excluded from procedural repetition.",
+      "assignedQuestionId": "DU-004"
+    },
+    {
+      "familyId": "arch-port-operational-building",
+      "familyName": "Port operational / passenger support building",
+      "statement": "Cartagena’s naval/shipyard and heavy-industrial families are intentionally excluded from this merge.",
+      "assignedQuestionId": "DU-003"
+    },
+    {
+      "familyId": "arch-business-technology-park-building",
+      "familyName": "Business / technology-park office-logistics building",
+      "statement": "Cross-city membership remains limited to Elche and Málaga; reviewed Alicante evidence did not isolate a defensible equivalent office/research-park family, so no Alicante member is added.",
+      "assignedQuestionId": "DU-003"
+    }
+  ]
+}

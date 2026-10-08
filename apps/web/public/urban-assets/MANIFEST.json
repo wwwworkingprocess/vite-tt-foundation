@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "0.1.0",
+  "package": "urban-assets-public-v0.1",
+  "authorityAlignment": {
+    "assetResearchAuthorityVersion": "phase3-applied-v0.1",
+    "phase3CompletedQuestionIds": [
+      "P3-001",
+      "P3-003",
+      "P3-004",
+      "P3-005"
+    ],
+    "schemaMigrationApplied": false
+  },
+  "status": "phase3-applied-production-facing-scaffold",
+  "scope": {
+    "citySpecificCatalogs": [
+      "es-torrevieja"
+    ],
+    "note": "This update deliberately preserves the initial city-specific scope. Phase 3 refinements for Alicante, Cartagena and Malaga remain authoritative in asset-research and are also visible where applicable through shared building cityVariantGuidance. Their city-specific urban-assets catalogs should be generated as separate production-derivation steps."
+  },
+  "validation": {
+    "validatedCatalogCount": 8,
+    "jsonSchemaPassed": true,
+    "crossReferencePassed": true,
+    "stableIdChecks": {
+      "sharedBuildingIdsPreserved": true,
+      "sharedPoiIdsPreserved": true,
+      "torreviejaBuildingIdsPreserved": true,
+      "torreviejaPoiIdsPreserved": true
+    },
+    "allCandidateStagesRemainUnmaterialized": true,
+    "passed": true
+  },
+  "counts": {
+    "sharedBuildingKitCandidates": 14,
+    "sharedPoiPresentationKitCandidates": 10,
+    "torreviejaBuildingCandidates": 27,
+    "torreviejaPoiCandidates": 28,
+    "torreviejaLandscapeTreatmentCandidates": 6,
+    "phase3TorreviejaBuildingCandidatesWithAdapterConstraints": 3
+  },
+  "files": [
+    {
+      "path": "catalog.json",
+      "byteLength": 710,
+      "sha256": "816722f72aced5737f567a14c3e833e171ba5e8d230cd3e2be986dcbf67b7ca4"
+    },
+    {
+      "path": "es-torrevieja/buildings/catalog.json",
+      "byteLength": 27033,
+      "sha256": "5abd58467117295c07a8a716dea7ba8d89a63ed316f1cfb154173c6147dcd56a"
+    },
+    {
+      "path": "es-torrevieja/catalog.json",
+      "byteLength": 615,
+      "sha256": "d1e191d7e195a0388a78e721a6029b77a47a918ddbc58b2990387a17c33fa9ae"
+    },
+    {
+      "path": "es-torrevieja/derivation/source-map.json",
+      "byteLength": 15045,
+      "sha256": "c581335e3d9defdf9d1170b6b6cf7c2702e63ceb91b03768168599fb4118b85d"
+    },
+    {
+      "path": "es-torrevieja/landscape/catalog.json",
+      "byteLength": 1954,
+      "sha256": "f80fe6e26507b915c8e54211a73468113fc760c62df4e3a8a482a38ee5fa374e"
+    },
+    {
+      "path": "es-torrevieja/pois/catalog.json",
+      "byteLength": 24084,
+      "sha256": "20453d1cd7f884cacae06caa68095692dca6faef4da1503090ba01c9159f2c69"
+    },
+    {
+      "path": "schema/asset-collection.v0.1.schema.json",
+      "byteLength": 1069,
+      "sha256": "5ea61e1cf69a1d3e3305527b5f6ab5efa30ff4e90f47e341c1dbd809f61d8331"
+    },
+    {
+      "path": "schema/catalog.v0.1.schema.json",
+      "byteLength": 1240,
+      "sha256": "26d2c251ae2ff9b957c5fa95e8e300e0906bc54567aa56462a9917da03e47c58"
+    },
+    {
+      "path": "schema/city-catalog.v0.1.schema.json",
+      "byteLength": 681,
+      "sha256": "332eb65f155a0059040500da3a7a5438f0ec1d7c4cebfa73d91fb5bfe4e87ede"
+    },
+    {
+      "path": "shared/buildings/catalog.json",
+      "byteLength": 87515,
+      "sha256": "b1e7653152ea014d9147fed79f2d7c94a21eeaf6ccc2dda114b257e335bb1434"
+    },
+    {
+      "path": "shared/catalog.json",
+      "byteLength": 339,
+      "sha256": "6e6fc735e62196e1b869b46b3ad483b733aeceb97b74701b5854032ee96e0a93"
+    },
+    {
+      "path": "shared/materials/catalog.json",
+      "byteLength": 128,
+      "sha256": "cfc9c58491356524fb58b05de2f20e4a2be29e4c55f8dccd616df64cbb571244"
+    },
+    {
+      "path": "shared/pois/catalog.json",
+      "byteLength": 7188,
+      "sha256": "ae39eb2697d69067a7be18b9566cd4a051f97df221adbc0448c0d9239d098904"
+    }
+  ]
+}

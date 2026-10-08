@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "0.1.0",
+  "settlementId": "es-torrevieja",
+  "cityId": "torrevieja",
+  "status": "production-candidate-scaffold",
+  "sourceAuthorities": {
+    "settlementMetadataCityId": "torrevieja",
+    "assetResearchCityId": "torrevieja",
+    "assetResearchAuthorityVersion": "phase3-applied-v0.1"
+  },
+  "collections": {
+    "buildings": "buildings/catalog.json",
+    "pois": "pois/catalog.json",
+    "landscape": "landscape/catalog.json",
+    "derivation": "derivation/source-map.json"
+  },
+  "counts": {
+    "buildingCandidates": 27,
+    "poiCandidates": 28,
+    "landscapeTreatmentCandidates": 6
+  }
+}

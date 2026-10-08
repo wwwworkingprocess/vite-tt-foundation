@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./catalog.v0.1.schema.json",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "status",
+    "pathSemantics",
+    "upstreamCatalogs",
+    "shared",
+    "settlements",
+    "runtimeRule"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1.0"
+    },
+    "status": {
+      "const": "production-facing-urban-asset-index"
+    },
+    "pathSemantics": {
+      "type": "string"
+    },
+    "upstreamCatalogs": {
+      "type": "object",
+      "required": [
+        "settlementMetadata",
+        "assetResearch"
+      ],
+      "properties": {
+        "settlementMetadata": {
+          "type": "string"
+        },
+        "assetResearch": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "shared": {
+      "type": "object",
+      "required": [
+        "catalog"
+      ],
+      "properties": {
+        "catalog": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "settlements": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "runtimeRule": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

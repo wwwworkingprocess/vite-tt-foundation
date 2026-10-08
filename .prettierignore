@@ -12,5 +12,11 @@ docs/research/torrevieja/urban-morphology-report.md
 docs/research/torrevieja/settlement-metadata-sources.md
 apps/web/public/route-presentation/torrevieja/torrevieja-route-presentation.v0.json
 docs/research/torrevieja/route-presentation-validation.md
-apps/web/public/terrain/es-torrevieja/*
+
+# Machine-generated / checksum-addressed public authority data
+apps/web/public/asset-research/
+apps/web/public/urban-assets/
+apps/web/public/terrain/es-*/
+
+# Small generated terrain catalog is also excluded
 apps/web/public/terrain/catalog.json

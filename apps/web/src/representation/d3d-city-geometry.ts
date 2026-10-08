@@ -1,3 +1,5 @@
+import type { D3dLodBand } from './d3d-map-model.js';
+import { d3dDrapePolicy } from './d3d-presentation-policy.js';
 import { drapeD3dGeometry } from './d3d-terrain-geometry.js';
 import { terrainLayerOffsets, type D3dTerrain } from './d3d-terrain-model.js';
 import {
@@ -206,11 +208,12 @@ function buildCitySurfaceGeometry(
   city: ProceduralCity,
   layer: 'ground' | 'street' | 'landscape' | 'reservation',
   terrain?: D3dTerrain,
+  lod: D3dLodBand = 'near',
 ) {
   const positions: number[] = [],
     colors: number[] = [];
   const quad = (points: readonly (readonly number[])[], color: Color) => {
-    for (const index of [0, 1, 2, 1, 3, 2]) {
+    for (const index of [0, 2, 1, 1, 2, 3]) {
       positions.push(...points[index]!);
       colors.push(color.r, color.g, color.b);
     }
@@ -288,7 +291,7 @@ function buildCitySurfaceGeometry(
         );
         const color = new Color(polygon.color);
         for (let i = 1; i < clipped.length - 1; i++)
-          for (const point of [clipped[0]!, clipped[i]!, clipped[i + 1]!]) {
+          for (const point of [clipped[0]!, clipped[i + 1]!, clipped[i]!]) {
             positions.push(point.x, polygon.surfaceY, point.y);
             colors.push(color.r, color.g, color.b);
           }
@@ -305,7 +308,16 @@ function buildCitySurfaceGeometry(
     new BufferAttribute(new Float32Array(colors), 3),
   );
   if (terrain) {
-    drapeD3dGeometry(surface, terrain, terrainLayerOffsets.surface, true);
+    drapeD3dGeometry(
+      surface,
+      terrain,
+      terrainLayerOffsets.surface,
+      true,
+      (layer === 'landscape'
+        ? d3dDrapePolicy('normal', lod).landscapeMetres
+        : d3dDrapePolicy('normal', lod).surfaceMetres) * terrain.metre,
+    );
+    if (layer !== 'reservation') return surface;
     positions.length = 0;
     colors.length = 0;
     const pos = surface.getAttribute('position'),
@@ -315,6 +327,7 @@ function buildCitySurfaceGeometry(
       colors.push(rgb.getX(i), rgb.getY(i), rgb.getZ(i));
     }
   }
+  const limited = surface.userData.drapeLimited === true;
   surface.dispose();
   if (layer === 'reservation') {
     const anchor = createCityPrototypeGeometry('landmark-placeholder', 'body');
@@ -345,6 +358,7 @@ function buildCitySurfaceGeometry(
     anchor.dispose();
   }
   const geometry = new BufferGeometry();
+  geometry.userData.drapeLimited = limited;
   geometry.setAttribute(
     'position',
     new BufferAttribute(new Float32Array(positions), 3),
@@ -357,7 +371,7 @@ function buildCitySurfaceGeometry(
   return geometry;
 }
 
-/** Cache only CPU templates by immutable city/world/layer. Each renderer owns fresh
+/** Cache only CPU templates by immutable city/world/layer/LOD. Each renderer owns fresh
  * attribute identities and disposal; shared arrays are never mutated. This avoids
  * repeating polygon subdivision during StrictMode and mini/main canvas mounts. */
 const terrainSurfaces = new WeakMap<
@@ -368,6 +382,7 @@ export function createCitySurfaceGeometry(
   city: ProceduralCity,
   layer: 'ground' | 'street' | 'landscape' | 'reservation',
   terrain?: D3dTerrain,
+  lod: D3dLodBand = 'near',
 ) {
   if (!terrain) return buildCitySurfaceGeometry(city, layer);
   let worlds = terrainSurfaces.get(city);
@@ -380,12 +395,14 @@ export function createCitySurfaceGeometry(
     layers = new Map();
     worlds.set(terrain, layers);
   }
-  let template = layers.get(layer);
+  const key = layer + ':' + lod;
+  let template = layers.get(key);
   if (!template) {
-    template = buildCitySurfaceGeometry(city, layer, terrain);
-    layers.set(layer, template);
+    template = buildCitySurfaceGeometry(city, layer, terrain, lod);
+    layers.set(key, template);
   }
   const geometry = new BufferGeometry();
+  geometry.userData.drapeLimited = template.userData.drapeLimited === true;
   for (const name of ['position', 'color', 'normal']) {
     const attribute = template.getAttribute(name);
     geometry.setAttribute(

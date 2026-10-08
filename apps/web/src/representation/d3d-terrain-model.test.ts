@@ -1,6 +1,8 @@
-import { Mesh, MeshBasicMaterial, Vector3, Raycaster, DoubleSide } from 'three';
+import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { Mesh, MeshBasicMaterial, Vector3, Raycaster } from 'three';
 import { createD3dTerrainGeometry } from './d3d-terrain-geometry.js';
-import { expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { terrainFixture } from '../test/terrain-fixture.js';
 import {
   parseTerrainCatalog,
@@ -37,9 +39,14 @@ it('renders native relief and distinct mask surfaces with static plans and groun
   });
   const world = createD3dTerrain(terrain, model);
   expect(createD3dTerrain(terrain, model)).toBe(world);
-  const plan = planD3dTerrain(world, 'normal');
+  const plan = planD3dTerrain(world, {
+    representationMode: 'normal',
+    lod: 'near',
+  });
   expect(plan.patches.map((p) => p.kind)).toEqual(['land', 'water']);
-  expect(planD3dTerrain(world, 'normal')).toBe(plan);
+  expect(
+    planD3dTerrain(world, { representationMode: 'normal', lod: 'near' }),
+  ).toBe(plan);
   const native = d3dProjectedPoint(
     model,
     terrainToGeographic({ x: 3375012.5, y: 1720062.5 }),
@@ -58,7 +65,10 @@ it('renders native relief and distinct mask surfaces with static plans and groun
   expect(grounded.buildings[0]!.x).toBe(building.x);
   expect(groundCity(city, world)).toBe(grounded);
   expect(city.buildings[0]!.baseY).toBe(0.035);
-  expect(planD3dTerrain(world, 'mini').triangles).toBeLessThan(plan.triangles);
+  expect(
+    planD3dTerrain(world, { representationMode: 'mini', lod: 'near' })
+      .triangles,
+  ).toBeLessThan(plan.triangles);
 });
 
 it('keeps an all-water viewport distinct and exposes outside/nearest sampling diagnostics', () => {
@@ -80,9 +90,12 @@ it('keeps an all-water viewport distinct and exposes outside/nearest sampling di
   const p = w.worldPoint(3375012.5, 1720062.5);
   expect(w.sample(p.x, p.z).kind).toBe('water');
   expect(w.ground(p.x, p.z).diagnostic).toBe('flat-fallback');
-  expect(planD3dTerrain(w, 'normal').patches.map((p) => p.kind)).toEqual([
-    'water',
-  ]);
+  expect(
+    planD3dTerrain(w, {
+      representationMode: 'normal',
+      lod: 'near',
+    }).patches.map((p) => p.kind),
+  ).toEqual(['water']);
 });
 
 it('places every cell-fan quadrant on the rendered native land surface rather than a different interpolation plane', () => {
@@ -97,9 +110,10 @@ it('places every cell-fan quadrant on the rendered native land surface rather th
     stopPlaces: [],
   });
   const w = createD3dTerrain(t, map),
-    patch = planD3dTerrain(w, 'normal').patches[0]!;
+    patch = planD3dTerrain(w, { representationMode: 'normal', lod: 'near' })
+      .patches[0]!;
   const geometry = createD3dTerrainGeometry(patch),
-    material = new MeshBasicMaterial({ side: DoubleSide }),
+    material = new MeshBasicMaterial(),
     mesh = new Mesh(geometry, material);
   mesh.updateMatrixWorld();
   for (const [u, v] of [
@@ -118,4 +132,169 @@ it('places every cell-fan quadrant on the rendered native land surface rather th
   expect(w.ground(water.x, water.z).diagnostic).toBe('nearest-land');
   geometry.dispose();
   material.dispose();
+});
+
+describe('full native dataset render LOD', () => {
+  let world: ReturnType<typeof createD3dTerrain>;
+  beforeAll(() => {
+    const root = join(import.meta.dirname, '..', '..', 'public', 'terrain');
+    const read = (path: string) =>
+      JSON.parse(readFileSync(join(root, path), 'utf8')) as unknown;
+    const resolved = resolveTerrainViewport(
+      parseTerrainCatalog(read('catalog.json')),
+      'es-torrevieja',
+      'torrevieja-legacy-all-v1',
+    )!;
+    const products = resolved.entry.products;
+    const terrain = terrainJsonDecoder.decode(
+      {
+        height: read(products.height.path),
+        surfaceMask: read(products.surfaceMask.path),
+        coastline: read(products.coastline.path),
+      },
+      resolved,
+    );
+    const model = createD3dMapModel({
+      bounds: { west: -0.8, east: -0.6, south: 37.9, north: 38.1 },
+      edges: [],
+      stopPlaces: [],
+    });
+    const mapped = createD3dTerrain(terrain, model);
+    const bounds = terrain.viewport.rasterBounds3035;
+    // Planning counts use a local metre transform; small ray fixtures above
+    // verify the real geographic mapping and native mesh/anchor agreement.
+    world = Object.freeze({
+      ...mapped,
+      worldPoint: (x: number, y: number) => ({
+        x: (x - bounds.west) * mapped.metre,
+        z: (bounds.north - y) * mapped.metre,
+      }),
+    });
+  });
+  it('retains every native sample while selecting cheap far and moderate medium plans', () => {
+    const far = planD3dTerrain(world, {
+      representationMode: 'normal',
+      lod: 'far',
+    });
+    const medium = planD3dTerrain(world, {
+      representationMode: 'normal',
+      lod: 'medium',
+    });
+    expect(world.terrain.statistics.nativeSamples).toBe(161680);
+    expect(world.terrain.sample(0, 0)).toBe(21.832195281982422);
+    expect(far.stride).toBe(8);
+    expect(medium.stride).toBe(4);
+    expect(far.triangles).toBe(8690);
+    expect(medium.triangles).toBe(34772);
+    expect(far.patches).toHaveLength(2);
+    expect(medium.patches).toHaveLength(2);
+    expect(
+      planD3dTerrain(world, { representationMode: 'normal', lod: 'medium' }),
+    ).toBe(medium);
+  });
+  it('keeps mini coarse regardless of the supplied camera band', () => {
+    const far = planD3dTerrain(world, {
+      representationMode: 'normal',
+      lod: 'far',
+    });
+    const mini = planD3dTerrain(world, {
+      representationMode: 'mini',
+      lod: 'near',
+    });
+    expect(mini.triangles).toBe(far.triangles);
+    expect(mini.lod).toBe('far');
+    expect(
+      planD3dTerrain(world, { representationMode: 'mini', lod: 'far' }),
+    ).toBe(mini);
+  });
+});
+
+it('chunks native detail with exact neighboring supports, including partial final rows and columns', () => {
+  const f = terrainFixture(),
+    width = 129,
+    height = 65;
+  for (const viewport of [
+    f.catalog.settlements.test.viewports[0]!,
+    f.height.viewports[0]!,
+    f.surfaceMask.viewports[0]!,
+  ]) {
+    viewport.width = width;
+    viewport.height = height;
+    viewport.rasterBounds3035.east =
+      viewport.rasterBounds3035.west + width * 25;
+    viewport.rasterBounds3035.south =
+      viewport.rasterBounds3035.north - height * 25;
+  }
+  f.height.viewports[0]!.elevations = Array.from(
+    { length: width * height },
+    (_, i) => (Math.floor(i / width) % 13) - (i % 17),
+  );
+  f.surfaceMask.viewports[0]!.cells = Array(width * height).fill(1);
+  const terrain = terrainJsonDecoder.decode(
+    f,
+    resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
+  );
+  const model = createD3dMapModel({
+    bounds: { west: -0.8, east: -0.6, south: 37.9, north: 38.1 },
+    edges: [],
+    stopPlaces: [],
+  });
+  const world = createD3dTerrain(terrain, model);
+  const near = planD3dTerrain(world, {
+    representationMode: 'normal',
+    lod: 'near',
+  });
+  expect(near.stride).toBe(1);
+  expect(near.triangles).toBe(width * height * 4);
+  expect(near.patches).toHaveLength(6);
+  expect(new Set(near.patches.map((p) => p.id)).size).toBe(6);
+  expect(
+    planD3dTerrain(world, { representationMode: 'normal', lod: 'near' }),
+  ).toBe(near);
+  for (const patch of near.patches) {
+    expect(patch.cells.endCol - patch.cells.col).toBeLessThanOrEqual(64);
+    expect(patch.cells.endRow - patch.cells.row).toBeLessThanOrEqual(64);
+  }
+  const left = near.patches.find(
+    (p) => p.cells.col === 0 && p.cells.row === 0,
+  )!;
+  const right = near.patches.find(
+    (p) => p.cells.col === 64 && p.cells.row === 0,
+  )!;
+  const shared = new Map<string, number>();
+  for (let i = 0; i < left.positions.length; i += 3)
+    shared.set(
+      left.positions[i] + ':' + left.positions[i + 2],
+      left.positions[i + 1]!,
+    );
+  let matched = 0,
+    mismatched = 0;
+  for (let i = 0; i < right.positions.length; i += 3) {
+    const y = shared.get(right.positions[i] + ':' + right.positions[i + 2]);
+    if (y !== undefined) {
+      matched++;
+      if (right.positions[i + 1] !== y) mismatched++;
+    }
+  }
+  expect(matched).toBe(65);
+  expect(mismatched).toBe(0);
+});
+
+it('keeps coarse terrain below native-grounded anchors rather than burying transport in simplified relief', () => {
+  const f = terrainFixture();
+  const t = terrainJsonDecoder.decode(
+    f,
+    resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
+  );
+  const map = createD3dMapModel({
+    bounds: { west: -0.8, east: -0.6, south: 37.9, north: 38.1 },
+    edges: [],
+    stopPlaces: [],
+  });
+  const w = createD3dTerrain(t, map);
+  const plan = planD3dTerrain(w, { representationMode: 'normal', lod: 'far' });
+  const patch = plan.patches.find((p) => p.kind === 'land')!;
+  expect(
+    Math.max(...Array.from(patch.positions).filter((_, i) => i % 3 === 1)),
+  ).toBeLessThanOrEqual(-4 * w.metre + 1e-6);
 });

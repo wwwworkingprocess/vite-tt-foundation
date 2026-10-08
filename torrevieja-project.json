@@ -67,7 +67,9 @@
       "apps/web/src/terrain/terrain-loader.ts",
       "apps/web/src/terrain/use-terrain.ts",
       "apps/web/src/representation/d3d-terrain-model.ts",
-      "apps/web/src/representation/d3d-terrain-geometry.ts"
+      "apps/web/src/representation/d3d-terrain-geometry.ts",
+      "apps/web/src/representation/d3d-presentation-policy.ts",
+      "apps/web/src/representation/d3d-dirty-frame.ts"
     ]
   },
   "simulationCriticalCoverage": {

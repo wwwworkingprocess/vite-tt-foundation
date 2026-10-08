@@ -343,6 +343,7 @@ summary {
 }
 
 .transport-route-dock {
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -365,7 +366,7 @@ summary {
 .transport-route-selector {
   flex: 0 1 auto;
   min-width: 0;
-  min-height: 0;
+  min-height: 2.75rem;
   overflow-x: hidden;
   overflow-y: auto;
   align-content: flex-start;

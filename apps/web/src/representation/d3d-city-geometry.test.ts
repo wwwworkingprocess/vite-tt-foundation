@@ -131,8 +131,8 @@ it('batches support patches and consumes independent source corridor widths bene
     expect(geometry.getAttribute('normal').count).toBe(position.count);
     expect(Array.from(position.array).every(Number.isFinite)).toBe(true);
     if (layer === 'street') {
-      expect(Math.abs(position.getZ(0) - position.getZ(1))).toBeCloseTo(0.3);
-      expect(Math.abs(position.getX(6) - position.getX(7))).toBeCloseTo(0.8);
+      expect(Math.abs(position.getZ(0) - position.getZ(2))).toBeCloseTo(0.3);
+      expect(Math.abs(position.getX(6) - position.getX(8))).toBeCloseTo(0.8);
       expect(position.getY(0)).toBeLessThan(0.1);
     }
     geometry.dispose();

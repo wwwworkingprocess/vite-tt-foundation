@@ -9,6 +9,7 @@ import {
   d3dProjectedPoint,
   d3dMetreScale,
   type D3dMapModel,
+  type D3dLodBand,
 } from './d3d-map-model.js';
 import type { ProceduralCity } from './d3d-city-model.js';
 import type { RepresentationMode } from './representation-cadence.js';
@@ -60,7 +61,7 @@ function renderCorner(terrain: TerrainRuntime, col: number, row: number) {
     ).elevation;
   return values[index]!;
 }
-/** Barycentric height of the exact native-center cell fan used by the main mesh.
+/** Barycentric height of the exact native-center cell fan used by native near detail.
  * Native query APIs retain bilinear semantics; all D3D anchors share this rendered
  * surface so slight interpolation differences cannot bury transport geometry. */
 function renderedGround(terrain: TerrainRuntime, x: number, y: number) {
@@ -143,6 +144,8 @@ export function createD3dTerrain(
 }
 const worlds = new WeakMap<TerrainRuntime, WeakMap<D3dMapModel, D3dTerrain>>();
 export type TerrainMeshPatch = Readonly<{
+  id: string;
+  cells: Readonly<{ col: number; row: number; endCol: number; endRow: number }>;
   kind: 'land' | 'water';
   positions: Float32Array;
   indices: Uint32Array;
@@ -152,100 +155,159 @@ export type TerrainMeshPlan = Readonly<{
   vertices: number;
   triangles: number;
   stride: number;
+  lod: D3dLodBand;
 }>;
-const plans = new WeakMap<
-  D3dTerrain,
-  Map<RepresentationMode, TerrainMeshPlan>
->();
-/** Renderer-owned buffers, independent of native storage. Main retains every LAND
- * sample as a center vertex; shared interpolated corners join continuous cell fans.
- * Water is a separate flat mask surface. Mini selects one native sample per 4x4
- * display block; this temporary render LOD never modifies native data.
- * A patch array is the seam for later spatial subdivision/culling, not per-cell objects.
- */
+const plans = new WeakMap<D3dTerrain, Map<string, TerrainMeshPlan>>();
+/** Conservative display support at coarse zoom: a reduced triangle must not
+ * rise above native-grounded anchors in valleys it cannot resolve. This lower
+ * envelope only affects display vertices, never runtime samples or queries.
+ * One native-cell halo includes support used by the native corner interpolation. */
+function coarseSupport(
+  terrain: TerrainRuntime,
+  col: number,
+  row: number,
+  radius: number,
+  initial: number,
+) {
+  let minimum = initial;
+  const { width, height } = terrain.viewport;
+  for (
+    let r = Math.max(0, Math.floor(row - radius) - 1);
+    r < Math.min(height, Math.ceil(row + radius) + 1);
+    r++
+  )
+    for (
+      let c = Math.max(0, Math.floor(col - radius) - 1);
+      c < Math.min(width, Math.ceil(col + radius) + 1);
+      c++
+    ) {
+      const elevation = terrain.sample(r, c);
+      if (elevation !== null) minimum = Math.min(minimum, elevation);
+    }
+  return minimum;
+}
+/** Presentation-only density. Native queries and all entity anchors are independent
+ * of the displayed stride. Near buffers cover at most 64 x 64 native cells. */
 export function planD3dTerrain(
   world: D3dTerrain,
-  mode: RepresentationMode,
+  options: Readonly<{
+    representationMode: RepresentationMode;
+    lod: D3dLodBand;
+  }>,
 ): TerrainMeshPlan {
+  const lod = options.representationMode === 'mini' ? 'far' : options.lod;
+  const key = options.representationMode + ':' + lod;
   let modes = plans.get(world);
   if (!modes) {
     modes = new Map();
     plans.set(world, modes);
   }
-  const previous = modes.get(mode);
+  const previous = modes.get(key);
   if (previous) return previous;
   const { terrain, metre } = world,
     { width, height, rasterBounds3035: b } = terrain.viewport;
-  const stride = mode === 'mini' ? 4 : 1;
+  const stride = lod === 'far' ? 8 : lod === 'medium' ? 4 : 1;
+  const chunk = lod === 'near' ? 64 : Math.max(width, height);
   const patches: TerrainMeshPatch[] = [];
-  for (const kind of ['land', 'water'] as const) {
-    const positions: number[] = [],
-      indices: number[] = [];
-    const corners = new Int32Array((width + 1) * (height + 1)).fill(-1);
-    const vertex = (col: number, row: number, elevation: number) => {
-      const p = world.worldPoint(
-        b.west + col * terrain.resolution.x,
-        b.north - row * terrain.resolution.y,
-      );
-      const index = positions.length / 3;
-      positions.push(p.x, elevation * metre, p.z);
-      return index;
-    };
-    const corner = (col: number, row: number) => {
-      const key = row * (width + 1) + col,
-        existing = corners[key]!;
-      if (existing >= 0) return existing;
-      const h = kind === 'water' ? 0 : renderCorner(terrain, col, row);
-      const index = vertex(col, row, h);
-      corners[key] = index;
-      return index;
-    };
-    for (let row = 0; row < height; row += stride)
-      for (let col = 0; col < width; col += stride) {
-        const endCol = Math.min(width, col + stride),
-          endRow = Math.min(height, row + stride);
-        const c = Math.floor((col + endCol - 1) / 2),
-          r = Math.floor((row + endRow - 1) / 2);
-        if (terrain.classify(r, c) !== kind) continue;
-        const a = corner(col, row),
-          b = corner(endCol, row),
-          c1 = corner(col, endRow),
-          d = corner(endCol, endRow);
-        if (kind === 'water') indices.push(a, c1, b, b, c1, d);
-        else {
-          const center = vertex(c + 0.5, r + 0.5, terrain.sample(r, c)!);
-          indices.push(
-            a,
-            center,
-            b,
-            b,
-            center,
-            d,
-            d,
-            center,
-            c1,
-            c1,
-            center,
-            a,
+  for (let rowStart = 0; rowStart < height; rowStart += chunk)
+    for (let colStart = 0; colStart < width; colStart += chunk)
+      for (const kind of ['land', 'water'] as const) {
+        const endCol = Math.min(width, colStart + chunk);
+        const endRow = Math.min(height, rowStart + chunk);
+        const positions: number[] = [],
+          indices: number[] = [];
+        const cornerWidth = endCol - colStart + 1;
+        const corners = new Int32Array(
+          cornerWidth * (endRow - rowStart + 1),
+        ).fill(-1);
+        const vertex = (col: number, row: number, elevation: number) => {
+          const p = world.worldPoint(
+            b.west + col * terrain.resolution.x,
+            b.north - row * terrain.resolution.y,
           );
-        }
+          const index = positions.length / 3;
+          positions.push(p.x, elevation * metre, p.z);
+          return index;
+        };
+        const corner = (col: number, row: number) => {
+          const key = (row - rowStart) * cornerWidth + col - colStart;
+          const existing = corners[key]!;
+          if (existing >= 0) return existing;
+          const native = kind === 'water' ? 0 : renderCorner(terrain, col, row);
+          const h =
+            kind === 'land' && stride > 1
+              ? coarseSupport(terrain, col, row, stride, native)
+              : native;
+          const index = vertex(col, row, h);
+          corners[key] = index;
+          return index;
+        };
+        for (let row = rowStart; row < endRow; row += stride)
+          for (let col = colStart; col < endCol; col += stride) {
+            const colEnd = Math.min(endCol, col + stride),
+              rowEnd = Math.min(endRow, row + stride);
+            const c = Math.floor((col + colEnd - 1) / 2),
+              r = Math.floor((row + rowEnd - 1) / 2);
+            if (terrain.classify(r, c) !== kind) continue;
+            const a = corner(col, row),
+              b = corner(colEnd, row),
+              c1 = corner(col, rowEnd),
+              d = corner(colEnd, rowEnd);
+            if (kind === 'water') indices.push(a, c1, b, b, c1, d);
+            else {
+              const center = vertex(
+                c + 0.5,
+                r + 0.5,
+                stride === 1
+                  ? terrain.sample(r, c)!
+                  : coarseSupport(
+                      terrain,
+                      c + 0.5,
+                      r + 0.5,
+                      stride / 2,
+                      terrain.sample(r, c)!,
+                    ),
+              );
+              indices.push(
+                a,
+                center,
+                b,
+                b,
+                center,
+                d,
+                d,
+                center,
+                c1,
+                c1,
+                center,
+                a,
+              );
+            }
+          }
+        if (indices.length)
+          patches.push(
+            Object.freeze({
+              id: kind + ':' + colStart + ':' + rowStart,
+              cells: Object.freeze({
+                col: colStart,
+                row: rowStart,
+                endCol,
+                endRow,
+              }),
+              kind,
+              positions: new Float32Array(positions),
+              indices: new Uint32Array(indices),
+            }),
+          );
       }
-    if (indices.length)
-      patches.push(
-        Object.freeze({
-          kind,
-          positions: new Float32Array(positions),
-          indices: new Uint32Array(indices),
-        }),
-      );
-  }
   const plan = Object.freeze({
     patches: Object.freeze(patches),
     stride,
+    lod,
     vertices: patches.reduce((n, p) => n + p.positions.length / 3, 0),
     triangles: patches.reduce((n, p) => n + p.indices.length / 3, 0),
   });
-  modes.set(mode, plan);
+  modes.set(key, plan);
   return plan;
 }
 const cities = new WeakMap<

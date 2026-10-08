@@ -32,7 +32,10 @@ const r3fState = {
   advance: () => r3fTestControls.frame?.(),
   camera: r3fTestControls.camera,
   size: { width: 1000, height: 660 },
-  gl: { domElement: r3fTestControls.canvas },
+  gl: {
+    domElement: r3fTestControls.canvas,
+    info: { render: { calls: 0, triangles: 0 }, memory: { geometries: 0 } },
+  },
 };
 
 vi.mock('@react-three/fiber', () => ({

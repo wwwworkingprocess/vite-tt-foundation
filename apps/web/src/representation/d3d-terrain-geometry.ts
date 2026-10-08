@@ -1,3 +1,4 @@
+import { d3dDrapeBudget } from './d3d-presentation-policy.js';
 import { BufferAttribute, BufferGeometry } from 'three';
 import type { D3dTerrain, TerrainMeshPatch } from './d3d-terrain-model.js';
 export function createD3dTerrainGeometry(patch: TerrainMeshPatch) {
@@ -8,7 +9,7 @@ export function createD3dTerrainGeometry(patch: TerrainMeshPatch) {
   geometry.computeBoundingSphere();
   return geometry;
 }
-/** Split presentation triangles to native-scale support before draping; the
+/** Split presentation triangles to bounded LOD support before draping; the
  * source horizontal geometry remains unchanged. No simulation/path edits.
  * Legacy surface layer ranks retain millimetre differences in metre space.
  * Caller owns/disposes the geometry; raw temporary buffers are released.
@@ -19,9 +20,28 @@ export function drapeD3dGeometry(
   offsetMeters: number,
   landOnly = false,
   maxEdgeLength = terrain.step,
+  budget: Readonly<{
+    maxTriangles?: number;
+    maxDepth?: number;
+  }> = d3dDrapeBudget,
 ) {
+  // A split adds one output face. Reserve every original face so exhaustion
+  // retains coarser coverage rather than leaving holes. Stack depth is also bounded.
+  const maxTriangles = Math.min(
+      d3dDrapeBudget.maxTriangles,
+      Math.max(
+        0,
+        Math.floor(budget.maxTriangles ?? d3dDrapeBudget.maxTriangles),
+      ),
+    ),
+    maxDepth = Math.min(
+      d3dDrapeBudget.maxDepth,
+      Math.max(0, Math.floor(budget.maxDepth ?? d3dDrapeBudget.maxDepth)),
+    );
   const vertices = source.getAttribute('position'),
     color = source.getAttribute('color');
+  let splits = Math.max(0, maxTriangles - vertices.count / 3);
+  let limited = false;
   const positions: number[] = [],
     colors: number[] = [];
   type Vertex = readonly [number, number, number, number, number, number];
@@ -51,7 +71,7 @@ export function drapeD3dGeometry(
   ];
   const distance = (a: Vertex, b: Vertex) =>
     Math.hypot(a[0] - b[0], a[2] - b[2]);
-  const emit = (a: Vertex, b: Vertex, c: Vertex) => {
+  const emit = (a: Vertex, b: Vertex, c: Vertex, depth = 0) => {
     const bounds = terrain.bounds;
     const outside =
       Math.min(a[0], b[0], c[0]) > bounds.maxX ||
@@ -62,22 +82,25 @@ export function drapeD3dGeometry(
     const ab = distance(a, b),
       bc = distance(b, c),
       ca = distance(c, a);
-    if (!outside && Math.max(ab, bc, ca) > maxEdgeLength) {
+    const needsSplit = !outside && Math.max(ab, bc, ca) > maxEdgeLength;
+    if (needsSplit && depth < maxDepth && splits > 0) {
+      splits--;
       if (ab >= bc && ab >= ca) {
         const m = midpoint(a, b);
-        emit(a, m, c);
-        emit(m, b, c);
+        emit(a, m, c, depth + 1);
+        emit(m, b, c, depth + 1);
       } else if (bc >= ca) {
         const m = midpoint(b, c);
-        emit(a, b, m);
-        emit(a, m, c);
+        emit(a, b, m, depth + 1);
+        emit(a, m, c, depth + 1);
       } else {
         const m = midpoint(c, a);
-        emit(a, b, m);
-        emit(m, b, c);
+        emit(a, b, m, depth + 1);
+        emit(m, b, c, depth + 1);
       }
       return;
     }
+    if (needsSplit) limited = true;
     if (
       landOnly &&
       terrain.sample((a[0] + b[0] + c[0]) / 3, (a[2] + b[2] + c[2]) / 3)
@@ -104,6 +127,7 @@ export function drapeD3dGeometry(
       'color',
       new BufferAttribute(new Float32Array(colors), 3),
     );
+  source.userData.drapeLimited = limited;
   source.computeVertexNormals();
   source.computeBoundingSphere();
   return source;

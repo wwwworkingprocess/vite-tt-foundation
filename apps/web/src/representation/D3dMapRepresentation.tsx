@@ -1,3 +1,5 @@
+import { d3dDrapePolicy } from './d3d-presentation-policy.js';
+import { createD3dDirtyFrameDriver } from './d3d-dirty-frame.js';
 import { projectTransportMapVehicles } from './transport-map-projection.js';
 import {
   Canvas,
@@ -11,7 +13,7 @@ import {
   BufferAttribute,
   BufferGeometry,
   Color,
-  DoubleSide,
+  MeshLambertMaterial,
   Object3D,
   OrthographicCamera,
   Vector3,
@@ -34,7 +36,6 @@ import {
   useLatestRepresentationValue,
 } from './RepresentationModeContext.js';
 import {
-  createRepresentationFrameDriver,
   representationCadence,
   type RepresentationMode,
 } from './representation-cadence.js';
@@ -133,22 +134,40 @@ const d3dPointerEvents = (state: Parameters<typeof createPointerEvents>[0]) => {
 function RepresentationFrameDriver({
   mode,
   wrapper,
+  driverRef,
+  visualState,
 }: {
   mode: RepresentationMode;
   wrapper: React.RefObject<HTMLElement | null>;
+  driverRef: React.RefObject<ReturnType<
+    typeof createD3dDirtyFrameDriver
+  > | null>;
+  visualState: readonly unknown[];
 }) {
+  const gl = useThree(({ gl }) => gl);
   const camera = useThree(({ camera }) => camera) as OrthographicCamera;
   const advance = useThree(({ advance }) => advance);
   useEffect(() => {
     const acknowledgeCamera = createD3dCameraAcknowledgement();
-    const driver = createRepresentationFrameDriver({
+    const driver = createD3dDirtyFrameDriver({
       mode,
       now: () => performance.now(),
       setTimer: (callback, delay) => window.setTimeout(callback, delay),
       cancel: (handle) => window.clearTimeout(handle as number),
       frame: (time) => {
         const profile = beginRepresentationProfile('r3f.advance');
+        writeD3dDiagnostics(wrapper.current, { terrainRenderedPatches: '0' });
         advance(time);
+        writeD3dDiagnostics(wrapper.current, {
+          rendererFrames: String(
+            Number(wrapper.current?.dataset.rendererFrames ?? 0) + 1,
+          ),
+          terrainVisiblePatches:
+            wrapper.current?.dataset.terrainRenderedPatches ?? '0',
+          rendererCalls: String(gl.info.render.calls),
+          rendererTriangles: String(gl.info.render.triangles),
+          rendererGeometries: String(gl.info.memory.geometries),
+        });
         acknowledgeCamera(wrapper.current, camera);
         if (profile) {
           const detail = {
@@ -160,8 +179,16 @@ function RepresentationFrameDriver({
         }
       },
     });
-    return () => driver.close();
-  }, [advance, mode, camera, wrapper]);
+    driverRef.current = driver;
+    driver.request();
+    return () => {
+      driver.close();
+      driverRef.current = null;
+    };
+  }, [advance, mode, camera, wrapper, gl, driverRef]);
+  useEffect(() => {
+    driverRef.current?.request();
+  }, [visualState, driverRef]);
   return null;
 }
 
@@ -232,6 +259,7 @@ function CameraController({
   onLod,
   initialLod,
   terrain,
+  requestFrame,
 }: Readonly<{
   model: D3dMapModel;
   sceneBounds: ReturnType<typeof d3dSceneBounds>;
@@ -241,6 +269,7 @@ function CameraController({
   wrapper: React.RefObject<HTMLElement | null>;
   onLod: (band: D3dLodBand) => void;
   initialLod: D3dLodBand;
+  requestFrame: () => void;
   terrain?: D3dTerrain | undefined;
 }>) {
   const { camera, size, gl } = useThree();
@@ -348,6 +377,7 @@ function CameraController({
   const publish = useCallback(
     (kind: 'full' | 'route-fit' | 'manual') => {
       cameraKind.current = kind;
+      requestFrame();
       writeD3dDiagnostics(wrapper.current, {
         cameraMode: kind,
         cameraZoom: String(orthographic.zoom),
@@ -376,6 +406,7 @@ function CameraController({
       mode,
       onLod,
       publishTargets,
+      requestFrame,
     ],
   );
   // R3F may commit while the DOM host is detached during a slot swap.
@@ -593,6 +624,7 @@ function CameraController({
 }
 
 type D3dTerrainMeshes = readonly Readonly<{
+  id: string;
   kind: 'land' | 'water';
   geometry: BufferGeometry;
 }>[];
@@ -600,33 +632,51 @@ function NativeTerrain({
   meshes,
   source,
   wrapper,
+  renderLod,
 }: {
   meshes: D3dTerrainMeshes;
   source: D3dTerrain['terrain'];
+  renderLod: D3dLodBand;
   wrapper: React.RefObject<HTMLElement | null>;
 }) {
+  const materials = useMemo(
+    () => ({
+      land: new MeshLambertMaterial({ color: '#a7b88d' }),
+      water: new MeshLambertMaterial({ color: '#729ea5' }),
+    }),
+    [],
+  );
+  useEffect(
+    () => () => {
+      materials.land.dispose();
+      materials.water.dispose();
+    },
+    [materials],
+  );
   return (
     <group name="native-terrain">
       {meshes.map((p) => (
         <mesh
-          key={p.kind}
+          key={p.id}
           name={'native-terrain-' + p.kind}
-          onAfterRender={() =>
+          material={materials[p.kind]}
+          onAfterRender={() => {
+            if (wrapper.current) {
+              wrapper.current.dataset.terrainRenderedPatches = String(
+                Number(wrapper.current.dataset.terrainRenderedPatches ?? 0) + 1,
+              );
+              wrapper.current.dataset.renderedTerrainLod = renderLod;
+            }
             writeD3dRenderedTerrain(
               wrapper.current,
               source.identity,
               source.viewport.terrainViewportId,
-            )
-          }
+            );
+          }}
           geometry={p.geometry}
           dispose={null}
           raycast={() => null}
-        >
-          <meshLambertMaterial
-            color={p.kind === 'land' ? '#a7b88d' : '#729ea5'}
-            side={DoubleSide}
-          />
-        </mesh>
+        />
       ))}
     </group>
   );
@@ -727,6 +777,7 @@ function CityBatch({
 }
 
 function City({
+  wrapper,
   city,
   lod,
   mode,
@@ -734,10 +785,14 @@ function City({
 }: {
   terrain?: D3dTerrain | undefined;
   city: ProceduralCity;
+  wrapper: React.RefObject<HTMLElement | null>;
   lod: D3dLodBand;
   mode: RepresentationMode;
 }) {
-  const nativeMini = mode === 'mini' && terrain !== undefined;
+  const effectiveLod = mode === 'mini' ? 'far' : lod;
+  const policy = d3dDrapePolicy(mode, effectiveLod);
+  const omitStreets = terrain !== undefined && !policy.streets;
+  const sparseSurfaces = terrain !== undefined && !policy.landscape;
   const buildings = cityLodBuildings(city, lod, mode);
   const simple = mode === 'mini' || lod === 'far';
   const groups = useMemo(
@@ -758,17 +813,36 @@ function City({
   );
   const surfaces = useMemo(
     () => ({
-      street: nativeMini
+      street: omitStreets
         ? new BufferGeometry()
-        : createCitySurfaceGeometry(city, 'street', terrain),
-      ground: createCitySurfaceGeometry(city, 'ground', terrain),
-      landscape: nativeMini
+        : createCitySurfaceGeometry(city, 'street', terrain, effectiveLod),
+      ground: createCitySurfaceGeometry(city, 'ground', terrain, effectiveLod),
+      landscape: sparseSurfaces
         ? new BufferGeometry()
-        : createCitySurfaceGeometry(city, 'landscape', terrain),
-      reservation: createCitySurfaceGeometry(city, 'reservation', terrain),
+        : createCitySurfaceGeometry(city, 'landscape', terrain, effectiveLod),
+      reservation: createCitySurfaceGeometry(
+        city,
+        'reservation',
+        terrain,
+        effectiveLod,
+      ),
     }),
-    [city, terrain, nativeMini],
+    [city, terrain, sparseSurfaces, omitStreets, effectiveLod],
   );
+  useEffect(() => {
+    const values: Record<string, string> = {};
+    for (const [layer, geometry] of Object.entries(surfaces)) {
+      const vertices = geometry.getAttribute('position')?.count ?? 0;
+      values['city' + layer[0]!.toUpperCase() + layer.slice(1) + 'Vertices'] =
+        String(vertices);
+      values[
+        'city' + layer[0]!.toUpperCase() + layer.slice(1) + 'DrapeLimited'
+      ] = String(geometry.userData.drapeLimited === true);
+      values['city' + layer[0]!.toUpperCase() + layer.slice(1) + 'Triangles'] =
+        String(vertices / 3);
+    }
+    writeD3dDiagnostics(wrapper.current, values);
+  }, [surfaces, wrapper]);
   useEffect(
     () => () => {
       surfaces.street.dispose();
@@ -780,13 +854,13 @@ function City({
   );
   return (
     <group name="procedural-city">
-      {!nativeMini ? (
+      {!sparseSurfaces ? (
         <mesh
           name="research-landscape"
           geometry={surfaces.landscape}
           raycast={() => null}
         >
-          <meshLambertMaterial vertexColors side={DoubleSide} />
+          <meshLambertMaterial vertexColors />
         </mesh>
       ) : null}
       <mesh
@@ -794,22 +868,22 @@ function City({
         geometry={surfaces.reservation}
         raycast={() => null}
       >
-        <meshLambertMaterial vertexColors side={DoubleSide} />
+        <meshLambertMaterial vertexColors />
       </mesh>
       <mesh
         name="settlement-ground"
         geometry={surfaces.ground}
         raycast={() => null}
       >
-        <meshLambertMaterial vertexColors side={DoubleSide} />
+        <meshLambertMaterial vertexColors />
       </mesh>
-      {mode === 'normal' ? (
+      {mode === 'normal' && !omitStreets ? (
         <mesh
           name="provisional-streets"
           geometry={surfaces.street}
           raycast={() => null}
         >
-          <meshBasicMaterial vertexColors side={DoubleSide} />
+          <meshBasicMaterial vertexColors />
         </mesh>
       ) : null}
       {groups.map((group) => (
@@ -870,16 +944,16 @@ export function createD3dRibbonGeometry(
       const length = Math.min(width * 1.6, edge.length * 0.25);
       addTriangle(
         [midX + dx * length, y, midZ + dz * length],
-        [midX - dx * length - sideX, y, midZ - dz * length - sideZ],
         [midX - dx * length + sideX, y, midZ - dz * length + sideZ],
+        [midX - dx * length - sideX, y, midZ - dz * length - sideZ],
       );
     } else {
       const a = [edge.from.x - sideX, y, edge.from.z - sideZ];
       const b = [edge.from.x + sideX, y, edge.from.z + sideZ];
       const c = [edge.to.x - sideX, y, edge.to.z - sideZ];
       const d = [edge.to.x + sideX, y, edge.to.z + sideZ];
-      addTriangle(a, b, c);
-      addTriangle(b, d, c);
+      addTriangle(a, c, b);
+      addTriangle(b, c, d);
     }
   }
   const geometry = new BufferGeometry();
@@ -892,6 +966,7 @@ export function createD3dRibbonGeometry(
 }
 
 function Routes({
+  wrapper,
   model,
   selection,
   lod,
@@ -900,6 +975,7 @@ function Routes({
 }: {
   terrain?: D3dTerrain | undefined;
   model: D3dMapModel;
+  wrapper: React.RefObject<HTMLElement | null>;
   selection: GameSelection;
   lod: D3dLodBand;
   metre: number | undefined;
@@ -919,7 +995,13 @@ function Routes({
       offset: number = terrainLayerOffsets.route,
     ) =>
       terrain
-        ? drapeD3dGeometry(geometry, terrain, offset, false, terrain.step / 2)
+        ? drapeD3dGeometry(
+            geometry,
+            terrain,
+            offset,
+            false,
+            d3dDrapePolicy('normal', lod).routeMetres * terrain.metre,
+          )
         : geometry;
     return [...edgesByRoute].map(([routeId, edges]) => ({
       routeId,
@@ -940,17 +1022,45 @@ function Routes({
           metre ? 0.052 : 0.1,
         ),
       ),
-      arrows: drape(
-        createD3dRibbonGeometry(
-          edges,
-          metre ? 5 * metre : 0.36,
-          true,
-          metre ? 0.052 : 0.1,
-        ),
-        terrainLayerOffsets.selection,
-      ),
+      arrows:
+        lod === 'far' || edges[0]!.enriched
+          ? new BufferGeometry()
+          : drape(
+              createD3dRibbonGeometry(
+                edges,
+                metre ? 5 * metre : 0.36,
+                true,
+                metre ? 0.052 : 0.1,
+              ),
+              terrainLayerOffsets.selection,
+            ),
     }));
-  }, [model, metre, ribbonWidth, terrain]);
+  }, [model, metre, ribbonWidth, terrain, lod]);
+  useEffect(() => {
+    const vertices = groups.reduce(
+      (n, group) =>
+        n +
+        [group.ribbon, group.selected, group.arrows].reduce(
+          (n, g) => n + (g.getAttribute('position')?.count ?? 0),
+          0,
+        ),
+      0,
+    );
+    writeD3dDiagnostics(wrapper.current, {
+      routeDrapeVertices: String(vertices),
+      routeDrapeTriangles: String(vertices / 3),
+      routeDrapeLimitedGeometryCount: String(
+        groups.reduce(
+          (n, group) =>
+            n +
+            [group.ribbon, group.selected, group.arrows].filter(
+              (g) => g.userData.drapeLimited === true,
+            ).length,
+          0,
+        ),
+      ),
+    });
+  }, [groups, wrapper]);
   useEffect(
     () => () => {
       for (const group of groups) {
@@ -985,8 +1095,10 @@ function Routes({
                 renderOrder={chosen ? 2 : 1}
               >
                 <meshBasicMaterial
+                  // Thin network overlays stay readable above reduced city drapes;
+                  // their world-space heights still use native terrain queries.
+                  depthTest={false}
                   color={route.color}
-                  side={DoubleSide}
                   transparent={route.enriched === true}
                   opacity={route.enriched && !chosen ? 0.8 : 1}
                   depthWrite={!route.enriched}
@@ -1008,8 +1120,8 @@ function Routes({
                   ]}
                 >
                   <meshBasicMaterial
+                    depthTest={false}
                     color="#fff0bd"
-                    side={DoubleSide}
                     transparent
                     opacity={0.7}
                   />
@@ -1021,7 +1133,7 @@ function Routes({
                   dispose={null}
                   raycast={() => null}
                 >
-                  <meshBasicMaterial color="#183842" side={DoubleSide} />
+                  <meshBasicMaterial color="#183842" depthTest={false} />
                 </mesh>
               ) : null}
             </group>
@@ -1383,14 +1495,22 @@ function D3dWorld({
           meshes={terrainMeshes}
           source={terrain!.terrain}
           wrapper={wrapper}
+          renderLod={mode === 'mini' ? 'far' : lod}
         />
       ) : (
         <Terrain sceneBounds={sceneBounds} />
       )}
       {city ? (
-        <City city={city} lod={lod} mode={mode} terrain={terrain} />
+        <City
+          city={city}
+          lod={lod}
+          mode={mode}
+          terrain={terrain}
+          wrapper={wrapper}
+        />
       ) : null}
       <Routes
+        wrapper={wrapper}
         model={model}
         selection={selection}
         lod={lod}
@@ -1430,6 +1550,11 @@ export default function D3dMapRepresentation({
 }: MapProps) {
   const mode = useRepresentationMode();
   const wrapper = useRef<HTMLElement>(null);
+  const [lod, setLod] = useState<D3dLodBand>('far');
+  const driverRef = useRef<ReturnType<typeof createD3dDirtyFrameDriver> | null>(
+    null,
+  );
+  const requestFrame = useCallback(() => driverRef.current?.request(), []);
   const projection = useMemo(
     () => createTransportMapProjection(scenario),
     [scenario],
@@ -1454,10 +1579,13 @@ export default function D3dMapRepresentation({
         : undefined,
     [terrainState, model],
   );
-  const terrainPlan = terrain ? planD3dTerrain(terrain, mode) : undefined;
+  const terrainPlan = terrain
+    ? planD3dTerrain(terrain, { representationMode: mode, lod })
+    : undefined;
   const terrainMeshes = useMemo(
     () =>
       terrainPlan?.patches.map((p) => ({
+        id: p.id,
         kind: p.kind,
         geometry: createD3dTerrainGeometry(p),
       })),
@@ -1517,7 +1645,30 @@ export default function D3dMapRepresentation({
     [model, vehicles],
   );
   const [candidateIndex, setCandidateIndex] = useState(0);
-  const [lod, setLod] = useState<D3dLodBand>('far');
+  const visualState = useMemo(
+    () => [
+      transportModel,
+      sceneBounds,
+      city,
+      terrainMeshes,
+      vehicles,
+      selection,
+      focusedRouteId,
+      lod,
+      mode,
+    ],
+    [
+      transportModel,
+      sceneBounds,
+      city,
+      terrainMeshes,
+      vehicles,
+      selection,
+      focusedRouteId,
+      lod,
+      mode,
+    ],
+  );
   const currentCandidate =
     candidates[Math.min(candidateIndex, candidates.length - 1)];
   const cadence = representationCadence(mode);
@@ -1554,6 +1705,7 @@ export default function D3dMapRepresentation({
       data-directed-edge-count={model.routes.length}
       data-stop-place-count={model.stops.length}
       data-vehicle-count={vehicles.length}
+      data-vehicle-movement-kind={acceptedFleet[0]?.movement.kind ?? ''}
       data-enriched-edge-count={
         view.map.edges.filter((edge) => edge.enriched).length
       }
@@ -1583,6 +1735,8 @@ export default function D3dMapRepresentation({
       data-terrain-vertices={terrainPlan?.vertices ?? 0}
       data-terrain-triangles={terrainPlan?.triangles ?? 0}
       data-terrain-meshes={terrainPlan?.patches.length ?? 0}
+      data-terrain-render-lod={terrainPlan?.lod ?? ''}
+      data-terrain-render-stride={terrainPlan?.stride ?? 0}
       data-settlement-metadata-status={metadata.status}
       data-settlement-metadata-version={
         city?.settlement?.metadata.schemaVersion ?? ''
@@ -1650,7 +1804,12 @@ export default function D3dMapRepresentation({
           </p>
         }
       >
-        <RepresentationFrameDriver mode={mode} wrapper={wrapper} />
+        <RepresentationFrameDriver
+          mode={mode}
+          wrapper={wrapper}
+          driverRef={driverRef}
+          visualState={visualState}
+        />
         <CameraController
           model={transportModel}
           sceneBounds={sceneBounds}
@@ -1660,6 +1819,7 @@ export default function D3dMapRepresentation({
           wrapper={wrapper}
           onLod={setLod}
           initialLod={lod}
+          requestFrame={requestFrame}
           terrain={terrain}
         />
         <D3dWorld

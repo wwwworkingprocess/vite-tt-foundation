@@ -37,6 +37,8 @@ function triangle(points: number[], colored: boolean) {
 }
 it('materializes shared indexed patches with upward normals and separate surface geometry', () => {
   const g = createD3dTerrainGeometry({
+    id: 'land:0:0',
+    cells: { col: 0, row: 0, endCol: 1, endRow: 1 },
     kind: 'land',
     positions: new Float32Array([0, 1, 0, 1, 2, 0, 0, 2, 1]),
     indices: new Uint32Array([0, 2, 1]),
@@ -128,4 +130,49 @@ it('samples shared subdivision vertices once per preparation while keeping indep
   );
   first.dispose();
   second.dispose();
+});
+
+it('bounds subdivision even for tiny support lengths and preserves source coordinates and layer offsets', () => {
+  const points = [0, 0.012, 0, 5, 0.012, 0, 0, 0.012, 5];
+  const original = new Float32Array(points);
+  const g = triangle(points, true);
+  const source = g.getAttribute('position').array;
+  drapeD3dGeometry(g, terrain, 0.15, true, 1e-12, { maxTriangles: 256 });
+  expect(g.getAttribute('position').count / 3).toBe(256);
+  expect(source).toEqual(original);
+  expect(g.userData.drapeLimited).toBe(true);
+  const p = g.getAttribute('position');
+  let maxError = 0;
+  for (let i = 0; i < p.count; i++)
+    maxError = Math.max(
+      maxError,
+      Math.abs(p.getY(i) - p.getX(i) - p.getZ(i) - 0.162),
+    );
+  expect(maxError).toBeLessThan(1e-5);
+  g.dispose();
+});
+
+it('retains coarser coverage at a depth limit or when input faces already consume the budget', () => {
+  const points = [0, 0, 0, 5, 0, 0, 0, 0, 5];
+  const depth = drapeD3dGeometry(
+    triangle(points, false),
+    terrain,
+    0.3,
+    false,
+    1e-12,
+    { maxDepth: 2 },
+  );
+  expect(depth.getAttribute('position').count / 3).toBe(4);
+  expect(depth.userData.drapeLimited).toBe(true);
+  const budget = drapeD3dGeometry(
+    triangle(points, false),
+    terrain,
+    0.3,
+    false,
+    1e-12,
+    { maxTriangles: 0 },
+  );
+  expect(budget.getAttribute('position').count / 3).toBe(1);
+  depth.dispose();
+  budget.dispose();
 });

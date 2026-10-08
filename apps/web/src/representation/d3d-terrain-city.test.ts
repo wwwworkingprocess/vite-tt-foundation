@@ -72,6 +72,8 @@ it('drapes independent surface layers and keeps landmark placeholder heights abo
     if (layer === 'reservation')
       expect(g.boundingBox!.max.y).toBeCloseTo(2.0015 + 0.15, 5);
     else {
+      for (let i = 0; i < g.getAttribute('normal').count; i++)
+        expect(g.getAttribute('normal').getY(i)).toBeGreaterThan(0);
       expect(g.boundingBox!.max.y).toBeLessThan(2.01);
       expect(
         g.boundingBox!.max.y,
@@ -96,6 +98,18 @@ it('drapes independent surface layers and keeps landmark placeholder heights abo
     expect(again.getAttribute('position').count).toBeGreaterThan(0);
     again.dispose();
   }
+  const far = createCitySurfaceGeometry(city, 'ground', terrain, 'far');
+  const medium = createCitySurfaceGeometry(city, 'ground', terrain, 'medium');
+  const near = createCitySurfaceGeometry(city, 'ground', terrain, 'near');
+  expect(far.getAttribute('position').count).toBeLessThan(
+    medium.getAttribute('position').count,
+  );
+  expect(medium.getAttribute('position').count).toBeLessThan(
+    near.getAttribute('position').count,
+  );
+  far.dispose();
+  medium.dispose();
+  near.dispose();
   const shifted = createCitySurfaceGeometry(city, 'ground', {
     ...terrain,
     ground: () => ({ y: 3, diagnostic: 'native' }),

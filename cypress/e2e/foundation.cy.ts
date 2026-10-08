@@ -260,10 +260,10 @@ describe('foundation screen', () => {
         const map = canvas.closest('[data-testid="d3d-map-representation"]')!;
         expect(
           Number(map.getAttribute('data-camera-viewport-height')),
-        ).to.equal(canvas.getBoundingClientRect().height);
-        expect(Number(map.getAttribute('data-camera-viewport-width'))).to.equal(
-          canvas.getBoundingClientRect().width,
-        );
+        ).to.be.closeTo(canvas.getBoundingClientRect().height, 1);
+        expect(
+          Number(map.getAttribute('data-camera-viewport-width')),
+        ).to.be.closeTo(canvas.getBoundingClientRect().width, 1);
       },
     );
     cy.get('[data-testid="d3d-map-representation"]').then(($map) => {

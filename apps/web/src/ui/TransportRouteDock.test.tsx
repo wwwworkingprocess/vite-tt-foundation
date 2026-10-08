@@ -117,3 +117,12 @@ it('uses GameSelection for route choice and exposes Add bus only for that route'
   fireEvent.click(screen.getByRole('button', { name: 'Show full network' }));
   expect(onShowFullNetwork).toHaveBeenCalledOnce();
 });
+
+it('reserves a clickable route row and scrolls the dock when selected actions exceed the available height', () => {
+  expect(styles).toMatch(
+    /\.transport-route-selector\s*\{[^}]*min-height:\s*2\.75rem;/s,
+  );
+  expect(styles).toMatch(
+    /\.transport-route-dock\s*\{[^}]*overflow-y:\s*auto;/s,
+  );
+});

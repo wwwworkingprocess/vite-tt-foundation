@@ -13,6 +13,7 @@ import {
   listActivePopulationCells,
   parseCityPopulationGrid,
   parseScenarioPackage,
+  buildDirectedScenarioGraph,
 } from '@torrevieja-tycoon/transport-domain';
 import {
   parseVehicleId,
@@ -1074,11 +1075,14 @@ it('uses a terrain-ready native scene while retaining entity selection and stati
   for (const mesh of document.querySelectorAll('mesh[name^="native-terrain-"]'))
     sceneProps(mesh).onBeforeRender?.();
   const count = dispose.mock.calls.length;
+  const builds = screen
+    .getByTestId('d3d-map-representation')
+    .getAttribute('data-terrain-geometry-builds');
   view.rerender(scene('normal', selectVehicle(fleet[0]!.vehicleId)));
   expect(dispose.mock.calls.length).toBe(count);
   expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
     'data-terrain-geometry-builds',
-    '1',
+    builds,
   );
 });
 
@@ -1113,6 +1117,11 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
       population,
     ),
   );
+  const initialBuilds = Number(
+    screen
+      .getByTestId('d3d-map-representation')
+      .getAttribute('data-terrain-geometry-builds'),
+  );
   const ground = 10 * d3dMetreScale(model).worldUnitsPerMetre;
   expect(
     setMatrixAt.mock.calls.some(
@@ -1121,7 +1130,13 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
   ).toBe(true);
   const ribbon = [...document.querySelectorAll('mesh')]
     .map((m) => sceneProps(m).geometry)
-    .find((g) => g && !g.index && !g.getAttribute('color'))!;
+    .find(
+      (g) =>
+        g &&
+        g.getAttribute('position')?.count &&
+        !g.index &&
+        !g.getAttribute('color'),
+    )!;
   expect(ribbon.getAttribute('position').getY(0)).toBeGreaterThan(ground);
   expect(
     [...document.querySelectorAll('mesh')]
@@ -1146,10 +1161,16 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
       population,
     ),
   );
-  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
-    'data-terrain-geometry-builds',
-    '1',
-  );
+  expect(
+    Number(
+      screen
+        .getByTestId('d3d-map-representation')
+        .getAttribute('data-terrain-geometry-builds'),
+    ),
+  ).toBeGreaterThanOrEqual(initialBuilds);
+  const focusedBuilds = screen
+    .getByTestId('d3d-map-representation')
+    .getAttribute('data-terrain-geometry-builds');
   view.rerender(
     scene(
       'normal',
@@ -1158,6 +1179,10 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
       scenario,
       population,
     ),
+  );
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-terrain-geometry-builds',
+    focusedBuilds,
   );
   const vehicleBody = [...document.querySelectorAll('mesh')].find(
     (m) => sceneProps(m).onClick,
@@ -1171,13 +1196,18 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
   );
   expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
     'data-terrain-geometry-builds',
-    '1',
+    String(initialBuilds + 2),
+  );
+  const fullBuilds = Number(
+    screen
+      .getByTestId('d3d-map-representation')
+      .getAttribute('data-terrain-geometry-builds'),
   );
   view.rerender(scene('mini', null, undefined, scenario, population));
   expect(document.querySelector('mesh[name="research-landscape"]')).toBeNull();
   expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
     'data-terrain-geometry-builds',
-    '2',
+    String(fullBuilds + 1),
   );
   view.unmount();
 });
@@ -1390,11 +1420,14 @@ it('reinitializes the Canvas only when native terrain replaces fallback, retaini
     'data-selected-kind',
     'vehicle',
   );
+  const builds = screen
+    .getByTestId('d3d-map-representation')
+    .getAttribute('data-terrain-geometry-builds');
   view.rerender(scene('normal', selectStop(stop.stopPlaceId)));
   expect(screen.getByTestId('r3f-canvas')).toBe(nativeCanvas);
   expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
     'data-terrain-geometry-builds',
-    '1',
+    builds,
   );
 });
 
@@ -1459,4 +1492,120 @@ it('marks a native terrain source only after its mesh draws and safely skips rep
   expect(map).toHaveAttribute('data-rendered-terrain-identity', 'replacement');
   view.unmount();
   expect(() => draw.onAfterRender()).not.toThrow();
+});
+
+it('draws dirty visual updates and camera input but leaves a static scene idle', () => {
+  vi.useFakeTimers();
+  configureRepresentationProfiling(true);
+  const mark = vi.spyOn(performance, 'mark');
+  const view = render(scene('normal'));
+  act(() => vi.advanceTimersByTime(18));
+  const initial = mark.mock.calls.filter(
+    ([name]) => name === representationProfilePrefix + 'r3f.frame',
+  ).length;
+  expect(initial).toBe(1);
+  act(() => vi.advanceTimersByTime(1000));
+  expect(
+    mark.mock.calls.filter(
+      ([name]) => name === representationProfilePrefix + 'r3f.frame',
+    ),
+  ).toHaveLength(initial);
+  view.rerender(scene('normal', selectVehicle(fleet[0]!.vehicleId)));
+  act(() => vi.advanceTimersByTime(18));
+  expect(
+    mark.mock.calls.filter(
+      ([name]) => name === representationProfilePrefix + 'r3f.frame',
+    ),
+  ).toHaveLength(initial + 1);
+  act(() => {
+    fireEvent.wheel(controls.canvas, { deltaY: -1 });
+    vi.advanceTimersByTime(18);
+  });
+  expect(
+    mark.mock.calls.filter(
+      ([name]) => name === representationProfilePrefix + 'r3f.frame',
+    ),
+  ).toHaveLength(initial + 2);
+  const map = screen.getByTestId('d3d-map-representation');
+  expect(map).toHaveAttribute('data-renderer-calls', '0');
+  expect(map).toHaveAttribute('data-renderer-triangles', '0');
+  expect(map).toHaveAttribute('data-renderer-geometries', '0');
+});
+
+it('safely finishes a dirty frame when its DOM host detaches during rendering', () => {
+  vi.useFakeTimers();
+  const state = r3f.useThree();
+  let detach = () => {};
+  vi.spyOn(r3f, 'useThree').mockImplementation((selector) => {
+    const detachedState = { ...state, advance: () => detach() };
+    return selector ? selector(detachedState) : detachedState;
+  });
+  const view = render(scene('normal'));
+  detach = view.unmount;
+  expect(() => act(() => vi.advanceTimersByTime(18))).not.toThrow();
+  expect(screen.queryByTestId('d3d-map-representation')).toBeNull();
+  expect(vi.getTimerCount()).toBe(0);
+});
+
+it('draws an accepted moving fleet pose above terrain without rebuilding its static buffers', () => {
+  vi.useFakeTimers();
+  enableWorld();
+  const f = terrainFixture();
+  Object.assign(f.catalog.settlements.test.viewports[0]!.rasterBounds3035, {
+    west: 3300000,
+    south: 1650000,
+    east: 3450000,
+    north: 1800000,
+  });
+  f.catalog.settlements.test.resolutionMeters = { x: 50000, y: 50000 };
+  for (const p of [f.height, f.surfaceMask]) {
+    p.resolutionMetersX = 50000;
+    p.resolutionMetersY = 50000;
+  }
+  f.height.viewports[0]!.elevations.fill(10);
+  f.surfaceMask.viewports[0]!.cells.fill(1);
+  const terrain = terrainJsonDecoder.decode(
+    f,
+    resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
+  );
+  vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
+  const selected = selectVehicle(fleet[0]!.vehicleId);
+  const view = render(scene('normal', selected));
+  act(() => vi.advanceTimersByTime(18));
+  const map = screen.getByTestId('d3d-map-representation');
+  const builds = map.getAttribute('data-terrain-geometry-builds');
+  const frames = Number(map.getAttribute('data-renderer-frames'));
+  const pose = () =>
+    (
+      sceneProps(
+        document.querySelector('mesh[name="vehicle-body"]')!.parentElement!,
+      ) as unknown as { position: readonly number[] }
+    ).position;
+  const parked = [...pose()];
+  const edge = buildDirectedScenarioGraph(scenario).edges.find(
+    (e) => e.patternId === pattern.patternId,
+  )!;
+  const moving: VehicleState = {
+    ...fleet[0]!,
+    movement: {
+      kind: 'running-on-edge',
+      edgeId: edge.edgeId,
+      edgeSequence: 0,
+      fromStopNodeId: edge.fromStopNodeId,
+      toStopNodeId: edge.toStopNodeId,
+      progressTicks: 5,
+      travelTicks: 10,
+    },
+  };
+  view.rerender(
+    scene('normal', selected, undefined, scenario, undefined, [moving]),
+  );
+  act(() => vi.advanceTimersByTime(40));
+  expect(map).toHaveAttribute('data-vehicle-movement-kind', 'running-on-edge');
+  expect(pose()).not.toEqual(parked);
+  expect(pose()[1]).toBeGreaterThan(
+    10 * d3dMetreScale(model).worldUnitsPerMetre,
+  );
+  expect(map).toHaveAttribute('data-terrain-geometry-builds', builds);
+  expect(Number(map.getAttribute('data-renderer-frames'))).toBe(frames + 1);
 });

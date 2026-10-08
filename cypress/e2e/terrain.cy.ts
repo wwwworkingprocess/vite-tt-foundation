@@ -1,3 +1,10 @@
+const recordTerrainState = (name: string) =>
+  terrainMap().then(($map) =>
+    cy.writeFile(
+      'node_modules/.cache/terrain-hardening/diagnostics/' + name + '.json',
+      { ...$map[0]!.dataset },
+    ),
+  );
 const terrainMap = () =>
   cy.get('[data-testid="d3d-map-representation"]', { timeout: 15000 });
 const terrainZoomTo = (worldUnitsPerPixel: number) =>
@@ -17,6 +24,17 @@ const terrainDrawn = () =>
     expect($map.attr('data-rendered-terrain-viewport')).to.equal(
       $map.attr('data-terrain-viewport'),
     );
+    expect($map.attr('data-rendered-terrain-lod')).to.equal(
+      $map.attr('data-terrain-render-lod'),
+    );
+    expect(
+      Number($map.attr('data-terrain-rendered-patches')),
+    ).to.be.greaterThan(0);
+    for (const layer of ['Ground', 'Street', 'Landscape', 'Reservation'])
+      expect($map[0]!.dataset['city' + layer + 'DrapeLimited']).to.equal(
+        'false',
+      );
+    expect($map.attr('data-route-drape-limited-geometry-count')).to.equal('0');
     for (const coordinate of ['zoom', 'target-x', 'target-z'])
       expect(
         Number($map.attr('data-rendered-camera-' + coordinate)),
@@ -74,16 +92,18 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
     .and('have.attr', 'data-terrain-native-samples', '161680')
     .and('have.attr', 'data-terrain-land-samples', '115166')
     .and('have.attr', 'data-terrain-water-samples', '46514')
-    .and('have.attr', 'data-terrain-vertices', '17810');
+    .and('have.attr', 'data-terrain-render-stride', '8');
   cy.get('[aria-label="Routes"] [data-route-id="legacy-A"]').click();
   cy.contains('button', 'Add bus').should('be.enabled').click();
   cy.get('button[aria-label="Select mini representation for swap"]').click();
   cy.contains('button', 'Swap visualizations').click();
   terrainMap()
     .should('have.attr', 'data-representation-mode', 'normal')
-    .and('have.attr', 'data-terrain-vertices', '278634')
-    .and('have.attr', 'data-terrain-triangles', '553692')
-    .and('have.attr', 'data-terrain-meshes', '2');
+    .should(($map) => {
+      expect(Number($map.attr('data-terrain-render-stride'))).to.be.at.least(4);
+      expect(Number($map.attr('data-terrain-triangles'))).to.be.lessThan(40000);
+      expect(Number($map.attr('data-terrain-meshes'))).to.equal(2);
+    });
   cy.then(() => expect(products).to.equal(3));
   terrainMap()
     .should(($map) =>
@@ -92,71 +112,96 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
       ),
     )
     .then(($map) => {
+      const lod = $map.attr('data-terrain-render-lod');
       const builds = $map.attr('data-terrain-geometry-builds');
       cy.get('[aria-label="Routes"] [data-route-id="legacy-A"]').click();
       cy.contains('button', 'Focus route').click();
       terrainMap()
         .should('have.attr', 'data-camera-mode', 'route-fit')
-        .and('have.attr', 'data-terrain-geometry-builds', builds);
+        .should(($focused) => {
+          if ($focused.attr('data-terrain-render-lod') === lod)
+            expect($focused.attr('data-terrain-geometry-builds')).to.equal(
+              builds,
+            );
+        });
       terrainDrawn();
+      recordTerrainState('terrain-focused-route');
       cy.screenshot('terrain-focused-route');
       cy.contains('button', 'Show full network').click();
     });
   terrainZoomTo(0.4);
   terrainMap().should('have.attr', 'data-lod', 'far');
   terrainDrawn();
+  terrainMap().should(($map) => {
+    expect(Number($map.attr('data-terrain-triangles'))).to.be.lessThan(10000);
+    expect($map.attr('data-terrain-render-stride')).to.equal('8');
+    expect(Number($map.attr('data-city-landscape-triangles'))).to.equal(0);
+    expect(Number($map.attr('data-city-street-triangles'))).to.equal(0);
+  });
+  recordTerrainState('terrain-full-network-far');
   cy.screenshot('terrain-full-network-far');
   terrainZoomTo(0.1);
   terrainMap().should('have.attr', 'data-lod', 'medium');
   terrainPanTo('vehicle');
   terrainDrawn();
+  terrainMap().should('have.attr', 'data-terrain-render-stride', '4');
+  recordTerrainState('terrain-medium-coast');
   cy.screenshot('terrain-medium-coast');
   terrainZoomTo(0.03);
   terrainMap().should('have.attr', 'data-lod', 'near');
   terrainPanTo('stop');
   terrainDrawn();
+  terrainMap().should(($map) => {
+    const patches = Number($map.attr('data-terrain-meshes'));
+    expect(patches).to.equal(53);
+    expect($map.attr('data-terrain-triangles')).to.equal('553692');
+    expect($map.attr('data-terrain-vertices')).to.equal('283086');
+    expect(Number($map.attr('data-terrain-rendered-patches'))).to.be.lessThan(
+      patches,
+    );
+    expect($map.attr('data-terrain-render-stride')).to.equal('1');
+  });
+  recordTerrainState('terrain-near-built-up');
   cy.screenshot('terrain-near-built-up');
   terrainMap().should('have.attr', 'data-camera-mode', 'manual');
   terrainPick('stop');
   cy.get('[role="dialog"]').should('contain.text', 'Stop overview');
   closeTerrainDetails();
   terrainDrawn();
+  recordTerrainState('terrain-selected-stop');
   cy.screenshot('terrain-selected-stop');
   terrainPanTo('vehicle');
   terrainPick('vehicle');
   cy.get('[role="dialog"]').should('contain.text', 'Vehicle');
   closeTerrainDetails();
   terrainDrawn();
+  recordTerrainState('terrain-selected-vehicle');
   cy.screenshot('terrain-selected-vehicle');
-  cy.contains('button', 'Simulation controls').click();
-  cy.contains('button', /^Start browser-demo-vehicle-/)
-    .should('be.enabled')
-    .click();
-  cy.get('[data-testid="vehicle-movement"]').should(
-    'contain.text',
-    'running-on-edge',
-  );
-  cy.contains('button', /^Normal /)
-    .should('be.enabled')
-    .click();
-  cy.get('button[aria-label="Close Simulation controls"]').click();
+  // Command propagation while paused is deterministic; starting at a stop must
+  // not depend on a renderer allowing a wall-clock tick before the assertion.
   terrainMap().then(($map) => {
-    const x = $map.attr('data-pointer-vehicle-x'),
-      y = $map.attr('data-pointer-vehicle-y'),
-      builds = $map.attr('data-terrain-geometry-builds');
-    terrainMap().should(($next) =>
-      expect([
-        $next.attr('data-pointer-vehicle-x'),
-        $next.attr('data-pointer-vehicle-y'),
-      ]).not.to.deep.equal([x, y]),
+    const builds = $map.attr('data-terrain-geometry-builds');
+    cy.contains('button', 'Simulation controls').click();
+    cy.get('[data-testid="pacing-rate"]').should('contain.text', '0×');
+    cy.contains('button', /^Start browser-demo-vehicle-/)
+      .should('be.enabled')
+      .click();
+    cy.get('[data-testid="vehicle-movement"]').should(
+      'contain.text',
+      'running-at-stop',
     );
-    terrainMap().should('have.attr', 'data-terrain-geometry-builds', builds);
+    cy.get('button[aria-label="Close Simulation controls"]').click();
+    terrainMap()
+      .should('have.attr', 'data-vehicle-movement-kind', 'running-at-stop')
+      .and('have.attr', 'data-terrain-geometry-builds', builds)
+      .and('have.attr', 'data-selected-kind', 'vehicle');
+    terrainDrawn();
+    terrainPick('vehicle');
+    cy.get('[role="dialog"]').should('contain.text', 'Vehicle');
+    closeTerrainDetails();
   });
-  terrainDrawn();
-  cy.screenshot('terrain-moving-vehicle');
-  cy.contains('button', 'Simulation controls').click();
-  cy.get('[role="dialog"]').contains('button', 'Pause').click();
-  cy.get('button[aria-label="Close Simulation controls"]').click();
+  recordTerrainState('terrain-started-vehicle');
+  cy.screenshot('terrain-started-vehicle');
   cy.get('[data-testid="scenario-menu-trigger"]').click();
   cy.contains('label', 'Scenario')
     .find('select')

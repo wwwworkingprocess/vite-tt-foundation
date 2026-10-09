@@ -546,8 +546,10 @@ describe('foundation screen', () => {
   });
 
   it('keeps selection separate from authority and restores both scenarios', () => {
+    cy.intercept('GET', '**/scenarios/scenarios.zip*').as('scenarioLayer');
     cy.visit('/');
     startDefaultGame();
+    cy.wait('@scenarioLayer').its('response.statusCode').should('equal', 200);
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     openSimulationControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'ready');
@@ -659,22 +661,16 @@ describe('foundation screen', () => {
     );
     openSimulationControls();
 
-    cy.intercept(
-      {
-        method: 'GET',
-        url: '**/torrevieja-legacy-east-v1/scenario.json',
-        times: 1,
-      },
-      (request) => {
-        request.continue((response) => response.setDelay(5_000));
-      },
-    ).as('loadSecondarySelection');
+    cy.get('button[aria-label="Close Simulation controls"]').click();
     cy.contains('label', 'Scenario')
       .find('select')
-      .select('torrevieja-legacy-east-v1', { force: true });
+      .select('torrevieja-legacy-east-v1');
+    openSimulationControls();
+    // Switching inflates another entry from the cached layer. Pending/failed
+    // acquisition safety is covered deterministically in App.test.tsx.
     cy.get('[data-testid="requested-scenario"]').should(
       'contain.text',
-      'torrevieja-legacy-east-v1 (loading)',
+      'torrevieja-legacy-east-v1 (ready)',
     );
     cy.get('[data-testid="active-scenario"]').should(
       'contain.text',
@@ -694,11 +690,8 @@ describe('foundation screen', () => {
 
     openSessionControls();
     cy.contains('button', 'Close transport Worker').click();
-    cy.contains('button', 'Start new transport session').should('be.disabled');
-    cy.wait('@loadSecondarySelection');
     openSimulationControls();
-    // The manifest response precedes the remaining assets and integrity checks.
-    cy.get('[data-testid="requested-scenario"]', { timeout: 20_000 }).should(
+    cy.get('[data-testid="requested-scenario"]').should(
       'contain.text',
       'torrevieja-legacy-east-v1 (ready)',
     );
@@ -791,6 +784,7 @@ describe('foundation screen', () => {
     cy.contains('button', 'Close transport Worker').click();
     openSimulationControls();
     cy.get('[data-testid="worker-status"]').should('contain.text', 'closed');
+    cy.get('@scenarioLayer.all').should('have.length', 1);
   });
 });
 

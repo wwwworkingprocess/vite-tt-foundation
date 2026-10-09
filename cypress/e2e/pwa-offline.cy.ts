@@ -258,14 +258,17 @@ describe('built foundation PWA offline lifecycle', () => {
       'Persistence status: idle',
     );
     openControls();
+    cy.get('button[aria-label="Close Simulation controls"]').click();
+    cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.contains('label', 'Scenario')
       .find('select')
-      .select('torrevieja-legacy-east-v1', { force: true });
+      .select('torrevieja-legacy-east-v1');
+    cy.contains('label', 'Scenario').find('select').should('be.enabled');
+    openControls();
     cy.get('[data-testid="requested-scenario"]').should(
       'contain.text',
-      'torrevieja-legacy-east-v1 (loading)',
+      'torrevieja-legacy-east-v1 (ready)',
     );
-    cy.contains('label', 'Scenario').find('select').should('be.disabled');
     cy.get('[data-testid="selected-scenario"]').should(
       'contain.text',
       'torrevieja-legacy-east-v1',

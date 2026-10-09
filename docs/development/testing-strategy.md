@@ -87,6 +87,13 @@ Cypress verifies critical user-visible integration, Worker execution, root and
 subpath loading, saves/restores, and offline PWA behavior. It does not replace
 simulation tests or exhaustively test game rules.
 
+Public-layer browser tests intercept archive URLs and verify cached scenario
+switching without assuming per-entry HTTP requests or a minimum loading duration.
+Pending/failed acquisition guards use controlled loader states in component tests;
+browser interactions use visible controls without forcing through open modals.
+D3D pointer tests wait for the rendered terrain and camera acknowledgements
+before using projected entity coordinates after camera or LOD changes.
+
 ## Coverage policy
 
 Coverage is a guardrail against untested paths, not evidence that behavior is

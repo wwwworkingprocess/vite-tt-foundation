@@ -4,6 +4,31 @@ const swap = () => {
   cy.get('button[aria-label="Select mini representation for swap"]').click();
   cy.contains('button', 'Swap visualizations').click();
 };
+const pickRenderedEntity = (kind: 'stop' | 'vehicle') =>
+  cy
+    .get('[data-testid="d3d-map-representation"]')
+    .should('have.attr', 'data-terrain-status', 'ready')
+    .should(($map) => {
+      expect($map.attr('data-rendered-terrain-identity')).to.equal(
+        $map.attr('data-terrain-identity'),
+      );
+      expect($map.attr('data-rendered-terrain-lod')).to.equal(
+        $map.attr('data-terrain-render-lod'),
+      );
+      expect(
+        Number($map.attr('data-terrain-rendered-patches')),
+      ).to.be.greaterThan(0);
+      for (const coordinate of ['zoom', 'target-x', 'target-z'])
+        expect(
+          Number($map.attr('data-rendered-camera-' + coordinate)),
+        ).to.be.closeTo(Number($map.attr('data-camera-' + coordinate)), 1e-10);
+    })
+    .then(($map) => {
+      cy.wrap($map.find('canvas')[0]!).click(
+        Number($map.attr(`data-pointer-${kind}-x`)),
+        Number($map.attr(`data-pointer-${kind}-y`)),
+      );
+    });
 
 it('shares all-lines enrichment and retains focus/selection through entity details and renderer swaps', () => {
   cy.intercept('GET', '**/route-presentation/route-presentation.zip*').as(
@@ -108,22 +133,10 @@ it('shares all-lines enrichment and retains focus/selection through entity detai
     'data-camera-mode',
     'manual',
   );
-  cy.get('[data-testid="d3d-map-representation"]').then(($map) => {
-    const canvas = $map.find('canvas')[0]!;
-    cy.wrap(canvas).click(
-      Number($map.attr('data-pointer-stop-x')),
-      Number($map.attr('data-pointer-stop-y')),
-    );
-  });
+  pickRenderedEntity('stop');
   cy.get('[role="dialog"]').should('contain.text', 'Stop overview');
   closeDetails();
-  cy.get('[data-testid="d3d-map-representation"]').then(($map) => {
-    const canvas = $map.find('canvas')[0]!;
-    cy.wrap(canvas).click(
-      Number($map.attr('data-pointer-vehicle-x')),
-      Number($map.attr('data-pointer-vehicle-y')),
-    );
-  });
+  pickRenderedEntity('vehicle');
   cy.get('[role="dialog"]').should('contain.text', 'Vehicle');
   closeDetails();
   cy.screenshot('route-enrichment-d3d-all-lines');

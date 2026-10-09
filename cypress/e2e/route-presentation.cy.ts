@@ -6,7 +6,7 @@ const swap = () => {
 };
 
 it('shares all-lines enrichment and retains focus/selection through entity details and renderer swaps', () => {
-  cy.intercept('GET', '**/route-presentation/torrevieja/*.json').as(
+  cy.intercept('GET', '**/route-presentation/route-presentation.zip*').as(
     'routeAsset',
   );
   cy.visit('/');

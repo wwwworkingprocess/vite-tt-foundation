@@ -1,4 +1,5 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync } from '../../../../scripts/public-layer-files.mjs';
+
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import {

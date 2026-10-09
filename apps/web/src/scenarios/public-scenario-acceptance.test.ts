@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile, readdir } from '../../../../scripts/public-layer-files.mjs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {

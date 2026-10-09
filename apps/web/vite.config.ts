@@ -1,3 +1,4 @@
+import { publicLayersPlugin } from './public-layers-plugin.js';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -26,17 +27,24 @@ export default defineConfig({
     },
   },
   plugins: [
+    publicLayersPlugin(),
     react(),
     VitePWA({
-      includeAssets: [
-        'icons/*.png',
-        'scenarios/**/*.json',
-        'population-fields/**/*',
-        'settlement-metadata/**/*.json',
-        'route-presentation/**/*.json',
-        'terrain/**/*.json',
-        'terrain/**/*.geojson',
-      ],
+      includeAssets: [],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html}', 'icons/*.png'],
+        runtimeCaching: [
+          {
+            urlPattern: /\/[^/]+\/[^/]+\.zip(?:\?|$)/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'public-layers',
+              cacheableResponse: { statuses: [200] },
+              expiration: { maxEntries: 16 },
+            },
+          },
+        ],
+      },
       registerType: 'autoUpdate',
       manifest: {
         name: 'Torrevieja Tycoon',

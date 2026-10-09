@@ -1,7 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
-import { readFileSync } from 'node:fs';
+import { readFileSync } from '../../../../scripts/public-layer-files.mjs';
+
 import { join } from 'node:path';
 import { TransportRouteDock } from './TransportRouteDock.js';
 

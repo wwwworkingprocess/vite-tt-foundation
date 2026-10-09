@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { readFile } from './public-layer-files.mjs';
+
 import { dirname, join, resolve } from 'node:path';
 import {
   buildStopCatchments,

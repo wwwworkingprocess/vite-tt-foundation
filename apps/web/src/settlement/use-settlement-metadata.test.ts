@@ -1,3 +1,6 @@
+vi.mock('../assets/public-layers.js', () => ({
+  fetchPublicAsset: (url: string) => fetch(url),
+}));
 import { act, renderHook } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { useSettlementMetadata } from './use-settlement-metadata.js';

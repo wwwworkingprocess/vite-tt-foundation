@@ -1,5 +1,9 @@
+vi.mock('../assets/public-layers.js', () => ({
+  fetchPublicAsset: (url: string) => fetch(url),
+}));
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { readFileSync } from 'node:fs';
+import { readFileSync } from '../../../../scripts/public-layer-files.mjs';
+
 import { join } from 'node:path';
 import {
   parseScenarioPackage,

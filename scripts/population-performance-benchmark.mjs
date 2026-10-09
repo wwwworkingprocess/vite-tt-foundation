@@ -1,5 +1,6 @@
 import { performance } from 'node:perf_hooks';
-import { readFile } from 'node:fs/promises';
+import { readFile } from './public-layer-files.mjs';
+
 import { join } from 'node:path';
 import {
   buildDirectedScenarioGraph,

@@ -431,38 +431,38 @@ describe('built foundation PWA offline lifecycle', () => {
     );
     cy.window().then((win) => writeSave(win, exactSave));
     cy.window().then(async (win) => {
-      const response = await win.fetch(
-        new URL('terrain/catalog.json', win.document.baseURI),
-      );
-      expect(response.ok, 'offline terrain catalog').to.equal(true);
-      const catalog = (await response.json()) as {
-        settlements: Record<
-          string,
-          { products: Record<string, { path: string; byteLength: number }> }
-        >;
-      };
-      for (const entry of Object.values(catalog.settlements))
-        for (const product of Object.values(entry.products)) {
-          const response = await win.fetch(
-            new URL('terrain/' + product.path, win.document.baseURI),
-          );
-          expect(response.ok, product.path).to.equal(true);
-          expect((await response.blob()).size, product.path).to.equal(
-            product.byteLength,
-          );
-        }
-    });
-    cy.window().then(async (win) => {
+      const cache = await win.caches.open('public-layers');
+      const keys = await cache.keys();
+      for (const layer of [
+        'scenarios',
+        'population-fields',
+        'settlement-metadata',
+        'route-presentation',
+        'terrain',
+      ]) {
+        const request = keys.find((request) =>
+          new URL(request.url).pathname.endsWith(
+            '/' + layer + '/' + layer + '.zip',
+          ),
+        );
+        expect(request, 'used offline layer ' + layer).not.to.equal(undefined);
+        const response = await win.fetch(request!);
+        expect(response.ok, layer).to.equal(true);
+        expect((await response.blob()).size, layer).to.be.greaterThan(0);
+      }
       for (const path of [
         'icons/foundation-192.png',
         'icons/foundation-512.png',
-        'settlement-metadata/catalog.json',
-        'settlement-metadata/torrevieja/torrevieja-settlement-metadata.v0.json',
       ]) {
         const response = await win.fetch(new URL(path, win.document.baseURI));
-        expect(response.ok).to.equal(true);
-        expect((await response.blob()).size).to.be.greaterThan(0);
+        expect(response.ok, path).to.equal(true);
       }
+      expect(
+        keys.some((request) => request.url.includes('/asset-research/')),
+      ).to.equal(false);
+      expect(
+        keys.some((request) => request.url.includes('/urban-assets/')),
+      ).to.equal(false);
     });
     restoreScenario('torrevieja-legacy-abc-v1');
     expectRestoredAuthority('torrevieja-legacy-abc-v1');

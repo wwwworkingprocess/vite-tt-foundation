@@ -1,3 +1,6 @@
+vi.mock('./assets/public-layers.js', () => ({
+  fetchPublicAsset: (url: string) => fetch(url),
+}));
 import 'fake-indexeddb/auto';
 import {
   cleanup,
@@ -8,7 +11,8 @@ import {
   within,
 } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync } from '../../../scripts/public-layer-files.mjs';
+
 import { join } from 'node:path';
 import {
   buildDirectedScenarioGraph,

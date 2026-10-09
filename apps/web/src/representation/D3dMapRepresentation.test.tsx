@@ -5,7 +5,8 @@ import {
   render,
   screen,
 } from '@testing-library/react';
-import { readFileSync } from 'node:fs';
+import { readFileSync } from '../../../../scripts/public-layer-files.mjs';
+
 import { join } from 'node:path';
 import { afterEach, expect, it, vi } from 'vitest';
 import * as r3f from '@react-three/fiber';

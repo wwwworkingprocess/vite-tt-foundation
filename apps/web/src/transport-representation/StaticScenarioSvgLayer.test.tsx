@@ -1,6 +1,7 @@
 import { fireEvent, render, within } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync } from '../../../../scripts/public-layer-files.mjs';
+
 import { join } from 'node:path';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import StaticScenarioSvgLayer from './StaticScenarioSvgLayer.js';

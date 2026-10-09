@@ -1,5 +1,6 @@
 import { join } from 'node:path';
-import { readFileSync } from 'node:fs';
+import { readFileSync } from '../../../../scripts/public-layer-files.mjs';
+
 import { Mesh, MeshBasicMaterial, Vector3, Raycaster } from 'three';
 import { createD3dTerrainGeometry } from './d3d-terrain-geometry.js';
 import { beforeAll, describe, expect, it } from 'vitest';

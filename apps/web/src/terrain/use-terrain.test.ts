@@ -1,3 +1,6 @@
+vi.mock('../assets/public-layers.js', () => ({
+  fetchPublicAsset: (url: string) => fetch(url),
+}));
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { createTerrainLoader, type TerrainView } from './terrain-loader.js';

@@ -1,4 +1,7 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
+import { readLayerFile } from './public-layer-files.mjs';
+const assetBytes = async (path) => readLayerFile(dist, path);
+const assetText = async (path) => (await assetBytes(path)).toString('utf8');
 import { basename, posix } from 'node:path';
 import { createHash } from 'node:crypto';
 
@@ -165,6 +168,14 @@ for (const icon of manifest.icons ?? []) {
   if (icon.type !== 'image/png' || !icon.purpose?.includes('maskable'))
     throw new Error(`Icon metadata is incomplete: ${icon.src}`);
   const bytes = await readFile(new URL(icon.src.slice(base.length), dist));
+  if (
+    !serviceWorkerSource.includes(
+      `url:${JSON.stringify(icon.src.slice(base.length))}`,
+    )
+  )
+    throw new Error(
+      `Service Worker does not precache install icon: ${icon.src}`,
+    );
   const dimensions = [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
   if (dimensions.join('x') !== requiredIcons.get(icon.src).join('x'))
     throw new Error(`Icon dimensions are invalid: ${icon.src}`);
@@ -175,15 +186,11 @@ if (requiredIcons.size)
     `Built manifest is missing install icons: ${[...requiredIcons.keys()].join(', ')}`,
   );
 const catalogueAsset = 'scenarios/catalog.json';
-const catalogue = JSON.parse(
-  await readFile(new URL(catalogueAsset, dist), 'utf8'),
-);
+const catalogue = JSON.parse(await assetText(catalogueAsset));
 const scenarioAssets = [catalogueAsset];
 for (const descriptor of catalogue.scenarios ?? []) {
   const manifestAsset = `scenarios/${descriptor.manifestPath}`;
-  const scenarioManifest = JSON.parse(
-    await readFile(new URL(manifestAsset, dist), 'utf8'),
-  );
+  const scenarioManifest = JSON.parse(await assetText(manifestAsset));
   scenarioAssets.push(manifestAsset);
   const scenarioDirectory = manifestAsset.slice(
     0,
@@ -192,12 +199,10 @@ for (const descriptor of catalogue.scenarios ?? []) {
   for (const asset of Object.values(scenarioManifest.assets ?? {}))
     scenarioAssets.push(`${scenarioDirectory}${asset.path}`);
 }
-for (const scenarioAsset of scenarioAssets)
-  if (!serviceWorkerSource.includes(`url:${JSON.stringify(scenarioAsset)}`))
-    throw new Error(`Service Worker does not precache ${scenarioAsset}.`);
+for (const path of scenarioAssets) await assetBytes(path);
 const populationCatalogueAsset = 'population-fields/catalog.json';
 const populationCatalogue = JSON.parse(
-  await readFile(new URL(populationCatalogueAsset, dist), 'utf8'),
+  await assetText(populationCatalogueAsset),
 );
 const populationAssets = [
   populationCatalogueAsset,
@@ -209,40 +214,32 @@ for (const city of populationCatalogue.cities ?? []) {
     [city.cropPath, city.cropSha256],
   ]) {
     const asset = `population-fields/${path}`;
-    const bytes = await readFile(new URL(asset, dist));
+    const bytes = await assetBytes(asset);
     const actualHash = createHash('sha256').update(bytes).digest('hex');
     if (actualHash !== expectedHash)
       throw new Error(`Built population asset integrity mismatch: ${asset}.`);
     populationAssets.push(asset);
   }
 }
-for (const asset of populationAssets)
-  if (!serviceWorkerSource.includes(`url:${JSON.stringify(asset)}`))
-    throw new Error(`Service Worker does not precache ${asset}.`);
+for (const path of populationAssets) await assetBytes(path);
 const routeCatalogueAsset = 'route-presentation/catalog.json';
-const routeCatalogue = JSON.parse(
-  await readFile(new URL(routeCatalogueAsset, dist), 'utf8'),
-);
+const routeCatalogue = JSON.parse(await assetText(routeCatalogueAsset));
 const routeAssets = [routeCatalogueAsset];
 for (const entry of routeCatalogue.scenarios) {
   const asset = `route-presentation/${entry.path}`;
-  const bytes = await readFile(new URL(asset, dist));
+  const bytes = await assetBytes(asset);
   if (createHash('sha256').update(bytes).digest('hex') !== entry.sha256)
     throw new Error(`Built route presentation integrity mismatch: ${asset}.`);
   routeAssets.push(asset);
 }
-for (const asset of routeAssets)
-  if (!serviceWorkerSource.includes(`url:${JSON.stringify(asset)}`))
-    throw new Error(`Service Worker does not precache ${asset}.`);
+for (const path of routeAssets) await assetBytes(path);
 const terrainCatalogAsset = 'terrain/catalog.json';
-const terrainCatalog = JSON.parse(
-  await readFile(new URL(terrainCatalogAsset, dist), 'utf8'),
-);
+const terrainCatalog = JSON.parse(await assetText(terrainCatalogAsset));
 const terrainAssets = [terrainCatalogAsset];
 for (const entry of Object.values(terrainCatalog.settlements)) {
   for (const product of Object.values(entry.products)) {
     const asset = 'terrain/' + product.path;
-    const bytes = await readFile(new URL(asset, dist));
+    const bytes = await assetBytes(asset);
     if (
       bytes.length !== product.byteLength ||
       createHash('sha256').update(bytes).digest('hex') !== product.sha256
@@ -251,9 +248,43 @@ for (const entry of Object.values(terrainCatalog.settlements)) {
     terrainAssets.push(asset);
   }
 }
-for (const asset of terrainAssets)
-  if (!serviceWorkerSource.includes('url:' + JSON.stringify(asset)))
-    throw new Error('Service Worker does not precache ' + asset + '.');
+for (const path of terrainAssets) await assetBytes(path);
+for (const layer of [
+  'asset-research',
+  'icons',
+  'population-fields',
+  'route-presentation',
+  'scenarios',
+  'settlement-metadata',
+  'terrain',
+  'urban-assets',
+]) {
+  const archive = layer + '/' + layer + '.zip';
+  if (!files.includes(archive))
+    throw new Error('Missing built public layer ' + archive);
+  const [sourceBytes, builtBytes] = await Promise.all([
+    readFile(new URL('../apps/web/public/' + archive, import.meta.url)),
+    readFile(new URL(archive, dist)),
+  ]);
+  if (
+    createHash('sha256').update(sourceBytes).digest('hex') !==
+    createHash('sha256').update(builtBytes).digest('hex')
+  )
+    throw new Error('Built layer differs from supplied archive: ' + archive);
+  if (serviceWorkerSource.includes('url:' + JSON.stringify(archive)))
+    throw new Error('Public layers must load on demand');
+  if (
+    files.some(
+      (path) =>
+        path.startsWith(layer + '/') &&
+        path !== archive &&
+        !(layer === 'icons' && /^icons\/foundation-(192|512)\.png$/.test(path)),
+    )
+  )
+    throw new Error('Uncompressed public data was emitted: ' + layer);
+}
+if (!serviceWorkerSource.includes('public-layers'))
+  throw new Error('Missing on-demand layer offline cache');
 console.log(
   `Build and installability audit passed: ${JSON.stringify({ javascript, hardBudgetCoordinates: sizes, budgets: configured, reportOnlySharedArchitecture, reportOnlyLogicalCompositions: logicalCompositions })}.`,
 );

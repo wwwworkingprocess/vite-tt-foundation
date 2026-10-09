@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile, readdir } from './public-layer-files.mjs';
 import { builtinModules } from 'node:module';
 import { dirname, extname, join } from 'node:path';
 import ts from 'typescript';
@@ -789,6 +789,7 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.includes('apps/web/src/population') ||
     normalized.includes('apps/web/src/settlement/') ||
     normalized.includes('apps/web/src/terrain/') ||
+    normalized.endsWith('apps/web/src/assets/public-layers.ts') ||
     /apps\/web\/src\/representation\/d3d-terrain-/.test(normalized) ||
     normalized.endsWith(
       'apps/web/src/representation/d3d-presentation-policy.ts',

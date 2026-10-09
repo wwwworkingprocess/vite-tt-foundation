@@ -1,3 +1,4 @@
+import { fetchPublicAsset } from '../assets/public-layers.js';
 import { useEffect, useState } from 'react';
 import type { CanonicalScenario } from '@torrevieja-tycoon/transport-domain';
 import { browserSha256 } from '../scenarios/scenario-loader.js';
@@ -9,7 +10,7 @@ let browserLoader: Loader | undefined;
 function getBrowserLoader() {
   browserLoader ??= createRoutePresentationLoader({
     baseUrl: import.meta.env.BASE_URL,
-    fetchText: (url) => fetch(url),
+    fetchText: (url) => fetchPublicAsset(url),
     digestSha256: browserSha256,
   });
   return browserLoader;

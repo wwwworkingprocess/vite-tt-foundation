@@ -1,3 +1,4 @@
+import { fetchPublicAsset } from '../assets/public-layers.js';
 import { useEffect, useState } from 'react';
 import { createTerrainLoader, type TerrainView } from './terrain-loader.js';
 type Loader = ReturnType<typeof createTerrainLoader>;
@@ -9,7 +10,7 @@ let browserLoader: Loader | undefined;
 function getBrowserLoader() {
   browserLoader ??= createTerrainLoader({
     baseUrl: import.meta.env.BASE_URL,
-    fetchText: (url) => fetch(url),
+    fetchText: (url) => fetchPublicAsset(url),
   });
   return browserLoader;
 }

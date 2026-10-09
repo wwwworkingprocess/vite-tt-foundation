@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { readFileSync } from '../../../../scripts/public-layer-files.mjs';
+
 import { join } from 'node:path';
 import { browserSha256, createScenarioLoader } from './scenario-loader.js';
 import { createScenarioCoordinate } from '@torrevieja-tycoon/simulation';

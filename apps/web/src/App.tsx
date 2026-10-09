@@ -1,3 +1,4 @@
+import { fetchPublicAsset } from './assets/public-layers.js';
 import {
   parseClientId,
   parseCommandId,
@@ -218,7 +219,7 @@ export function App() {
     createScenarioLoader({
       baseUrl: import.meta.env.BASE_URL,
       fetchText: async (url) => {
-        const response = await fetch(url);
+        const response = await fetchPublicAsset(url);
         return { ok: response.ok, text: () => response.text() };
       },
       digestSha256: browserSha256,
@@ -228,7 +229,7 @@ export function App() {
     createPopulationFieldLoader({
       baseUrl: import.meta.env.BASE_URL,
       fetchText: async (url) => {
-        const response = await fetch(url);
+        const response = await fetchPublicAsset(url);
         return { ok: response.ok, text: () => response.text() };
       },
       digestSha256: browserSha256,

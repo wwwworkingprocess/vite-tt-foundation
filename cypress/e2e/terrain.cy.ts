@@ -76,7 +76,7 @@ const terrainPick = (kind: 'stop' | 'vehicle') =>
   });
 it('renders native terrain, preserves entity/focus interaction, and reuses products across scenarios', () => {
   let products = 0;
-  cy.intercept('GET', '**/terrain/es-torrevieja/*', () => {
+  cy.intercept('GET', '**/terrain/terrain.zip*', () => {
     products++;
   });
   cy.visit('/');
@@ -104,7 +104,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
       expect(Number($map.attr('data-terrain-triangles'))).to.be.lessThan(40000);
       expect(Number($map.attr('data-terrain-meshes'))).to.equal(2);
     });
-  cy.then(() => expect(products).to.equal(3));
+  cy.then(() => expect(products).to.equal(1));
   terrainMap()
     .should(($map) =>
       expect($map.attr('data-terrain-geometry-builds')).to.match(
@@ -212,5 +212,5 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   terrainMap()
     .should('have.attr', 'data-scenario-id', 'torrevieja-legacy-north-v1')
     .and('have.attr', 'data-terrain-status', 'ready');
-  cy.then(() => expect(products).to.equal(3));
+  cy.then(() => expect(products).to.equal(1));
 });

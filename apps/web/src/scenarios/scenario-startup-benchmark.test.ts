@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { readFile } from '../../../../scripts/public-layer-files.mjs';
+
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';

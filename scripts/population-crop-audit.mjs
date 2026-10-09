@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from './public-layer-files.mjs';
+import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import {
   buildStopCatchments,

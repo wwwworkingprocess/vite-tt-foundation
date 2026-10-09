@@ -22,7 +22,8 @@ import {
   d3dWorldPoint,
   projectD3dVehicles,
 } from './d3d-map-model.js';
-import { readFileSync } from 'node:fs';
+import { readFileSync } from '../../../../scripts/public-layer-files.mjs';
+
 import { join } from 'node:path';
 import { parseScenarioPackage } from '@torrevieja-tycoon/transport-domain';
 import { expect, it } from 'vitest';

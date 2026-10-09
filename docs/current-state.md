@@ -56,6 +56,32 @@ active task explicitly changes the sequence.
 
 ## Workspace and dependency graph
 
+### Compressed public-layer storage
+
+Public packages are stored as one folder-relative ZIP per layer: `asset-research`,
+`icons`, `population-fields`, `route-presentation`, `scenarios`,
+`settlement-metadata`, `terrain`, and `urban-assets`. Browser acquisition downloads
+a layer on first use, shares concurrent requests, and inflates only requested
+entries using native raw-deflate decompression. Stored entries are also supported.
+ZIP lengths/CRC and bounded container/inflation validation precede the existing
+catalog, schema, byte-length and SHA-256 checks. Catalog paths, source bytes,
+native terrain samples, and all authority contracts are unchanged.
+
+Vite serves/publishes archives rather than the loose data tree. The two install
+icons are emitted from `icons.zip` at their existing PNG URLs because the browser
+manifest requires ordinary image resources. Content-hash query revisions identify
+archive versions; the service worker caches requested layers on demand. The shell
+and icons are precached, while unused layers are not downloaded for installation.
+Offline sessions can use previously acquired layers; a never-acquired layer still
+requires connectivity. Research/urban packages remain available through the same
+storage adapter without becoming new runtime authorities or being eagerly loaded.
+
+Node audits and real-data fixtures read the same archived entries. The supplied
+archives are preserved, and loose source folders may be removed by the owner;
+they are not a runtime/build/test fallback. Replacing data requires replacing its
+layer archive and rebuilding/restarting Vite. Streaming, binary terrain transport,
+worker decoding, and new semantic asset integration remain separate work.
+
 ```text
 apps/web ───────────────► packages/simulation
    │                              │
@@ -365,10 +391,10 @@ Hidden StopPlace targets update their final matrices and
 retain a horizontal screen-scale pick floor under the wider terrain framing.
 Vehicle body/HUD/hit intersections take presentation pick priority at overlaps,
 so broad terrain-height Stop targets cannot steal visible Vehicle clicks;
-canonical entity identities and selection callbacks remain unchanged. Public catalog/products are precached under root/subpath
-URLs and checked for byte/hash integrity by the build audit.
+canonical entity identities and selection callbacks remain unchanged. Public catalog/products retain their logical root/subpath
+paths inside lazily acquired archives, with byte/hash integrity checked by the build audit.
 
-Only Torrevieja terrain is integrated. JSON transport remains temporary: binary/compressed or streamed delivery, worker preparation, persistent GPU chunk caches and million-plus-sample delivery remain future work. Native detailed terrain already uses cullable spatial patches; broader city batching remains bounded presentation geometry. The remaining six settlements, complex foundations, bridges/tunnels, terrain editing, vertical exaggeration controls and advanced water/art are deferred.
+The terrain catalog includes Torrevieja, Alicante and Murcia. JSON products now use compressed layer storage; binary or streamed delivery, worker preparation, persistent GPU chunk caches and million-plus-sample delivery remain future work. Native detailed terrain already uses cullable spatial patches; broader city batching remains bounded presentation geometry. The remaining settlements, complex foundations, bridges/tunnels, terrain editing, vertical exaggeration controls and advanced water/art are deferred.
 
 D3D `Map` is the family's sole current view. No view-switch control exists while
 every family supports only one view.

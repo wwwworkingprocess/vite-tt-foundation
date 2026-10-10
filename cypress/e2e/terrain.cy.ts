@@ -243,7 +243,17 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   terrainMap().then(($map) => {
     const builds = $map.attr('data-terrain-geometry-builds');
     cy.contains('button', 'Simulation controls').click();
-    cy.get('[data-testid="pacing-rate"]').should('contain.text', '0×');
+    cy.get('[role="dialog"]')
+      .contains('button', /^Pause$/)
+      .click();
+    cy.get('[data-testid="pacing-status"]').should(
+      'have.text',
+      'Pacing status: paused',
+    );
+    cy.get('[data-testid="pacing-rate"]').should(
+      'have.text',
+      'Effective rate: 0×',
+    );
     cy.contains('button', /^Start browser-demo-vehicle-/)
       .should('be.enabled')
       .click();

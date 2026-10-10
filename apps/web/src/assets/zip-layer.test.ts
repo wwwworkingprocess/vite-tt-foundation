@@ -67,7 +67,7 @@ it('rejects malformed headers, unsupported methods, disks, ZIP64 and excessive d
     ['central', 0, 0, 4],
     ['central', 8, 1, 2],
     ['central', 10, 12, 2],
-    ['central', 24, 64 * 1024 * 1024 + 1, 4],
+    ['central', 24, 128 * 1024 * 1024 + 1, 4],
     ['central', 34, 1, 2],
     ['central', 28, 65535, 2],
     ['central', 42, 0xffffffff, 4],
@@ -120,10 +120,21 @@ function joinZips(names: readonly string[], declaredSize = 0) {
   end.writeUInt32LE(offset, 16);
   return Buffer.concat([...locals, ...centrals, end]);
 }
+it('accepts bounded large-entry and aggregate metadata without inflating entries', () => {
+  const entryLimit = 128 * 1024 * 1024;
+  expect(
+    indexZip(joinZips(['height.json'], entryLimit)).get('height.json')
+      ?.byteLength,
+  ).toBe(entryLimit);
+  // Six-city products total about 328 MiB; indexing retains compressed slices.
+  expect(
+    indexZip(joinZips(['a', 'b', 'c', 'd', 'e', 'f'], 64 * 1024 * 1024)).size,
+  ).toBe(6);
+});
 it('rejects duplicate paths and aggregate inflation budgets', () => {
   expect(() => indexZip(joinZips(['same', 'same']))).toThrow();
   expect(() =>
-    indexZip(joinZips(['a', 'b', 'c', 'd', 'e'], 64 * 1024 * 1024)),
+    indexZip(joinZips(['a', 'b', 'c', 'd', 'e', 'f', 'g'], 64 * 1024 * 1024)),
   ).toThrow();
 });
 it('bounds streamed inflation and rejects truncated declared output', async () => {

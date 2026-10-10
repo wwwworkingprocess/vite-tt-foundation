@@ -5,7 +5,11 @@ export interface ZipEntry {
   readonly byteLength: number;
   readonly crc32: number;
 }
-const limit = 64 * 1024 * 1024;
+const archiveLimit = 64 * 1024 * 1024;
+// Six-city terrain: ~108 MiB largest entry, ~328 MiB aggregate. Entries inflate
+// only on request; these limits bound declared sizes without reducing source data.
+const entryLimit = 128 * 1024 * 1024;
+const aggregateLimit = 384 * 1024 * 1024;
 const crcTable = Uint32Array.from({ length: 256 }, (_, index) => {
   let value = index;
   for (let bit = 0; bit < 8; bit++)
@@ -28,7 +32,7 @@ export function indexZip(bytes: Uint8Array): ReadonlyMap<string, ZipEntry> {
     check(offset, 4);
     return view.getUint32(offset, true);
   };
-  if (bytes.length > limit) fail();
+  if (bytes.length > archiveLimit) fail();
   let end = bytes.length - 22;
   const earliest = Math.max(0, end - 65535);
   while (
@@ -70,8 +74,8 @@ export function indexZip(bytes: Uint8Array): ReadonlyMap<string, ZipEntry> {
       (flags & ~0x080e) !== 0 ||
       (method !== 0 && method !== 8) ||
       u16(cursor + 34) !== 0 ||
-      byteLength > limit ||
-      total > 256 * 1024 * 1024 ||
+      byteLength > entryLimit ||
+      total > aggregateLimit ||
       parts.some((part) => !part || part === '.' || part === '..') ||
       /[\\:]/.test(name) ||
       name.includes(String.fromCharCode(0)) ||

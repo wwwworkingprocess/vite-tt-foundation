@@ -17,7 +17,7 @@ export type RoadDescriptor = Readonly<{
   byteLength: number;
   sha256: string;
 }>;
-export type RoadCatalog = Readonly<{
+type SingleRoadCatalog = Readonly<{
   schemaVersion: 'road-network-catalog-v0';
   version: '0.0.0';
   settlementId: string;
@@ -33,6 +33,26 @@ export type RoadCatalog = Readonly<{
   source: JsonObject;
   audit: JsonObject;
 }>;
+export type RoadCatalog = Readonly<
+  Omit<
+    SingleRoadCatalog,
+    | 'schemaVersion'
+    | 'version'
+    | 'settlementId'
+    | 'products'
+    | 'source'
+    | 'audit'
+  > & {
+    schemaVersion: 'road-network-catalog-v0' | 'road-network-catalog-v1';
+    version: '0.0.0' | '0.1.0';
+    settlements: Readonly<
+      Record<
+        string,
+        Readonly<Pick<SingleRoadCatalog, 'products' | 'source' | 'audit'>>
+      >
+    >;
+  }
+>;
 export type RoadFeature = Readonly<{
   type: 'Feature';
   id: string;
@@ -160,7 +180,7 @@ function jsonObject(value: unknown): JsonObject {
   jsonValue(value);
   return value as JsonObject;
 }
-export function parseRoadCatalog(value: unknown): RoadCatalog {
+function parseSingleRoadCatalog(value: unknown): SingleRoadCatalog {
   const c = dictionary(value, [
     'schemaVersion',
     'version',
@@ -274,6 +294,183 @@ export function parseRoadCatalog(value: unknown): RoadCatalog {
     audit: jsonObject(c.audit),
   });
 }
+/** Normalize the two installed transport shapes; product V0 semantics are unchanged. */
+export function parseRoadCatalog(value: unknown): RoadCatalog {
+  const raw = dictionary(value);
+  const v1 = raw.schemaVersion === 'road-network-catalog-v1';
+  if (!v1) {
+    const single = parseSingleRoadCatalog(raw);
+    const { settlementId, products, source, audit, ...common } = single;
+    return freezeRoad({
+      ...common,
+      settlements: { [settlementId]: { products, source, audit } },
+    });
+  }
+  const c = dictionary(raw, [
+    'schemaVersion',
+    'version',
+    'crs',
+    'geometry',
+    'coordinateSemantics',
+    'identityPolicy',
+    'policy',
+    'settlements',
+  ]);
+  requireRoad(c.version === '0.1.0', 'catalog version');
+  const entries = dictionary(c.settlements);
+  requireRoad(Object.keys(entries).length > 0, 'settlements');
+  const settlements: Record<string, RoadCatalog['settlements'][string]> = {};
+  for (const [settlementId, rawEntry] of Object.entries(entries)) {
+    const entry = dictionary(rawEntry, ['products', 'source', 'audit']);
+    const single = parseSingleRoadCatalog({
+      schemaVersion: 'road-network-catalog-v0',
+      version: '0.0.0',
+      settlementId,
+      crs: c.crs,
+      geometry: c.geometry,
+      coordinateSemantics: c.coordinateSemantics,
+      identityPolicy: c.identityPolicy,
+      policy: c.policy,
+      ...entry,
+    });
+    validateRoadProvenance(single);
+    settlements[settlementId] = {
+      products: single.products,
+      source: single.source,
+      audit: single.audit,
+    };
+  }
+  return freezeRoad({
+    schemaVersion: 'road-network-catalog-v1',
+    version: '0.1.0',
+    crs: 'EPSG:4326',
+    geometry: 'LineString',
+    coordinateSemantics: 'source-longitude-latitude-preserved-no-clipping',
+    identityPolicy: 'source-feature-id-preserved-no-created-road-identities',
+    policy: {
+      version: 'motor-street-lines-v0',
+      // All city entries validated the same exact global policy above.
+      classes,
+    },
+    settlements,
+  });
+}
+/** Provenance is declarative research evidence, not an acquisition instruction. */
+function validateRoadProvenance(c: SingleRoadCatalog) {
+  const hash = (value: unknown) =>
+    requireRoad(/^[0-9a-f]{64}$/.test(text(value)), 'source hash');
+  const source = dictionary(c.source, ['files', 'fingerprint', 'mode']);
+  hash(source.fingerprint);
+  requireRoad(source.mode === 'whole-highway', 'source mode');
+  const files = list(source.files);
+  requireRoad(files.length > 0, 'source files');
+  const paths = new Set<string>();
+  for (const raw of files) {
+    const file = dictionary(raw, [
+      'acquisition',
+      'byteLength',
+      'path',
+      'sha256',
+    ]);
+    const path = text(file.path);
+    requireRoad(
+      /^osm-layers\/[a-z0-9-]+\/highway\.geojson$/.test(path) &&
+        !paths.has(path),
+      'source path',
+    );
+    paths.add(path);
+    integer(file.byteLength, 1);
+    hash(file.sha256);
+    const acquisition = dictionary(file.acquisition, [
+      'cityFrameWgs84',
+      'query',
+      'sourceLibrary',
+      'sourceLibrarySha256',
+    ]);
+    hash(acquisition.sourceLibrarySha256);
+    requireRoad(
+      /^gol\/[a-z0-9-]+\.gol$/.test(text(acquisition.sourceLibrary)),
+      'source library',
+    );
+    requireRoad(
+      acquisition.query === '*["highway"],*["highway"="no"]',
+      'source query',
+    );
+    const bounds = list(acquisition.cityFrameWgs84);
+    requireRoad(
+      bounds.length === 4 &&
+        bounds.every(
+          (v, i) =>
+            typeof v === 'number' &&
+            Number.isFinite(v) &&
+            Math.abs(v) <= (i % 2 === 0 ? 180 : 90),
+        ),
+      'source bounds',
+    );
+    requireRoad(
+      (bounds[0] as number) < (bounds[2] as number) &&
+        (bounds[1] as number) < (bounds[3] as number),
+      'source bounds order',
+    );
+  }
+  const audit = dictionary(c.audit, [
+    'excluded',
+    'identicalDuplicates',
+    'inventory',
+    'sourceFeatureCount',
+    'subsets',
+    'uniqueFeatureCount',
+  ]);
+  const subsets = dictionary(audit.subsets, ['aInB', 'bInC']);
+  requireRoad(subsets.aInB === true && subsets.bInC === true, 'source subsets');
+  const unique = integer(audit.uniqueFeatureCount);
+  requireRoad(
+    integer(audit.sourceFeatureCount) ===
+      unique + integer(audit.identicalDuplicates),
+    'source totals',
+  );
+  const inventory = new Map<string, number>();
+  let total = 0;
+  for (const raw of list(audit.inventory)) {
+    const item = dictionary(raw, ['count', 'geometry', 'highway']);
+    const key = text(item.geometry) + ':' + text(item.highway);
+    requireRoad(!inventory.has(key), 'duplicate inventory');
+    const count = integer(item.count, 1);
+    inventory.set(key, count);
+    total += count;
+  }
+  requireRoad(total === unique, 'inventory total');
+  const excluded = new Set<string>();
+  for (const raw of list(audit.excluded)) {
+    const item = dictionary(raw, ['count', 'geometry', 'highway', 'reason']);
+    const geometry = text(item.geometry),
+      highway = text(item.highway),
+      key = geometry + ':' + highway;
+    requireRoad(
+      !excluded.has(key) &&
+        inventory.get(key) === integer(item.count, 1) &&
+        item.reason ===
+          (geometry === 'LineString' ? 'unlisted-highway' : 'non-LineString') &&
+        (geometry !== 'LineString' || !classes.C.includes(highway)),
+      'excluded inventory',
+    );
+    excluded.add(key);
+  }
+  for (const [key] of inventory) {
+    const [geometry, highway] = key.split(':');
+    requireRoad(
+      excluded.has(key) ===
+        (geometry !== 'LineString' || !classes.C.includes(highway!)),
+      'inventory classification',
+    );
+  }
+  for (const product of c.products)
+    for (const [highway, count] of Object.entries(product.classCounts))
+      requireRoad(
+        count === (inventory.get('LineString:' + highway) ?? 0),
+        'inventory product count',
+      );
+}
 function validateFeature(value: unknown): RoadFeature {
   const f = dictionary(value, ['type', 'id', 'properties', 'geometry']),
     g = dictionary(f.geometry, ['type', 'coordinates']);
@@ -345,7 +542,7 @@ export function decodeRoadProduct(
   )
     throw new Error('Road product feature/tag/class count mismatch');
   return freezeRoad({
-    settlementId: catalog.settlementId,
+    settlementId: product.path.split('/')[0]!,
     level: product.level,
     sha256: product.sha256,
     features,

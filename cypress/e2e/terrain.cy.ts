@@ -1,3 +1,9 @@
+let roadProductCounts: Record<string, Record<'A' | 'B' | 'C', number>>;
+before(() =>
+  cy.task('roadProductCounts').then((counts) => {
+    roadProductCounts = counts as typeof roadProductCounts;
+  }),
+);
 const recordTerrainState = (name: string) =>
   terrainMap().then(($map) =>
     cy.writeFile(
@@ -34,13 +40,17 @@ const terrainDrawn = () =>
       expect($map[0]!.dataset['city' + layer + 'DrapeLimited']).to.equal(
         'false',
       );
+    for (const layer of ['ground', 'landscape']) {
+      expect($map.attr('data-city-' + layer + '-triangles')).to.equal('0');
+      expect($map.attr('data-city-' + layer + '-vertices')).to.equal('0');
+    }
     expect($map.attr('data-route-drape-limited-geometry-count')).to.equal('0');
     for (const coordinate of ['zoom', 'target-x', 'target-z'])
       expect(
         Number($map.attr('data-rendered-camera-' + coordinate)),
       ).to.be.closeTo(Number($map.attr('data-camera-' + coordinate)), 1e-10);
   });
-const roadDrawn = (level: 'A' | 'B' | 'C') =>
+const roadDrawn = (level: 'A' | 'B' | 'C', city = 'es-torrevieja') =>
   terrainMap()
     .should('have.attr', 'data-road-network-status', 'ready')
     .and('have.attr', 'data-road-network-level', level)
@@ -48,7 +58,7 @@ const roadDrawn = (level: 'A' | 'B' | 'C') =>
     .and(
       'have.attr',
       'data-road-network-features',
-      String({ A: 124, B: 664, C: 4364 }[level]),
+      String(roadProductCounts[city]![level]),
     )
     .and('have.attr', 'data-city-street-triangles', '0');
 const closeTerrainDetails = () =>
@@ -308,20 +318,36 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   cy.then(() => expect(products).to.equal(1));
 });
 
-it('leaves non-Torrevieja roads absent without hiding native terrain or gameplay', () => {
+it('switches between cataloged cities and unsupported Cartagena without stale road products', () => {
+  let archiveRequests = 0;
+  cy.intercept('GET', '**/road-network/road-network.zip*', () => {
+    archiveRequests++;
+  });
   cy.visit('/');
   cy.get('[data-testid="open-screen"]').should('be.visible');
-  cy.get('select[aria-label="City"]').select('es-alicante');
-  cy.contains('label', 'Scenario')
-    .find('select')
-    .select('alicante-legacy-core-v1');
   cy.contains('button', 'Start new game').should('be.enabled').click();
+  roadDrawn('A');
+  const changeCity = (city: string, scenario: string) => {
+    cy.get('[data-testid="scenario-menu-trigger"]').click();
+    cy.get('select[aria-label="City"]').select(city);
+    cy.contains('label', 'Scenario').find('select').select(scenario);
+    cy.get('[data-testid="scenario-status"]').should('contain.text', 'ready');
+    cy.get('[data-testid="scenario-menu-trigger"]').click();
+    cy.contains('button', 'Restart').click();
+    terrainMap().should('have.attr', 'data-scenario-id', scenario);
+  };
+  changeCity('es-elche', 'elche-urban-abc-v1');
+  roadDrawn('A', 'es-elche');
+  changeCity('es-alicante', 'alicante-legacy-core-v1');
+  roadDrawn('A', 'es-alicante');
+  changeCity('es-cartagena', 'cartagena-legacy-core-v1');
   terrainMap()
     .should('have.attr', 'data-road-network-status', 'absent')
     .and('have.attr', 'data-road-network-level', '')
     .and('have.attr', 'data-road-network-features', '0')
     .and('have.attr', 'data-rendered-road-network-level', '');
   cy.get('[data-testid="game-shell"]').should('be.visible');
+  cy.then(() => expect(archiveRequests).to.equal(1));
 });
 
 it('reports missing required road infrastructure while preserving the game and native terrain', () => {

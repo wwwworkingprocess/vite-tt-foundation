@@ -358,11 +358,10 @@ The capped normal zoom explicitly selects native stride-1 detail regardless of s
 
 Plans are weakly cached by terrain/map-transform identity, mode and effective LOD. Fleet, selection, simulation ticks and camera motion within a band do not rebuild static buffers. LOD transitions select cached CPU plans; mounted renderers own and dispose GPU geometries. Chunk meshes share one LAND and one WATER material, disposed by their scene owner. Ground-like surfaces have upward winding and one-sided materials. Thin network ribbons retain native-grounded heights and draw as depth-independent overlays so reduced city drapes cannot occlude route identity.
 
-Broad drape support is presentation-only: far/medium/near use 200/100/50 metres for ground/street/reservation surfaces and 150/75/25 metres for routes. City-wide research landscape tints use 200/125/100 metres: their approximate macro polygons do not warrant local ground density. Native far/mini skip research landscape and dense streets entirely. Subdivision has a depth-16 limit and a 262,144-triangle preparation ceiling: original faces are reserved, and budget exhaustion retains coarser coverage instead of introducing holes. An input already above that target receives no extra splits. Immutable CPU surface templates include LOD in their cache key; broad layers avoid a second full buffer copy.
+Broad drape support is presentation-only: far/medium/near use 200/100/50 metres for ground/street/reservation surfaces and 150/75/25 metres for routes. City-wide research landscape tints use 200/125/100 metres: their approximate macro polygons do not warrant local ground density. Native terrain-ready views skip research-landscape and settlement-ground geometry entirely, at every LOD and in mini mode; their vertex/triangle diagnostics are zero. The existing no-terrain fallback still draws both surfaces. Far/mini also skip dense provisional streets. Subdivision has a depth-16 limit and a 262,144-triangle preparation ceiling: original faces are reserved, and budget exhaustion retains coarser coverage instead of introducing holes. An input already above that target receives no extra splits. Immutable CPU surface templates include LOD in their cache key; broad layers avoid a second full buffer copy.
 
 Buildings retain their generated footprints/heights and receive sampled anchor
-bases. Routes and independent ground/street/landscape surfaces are subdivided
-and draped in presentation space; landmarks keep one sampled anchor rather than
+bases. Routes, provisional streets and reservations are draped in presentation space; landmarks keep one sampled anchor rather than
 deforming their volume. Stops, vehicles, selection cues and camera diagnostic
 pick coordinates use the same ground query with small named metre offsets.
 D3D placement samples the same native-center triangle fans as its near terrain
@@ -553,14 +552,14 @@ release itself.
 - Milestone chronology: `development/milestone-history.md`.
 - Foundation Template reference: `docs/template/` and the template contract.
 
-## Road Network V0 presentation
+## Road Network V1 catalog / V0 product presentation
 
 The mandatory ninth ZIP layer, `road-network/road-network.zip`, contains the accepted
-Torrevieja-only Workbench catalog and cumulative A/B/C WGS84 LineString products.
+Workbench V1 catalog (`road-network-catalog-v1`, version `0.1.0`) and cumulative A/B/C WGS84 LineString V0 products for Alicante, Benidorm, Elche, Málaga, Murcia and Torrevieja. Cartagena is deliberately unlisted. The global policy is unchanged; each settlement owns its products, source provenance and audit. The consumer also accepts the previous single-settlement V0 catalog, normalizing both shapes at acquisition.
 No source bytes are rewritten. D3D selects A at far/mini, B at medium and C at near,
 using existing camera hysteresis. Catalog semantics, source IDs/classes/counts,
 UTF-8 length and SHA-256 are validated before immutable models are cached. The
-revision-bound ZIP registry inflates only requested entries. A valid catalog
+revision-bound ZIP registry inflates only requested entries; the loader caches by settlement, level and content hash. Catalog validation checks all descriptors/provenance, while only the active city/level product is inflated and decoded. Torrevieja A/B/C payloads remain byte-identical to the accepted V0 package. A valid catalog
 excluding the selected settlement reports absent coverage. Missing,
 unreadable or corrupt required ZIP/catalog infrastructure reports an error, as do
 invalid declared products; failed acquisitions may retry. Pending or failed
@@ -585,5 +584,9 @@ feature counts, geometry builds/batches/vertices/triangles and fallback supports
 The drawn-road acknowledgement is cleared on product/request/scene transitions;
 only an active batch after actual rendering may acknowledge its level, once per
 host/active presentation. Removed batches cannot republish stale levels.
-StreetCell compilation, road/building alignment and additional-city road products
+StreetCell compilation, road/building alignment and Cartagena road products
 remain deferred; the accepted procedural buildings may intersect source roads.
+
+Native DEM clean-ground presentation omits optional research/density tint meshes before geometry preparation. All pure city-model polygons, land-use/buildability exclusions, population inputs, generated building identities, landmark reservations and transport overlays remain intact. These surface descriptors remain available for fallback rendering and later StreetCells; they do not define city-generation authority.
+
+The full Málaga and Murcia C products currently exceed the unchanged 131,072-segment road preparation guard; those near views expose a preparation error and retain provisional streets. Their A/B products and all six catalog/product acquisitions remain supported. Bounded delivery of the larger C geometry requires a separately accepted road preparation change; this catalog integration does not raise geometry or JS budgets.

@@ -43,6 +43,7 @@ import {
 } from 'three';
 import { parseRoutePresentation } from './route-presentation.js';
 import { createRoutePresentationView } from './route-presentation-view.js';
+import * as cityGeometry from './d3d-city-geometry.js';
 import { buildProceduralCity } from './d3d-city-model.js';
 import { useRoadNetwork } from './use-road-network.js';
 import type { RoadNetwork } from './road-network.js';
@@ -1101,6 +1102,11 @@ it('uses a terrain-ready native scene while retaining entity selection and stati
 
 it('grounds transport and selection on ready terrain while preserving pan/focus and replacing the cheap mini plan', () => {
   const { setMatrixAt } = enableWorld();
+  const generatedBefore = buildProceduralCity(model, population);
+  const surfacePreparation = vi.spyOn(
+    cityGeometry,
+    'createCitySurfaceGeometry',
+  );
   const f = terrainFixture();
   const b = f.catalog.settlements.test.viewports[0]!.rasterBounds3035;
   Object.assign(b, {
@@ -1135,6 +1141,18 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
       .getByTestId('d3d-map-representation')
       .getAttribute('data-terrain-geometry-builds'),
   );
+  for (const layer of ['ground', 'landscape']) {
+    expect(
+      surfacePreparation.mock.calls.some(([, prepared]) => prepared === layer),
+    ).toBe(false);
+    expect(
+      screen.getByTestId('d3d-map-representation').dataset[
+        'city' + layer[0]!.toUpperCase() + layer.slice(1) + 'Triangles'
+      ],
+    ).toBe('0');
+  }
+  expect(document.querySelector('mesh[name="settlement-ground"]')).toBeNull();
+  expect(document.querySelector('mesh[name="research-landscape"]')).toBeNull();
   const ground = 100 * d3dMetreScale(model).worldUnitsPerMetre;
   expect(
     setMatrixAt.mock.calls.some(
@@ -1211,6 +1229,7 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
     'data-terrain-geometry-builds',
     String(initialBuilds + 2),
   );
+  expect(buildProceduralCity(model, population)).toBe(generatedBefore);
   const fullBuilds = Number(
     screen
       .getByTestId('d3d-map-representation')
@@ -1222,6 +1241,11 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
     'data-terrain-geometry-builds',
     String(fullBuilds + 1),
   );
+  expect(
+    surfacePreparation.mock.calls.some(
+      ([, layer]) => layer === 'ground' || layer === 'landscape',
+    ),
+  ).toBe(false);
   view.unmount();
 });
 it('exposes optional terrain failure without removing transport selection', () => {

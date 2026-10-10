@@ -234,23 +234,31 @@ for (const entry of routeCatalogue.scenarios) {
 }
 for (const path of routeAssets) await assetBytes(path);
 const roadCatalog = JSON.parse(await assetText('road-network/catalog.json'));
-let previousRoadFeatures = new Map();
-for (const level of ['A', 'B', 'C']) {
-  const product = roadCatalog.products.find((p) => p.level === level);
-  const bytes = await assetBytes('road-network/' + product.path);
-  if (
-    bytes.length !== product.byteLength ||
-    createHash('sha256').update(bytes).digest('hex') !== product.sha256
-  )
-    throw new Error('Built road network integrity mismatch: ' + product.path);
-  const data = JSON.parse(bytes.toString('utf8'));
-  if (data.features.length !== product.featureCount)
-    throw new Error('Built road network count mismatch');
-  const current = new Map(data.features.map((f) => [f.id, JSON.stringify(f)]));
-  for (const [id, feature] of previousRoadFeatures)
-    if (current.get(id) !== feature)
-      throw new Error('Road cumulative source identity mismatch: ' + id);
-  previousRoadFeatures = current;
+for (const [settlementId, entry] of Object.entries(roadCatalog.settlements)) {
+  let previousRoadFeatures = new Map();
+  for (const level of ['A', 'B', 'C']) {
+    const product = entry.products.find((p) => p.level === level);
+    if (
+      product.path !== `${settlementId}/roads-${level.toLowerCase()}.v0.geojson`
+    )
+      throw new Error('Built road city/path mismatch');
+    const bytes = await assetBytes('road-network/' + product.path);
+    if (
+      bytes.length !== product.byteLength ||
+      createHash('sha256').update(bytes).digest('hex') !== product.sha256
+    )
+      throw new Error('Built road network integrity mismatch: ' + product.path);
+    const data = JSON.parse(bytes.toString('utf8'));
+    if (data.features.length !== product.featureCount)
+      throw new Error('Built road network count mismatch');
+    const current = new Map(
+      data.features.map((f) => [f.id, JSON.stringify(f)]),
+    );
+    for (const [id, feature] of previousRoadFeatures)
+      if (current.get(id) !== feature)
+        throw new Error('Road cumulative source identity mismatch: ' + id);
+    previousRoadFeatures = current;
+  }
 }
 const terrainCatalogAsset = 'terrain/catalog.json';
 const terrainCatalog = JSON.parse(await assetText(terrainCatalogAsset));

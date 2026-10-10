@@ -98,25 +98,39 @@ it('shares the browser storage adapter lazily', async () => {
   expect((await fetchPublicAsset('/scenarios/catalog.json')).ok).toBe(true);
   expect(fetchArchive).toHaveBeenCalledTimes(1);
 });
-it.each(publicLayerNames.filter((layer) => layer !== 'terrain'))(
-  'loads the real %s archive without changing entry bytes',
-  async (layer) => {
-    const root = join(import.meta.dirname, '../../public', layer);
-    const zip = indexZip(readFileSync(join(root, `${layer}.zip`)));
-    for (const [name, entry] of zip) {
-      const bytes = await readZipEntry(entry);
-      expect(bytes.byteLength).toBe(entry.byteLength);
-      expect(verifyZipEntry(entry, bytes)).toBe(bytes);
-      if (!name.endsWith('/')) {
-        // Original files are optional after the owner removes them; the ZIP CRC remains mandatory.
-        if (existsSync(join(root, name)))
-          expect(createHash('sha256').update(bytes).digest('hex')).toBe(
-            createHash('sha256')
-              .update(readFileSync(join(root, name)))
-              .digest('hex'),
-          );
-      }
+it.each(
+  publicLayerNames.filter(
+    (layer) => layer !== 'terrain' && layer !== 'road-network',
+  ),
+)('loads the real %s archive without changing entry bytes', async (layer) => {
+  const root = join(import.meta.dirname, '../../public', layer);
+  const zip = indexZip(readFileSync(join(root, `${layer}.zip`)));
+  for (const [name, entry] of zip) {
+    const bytes = await readZipEntry(entry);
+    expect(bytes.byteLength).toBe(entry.byteLength);
+    expect(verifyZipEntry(entry, bytes)).toBe(bytes);
+    if (!name.endsWith('/')) {
+      // Original files are optional after the owner removes them; the ZIP CRC remains mandatory.
+      if (existsSync(join(root, name)))
+        expect(createHash('sha256').update(bytes).digest('hex')).toBe(
+          createHash('sha256')
+            .update(readFileSync(join(root, name)))
+            .digest('hex'),
+        );
     }
+  }
+});
+
+// Each city product is an independent integrity assertion; the larger V1 ZIP
+// must not bundle all native inflations into one five-second test case.
+const roadRoot = join(import.meta.dirname, '../../public/road-network');
+const roadArchive = indexZip(readFileSync(join(roadRoot, 'road-network.zip')));
+it.each([...roadArchive])(
+  'preserves real road entry %s',
+  async (_name, entry) => {
+    const bytes = await readZipEntry(entry);
+    expect(bytes.byteLength).toBe(entry.byteLength);
+    expect(verifyZipEntry(entry, bytes)).toBe(bytes);
   },
 );
 
@@ -166,23 +180,28 @@ it.each([...terrainArchive].filter(([name]) => !name.endsWith('/')))(
   },
 );
 
-it.each(['/', '/game/'])(
-  'addresses all road products through the one revision-bound ZIP at %s',
-  async (base) => {
-    const bytes = readFileSync(
-      join(import.meta.dirname, '../../public/road-network/road-network.zip'),
-    );
-    const fetchArchive = vi.fn(async () => response(bytes));
-    const loader = createPublicLayerLoader({
-      baseUrl: base,
-      revisions: { 'road-network': 'accepted' },
-      fetchArchive,
-    });
+const roadLayerFixtures = ['/', '/game/'].map((base) => {
+  const bytes = readFileSync(join(roadRoot, 'road-network.zip'));
+  const fetchArchive = vi.fn(async () => response(bytes));
+  const loader = createPublicLayerLoader({
+    baseUrl: base,
+    revisions: { 'road-network': 'accepted' },
+    fetchArchive,
+  });
+  return { base, loader, fetchArchive };
+});
+it.each(
+  roadLayerFixtures.flatMap((fixture) =>
+    ['es-torrevieja', 'es-elche'].map((city) => ({ ...fixture, city })),
+  ),
+)(
+  'addresses $city products through the shared revision-bound ZIP at $base',
+  async ({ base, city, loader, fetchArchive }) => {
     const catalog = await loader.fetchAsset(base + 'road-network/catalog.json');
     expect(catalog.ok).toBe(true);
     for (const level of ['a', 'b', 'c']) {
       const entry = await loader.fetchAsset(
-        base + `road-network/es-torrevieja/roads-${level}.v0.geojson`,
+        base + `road-network/${city}/roads-${level}.v0.geojson`,
       );
       expect(entry.ok).toBe(true);
       expect(JSON.parse(await entry.text()).type).toBe('FeatureCollection');

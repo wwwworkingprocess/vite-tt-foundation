@@ -107,3 +107,35 @@ it('uses the shared revision-bound browser layer and exposes missing required in
   expect(fetchPublicAsset).toHaveBeenCalledTimes(4);
   second.unmount();
 });
+
+it('keeps two supported city/LOD races separate and rejects late prior-city results', async () => {
+  const pending: ((model: RoadNetwork) => void)[] = [];
+  const loader = {
+    resolve: vi.fn(
+      () => new Promise<RoadNetwork>((resolve) => pending.push(resolve)),
+    ),
+  };
+  const hook = renderHook(
+    ({ city, level }: { city: string; level: RoadLevel }) =>
+      useRoadNetwork(city, level, loader),
+    { initialProps: { city: 'es-torrevieja', level: 'A' as RoadLevel } },
+  );
+  hook.rerender({ city: 'es-elche', level: 'B' });
+  await act(async () =>
+    pending[1]!({ ...model, settlementId: 'es-elche', level: 'B' }),
+  );
+  await act(async () => pending[0]!(model));
+  expect(hook.result.current).toMatchObject({
+    status: 'ready',
+    model: { settlementId: 'es-elche', level: 'B' },
+  });
+  hook.rerender({ city: 'es-alicante', level: 'C' });
+  expect(hook.result.current.status).toBe('loading');
+  await act(async () =>
+    pending[2]!({ ...model, settlementId: 'es-alicante', level: 'C' }),
+  );
+  expect(hook.result.current).toMatchObject({
+    status: 'ready',
+    model: { settlementId: 'es-alicante', level: 'C' },
+  });
+});

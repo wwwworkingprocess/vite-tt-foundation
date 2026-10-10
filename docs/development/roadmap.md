@@ -330,7 +330,7 @@ Build a complete Easy game first, then extend the same engine through Normal and
 Realistic rulesets. The modes remain configurations of one engine, not separate
 codebases.
 
-Road Network V0 now requires the accepted Torrevieja Workbench ZIP; city coverage
+Road Network V1 now requires the accepted six-city Workbench ZIP; city coverage
 is optional. It provides D3D context: far/mini A, medium B, near C, with lazy integrity-checked products and
 terrain-grounded static batches replacing provisional streets only when ready.
-StreetCell compilation, building alignment and additional road cities are deferred.
+Catalog V1 covers Alicante, Benidorm, Elche, Málaga, Murcia and Torrevieja, with unchanged V0 products; Cartagena remains absent. Ready native terrain omits research-landscape and settlement-ground tint geometry while retaining pure procedural semantics and the no-terrain fallback. StreetCell compilation, building alignment and Cartagena roads are deferred.

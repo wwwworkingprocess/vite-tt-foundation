@@ -6,7 +6,7 @@ import {
   type RoadNetwork,
 } from './road-network.js';
 /** A loader instance is bound to one ZIP revision by its injected public asset reader.
- * At most three successful models per catalog; unknown settlements are never cached.
+ * At most three successful models per settlement; unknown settlements are never cached.
  */
 export function createRoadNetworkLoader(
   input: Readonly<{
@@ -41,10 +41,10 @@ export function createRoadNetworkLoader(
         catalog = undefined;
         throw error;
       }
-      if (entries.settlementId !== settlementId) return undefined;
-      const product = entries.products.find((p) => p.level === level)!;
-      const key =
-        entries.settlementId + ':' + product.level + ':' + product.sha256;
+      if (!Object.hasOwn(entries.settlements, settlementId)) return undefined;
+      const city = entries.settlements[settlementId]!;
+      const product = city.products.find((p) => p.level === level)!;
+      const key = settlementId + ':' + product.level + ':' + product.sha256;
       let model = models.get(key);
       if (!model) {
         const selected = entries;

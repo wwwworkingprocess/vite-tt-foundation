@@ -256,7 +256,9 @@ describe('real Torrevieja grounded road plans', () => {
   it.each(['A', 'B', 'C'] as const)(
     'prepares complete %s geometry within bounded batches and reuses it without fleet/selection inputs',
     (level) => {
-      const descriptor = roadCatalog.products.find((p) => p.level === level)!;
+      const descriptor = roadCatalog.settlements[
+        'es-torrevieja'
+      ]!.products.find((p) => p.level === level)!;
       const road = decodeRoadProduct(
         JSON.parse(
           readFileSync(root + 'road-network/' + descriptor.path, 'utf8'),
@@ -287,3 +289,32 @@ describe('real Torrevieja grounded road plans', () => {
     },
   );
 });
+
+it.each(['es-malaga', 'es-murcia'])(
+  'retains the explicit preparation guard for the oversized installed C product in %s',
+  (city) => {
+    const root = join(import.meta.dirname, '../../public/road-network') + '/';
+    const catalog = parseRoadCatalog(
+      JSON.parse(readFileSync(root + 'catalog.json', 'utf8')),
+    );
+    const entry = catalog.settlements[city]!;
+    const frame = entry.source.files as readonly {
+      acquisition: { cityFrameWgs84: readonly number[] };
+    }[];
+    const [west, south, east, north] = frame[0]!.acquisition.cityFrameWgs84;
+    const map = createD3dMapModel({
+      bounds: { west: west!, south: south!, east: east!, north: north! },
+      edges: [],
+      stopPlaces: [],
+    });
+    const descriptor = entry.products.find((p) => p.level === 'C')!;
+    const road = decodeRoadProduct(
+      JSON.parse(readFileSync(root + descriptor.path, 'utf8')),
+      catalog,
+      descriptor,
+    );
+    expect(() => prepareD3dRoads(road, map)).toThrow(
+      'Road geometry support budget exceeded',
+    );
+  },
+);

@@ -849,7 +849,7 @@ function City({
   const policy = d3dDrapePolicy(mode, effectiveLod);
   const omitStreets =
     roadsPresented || (terrain !== undefined && !policy.streets);
-  const sparseSurfaces = terrain !== undefined && !policy.landscape;
+  const omitGroundOverlays = terrain !== undefined;
   const buildings = cityLodBuildings(city, lod, mode);
   const simple = mode === 'mini' || lod === 'far';
   const groups = useMemo(
@@ -873,10 +873,12 @@ function City({
       street: omitStreets
         ? new BufferGeometry()
         : createCitySurfaceGeometry(city, 'street', terrain, effectiveLod),
-      ground: createCitySurfaceGeometry(city, 'ground', terrain, effectiveLod),
-      landscape: sparseSurfaces
-        ? new BufferGeometry()
-        : createCitySurfaceGeometry(city, 'landscape', terrain, effectiveLod),
+      ground: omitGroundOverlays
+        ? undefined
+        : createCitySurfaceGeometry(city, 'ground'),
+      landscape: omitGroundOverlays
+        ? undefined
+        : createCitySurfaceGeometry(city, 'landscape'),
       reservation: createCitySurfaceGeometry(
         city,
         'reservation',
@@ -884,17 +886,17 @@ function City({
         effectiveLod,
       ),
     }),
-    [city, terrain, sparseSurfaces, omitStreets, effectiveLod],
+    [city, terrain, omitGroundOverlays, omitStreets, effectiveLod],
   );
   useEffect(() => {
     const values: Record<string, string> = {};
     for (const [layer, geometry] of Object.entries(surfaces)) {
-      const vertices = geometry.getAttribute('position')?.count ?? 0;
+      const vertices = geometry?.getAttribute('position')?.count ?? 0;
       values['city' + layer[0]!.toUpperCase() + layer.slice(1) + 'Vertices'] =
         String(vertices);
       values[
         'city' + layer[0]!.toUpperCase() + layer.slice(1) + 'DrapeLimited'
-      ] = String(geometry.userData.drapeLimited === true);
+      ] = String(geometry?.userData.drapeLimited === true);
       values['city' + layer[0]!.toUpperCase() + layer.slice(1) + 'Triangles'] =
         String(vertices / 3);
     }
@@ -903,15 +905,15 @@ function City({
   useEffect(
     () => () => {
       surfaces.street.dispose();
-      surfaces.ground.dispose();
-      surfaces.landscape.dispose();
+      surfaces.ground?.dispose();
+      surfaces.landscape?.dispose();
       surfaces.reservation.dispose();
     },
     [surfaces],
   );
   return (
     <group name="procedural-city">
-      {!sparseSurfaces ? (
+      {surfaces.landscape ? (
         <mesh
           name="research-landscape"
           geometry={surfaces.landscape}
@@ -927,13 +929,15 @@ function City({
       >
         <meshLambertMaterial vertexColors />
       </mesh>
-      <mesh
-        name="settlement-ground"
-        geometry={surfaces.ground}
-        raycast={() => null}
-      >
-        <meshLambertMaterial vertexColors />
-      </mesh>
+      {surfaces.ground ? (
+        <mesh
+          name="settlement-ground"
+          geometry={surfaces.ground}
+          raycast={() => null}
+        >
+          <meshLambertMaterial vertexColors />
+        </mesh>
+      ) : null}
       {mode === 'normal' && !omitStreets ? (
         <mesh
           name="provisional-streets"

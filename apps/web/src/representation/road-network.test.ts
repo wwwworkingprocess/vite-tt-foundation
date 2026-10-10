@@ -8,14 +8,27 @@ import {
   roadNetworkLevel,
 } from './road-network.js';
 const root = join(import.meta.dirname, '../../public/road-network') + '/';
-export const catalogInput = () =>
-  JSON.parse(readFileSync(root + 'catalog.json', 'utf8'));
+export const catalogInput = () => {
+  const input = JSON.parse(readFileSync(root + 'catalog.json', 'utf8'));
+  // Retain focused V0 compatibility/corruption coverage after installation migrates.
+  if (input.schemaVersion === 'road-network-catalog-v0') return input;
+  const { settlements, ...common } = input;
+  return {
+    ...common,
+    schemaVersion: 'road-network-catalog-v0',
+    version: '0.0.0',
+    settlementId: 'es-torrevieja',
+    ...settlements['es-torrevieja'],
+  };
+};
 const productInput = (path: string) =>
   JSON.parse(readFileSync(root + path, 'utf8'));
 it('keeps exact cumulative OSM identities, coordinates and metadata for the accepted package', () => {
   const catalog = parseRoadCatalog(catalogInput());
   let previous = new Map<string, string>();
-  for (const [index, descriptor] of catalog.products.entries()) {
+  for (const [index, descriptor] of catalog.settlements[
+    'es-torrevieja'
+  ]!.products.entries()) {
     const bytes = readFileSync(root + descriptor.path);
     expect(bytes.length).toBe(descriptor.byteLength);
     expect(createHash('sha256').update(bytes).digest('hex')).toBe(
@@ -37,7 +50,9 @@ it('keeps exact cumulative OSM identities, coordinates and metadata for the acce
     const current = new Map(
       model.features.map((f) => [f.id, JSON.stringify(f)]),
     );
-    for (const [id, feature] of previous) expect(current.get(id)).toBe(feature);
+    expect(
+      [...previous].filter(([id, feature]) => current.get(id) !== feature),
+    ).toEqual([]);
     previous = current;
   }
 });
@@ -111,7 +126,7 @@ it('rejects unsupported catalog semantics, settlement/path identities and policy
 });
 it('rejects malformed linework, unsupported tags/classes, duplicate identities and count corruption', () => {
   const catalog = parseRoadCatalog(catalogInput()),
-    descriptor = catalog.products[0]!;
+    descriptor = catalog.settlements['es-torrevieja']!.products[0]!;
   for (const mutate of [
     (d: ReturnType<typeof productInput>) => {
       d.type = 'Other';
@@ -170,7 +185,7 @@ it('rejects malformed linework, unsupported tags/classes, duplicate identities a
 
 it('preserves nested JSON tags and deeply freezes even a shallow-frozen source feature', () => {
   const catalog = parseRoadCatalog(catalogInput()),
-    product = catalog.products[0]!,
+    product = catalog.settlements['es-torrevieja']!.products[0]!,
     input = productInput(product.path);
   input.features[0].properties.otherTag = [
     true,
@@ -192,7 +207,7 @@ it('preserves nested JSON tags and deeply freezes even a shallow-frozen source f
 });
 it('rejects non-JSON objects, metadata cycles and excessive nesting safely', () => {
   const catalog = parseRoadCatalog(catalogInput()),
-    product = catalog.products[0]!;
+    product = catalog.settlements['es-torrevieja']!.products[0]!;
   const cycle: Record<string, unknown> = {};
   cycle.self = cycle;
   let deep: unknown = 'end';
@@ -201,5 +216,203 @@ it('rejects non-JSON objects, metadata cycles and excessive nesting safely', () 
     const input = productInput(product.path);
     input.features[0].properties.otherTag = tag;
     expect(() => decodeRoadProduct(input, catalog, product)).toThrow();
+  }
+});
+
+const candidateText = (path: string) => readFileSync(root + path, 'utf8');
+it('loads the actual six-city V1 catalog and preserves every cumulative source product', () => {
+  const input = JSON.parse(candidateText('catalog.json'));
+  const catalog = parseRoadCatalog(input);
+  expect(Object.keys(catalog.settlements)).toEqual([
+    'es-alicante',
+    'es-benidorm',
+    'es-elche',
+    'es-malaga',
+    'es-murcia',
+    'es-torrevieja',
+  ]);
+  expect(
+    catalog.settlements['es-torrevieja']!.products.map((p) => p.sha256),
+  ).toEqual([
+    'e18a6a5fc4407095e490764022d795730197a9bd5eeced78692e30d8f397a6ac',
+    'e88770744e19c50d0c04c0a7da1a8eaaa4146f0ef0d9a9ceab091d0d5ece129b',
+    '24ae1581e6ce43eed8523f9d928c2fc0657652e7face9911071daebf14a7becb',
+  ]);
+});
+const installedCatalog = parseRoadCatalog(
+  JSON.parse(candidateText('catalog.json')),
+);
+it.each(Object.entries(installedCatalog.settlements))(
+  'preserves cumulative source products for %s',
+  (city, entry) => {
+    const catalog = installedCatalog;
+    let previous = new Map<string, string>();
+    for (const p of entry.products) {
+      const text = candidateText(p.path);
+      expect(Buffer.byteLength(text)).toBe(p.byteLength);
+      expect(createHash('sha256').update(text).digest('hex')).toBe(p.sha256);
+      const started = performance.now();
+      const model = decodeRoadProduct(JSON.parse(text), catalog, p);
+      process.stdout.write(
+        'Road parse measurement ' +
+          JSON.stringify({
+            city,
+            level: p.level,
+            bytes: p.byteLength,
+            milliseconds: performance.now() - started,
+          }) +
+          '\n',
+      );
+      expect(model.settlementId).toBe(city);
+      const current = new Map(
+        model.features.map((f) => [f.id, JSON.stringify(f)]),
+      );
+      expect(
+        [...previous].filter(([id, feature]) => current.get(id) !== feature),
+      ).toEqual([]);
+      previous = current;
+    }
+  },
+);
+
+it('rejects malformed V1 nesting, city identities, provenance and audit consistency', () => {
+  const mutateCases = [
+    (c: ReturnType<typeof catalogInput>) => {
+      c.version = '0.0.0';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.extra = true;
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements = {};
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['../bad'] = c.settlements['es-elche'];
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].products[0].path =
+        'es-torrevieja/roads-a.v0.geojson';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].products[1].level = 'A';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.mode = 'future';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.fingerprint = 'bad';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files = [];
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files.push(
+        c.settlements['es-elche'].source.files[0],
+      );
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].path = '../bad';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].byteLength = 0;
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].sha256 = 'bad';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].acquisition.sourceLibrary =
+        '../bad';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements[
+        'es-elche'
+      ].source.files[0].acquisition.sourceLibrarySha256 = 'bad';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].acquisition.query = 'future';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].acquisition.cityFrameWgs84 = [
+        0, 0, 0,
+      ];
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].acquisition.cityFrameWgs84 = [
+        0, 0, 181, 1,
+      ];
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].acquisition.cityFrameWgs84 = [
+        0, 0, 1, 91,
+      ];
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].acquisition.cityFrameWgs84 = [
+        0,
+        0,
+        1,
+        NaN,
+      ];
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].acquisition.cityFrameWgs84 = [
+        1, 0, 0, 1,
+      ];
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].source.files[0].acquisition.cityFrameWgs84 = [
+        0, 1, 1, 0,
+      ];
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].audit.subsets.aInB = false;
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].audit.subsets.bInC = false;
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].audit.sourceFeatureCount++;
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].audit.uniqueFeatureCount++;
+      c.settlements['es-elche'].audit.sourceFeatureCount++;
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].audit.inventory.push(
+        c.settlements['es-elche'].audit.inventory[0],
+      );
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].audit.excluded.push(
+        c.settlements['es-elche'].audit.excluded[0],
+      );
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].audit.excluded[0].count++;
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].audit.excluded[0].reason = 'bad';
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      c.settlements['es-elche'].audit.excluded = [];
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      const e = c.settlements['es-elche'];
+      const item = e.audit.inventory.find(
+        (i: { geometry: string; highway: string }) =>
+          i.geometry === 'LineString' && i.highway === 'primary',
+      );
+      e.audit.excluded.push({ ...item, reason: 'unlisted-highway' });
+    },
+    (c: ReturnType<typeof catalogInput>) => {
+      const e = c.settlements['es-elche'];
+      e.products[0].classCounts.primary++;
+      e.products[0].featureCount++;
+    },
+  ];
+  for (const mutate of mutateCases) {
+    const input = JSON.parse(candidateText('catalog.json'));
+    mutate(input);
+    expect(() => parseRoadCatalog(input)).toThrow();
   }
 });

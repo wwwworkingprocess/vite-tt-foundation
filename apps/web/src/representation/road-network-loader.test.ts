@@ -21,7 +21,7 @@ function fixture() {
 it('loads catalog first, only parses requested level, shares successful immutable products and resolves missing settlements', async () => {
   const io = fixture(),
     loader = createRoadNetworkLoader({ baseUrl: '/game/', ...io });
-  expect(await loader.resolve('es-elche', 'A')).toBeUndefined();
+  expect(await loader.resolve('es-cartagena', 'A')).toBeUndefined();
   expect(io.fetchText).toHaveBeenCalledTimes(1);
   const [a, b] = await Promise.all([
     loader.resolve('es-torrevieja', 'A'),
@@ -87,11 +87,16 @@ it('keeps level identity separate when cumulative products legitimately have ide
   const catalog = parseRoadCatalog(
       JSON.parse(readFileSync(root + 'catalog.json', 'utf8')) as unknown,
     ),
-    primary = catalog.products[0]!;
+    primary = catalog.settlements['es-torrevieja']!.products[0]!;
   const text = readFileSync(root + primary.path, 'utf8');
   const input = {
     ...catalog,
-    products: catalog.products.map((p) => ({
+    schemaVersion: 'road-network-catalog-v0',
+    version: '0.0.0',
+    settlementId: 'es-torrevieja',
+    source: {},
+    audit: {},
+    products: catalog.settlements['es-torrevieja']!.products.map((p) => ({
       ...p,
       featureCount: primary.featureCount,
       byteLength: primary.byteLength,
@@ -106,10 +111,12 @@ it('keeps level identity separate when cumulative products legitimately have ide
       ),
     })),
   };
+  const v0 = { ...input };
+  Reflect.deleteProperty(v0, 'settlements');
   const fetchText = vi.fn(async (url: string) => ({
     ok: true,
     text: async () =>
-      url.endsWith('catalog.json') ? JSON.stringify(input) : text,
+      url.endsWith('catalog.json') ? JSON.stringify(v0) : text,
   }));
   const loader = createRoadNetworkLoader({
     baseUrl: '/',
@@ -143,7 +150,7 @@ it.each(['missing', 'http', 'invalid', 'unreadable', 'archive'] as const)(
       };
     });
     const loader = createRoadNetworkLoader({ baseUrl: '/game/', ...io });
-    await expect(loader.resolve('es-elche', 'A')).rejects.toThrow(
+    await expect(loader.resolve('es-cartagena', 'A')).rejects.toThrow(
       failure === 'missing' || failure === 'http'
         ? 'Road catalog unavailable: /game/road-network/catalog.json'
         : failure === 'archive'
@@ -152,7 +159,7 @@ it.each(['missing', 'http', 'invalid', 'unreadable', 'archive'] as const)(
             ? 'Root catalog unreadable'
             : 'Invalid road',
     );
-    expect(await loader.resolve('es-elche', 'A')).toBeUndefined();
+    expect(await loader.resolve('es-cartagena', 'A')).toBeUndefined();
     expect(io.fetchText.mock.calls.map(([url]) => url)).toEqual([
       '/game/road-network/catalog.json',
       '/game/road-network/catalog.json',
@@ -162,3 +169,26 @@ it.each(['missing', 'http', 'invalid', 'unreadable', 'archive'] as const)(
     );
   },
 );
+
+it('lazily resolves distinct cities at root and subpath without inflating other city products', async () => {
+  for (const baseUrl of ['/', '/game/']) {
+    const io = fixture(),
+      loader = createRoadNetworkLoader({ baseUrl, ...io });
+    const tor = await loader.resolve('es-torrevieja', 'A');
+    const [elche, duplicate] = await Promise.all([
+      loader.resolve('es-elche', 'B'),
+      loader.resolve('es-elche', 'B'),
+    ]);
+    expect(elche).toBe(duplicate);
+    expect(elche?.settlementId).toBe('es-elche');
+    expect(elche?.features).toHaveLength(2068);
+    expect(await loader.resolve('es-torrevieja', 'A')).toBe(tor);
+    expect(await loader.resolve('es-cartagena', 'C')).toBeUndefined();
+    expect(await loader.resolve('constructor', 'C')).toBeUndefined();
+    expect(io.fetchText.mock.calls.map(([url]) => url)).toEqual([
+      baseUrl + 'road-network/catalog.json',
+      baseUrl + 'road-network/es-torrevieja/roads-a.v0.geojson',
+      baseUrl + 'road-network/es-elche/roads-b.v0.geojson',
+    ]);
+  }
+});

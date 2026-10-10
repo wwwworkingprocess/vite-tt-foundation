@@ -1,3 +1,14 @@
+import { useRoadNetwork } from './use-road-network.js';
+import { roadNetworkLevel } from './road-network.js';
+import {
+  prepareD3dRoads,
+  createRoadGeometry,
+  type RoadBatch,
+} from './d3d-road-geometry.js';
+type RoadMeshes = readonly Readonly<{
+  kind: RoadBatch['kind'];
+  geometry: BufferGeometry;
+}>[];
 import {
   createD3dStopGeometry,
   d3dStopColors,
@@ -34,6 +45,7 @@ import {
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -819,6 +831,7 @@ function CityBatch({
 }
 
 function City({
+  roadsPresented,
   wrapper,
   city,
   lod,
@@ -826,6 +839,7 @@ function City({
   terrain,
 }: {
   terrain?: D3dTerrain | undefined;
+  roadsPresented: boolean;
   city: ProceduralCity;
   wrapper: React.RefObject<HTMLElement | null>;
   lod: D3dLodBand;
@@ -833,7 +847,8 @@ function City({
 }) {
   const effectiveLod = mode === 'mini' ? 'far' : lod;
   const policy = d3dDrapePolicy(mode, effectiveLod);
-  const omitStreets = terrain !== undefined && !policy.streets;
+  const omitStreets =
+    roadsPresented || (terrain !== undefined && !policy.streets);
   const sparseSurfaces = terrain !== undefined && !policy.landscape;
   const buildings = cityLodBuildings(city, lod, mode);
   const simple = mode === 'mini' || lod === 'far';
@@ -1476,6 +1491,9 @@ function Vehicles({
 }
 
 function D3dWorld({
+  onRoadInvalidated,
+  onRoadRendered,
+  roadMeshes,
   model,
   stopColors,
   sceneBounds,
@@ -1492,6 +1510,9 @@ function D3dWorld({
 }: Readonly<{
   wrapper: React.RefObject<HTMLElement | null>;
   terrain?: D3dTerrain | undefined;
+  onRoadInvalidated: () => void;
+  onRoadRendered: () => void;
+  roadMeshes: RoadMeshes | undefined;
   terrainMeshes: D3dTerrainMeshes | undefined;
   gridGeometry: BufferGeometry | undefined;
   model: D3dMapModel;
@@ -1504,6 +1525,46 @@ function D3dWorld({
   lod: D3dLodBand;
   mode: RepresentationMode;
 }>) {
+  // Scene-local identity also rejects callbacks from a detached Canvas root.
+  const roadPresentation = useMemo(() => ({}), [roadMeshes, onRoadRendered]);
+  const activeRoadPresentation = useRef<object | null>(null);
+  useLayoutEffect(() => {
+    activeRoadPresentation.current = roadPresentation;
+    onRoadInvalidated();
+    return () => {
+      activeRoadPresentation.current = null;
+      onRoadInvalidated();
+    };
+  }, [roadPresentation, onRoadInvalidated]);
+  const roadMaterials = useMemo(
+    () => ({
+      surface: new MeshBasicMaterial({
+        color: '#777a70',
+        polygonOffset: true,
+        polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1,
+      }),
+      bridge: new MeshBasicMaterial({
+        color: '#918b73',
+        polygonOffset: true,
+        polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1,
+      }),
+      tunnel: new MeshBasicMaterial({
+        color: '#98918c',
+        polygonOffset: true,
+        polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1,
+      }),
+    }),
+    [],
+  );
+  useEffect(
+    () => () => {
+      for (const material of Object.values(roadMaterials)) material.dispose();
+    },
+    [roadMaterials],
+  );
   const gridMaterial = useMemo(
     () =>
       new LineBasicMaterial({
@@ -1544,6 +1605,7 @@ function D3dWorld({
       ) : null}
       {city ? (
         <City
+          roadsPresented={roadMeshes !== undefined}
           city={city}
           lod={lod}
           mode={mode}
@@ -1551,6 +1613,20 @@ function D3dWorld({
           wrapper={wrapper}
         />
       ) : null}
+      {roadMeshes?.map((batch) => (
+        <mesh
+          key={batch.kind}
+          name={'road-network-' + batch.kind}
+          geometry={batch.geometry}
+          material={roadMaterials[batch.kind]}
+          raycast={() => null}
+          dispose={null}
+          onAfterRender={() => {
+            if (activeRoadPresentation.current === roadPresentation)
+              onRoadRendered();
+          }}
+        />
+      ))}
       <Routes
         wrapper={wrapper}
         model={model}
@@ -1622,6 +1698,87 @@ export default function D3dMapRepresentation({
         : undefined,
     [terrainState, model],
   );
+  const roadState = useRoadNetwork(
+    scenario.manifest.primarySettlementId,
+    roadNetworkLevel(mode, lod),
+  );
+  const roadPreparation = useMemo(() => {
+    if (roadState.status !== 'ready') return undefined;
+    try {
+      const profile = beginRepresentationProfile('road.prepare');
+      const plan = prepareD3dRoads(roadState.model, model, terrain);
+      finishRepresentationProfile(profile, {
+        level: roadState.model.level,
+        features: roadState.model.features.length,
+        triangles: plan.triangles,
+      });
+      return {
+        status: 'ready' as const,
+        plan,
+        meshes: plan.batches.map((batch) => ({
+          kind: batch.kind,
+          geometry: createRoadGeometry(batch),
+        })),
+      };
+    } catch (error) {
+      return { status: 'error' as const, message: String(error) };
+    }
+  }, [roadState, model, terrain]);
+  const roadMeshes =
+    roadPreparation?.status === 'ready' ? roadPreparation.meshes : undefined;
+  const roadLevel =
+    roadMeshes && roadState.status === 'ready'
+      ? roadState.model.level
+      : undefined;
+  const roadRequestKey =
+    scenario.manifest.primarySettlementId +
+    ':' +
+    roadNetworkLevel(mode, lod) +
+    ':' +
+    mode;
+  // Parent commit invalidates immediately, even before the independent Canvas
+  // root commits its replacement. Acknowledgement is never a load/render-state value.
+  const roadPresentation = useMemo(() => ({}), [roadMeshes, roadRequestKey]);
+  const activeRoadPresentation = useRef<object | null>(null);
+  useLayoutEffect(() => {
+    const element = wrapper.current;
+    const clear = () => {
+      if (element && element.dataset.renderedRoadNetworkLevel !== '')
+        writeD3dDiagnostics(element, { renderedRoadNetworkLevel: '' });
+    };
+    activeRoadPresentation.current = roadPresentation;
+    clear();
+    return () => {
+      activeRoadPresentation.current = null;
+      clear();
+    };
+  }, [roadPresentation]);
+  const onRoadInvalidated = useCallback(() => {
+    const element = wrapper.current;
+    if (
+      activeRoadPresentation.current === roadPresentation &&
+      element &&
+      element.dataset.renderedRoadNetworkLevel !== ''
+    )
+      writeD3dDiagnostics(element, { renderedRoadNetworkLevel: '' });
+  }, [roadPresentation]);
+  const onRoadRendered = useCallback(() => {
+    const element = wrapper.current;
+    if (
+      activeRoadPresentation.current === roadPresentation &&
+      element &&
+      element.dataset.renderedRoadNetworkLevel !== roadLevel
+    )
+      writeD3dDiagnostics(element, { renderedRoadNetworkLevel: roadLevel! });
+  }, [roadPresentation, roadLevel]);
+  const [roadBuilds, setRoadBuilds] = useState(0);
+  useEffect(() => {
+    if (!roadMeshes) return;
+    setRoadBuilds((n) => n + 1);
+    return () => {
+      for (const mesh of roadMeshes) mesh.geometry.dispose();
+    };
+  }, [roadMeshes]);
   const preferredStopRoute =
     focusedRouteId ??
     (selection?.kind === 'route' ? selection.routeId : undefined);
@@ -1735,6 +1892,7 @@ export default function D3dMapRepresentation({
       city,
       terrainMeshes,
       gridGeometry,
+      roadMeshes,
       vehicles,
       selection,
       focusedRouteId,
@@ -1747,6 +1905,7 @@ export default function D3dMapRepresentation({
       city,
       terrainMeshes,
       gridGeometry,
+      roadMeshes,
       vehicles,
       selection,
       focusedRouteId,
@@ -1795,6 +1954,37 @@ export default function D3dMapRepresentation({
         view.map.edges.filter((edge) => edge.enriched).length
       }
       data-vehicle-hud-count={vehicles.length}
+      data-road-network-status={
+        roadPreparation?.status === 'error' ? 'error' : roadState.status
+      }
+      data-road-network-requested-level={roadNetworkLevel(mode, lod)}
+      data-road-network-level={roadLevel ?? ''}
+      data-rendered-road-network-level=""
+      data-road-network-features={
+        roadLevel && roadState.status === 'ready'
+          ? roadState.model.features.length
+          : 0
+      }
+      data-road-network-error={
+        roadPreparation?.status === 'error'
+          ? roadPreparation.message
+          : roadState.status === 'error'
+            ? roadState.message
+            : ''
+      }
+      data-road-network-geometry-builds={roadBuilds}
+      data-road-network-batches={roadMeshes?.length ?? 0}
+      data-road-network-vertices={
+        roadPreparation?.status === 'ready' ? roadPreparation.plan.vertices : 0
+      }
+      data-road-network-triangles={
+        roadPreparation?.status === 'ready' ? roadPreparation.plan.triangles : 0
+      }
+      data-road-network-fallback-supports={
+        roadPreparation?.status === 'ready'
+          ? roadPreparation.plan.fallbackSupports
+          : 0
+      }
       data-terrain-geometry-builds={terrainGeometryBuilds}
       data-terrain-elevation-scale={d3dTerrainElevationScale}
       data-terrain-grid-visible={Boolean(gridGeometry)}
@@ -1921,6 +2111,9 @@ export default function D3dMapRepresentation({
           terrain={terrain}
         />
         <D3dWorld
+          onRoadInvalidated={onRoadInvalidated}
+          onRoadRendered={onRoadRendered}
+          roadMeshes={roadMeshes}
           model={transportModel}
           stopColors={stopColors}
           sceneBounds={sceneBounds}

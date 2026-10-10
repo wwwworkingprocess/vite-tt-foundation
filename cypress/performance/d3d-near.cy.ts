@@ -33,7 +33,18 @@ it('measures paused maximum-zoom terrain interaction separately from running pac
   map()
     .should('have.attr', 'data-camera-maximum-zoom', 'true')
     .and('have.attr', 'data-terrain-grid-visible', 'true');
+  map()
+    .should('have.attr', 'data-road-network-status', 'ready')
+    .and('have.attr', 'data-road-network-level', 'C')
+    .and('have.attr', 'data-rendered-road-network-level', 'C');
   drawn();
+  const roadPreparations: { name: string; duration: number }[] = [];
+  cy.window().then((w) => {
+    for (const e of w.performance
+      .getEntriesByType('measure')
+      .filter((e) => e.name.endsWith('road.prepare')))
+      roadPreparations.push({ name: e.name, duration: e.duration });
+  });
   const samples: number[] = [];
   let started = 0;
   cy.window().then((w) => {
@@ -72,6 +83,7 @@ it('measures paused maximum-zoom terrain interaction separately from running pac
     cy.window().then((w) =>
       cy.writeFile('performance-results/d3d-near-paused.json', {
         samples,
+        roadPreparations,
         diagnostics,
         measures: w.performance
           .getEntriesByType('measure')

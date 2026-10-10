@@ -329,3 +329,8 @@ separate architecture decision before implementation.
 Build a complete Easy game first, then extend the same engine through Normal and
 Realistic rulesets. The modes remain configurations of one engine, not separate
 codebases.
+
+Road Network V0 now requires the accepted Torrevieja Workbench ZIP; city coverage
+is optional. It provides D3D context: far/mini A, medium B, near C, with lazy integrity-checked products and
+terrain-grounded static batches replacing provisional streets only when ready.
+StreetCell compilation, building alignment and additional road cities are deferred.

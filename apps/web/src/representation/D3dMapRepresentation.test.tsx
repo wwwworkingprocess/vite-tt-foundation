@@ -14,6 +14,7 @@ import {
   listActivePopulationCells,
   parseCityPopulationGrid,
   parseScenarioPackage,
+  parseScenarioManifest,
   buildDirectedScenarioGraph,
 } from '@torrevieja-tycoon/transport-domain';
 import {
@@ -43,6 +44,11 @@ import {
 import { parseRoutePresentation } from './route-presentation.js';
 import { createRoutePresentationView } from './route-presentation-view.js';
 import { buildProceduralCity } from './d3d-city-model.js';
+import { useRoadNetwork } from './use-road-network.js';
+import type { RoadNetwork } from './road-network.js';
+vi.mock('./use-road-network.js', () => ({
+  useRoadNetwork: vi.fn(() => ({ status: 'absent' })),
+}));
 import { useTerrain } from '../terrain/use-terrain.js';
 import { terrainFixture } from '../test/terrain-fixture.js';
 import {
@@ -161,6 +167,7 @@ const pointer = (kind: string, x: number, y: number, pointerId = 1) => {
 };
 
 afterEach(() => {
+  vi.mocked(useRoadNetwork).mockReturnValue({ status: 'absent' });
   controls.renderWorld = false;
   controls.frame = undefined;
   controls.eventConnect.mockClear();
@@ -314,6 +321,10 @@ const sceneProps = (element: Element) =>
     geometry?: BufferGeometry;
     material?: import('three').Material;
     onBeforeRender?: () => void;
+    onAfterRender?: () => void;
+    children?: readonly Readonly<{
+      props: { onRoadInvalidated?: () => void };
+    }>[];
   };
 
 const chooseSceneObject = (
@@ -1727,4 +1738,270 @@ it('retains an active drag across viewport listener rebinding and cancels it on 
   const restored = cameraState();
   act(() => pointer('pointermove', 100, 100));
   expect(cameraState()).toEqual(restored);
+});
+
+it('owns cached road buffers across fleet/focus/pan and swaps one product while suppressing provisional streets', () => {
+  enableWorld();
+  const road: RoadNetwork = {
+    settlementId: 'es-torrevieja',
+    level: 'A',
+    sha256: 'a'.repeat(64),
+    features: [
+      {
+        type: 'Feature',
+        id: 'W1',
+        properties: { highway: 'primary' },
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [-0.7, 37.98],
+            [-0.69, 37.98],
+          ],
+        },
+      },
+    ],
+  };
+  vi.mocked(useRoadNetwork).mockReturnValue({ status: 'ready', model: road });
+  const { rerender, unmount } = render(
+    scene('normal', null, undefined, scenario, population),
+  );
+  const map = screen.getByTestId('d3d-map-representation');
+  expect(map).toHaveAttribute('data-road-network-level', 'A');
+  expect(map).toHaveAttribute('data-road-network-features', '1');
+  expect(document.querySelector('mesh[name="provisional-streets"]')).toBeNull();
+  const mesh = document.querySelector('mesh[name="road-network-surface"]')!;
+  sceneProps(mesh).onAfterRender!();
+  expect(map).toHaveAttribute('data-rendered-road-network-level', 'A');
+  expect(sceneProps(mesh).raycast?.()).toBeNull();
+  const roadGeometry = sceneProps(mesh).geometry!;
+  const roadDisposed = vi.spyOn(roadGeometry, 'dispose');
+  const roadMaterial = sceneProps(mesh).material!;
+  const materialDisposed = vi.spyOn(roadMaterial, 'dispose');
+  expect(roadMaterial.side).toBe(0); // Three FrontSide, backed by winding tests.
+  const builds = map.getAttribute('data-road-network-geometry-builds');
+  rerender(
+    scene(
+      'normal',
+      selectStop(stop.stopPlaceId),
+      undefined,
+      scenario,
+      population,
+      [...fleet],
+    ),
+  );
+  expect(map).toHaveAttribute('data-road-network-geometry-builds', builds);
+  rerender(scene('normal', null, route.routeId, scenario, population));
+  expect(map).toHaveAttribute('data-road-network-geometry-builds', builds);
+  act(() => {
+    pointer('pointerdown', 100, 100);
+    pointer('pointermove', 140, 120);
+    pointer('pointerup', 140, 120);
+  });
+  expect(map).toHaveAttribute('data-road-network-geometry-builds', builds);
+  fireEvent.wheel(controls.canvas, { deltaY: -3000 });
+  expect(useRoadNetwork).toHaveBeenLastCalledWith('es-torrevieja', 'C');
+  vi.mocked(useRoadNetwork).mockReturnValue({ status: 'loading' });
+  rerender(scene('normal', null, undefined, scenario, population));
+  expect(roadDisposed).toHaveBeenCalledTimes(1);
+  expect(materialDisposed).not.toHaveBeenCalled();
+  expect(map).toHaveAttribute('data-road-network-level', '');
+  expect(
+    document.querySelector('mesh[name="provisional-streets"]'),
+  ).not.toBeNull();
+  vi.mocked(useRoadNetwork).mockReturnValue({
+    status: 'ready',
+    model: { ...road, level: 'C' },
+  });
+  rerender(scene('normal', null, undefined, scenario, population));
+  expect(map).toHaveAttribute('data-road-network-level', 'C');
+  expect(document.querySelectorAll('mesh[name^="road-network-"]')).toHaveLength(
+    1,
+  );
+  vi.mocked(useRoadNetwork).mockReturnValue({
+    status: 'error',
+    message: 'corrupt road',
+  });
+  rerender(scene('normal', null, undefined, scenario, population));
+  expect(map).toHaveAttribute('data-road-network-error', 'corrupt road');
+  expect(
+    document.querySelector('mesh[name="provisional-streets"]'),
+  ).not.toBeNull();
+  vi.mocked(useRoadNetwork).mockReturnValue({
+    status: 'ready',
+    model: {
+      ...road,
+      features: [
+        {
+          ...road.features[0]!,
+          geometry: {
+            type: 'LineString',
+            coordinates: [
+              [-180, -90],
+              [180, 90],
+            ],
+          },
+        },
+      ],
+    },
+  });
+  rerender(scene('normal', null, undefined, scenario, population));
+  expect(map).toHaveAttribute('data-road-network-status', 'error');
+  expect(map.getAttribute('data-road-network-error')).toContain(
+    'support budget exceeded',
+  );
+  unmount();
+  expect(materialDisposed).toHaveBeenCalledTimes(1);
+  expect(roadDisposed).toHaveBeenCalledTimes(1);
+});
+
+it('acknowledges only the active actually drawn road product once and invalidates old batches across transitions', () => {
+  enableWorld();
+  const road: RoadNetwork = {
+    settlementId: 'es-torrevieja',
+    level: 'A',
+    sha256: 'a'.repeat(64),
+    features: ['surface', 'bridge'].map((kind) => ({
+      type: 'Feature',
+      id: kind,
+      properties: {
+        highway: 'primary',
+        ...(kind === 'bridge' ? { bridge: 'yes' } : {}),
+      },
+      geometry: {
+        type: 'LineString',
+        coordinates: [
+          [-0.7, 37.98],
+          [-0.69, 37.98],
+        ],
+      },
+    })),
+  };
+  vi.mocked(useRoadNetwork).mockReturnValue({ status: 'ready', model: road });
+  const view = render(scene('normal', null, undefined, scenario, population));
+  const map = screen.getByTestId('d3d-map-representation');
+  const acknowledgement = () =>
+    map.getAttribute('data-rendered-road-network-level');
+  const callbacks = () =>
+    [...document.querySelectorAll('mesh[name^="road-network-"]')].map(
+      (mesh) => sceneProps(mesh).onAfterRender!,
+    );
+  const old = callbacks();
+  const oldInvalidation = sceneProps(
+    screen.getByTestId('r3f-canvas'),
+  ).children!.find((child) => child.props.onRoadInvalidated)!.props
+    .onRoadInvalidated!;
+  expect(map).toHaveAttribute('data-road-network-level', 'A');
+  expect(acknowledgement()).toBe('');
+  const observer = new MutationObserver(() => {});
+  observer.observe(map, {
+    attributes: true,
+    attributeFilter: ['data-rendered-road-network-level'],
+  });
+  old[0]!();
+  expect(acknowledgement()).toBe('A');
+  expect(observer.takeRecords()).toHaveLength(1);
+  old.forEach((draw) => draw());
+  expect(observer.takeRecords()).toHaveLength(0);
+  vi.mocked(useRoadNetwork).mockReturnValue({ status: 'loading' });
+  fireEvent.wheel(controls.canvas, { deltaY: -3000 });
+  view.rerender(scene('normal', null, undefined, scenario, population));
+  expect(map).toHaveAttribute('data-road-network-requested-level', 'C');
+  expect(acknowledgement()).toBe('');
+  expect(
+    document.querySelector('mesh[name="provisional-streets"]'),
+  ).not.toBeNull();
+  observer.takeRecords();
+  old.forEach((draw) => draw());
+  expect(acknowledgement()).toBe('');
+  expect(observer.takeRecords()).toHaveLength(0);
+  vi.mocked(useRoadNetwork).mockReturnValue({
+    status: 'ready',
+    model: { ...road, level: 'C' },
+  });
+  view.rerender(scene('normal', null, undefined, scenario, population));
+  expect(acknowledgement()).toBe('');
+  const current = callbacks()[0]!;
+  old[0]!();
+  expect(acknowledgement()).toBe('');
+  current();
+  expect(acknowledgement()).toBe('C');
+  observer.takeRecords();
+  oldInvalidation();
+  expect(acknowledgement()).toBe('C');
+  current();
+  expect(observer.takeRecords()).toHaveLength(0);
+  vi.mocked(useRoadNetwork).mockReturnValue({
+    status: 'error',
+    message: 'Required archive unavailable',
+  });
+  view.rerender(scene('normal', null, undefined, scenario, population));
+  expect(acknowledgement()).toBe('');
+  current();
+  expect(acknowledgement()).toBe('');
+  expect(
+    document.querySelector('mesh[name="provisional-streets"]'),
+  ).not.toBeNull();
+  vi.mocked(useRoadNetwork).mockReturnValue({ status: 'ready', model: road });
+  view.rerender(scene('normal', null, undefined, scenario, population));
+  const normal = callbacks()[0]!;
+  normal();
+  expect(acknowledgement()).toBe('A');
+  view.rerender(scene('mini', null, undefined, scenario, population));
+  expect(acknowledgement()).toBe('');
+  normal();
+  expect(acknowledgement()).toBe('');
+  const mini = callbacks()[0]!;
+  mini();
+  expect(acknowledgement()).toBe('A');
+  vi.mocked(useRoadNetwork).mockReturnValue({
+    status: 'ready',
+    model: { ...road, sha256: 'b'.repeat(64) },
+  });
+  view.rerender(scene('mini', null, undefined, scenario, population));
+  expect(acknowledgement()).toBe('');
+  mini();
+  expect(acknowledgement()).toBe('');
+  const replaced = callbacks()[0]!;
+  replaced();
+  expect(acknowledgement()).toBe('A');
+  controls.renderWorld = false;
+  view.rerender(scene('mini', null, undefined, scenario, population));
+  expect(acknowledgement()).toBe('');
+  replaced();
+  expect(acknowledgement()).toBe('');
+  controls.renderWorld = true;
+  view.rerender(scene('mini', null, undefined, scenario, population));
+  expect(acknowledgement()).toBe('');
+  const remounted = callbacks()[0]!;
+  remounted();
+  expect(acknowledgement()).toBe('A');
+  vi.mocked(useRoadNetwork).mockReturnValue({ status: 'absent' });
+  view.rerender(
+    scene(
+      'normal',
+      null,
+      undefined,
+      {
+        ...scenario,
+        manifest: parseScenarioManifest({
+          ...scenario.manifest,
+          settlementIds: [...scenario.manifest.settlementIds, 'es-elche'],
+          primarySettlementId: 'es-elche',
+        }),
+      },
+      population,
+    ),
+  );
+  expect(acknowledgement()).toBe('');
+  remounted();
+  expect(acknowledgement()).toBe('');
+  vi.mocked(useRoadNetwork).mockReturnValue({ status: 'ready', model: road });
+  view.rerender(scene('normal', null, undefined, scenario, population));
+  const detached = callbacks()[0]!;
+  detached();
+  expect(acknowledgement()).toBe('A');
+  view.unmount();
+  expect(acknowledgement()).toBe('');
+  expect(() => detached()).not.toThrow();
+  observer.disconnect();
 });

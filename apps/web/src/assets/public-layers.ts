@@ -4,6 +4,7 @@ export const publicLayerNames = [
   'asset-research',
   'icons',
   'population-fields',
+  'road-network',
   'route-presentation',
   'scenarios',
   'settlement-metadata',

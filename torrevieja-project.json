@@ -74,7 +74,11 @@
       "apps/web/src/representation/d3d-presentation-policy.ts",
       "apps/web/src/representation/d3d-dirty-frame.ts",
       "apps/web/src/assets/public-layers.ts",
-      "apps/web/src/assets/zip-layer.ts"
+      "apps/web/src/assets/zip-layer.ts",
+      "apps/web/src/representation/road-network.ts",
+      "apps/web/src/representation/road-network-loader.ts",
+      "apps/web/src/representation/use-road-network.ts",
+      "apps/web/src/representation/d3d-road-geometry.ts"
     ]
   },
   "simulationCriticalCoverage": {

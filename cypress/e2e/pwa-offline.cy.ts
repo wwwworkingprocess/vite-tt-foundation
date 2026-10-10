@@ -440,6 +440,7 @@ describe('built foundation PWA offline lifecycle', () => {
         'scenarios',
         'population-fields',
         'settlement-metadata',
+        'road-network',
         'route-presentation',
         'terrain',
       ]) {

@@ -1,3 +1,5 @@
+import { crc32, inflateRawSync } from 'node:zlib';
+import { parseTerrainCatalog } from '../terrain/terrain-catalog.js';
 import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { readFileSync } from 'node:fs';
@@ -120,16 +122,73 @@ it.each(publicLayerNames.filter((layer) => layer !== 'terrain'))(
 
 const terrainRoot = join(import.meta.dirname, '../../public/terrain');
 const terrainArchive = indexZip(readFileSync(join(terrainRoot, 'terrain.zip')));
+const terrainCatalogEntry = terrainArchive.get('catalog.json')!;
+const terrainCatalog = parseTerrainCatalog(
+  JSON.parse(
+    new TextDecoder().decode(
+      verifyZipEntry(
+        terrainCatalogEntry,
+        inflateRawSync(terrainCatalogEntry.compressed),
+      ),
+    ),
+  ) as unknown,
+);
+const terrainProducts = Object.values(terrainCatalog.settlements).flatMap(
+  (entry) => Object.values(entry.products),
+);
 it.each([...terrainArchive].filter(([name]) => !name.endsWith('/')))(
   'preserves real terrain product %s',
   async (name, entry) => {
-    const bytes = await readZipEntry(entry);
+    // Large source fixtures are storage-integrity checks. Native inflation avoids
+    // repeated streamed buffer copies for 113 MB products; the streaming reader
+    // is exercised above and in live terrain/PWA browser acceptance.
+    const bytes =
+      entry.byteLength <= 16 * 1024 * 1024
+        ? await readZipEntry(entry)
+        : inflateRawSync(entry.compressed, {
+            maxOutputLength: entry.byteLength,
+          });
+    expect(crc32(bytes)).toBe(entry.crc32);
     expect(bytes.byteLength).toBe(entry.byteLength);
+    const product = terrainProducts.find((p) => p.path === name);
+    if (product) {
+      expect(bytes.byteLength).toBe(product.byteLength);
+      expect(createHash('sha256').update(bytes).digest('hex')).toBe(
+        product.sha256,
+      );
+    }
     if (existsSync(join(terrainRoot, name)))
       expect(createHash('sha256').update(bytes).digest('hex')).toBe(
         createHash('sha256')
           .update(readFileSync(join(terrainRoot, name)))
           .digest('hex'),
       );
+  },
+);
+
+it.each(['/', '/game/'])(
+  'addresses all road products through the one revision-bound ZIP at %s',
+  async (base) => {
+    const bytes = readFileSync(
+      join(import.meta.dirname, '../../public/road-network/road-network.zip'),
+    );
+    const fetchArchive = vi.fn(async () => response(bytes));
+    const loader = createPublicLayerLoader({
+      baseUrl: base,
+      revisions: { 'road-network': 'accepted' },
+      fetchArchive,
+    });
+    const catalog = await loader.fetchAsset(base + 'road-network/catalog.json');
+    expect(catalog.ok).toBe(true);
+    for (const level of ['a', 'b', 'c']) {
+      const entry = await loader.fetchAsset(
+        base + `road-network/es-torrevieja/roads-${level}.v0.geojson`,
+      );
+      expect(entry.ok).toBe(true);
+      expect(JSON.parse(await entry.text()).type).toBe('FeatureCollection');
+    }
+    expect(fetchArchive.mock.calls).toEqual([
+      [base + 'road-network/road-network.zip?v=accepted'],
+    ]);
   },
 );

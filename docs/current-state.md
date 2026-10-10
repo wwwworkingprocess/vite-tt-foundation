@@ -60,7 +60,7 @@ active task explicitly changes the sequence.
 
 Public packages are stored as one folder-relative ZIP per layer: `asset-research`,
 `icons`, `population-fields`, `route-presentation`, `scenarios`,
-`settlement-metadata`, `terrain`, and `urban-assets`. Browser acquisition downloads
+`settlement-metadata`, `terrain`, `road-network`, and `urban-assets`. Browser acquisition downloads
 a layer on first use, shares concurrent requests, and inflates only requested
 entries using native raw-deflate decompression. Stored entries are also supported.
 ZIP lengths/CRC and bounded container/inflation validation precede the existing
@@ -552,3 +552,38 @@ release itself.
   do not describe current HEAD.
 - Milestone chronology: `development/milestone-history.md`.
 - Foundation Template reference: `docs/template/` and the template contract.
+
+## Road Network V0 presentation
+
+The mandatory ninth ZIP layer, `road-network/road-network.zip`, contains the accepted
+Torrevieja-only Workbench catalog and cumulative A/B/C WGS84 LineString products.
+No source bytes are rewritten. D3D selects A at far/mini, B at medium and C at near,
+using existing camera hysteresis. Catalog semantics, source IDs/classes/counts,
+UTF-8 length and SHA-256 are validated before immutable models are cached. The
+revision-bound ZIP registry inflates only requested entries. A valid catalog
+excluding the selected settlement reports absent coverage. Missing,
+unreadable or corrupt required ZIP/catalog infrastructure reports an error, as do
+invalid declared products; failed acquisitions may retry. Pending or failed
+products retain provisional-city streets and expose diagnostics. Ready road
+geometry suppresses provisional streets without
+changing city generation, transit routes, selection or simulation.
+
+At most three non-raycasting front-sided batches depict ordinary, bridge and
+tunnel linework. Fixed 8/6/4 metre widths and tag-based tones are visual styling,
+not surveyed lanes or curbs. Support is 150/50/12.5 metres at A/B/C, bounded at
+131,072 segments. Ribbon corners use shared rendered-ground queries, including
+10x elevation exaggeration; native/nearest-land/explicit finite fallback behavior
+also preserves bridges on water and outside coverage. A 0.22 metre road offset
+lies between city ground and canonical transit lines. Grade tags survive unchanged;
+no surveyed road-deck height, true tunnel, clearance or topology is claimed.
+
+CPU plans are cached by immutable product, projection and terrain identity.
+Each Canvas owns/disposes fresh GPU geometry attributes and shared road materials;
+LOD/load changes request dirty frames, while fleet ticks, focus and same-level pan
+reuse static buffers. Diagnostics distinguish requested, prepared and drawn levels,
+feature counts, geometry builds/batches/vertices/triangles and fallback supports.
+The drawn-road acknowledgement is cleared on product/request/scene transitions;
+only an active batch after actual rendering may acknowledge its level, once per
+host/active presentation. Removed batches cannot republish stale levels.
+StreetCell compilation, road/building alignment and additional-city road products
+remain deferred; the accepted procedural buildings may intersect source roads.

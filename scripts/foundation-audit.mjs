@@ -665,6 +665,8 @@ for (const d3dRepresentationFile of [
   'apps/web/src/representation/d3d-map-model.ts',
   'apps/web/src/representation/d3d-city-model.ts',
   'apps/web/src/representation/d3d-city-geometry.ts',
+  'apps/web/src/representation/d3d-road-geometry.ts',
+  'apps/web/src/representation/use-road-network.ts',
   'apps/web/src/representation/d3d-terrain-geometry.ts',
   'apps/web/src/representation/d3d-terrain-grid.ts',
   'apps/web/src/representation/d3d-terrain-shading.ts',
@@ -682,6 +684,8 @@ for (const d3dRepresentationFile of [
     );
 }
 for (const purePresentationFile of [
+  'apps/web/src/representation/road-network.ts',
+  'apps/web/src/representation/road-network-loader.ts',
   'apps/web/src/terrain/terrain-catalog.ts',
   'apps/web/src/terrain/terrain-runtime.ts',
   'apps/web/src/terrain/terrain-projection.ts',

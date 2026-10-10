@@ -7,6 +7,7 @@ const layers = [
   'asset-research',
   'icons',
   'population-fields',
+  'road-network',
   'route-presentation',
   'scenarios',
   'settlement-metadata',

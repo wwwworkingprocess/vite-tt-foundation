@@ -40,6 +40,17 @@ const terrainDrawn = () =>
         Number($map.attr('data-rendered-camera-' + coordinate)),
       ).to.be.closeTo(Number($map.attr('data-camera-' + coordinate)), 1e-10);
   });
+const roadDrawn = (level: 'A' | 'B' | 'C') =>
+  terrainMap()
+    .should('have.attr', 'data-road-network-status', 'ready')
+    .and('have.attr', 'data-road-network-level', level)
+    .and('have.attr', 'data-rendered-road-network-level', level)
+    .and(
+      'have.attr',
+      'data-road-network-features',
+      String({ A: 124, B: 664, C: 4364 }[level]),
+    )
+    .and('have.attr', 'data-city-street-triangles', '0');
 const closeTerrainDetails = () =>
   cy.get('[role="dialog"]').contains('button', 'Close').click();
 const terrainPanTo = (kind: 'stop' | 'vehicle') =>
@@ -95,6 +106,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
     .and('have.attr', 'data-terrain-land-samples', '115166')
     .and('have.attr', 'data-terrain-water-samples', '46514')
     .and('have.attr', 'data-terrain-render-stride', '8');
+  roadDrawn('A');
   cy.get('[aria-label="Routes"] [data-route-id="legacy-A"]').click();
   cy.contains('button', 'Add bus').should('be.enabled').click();
   cy.get('button[aria-label="Select mini representation for swap"]').click();
@@ -140,6 +152,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
     expect(Number($map.attr('data-city-landscape-triangles'))).to.equal(0);
     expect(Number($map.attr('data-city-street-triangles'))).to.equal(0);
   });
+  roadDrawn('A');
   recordTerrainState('terrain-full-network-far');
   cy.screenshot('terrain-full-network-far');
   terrainZoomTo(0.1);
@@ -147,6 +160,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   terrainPanTo('vehicle');
   terrainDrawn();
   terrainMap().should('have.attr', 'data-terrain-render-stride', '4');
+  roadDrawn('B');
   recordTerrainState('terrain-medium-coast');
   cy.screenshot('terrain-medium-coast');
   terrainZoomTo(0.03);
@@ -183,6 +197,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
     });
   terrainPanTo('stop');
   terrainDrawn();
+  roadDrawn('C');
   recordTerrainState('terrain-maximum-native-grid');
   cy.screenshot('terrain-maximum-native-grid');
   terrainMap().then(($map) => {
@@ -242,6 +257,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   // not depend on a renderer allowing a wall-clock tick before the assertion.
   terrainMap().then(($map) => {
     const builds = $map.attr('data-terrain-geometry-builds');
+    const roadBuilds = $map.attr('data-road-network-geometry-builds');
     cy.contains('button', 'Simulation controls').click();
     cy.get('[role="dialog"]')
       .contains('button', /^Pause$/)
@@ -265,12 +281,18 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
     terrainMap()
       .should('have.attr', 'data-vehicle-movement-kind', 'running-at-stop')
       .and('have.attr', 'data-terrain-geometry-builds', builds)
-      .and('have.attr', 'data-selected-kind', 'vehicle');
+      .and('have.attr', 'data-selected-kind', 'vehicle')
+      .and('have.attr', 'data-road-network-geometry-builds', roadBuilds);
     terrainDrawn();
     terrainPick('vehicle');
     cy.get('[role="dialog"]').should('contain.text', 'Vehicle');
     closeTerrainDetails();
   });
+  roadDrawn('C');
+  terrainZoomTo(0.1);
+  roadDrawn('B');
+  terrainZoomTo(0.4);
+  roadDrawn('A');
   recordTerrainState('terrain-started-vehicle');
   cy.screenshot('terrain-started-vehicle');
   cy.get('[data-testid="scenario-menu-trigger"]').click();
@@ -284,4 +306,43 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
     .should('have.attr', 'data-scenario-id', 'torrevieja-legacy-north-v1')
     .and('have.attr', 'data-terrain-status', 'ready');
   cy.then(() => expect(products).to.equal(1));
+});
+
+it('leaves non-Torrevieja roads absent without hiding native terrain or gameplay', () => {
+  cy.visit('/');
+  cy.get('[data-testid="open-screen"]').should('be.visible');
+  cy.get('select[aria-label="City"]').select('es-alicante');
+  cy.contains('label', 'Scenario')
+    .find('select')
+    .select('alicante-legacy-core-v1');
+  cy.contains('button', 'Start new game').should('be.enabled').click();
+  terrainMap()
+    .should('have.attr', 'data-road-network-status', 'absent')
+    .and('have.attr', 'data-road-network-level', '')
+    .and('have.attr', 'data-road-network-features', '0')
+    .and('have.attr', 'data-rendered-road-network-level', '');
+  cy.get('[data-testid="game-shell"]').should('be.visible');
+});
+
+it('reports missing required road infrastructure while preserving the game and native terrain', () => {
+  cy.intercept('GET', '**/road-network/road-network.zip*', {
+    statusCode: 503,
+    body: 'Unavailable',
+  });
+  cy.visit('/');
+  cy.get('[data-testid="open-screen"]').should('be.visible');
+  cy.contains('button', 'Start new game').should('be.enabled').click();
+  terrainMap()
+    .should('have.attr', 'data-road-network-status', 'error')
+    .and(
+      'have.attr',
+      'data-road-network-error',
+      'Public layer unavailable: road-network',
+    )
+    .and('have.attr', 'data-road-network-level', '')
+    .and('have.attr', 'data-rendered-road-network-level', '')
+    .and('have.attr', 'data-terrain-status', 'ready');
+  cy.get('[data-testid="game-shell"]').should('be.visible');
+  cy.get('[aria-label="Routes"] [data-route-id="legacy-A"]').click();
+  cy.contains('button', 'Add bus').should('be.enabled');
 });

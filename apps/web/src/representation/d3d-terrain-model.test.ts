@@ -221,13 +221,18 @@ describe('full native dataset render LOD', () => {
           );
       }
     expect(samples.size).toBe(115166);
+    // Inspect every native center, with one mismatch assertion rather than
+    // allocating 115,166 assertion objects during concurrent dataset validation.
+    const mismatchedCenters: number[] = [];
     for (const [index, y] of samples) {
       const native = world.terrain.sample(
         Math.floor(index / world.terrain.viewport.width),
         index % world.terrain.viewport.width,
       )!;
-      expect(y).toBe(Math.fround(native * world.metre * 10));
+      if (y !== Math.fround(native * world.metre * 10))
+        mismatchedCenters.push(index);
     }
+    expect(mismatchedCenters).toEqual([]);
     expect(world.terrain.statistics.nativeSamples).toBe(161680);
     expect(world.terrain.sample(0, 0)).toBe(21.832195281982422);
   });

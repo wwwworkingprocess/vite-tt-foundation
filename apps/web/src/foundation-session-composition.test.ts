@@ -6,6 +6,7 @@ import type {
 } from './application/foundation-controller.js';
 import {
   createFoundationSessionComposition,
+  sameSessionPresentation,
   type FoundationSessionStack,
   type FoundationSessionTimer,
 } from './foundation-session-composition.js';
@@ -1066,4 +1067,70 @@ describe('foundation session composition', () => {
     expect(stacks).toHaveLength(1);
     expect(composition.projection.getState().canStartNewSession).toBe(false);
   });
+});
+
+it('grants fifty times the former 24-tick demo bonus', async () => {
+  const { composition, stacks } = harness();
+  await composition.startNewSession();
+  await composition.grantBonus();
+  expect(stacks[0]!.bonus).toHaveBeenCalledWith(1200);
+  await composition.dispose();
+});
+
+it('filters pacing bookkeeping without hiding visible modes, bonus, errors or authority changes', async () => {
+  const { composition, stacks } = harness();
+  await composition.startNewSession();
+  const before = composition.projection.getState();
+  const credit = {
+    ...before,
+    pacing: {
+      ...before.pacing,
+      creditGameMicroseconds: 12345,
+      advancedTicksTotal: 2,
+    },
+  };
+  expect(sameSessionPresentation(before, credit)).toBe(true);
+  for (const patch of [
+    { status: 'running' as const },
+    { mode: 'normal' as const },
+    { selectedRate: 20 },
+    { effectiveRate: 20 },
+    { remainingDoubleSpeedBonusTicks: 1200 },
+    { message: 'failed' },
+  ])
+    expect(
+      sameSessionPresentation(before, {
+        ...credit,
+        pacing: { ...credit.pacing, ...patch },
+      }),
+    ).toBe(false);
+  expect(
+    sameSessionPresentation(before, {
+      ...credit,
+      application: { ...before.application },
+    }),
+  ).toBe(false);
+  expect(sameSessionPresentation(before, { ...credit, message: 'error' })).toBe(
+    false,
+  );
+  expect(
+    sameSessionPresentation(before, { ...credit, saveMode: 'autosave' }),
+  ).toBe(false);
+  const app = stacks[0]!.app.api.getState();
+  let reads = 0;
+  const next = {
+    ...app,
+    get synchronization() {
+      reads++;
+      return app.synchronization;
+    },
+  };
+  stacks[0]!.app.set(next);
+  const initialReads = reads;
+  stacks[0]!.pacing.set({ ...before.pacing, creditGameMicroseconds: 9876 });
+  expect(reads).toBe(initialReads);
+  expect(composition.projection.getState().pacing.creditGameMicroseconds).toBe(
+    9876,
+  );
+  await composition.dispose();
 });

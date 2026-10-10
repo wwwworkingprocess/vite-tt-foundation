@@ -235,3 +235,16 @@ it('keeps far Stop footprints pickable without enlarging vertical occlusion over
   expect(far.z).toBe(far.x);
   expect(far.y * 0.8).toBe(0.8);
 });
+
+it('keeps metre-scale stop targets close to the disk with a screen-space pick floor', () => {
+  expect(d3dStopHitScale(0.01, 0.02)).toEqual({
+    x: 0.4 / 1.25,
+    y: 0.06 / 0.8,
+    z: 0.4 / 1.25,
+  });
+  expect(d3dStopHitScale(0.4, 0.02)).toEqual({
+    x: (12 * 0.4) / 1.25,
+    y: (6 * 0.4) / 0.8,
+    z: (12 * 0.4) / 1.25,
+  });
+});

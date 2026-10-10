@@ -1,3 +1,4 @@
+import { terrainSelfShade } from './d3d-terrain-shading.js';
 import type { TerrainRuntime } from '../terrain/terrain-runtime.js';
 import { sampleTerrain, terrainGround } from '../terrain/terrain-runtime.js';
 import {
@@ -13,6 +14,9 @@ import {
 } from './d3d-map-model.js';
 import type { ProceduralCity } from './d3d-city-model.js';
 import type { RepresentationMode } from './representation-cadence.js';
+// Presentation elevation about sea level; horizontal scale and object dimensions
+// retain metres. Native runtime heights and query semantics are unchanged.
+export const d3dTerrainElevationScale = 10;
 export const terrainLayerOffsets = Object.freeze({
   route: 0.3,
   stop: 0.3,
@@ -39,13 +43,18 @@ export interface D3dTerrain {
   ): Readonly<{
     y: number;
     diagnostic: 'native' | 'nearest-land' | 'flat-fallback';
+    shade?: number;
   }>;
   sample(x: number, z: number): ReturnType<typeof sampleTerrain>;
 }
 const surfaceCorners = new WeakMap<TerrainRuntime, Float64Array>();
 /** Lazy renderer support only; native heights/mask remain untouched. NaN marks
  * an uncomputed render corner, never DEM NoData. Shared across map transforms. */
-function renderCorner(terrain: TerrainRuntime, col: number, row: number) {
+export function terrainRenderCorner(
+  terrain: TerrainRuntime,
+  col: number,
+  row: number,
+) {
   let values = surfaceCorners.get(terrain);
   const { width, height, rasterBounds3035: b } = terrain.viewport;
   if (!values) {
@@ -76,10 +85,10 @@ function renderedGround(terrain: TerrainRuntime, x: number, y: number) {
   const u = (x - b.west) / terrain.resolution.x - c,
     v = (b.north - y) / terrain.resolution.y - r;
   const center = terrain.sample(r, c)!,
-    nw = renderCorner(terrain, c, r),
-    ne = renderCorner(terrain, c + 1, r),
-    sw = renderCorner(terrain, c, r + 1),
-    se = renderCorner(terrain, c + 1, r + 1);
+    nw = terrainRenderCorner(terrain, c, r),
+    ne = terrainRenderCorner(terrain, c + 1, r),
+    sw = terrainRenderCorner(terrain, c, r + 1),
+    se = terrainRenderCorner(terrain, c + 1, r + 1);
   const elevation =
     v <= Math.min(u, 1 - u)
       ? center * 2 * v + nw * (1 - u - v) + ne * (u - v)
@@ -122,8 +131,14 @@ export function createD3dTerrain(
       const p = projected(x, z),
         s = renderedGround(terrain, p.x, p.y);
       return Object.freeze({
-        y: s.elevation * metre,
+        y: s.elevation * metre * d3dTerrainElevationScale,
         diagnostic: s.diagnostic,
+        shade: terrainSelfShade(
+          terrain,
+          (p.x - west) / terrain.resolution.x,
+          (north - p.y) / terrain.resolution.y,
+          d3dTerrainElevationScale,
+        ),
       });
     },
     sample(x: number, z: number) {
@@ -135,8 +150,14 @@ export function createD3dTerrain(
       maxX: Math.max(...corners.map((p) => p.x)),
       minZ: Math.min(...corners.map((p) => p.z)),
       maxZ: Math.max(...corners.map((p) => p.z)),
-      minY: (terrain.statistics.minElevation ?? 0) * metre,
-      maxY: (terrain.statistics.maxElevation ?? 0) * metre,
+      minY:
+        (terrain.statistics.minElevation ?? 0) *
+        metre *
+        d3dTerrainElevationScale,
+      maxY:
+        (terrain.statistics.maxElevation ?? 0) *
+        metre *
+        d3dTerrainElevationScale,
     }),
   });
   maps.set(model, world);
@@ -148,6 +169,7 @@ export type TerrainMeshPatch = Readonly<{
   cells: Readonly<{ col: number; row: number; endCol: number; endRow: number }>;
   kind: 'land' | 'water';
   positions: Float32Array;
+  colors?: Float32Array;
   indices: Uint32Array;
 }>;
 export type TerrainMeshPlan = Readonly<{
@@ -215,6 +237,7 @@ export function planD3dTerrain(
         const endCol = Math.min(width, colStart + chunk);
         const endRow = Math.min(height, rowStart + chunk);
         const positions: number[] = [],
+          colors: number[] = [],
           indices: number[] = [];
         const cornerWidth = endCol - colStart + 1;
         const corners = new Int32Array(
@@ -226,14 +249,24 @@ export function planD3dTerrain(
             b.north - row * terrain.resolution.y,
           );
           const index = positions.length / 3;
-          positions.push(p.x, elevation * metre, p.z);
+          const shade =
+            kind === 'water'
+              ? 1
+              : terrainSelfShade(terrain, col, row, d3dTerrainElevationScale);
+          colors.push(shade, shade, shade);
+          positions.push(
+            p.x,
+            elevation * metre * d3dTerrainElevationScale,
+            p.z,
+          );
           return index;
         };
         const corner = (col: number, row: number) => {
           const key = (row - rowStart) * cornerWidth + col - colStart;
           const existing = corners[key]!;
           if (existing >= 0) return existing;
-          const native = kind === 'water' ? 0 : renderCorner(terrain, col, row);
+          const native =
+            kind === 'water' ? 0 : terrainRenderCorner(terrain, col, row);
           const h =
             kind === 'land' && stride > 1
               ? coarseSupport(terrain, col, row, stride, native)
@@ -296,6 +329,7 @@ export function planD3dTerrain(
               }),
               kind,
               positions: new Float32Array(positions),
+              colors: new Float32Array(colors),
               indices: new Uint32Array(indices),
             }),
           );

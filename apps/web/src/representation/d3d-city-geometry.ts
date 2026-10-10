@@ -316,6 +316,8 @@ function buildCitySurfaceGeometry(
       (layer === 'landscape'
         ? d3dDrapePolicy('normal', lod).landscapeMetres
         : d3dDrapePolicy('normal', lod).surfaceMetres) * terrain.metre,
+      undefined,
+      true,
     );
     if (layer !== 'reservation') return surface;
     positions.length = 0;

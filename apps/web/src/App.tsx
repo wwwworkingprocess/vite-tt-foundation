@@ -1,3 +1,4 @@
+import { recordRepresentationProfile } from './performance/representation-profiler.js';
 import { fetchPublicAsset } from './assets/public-layers.js';
 import {
   parseClientId,
@@ -34,6 +35,7 @@ import {
 } from 'react';
 import {
   createFoundationSessionComposition,
+  sameSessionPresentation,
   type FoundationSaveMode,
   type FoundationSaveOutcome,
   type FoundationSessionCompositionState,
@@ -178,6 +180,7 @@ const useAuthorityScopedRouteFocus = (scopeKey: string | undefined) => {
 };
 
 export function App() {
+  recordRepresentationProfile('app.render');
   const [state, setState] = useState<FoundationSessionCompositionState>();
   const [lifecycle, setLifecycle] = useState<BrowserLifecycle>({
     status: 'booting',
@@ -450,11 +453,14 @@ export function App() {
           (scenario) => scenario.manifest.scenarioId === scenarioId,
         )?.manifest.title,
     });
+    let displayed = composition.projection.getState();
     const remove = composition.projection.subscribe((next) => {
       saveMode.current = next.saveMode;
+      if (sameSessionPresentation(displayed, next)) return;
+      displayed = next;
       setState(next);
     });
-    setState(composition.projection.getState());
+    setState(displayed);
     setActions({
       mode: composition.setMode,
       bonus: composition.grantBonus,

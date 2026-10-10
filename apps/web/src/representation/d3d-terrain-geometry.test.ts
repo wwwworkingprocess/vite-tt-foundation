@@ -4,7 +4,12 @@ import {
   createD3dTerrainGeometry,
   drapeD3dGeometry,
 } from './d3d-terrain-geometry.js';
-import type { D3dTerrain } from './d3d-terrain-model.js';
+import {
+  createD3dTerrain,
+  terrainLayerOffsets,
+  type D3dTerrain,
+} from './d3d-terrain-model.js';
+import { createD3dMapModel } from './d3d-map-model.js';
 import { terrainFixture } from '../test/terrain-fixture.js';
 import {
   parseTerrainCatalog,
@@ -175,4 +180,115 @@ it('retains coarser coverage at a depth limit or when input faces already consum
   expect(budget.getAttribute('position').count / 3).toBe(1);
   depth.dispose();
   budget.dispose();
+});
+
+it('drapes curved transport over positive and negative exaggerated relief without multiplying the route clearance or changing source positions', () => {
+  const f = terrainFixture();
+  const runtime = terrainJsonDecoder.decode(
+    f,
+    resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
+  );
+  const model = createD3dMapModel({
+    bounds: { west: -0.8, east: -0.6, south: 37.9, north: 38.1 },
+    edges: [],
+    stopPlaces: [],
+  });
+  const world = createD3dTerrain(runtime, model);
+  const a = world.worldPoint(3375012.5, 1720062.5),
+    b = world.worldPoint(3375062.5, 1720037.5),
+    c = world.worldPoint(3375012.5, 1720037.5);
+  const source = triangle([a.x, 0, a.z, b.x, 0, b.z, c.x, 0, c.z], false);
+  const sourceAttribute = source.getAttribute('position');
+  const original = Array.from(sourceAttribute.array);
+  const draped = drapeD3dGeometry(
+    source,
+    world,
+    terrainLayerOffsets.route,
+    false,
+    world.step / 2,
+  );
+  const position = draped.getAttribute('position');
+  expect(position.count).toBeGreaterThan(3);
+  const ys: number[] = [];
+  for (let i = 0; i < position.count; i++) {
+    ys.push(position.getY(i));
+    expect(position.getY(i)).toBeCloseTo(
+      world.ground(position.getX(i), position.getZ(i)).y + 0.3 * world.metre,
+      4,
+    );
+  }
+  expect(Math.min(...ys)).toBeLessThan(0);
+  expect(Math.max(...ys)).toBeGreaterThan(100 * world.metre);
+  // Subdivision replaces renderer-owned attributes, preserving source arrays.
+  expect(Array.from(sourceAttribute.array)).toEqual(original);
+  for (let i = 0; i < original.length; i += 3)
+    expect(
+      Array.from(
+        { length: position.count },
+        (_, j) =>
+          position.getX(j) === original[i] &&
+          position.getZ(j) === original[i + 2],
+      ),
+    ).toContain(true);
+  draped.dispose();
+});
+
+it('applies cached self-shadow to ground tint while preserving route colors and ground offsets', () => {
+  const points = [0, 0, 0, 1, 0, 0, 0, 0, 1];
+  const shaded = {
+    ...terrain,
+    ground: (x: number, z: number) => ({
+      y: x + z,
+      shade: 0.7,
+      diagnostic: 'native' as const,
+    }),
+  };
+  const city = drapeD3dGeometry(
+    triangle(points, true),
+    shaded,
+    0.15,
+    false,
+    10,
+    undefined,
+    true,
+  );
+  const route = drapeD3dGeometry(
+    triangle(points, true),
+    shaded,
+    0.3,
+    false,
+    10,
+  );
+  expect(city.getAttribute('color').getX(0)).toBeCloseTo(0.7);
+  expect(route.getAttribute('color').getX(0)).toBe(1);
+  expect(city.getAttribute('position').getY(0)).toBeCloseTo(0.15);
+  const fallback = drapeD3dGeometry(
+    triangle(points, true),
+    terrain,
+    0.15,
+    false,
+    10,
+    undefined,
+    true,
+  );
+  expect(fallback.getAttribute('color').getX(0)).toBe(1);
+  for (const g of [city, route, fallback]) g.dispose();
+});
+
+it('materializes cached terrain shade attributes without changing positions or index authority', () => {
+  const colors = new Float32Array([0.7, 0.7, 0.7, 1, 1, 1, 0.8, 0.8, 0.8]);
+  const positions = new Float32Array([0, 0, 0, 1, 0, 0, 0, 0, 1]);
+  const indices = new Uint32Array([0, 2, 1]);
+  const g = createD3dTerrainGeometry({
+    id: 'land:test',
+    kind: 'land',
+    cells: { col: 0, row: 0, endCol: 1, endRow: 1 },
+    positions,
+    indices,
+    colors,
+  });
+  expect(g.getAttribute('color').array).toBe(colors);
+  expect(g.getAttribute('position').array).toBe(positions);
+  expect(g.index!.array).toBe(indices);
+  g.dispose();
 });

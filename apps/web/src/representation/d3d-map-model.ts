@@ -311,9 +311,13 @@ export function d3dLodBand(
   return 'medium';
 }
 
-/** Preserve the vertical pick volume so far-view Stop targets do not obscure
- * Vehicle targets; only the horizontal footprint gets a CSS-scale floor. */
-export function d3dStopHitScale(worldUnitsPerCssPixel: number) {
-  const horizontal = Math.max(1.25, 12 * worldUnitsPerCssPixel) / 1.25;
-  return frozen({ x: horizontal, y: 1, z: horizontal });
+/** Metre-scale disk targets retain a modest CSS pick floor on both axes.
+ * Legacy scenes retain their previous target dimensions. */
+export function d3dStopHitScale(worldUnitsPerCssPixel: number, metre?: number) {
+  const horizontal =
+    Math.max(metre ? 20 * metre : 1.25, 12 * worldUnitsPerCssPixel) / 1.25;
+  const vertical = metre
+    ? Math.max(2 * metre, 6 * worldUnitsPerCssPixel) / 0.8
+    : 1;
+  return frozen({ x: horizontal, y: vertical, z: horizontal });
 }

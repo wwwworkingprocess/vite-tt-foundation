@@ -89,6 +89,8 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   cy.contains('button', 'Start new game').should('be.enabled').click();
   terrainMap()
     .should('have.attr', 'data-terrain-status', 'ready')
+    .and('have.attr', 'data-terrain-elevation-scale', '10')
+    .and('have.attr', 'data-terrain-grid-visible', 'false')
     .and('have.attr', 'data-terrain-native-samples', '161680')
     .and('have.attr', 'data-terrain-land-samples', '115166')
     .and('have.attr', 'data-terrain-water-samples', '46514')
@@ -161,10 +163,69 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
     );
     expect($map.attr('data-terrain-render-stride')).to.equal('1');
   });
+  // Capped zoom guarantees native detail even for large coverage/viewport sizes.
+  terrainMap().find('canvas').trigger('wheel', { deltaY: -10000 });
+  terrainMap()
+    .should('have.attr', 'data-camera-maximum-zoom', 'true')
+    .and('have.attr', 'data-terrain-render-stride', '1')
+    .and('have.attr', 'data-terrain-grid-visible', 'true')
+    .should(($map) => {
+      expect(Number($map.attr('data-camera-zoom'))).to.equal(
+        Number($map.attr('data-camera-max-zoom')),
+      );
+      const window = JSON.parse($map.attr('data-terrain-grid-window')!);
+      expect(
+        (window.endCol - window.col) * (window.endRow - window.row),
+      ).to.be.lessThan(161680 / 4);
+      expect(Number($map.attr('data-terrain-grid-segments'))).to.be.greaterThan(
+        0,
+      );
+    });
+  terrainPanTo('stop');
+  terrainDrawn();
+  recordTerrainState('terrain-maximum-native-grid');
+  cy.screenshot('terrain-maximum-native-grid');
+  terrainMap().then(($map) => {
+    const window = $map.attr('data-terrain-grid-window'),
+      builds = $map.attr('data-terrain-geometry-builds');
+    const canvas = $map.find('canvas')[0]!,
+      rect = canvas.getBoundingClientRect();
+    cy.wrap(canvas).trigger('pointerdown', {
+      eventConstructor: 'PointerEvent',
+      pointerId: 1,
+      clientX: rect.left + 10,
+      clientY: rect.top + 10,
+    });
+    cy.wrap(canvas).trigger('pointermove', {
+      eventConstructor: 'PointerEvent',
+      pointerId: 1,
+      clientX: rect.left + 180,
+      clientY: rect.top + 80,
+    });
+    cy.wrap(canvas).trigger('pointerup', {
+      eventConstructor: 'PointerEvent',
+      pointerId: 1,
+      clientX: rect.left + 180,
+      clientY: rect.top + 80,
+    });
+    terrainMap()
+      .should('have.attr', 'data-terrain-geometry-builds', builds)
+      .should(($pan) => {
+        expect($pan.attr('data-terrain-grid-window')).not.to.equal(window);
+      });
+  });
+  terrainZoomTo(0.03);
+  terrainMap().should('have.attr', 'data-terrain-grid-visible', 'false');
+  terrainPanTo('stop');
+  terrainDrawn();
   recordTerrainState('terrain-near-built-up');
   cy.screenshot('terrain-near-built-up');
   terrainMap().should('have.attr', 'data-camera-mode', 'manual');
-  terrainPick('stop');
+  terrainMap().then(($map) => {
+    const id = $map.attr('data-pointer-stop-id');
+    terrainPick('stop');
+    terrainMap().should('have.attr', 'data-selected-stop-id', id);
+  });
   cy.get('[role="dialog"]').should('contain.text', 'Stop overview');
   closeTerrainDetails();
   terrainDrawn();

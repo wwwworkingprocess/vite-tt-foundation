@@ -222,7 +222,7 @@ native query boundary. Camera-LOD indexed land/water plans and all geographic D3
 layers follow native terrain without changing horizontal transport or simulation
 authority. Root/subpath PWA acquisition now caches requested compressed public
 layers on demand; the shell and install icons remain precached. JSON products
-and their semantic decoders are unchanged. Far/mini stride 8, medium stride 4, native near 64-cell chunks, bounded LOD draping, one-sided ground materials and dirty-only D3D frames correct the initial monolithic renderer.
+and their semantic decoders are unchanged. Far/mini stride 8, medium stride 4, native near 64-cell chunks, bounded LOD draping, one-sided ground materials and dirty-only D3D frames correct the initial monolithic renderer. D3D now exaggerates shared ground elevation by 10 about sea level, with native detail and a viewport-bounded 25-metre grid at capped zoom; grounded route-colored 10-metre stop disks with 20-metre selection rings retain canonical selection. Cached fixed-sun shading and native grid support reuse improve relief readability and maximum-zoom CPU preparation; credit-only pacing publications no longer rerender the UI.
 
 The next bounded milestone is: **Complete all settlement terrain products, then
 optimize multi-city / large-viewport terrain rendering and delivery.** The

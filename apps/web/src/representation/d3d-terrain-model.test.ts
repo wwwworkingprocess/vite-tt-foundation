@@ -52,7 +52,11 @@ it('renders native relief and distinct mask surfaces with static plans and groun
     model,
     terrainToGeographic({ x: 3375012.5, y: 1720062.5 }),
   );
-  expect(world.ground(native.x, native.z).y).toBeCloseTo(-4 * world.metre);
+  expect(world.ground(native.x, native.z).y).toBeCloseTo(-40 * world.metre);
+  expect(world.bounds.maxY).toBeCloseTo(
+    terrain.statistics.maxElevation! * world.metre * 10,
+  );
+  expect(terrain.sample(0, 0)).toBe(-4);
   const building = { id: 'a', ...native, baseY: 0.035, height: 2 };
   const city = {
     buildings: [building],
@@ -61,7 +65,7 @@ it('renders native relief and distinct mask surfaces with static plans and groun
     mini: [building],
   } as unknown as ProceduralCity;
   const grounded = groundCity(city, world);
-  expect(grounded.buildings[0]!.baseY).toBeCloseTo(-4 * world.metre);
+  expect(grounded.buildings[0]!.baseY).toBeCloseTo(-40 * world.metre);
   expect(grounded.buildings[0]!.height).toBe(2);
   expect(grounded.buildings[0]!.x).toBe(building.x);
   expect(groundCity(city, world)).toBe(grounded);
@@ -193,6 +197,40 @@ describe('full native dataset render LOD', () => {
       planD3dTerrain(world, { representationMode: 'normal', lod: 'medium' }),
     ).toBe(medium);
   });
+  it('includes every unchanged native LAND sample in detailed GPU buffers at ten-fold elevation', () => {
+    const near = planD3dTerrain(world, {
+      representationMode: 'normal',
+      lod: 'near',
+    });
+    expect(near.stride).toBe(1);
+    expect(near.patches).toHaveLength(53);
+    expect(near.triangles).toBe(553692);
+    const step = world.terrain.resolution.x * world.metre;
+    const samples = new Map<number, number>();
+    for (const patch of near.patches.filter((p) => p.kind === 'land'))
+      for (let i = 0; i < patch.positions.length; i += 3) {
+        const c = patch.positions[i]! / step,
+          r = patch.positions[i + 2]! / step;
+        if (
+          Math.abs(c - Math.floor(c) - 0.5) < 0.0001 &&
+          Math.abs(r - Math.floor(r) - 0.5) < 0.0001
+        )
+          samples.set(
+            Math.floor(r) * world.terrain.viewport.width + Math.floor(c),
+            patch.positions[i + 1]!,
+          );
+      }
+    expect(samples.size).toBe(115166);
+    for (const [index, y] of samples) {
+      const native = world.terrain.sample(
+        Math.floor(index / world.terrain.viewport.width),
+        index % world.terrain.viewport.width,
+      )!;
+      expect(y).toBe(Math.fround(native * world.metre * 10));
+    }
+    expect(world.terrain.statistics.nativeSamples).toBe(161680);
+    expect(world.terrain.sample(0, 0)).toBe(21.832195281982422);
+  });
   it('keeps mini coarse regardless of the supplied camera band', () => {
     const far = planD3dTerrain(world, {
       representationMode: 'normal',
@@ -297,5 +335,5 @@ it('keeps coarse terrain below native-grounded anchors rather than burying trans
   const patch = plan.patches.find((p) => p.kind === 'land')!;
   expect(
     Math.max(...Array.from(patch.positions).filter((_, i) => i % 3 === 1)),
-  ).toBeLessThanOrEqual(-4 * w.metre + 1e-6);
+  ).toBeLessThanOrEqual(-40 * w.metre + 1e-6);
 });

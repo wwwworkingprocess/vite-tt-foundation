@@ -488,9 +488,10 @@ describe('built foundation PWA offline lifecycle', () => {
       'Stream offset: 0',
     );
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
-    cy.get('[data-testid="pacing-credit"]').should(
+    cy.get('[data-testid="pacing-credit"]').should('not.exist');
+    cy.get('[data-testid="pacing-rate"]').should(
       'have.text',
-      'Pacing credit: 0',
+      'Effective rate: 0×',
     );
     cy.get('[data-testid="bonus-ticks"]').should(
       'have.text',
@@ -515,9 +516,10 @@ describe('built foundation PWA offline lifecycle', () => {
       'Stream offset: 0',
     );
     cy.get('[data-testid="pacing-status"]').should('contain.text', 'paused');
-    cy.get('[data-testid="pacing-credit"]').should(
+    cy.get('[data-testid="pacing-credit"]').should('not.exist');
+    cy.get('[data-testid="pacing-rate"]').should(
       'have.text',
-      'Pacing credit: 0',
+      'Effective rate: 0×',
     );
     cy.get('[data-testid="vehicle-count"]').should('contain.text', '2');
     cy.then(() => expectVehicleSvg(secondarySavedSvg));

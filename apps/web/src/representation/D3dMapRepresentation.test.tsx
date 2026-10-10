@@ -312,6 +312,7 @@ const sceneProps = (element: Element) =>
     onClick?: (event: unknown) => void;
     raycast?: () => unknown;
     geometry?: BufferGeometry;
+    material?: import('three').Material;
     onBeforeRender?: () => void;
   };
 
@@ -352,7 +353,7 @@ it('publishes read-only diagnostics when mounted and tolerates R3F host teardown
 it('materializes route, terrain, StopPlace, and Vehicle geometry through the scene boundary', () => {
   const { setMatrixAt, setColorAt, computeBoundingSphere } = enableWorld();
   render(scene('normal'));
-  expect(document.querySelectorAll('instancedmesh')).toHaveLength(3);
+  expect(document.querySelectorAll('instancedmesh')).toHaveLength(1);
   expect(setMatrixAt).toHaveBeenCalled();
   expect(computeBoundingSphere).toHaveBeenCalled();
   expect(setColorAt).not.toHaveBeenCalled();
@@ -605,9 +606,9 @@ it('keeps route ribbons nonselectable and highlights only the selected canonical
     'route',
   );
   rerender(scene('normal', selectStop(stop.stopPlaceId)));
-  expect(document.querySelectorAll('cylindergeometry').length).toBeGreaterThan(
-    0,
-  );
+  expect(
+    document.querySelector('mesh[name="stop-selection-ring"]'),
+  ).not.toBeNull();
   unmount();
   expect(dispose).toHaveBeenCalled();
 });
@@ -685,7 +686,7 @@ it('keeps terrain and selected markers nonselectable in detailed and far LOD', (
     'data-lod',
     'far',
   );
-  expect(document.querySelectorAll('instancedmesh')).toHaveLength(2);
+  expect(document.querySelectorAll('instancedmesh')).toHaveLength(1);
   expect(
     [...document.querySelectorAll('mesh')]
       .filter((element) => sceneProps(element).raycast)
@@ -1123,7 +1124,7 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
       .getByTestId('d3d-map-representation')
       .getAttribute('data-terrain-geometry-builds'),
   );
-  const ground = 10 * d3dMetreScale(model).worldUnitsPerMetre;
+  const ground = 100 * d3dMetreScale(model).worldUnitsPerMetre;
   expect(
     setMatrixAt.mock.calls.some(
       ([, matrix]) => Math.abs(matrix.elements[13] - ground) < 1e-7,
@@ -1452,7 +1453,7 @@ it('keeps CPU raycasting aligned with published Stop targets before the first dr
       camera,
     );
     expect(
-      raycaster.ray.distanceToPoint(new Vector3(stop.x, 0.3, stop.z)),
+      raycaster.ray.distanceToPoint(new Vector3(stop.x, 0.045, stop.z)),
     ).toBeLessThan(1e-8);
   };
   check();
@@ -1609,4 +1610,121 @@ it('draws an accepted moving fleet pose above terrain without rebuilding its sta
   );
   expect(map).toHaveAttribute('data-terrain-geometry-builds', builds);
   expect(Number(map.getAttribute('data-renderer-frames'))).toBe(frames + 1);
+});
+
+it('uses native detail and a viewport grid only at the normal maximum zoom, updating it after pan', () => {
+  enableWorld();
+  const f = terrainFixture(),
+    terrain = terrainJsonDecoder.decode(
+      f,
+      resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
+    );
+  vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
+  const view = render(scene('normal'));
+  const map = screen.getByTestId('d3d-map-representation');
+  expect(map).toHaveAttribute('data-terrain-elevation-scale', '10');
+  expect(map).toHaveAttribute('data-terrain-grid-visible', 'false');
+  fireEvent.wheel(controls.canvas, { deltaY: -10000 });
+  expect(map).toHaveAttribute('data-terrain-render-stride', '1');
+  expect(map).toHaveAttribute('data-camera-maximum-zoom', 'true');
+  expect(Number(map.getAttribute('data-camera-zoom'))).toBe(
+    Number(map.getAttribute('data-camera-max-zoom')),
+  );
+  expect(map).toHaveAttribute('data-terrain-grid-visible', 'true');
+  const grid = document.querySelector(
+    'linesegments[name="native-terrain-grid"]',
+  )!;
+  expect(grid).not.toBeNull();
+  expect(sceneProps(grid).raycast?.()).toBeNull();
+  const builds = map.getAttribute('data-terrain-geometry-builds');
+  act(() => {
+    pointer('pointerdown', 10, 10);
+    pointer('pointermove', 30, 40);
+    pointer('pointerup', 30, 40);
+  });
+  expect(map).toHaveAttribute('data-terrain-geometry-builds', builds);
+  view.rerender(scene('mini'));
+  expect(map).toHaveAttribute('data-terrain-grid-visible', 'false');
+  view.rerender(scene('normal'));
+  expect(map).toHaveAttribute('data-terrain-grid-visible', 'true');
+  fireEvent.wheel(controls.canvas, { deltaY: 100 });
+  expect(map).toHaveAttribute('data-terrain-grid-visible', 'false');
+});
+
+it('updates stop pick floors for zoom changes inside one LOD without rebuilding terrain or disks', () => {
+  const { setMatrixAt } = enableWorld();
+  render(scene('normal'));
+  const target = document.querySelector(
+    'instancedmesh[name="stop-hit-targets"]',
+  )!;
+  const draw = sceneProps(target).onBeforeRender!;
+  const disks = sceneProps(
+    document.querySelector('mesh[name="stop-disks"]')!,
+  ).geometry;
+  const count = setMatrixAt.mock.calls.length;
+  draw();
+  expect(setMatrixAt.mock.calls.length).toBe(count);
+  const state = r3f.useThree();
+  state.camera.zoom *= 1.1;
+  draw();
+  expect(setMatrixAt.mock.calls.length).toBe(count + model.stops.length);
+  expect(
+    sceneProps(document.querySelector('mesh[name="stop-disks"]')!).geometry,
+  ).toBe(disks);
+  draw();
+  expect(setMatrixAt.mock.calls.length).toBe(count + model.stops.length);
+});
+
+it('owns and disposes shared stop and grid materials once, independently of geometry swaps', () => {
+  enableWorld();
+  const f = terrainFixture(),
+    terrain = terrainJsonDecoder.decode(
+      f,
+      resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
+    );
+  vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
+  const view = render(scene('normal', selectStop(stop.stopPlaceId)));
+  const material = sceneProps(
+    document.querySelector('mesh[name="stop-disks"]')!,
+  ).material;
+  expect(material).toBeDefined();
+  expect(
+    sceneProps(document.querySelector('mesh[name="stop-selection-ring"]')!)
+      .material,
+  ).toBe(material);
+  const stopDispose = vi.spyOn(material!, 'dispose');
+  fireEvent.wheel(controls.canvas, { deltaY: -10000 });
+  const gridMaterial = sceneProps(
+    document.querySelector('linesegments[name="native-terrain-grid"]')!,
+  ).material;
+  expect(gridMaterial).toBeDefined();
+  const gridDispose = vi.spyOn(gridMaterial!, 'dispose');
+  fireEvent.wheel(controls.canvas, { deltaY: 100 });
+  expect(gridDispose).not.toHaveBeenCalled();
+  view.unmount();
+  expect(stopDispose).toHaveBeenCalledTimes(1);
+  expect(gridDispose).toHaveBeenCalledTimes(1);
+});
+
+it('retains an active drag across viewport listener rebinding and cancels it on mini transition', () => {
+  const state = r3f.useThree();
+  let height = state.size.height;
+  vi.spyOn(r3f, 'useThree').mockImplementation((selector) => {
+    const resized = { ...state, size: { ...state.size, height } };
+    return selector ? selector(resized) : resized;
+  });
+  const view = render(scene('normal'));
+  act(() => pointer('pointerdown', 10, 10));
+  height += 100;
+  view.rerender(scene('normal'));
+  const before = cameraState();
+  act(() => pointer('pointermove', 60, 30));
+  expect(cameraState()).not.toEqual(before);
+  act(() => pointer('pointerup', 60, 30));
+  act(() => pointer('pointerdown', 10, 10));
+  view.rerender(scene('mini'));
+  view.rerender(scene('normal'));
+  const restored = cameraState();
+  act(() => pointer('pointermove', 100, 100));
+  expect(cameraState()).toEqual(restored);
 });

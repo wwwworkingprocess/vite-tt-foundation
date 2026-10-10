@@ -666,6 +666,9 @@ for (const d3dRepresentationFile of [
   'apps/web/src/representation/d3d-city-model.ts',
   'apps/web/src/representation/d3d-city-geometry.ts',
   'apps/web/src/representation/d3d-terrain-geometry.ts',
+  'apps/web/src/representation/d3d-terrain-grid.ts',
+  'apps/web/src/representation/d3d-terrain-shading.ts',
+  'apps/web/src/representation/d3d-stop-geometry.ts',
   'apps/web/src/representation/d3d-presentation-policy.ts',
   'apps/web/src/representation/d3d-dirty-frame.ts',
   'apps/web/src/terrain/use-terrain.ts',
@@ -830,6 +833,7 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('apps/web/src/representation/d3d-map-model.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-city-model.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-city-geometry.ts') ||
+    normalized.endsWith('apps/web/src/representation/d3d-stop-geometry.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-city-spatial.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-metadata-city.ts') ||
     normalized.endsWith(

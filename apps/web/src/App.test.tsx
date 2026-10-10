@@ -1057,6 +1057,13 @@ describe('foundation screen', () => {
     await waitFor(() =>
       expect(screen.getByTestId('pacing-status')).toHaveTextContent('paused'),
     );
+    expect(screen.queryByTestId('pacing-credit')).not.toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole('button', { name: /Grant 1,200 bonus ticks/ }),
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('bonus-ticks')).toHaveTextContent('1200'),
+    );
     await new Promise((resolve) => setTimeout(resolve, 25));
     const position = screen
       .getAllByTestId('vehicle-position')

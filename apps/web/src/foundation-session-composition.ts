@@ -86,10 +86,49 @@ export interface FoundationSessionCompositionState {
   readonly message?: string | undefined;
 }
 
+/** React ignores bookkeeping-only pacing publications. The underlying projection
+ * retains current credit and totals for its scheduling/diagnostic consumers. */
+export function sameSessionPresentation(
+  a: FoundationSessionCompositionState,
+  b: FoundationSessionCompositionState,
+): boolean {
+  return (
+    (
+      [
+        'application',
+        'saveMode',
+        'manualSaveAvailable',
+        'autosaveSaveAvailable',
+        'operation',
+        'canStartNewSession',
+        'message',
+      ] as const
+    ).every((key) => a[key] === b[key]) &&
+    (
+      [
+        'status',
+        'mode',
+        'selectedRate',
+        'effectiveRate',
+        'remainingDoubleSpeedBonusTicks',
+        'message',
+      ] as const
+    ).every((key) => a.pacing[key] === b.pacing[key])
+  );
+}
+
+// Only skip values recursively frozen by this boundary, not arbitrary shallow freezes.
+const recursivelyFrozen = new WeakSet<object>();
 function deepFreeze<T>(value: T): T {
-  if (value === null || typeof value !== 'object') return value;
+  if (
+    value === null ||
+    typeof value !== 'object' ||
+    recursivelyFrozen.has(value)
+  )
+    return value;
   for (const child of Object.values(value)) deepFreeze(child);
-  return Object.isFrozen(value) ? value : Object.freeze(value);
+  recursivelyFrozen.add(value);
+  return Object.freeze(value);
 }
 
 const idleApplication = deepFreeze<FoundationApplicationState>({
@@ -606,7 +645,7 @@ export function createFoundationSessionComposition(input: {
       const candidate = stack;
       const token = generation;
       try {
-        await candidate?.pacing.grantDoubleSpeedBonus(24);
+        await candidate?.pacing.grantDoubleSpeedBonus(1_200);
       } catch (error) {
         if (candidate) recordError(error, candidate, token);
       }

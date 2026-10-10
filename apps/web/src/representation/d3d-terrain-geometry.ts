@@ -5,6 +5,8 @@ export function createD3dTerrainGeometry(patch: TerrainMeshPatch) {
   const geometry = new BufferGeometry();
   geometry.setAttribute('position', new BufferAttribute(patch.positions, 3));
   geometry.setIndex(new BufferAttribute(patch.indices, 1));
+  if (patch.colors)
+    geometry.setAttribute('color', new BufferAttribute(patch.colors, 3));
   geometry.computeVertexNormals();
   geometry.computeBoundingSphere();
   return geometry;
@@ -24,6 +26,7 @@ export function drapeD3dGeometry(
     maxTriangles?: number;
     maxDepth?: number;
   }> = d3dDrapeBudget,
+  selfShade = false,
 ) {
   // A split adds one output face. Reserve every original face so exhaustion
   // retains coarser coverage rather than leaving holes. Stack depth is also bounded.
@@ -45,11 +48,11 @@ export function drapeD3dGeometry(
   const positions: number[] = [],
     colors: number[] = [];
   type Vertex = readonly [number, number, number, number, number, number];
-  const heights = new WeakMap<Vertex, number>();
+  const heights = new WeakMap<Vertex, ReturnType<D3dTerrain['ground']>>();
   const height = (p: Vertex) => {
     const previous = heights.get(p);
     if (previous !== undefined) return previous;
-    const y = terrain.ground(p[0], p[2]).y;
+    const y = terrain.ground(p[0], p[2]);
     heights.set(p, y);
     return y;
   };
@@ -110,10 +113,13 @@ export function drapeD3dGeometry(
     for (const p of [a, b, c]) {
       positions.push(
         p[0],
-        height(p) + (offsetMeters + (landOnly ? p[1] : 0)) * terrain.metre,
+        height(p).y + (offsetMeters + (landOnly ? p[1] : 0)) * terrain.metre,
         p[2],
       );
-      if (color) colors.push(p[3], p[4], p[5]);
+      if (color) {
+        const shade = selfShade ? (height(p).shade ?? 1) : 1;
+        colors.push(p[3] * shade, p[4] * shade, p[5] * shade);
+      }
     }
   };
   for (let i = 0; i < vertices.count; i += 3)

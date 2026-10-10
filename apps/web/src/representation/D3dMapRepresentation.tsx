@@ -1,3 +1,14 @@
+import {
+  createD3dStopGeometry,
+  d3dStopColors,
+  d3dStopRadius,
+} from './d3d-stop-geometry.js';
+import {
+  createTerrainGridGeometry,
+  terrainGridWindow,
+  maximumD3dZoom,
+  type TerrainGridWindow,
+} from './d3d-terrain-grid.js';
 import { d3dDrapePolicy } from './d3d-presentation-policy.js';
 import { createD3dDirtyFrameDriver } from './d3d-dirty-frame.js';
 import { projectTransportMapVehicles } from './transport-map-projection.js';
@@ -14,6 +25,8 @@ import {
   BufferGeometry,
   Color,
   MeshLambertMaterial,
+  MeshBasicMaterial,
+  LineBasicMaterial,
   Object3D,
   OrthographicCamera,
   Vector3,
@@ -92,6 +105,7 @@ import {
   planD3dTerrain,
   groundCity,
   terrainLayerOffsets,
+  d3dTerrainElevationScale,
   type D3dTerrain,
 } from './d3d-terrain-model.js';
 import {
@@ -257,6 +271,7 @@ function CameraController({
   mode,
   wrapper,
   onLod,
+  onGridWindow,
   initialLod,
   terrain,
   requestFrame,
@@ -268,12 +283,15 @@ function CameraController({
   mode: RepresentationMode;
   wrapper: React.RefObject<HTMLElement | null>;
   onLod: (band: D3dLodBand) => void;
+  onGridWindow: (window: TerrainGridWindow | undefined) => void;
   initialLod: D3dLodBand;
   requestFrame: () => void;
   terrain?: D3dTerrain | undefined;
 }>) {
   const { camera, size, gl } = useThree();
   const target = useRef(new Vector3());
+  // A viewport change rebinds listeners without ending an active gesture.
+  const pointers = useRef(new Map<number, { x: number; y: number }>()).current;
   const vehiclesRef = useRef(vehicles);
   vehiclesRef.current = vehicles;
   const previous = useRef<
@@ -338,7 +356,8 @@ function CameraController({
     if (stop) {
       const point = locate(
         stop.x,
-        (terrain?.ground(stop.x, stop.z).y ?? 0) + 0.3,
+        (terrain?.ground(stop.x, stop.z).y ?? 0) +
+          (terrain ? terrainLayerOffsets.stop * terrain.metre : 0.045),
         stop.z,
       );
       writeD3dDiagnostics(wrapper.current, {
@@ -376,22 +395,38 @@ function CameraController({
   }, [model, orthographic, size.width, size.height, wrapper, terrain]);
   const publish = useCallback(
     (kind: 'full' | 'route-fit' | 'manual') => {
+      const maximum = maximumD3dZoom(mode, orthographic.zoom, fullFit.maxZoom);
+      onGridWindow(
+        terrain && maximum
+          ? terrainGridWindow(terrain, model, {
+              x: target.current.x,
+              z: target.current.z,
+              zoom: orthographic.zoom,
+              width: size.width,
+              height: size.height,
+            })
+          : undefined,
+      );
       cameraKind.current = kind;
       requestFrame();
       writeD3dDiagnostics(wrapper.current, {
         cameraMode: kind,
         cameraZoom: String(orthographic.zoom),
+        cameraMaxZoom: String(fullFit.maxZoom),
+        cameraMaximumZoom: String(maximum),
         cameraTargetX: String(target.current.x),
         cameraTargetZ: String(target.current.z),
         cameraViewportWidth: String(size.width),
         cameraViewportHeight: String(size.height),
       });
       publishTargets();
-      const next = d3dLodBand(
-        20 / (Math.max(1, size.height) * orthographic.zoom),
-        mode,
-        lod.current,
-      );
+      const next = maximum
+        ? 'near'
+        : d3dLodBand(
+            20 / (Math.max(1, size.height) * orthographic.zoom),
+            mode,
+            lod.current,
+          );
       if (next !== lod.current) {
         lod.current = next;
         writeD3dDiagnostics(wrapper.current, { lod: next });
@@ -405,6 +440,10 @@ function CameraController({
       size.height,
       mode,
       onLod,
+      onGridWindow,
+      fullFit.maxZoom,
+      terrain,
+      model,
       publishTargets,
       requestFrame,
     ],
@@ -564,9 +603,11 @@ function CameraController({
     publish('manual');
   };
   useEffect(() => {
-    if (mode === 'mini') return;
+    if (mode === 'mini') {
+      pointers.clear();
+      return;
+    }
     const canvas = gl.domElement;
-    const pointers = new Map<number, { x: number; y: number }>();
     const down = (event: PointerEvent) => {
       canvas.setPointerCapture(event.pointerId);
       pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
@@ -619,6 +660,7 @@ function CameraController({
     orthographic,
     publish,
     terrain,
+    pointers,
   ]);
   return null;
 }
@@ -641,8 +683,8 @@ function NativeTerrain({
 }) {
   const materials = useMemo(
     () => ({
-      land: new MeshLambertMaterial({ color: '#a7b88d' }),
-      water: new MeshLambertMaterial({ color: '#729ea5' }),
+      land: new MeshLambertMaterial({ color: '#a7b88d', vertexColors: true }),
+      water: new MeshLambertMaterial({ color: '#729ea5', vertexColors: true }),
     }),
     [],
   );
@@ -1145,6 +1187,7 @@ function Routes({
 
 function Stops({
   model,
+  colors,
   selection,
   onSelectionChange,
   lod,
@@ -1154,58 +1197,68 @@ function Stops({
 }: Readonly<{
   terrain?: D3dTerrain | undefined;
   model: D3dMapModel;
+  colors: readonly string[];
   selection: GameSelection;
   onSelectionChange: MapProps['onSelectionChange'];
   lod: D3dLodBand;
   mode: RepresentationMode;
   metre: number | undefined;
 }>) {
-  const platforms = useRef<import('three').InstancedMesh>(null);
-  const posts = useRef<import('three').InstancedMesh>(null);
   const targets = useRef<import('three').InstancedMesh>(null);
   const { camera, size } = useThree();
-  useEffect(() => {
+  const material = useMemo(
+    () => new MeshBasicMaterial({ vertexColors: true }),
+    [],
+  );
+  useEffect(() => () => material.dispose(), [material]);
+  const radius = d3dStopRadius(metre);
+  const disks = useMemo(
+    () => createD3dStopGeometry(model.stops, colors, radius, terrain),
+    [model, colors, radius, terrain],
+  );
+  useEffect(() => () => disks.dispose(), [disks]);
+  const selected =
+    selection?.kind === 'stop'
+      ? model.stops.find((stop) => stop.stopPlaceId === selection.stopPlaceId)
+      : undefined;
+  const ring = useMemo(
+    () =>
+      selected
+        ? createD3dStopGeometry(
+            [selected],
+            ['#f2bc56'],
+            radius * 2,
+            terrain,
+            true,
+          )
+        : undefined,
+    [selected, radius, terrain],
+  );
+  useEffect(() => () => ring?.dispose(), [ring]);
+  const hitZoom = useRef<number | undefined>(undefined);
+  const updateTargets = useCallback(() => {
+    hitZoom.current = (camera as OrthographicCamera).zoom;
     const dummy = new Object3D();
     for (let i = 0; i < model.stops.length; i++) {
       const stop = model.stops[i]!;
       const ground = terrain?.ground(stop.x, stop.z).y ?? 0;
-      const offset = terrain ? terrainLayerOffsets.stop * terrain.metre : 0.045;
-      dummy.scale.set(1, 1, 1);
       dummy.position.set(
         stop.x,
-        ground + (metre ? offset + 0.2 * metre : 0.14),
+        ground + (terrain ? terrainLayerOffsets.stop * terrain.metre : 0.045),
         stop.z,
       );
-      dummy.updateMatrix();
-      platforms.current?.setMatrixAt(i, dummy.matrix);
-      dummy.position.set(
-        stop.x,
-        ground + (metre ? offset + 1.3 * metre : 0.3),
-        stop.z,
-      );
-      dummy.updateMatrix();
-      posts.current?.setMatrixAt(i, dummy.matrix);
-      dummy.position.set(stop.x, ground + 0.3, stop.z);
       const hitScale = d3dStopHitScale(
         20 / (Math.max(1, size.height) * (camera as OrthographicCamera).zoom),
+        metre,
       );
       dummy.scale.set(hitScale.x, hitScale.y, hitScale.z);
       dummy.updateMatrix();
       targets.current!.setMatrixAt(i, dummy.matrix);
     }
-    platforms.current!.instanceMatrix.needsUpdate = true;
-    platforms.current!.computeBoundingSphere();
-    if (posts.current) {
-      posts.current.instanceMatrix.needsUpdate = true;
-      posts.current.computeBoundingSphere();
-    }
     targets.current!.instanceMatrix.needsUpdate = true;
     targets.current!.computeBoundingSphere();
-  }, [model, lod, metre, terrain, camera, size.height]);
-  const selected =
-    selection?.kind === 'stop'
-      ? model.stops.find((stop) => stop.stopPlaceId === selection.stopPlaceId)
-      : undefined;
+  }, [model, metre, terrain, camera, size.height]);
+  useEffect(() => updateTargets(), [updateTargets, lod]);
   const choose = (event: ThreeEvent<MouseEvent>) => {
     if (mode === 'mini' || event.instanceId === undefined || event.delta > 5)
       return;
@@ -1215,64 +1268,29 @@ function Stops({
   };
   return (
     <group>
-      <instancedMesh
-        ref={platforms}
-        args={[undefined, undefined, model.stops.length]}
-        onClick={choose}
-      >
-        <boxGeometry
-          args={
-            metre
-              ? [7 * metre, 0.4 * metre, 3 * metre]
-              : [lod === 'far' ? 0.5 : 0.65, 0.12, lod === 'far' ? 0.5 : 0.65]
-          }
-        />
-        <meshLambertMaterial color="#5a777c" />
-      </instancedMesh>
-      {lod !== 'far' ? (
-        <instancedMesh
-          ref={posts}
-          args={[undefined, undefined, model.stops.length]}
-          onClick={choose}
-        >
-          <boxGeometry
-            args={
-              metre
-                ? [0.45 * metre, 2.6 * metre, 0.45 * metre]
-                : [0.12, 0.38, 0.12]
-            }
-          />
-          <meshLambertMaterial color="#f4f0e2" />
-        </instancedMesh>
-      ) : null}
-      {selected ? (
+      <mesh
+        name="stop-disks"
+        geometry={disks}
+        material={material}
+        raycast={() => null}
+        dispose={null}
+      />
+      {ring ? (
         <mesh
-          position={[
-            selected.x,
-            terrain
-              ? terrain.ground(selected.x, selected.z).y +
-                terrainLayerOffsets.selection * terrain.metre
-              : metre
-                ? 0.065
-                : 0.17,
-            selected.z,
-          ]}
+          name="stop-selection-ring"
+          geometry={ring}
+          material={material}
           raycast={() => null}
-        >
-          <cylinderGeometry
-            args={[
-              metre ? 8 * metre : 0.65,
-              metre ? 8 * metre : 0.65,
-              terrain ? 0.1 * terrain.metre : 0.04,
-              8,
-            ]}
-          />
-          <meshBasicMaterial color="#f2bc56" />
-        </mesh>
+          dispose={null}
+        />
       ) : null}
       <instancedMesh
         name="stop-hit-targets"
         ref={targets}
+        onBeforeRender={() => {
+          if (hitZoom.current !== (camera as OrthographicCamera).zoom)
+            updateTargets();
+        }}
         args={[undefined, undefined, model.stops.length]}
         onClick={choose}
       >
@@ -1459,6 +1477,7 @@ function Vehicles({
 
 function D3dWorld({
   model,
+  stopColors,
   sceneBounds,
   city,
   vehicles,
@@ -1468,12 +1487,15 @@ function D3dWorld({
   mode,
   terrain,
   terrainMeshes,
+  gridGeometry,
   wrapper,
 }: Readonly<{
   wrapper: React.RefObject<HTMLElement | null>;
   terrain?: D3dTerrain | undefined;
   terrainMeshes: D3dTerrainMeshes | undefined;
+  gridGeometry: BufferGeometry | undefined;
   model: D3dMapModel;
+  stopColors: readonly string[];
   sceneBounds: ReturnType<typeof d3dSceneBounds>;
   city: ProceduralCity | undefined;
   vehicles: readonly D3dVehicle[];
@@ -1482,6 +1504,17 @@ function D3dWorld({
   lod: D3dLodBand;
   mode: RepresentationMode;
 }>) {
+  const gridMaterial = useMemo(
+    () =>
+      new LineBasicMaterial({
+        color: '#53665c',
+        transparent: true,
+        opacity: 0.4,
+        depthWrite: false,
+      }),
+    [],
+  );
+  useEffect(() => () => gridMaterial.dispose(), [gridMaterial]);
   const metre =
     terrain?.metre ??
     (city?.settlement ? d3dMetreScale(model).worldUnitsPerMetre : undefined);
@@ -1500,6 +1533,15 @@ function D3dWorld({
       ) : (
         <Terrain sceneBounds={sceneBounds} />
       )}
+      {gridGeometry ? (
+        <lineSegments
+          name="native-terrain-grid"
+          geometry={gridGeometry}
+          material={gridMaterial}
+          raycast={() => null}
+          dispose={null}
+        />
+      ) : null}
       {city ? (
         <City
           city={city}
@@ -1519,6 +1561,7 @@ function D3dWorld({
       />
       <Stops
         model={model}
+        colors={stopColors}
         selection={selection}
         onSelectionChange={onSelectionChange}
         lod={lod}
@@ -1579,6 +1622,46 @@ export default function D3dMapRepresentation({
         : undefined,
     [terrainState, model],
   );
+  const preferredStopRoute =
+    focusedRouteId ??
+    (selection?.kind === 'route' ? selection.routeId : undefined);
+  const stopColors = useMemo(
+    () => d3dStopColors(transportModel, scenario, preferredStopRoute),
+    [transportModel, scenario, preferredStopRoute],
+  );
+  const [gridView, setGridView] = useState<
+    Readonly<{ terrain: D3dTerrain; window: TerrainGridWindow }> | undefined
+  >();
+  const onGridWindow = useCallback(
+    (window: TerrainGridWindow | undefined) => {
+      setGridView((previous) => {
+        if (!terrain || !window) return undefined;
+        if (
+          previous?.terrain === terrain &&
+          previous.window.col === window.col &&
+          previous.window.row === window.row &&
+          previous.window.endCol === window.endCol &&
+          previous.window.endRow === window.endRow
+        )
+          return previous;
+        return { terrain, window };
+      });
+    },
+    [terrain],
+  );
+  const gridGeometry = useMemo(
+    () =>
+      gridView?.terrain === terrain && gridView
+        ? createTerrainGridGeometry(gridView.terrain, gridView.window)
+        : undefined,
+    [gridView, terrain],
+  );
+  const [gridBuilds, setGridBuilds] = useState(0);
+  useEffect(() => {
+    if (!gridGeometry) return;
+    setGridBuilds((n) => n + 1);
+    return () => gridGeometry.dispose();
+  }, [gridGeometry]);
   const terrainPlan = terrain
     ? planD3dTerrain(terrain, { representationMode: mode, lod })
     : undefined;
@@ -1651,6 +1734,7 @@ export default function D3dMapRepresentation({
       sceneBounds,
       city,
       terrainMeshes,
+      gridGeometry,
       vehicles,
       selection,
       focusedRouteId,
@@ -1662,6 +1746,7 @@ export default function D3dMapRepresentation({
       sceneBounds,
       city,
       terrainMeshes,
+      gridGeometry,
       vehicles,
       selection,
       focusedRouteId,
@@ -1711,6 +1796,15 @@ export default function D3dMapRepresentation({
       }
       data-vehicle-hud-count={vehicles.length}
       data-terrain-geometry-builds={terrainGeometryBuilds}
+      data-terrain-elevation-scale={d3dTerrainElevationScale}
+      data-terrain-grid-visible={Boolean(gridGeometry)}
+      data-terrain-grid-window={
+        gridGeometry ? JSON.stringify(gridView!.window) : ''
+      }
+      data-terrain-grid-segments={
+        gridGeometry ? gridGeometry.getAttribute('position').count / 2 : 0
+      }
+      data-terrain-grid-builds={gridBuilds}
       data-terrain-status={terrainState.status}
       data-terrain-error={
         terrainState.status === 'error' ? terrainState.message : ''
@@ -1780,6 +1874,9 @@ export default function D3dMapRepresentation({
         city && mode === 'normal' && lod === 'near' ? city.buildings.length : 0
       }
       data-selected-kind={selection?.kind ?? ''}
+      data-selected-stop-id={
+        selection?.kind === 'stop' ? selection.stopPlaceId : ''
+      }
       data-focused-route-id={focusedRouteId ?? ''}
       data-lod="far"
     >
@@ -1818,16 +1915,19 @@ export default function D3dMapRepresentation({
           mode={mode}
           wrapper={wrapper}
           onLod={setLod}
+          onGridWindow={onGridWindow}
           initialLod={lod}
           requestFrame={requestFrame}
           terrain={terrain}
         />
         <D3dWorld
           model={transportModel}
+          stopColors={stopColors}
           sceneBounds={sceneBounds}
           city={city}
           terrain={terrain}
           terrainMeshes={terrainMeshes}
+          gridGeometry={gridGeometry}
           wrapper={wrapper}
           vehicles={vehicles}
           selection={selection}

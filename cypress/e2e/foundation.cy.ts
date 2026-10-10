@@ -515,9 +515,9 @@ describe('foundation screen', () => {
         );
       });
     });
-    cy.contains('button', 'Grant demo 2× bonus').click();
+    cy.contains('button', 'Grant 1,200 bonus ticks (2×)').click();
     cy.get('[data-testid="pacing-rate"]').should('contain.text', '40×');
-    cy.get('[data-testid="bonus-ticks"]').should('not.contain.text', '24');
+    cy.get('[data-testid="bonus-ticks"]').should('not.contain.text', ': 0');
     cy.get('[role="dialog"]').contains('button', 'Pause').click();
     cy.get('[data-testid="worker-tick"]')
       .invoke('text')

@@ -27,6 +27,7 @@
     "benchmark:simulation-runtime": "yarn build:libraries && node scripts/simulation-runtime-benchmark.mjs",
     "benchmark:passenger-emission": "yarn build:libraries && node scripts/passenger-emission-runtime-benchmark.mjs",
     "audit:passenger-work-windows": "yarn build:libraries && node scripts/passenger-work-window-audit.mjs",
+    "benchmark:d3d-near": "yarn build && start-server-and-test 'yarn workspace @torrevieja-tycoon/web preview --host 127.0.0.1 --strictPort' http://127.0.0.1:4174 'cypress run --config-file cypress.representation.config.ts --config specPattern=cypress/performance/d3d-near.cy.ts'",
     "benchmark:representation-runtime": "yarn build && start-server-and-test 'yarn workspace @torrevieja-tycoon/web preview --host 127.0.0.1 --strictPort' http://127.0.0.1:4174 'cypress run --config-file cypress.representation.config.ts'",
     "audit:population-fields": "yarn workspace @torrevieja-tycoon/transport-domain build && node scripts/population-crop-audit.mjs",
     "typecheck": "tsc --build",

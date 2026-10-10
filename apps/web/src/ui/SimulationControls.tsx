@@ -76,7 +76,7 @@ export default function SimulationControls({
           </button>
         ))}
         <button disabled={!ready} onClick={run(onBonus)}>
-          Grant demo 2× bonus
+          Grant 1,200 bonus ticks (2×)
         </button>
         <p data-testid="pacing-rate">
           Effective rate: {pacing?.effectiveRate ?? 0}×
@@ -87,9 +87,6 @@ export default function SimulationControls({
         </p>
         <p data-testid="bonus-ticks">
           Bonus ticks remaining: {pacing?.remainingDoubleSpeedBonusTicks ?? 0}
-        </p>
-        <p data-testid="pacing-credit">
-          Pacing credit: {pacing?.creditGameMicroseconds ?? 0}
         </p>
       </section>
       <section aria-labelledby="authority-status-heading">

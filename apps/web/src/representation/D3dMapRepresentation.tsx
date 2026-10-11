@@ -1,3 +1,8 @@
+import { useStreetCells } from './use-street-cells.js';
+import {
+  prepareD3dStreetCells,
+  createStreetCellGeometry,
+} from './d3d-street-cells.js';
 import { useRoadNetwork } from './use-road-network.js';
 import { roadNetworkLevel } from './road-network.js';
 import {
@@ -1495,6 +1500,9 @@ function Vehicles({
 }
 
 function D3dWorld({
+  streetCellGeometry,
+  onStreetCellsInvalidated,
+  onStreetCellsRendered,
   onRoadInvalidated,
   onRoadRendered,
   roadMeshes,
@@ -1514,6 +1522,9 @@ function D3dWorld({
 }: Readonly<{
   wrapper: React.RefObject<HTMLElement | null>;
   terrain?: D3dTerrain | undefined;
+  streetCellGeometry: BufferGeometry | undefined;
+  onStreetCellsInvalidated: () => void;
+  onStreetCellsRendered: () => void;
   onRoadInvalidated: () => void;
   onRoadRendered: () => void;
   roadMeshes: RoadMeshes | undefined;
@@ -1540,6 +1551,32 @@ function D3dWorld({
       onRoadInvalidated();
     };
   }, [roadPresentation, onRoadInvalidated]);
+  const cellPresentation = useMemo(
+    () => ({}),
+    [streetCellGeometry, onStreetCellsRendered],
+  );
+  const activeCellPresentation = useRef<object | null>(null);
+  useLayoutEffect(() => {
+    activeCellPresentation.current = cellPresentation;
+    onStreetCellsInvalidated();
+    return () => {
+      activeCellPresentation.current = null;
+      onStreetCellsInvalidated();
+    };
+  }, [cellPresentation, onStreetCellsInvalidated]);
+  const cellMaterial = useMemo(
+    () =>
+      new LineBasicMaterial({
+        color: '#7833b2',
+        toneMapped: false,
+        transparent: true,
+        opacity: 0.88,
+        depthTest: true,
+        depthWrite: false,
+      }),
+    [],
+  );
+  useEffect(() => () => cellMaterial.dispose(), [cellMaterial]);
   const roadMaterials = useMemo(
     () => ({
       surface: new MeshBasicMaterial({
@@ -1631,6 +1668,20 @@ function D3dWorld({
           }}
         />
       ))}
+      {streetCellGeometry ? (
+        <lineSegments
+          name="street-cells-boundaries"
+          renderOrder={2}
+          geometry={streetCellGeometry}
+          material={cellMaterial}
+          raycast={() => null}
+          dispose={null}
+          onAfterRender={() => {
+            if (activeCellPresentation.current === cellPresentation)
+              onStreetCellsRendered();
+          }}
+        />
+      ) : null}
       <Routes
         wrapper={wrapper}
         model={model}
@@ -1783,6 +1834,94 @@ export default function D3dMapRepresentation({
       for (const mesh of roadMeshes) mesh.geometry.dispose();
     };
   }, [roadMeshes]);
+  const streetCellActive = mode === 'normal' && terrain !== undefined;
+  const streetCellLevel = lod === 'far' ? 'A' : lod === 'medium' ? 'B' : 'C';
+  const streetCellState = useStreetCells(
+    scenario.manifest.primarySettlementId,
+    streetCellActive,
+    undefined,
+    streetCellLevel,
+  );
+  const streetCellModel =
+    streetCellState.status === 'ready' &&
+    streetCellState.model.level === streetCellLevel
+      ? streetCellState.model
+      : undefined;
+  const streetCellPreparation = useMemo(() => {
+    if (!streetCellActive || !streetCellModel) return undefined;
+    try {
+      const profile = beginRepresentationProfile('street-cells.prepare');
+      const plan = prepareD3dStreetCells(streetCellModel, model, terrain);
+      finishRepresentationProfile(profile, {
+        cells: plan.cells,
+        segments: plan.segments,
+      });
+      return {
+        status: 'ready' as const,
+        plan,
+        geometry: plan.vertices ? createStreetCellGeometry(plan) : undefined,
+      };
+    } catch (error) {
+      return { status: 'error' as const, message: String(error) };
+    }
+  }, [streetCellActive, streetCellModel, model, terrain]);
+  const streetCellGeometry =
+    streetCellPreparation?.status === 'ready'
+      ? streetCellPreparation.geometry
+      : undefined;
+  const cellPlan =
+    streetCellPreparation?.status === 'ready'
+      ? streetCellPreparation.plan
+      : undefined;
+  const cellRejections = useMemo(
+    () => JSON.stringify(cellPlan?.rejectedCells ?? []),
+    [cellPlan],
+  );
+  const [streetCellBuilds, setStreetCellBuilds] = useState(0);
+  useEffect(() => {
+    if (!streetCellGeometry) return;
+    setStreetCellBuilds((n) => n + 1);
+    return () => streetCellGeometry.dispose();
+  }, [streetCellGeometry]);
+  const cellPresentation = useMemo(
+    () => ({}),
+    [streetCellGeometry, scenario, mode, lod, terrain],
+  );
+  const activeCellPresentation = useRef<object | null>(null);
+  useLayoutEffect(() => {
+    const element = wrapper.current;
+    const clear = () => {
+      if (element && element.dataset.renderedStreetCellsLevel !== '')
+        writeD3dDiagnostics(element, { renderedStreetCellsLevel: '' });
+    };
+    activeCellPresentation.current = cellPresentation;
+    clear();
+    return () => {
+      activeCellPresentation.current = null;
+      clear();
+    };
+  }, [cellPresentation]);
+  const onStreetCellsInvalidated = useCallback(() => {
+    const element = wrapper.current;
+    if (
+      activeCellPresentation.current === cellPresentation &&
+      element &&
+      element.dataset.renderedStreetCellsLevel !== ''
+    )
+      writeD3dDiagnostics(element, { renderedStreetCellsLevel: '' });
+  }, [cellPresentation]);
+  const onStreetCellsRendered = useCallback(() => {
+    const element = wrapper.current;
+    if (
+      streetCellGeometry &&
+      activeCellPresentation.current === cellPresentation &&
+      element &&
+      element.dataset.renderedStreetCellsLevel !== streetCellLevel
+    )
+      writeD3dDiagnostics(element, {
+        renderedStreetCellsLevel: streetCellLevel,
+      });
+  }, [cellPresentation, streetCellGeometry, streetCellLevel]);
   const preferredStopRoute =
     focusedRouteId ??
     (selection?.kind === 'route' ? selection.routeId : undefined);
@@ -1897,6 +2036,7 @@ export default function D3dMapRepresentation({
       terrainMeshes,
       gridGeometry,
       roadMeshes,
+      streetCellGeometry,
       vehicles,
       selection,
       focusedRouteId,
@@ -1910,6 +2050,7 @@ export default function D3dMapRepresentation({
       terrainMeshes,
       gridGeometry,
       roadMeshes,
+      streetCellGeometry,
       vehicles,
       selection,
       focusedRouteId,
@@ -1958,6 +2099,35 @@ export default function D3dMapRepresentation({
         view.map.edges.filter((edge) => edge.enriched).length
       }
       data-vehicle-hud-count={vehicles.length}
+      data-street-cells-status={
+        !streetCellActive
+          ? 'inactive'
+          : streetCellPreparation?.status === 'error'
+            ? 'error'
+            : streetCellState.status
+      }
+      data-street-cells-level={streetCellGeometry ? streetCellLevel : ''}
+      data-rendered-street-cells-level=""
+      data-street-cells-count={cellPlan?.cells ?? 0}
+      data-street-cells-displayed-count={cellPlan?.displayedCells ?? 0}
+      data-street-cells-nondrawable-count={cellPlan?.rejectedCells.length ?? 0}
+      data-street-cells-nondrawable-cells={cellRejections}
+      data-street-cells-display-edges={cellPlan?.displayEdges ?? 0}
+      data-street-cells-unique-edges={cellPlan?.uniqueEdges ?? 0}
+      data-street-cells-raw-edges={cellPlan?.rawEdges ?? 0}
+      data-street-cells-segments={cellPlan?.segments ?? 0}
+      data-street-cells-supports={cellPlan?.supports ?? 0}
+      data-street-cells-vertices={cellPlan?.vertices ?? 0}
+      data-street-cells-geometry-bytes={cellPlan?.positions.byteLength ?? 0}
+      data-street-cells-batches={streetCellGeometry ? 1 : 0}
+      data-street-cells-geometry-builds={streetCellBuilds}
+      data-street-cells-error={
+        streetCellPreparation?.status === 'error'
+          ? streetCellPreparation.message
+          : streetCellState.status === 'error'
+            ? streetCellState.message
+            : ''
+      }
       data-road-network-status={
         roadPreparation?.status === 'error' ? 'error' : roadState.status
       }
@@ -2115,6 +2285,9 @@ export default function D3dMapRepresentation({
           terrain={terrain}
         />
         <D3dWorld
+          streetCellGeometry={streetCellGeometry}
+          onStreetCellsInvalidated={onStreetCellsInvalidated}
+          onStreetCellsRendered={onStreetCellsRendered}
           onRoadInvalidated={onRoadInvalidated}
           onRoadRendered={onRoadRendered}
           roadMeshes={roadMeshes}

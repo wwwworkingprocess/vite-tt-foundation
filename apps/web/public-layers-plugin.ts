@@ -11,6 +11,7 @@ const layers = [
   'route-presentation',
   'scenarios',
   'settlement-metadata',
+  'street-cells',
   'terrain',
   'urban-assets',
 ];

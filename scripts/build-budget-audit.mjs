@@ -1,3 +1,8 @@
+import {
+  parseStreetCellCatalog,
+  decodeStreetCells,
+  decodeStreetCellAnnotations,
+} from '../apps/web/src/representation/street-cells.ts';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { readLayerFile } from './public-layer-files.mjs';
 const assetBytes = async (path) => readLayerFile(dist, path);
@@ -260,6 +265,73 @@ for (const [settlementId, entry] of Object.entries(roadCatalog.settlements)) {
     previousRoadFeatures = current;
   }
 }
+const cellCatalog = parseStreetCellCatalog(
+  JSON.parse(await assetText('street-cells/catalog.json')),
+);
+if (cellCatalog.schemaVersion !== 'street-cells-catalog-v2')
+  throw new Error('Invalid built StreetCell catalog');
+const roadArchiveHash = createHash('sha256')
+  .update(await readFile(new URL('road-network/road-network.zip', dist)))
+  .digest('hex');
+for (const [settlementId, entry] of Object.entries(cellCatalog.settlements)) {
+  if (entry.source.roadArchiveSha256 !== roadArchiveHash)
+    throw new Error('StreetCell source road archive mismatch');
+  for (const source of entry.source.products) {
+    const road = roadCatalog.settlements[settlementId]?.products.find(
+      (p) => p.level === source.level,
+    );
+    if (
+      !road ||
+      ['path', 'byteLength', 'sha256'].some((key) => road[key] !== source[key])
+    )
+      throw new Error('StreetCell source road product mismatch');
+  }
+  for (const descriptor of [
+    entry.audit,
+    entry.annotations,
+    entry.hierarchy,
+    ...entry.products,
+  ]) {
+    const bytes = await assetBytes('street-cells/' + descriptor.path);
+    if (
+      bytes.length !== descriptor.byteLength ||
+      createHash('sha256').update(bytes).digest('hex') !== descriptor.sha256
+    )
+      throw new Error(
+        'Built StreetCell integrity mismatch: ' + descriptor.path,
+      );
+    if (descriptor.level) {
+      if (
+        descriptor.path !==
+        `${settlementId}/cells-${descriptor.level.toLowerCase()}.v2.geojson`
+      )
+        throw new Error('Built StreetCell city/path mismatch');
+      const data = JSON.parse(bytes.toString('utf8'));
+      const cells = decodeStreetCells(data, settlementId, descriptor);
+      if (descriptor.level === 'C')
+        decodeStreetCellAnnotations(
+          JSON.parse(await assetText('street-cells/' + entry.annotations.path)),
+          cells,
+          entry.source.products.find((p) => p.level === 'C').sha256,
+        );
+      if (
+        data.type !== 'FeatureCollection' ||
+        data.features.length !== descriptor.featureCount ||
+        new Set(data.features.map((f) => f.id)).size !== descriptor.featureCount
+      )
+        throw new Error('Built StreetCell count/identity mismatch');
+      if (
+        data.features.some(
+          (f) =>
+            f.geometry.type !== 'Polygon' ||
+            f.properties.settlementId !== settlementId ||
+            f.properties.level !== descriptor.level,
+        )
+      )
+        throw new Error('Built StreetCell city/level mismatch');
+    }
+  }
+}
 const terrainCatalogAsset = 'terrain/catalog.json';
 const terrainCatalog = JSON.parse(await assetText(terrainCatalogAsset));
 const terrainAssets = [terrainCatalogAsset];
@@ -284,6 +356,7 @@ for (const layer of [
   'route-presentation',
   'scenarios',
   'settlement-metadata',
+  'street-cells',
   'terrain',
   'urban-assets',
 ]) {

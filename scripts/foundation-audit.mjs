@@ -667,6 +667,8 @@ for (const d3dRepresentationFile of [
   'apps/web/src/representation/d3d-city-geometry.ts',
   'apps/web/src/representation/d3d-road-geometry.ts',
   'apps/web/src/representation/use-road-network.ts',
+  'apps/web/src/representation/use-street-cells.ts',
+  'apps/web/src/representation/d3d-street-cells.ts',
   'apps/web/src/representation/d3d-terrain-geometry.ts',
   'apps/web/src/representation/d3d-terrain-grid.ts',
   'apps/web/src/representation/d3d-terrain-shading.ts',
@@ -686,6 +688,8 @@ for (const d3dRepresentationFile of [
 for (const purePresentationFile of [
   'apps/web/src/representation/road-network.ts',
   'apps/web/src/representation/road-network-loader.ts',
+  'apps/web/src/representation/street-cells.ts',
+  'apps/web/src/representation/street-cells-loader.ts',
   'apps/web/src/terrain/terrain-catalog.ts',
   'apps/web/src/terrain/terrain-runtime.ts',
   'apps/web/src/terrain/terrain-projection.ts',
@@ -791,6 +795,9 @@ for (const file of [...simulation, ...protocol, ...web]) {
   const normalized = file.replaceAll('\\', '/');
   const transportExtension =
     /apps\/web\/src\/representation\/(?:route-presentation|use-route-presentation|transport-map-space)/.test(
+      normalized,
+    ) ||
+    /apps\/web\/src\/representation\/(?:street-cells|street-cells-loader|use-street-cells|d3d-street-cells)\.ts$/.test(
       normalized,
     ) ||
     normalized.includes('apps/web/src/population') ||

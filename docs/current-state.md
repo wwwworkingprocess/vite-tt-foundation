@@ -60,7 +60,7 @@ active task explicitly changes the sequence.
 
 Public packages are stored as one folder-relative ZIP per layer: `asset-research`,
 `icons`, `population-fields`, `route-presentation`, `scenarios`,
-`settlement-metadata`, `terrain`, `road-network`, and `urban-assets`. Browser acquisition downloads
+`settlement-metadata`, `street-cells`, `terrain`, `road-network`, and `urban-assets`. Browser acquisition downloads
 a layer on first use, shares concurrent requests, and inflates only requested
 entries using native raw-deflate decompression. Stored entries are also supported.
 ZIP lengths/CRC and bounded container/inflation validation precede the existing
@@ -584,9 +584,78 @@ feature counts, geometry builds/batches/vertices/triangles and fallback supports
 The drawn-road acknowledgement is cleared on product/request/scene transitions;
 only an active batch after actual rendering may acknowledge its level, once per
 host/active presentation. Removed batches cannot republish stale levels.
-StreetCell compilation, road/building alignment and Cartagena road products
+StreetCell generation/refinement, road/building alignment and Cartagena road products
 remain deferred; the accepted procedural buildings may intersect source roads.
 
 Native DEM clean-ground presentation omits optional research/density tint meshes before geometry preparation. All pure city-model polygons, land-use/buildability exclusions, population inputs, generated building identities, landmark reservations and transport overlays remain intact. These surface descriptors remain available for fallback rendering and later StreetCells; they do not define city-generation authority.
 
 The full Málaga and Murcia C products currently exceed the unchanged 131,072-segment road preparation guard; those near views expose a preparation error and retain provisional streets. Their A/B products and all six catalog/product acquisitions remain supported. Bounded delivery of the larger C geometry requires a separately accepted road preparation change; this catalog integration does not raise geometry or JS budgets.
+
+## StreetCells V2 multi-city A/B/C inspection POC
+
+The tenth mandatory on-demand ZIP remains `street-cells/street-cells.zip`.
+The supplied Workbench `street-cells-catalog-v2` / `0.2.0` dictionary currently
+covers Torrevieja (A/B/C: 84/584/1,623 polygons) and Alicante (348/1,411/3,201).
+Installed bytes are the accepted compact V2 export, not recompressed products.
+Coverage is catalog-derived; an unlisted city is absent, while a missing/broken
+required ZIP/catalog or declared product is an error with gameplay preserved.
+
+Normal D3D with ready native terrain uses the existing far/medium/near hysteresis
+to request A/B/C respectively. Mini and unavailable terrain remain inactive.
+Only the selected city's selected polygon product is decoded; C additionally
+reads that city's annotations. Hierarchy, audit and source-road products are not
+routine runtime reads. Byte lengths/SHA-256, exact policies, city-local paths,
+city/level IDs, measurements, closed rings/holes and annotation references are
+validated. Successful immutable models share revision-bound acquisition and
+city/level/hash caches; failures retry and stale city/level results are rejected.
+The public registry remains ten layers; unused ZIPs are not startup precache.
+
+Original C polygons, IDs, measurements, holes and road references remain exact.
+A/B display the actual exported coarsened polygons, deduplicating identical
+undirected shared edges. C joins compact annotations by stable cell ID and draws
+supplied `safeZoneCoordinates`, including holes, for `empty` and `road-crossed`.
+The temporary game-side 8-metre inset is removed. No margins, polygon merging,
+setbacks or road corridors are recalculated in the game. `empty` is a Workbench
+road classification, not an assertion about buildings or buildability.
+Torrevieja displays 1,437 safe-zone cells (1,126 empty / 311 road-crossed), retaining
+186 non-drawables as semantic cells. Alicante displays 2,759 (2,378 / 381), retaining
+442 non-drawables. Named immutable annotation access preserves representative
+points, road-width margins, classification reasons and clipped road associations
+for future reviewed uses, without rendering those associations.
+
+One static non-raycasting violet LineSegments batch per active product follows
+the same projection and exaggerated native ground as roads. Every support is
+sampled at at most 12.5-metre spacing, with the named unscaled 0.50-metre visual
+clearance (+0.28 above roads / +0.20 above transit at coincident supports).
+Opacity 0.88, depth testing, disabled depth writes and render order 2 retain
+single-pixel contrast and normal building occlusion. There are no fills, per-cell
+objects, toggles, building-placement changes or additional authority.
+
+The unchanged 262,144-segment preparation guard rejects excessive products
+without partially dropping cells. Reference native plans measure:
+
+| City       | Level | Display cells | Segments | GPU vertices | Float32 position bytes |
+| ---------- | ----- | ------------: | -------: | -----------: | ---------------------: |
+| Torrevieja | A     |            84 |   11,674 |       23,348 |                280,176 |
+| Torrevieja | B     |           584 |   25,289 |       50,578 |                606,936 |
+| Torrevieja | C     |         1,437 |  118,246 |      236,492 |              2,837,904 |
+| Alicante   | A     |           348 |   28,112 |       56,224 |                674,688 |
+| Alicante   | B     |         1,411 |   51,985 |      103,970 |              1,247,640 |
+| Alicante   | C     |         2,759 |  192,514 |      385,028 |              4,620,336 |
+
+These use native coverage-derived reference projections; counts can vary slightly
+with scenario bounds. No source coordinate simplification or tolerance is used.
+CPU plans cache by immutable product/map/terrain identity; each scene owns and
+disposes fresh GPU geometry/material. Fleet, selection and same-band pan reuse
+static buffers. Diagnostics distinguish source/display counts, declared
+non-drawables, edges/supports/vertices/bytes/builds and actual A/B/C draw
+acknowledgement. Stale Canvas callbacks cannot publish old levels; unchanged
+acknowledgements do not rewrite the DOM. Existing dirty-frame scheduling remains.
+Offline integrity checks cover all descriptors and source-road provenance;
+hierarchy tests prove exact shared-edge footprint cancellation and conserved
+metric area, without browser topology compilation.
+
+This is a visual consumer only. Procedural composition, buildability, building
+placement/alignment, cell filling, topology repair, additional exports and
+hierarchy-driven city generation remain separately reviewed work. Native terrain,
+clean-ground policy, road products, canonical transit and simulation are unchanged.

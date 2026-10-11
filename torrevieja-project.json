@@ -78,7 +78,11 @@
       "apps/web/src/representation/road-network.ts",
       "apps/web/src/representation/road-network-loader.ts",
       "apps/web/src/representation/use-road-network.ts",
-      "apps/web/src/representation/d3d-road-geometry.ts"
+      "apps/web/src/representation/d3d-road-geometry.ts",
+      "apps/web/src/representation/street-cells.ts",
+      "apps/web/src/representation/street-cells-loader.ts",
+      "apps/web/src/representation/use-street-cells.ts",
+      "apps/web/src/representation/d3d-street-cells.ts"
     ]
   },
   "simulationCriticalCoverage": {

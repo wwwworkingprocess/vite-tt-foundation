@@ -1,3 +1,13 @@
+import { useStreetCells } from './use-street-cells.js';
+import { decodeStreetCells, parseStreetCellCatalog } from './street-cells.js';
+import {
+  streetCellFixture,
+  streetCellJson,
+  withStreetCellZones,
+} from '../test/street-cells-fixture.js';
+vi.mock('./use-street-cells.js', () => ({
+  useStreetCells: vi.fn(() => ({ status: 'inactive' })),
+}));
 import {
   act,
   cleanup,
@@ -168,6 +178,7 @@ const pointer = (kind: string, x: number, y: number, pointerId = 1) => {
 };
 
 afterEach(() => {
+  vi.mocked(useStreetCells).mockReturnValue({ status: 'inactive' });
   vi.mocked(useRoadNetwork).mockReturnValue({ status: 'absent' });
   controls.renderWorld = false;
   controls.frame = undefined;
@@ -324,7 +335,11 @@ const sceneProps = (element: Element) =>
     onBeforeRender?: () => void;
     onAfterRender?: () => void;
     children?: readonly Readonly<{
-      props: { onRoadInvalidated?: () => void };
+      props: {
+        onLod?: (level: 'far' | 'medium' | 'near') => void;
+        onRoadInvalidated?: () => void;
+        onStreetCellsInvalidated?: () => void;
+      };
     }>[];
   };
 
@@ -508,7 +523,7 @@ buildProceduralCity(model, population, readyView);
 it('exposes research diagnostics and keeps scaled city surfaces outside entity hit targets', () => {
   enableWorld();
   vi.mocked(useSettlementMetadata).mockReturnValue(readyView);
-  const { rerender, unmount } = render(
+  const { unmount } = render(
     scene('normal', null, undefined, scenario, population),
   );
   const map = screen.getByTestId('d3d-map-representation');
@@ -537,6 +552,16 @@ it('exposes research diagnostics and keeps scaled city surfaces outside entity h
     { instanceId: 0, delta: 0 },
   );
   expect(onSelectionChange).toHaveBeenCalled();
+  unmount();
+});
+
+it('preserves research surfaces through medium/near selection and mini lifecycle transitions', () => {
+  enableWorld();
+  vi.mocked(useSettlementMetadata).mockReturnValue(readyView);
+  const { rerender, unmount } = render(
+    scene('normal', null, undefined, scenario, population),
+  );
+  const map = screen.getByTestId('d3d-map-representation');
   const unitsPerPixel = 20 / (660 * cameraState().zoom);
   fireEvent.wheel(controls.canvas, {
     deltaY: -Math.log(unitsPerPixel / 0.07) * 1000,
@@ -2029,3 +2054,342 @@ it('acknowledges only the active actually drawn road product once and invalidate
   expect(() => detached()).not.toThrow();
   observer.disconnect();
 });
+
+function readyCellTerrain() {
+  const f = terrainFixture();
+  Object.assign(f.catalog.settlements.test.viewports[0]!.rasterBounds3035, {
+    west: 3375000,
+    south: 1720000,
+    east: 3376500,
+    north: 1721500,
+  });
+  f.catalog.settlements.test.resolutionMeters = { x: 500, y: 500 };
+  for (const product of [f.height, f.surfaceMask]) {
+    product.resolutionMetersX = 500;
+    product.resolutionMetersY = 500;
+  }
+  const resolution = resolveTerrainViewport(
+    parseTerrainCatalog(f.catalog),
+    'test',
+    'a',
+  )!;
+  const terrain = terrainJsonDecoder.decode(f, resolution);
+  vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
+  return terrain;
+}
+const cellModel = withStreetCellZones(
+  decodeStreetCells(streetCellFixture(), 'es-torrevieja', {
+    ...parseStreetCellCatalog(streetCellJson('catalog.json')).settlements[
+      'es-torrevieja'
+    ]!.products[2]!,
+    featureCount: 2,
+  }),
+);
+it('preserves non-drawable C authority without empty GPU geometry or fake acknowledgement', () => {
+  enableWorld();
+  readyCellTerrain();
+  const one = {
+    ...cellModel,
+    features: [cellModel.features[0]!],
+    annotations: {
+      ...cellModel.annotations!,
+      cells: {
+        'es-torrevieja-sc-1': {
+          ...cellModel.annotations!.cells['es-torrevieja-sc-1']!,
+          classification: 'non-drawable' as const,
+          safeZoneCoordinates: null,
+          safeAreaSqm: 0,
+        },
+      },
+    },
+  };
+  vi.mocked(useStreetCells).mockReturnValue({ status: 'ready', model: one });
+  const view = render(scene('normal'));
+  fireEvent.wheel(controls.canvas, { deltaY: -10000 });
+  const map = screen.getByTestId('d3d-map-representation');
+  expect(map).toHaveAttribute('data-street-cells-count', '1');
+  expect(map).toHaveAttribute('data-street-cells-displayed-count', '0');
+  expect(map).toHaveAttribute('data-street-cells-nondrawable-count', '1');
+  expect(
+    JSON.parse(map.getAttribute('data-street-cells-nondrawable-cells')!),
+  ).toEqual([{ id: 'es-torrevieja-sc-1', reason: 'non-drawable' }]);
+  expect(map).toHaveAttribute('data-street-cells-level', '');
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+  expect(map).toHaveAttribute('data-street-cells-geometry-builds', '0');
+  expect(
+    document.querySelector('linesegments[name="street-cells-boundaries"]'),
+  ).toBeNull();
+  view.unmount();
+});
+it('presents only near normal C lines with native terrain, safe depth style, stable GPU buffers and actual-draw acknowledgement', () => {
+  enableWorld();
+  readyCellTerrain();
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: cellModel,
+  });
+  const view = render(scene('normal'));
+  const map = screen.getByTestId('d3d-map-representation');
+  fireEvent.wheel(controls.canvas, { deltaY: 10000 });
+  expect(map).toHaveAttribute('data-street-cells-level', '');
+  expect(
+    document.querySelector('linesegments[name="street-cells-boundaries"]'),
+  ).toBeNull();
+  fireEvent.wheel(controls.canvas, { deltaY: -10000 });
+  expect(map).toHaveAttribute('data-street-cells-level', 'C');
+  expect(map).toHaveAttribute('data-street-cells-count', '2');
+  expect(map).toHaveAttribute('data-street-cells-unique-edges', '10');
+  const line = () =>
+    document.querySelector('linesegments[name="street-cells-boundaries"]')!;
+  const props = sceneProps(line()),
+    geometry = props.geometry!,
+    material = props.material!;
+  expect(props.raycast?.()).toBeNull();
+  expect(props.onClick).toBeUndefined();
+  expect(material.depthTest).toBe(true);
+  expect(material.depthWrite).toBe(false);
+  expect(material.opacity).toBe(0.88);
+  expect(material.toneMapped).toBe(false);
+  const disposed = vi.spyOn(geometry, 'dispose'),
+    materialDisposed = vi.spyOn(material, 'dispose');
+  const ack = () => map.getAttribute('data-rendered-street-cells-level');
+  expect(ack()).toBe('');
+  const observer = new MutationObserver(() => {});
+  observer.observe(map, {
+    attributes: true,
+    attributeFilter: ['data-rendered-street-cells-level'],
+  });
+  const draw = props.onAfterRender!;
+  draw();
+  expect(ack()).toBe('C');
+  expect(observer.takeRecords()).toHaveLength(1);
+  draw();
+  expect(observer.takeRecords()).toHaveLength(0);
+  const builds = map.getAttribute('data-street-cells-geometry-builds');
+  view.rerender(
+    scene(
+      'normal',
+      selectVehicle(fleet[0]!.vehicleId),
+      undefined,
+      scenario,
+      undefined,
+      [{ ...fleet[0]!, label: 'Updated fleet' }],
+    ),
+  );
+  pointer('pointerdown', 100, 100);
+  pointer('pointermove', 104, 104);
+  pointer('pointerup', 104, 104);
+  expect(sceneProps(line()).geometry).toBe(geometry);
+  expect(map).toHaveAttribute('data-street-cells-geometry-builds', builds);
+  expect(disposed).not.toHaveBeenCalled();
+  fireEvent.wheel(controls.canvas, { deltaY: 10000 });
+  expect(ack()).toBe('');
+  expect(line()).toBeNull();
+  draw();
+  expect(ack()).toBe('');
+  expect(disposed).toHaveBeenCalledTimes(1);
+  view.rerender(scene('mini'));
+  expect(map).toHaveAttribute('data-street-cells-status', 'inactive');
+  view.rerender(scene('normal'));
+  fireEvent.wheel(controls.canvas, { deltaY: -10000 });
+  sceneProps(line()).onAfterRender!();
+  expect(ack()).toBe('C');
+  view.unmount();
+  expect(ack()).toBe('');
+  draw();
+  expect(ack()).toBe('');
+  expect(materialDisposed).toHaveBeenCalledTimes(1);
+  observer.disconnect();
+});
+it('clears cells immediately on loading/error/absence, terrain and scene changes, rejecting stale batch callbacks', () => {
+  enableWorld();
+  readyCellTerrain();
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: cellModel,
+  });
+  const view = render(scene('normal'));
+  fireEvent.wheel(controls.canvas, { deltaY: -10000 });
+  const map = screen.getByTestId('d3d-map-representation');
+  const line = () =>
+    document.querySelector('linesegments[name="street-cells-boundaries"]')!;
+  const draw = () => sceneProps(line()).onAfterRender!;
+  const old = draw();
+  old();
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', 'C');
+  for (const status of ['loading', 'error', 'absent'] as const) {
+    vi.mocked(useStreetCells).mockReturnValue(
+      status === 'error' ? { status, message: 'corrupt cells' } : { status },
+    );
+    view.rerender(scene('normal'));
+    expect(map).toHaveAttribute('data-street-cells-status', status);
+    expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+    old();
+    expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+    expect(line()).toBeNull();
+  }
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: cellModel,
+  });
+  view.rerender(scene('normal'));
+  const detached = draw();
+  detached();
+  const invalidate = sceneProps(
+    screen.getByTestId('r3f-canvas'),
+  ).children!.find((c) => c.props.onStreetCellsInvalidated)!.props
+    .onStreetCellsInvalidated!;
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: { ...cellModel },
+  });
+  view.rerender(scene('normal'));
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+  draw()();
+  invalidate();
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', 'C');
+  detached();
+  controls.renderWorld = false;
+  view.rerender(scene('normal'));
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+  detached();
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+  controls.renderWorld = true;
+  view.rerender(scene('normal'));
+  const current = draw();
+  current();
+  vi.mocked(useTerrain).mockReturnValue({ status: 'unavailable' });
+  view.rerender(scene('normal'));
+  expect(map).toHaveAttribute('data-street-cells-status', 'inactive');
+  expect(line()).toBeNull();
+  current();
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+  view.unmount();
+  current();
+});
+
+it('keeps StreetCell preparation guard failures diagnostic and rejects old city/terrain acknowledgements', () => {
+  enableWorld();
+  readyCellTerrain();
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: cellModel,
+  });
+  const view = render(scene('normal'));
+  fireEvent.wheel(controls.canvas, { deltaY: -10000 });
+  const map = screen.getByTestId('d3d-map-representation');
+  const old = sceneProps(
+    document.querySelector('linesegments[name="street-cells-boundaries"]')!,
+  ).onAfterRender!;
+  old();
+  const city = {
+    ...scenario,
+    manifest: parseScenarioManifest({
+      ...scenario.manifest,
+      settlementIds: [...scenario.manifest.settlementIds, 'es-elche'],
+      primarySettlementId: 'es-elche',
+    }),
+  };
+  vi.mocked(useStreetCells).mockReturnValue({ status: 'absent' });
+  view.rerender(scene('normal', null, undefined, city));
+  old();
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: {
+      ...cellModel,
+      level: 'A',
+      annotations: undefined,
+      features: [
+        {
+          ...cellModel.features[0]!,
+          geometry: {
+            type: 'Polygon',
+            coordinates: [
+              [
+                [-180, -90],
+                [180, 90],
+                [180, -90],
+                [-180, -90],
+              ],
+            ],
+          },
+        },
+      ],
+    },
+  });
+  view.rerender(scene('normal'));
+  publishCellLod('far');
+  expect(map).toHaveAttribute('data-street-cells-status', 'error');
+  expect(map.getAttribute('data-street-cells-error')).toContain('budget');
+  expect(map).toHaveAttribute('data-street-cells-count', '0');
+  expect(
+    document.querySelector('linesegments[name="street-cells-boundaries"]'),
+  ).toBeNull();
+  view.unmount();
+});
+
+it('uses existing far/medium/near demand and rejects stale rendered levels during A/B/C transitions', () => {
+  enableWorld();
+  readyCellTerrain();
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: { ...cellModel, level: 'A', annotations: undefined },
+  });
+  const view = render(scene('normal')),
+    map = screen.getByTestId('d3d-map-representation');
+  publishCellLod('far');
+  expect(useStreetCells).toHaveBeenLastCalledWith(
+    'es-torrevieja',
+    true,
+    undefined,
+    'A',
+  );
+  const line = () =>
+    document.querySelector('linesegments[name="street-cells-boundaries"]')!;
+  const old = sceneProps(line()).onAfterRender!;
+  old();
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', 'A');
+  vi.mocked(useStreetCells).mockReturnValue({ status: 'loading' });
+  publishCellLod('medium');
+  expect(useStreetCells).toHaveBeenLastCalledWith(
+    'es-torrevieja',
+    true,
+    undefined,
+    'B',
+  );
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+  old();
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: { ...cellModel, level: 'B', annotations: undefined },
+  });
+  view.rerender(scene('normal'));
+  expect(map).toHaveAttribute('data-street-cells-level', 'B');
+  sceneProps(line()).onAfterRender!();
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', 'B');
+  fireEvent.wheel(controls.canvas, { deltaY: -10000 });
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: cellModel,
+  });
+  view.rerender(scene('normal'));
+  sceneProps(line()).onAfterRender!();
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', 'C');
+  view.rerender(scene('mini'));
+  expect(map).toHaveAttribute('data-street-cells-status', 'inactive');
+  expect(line()).toBeNull();
+  old();
+  expect(map).toHaveAttribute('data-rendered-street-cells-level', '');
+  view.unmount();
+});
+
+function publishCellLod(level: 'far' | 'medium' | 'near') {
+  act(() =>
+    sceneProps(screen.getByTestId('r3f-canvas')).children!.find(
+      (c) => c.props.onLod,
+    )!.props.onLod!(level),
+  );
+}

@@ -98,28 +98,31 @@ it('shares the browser storage adapter lazily', async () => {
   expect((await fetchPublicAsset('/scenarios/catalog.json')).ok).toBe(true);
   expect(fetchArchive).toHaveBeenCalledTimes(1);
 });
-it.each(
-  publicLayerNames.filter(
-    (layer) => layer !== 'terrain' && layer !== 'road-network',
-  ),
-)('loads the real %s archive without changing entry bytes', async (layer) => {
-  const root = join(import.meta.dirname, '../../public', layer);
-  const zip = indexZip(readFileSync(join(root, `${layer}.zip`)));
-  for (const [name, entry] of zip) {
+// Installed entries are independent integrity cases. Splitting by entry keeps
+// ten-layer validation bounded without bundling hundreds of scenario reads into
+// one five-second test or changing the streaming reader/CRC assertions.
+const installedEntries = publicLayerNames
+  .filter((layer) => layer !== 'terrain' && layer !== 'road-network')
+  .flatMap((layer) => {
+    const root = join(import.meta.dirname, '../../public', layer);
+    return [...indexZip(readFileSync(join(root, `${layer}.zip`)))].map(
+      ([name, entry]) => ({ identity: layer + '/' + name, root, name, entry }),
+    );
+  });
+it.each(installedEntries)(
+  'preserves real public entry $identity without changing bytes',
+  async ({ root, name, entry }) => {
     const bytes = await readZipEntry(entry);
     expect(bytes.byteLength).toBe(entry.byteLength);
     expect(verifyZipEntry(entry, bytes)).toBe(bytes);
-    if (!name.endsWith('/')) {
-      // Original files are optional after the owner removes them; the ZIP CRC remains mandatory.
-      if (existsSync(join(root, name)))
-        expect(createHash('sha256').update(bytes).digest('hex')).toBe(
-          createHash('sha256')
-            .update(readFileSync(join(root, name)))
-            .digest('hex'),
-        );
-    }
-  }
-});
+    if (!name.endsWith('/') && existsSync(join(root, name)))
+      expect(createHash('sha256').update(bytes).digest('hex')).toBe(
+        createHash('sha256')
+          .update(readFileSync(join(root, name)))
+          .digest('hex'),
+      );
+  },
+);
 
 // Each city product is an independent integrity assertion; the larger V1 ZIP
 // must not bundle all native inflations into one five-second test case.
@@ -211,3 +214,18 @@ it.each(
     ]);
   },
 );
+
+it('requires exactly ten revision-bound on-demand layers including StreetCells', () => {
+  expect(publicLayerNames).toEqual([
+    'asset-research',
+    'icons',
+    'population-fields',
+    'road-network',
+    'route-presentation',
+    'scenarios',
+    'settlement-metadata',
+    'street-cells',
+    'terrain',
+    'urban-assets',
+  ]);
+});

@@ -462,6 +462,10 @@ describe('built foundation PWA offline lifecycle', () => {
         expect(response.ok, path).to.equal(true);
       }
       expect(
+        keys.some((request) => request.url.includes('/street-cells/')),
+        'inactive StreetCells layer is not a startup download',
+      ).to.equal(false);
+      expect(
         keys.some((request) => request.url.includes('/asset-research/')),
       ).to.equal(false);
       expect(

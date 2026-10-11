@@ -8,6 +8,7 @@ export const publicLayerNames = [
   'route-presentation',
   'scenarios',
   'settlement-metadata',
+  'street-cells',
   'terrain',
   'urban-assets',
 ] as const;

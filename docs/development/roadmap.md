@@ -333,4 +333,16 @@ codebases.
 Road Network V1 now requires the accepted six-city Workbench ZIP; city coverage
 is optional. It provides D3D context: far/mini A, medium B, near C, with lazy integrity-checked products and
 terrain-grounded static batches replacing provisional streets only when ready.
-Catalog V1 covers Alicante, Benidorm, Elche, Málaga, Murcia and Torrevieja, with unchanged V0 products; Cartagena remains absent. Ready native terrain omits research-landscape and settlement-ground tint geometry while retaining pure procedural semantics and the no-terrain fallback. StreetCell compilation, building alignment and Cartagena roads are deferred.
+Catalog V1 covers Alicante, Benidorm, Elche, Málaga, Murcia and Torrevieja, with unchanged V0 products; Cartagena remains absent. Ready native terrain omits research-landscape and settlement-ground tint geometry while retaining pure procedural semantics and the no-terrain fallback. StreetCell compilation/generation, building alignment and Cartagena roads are deferred.
+
+StreetCells V2 is a bounded two-city visual consumer of the tenth lazy ZIP.
+Existing normal D3D far/medium/near uses exported A/B/C polygons; mini is hidden
+and native terrain is required. Torrevieja has 84/584/1,623 cells and Alicante
+348/1,411/3,201. Near C draws supplied road-width-aware safe zones by stable ID
+(1,437 / 2,759 drawable cells), preserving non-drawables and original C semantics.
+A/B deduplicate shared outlines; C no longer uses the temporary 8-metre game inset.
+All boundaries retain native ground sampling and unscaled 0.50-metre clearance,
+static batching, truthful draw acknowledgements and existing LOD/cache ownership.
+Compact annotations preserve future margin/road-guide context; offline hierarchy
+checks do not turn into a browser compiler. Building placement/filling, procedural
+blueprints, buildability and further exports remain future reviewed milestones.

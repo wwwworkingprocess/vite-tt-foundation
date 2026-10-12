@@ -283,7 +283,8 @@ retail boxes, industrial sheds and stepped civic masses. A winged villa variant
 and a generic stepped landmark placeholder bring the bounded prototype set to
 fourteen. Landmark placeholders remain noninteractive and use existing geographic
 reservations; parks and context-only anchors remain open. Generic population-only
-presentation remains available for other settlements and research gaps. Optional
+presentation remains available for other settlements. Torrevieja now uses the
+C-empty-only composition described below, with no off-cell research-gap fallback. Optional
 acquisition renders transport immediately while metadata is pending and falls
 back to generic city geometry on failure without changing camera framing. Quiet
 zone tints integrate settlements with the terrain. Research water geometry and
@@ -563,7 +564,8 @@ revision-bound ZIP registry inflates only requested entries; the loader caches b
 excluding the selected settlement reports absent coverage. Missing,
 unreadable or corrupt required ZIP/catalog infrastructure reports an error, as do
 invalid declared products; failed acquisitions may retry. Pending or failed
-products retain provisional-city streets and expose diagnostics. Ready road
+products expose diagnostics. Other cities retain provisional-city streets;
+Torrevieja C-empty composition suppresses superseded procedural streets. Ready road
 geometry suppresses provisional streets without
 changing city generation, transit routes, selection or simulation.
 
@@ -584,19 +586,23 @@ feature counts, geometry builds/batches/vertices/triangles and fallback supports
 The drawn-road acknowledgement is cleared on product/request/scene transitions;
 only an active batch after actual rendering may acknowledge its level, once per
 host/active presentation. Removed batches cannot republish stale levels.
-StreetCell generation/refinement, road/building alignment and Cartagena road products
-remain deferred; the accepted procedural buildings may intersect source roads.
+Cartagena road products and road-crossed cell generation remain deferred.
+Other cities retain their legacy procedural building path, which may intersect
+source roads; Torrevieja ordinary buildings now require eligible C safe zones.
 
 Native DEM clean-ground presentation omits optional research/density tint meshes before geometry preparation. All pure city-model polygons, land-use/buildability exclusions, population inputs, generated building identities, landmark reservations and transport overlays remain intact. These surface descriptors remain available for fallback rendering and later StreetCells; they do not define city-generation authority.
 
 The full Málaga and Murcia C products currently exceed the unchanged 131,072-segment road preparation guard; those near views expose a preparation error and retain provisional streets. Their A/B products and all six catalog/product acquisitions remain supported. Bounded delivery of the larger C geometry requires a separately accepted road preparation change; this catalog integration does not raise geometry or JS budgets.
 
-## StreetCells V2 multi-city A/B/C inspection POC
+## StreetCells V3 multi-city A/B/C inspection POC
 
 The tenth mandatory on-demand ZIP remains `street-cells/street-cells.zip`.
-The supplied Workbench `street-cells-catalog-v2` / `0.2.0` dictionary currently
+The supplied Workbench `street-cells-catalog-v3` / `0.3.0` dictionary currently
 covers Torrevieja (A/B/C: 84/584/1,623 polygons) and Alicante (348/1,411/3,201).
-Installed bytes are the accepted compact V2 export, not recompressed products.
+Installed bytes are the accepted V3 export (3,861,322 bytes, SHA-256
+`e71360004a34fe1ba82782b01f4921d1ab42e3d4c2da1fcb5192308699f5524e`).
+The A/B/C `.v2.geojson` and `.v2` hierarchy entries remain byte-identical.
+Only annotations/audits migrate to V3; the owner staging copy is not published.
 Coverage is catalog-derived; an unlisted city is absent, while a missing/broken
 required ZIP/catalog or declared product is an error with gameplay preserved.
 
@@ -629,7 +635,8 @@ sampled at at most 12.5-metre spacing, with the named unscaled 0.50-metre visual
 clearance (+0.28 above roads / +0.20 above transit at coincident supports).
 Opacity 0.88, depth testing, disabled depth writes and render order 2 retain
 single-pixel contrast and normal building occlusion. There are no fills, per-cell
-objects, toggles, building-placement changes or additional authority.
+objects, toggles or additional authority in the outline layer. The separate
+two-city composition below consumes the same immutable C model.
 
 The unchanged 262,144-segment preparation guard rejects excessive products
 without partially dropping cells. Reference native plans measure:
@@ -638,13 +645,15 @@ without partially dropping cells. Reference native plans measure:
 | ---------- | ----- | ------------: | -------: | -----------: | ---------------------: |
 | Torrevieja | A     |            84 |   11,674 |       23,348 |                280,176 |
 | Torrevieja | B     |           584 |   25,289 |       50,578 |                606,936 |
-| Torrevieja | C     |         1,437 |  118,246 |      236,492 |              2,837,904 |
+| Torrevieja | C     |         1,437 |  107,052 |      214,104 |              2,569,248 |
 | Alicante   | A     |           348 |   28,112 |       56,224 |                674,688 |
 | Alicante   | B     |         1,411 |   51,985 |      103,970 |              1,247,640 |
-| Alicante   | C     |         2,759 |  192,514 |      385,028 |              4,620,336 |
+| Alicante   | C     |         2,759 |  184,541 |      369,082 |              4,428,984 |
 
 These use native coverage-derived reference projections; counts can vary slightly
-with scenario bounds. No source coordinate simplification or tolerance is used.
+with scenario bounds. Original polygon coordinates remain exact. Workbench V3 annotations use the
+validated seven-decimal WGS84 encoding and declared 0.021-metre serialization
+tolerance; the game does not re-encode or repair them.
 CPU plans cache by immutable product/map/terrain identity; each scene owns and
 disposes fresh GPU geometry/material. Fleet, selection and same-band pan reuse
 static buffers. Diagnostics distinguish source/display counts, declared
@@ -655,7 +664,96 @@ Offline integrity checks cover all descriptors and source-road provenance;
 hierarchy tests prove exact shared-edge footprint cancellation and conserved
 metric area, without browser topology compilation.
 
-This is a visual consumer only. Procedural composition, buildability, building
-placement/alignment, cell filling, topology repair, additional exports and
-hierarchy-driven city generation remain separately reviewed work. Native terrain,
+The outline layer remains a visual consumer. Two-city C-empty composition is
+now the bounded presentation pass below. Authoritative buildability, road-crossed
+filling, topology repair, additional exports and hierarchy-driven city generation
+remain separately reviewed work. Native terrain,
 clean-ground policy, road products, canonical transit and simulation are unchanged.
+
+## StreetCell C-empty procedural buildings — research-independent V3
+
+Torrevieja and Alicante share one C-owned ordinary-building composer. Supplied
+`empty` C safe zones decide **where**, native geography and explicit physical
+reservations govern safety, population and observed footprint evidence modulate
+**quantity**, and optional research assigns **appearance**. Road-crossed and
+non-drawable cells remain excluded. Other settlements without C coverage retain
+their prior generic presentation. The canonical population, terrain, transport,
+Worker, simulation and persistence contracts are unchanged.
+
+C building demand remains independent of outline A/B/C LOD and normal/mini mode;
+it shares revision-bound ZIP/model acquisition. These two cities never fall back
+to off-cell ordinary buildings while C or native terrain is unavailable. Available
+research can still display landscapes/reservations, while roads, transit,
+selection and cameras remain operational. No Workbench or exported polygons are
+modified, and no runtime inset is applied to the supplied safe zones.
+
+V3 decoding validates the numeric C suffix, exact tuple headers, coordinate
+precision, policy, paths, hashes, one-to-one C join and building evidence.
+Torrevieja/Alicante evidence is partial: observations are lower bounds, not a
+census or generation target. All 4,824 cells preserve null estimated-count and
+desired-coverage fields. Unavailable observations remain null; measured zero is
+distinct. Empty-class safe representative observations total 10,591 / 13,852,
+with 9,544 / 9,928 fully contained source features. Intersections are associations
+and are not summed as unique buildings. No raw building-footprint runtime asset
+or additional data authority is installed.
+
+Immutable slots are cached separately from optional recipes. The same source,
+population, terrain and independently supplied physical reservations produce the
+same IDs, counts, positions, dimensions and orientations with research present,
+absent or partial. Missing zones and unsupported profile contexts cannot erase a
+slot. Existing generic families provide defaults; available research contributes
+its supported archetypes, storeys, palettes and villa prototypes. Research
+coarse sea/lagoon/morphology predicates no longer gate construction. Overlap of
+observed development with coarse research restrictions is reported for authority
+review, not interpreted as surveyed protection or permission. Validated landmark
+coordinates still supply explicit physical reservations; changing those is a
+geographic-input change, separate from toggling appearance. Genuine explicitly
+supplied protection polygons remain exclusions.
+
+Quantity uses frontage rows and street-aligned interior bands. Calibrated
+urban/suburban footprint ranges retain the accepted offline reference
+`building.geojson` SHA-256
+`6f28934613fef4531d0a4bb43fae19f802d89f9686afb0bbe0d94a0a4c4cc601`.
+Observed union area per safe representative adjusts footprint scale within
+0.75–1.6 times those ranges. Source coverage/count and population intensity select
+denser urban or spaced suburban packing; coverage is bounded at 60%. These are
+local game heuristics, not Workbench estimates. Null evidence uses population
+support; trusted observed buildings permit construction at true zero population.
+Cropped/out-of-grid/unsupported tiles are diagnosed as unknown, not zero.
+Interior positive population tiles are considered even when boundary probes miss
+them. Canonical weights and demand remain untouched.
+
+Every full rotated envelope must lie inside both safe and original polygons,
+excluding holes, concave crossings and millimetre boundary contacts. Every
+intersected native WATER raster cell excludes it; negative finite LAND is allowed.
+Native viewport bounds, actual transit corridors, StopPlaces, explicit landmarks
+and protection polygons remain hard checks. Cell-local indexes reject collisions.
+Incremental proposals stop when a local count/coverage bound is reached, with a
+compact retry for unfilled residual cells. The 65,536 global proposal guard and
+all rendering budgets remain unchanged. No full unused proposal arrays are
+allocated; out-of-viewport candidate preparation is avoided.
+
+The all-lines Torrevieja plan currently has 8,407 buildings in 894 of 1,126 empty
+cells, versus 2,486 / 407 before V3. Alicante core has 8,461 in 1,210 of 2,378;
+its active native viewport covers only part of the full C export. These occupied
+counts are not a usable-cell denominator. The ignored delivery ledger separately
+records source class, safe area, population availability, observations, geometric
+witnesses, targets and rejection reasons. A witness found during proposals is a
+positive geometry diagnostic; failure to find one is not proof of unusability.
+Independent geometry-only and physical/source-coverage denominators accompany
+acceptance, including unresolved cases. Candidate rejection totals never stand in
+for skipped-cell totals. The post-composition footprint/class audit is zero for
+both cities.
+
+Existing instanced bodies/roofs, mini reduction, native 10x grounding, stable
+cell provenance and scene-owned GPU disposal remain. Slot caches include immutable
+map/population/C/terrain/protection identity; recipe caches additionally include
+research identity/hash. Fleet, selection, same-band pan and outline LOD do not
+repack. Current local cold preparation measured approximately 1.7 / 2.5 seconds,
+with cached lookups around 0.009 milliseconds; these are setup observations, not
+CI FPS thresholds. Root/subpath lazy ZIP/PWA and truthful line-draw acknowledgements
+remain part of acceptance.
+
+Road-crossed Pass 2, additional art/families, surveyed reconstruction, authoritative
+parcel/setback calculation, blueprint compilation, further exports and Workbench
+performance work remain deferred.

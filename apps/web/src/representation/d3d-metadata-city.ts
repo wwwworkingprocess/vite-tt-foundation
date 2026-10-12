@@ -7,6 +7,7 @@ import type { SettlementPopulationOverlay } from '../settlement/settlement-popul
 import {
   pointInPolygon,
   lookupSettlementContext,
+  lookupSettlementZone,
   landmarkReservationMetres,
   polygonArea,
 } from '../settlement/settlement-metadata-spatial.js';
@@ -21,6 +22,7 @@ import type {
   CityBuilding,
   UrbanBlock,
   ProceduralCity,
+  CityBounds,
 } from './d3d-city-model.js';
 import {
   citySeed,
@@ -82,7 +84,7 @@ export function selectDevelopmentProfile(
     (profile) => profile.id === selected.buildingProfileId,
   )!;
 }
-const sample = (
+export const metadataRangeSample = (
   range: { readonly min: number; readonly max: number },
   seed: number,
 ) => range.min + (range.max - range.min) * ((seed % 1000) / 999);
@@ -145,12 +147,15 @@ export function urbanParcelLayout(
   return { parcels, rows, banded };
 }
 
-/** Static metre-based presentation. Population controls occupancy, never morphology authority. */
-export function generateMetadataCity(
+/** Shared research support, without generating legacy blocks or parcels. */
+export function metadataCityContext(
   model: D3dMapModel,
   settlement: SettlementPopulationOverlay,
-  fallback: ProceduralCity,
-): ProceduralCity {
+  fallback: {
+    readonly bounds: CityBounds;
+    readonly corridors: readonly UrbanCorridor[];
+  },
+) {
   const { population, metadata } = settlement;
   const metre = d3dMetreScale(model).worldUnitsPerMetre;
   const corridors = fallback.corridors.map((road) => ({
@@ -269,7 +274,7 @@ export function generateMetadataCity(
     1,
   );
   // Smooth presentation support over at most one raster cell, retaining the source weights.
-  const densityAt = (point: D3dWorldPoint, zoneId: string) => {
+  const densityAt = (point: D3dWorldPoint, zoneId?: string) => {
     const coordinate = geographic(model, point);
     const resolution = population.grid.resolutionDegrees;
     let weight = 0;
@@ -281,13 +286,170 @@ export function generateMetadataCity(
             coordinate[1] + dr * resolution,
           ]),
         );
-        if (support?.zoneId === zoneId && support.buildability !== 'none')
+        if (
+          support &&
+          (zoneId === undefined || support.zoneId === zoneId) &&
+          support.buildability !== 'none'
+        )
           weight +=
             support.cell.populationWeight *
             (dr === 0 && dc === 0 ? 1 : dr === 0 || dc === 0 ? 0.35 : 0.15);
       }
     return Math.pow(weight / (maximum * 3), 0.4);
   };
+  return {
+    metre,
+    corridors,
+    reservations,
+    landscapes,
+    touchesMask,
+    withinCrop,
+    clear,
+    context,
+    densityAt,
+    zoneAt: (point: D3dWorldPoint) =>
+      lookupSettlementZone(metadata, geographic(model, point))?.id,
+  };
+}
+
+export function metadataZoneAngle(
+  zone: SettlementMetadata['zones'][number],
+  urban: SettlementMetadata['urbanProfiles'][number],
+  seed: number,
+): number {
+  return (
+    ((zone.principalOrientationDeg +
+      (urban.orientationBehavior === 'locally-adaptive'
+        ? ((seed % 9) - 4) *
+          { high: 0.25, medium: 0.5, low: 1 }[zone.orientationConfidence]
+        : 0)) *
+      Math.PI) /
+    180
+  );
+}
+
+export function metadataParcelBuilding(
+  metre: number,
+  urban: SettlementMetadata['urbanProfiles'][number],
+  profile: BuildingProfile,
+  blockId: string,
+  blockSeed: number,
+  parcelIndex: number,
+  parcel: ReturnType<typeof urbanParcelLayout>['parcels'][number],
+  p: D3dWorldPoint,
+  angle: number,
+  zoneId: string,
+  localDensity: number,
+): CityBuilding | undefined {
+  const parcelId = `${blockId}-parcel-${parcelIndex}`,
+    variation = citySeed(parcelId);
+  const residential = profile.dominantUses.includes('residential');
+  const coverage = Math.min(
+    metadataRangeSample(urban.plotCoverageRatio, blockSeed >>> 4),
+    1 - metadataRangeSample(urban.openSpaceRatio, blockSeed >>> 10),
+  );
+  const family =
+    profile.allowedArchetypes[
+      (blockSeed >>> 16) % profile.allowedArchetypes.length
+    ]!;
+  const repetitive = profile.repetitionBehavior === 'highly-repetitive';
+  const archetype =
+    parcel.corner && profile.allowedArchetypes.includes('corner-l')
+      ? 'corner-l'
+      : repetitive
+        ? family
+        : profile.repetitionBehavior === 'locally-repetitive'
+          ? profile.allowedArchetypes[
+              (blockSeed + (variation % 2)) % profile.allowedArchetypes.length
+            ]!
+          : profile.allowedArchetypes[
+              variation % profile.allowedArchetypes.length
+            ]!;
+  const side =
+    metadataRangeSample(
+      { min: urban.setbackM.sideMin, max: urban.setbackM.sideMax },
+      repetitive ? blockSeed : variation,
+    ) * metre;
+  const front =
+    metadataRangeSample(
+      { min: urban.setbackM.frontMin, max: urban.setbackM.frontMax },
+      repetitive ? blockSeed : variation >>> 8,
+    ) * metre;
+  const prototype =
+    archetype === 'detached-house' &&
+    urban.parcelPattern === 'detached-lot' &&
+    variation % 3 !== 0
+      ? ('detached-villa' as const)
+      : undefined;
+  const footprintFactor = prototype
+    ? 0.86
+    : { small: 0.75, medium: 0.86, large: 0.95 }[profile.footprintScale];
+  const buildingWidth = Math.min(
+      parcel.width - 2 * side,
+      parcel.width * Math.sqrt(coverage) * footprintFactor,
+    ),
+    buildingDepth = Math.min(
+      parcel.depth - 2 * front,
+      parcel.depth * Math.sqrt(coverage) * footprintFactor,
+    );
+  if (buildingWidth < 2 * metre || buildingDepth < 3 * metre) return undefined;
+  const storeys = Math.min(
+    profile.storeys.max,
+    Math.max(
+      profile.storeys.min,
+      Math.round(
+        profile.storeys.typicalMin +
+          (profile.storeys.typicalMax - profile.storeys.typicalMin) *
+            (residential ? localDensity * 0.55 : (blockSeed % 100) / 100) +
+          (repetitive ? 0 : (variation % 3) - 1),
+      ),
+    ),
+  );
+  const tone = repetitive ? blockSeed : blockSeed + (variation % 2);
+  return {
+    ...p,
+    id: parcelId,
+    blockId,
+    zoneId,
+    buildingProfileId: profile.id,
+    width: buildingWidth,
+    depth: buildingDepth,
+    rotation: angle + parcel.rotation,
+    archetype,
+    ...(prototype ? { prototype } : {}),
+    storeys,
+    height: storeys * 3.1 * metre,
+    baseY: 0.035,
+    wallVariant: 0,
+    roofVariant: 0,
+    wallColor: settlementPaletteColor(
+      profile.wallPalette[tone % profile.wallPalette.length]!,
+    ),
+    roofColor: settlementPaletteColor(
+      profile.roofPalette[tone % profile.roofPalette.length]!,
+    ),
+    density: localDensity,
+  };
+}
+
+/** Static metre-based presentation. Population controls occupancy, never morphology authority. */
+export function generateMetadataCity(
+  model: D3dMapModel,
+  settlement: SettlementPopulationOverlay,
+  fallback: ProceduralCity,
+): ProceduralCity {
+  const { metadata } = settlement;
+  const {
+    metre,
+    corridors,
+    reservations,
+    landscapes,
+    touchesMask,
+    withinCrop,
+    clear,
+    context,
+    densityAt,
+  } = metadataCityContext(model, settlement, fallback);
   const buildings: CityBuilding[] = fallback.buildings
     .map((building) => ({
       ...building,
@@ -345,14 +507,7 @@ export function generateMetadataCity(
       (profile) => profile.id === zone.urbanProfileId,
     )!;
     const seed = citySeed(`${metadata.schemaVersion}:${zone.id}`);
-    const angle =
-      ((zone.principalOrientationDeg +
-        (urban.orientationBehavior === 'locally-adaptive'
-          ? ((seed % 9) - 4) *
-            { high: 0.25, medium: 0.5, low: 1 }[zone.orientationConfidence]
-          : 0)) *
-        Math.PI) /
-      180;
+    const angle = metadataZoneAngle(zone, urban, seed);
     const cos = Math.cos(angle),
       sin = Math.sin(angle);
     const toWorld = (u: number, v: number): D3dWorldPoint => ({
@@ -366,9 +521,10 @@ export function generateMetadataCity(
       maxU = Math.max(...points.map((p) => p.u)),
       minV = Math.min(...points.map((p) => p.v)),
       maxV = Math.max(...points.map((p) => p.v));
-    const widthM = sample(urban.typicalBlockWidthM, seed),
-      depthM = sample(urban.typicalBlockDepthM, seed >>> 8);
-    const street = sample(urban.typicalStreetWidthM, seed >>> 12) * metre,
+    const widthM = metadataRangeSample(urban.typicalBlockWidthM, seed),
+      depthM = metadataRangeSample(urban.typicalBlockDepthM, seed >>> 8);
+    const street =
+        metadataRangeSample(urban.typicalStreetWidthM, seed >>> 12) * metre,
       width = widthM * metre,
       depth = depthM * metre;
     let row = 0;
@@ -443,7 +599,7 @@ export function generateMetadataCity(
           urban.parcelPattern !== 'large-plot' &&
           urban.parcelPattern !== 'superblock';
         const frontage =
-            sample(
+            metadataRangeSample(
               {
                 min: urban.typicalParcelFrontageM.min,
                 max:
@@ -455,7 +611,8 @@ export function generateMetadataCity(
               blockSeed,
             ) * metre,
           parcelDepth =
-            sample(urban.typicalParcelDepthM, blockSeed >>> 8) * metre;
+            metadataRangeSample(urban.typicalParcelDepthM, blockSeed >>> 8) *
+            metre;
         const layout = urbanParcelLayout(
           width,
           depth,
@@ -471,15 +628,6 @@ export function generateMetadataCity(
               Math.min(street * 0.4, 5 * metre),
               zone.id,
             );
-        const open = sample(urban.openSpaceRatio, blockSeed >>> 10),
-          coverage = Math.min(
-            sample(urban.plotCoverageRatio, blockSeed >>> 4),
-            1 - open,
-          );
-        const family =
-          profile.allowedArchetypes[
-            (blockSeed >>> 16) % profile.allowedArchetypes.length
-          ]!;
         const residential = profile.dominantUses.includes('residential');
         for (const [parcelIndex, parcel] of layout.parcels.entries()) {
           const parcelId = `${blockId}-parcel-${parcelIndex}`,
@@ -501,95 +649,26 @@ export function generateMetadataCity(
             (variation % 1000) / 1000 >= occupancy
           )
             continue;
-          const repetitive = profile.repetitionBehavior === 'highly-repetitive';
-          const archetype =
-            parcel.corner && profile.allowedArchetypes.includes('corner-l')
-              ? 'corner-l'
-              : repetitive
-                ? family
-                : profile.repetitionBehavior === 'locally-repetitive'
-                  ? profile.allowedArchetypes[
-                      (blockSeed + (variation % 2)) %
-                        profile.allowedArchetypes.length
-                    ]!
-                  : profile.allowedArchetypes[
-                      variation % profile.allowedArchetypes.length
-                    ]!;
-          const side =
-            sample(
-              { min: urban.setbackM.sideMin, max: urban.setbackM.sideMax },
-              repetitive ? blockSeed : variation,
-            ) * metre;
-          const front =
-            sample(
-              { min: urban.setbackM.frontMin, max: urban.setbackM.frontMax },
-              repetitive ? blockSeed : variation >>> 8,
-            ) * metre;
-          const prototype =
-            archetype === 'detached-house' &&
-            urban.parcelPattern === 'detached-lot' &&
-            variation % 3 !== 0
-              ? ('detached-villa' as const)
-              : undefined;
-          const footprintFactor = prototype
-            ? 0.86
-            : { small: 0.75, medium: 0.86, large: 0.95 }[
-                profile.footprintScale
-              ];
-          const buildingWidth = Math.min(
-              parcel.width - 2 * side,
-              parcel.width * Math.sqrt(coverage) * footprintFactor,
-            ),
-            buildingDepth = Math.min(
-              parcel.depth - 2 * front,
-              parcel.depth * Math.sqrt(coverage) * footprintFactor,
-            );
-          if (buildingWidth < 2 * metre || buildingDepth < 3 * metre) continue;
-          const radius = Math.hypot(buildingWidth, buildingDepth) / 2;
+          const building = metadataParcelBuilding(
+            metre,
+            urban,
+            profile,
+            blockId,
+            blockSeed,
+            parcelIndex,
+            parcel,
+            p,
+            angle,
+            zone.id,
+            localDensity,
+          );
           if (
-            !clear(p, radius) ||
+            !building ||
+            !clear(p, Math.hypot(building.width, building.depth) / 2) ||
             !pointInPolygon(geographic(model, p), zone.boundary)
           )
             continue;
-          const storeys = Math.min(
-            profile.storeys.max,
-            Math.max(
-              profile.storeys.min,
-              Math.round(
-                profile.storeys.typicalMin +
-                  (profile.storeys.typicalMax - profile.storeys.typicalMin) *
-                    (residential
-                      ? localDensity * 0.55
-                      : (blockSeed % 100) / 100) +
-                  (repetitive ? 0 : (variation % 3) - 1),
-              ),
-            ),
-          );
-          const tone = repetitive ? blockSeed : blockSeed + (variation % 2);
-          buildings.push({
-            ...p,
-            id: parcelId,
-            blockId,
-            zoneId: zone.id,
-            buildingProfileId: profile.id,
-            width: buildingWidth,
-            depth: buildingDepth,
-            rotation: angle + parcel.rotation,
-            archetype,
-            ...(prototype ? { prototype } : {}),
-            storeys,
-            height: storeys * 3.1 * metre,
-            baseY: 0.035,
-            wallVariant: 0,
-            roofVariant: 0,
-            wallColor: settlementPaletteColor(
-              profile.wallPalette[tone % profile.wallPalette.length]!,
-            ),
-            roofColor: settlementPaletteColor(
-              profile.roofPalette[tone % profile.roofPalette.length]!,
-            ),
-            density: localDensity,
-          });
+          buildings.push(building);
         }
       }
     }

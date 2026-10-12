@@ -1,3 +1,14 @@
+import * as terrainGrid from './d3d-terrain-grid.js';
+import * as terrainPlanning from './d3d-terrain-model.js';
+import {
+  buildStreetCellCity,
+  streetCellLandmarkProtections,
+} from './d3d-street-cell-city.js';
+import {
+  cellCityCells,
+  cellCityPopulation,
+  cellCityTerrain,
+} from '../test/street-cell-city-fixture.js';
 import { useStreetCells } from './use-street-cells.js';
 import { decodeStreetCells, parseStreetCellCatalog } from './street-cells.js';
 import {
@@ -354,6 +365,19 @@ const chooseSceneObject = (
 
 const enableWorld = () => {
   controls.renderWorld = true;
+  // The R3F test bridge uses DOM nodes for Three tags; ignore only this expected
+  // React casing notice, forwarding all other errors unchanged.
+  const error = console.error;
+  vi.spyOn(console, 'error').mockImplementation(
+    (message: unknown, ...args: unknown[]) => {
+      if (
+        typeof message === 'string' &&
+        message.includes('is using incorrect casing.')
+      )
+        return;
+      error(message, ...args);
+    },
+  );
   const setMatrixAt = vi.fn();
   const setColorAt = vi.fn();
   const computeBoundingSphere = vi.fn();
@@ -409,7 +433,7 @@ it('batches five city silhouettes with near roofs and cheap far/mini geometry wi
   const dispose = vi.spyOn(BufferGeometry.prototype, 'dispose');
   const city = buildProceduralCity(model, population);
   const { rerender, unmount } = render(
-    scene('normal', null, undefined, scenario, population),
+    scene('normal', null, undefined, genericScenario, population),
   );
   const map = screen.getByTestId('d3d-map-representation');
   expect(map).toHaveAttribute(
@@ -453,7 +477,9 @@ it('batches five city silhouettes with near roofs and cheap far/mini geometry wi
   );
   const staticCalls = setMatrixAt.mock.calls.length;
   const staticBounds = computeBoundingSphere.mock.calls.length;
-  rerender(scene('normal', null, undefined, scenario, population, [...fleet]));
+  rerender(
+    scene('normal', null, undefined, genericScenario, population, [...fleet]),
+  );
   expect(setMatrixAt).toHaveBeenCalledTimes(staticCalls);
   expect(computeBoundingSphere).toHaveBeenCalledTimes(staticBounds);
   fireEvent.wheel(controls.canvas, { deltaY: 10000 });
@@ -463,7 +489,7 @@ it('batches five city silhouettes with near roofs and cheap far/mini geometry wi
     String(city.far.length),
   );
   expect(map).toHaveAttribute('data-city-roof-instances', '0');
-  rerender(scene('mini', null, undefined, scenario, population));
+  rerender(scene('mini', null, undefined, genericScenario, population));
   expect(map).toHaveAttribute(
     'data-city-building-instances',
     String(city.mini.length),
@@ -475,8 +501,11 @@ it('batches five city silhouettes with near roofs and cheap far/mini geometry wi
     canonicalCells: population.canonicalCells.filter((c) => c.column < 5),
   };
   const replacementScenario = {
-    ...scenario,
-    manifest: { ...scenario.manifest, scenarioId: 'population-replacement' },
+    ...genericScenario,
+    manifest: {
+      ...genericScenario.manifest,
+      scenarioId: 'population-replacement',
+    },
   } as typeof scenario;
   rerender(
     scene(
@@ -519,12 +548,15 @@ const readyView = {
 } as const;
 // Static fixture acquisition is exercised independently by the city-model tests.
 buildProceduralCity(model, population, readyView);
+const cellOwnedPopulation = { ...population, ...cellCityPopulation };
+// Shared real-data fixture preparation is outside individual interaction cases.
+buildStreetCellCity(model, cellOwnedPopulation, readyView, cellCityCells);
 
 it('exposes research diagnostics and keeps scaled city surfaces outside entity hit targets', () => {
   enableWorld();
   vi.mocked(useSettlementMetadata).mockReturnValue(readyView);
   const { unmount } = render(
-    scene('normal', null, undefined, scenario, population),
+    scene('normal', null, undefined, genericScenario, population),
   );
   const map = screen.getByTestId('d3d-map-representation');
   expect(map).toHaveAttribute('data-settlement-metadata-status', 'ready');
@@ -609,13 +641,13 @@ it('keeps an empty population crop as cheap land context with no zero-capacity i
 it('renders transport immediately while metadata loads, then retains generic fallback and stable framing', () => {
   vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'loading' });
   const { rerender } = render(
-    scene('normal', null, undefined, scenario, population),
+    scene('normal', null, undefined, genericScenario, population),
   );
   const map = screen.getByTestId('d3d-map-representation');
   expect(map).toHaveAttribute('data-city-building-count', '0');
   const camera = cameraState();
   vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'failed' });
-  rerender(scene('normal', null, undefined, scenario, population));
+  rerender(scene('normal', null, undefined, genericScenario, population));
   expect(Number(map.getAttribute('data-city-building-count'))).toBeGreaterThan(
     0,
   );
@@ -829,6 +861,22 @@ it('advances without profile records when presentation profiling is disabled', (
   act(() => vi.advanceTimersByTime(1000 / 60 + 1));
   expect(mark).not.toHaveBeenCalled();
 });
+
+const genericScenario = {
+  ...scenario,
+  manifest: parseScenarioManifest({
+    ...scenario.manifest,
+    settlementIds: [...scenario.manifest.settlementIds, 'es-elche'],
+    primarySettlementId: 'es-elche',
+  }),
+};
+
+// Prewarm the exact generic research fixture, independently covered by model tests.
+buildProceduralCity(
+  createD3dMapModel(createTransportMapProjection(genericScenario)),
+  population,
+  readyView,
+);
 
 const scene = (
   mode: 'normal' | 'mini',
@@ -1157,7 +1205,7 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
       'normal',
       selectStop(stop.stopPlaceId),
       undefined,
-      scenario,
+      genericScenario,
       population,
     ),
   );
@@ -1213,7 +1261,7 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
       'normal',
       selectRoute(route.routeId),
       route.routeId,
-      scenario,
+      genericScenario,
       population,
     ),
   );
@@ -1232,7 +1280,7 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
       'normal',
       selectVehicle(fleet[0]!.vehicleId),
       route.routeId,
-      scenario,
+      genericScenario,
       population,
     ),
   );
@@ -1248,7 +1296,7 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
   };
   expect(groupProps.position[1]).toBeGreaterThan(ground);
   view.rerender(
-    scene('normal', null, undefined, scenario, population, [...fleet]),
+    scene('normal', null, undefined, genericScenario, population, [...fleet]),
   );
   expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
     'data-terrain-geometry-builds',
@@ -1260,7 +1308,7 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
       .getByTestId('d3d-map-representation')
       .getAttribute('data-terrain-geometry-builds'),
   );
-  view.rerender(scene('mini', null, undefined, scenario, population));
+  view.rerender(scene('mini', null, undefined, genericScenario, population));
   expect(document.querySelector('mesh[name="research-landscape"]')).toBeNull();
   expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
     'data-terrain-geometry-builds',
@@ -1812,7 +1860,7 @@ it('owns cached road buffers across fleet/focus/pan and swaps one product while 
   };
   vi.mocked(useRoadNetwork).mockReturnValue({ status: 'ready', model: road });
   const { rerender, unmount } = render(
-    scene('normal', null, undefined, scenario, population),
+    scene('normal', null, undefined, genericScenario, population),
   );
   const map = screen.getByTestId('d3d-map-representation');
   expect(map).toHaveAttribute('data-road-network-level', 'A');
@@ -1833,13 +1881,13 @@ it('owns cached road buffers across fleet/focus/pan and swaps one product while 
       'normal',
       selectStop(stop.stopPlaceId),
       undefined,
-      scenario,
+      genericScenario,
       population,
       [...fleet],
     ),
   );
   expect(map).toHaveAttribute('data-road-network-geometry-builds', builds);
-  rerender(scene('normal', null, route.routeId, scenario, population));
+  rerender(scene('normal', null, route.routeId, genericScenario, population));
   expect(map).toHaveAttribute('data-road-network-geometry-builds', builds);
   act(() => {
     pointer('pointerdown', 100, 100);
@@ -1848,9 +1896,9 @@ it('owns cached road buffers across fleet/focus/pan and swaps one product while 
   });
   expect(map).toHaveAttribute('data-road-network-geometry-builds', builds);
   fireEvent.wheel(controls.canvas, { deltaY: -3000 });
-  expect(useRoadNetwork).toHaveBeenLastCalledWith('es-torrevieja', 'C');
+  expect(useRoadNetwork).toHaveBeenLastCalledWith('es-elche', 'C');
   vi.mocked(useRoadNetwork).mockReturnValue({ status: 'loading' });
-  rerender(scene('normal', null, undefined, scenario, population));
+  rerender(scene('normal', null, undefined, genericScenario, population));
   expect(roadDisposed).toHaveBeenCalledTimes(1);
   expect(materialDisposed).not.toHaveBeenCalled();
   expect(map).toHaveAttribute('data-road-network-level', '');
@@ -1861,7 +1909,7 @@ it('owns cached road buffers across fleet/focus/pan and swaps one product while 
     status: 'ready',
     model: { ...road, level: 'C' },
   });
-  rerender(scene('normal', null, undefined, scenario, population));
+  rerender(scene('normal', null, undefined, genericScenario, population));
   expect(map).toHaveAttribute('data-road-network-level', 'C');
   expect(document.querySelectorAll('mesh[name^="road-network-"]')).toHaveLength(
     1,
@@ -1870,7 +1918,7 @@ it('owns cached road buffers across fleet/focus/pan and swaps one product while 
     status: 'error',
     message: 'corrupt road',
   });
-  rerender(scene('normal', null, undefined, scenario, population));
+  rerender(scene('normal', null, undefined, genericScenario, population));
   expect(map).toHaveAttribute('data-road-network-error', 'corrupt road');
   expect(
     document.querySelector('mesh[name="provisional-streets"]'),
@@ -1893,7 +1941,7 @@ it('owns cached road buffers across fleet/focus/pan and swaps one product while 
       ],
     },
   });
-  rerender(scene('normal', null, undefined, scenario, population));
+  rerender(scene('normal', null, undefined, genericScenario, population));
   expect(map).toHaveAttribute('data-road-network-status', 'error');
   expect(map.getAttribute('data-road-network-error')).toContain(
     'support budget exceeded',
@@ -1926,7 +1974,9 @@ it('acknowledges only the active actually drawn road product once and invalidate
     })),
   };
   vi.mocked(useRoadNetwork).mockReturnValue({ status: 'ready', model: road });
-  const view = render(scene('normal', null, undefined, scenario, population));
+  const view = render(
+    scene('normal', null, undefined, genericScenario, population),
+  );
   const map = screen.getByTestId('d3d-map-representation');
   const acknowledgement = () =>
     map.getAttribute('data-rendered-road-network-level');
@@ -1953,7 +2003,7 @@ it('acknowledges only the active actually drawn road product once and invalidate
   expect(observer.takeRecords()).toHaveLength(0);
   vi.mocked(useRoadNetwork).mockReturnValue({ status: 'loading' });
   fireEvent.wheel(controls.canvas, { deltaY: -3000 });
-  view.rerender(scene('normal', null, undefined, scenario, population));
+  view.rerender(scene('normal', null, undefined, genericScenario, population));
   expect(map).toHaveAttribute('data-road-network-requested-level', 'C');
   expect(acknowledgement()).toBe('');
   expect(
@@ -1967,7 +2017,7 @@ it('acknowledges only the active actually drawn road product once and invalidate
     status: 'ready',
     model: { ...road, level: 'C' },
   });
-  view.rerender(scene('normal', null, undefined, scenario, population));
+  view.rerender(scene('normal', null, undefined, genericScenario, population));
   expect(acknowledgement()).toBe('');
   const current = callbacks()[0]!;
   old[0]!();
@@ -1983,7 +2033,7 @@ it('acknowledges only the active actually drawn road product once and invalidate
     status: 'error',
     message: 'Required archive unavailable',
   });
-  view.rerender(scene('normal', null, undefined, scenario, population));
+  view.rerender(scene('normal', null, undefined, genericScenario, population));
   expect(acknowledgement()).toBe('');
   current();
   expect(acknowledgement()).toBe('');
@@ -1991,11 +2041,11 @@ it('acknowledges only the active actually drawn road product once and invalidate
     document.querySelector('mesh[name="provisional-streets"]'),
   ).not.toBeNull();
   vi.mocked(useRoadNetwork).mockReturnValue({ status: 'ready', model: road });
-  view.rerender(scene('normal', null, undefined, scenario, population));
+  view.rerender(scene('normal', null, undefined, genericScenario, population));
   const normal = callbacks()[0]!;
   normal();
   expect(acknowledgement()).toBe('A');
-  view.rerender(scene('mini', null, undefined, scenario, population));
+  view.rerender(scene('mini', null, undefined, genericScenario, population));
   expect(acknowledgement()).toBe('');
   normal();
   expect(acknowledgement()).toBe('');
@@ -2006,7 +2056,7 @@ it('acknowledges only the active actually drawn road product once and invalidate
     status: 'ready',
     model: { ...road, sha256: 'b'.repeat(64) },
   });
-  view.rerender(scene('mini', null, undefined, scenario, population));
+  view.rerender(scene('mini', null, undefined, genericScenario, population));
   expect(acknowledgement()).toBe('');
   mini();
   expect(acknowledgement()).toBe('');
@@ -2014,12 +2064,12 @@ it('acknowledges only the active actually drawn road product once and invalidate
   replaced();
   expect(acknowledgement()).toBe('A');
   controls.renderWorld = false;
-  view.rerender(scene('mini', null, undefined, scenario, population));
+  view.rerender(scene('mini', null, undefined, genericScenario, population));
   expect(acknowledgement()).toBe('');
   replaced();
   expect(acknowledgement()).toBe('');
   controls.renderWorld = true;
-  view.rerender(scene('mini', null, undefined, scenario, population));
+  view.rerender(scene('mini', null, undefined, genericScenario, population));
   expect(acknowledgement()).toBe('');
   const remounted = callbacks()[0]!;
   remounted();
@@ -2031,21 +2081,25 @@ it('acknowledges only the active actually drawn road product once and invalidate
       null,
       undefined,
       {
-        ...scenario,
+        ...genericScenario,
         manifest: parseScenarioManifest({
           ...scenario.manifest,
-          settlementIds: [...scenario.manifest.settlementIds, 'es-elche'],
-          primarySettlementId: 'es-elche',
+          settlementIds: [...scenario.manifest.settlementIds, 'es-alicante'],
+          primarySettlementId: 'es-alicante',
         }),
       },
       population,
     ),
   );
+  expect(useRoadNetwork).toHaveBeenLastCalledWith(
+    'es-alicante',
+    expect.any(String),
+  );
   expect(acknowledgement()).toBe('');
   remounted();
   expect(acknowledgement()).toBe('');
   vi.mocked(useRoadNetwork).mockReturnValue({ status: 'ready', model: road });
-  view.rerender(scene('normal', null, undefined, scenario, population));
+  view.rerender(scene('normal', null, undefined, genericScenario, population));
   const detached = callbacks()[0]!;
   detached();
   expect(acknowledgement()).toBe('A');
@@ -2393,3 +2447,224 @@ function publishCellLod(level: 'far' | 'medium' | 'near') {
     )!.props.onLod!(level),
   );
 }
+
+it('requires independent Torrevieja C for ordinary buildings at every camera LOD, with no old-grid fallback', () => {
+  enableWorld();
+  vi.mocked(useSettlementMetadata).mockReturnValue(readyView);
+  const view = render(scene('normal', null, undefined, scenario, population));
+  const host = screen.getByTestId('d3d-map-representation');
+  expect(useStreetCells).toHaveBeenCalledWith(
+    'es-torrevieja',
+    true,
+    undefined,
+    'C',
+  );
+  expect(host).toHaveAttribute('data-cell-buildings-status', 'inactive');
+  expect(host).toHaveAttribute('data-city-building-count', '0');
+  for (const state of [
+    { status: 'loading' },
+    { status: 'absent' },
+    { status: 'error', message: 'broken required C' },
+  ] as const) {
+    vi.mocked(useStreetCells).mockReturnValue(state);
+    view.rerender(scene('normal', null, undefined, scenario, population));
+    expect(host).toHaveAttribute('data-city-building-count', '0');
+    expect(host).toHaveAttribute('data-cell-buildings-status', state.status);
+    expect(
+      document.querySelector('mesh[name="landmark-reservations"]'),
+    ).not.toBeNull();
+  }
+  fireEvent.wheel(controls.canvas, { deltaY: -3000 });
+  expect(useStreetCells).toHaveBeenCalledWith(
+    'es-torrevieja',
+    true,
+    undefined,
+    'C',
+  );
+  view.rerender(scene('mini', null, undefined, scenario, population));
+  expect(useStreetCells).toHaveBeenCalledWith(
+    'es-torrevieja',
+    true,
+    undefined,
+    'C',
+  );
+  expect(host).toHaveAttribute('data-city-building-count', '0');
+});
+
+const lifecycleCells = {
+  ...cellCityCells,
+  features: cellCityCells.features.filter((f) =>
+    ['es-torrevieja-sc-123', 'es-torrevieja-sc-1'].includes(f.id),
+  ),
+};
+
+// Cold C planning/grounding is measured by real-data model tests. This scene case
+// deliberately times cache/lifecycle behavior using the same immutable identities.
+const lifecycleWorld = terrainPlanning.createD3dTerrain(
+  cellCityTerrain.terrain,
+  model,
+);
+const lifecycleCity = buildStreetCellCity(
+  model,
+  cellOwnedPopulation,
+  readyView,
+  lifecycleCells,
+  lifecycleWorld,
+  streetCellLandmarkProtections(model, readyView),
+);
+terrainPlanning.groundCity(lifecycleCity, lifecycleWorld);
+terrainPlanning.planD3dTerrain(lifecycleWorld, {
+  representationMode: 'normal',
+  lod: 'far',
+});
+
+it('batches cell-owned Torrevieja buildings once and keeps their static plan through fleet, pan, selection and LOD', () => {
+  enableWorld();
+  // Native-ground queries remain real; full terrain mesh LOD has independent model/E2E coverage.
+  // This case measures city lifecycle, so avoid materializing the entire native mesh here.
+  // Native grid is independently covered; this case asserts city buffers, not grid materialization.
+  vi.spyOn(terrainGrid, 'terrainGridWindow').mockReturnValue(undefined);
+  const terrainPlanner = terrainPlanning.planD3dTerrain;
+  vi.spyOn(terrainPlanning, 'planD3dTerrain').mockImplementation(
+    (terrain, policy) => terrainPlanner(terrain, { ...policy, lod: 'far' }),
+  );
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  vi.mocked(useSettlementMetadata).mockReturnValue(readyView);
+  vi.mocked(useStreetCells).mockImplementation(
+    (_city, _active, _loader, level) =>
+      level === 'C'
+        ? { status: 'ready', model: lifecycleCells }
+        : { status: 'loading' },
+  );
+  const realPopulation = cellOwnedPopulation;
+  const view = render(
+    scene('normal', null, undefined, scenario, realPopulation),
+  );
+  const host = screen.getByTestId('d3d-map-representation');
+  expect(Number(host.dataset.cityBuildingCount)).toBeGreaterThan(0);
+  expect(Number(host.dataset.cellBuildingsUrban)).toBeGreaterThan(0);
+  expect(Number(host.dataset.cellBuildingsSuburban)).toBeGreaterThan(0);
+  expect(host).toHaveAttribute('data-cell-buildings-source-cells', '2');
+  expect(document.querySelector('mesh[name="provisional-streets"]')).toBeNull();
+  const builds = host.dataset.cityLayoutBuilds;
+  fireEvent.wheel(controls.canvas, { deltaY: -3000 });
+  expect(host.dataset.cityLayoutBuilds).toBe(builds);
+  const geometries = [
+    ...document.querySelectorAll('instancedmesh[name^="city-"]'),
+  ].map((node) => sceneProps(node).geometry);
+  const staticGeometry = vi.spyOn(cityGeometry, 'createCityPrototypeGeometry');
+  view.rerender(
+    scene(
+      'normal',
+      selectStop(stop.stopPlaceId),
+      undefined,
+      scenario,
+      realPopulation,
+      [...fleet],
+    ),
+  );
+  act(() => {
+    pointer('pointerdown', 10, 10);
+    pointer('pointermove', 12, 12);
+    pointer('pointerup', 12, 12);
+  });
+  expect(host.dataset.cityLayoutBuilds).toBe(builds);
+  expect(
+    [...document.querySelectorAll('instancedmesh[name^="city-"]')].map(
+      (node) => sceneProps(node).geometry,
+    ),
+  ).toEqual(geometries);
+  expect(staticGeometry).not.toHaveBeenCalled();
+  const dispose = vi.spyOn(BufferGeometry.prototype, 'dispose');
+  view.unmount();
+  expect(dispose).toHaveBeenCalled();
+});
+it('reports repeated skipped-cell causes separately from candidate rejections', () => {
+  enableWorld();
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: {
+      ...cellCityCells,
+      features: cellCityCells.features.filter((f) =>
+        ['es-torrevieja-sc-4', 'es-torrevieja-sc-7'].includes(f.id),
+      ),
+    },
+  });
+  render(scene('normal', null, undefined, scenario, cellOwnedPopulation));
+  const host = screen.getByTestId('d3d-map-representation');
+  expect(host).toHaveAttribute('data-cell-buildings-source-cells', '2');
+  expect(host).toHaveAttribute('data-city-building-count', '0');
+  expect(JSON.parse(host.dataset.cellBuildingsSkipped!)).toEqual({
+    'safe-zone-footprint': 2,
+  });
+  expect(
+    JSON.parse(host.dataset.cellBuildingsRejected!)['safe-zone-footprint'],
+  ).toBeGreaterThan(2);
+});
+it('fails a foreign C composition safely, reports its error and retains research reservations', () => {
+  enableWorld();
+  vi.mocked(useSettlementMetadata).mockReturnValue(readyView);
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: { ...cellCityCells, settlementId: 'es-alicante' },
+  });
+  const view = render(scene('normal', null, undefined, scenario, population));
+  const host = screen.getByTestId('d3d-map-representation');
+  expect(host).toHaveAttribute('data-cell-buildings-status', 'error');
+  expect(host.dataset.cellBuildingsError).toContain(
+    'StreetCell C settlement mismatch',
+  );
+  expect(host).toHaveAttribute('data-city-building-count', '0');
+  expect(
+    document.querySelector('mesh[name="landmark-reservations"]'),
+  ).not.toBeNull();
+  vi.mocked(useSettlementMetadata).mockReturnValue({
+    status: 'failed',
+  });
+  view.rerender(scene('normal', null, undefined, scenario, population));
+  expect(host).toHaveAttribute('data-cell-buildings-status', 'error');
+  expect(host).toHaveAttribute('data-city-building-count', '0');
+  expect(
+    sceneProps(
+      document.querySelector('mesh[name="landmark-reservations"]')!,
+    ).geometry!.getAttribute('position').count,
+  ).toBe(0);
+});
+
+it('reports C buildings ready with absent/error/loading optional research and reuses unchanged slots', () => {
+  enableWorld();
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  const one = {
+    ...cellCityCells,
+    features: cellCityCells.features.filter(
+      (f) => f.id === 'es-torrevieja-sc-1',
+    ),
+  };
+  vi.mocked(useStreetCells).mockReturnValue({ status: 'ready', model: one });
+  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'failed' });
+  const view = render(
+    scene('normal', null, undefined, scenario, cellOwnedPopulation),
+  );
+  const host = screen.getByTestId('d3d-map-representation');
+  expect(host).toHaveAttribute('data-cell-buildings-status', 'ready');
+  expect(Number(host.dataset.cityBuildingCount)).toBeGreaterThan(0);
+  const count = host.dataset.cityBuildingCount,
+    builds = host.dataset.cityLayoutBuilds;
+  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'loading' });
+  view.rerender(
+    scene('normal', null, undefined, scenario, cellOwnedPopulation),
+  );
+  expect(host).toHaveAttribute('data-cell-buildings-status', 'ready');
+  expect(host.dataset.cityBuildingCount).toBe(count);
+  expect(host.dataset.cityLayoutBuilds).toBe(builds);
+});

@@ -124,7 +124,8 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   terrainMap()
     .should('have.attr', 'data-street-cells-status', 'inactive')
     .and('have.attr', 'data-street-cells-count', '0');
-  cy.then(() => expect(cellArchives).to.equal(0));
+  terrainMap().should('have.attr', 'data-cell-buildings-status', 'ready');
+  cy.then(() => expect(cellArchives).to.equal(1));
   cy.get('[aria-label="Routes"] [data-route-id="legacy-A"]').click();
   cy.contains('button', 'Add bus').should('be.enabled').click();
   cy.get('button[aria-label="Select mini representation for swap"]').click();
@@ -353,7 +354,10 @@ it('switches between cataloged cities and unsupported Cartagena without stale ro
   const changeCity = (city: string, scenario: string) => {
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.get('select[aria-label="City"]').select(city);
-    cy.contains('label', 'Scenario').find('select').select(scenario);
+    cy.contains('label', 'Scenario')
+      .find('select')
+      .should('be.enabled')
+      .select(scenario);
     cy.get('[data-testid="scenario-status"]').should('contain.text', 'ready');
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.contains('button', 'Restart').click();
@@ -398,42 +402,43 @@ it('reports missing required road infrastructure while preserving the game and n
 
 // Deterministic test framing uses the existing canonical map/world transform;
 // no runtime controls, pixel assertions or compiled parcel authority are added.
-const frameCellDowntown = (city = 'es-torrevieja') =>
-  cy.task('streetCellDowntown', city).then((point) => {
-    const target = point as { x: number; z: number };
-    terrainMap().then(($map) => {
-      const canvas = $map.find('canvas')[0]!,
-        rect = canvas.getBoundingClientRect();
-      const units =
-        20 /
-        (Number($map.attr('data-camera-viewport-height')) *
-          Number($map.attr('data-camera-zoom')));
-      const tx = target.x - Number($map.attr('data-camera-target-x')),
-        tz = target.z - Number($map.attr('data-camera-target-z'));
-      const dx = (tz - tx) / (Math.SQRT2 * units),
-        dy =
-          (-(tx + tz) * Math.sin((35 * Math.PI) / 180)) / (Math.SQRT2 * units);
-      cy.wrap(canvas).trigger('pointerdown', {
-        eventConstructor: 'PointerEvent',
-        pointerId: 1,
-        clientX: rect.left + 10,
-        clientY: rect.top + 10,
-      });
-      cy.wrap(canvas).trigger('pointermove', {
-        eventConstructor: 'PointerEvent',
-        pointerId: 1,
-        clientX: rect.left + 10 + dx,
-        clientY: rect.top + 10 + dy,
-      });
-      cy.wrap(canvas).trigger('pointerup', {
-        eventConstructor: 'PointerEvent',
-        pointerId: 1,
-        clientX: rect.left + 10 + dx,
-        clientY: rect.top + 10 + dy,
-      });
+const frameTerrainTarget = (target: { x: number; z: number }) => {
+  terrainMap().then(($map) => {
+    const canvas = $map.find('canvas')[0]!,
+      rect = canvas.getBoundingClientRect();
+    const units =
+      20 /
+      (Number($map.attr('data-camera-viewport-height')) *
+        Number($map.attr('data-camera-zoom')));
+    const tx = target.x - Number($map.attr('data-camera-target-x')),
+      tz = target.z - Number($map.attr('data-camera-target-z'));
+    const dx = (tz - tx) / (Math.SQRT2 * units),
+      dy = (-(tx + tz) * Math.sin((35 * Math.PI) / 180)) / (Math.SQRT2 * units);
+    cy.wrap(canvas).trigger('pointerdown', {
+      eventConstructor: 'PointerEvent',
+      pointerId: 1,
+      clientX: rect.left + 10,
+      clientY: rect.top + 10,
     });
-    terrainDrawn();
+    cy.wrap(canvas).trigger('pointermove', {
+      eventConstructor: 'PointerEvent',
+      pointerId: 1,
+      clientX: rect.left + 10 + dx,
+      clientY: rect.top + 10 + dy,
+    });
+    cy.wrap(canvas).trigger('pointerup', {
+      eventConstructor: 'PointerEvent',
+      pointerId: 1,
+      clientX: rect.left + 10 + dx,
+      clientY: rect.top + 10 + dy,
+    });
   });
+  terrainDrawn();
+};
+const frameCellDowntown = (city = 'es-torrevieja') =>
+  cy
+    .task('streetCellDowntown', city)
+    .then((point) => frameTerrainTarget(point as { x: number; z: number }));
 it('draws inspectable V2 C safe-zone boundaries beside downtown roads and preserves static buffers on pan', () => {
   cy.viewport(1000, 660);
   cy.visit('/');
@@ -547,12 +552,14 @@ it('preserves native downtown gameplay when the mandatory StreetCell archive can
   terrainMap()
     .should('have.attr', 'data-street-cells-status', 'error')
     .and('have.attr', 'data-rendered-street-cells-level', '')
-    .and('have.attr', 'data-street-cells-count', '0');
+    .and('have.attr', 'data-street-cells-count', '0')
+    .and('have.attr', 'data-cell-buildings-status', 'error')
+    .and('have.attr', 'data-city-building-count', '0');
   recordTerrainState('street-cells-downtown-without-lattice');
   cy.screenshot('street-cells-downtown-without-lattice');
 });
 
-it('draws Alicante V2 A/B/C, keeps near buffers stable and clears cells for unsupported Cartagena', () => {
+it('draws Alicante V3 C-owned buildings with A/B/C, keeps near buffers stable and clears cells for unsupported Cartagena', () => {
   let archives = 0;
   cy.intercept('GET', '**/street-cells/street-cells.zip*', () => {
     archives++;
@@ -589,7 +596,16 @@ it('draws Alicante V2 A/B/C, keeps near buffers stable and clears cells for unsu
   }
   terrainMap()
     .should('have.attr', 'data-street-cells-displayed-count', '2759')
-    .and('have.attr', 'data-street-cells-nondrawable-count', '442');
+    .and('have.attr', 'data-street-cells-nondrawable-count', '442')
+    .and('have.attr', 'data-cell-buildings-status', 'ready')
+    .and('have.attr', 'data-cell-buildings-source-cells', '3201')
+    .and('have.attr', 'data-cell-buildings-outside-safe-zone', '0')
+    .and('have.attr', 'data-cell-buildings-ineligible', '0')
+    .should(($map) =>
+      expect(Number($map.attr('data-city-building-count'))).to.be.greaterThan(
+        8000,
+      ),
+    );
   terrainMap().then(($map) => {
     const builds = $map.attr('data-street-cells-geometry-builds');
     cy.contains('button', 'Pause').click();
@@ -615,5 +631,107 @@ it('draws Alicante V2 A/B/C, keeps near buffers stable and clears cells for unsu
     .and('have.attr', 'data-rendered-street-cells-level', '')
     .and('have.attr', 'data-street-cells-batches', '0');
   cy.get('[data-testid="game-shell"]').should('be.visible');
+  cy.then(() => expect(archives).to.equal(1));
+});
+
+it('shows distinct research urban/suburban buildings only inside empty C cells at every LOD', () => {
+  cy.viewport(1000, 660);
+  let archives = 0;
+  cy.intercept('GET', '**/street-cells/street-cells.zip*', () => {
+    archives++;
+  });
+  cy.visit('/');
+  cy.get('[data-testid="open-screen"]').should('be.visible');
+  cy.contains('label', 'Scenario')
+    .find('select')
+    .select('torrevieja-legacy-all-v1');
+  cy.contains('button', 'Start new game').click();
+  terrainMap()
+    .should('have.attr', 'data-cell-buildings-status', 'ready')
+    .and('have.attr', 'data-cell-buildings-source-cells', '1623')
+    .and('have.attr', 'data-cell-buildings-empty', '1126')
+    .and('have.attr', 'data-cell-buildings-road-crossed', '311')
+    .and('have.attr', 'data-cell-buildings-non-drawable', '186')
+    .should(($map) => {
+      expect(Number($map.attr('data-city-building-count'))).to.be.greaterThan(
+        2486 * 3,
+      );
+      expect(
+        Number($map.attr('data-cell-buildings-frontage')),
+      ).to.be.greaterThan(0);
+      expect(
+        Number($map.attr('data-cell-buildings-interior')),
+      ).to.be.greaterThan(0);
+    });
+  cy.get('button[aria-label="Select mini representation for swap"]').click();
+  cy.contains('button', 'Swap visualizations').click();
+  terrainDrawn();
+  terrainMap().then(($map) => {
+    const layoutBuilds = $map.attr('data-city-layout-builds'),
+      buildings = $map.attr('data-city-building-count');
+    expect(Number($map.attr('data-cell-buildings-urban'))).to.be.greaterThan(0);
+    expect(Number($map.attr('data-cell-buildings-suburban'))).to.be.greaterThan(
+      0,
+    );
+    terrainZoomTo(0.03);
+    terrainMap().find('canvas').trigger('wheel', { deltaY: -10000 });
+    terrainDrawn();
+    roadDrawn('C');
+    terrainMap().should('have.attr', 'data-rendered-street-cells-level', 'C');
+    cy.task('streetCellBuildingSamples').then((raw) => {
+      const samples = raw as {
+        urban: { x: number; z: number; buildings: number };
+        suburban: { x: number; z: number; buildings: number };
+      };
+      expect(samples.urban.buildings).to.be.greaterThan(10);
+      expect(samples.suburban.buildings).to.be.greaterThan(10);
+      cy.writeFile(
+        'node_modules/.cache/street-cells/cell-city-browser-samples.json',
+        raw,
+      );
+      for (const family of ['urban', 'suburban'] as const) {
+        frameTerrainTarget(samples[family]);
+        terrainMap()
+          .should('have.attr', 'data-city-layout-builds', layoutBuilds)
+          .and('have.attr', 'data-city-building-count', buildings);
+        recordTerrainState('cell-city-' + family);
+        cy.screenshot('cell-city-' + family);
+      }
+    });
+    // Same world targets and viewport as the retained V2 dense-candidate samples.
+    for (const [name, target] of [
+      ['urban', { x: 14.19654349468673, z: 4.6500942933388325 }],
+      ['suburban', { x: 27.23797137949348, z: -32.05766803384611 }],
+    ] as const) {
+      frameTerrainTarget(target);
+      terrainMap()
+        .should('have.attr', 'data-city-layout-builds', layoutBuilds)
+        .and('have.attr', 'data-city-building-count', buildings);
+      recordTerrainState('cell-city-matched-' + name);
+      cy.screenshot('cell-city-matched-' + name);
+    }
+    cy.get('[aria-label="Routes"] [data-route-id="legacy-A"]').click();
+    cy.contains('button', 'Add bus').click();
+    cy.contains('button', 'Focus route').click();
+    terrainMap()
+      .should('have.attr', 'data-city-layout-builds', layoutBuilds)
+      .and('have.attr', 'data-city-building-count', buildings);
+    cy.contains('button', 'Show full network').click();
+    terrainDrawn();
+    terrainZoomTo(0.3);
+    terrainDrawn();
+    roadDrawn('A');
+    terrainMap()
+      .should('have.attr', 'data-city-layout-builds', layoutBuilds)
+      .and('have.attr', 'data-city-building-count', buildings);
+    terrainZoomTo(0.055);
+    terrainDrawn();
+    frameCellDowntown();
+    terrainMap()
+      .should('have.attr', 'data-city-layout-builds', layoutBuilds)
+      .and('have.attr', 'data-city-building-count', buildings);
+    recordTerrainState('cell-city-cityscale');
+    cy.screenshot('cell-city-cityscale');
+  });
   cy.then(() => expect(archives).to.equal(1));
 });

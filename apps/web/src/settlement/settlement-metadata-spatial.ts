@@ -9,9 +9,12 @@ import {
 function ringContains(
   point: GeographicPoint,
   ring: readonly GeographicPoint[],
+  edges?: readonly number[],
 ) {
   let inside = false;
-  for (let i = 1; i < ring.length; i++) {
+  const count = edges?.length ?? ring.length - 1;
+  for (let j = 0; j < count; j++) {
+    const i = edges ? edges[j]! : j + 1;
     const a = ring[i - 1]!,
       b = ring[i]!;
     const cross =
@@ -41,6 +44,54 @@ export function pointInPolygon(
     ringContains(point, polygon.coordinates[0]!) &&
     !polygon.coordinates.slice(1).some((ring) => ringContains(point, ring))
   );
+}
+const polygonQueries = new WeakMap<
+  ResearchPolygon['coordinates'],
+  (point: GeographicPoint) => boolean
+>();
+/** Static query accelerator on immutable source/renderer ring identity. It uses the same exact
+ * ray/boundary predicate; rows only select potentially intersecting edges, never rewrite polygons. */
+export function preparePolygonQuery(
+  polygon: ResearchPolygon,
+): (point: GeographicPoint) => boolean {
+  const cached = polygonQueries.get(polygon.coordinates);
+  if (cached) return cached;
+  const queries = polygon.coordinates.map((ring) => {
+    const west = Math.min(...ring.map((p) => p[0])),
+      east = Math.max(...ring.map((p) => p[0])),
+      south = Math.min(...ring.map((p) => p[1])),
+      north = Math.max(...ring.map((p) => p[1]));
+    const count = Math.min(32, Math.ceil(Math.sqrt(ring.length - 1)));
+    const step = (north - south) / count;
+    const buckets =
+      ring.length >= 64 && step > 0
+        ? Array.from({ length: count }, () => [] as number[])
+        : undefined;
+    const row = (y: number) =>
+      Math.max(0, Math.min(count - 1, Math.floor((y - south) / step)));
+    if (buckets)
+      for (let i = 1; i < ring.length; i++)
+        for (
+          let r = row(Math.min(ring[i - 1]![1], ring[i]![1]) - 1e-12);
+          r <= row(Math.max(ring[i - 1]![1], ring[i]![1]) + 1e-12);
+          r++
+        )
+          buckets[r]!.push(i);
+    return (point: GeographicPoint) => {
+      if (
+        point[0] < west - 1e-12 ||
+        point[0] > east + 1e-12 ||
+        point[1] < south - 1e-12 ||
+        point[1] > north + 1e-12
+      )
+        return false;
+      return ringContains(point, ring, buckets?.[row(point[1])]);
+    };
+  });
+  const query = (point: GeographicPoint) =>
+    queries[0]!(point) && !queries.slice(1).some((q) => q(point));
+  polygonQueries.set(polygon.coordinates, query);
+  return query;
 }
 export function polygonArea(polygon: ResearchPolygon): number {
   const areas = polygon.coordinates.map(
@@ -96,19 +147,36 @@ function covers(
   );
 }
 
-export function lookupSettlementContext(
-  metadata: SettlementMetadata,
-  point: GeographicPoint,
-) {
+function metadataIndex(metadata: SettlementMetadata) {
   let index = spatialIndexes.get(metadata);
   if (!index) {
     index = prepareMetadata(metadata);
     spatialIndexes.set(metadata, index);
   }
-  const zones = index.zones
+  return index;
+}
+function coveringZones(
+  index: ReturnType<typeof prepareMetadata>,
+  point: GeographicPoint,
+) {
+  return index.zones
     .filter((zone) => covers(point, zone))
     .sort((a, b) => a.area - b.area || (a.record.id < b.record.id ? -1 : 1))
     .map((zone) => zone.record);
+}
+/** Same primary-zone selection as full research context, without preparing/freeze-copying landscape diagnostics per proposal. */
+export function lookupSettlementZone(
+  metadata: SettlementMetadata,
+  point: GeographicPoint,
+) {
+  return coveringZones(metadataIndex(metadata), point)[0];
+}
+export function lookupSettlementContext(
+  metadata: SettlementMetadata,
+  point: GeographicPoint,
+) {
+  const index = metadataIndex(metadata);
+  const zones = coveringZones(index, point);
   const landscapes = index.landscapes
     .filter((region) => covers(point, region))
     .map((region) => region.record)

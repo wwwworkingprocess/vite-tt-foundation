@@ -89,6 +89,10 @@ export function prepareD3dStreetCells(
         d3dProjectedPoint(map, { longitude: p[0], latitude: p[1] }),
       );
       for (let i = 1; i < ring.length; i++) {
+        // V3 grid encoding can preserve coincident consecutive safe vertices.
+        // Omit only their zero-length display segment; retain the semantic ring.
+        if (ring[i - 1]![0] === ring[i]![0] && ring[i - 1]![1] === ring[i]![1])
+          continue;
         const key = edgeKey(ring[i - 1]!, ring[i]!);
         if (displaySeen.has(key)) continue;
         displaySeen.add(key);

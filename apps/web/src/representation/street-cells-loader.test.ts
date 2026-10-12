@@ -34,7 +34,7 @@ it.each(['/', '/game/'])(
     expect(fetchText.mock.calls.map((c) => c[0])).toEqual([
       baseUrl + 'street-cells/catalog.json',
       baseUrl + 'street-cells/es-torrevieja/cells-c.v2.geojson',
-      baseUrl + 'street-cells/es-torrevieja/annotations-c.v2.json',
+      baseUrl + 'street-cells/es-torrevieja/annotations-c.v3.json',
     ]);
     expect(fetchArchive.mock.calls).toHaveLength(1);
     expect(fetchArchive).toHaveBeenCalledWith(

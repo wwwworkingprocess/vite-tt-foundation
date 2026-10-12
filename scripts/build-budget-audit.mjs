@@ -268,7 +268,7 @@ for (const [settlementId, entry] of Object.entries(roadCatalog.settlements)) {
 const cellCatalog = parseStreetCellCatalog(
   JSON.parse(await assetText('street-cells/catalog.json')),
 );
-if (cellCatalog.schemaVersion !== 'street-cells-catalog-v2')
+if (cellCatalog.schemaVersion !== 'street-cells-catalog-v3')
   throw new Error('Invalid built StreetCell catalog');
 const roadArchiveHash = createHash('sha256')
   .update(await readFile(new URL('road-network/road-network.zip', dist)))

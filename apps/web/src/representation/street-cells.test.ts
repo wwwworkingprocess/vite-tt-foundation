@@ -25,7 +25,7 @@ const descriptor = () => catalog().settlements['es-torrevieja']!.products[2]!;
 it('preserves the accepted archive CRCs, provenance, all descriptors and immutable exact polygons including holes', () => {
   const zip = rawRead(streetCellRoot + 'street-cells.zip');
   expect(createHash('sha256').update(zip).digest('hex')).toBe(
-    'bb54f7d2f8bfa60a1d1751eadc9d322e19de8dfe132577ce81aaa58456076211',
+    'e71360004a34fe1ba82782b01f4921d1ab42e3d4c2da1fcb5192308699f5524e',
   );
   const entries = indexZip(zip);
   expect(entries.size).toBe(13);
@@ -269,10 +269,9 @@ it.each<(x: ReturnType<typeof streetCellFixture>) => void>([
   },
 );
 
-// Installed two-city products are the integration authority.
-it('consumes the actual V2 dictionary and stable-ID annotations for both cities', async () => {
-  const zip = rawRead(streetCellRoot + 'street-cells.zip');
-  const entries = indexZip(zip);
+// Decode immutable installed products once; test bodies retain every city/level assertion.
+const installedV3Products = (() => {
+  const entries = indexZip(rawRead(streetCellRoot + 'street-cells.zip'));
   const json = (path: string): unknown => {
     const e = entries.get(path)!;
     return JSON.parse(
@@ -281,31 +280,42 @@ it('consumes the actual V2 dictionary and stable-ID annotations for both cities'
       ),
     );
   };
-  const catalog = parseStreetCellCatalog(json('catalog.json'));
-  const { decodeStreetCellAnnotations } = await import('./street-cells.js');
-  for (const [city, counts] of [
-    ['es-torrevieja', [84, 584, 1623, 1437]],
-    ['es-alicante', [348, 1411, 3201, 2759]],
-  ] as const) {
-    const entry = catalog.settlements[city]!;
+  const installed = parseStreetCellCatalog(json('catalog.json'));
+  return Object.entries(installed.settlements).map(([city, entry]) => ({
+    city,
+    entry,
+    products: entry.products.map((product) => {
+      const model = decodeStreetCells(json(product.path), city, product);
+      const annotations =
+        product.level === 'C'
+          ? decodeStreetCellAnnotations(
+              json(entry.annotations.path),
+              model,
+              entry.source.products[2]!.sha256,
+            )
+          : undefined;
+      return { product, model, annotations };
+    }),
+  }));
+})();
+it('consumes the actual V3 dictionary and stable-ID annotations for both cities', () => {
+  for (const { city, entry, products } of installedV3Products) {
+    const counts =
+      city === 'es-torrevieja'
+        ? [84, 584, 1623, 1437]
+        : [348, 1411, 3201, 2759];
     expect(entry.products.map((p) => p.featureCount)).toEqual(
       counts.slice(0, 3),
     );
-    for (const product of entry.products) {
-      const model = decodeStreetCells(json(product.path), city, product);
+    for (const { product, model, annotations } of products) {
       expect(model.level).toBe(product.level);
       expect(model.features).toHaveLength(product.featureCount);
-      if (product.level === 'C') {
-        const annotations = decodeStreetCellAnnotations(
-          json(entry.annotations.path),
-          model,
-          entry.source.products[2]!.sha256,
-        );
+      if (annotations) {
         expect(
           Object.values(annotations.cells).filter(
             (c) => c.safeZoneCoordinates !== null,
           ),
-        ).toHaveLength(counts[3]);
+        ).toHaveLength(counts[3]!);
         expect(Object.isFrozen(annotations.cells)).toBe(true);
       }
     }
@@ -313,7 +323,7 @@ it('consumes the actual V2 dictionary and stable-ID annotations for both cities'
 });
 
 const annotationTemplate = streetCellJson(
-  'es-torrevieja/annotations-c.v2.json',
+  'es-torrevieja/annotations-c.v3.json',
 ) as Record<string, unknown>;
 function annotationFixture(): Record<string, unknown> & {
   cells: unknown[][];
@@ -325,7 +335,7 @@ function annotationFixture(): Record<string, unknown> & {
     cells: streetCellFixture().features.map(
       (f) =>
         [
-          f.id,
+          Number(f.id.split('-sc-')[1]),
           'empty',
           f.geometry.coordinates[0]![0]!,
           f.geometry.coordinates,
@@ -345,6 +355,7 @@ function annotationFixture(): Record<string, unknown> & {
               ],
             ],
           ],
+          [1, 1, 1, 1, 1, 0, 0, null, null],
         ] as unknown[],
     ),
     roadMetadata: {
@@ -622,7 +633,7 @@ it.each<(x: ReturnType<typeof annotationFixture>) => void>([
     x.cells[0]![5] = [''];
   },
 ])(
-  'rejects corrupt V2 annotations without inventing safe zones %#',
+  'rejects corrupt V3 annotations without inventing safe zones %#',
   (mutate) => {
     const input = annotationFixture();
     mutate(input);
@@ -636,6 +647,7 @@ it('retains explicit non-drawables and compact unmeasured associations', () => {
   input.cells[0]![1] = 'non-drawable';
   input.cells[0]![3] = null;
   input.cells[0]![4] = 0;
+  input.cells[0]![8] = [0, 0, null, null, null, null, null, null, null];
   input.cells[0]![7] = [
     ['W1', 0, 'non-drawable-candidate'],
     ['W1', 1, 'grade-separated'],

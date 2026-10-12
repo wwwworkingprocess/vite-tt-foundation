@@ -440,6 +440,7 @@ describe('built foundation PWA offline lifecycle', () => {
         'scenarios',
         'population-fields',
         'settlement-metadata',
+        'street-cells',
         'road-network',
         'route-presentation',
         'terrain',
@@ -461,10 +462,8 @@ describe('built foundation PWA offline lifecycle', () => {
         const response = await win.fetch(new URL(path, win.document.baseURI));
         expect(response.ok, path).to.equal(true);
       }
-      expect(
-        keys.some((request) => request.url.includes('/street-cells/')),
-        'inactive StreetCells layer is not a startup download',
-      ).to.equal(false);
+      // Torrevieja buildings demand C even while the outline is inactive in mini.
+      // This is an acquired offline layer, not shell precache.
       expect(
         keys.some((request) => request.url.includes('/asset-research/')),
       ).to.equal(false);

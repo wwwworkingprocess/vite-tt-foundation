@@ -1,3 +1,7 @@
+import {
+  buildStreetCellCity,
+  streetCellLandmarkProtections,
+} from './d3d-street-cell-city.js';
 import { useStreetCells } from './use-street-cells.js';
 import {
   prepareD3dStreetCells,
@@ -853,7 +857,9 @@ function City({
   const effectiveLod = mode === 'mini' ? 'far' : lod;
   const policy = d3dDrapePolicy(mode, effectiveLod);
   const omitStreets =
-    roadsPresented || (terrain !== undefined && !policy.streets);
+    roadsPresented ||
+    city.buildingSource === 'street-cells-C-empty' ||
+    (terrain !== undefined && !policy.streets);
   const omitGroundOverlays = terrain !== undefined;
   const buildings = cityLodBuildings(city, lod, mode);
   const simple = mode === 'mini' || lod === 'far';
@@ -1834,6 +1840,25 @@ export default function D3dMapRepresentation({
       for (const mesh of roadMeshes) mesh.geometry.dispose();
     };
   }, [roadMeshes]);
+  // Building composition requires C independently of camera/slot outline demand.
+  // Both hooks share the revision-bound loader's catalog/product promises.
+  const buildingCellState = useStreetCells(
+    scenario.manifest.primarySettlementId,
+    population !== undefined,
+    undefined,
+    'C',
+  );
+  const cellOwnedCity =
+    ['es-torrevieja', 'es-alicante'].includes(
+      scenario.manifest.primarySettlementId,
+    ) ||
+    (buildingCellState.status !== 'absent' &&
+      buildingCellState.status !== 'inactive');
+  const buildingCells =
+    buildingCellState.status === 'ready' &&
+    buildingCellState.model.level === 'C'
+      ? buildingCellState.model
+      : undefined;
   const streetCellActive = mode === 'normal' && terrain !== undefined;
   const streetCellLevel = lod === 'far' ? 'A' : lod === 'medium' ? 'B' : 'C';
   const streetCellState = useStreetCells(
@@ -1983,16 +2008,85 @@ export default function D3dMapRepresentation({
     };
   }, [terrainMeshes]);
   const metadata = useSettlementMetadata(scenario.manifest.primarySettlementId);
+  const cellProtections = useMemo(
+    () =>
+      metadata.status === 'ready'
+        ? streetCellLandmarkProtections(model, metadata)
+        : undefined,
+    [model, metadata],
+  );
+  const cellCityPreparation = useMemo(() => {
+    if (!cellOwnedCity || !population) return undefined;
+    try {
+      if (
+        buildingCells &&
+        buildingCells.settlementId !== scenario.manifest.primarySettlementId
+      )
+        throw new Error('StreetCell C settlement mismatch');
+      const profile = beginRepresentationProfile('street-cell-city.prepare');
+      const city = buildStreetCellCity(
+        model,
+        population,
+        metadata.status === 'ready' ? metadata : undefined,
+        buildingCells,
+        terrain,
+        cellProtections,
+      );
+      finishRepresentationProfile(profile, {
+        buildings: city.buildings.length,
+      });
+      return { status: 'ready' as const, city };
+    } catch (error) {
+      return {
+        status: 'error' as const,
+        message: String(error),
+        city: buildStreetCellCity(
+          model,
+          population,
+          metadata.status === 'ready' ? metadata : undefined,
+        ),
+      };
+    }
+  }, [
+    cellOwnedCity,
+    model,
+    population,
+    metadata,
+    buildingCells,
+    terrain,
+    cellProtections,
+    scenario.manifest.primarySettlementId,
+  ]);
   const generatedCity = useMemo(
     () =>
-      population && metadata.status !== 'loading'
-        ? buildProceduralCity(
-            model,
-            population,
-            metadata.status === 'ready' ? metadata : undefined,
-          )
-        : undefined,
-    [model, population, metadata],
+      cellOwnedCity
+        ? cellCityPreparation?.city
+        : population && metadata.status !== 'loading'
+          ? buildProceduralCity(
+              model,
+              population,
+              metadata.status === 'ready' ? metadata : undefined,
+            )
+          : undefined,
+    [cellOwnedCity, cellCityPreparation, model, population, metadata],
+  );
+  const [cityLayoutBuilds, setCityLayoutBuilds] = useState(0);
+  useEffect(() => {
+    if (generatedCity) setCityLayoutBuilds((n) => n + 1);
+  }, [generatedCity]);
+  const cellLayout = generatedCity?.streetCellLayout;
+  const cellSkipped = useMemo(
+    () =>
+      JSON.stringify(
+        cellLayout?.skippedCells.reduce<Record<string, number>>(
+          (counts, cell) => {
+            counts[cell.reason] = (counts[cell.reason] ?? 0) + 1;
+            return counts;
+          },
+          {},
+        ) ?? {},
+      ),
+    [cellLayout],
   );
   const city = useMemo(
     () =>
@@ -2218,6 +2312,37 @@ export default function D3dMapRepresentation({
       data-landmark-zone-mismatch-count={
         city?.settlement?.diagnostics.landmarkZoneMismatches.length ?? 0
       }
+      data-cell-buildings-status={
+        cellOwnedCity
+          ? cellCityPreparation?.status === 'error'
+            ? 'error'
+            : buildingCellState.status
+          : 'inactive'
+      }
+      data-cell-buildings-error={
+        cellCityPreparation?.status === 'error'
+          ? cellCityPreparation.message
+          : buildingCellState.status === 'error'
+            ? buildingCellState.message
+            : ''
+      }
+      data-city-layout-builds={cityLayoutBuilds}
+      data-cell-buildings-source-cells={cellLayout?.sourceCells ?? 0}
+      data-cell-buildings-empty={cellLayout?.empty ?? 0}
+      data-cell-buildings-road-crossed={cellLayout?.roadCrossed ?? 0}
+      data-cell-buildings-non-drawable={cellLayout?.nonDrawable ?? 0}
+      data-cell-buildings-usable-empty={cellLayout?.usableEmptyCells ?? 0}
+      data-cell-buildings-urban={cellLayout?.urbanBuildings ?? 0}
+      data-cell-buildings-suburban={cellLayout?.suburbanBuildings ?? 0}
+      data-cell-buildings-frontage={cellLayout?.frontageBuildings ?? 0}
+      data-cell-buildings-interior={cellLayout?.interiorBuildings ?? 0}
+      data-cell-buildings-skipped={cellSkipped}
+      data-cell-buildings-samples={JSON.stringify(cellLayout?.samples ?? {})}
+      data-cell-buildings-rejected={JSON.stringify(
+        cellLayout?.rejectedCandidates ?? {},
+      )}
+      data-cell-buildings-outside-safe-zone={cellLayout?.outsideSafeZone ?? 0}
+      data-cell-buildings-ineligible={cellLayout?.ineligible ?? 0}
       data-city-component-count={city?.components.length ?? 0}
       data-city-block-count={city?.blocks.length ?? 0}
       data-city-building-count={city?.buildings.length ?? 0}

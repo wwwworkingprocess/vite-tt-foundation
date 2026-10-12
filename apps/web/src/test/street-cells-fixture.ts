@@ -57,6 +57,12 @@ export function withStreetCellZones(model: StreetCells): StreetCells {
     annotations: Object.freeze({
       roadProductSha256: 'a'.repeat(64),
       roadMetadata: Object.freeze({}),
+      evidence: Object.freeze({
+        availability: 'unavailable' as const,
+        source: null,
+        sourceCounts: null,
+        diagnostics: [],
+      }),
       cells: Object.freeze(
         Object.fromEntries(
           model.features.map((f) => [
@@ -70,6 +76,17 @@ export function withStreetCellZones(model: StreetCells): StreetCells {
               reasons: Object.freeze([]),
               margins: Object.freeze([]),
               roads: Object.freeze([]),
+              buildingEvidence: Object.freeze({
+                ownedFeatureCount: null,
+                ownedComponentCount: null,
+                safeRepresentativeCount: null,
+                safeFullyContainedCount: null,
+                safeIntersectingFeatureCount: null,
+                safeFootprintUnionAreaSqm: null,
+                safeFootprintCoverage: null,
+                estimatedBuildingCount: null,
+                desiredFootprintCoverage: null,
+              }),
             }),
           ]),
         ),

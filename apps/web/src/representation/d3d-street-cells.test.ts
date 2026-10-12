@@ -224,13 +224,10 @@ it('rejects missing annotations, degeneracy and aggregate budgets without partia
   expect(streetCellSegmentBudget).toBe(262144);
 });
 
-it.each(
-  ['es-torrevieja', 'es-alicante'].flatMap((city) =>
-    ['A', 'B', 'C'].map((level) => ({ city, level })),
-  ),
-)(
-  'measures real V2 $city/$level native plan and repeat-identity cache',
-  ({ city, level }) => {
+// Decode and prepare immutable real-data fixtures once, outside timed assertion bodies.
+// This retains cold measurements and full production preparation under coverage instrumentation.
+const nativePlans = ['es-torrevieja', 'es-alicante'].flatMap((city) =>
+  ['A', 'B', 'C'].map((level) => {
     const terrainRoot = join(import.meta.dirname, '../../public/terrain/');
     const read = (path: string): unknown =>
       JSON.parse(readFileSync(terrainRoot + path, 'utf8'));
@@ -268,8 +265,7 @@ it.each(
       stopPlaces: [],
     });
     const world = createD3dTerrain(nativeReal, m);
-    if (city === 'es-torrevieja')
-      expect(nativeReal.statistics.nativeSamples).toBe(161680);
+
     const e = parseStreetCellCatalog(streetCellJson('catalog.json'))
       .settlements[city]!;
     const metrics = [];
@@ -290,17 +286,12 @@ it.each(
       const plan = prepareD3dStreetCells(real, m, world);
       const coldMs = performance.now() - start;
       const cachedStart = performance.now();
-      expect(prepareD3dStreetCells(real, m, world)).toBe(plan);
+      const cached = prepareD3dStreetCells(real, m, world);
       const cachedMs = performance.now() - cachedStart;
-      expect(plan.cells).toBe(product.featureCount);
-      expect(plan.segments).toBeLessThan(streetCellSegmentBudget);
-      expect(plan.vertices).toBe(plan.segments * 2);
-      if (product.level === 'C')
-        expect(plan.displayedCells).toBe(
-          city === 'es-torrevieja' ? 1437 : 2759,
-        );
       metrics.push({
         ...plan,
+        expectedCells: product.featureCount,
+        cacheReused: cached === plan,
         positions: undefined,
         geometryBytes: plan.positions.byteLength,
         parseMs,
@@ -315,8 +306,58 @@ it.each(
     );
     mkdirSync(dir, { recursive: true });
     writeFileSync(
-      join(dir, city + '-' + level + '-v2-geometry.json'),
+      join(dir, city + '-' + level + '-v3-geometry.json'),
       JSON.stringify(metrics, null, 2),
     );
+    return {
+      city,
+      level,
+      metrics,
+      nativeSamples: nativeReal.statistics.nativeSamples,
+    };
+  }),
+);
+it.each(nativePlans)(
+  'measures real V3 $city/$level native plan and repeat-identity cache',
+  ({ city, level, metrics, nativeSamples }) => {
+    if (city === 'es-torrevieja') expect(nativeSamples).toBe(161680);
+    for (const plan of metrics) {
+      expect(plan.cacheReused).toBe(true);
+      expect(plan.cells).toBe(plan.expectedCells);
+      expect(plan.segments).toBeLessThan(streetCellSegmentBudget);
+      expect(plan.vertices).toBe(plan.segments * 2);
+      if (level === 'C')
+        expect(plan.displayedCells).toBe(
+          city === 'es-torrevieja' ? 1437 : 2759,
+        );
+    }
   },
 );
+
+it('renders V3 coincident encoded safe vertices without rewriting the annotation or dropping cells', () => {
+  const f = cells.features[0]!,
+    a = cells.annotations!.cells[f.id]!,
+    r = a.safeZoneCoordinates![0]!;
+  const duplicated = {
+    ...cells,
+    annotations: {
+      ...cells.annotations!,
+      cells: {
+        ...cells.annotations!.cells,
+        [f.id]: {
+          ...a,
+          safeZoneCoordinates: [
+            [r[0]!, ...r],
+            ...a.safeZoneCoordinates!.slice(1),
+          ],
+        },
+      },
+    },
+  };
+  const original = JSON.stringify(duplicated);
+  const plan = prepareD3dStreetCells(duplicated, map, terrain),
+    plain = prepareD3dStreetCells(cells, map, terrain);
+  expect(plan.positions).toEqual(plain.positions);
+  expect(plan.displayedCells).toBe(plain.displayedCells);
+  expect(JSON.stringify(duplicated)).toBe(original);
+});

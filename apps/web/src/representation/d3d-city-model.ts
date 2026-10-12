@@ -45,6 +45,7 @@ export type GeneratedSettlementComponent = Readonly<{
 export type UrbanBlock = CityBounds &
   Readonly<{
     id: string;
+    cellId?: string;
     componentId: string;
     density: number;
     zoneId?: string;
@@ -57,6 +58,7 @@ export type UrbanBlock = CityBounds &
 export type CityBuilding = D3dWorldPoint &
   Readonly<{
     id: string;
+    cellId?: string;
     blockId: string;
     width: number;
     depth: number;
@@ -75,6 +77,8 @@ export type CityBuilding = D3dWorldPoint &
     roofColor?: string;
   }>;
 export type ProceduralCity = Readonly<{
+  buildingSource?: 'street-cells-C-empty';
+  streetCellLayout?: import('./d3d-street-cell-city.js').StreetCellLayout;
   bounds: CityBounds;
   cellWidth: number;
   cellDepth: number;

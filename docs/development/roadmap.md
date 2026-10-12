@@ -333,9 +333,9 @@ codebases.
 Road Network V1 now requires the accepted six-city Workbench ZIP; city coverage
 is optional. It provides D3D context: far/mini A, medium B, near C, with lazy integrity-checked products and
 terrain-grounded static batches replacing provisional streets only when ready.
-Catalog V1 covers Alicante, Benidorm, Elche, Málaga, Murcia and Torrevieja, with unchanged V0 products; Cartagena remains absent. Ready native terrain omits research-landscape and settlement-ground tint geometry while retaining pure procedural semantics and the no-terrain fallback. StreetCell compilation/generation, building alignment and Cartagena roads are deferred.
+Catalog V1 covers Alicante, Benidorm, Elche, Málaga, Murcia and Torrevieja, with unchanged V0 products; Cartagena remains absent. Ready native terrain omits research-landscape and settlement-ground tint geometry while retaining pure procedural semantics and the no-terrain fallback. Cartagena roads and broader StreetCell generation remain deferred; the Torrevieja C-empty pass below now supplies bounded building alignment.
 
-StreetCells V2 is a bounded two-city visual consumer of the tenth lazy ZIP.
+StreetCells V3 is a bounded two-city visual consumer of the tenth lazy ZIP.
 Existing normal D3D far/medium/near uses exported A/B/C polygons; mini is hidden
 and native terrain is required. Torrevieja has 84/584/1,623 cells and Alicante
 348/1,411/3,201. Near C draws supplied road-width-aware safe zones by stable ID
@@ -344,5 +344,17 @@ A/B deduplicate shared outlines; C no longer uses the temporary 8-metre game ins
 All boundaries retain native ground sampling and unscaled 0.50-metre clearance,
 static batching, truthful draw acknowledgements and existing LOD/cache ownership.
 Compact annotations preserve future margin/road-guide context; offline hierarchy
-checks do not turn into a browser compiler. Building placement/filling, procedural
-blueprints, buildability and further exports remain future reviewed milestones.
+checks do not turn into a browser compiler. Torrevieja C-empty placement is now the separate pass below; road-crossed filling,
+authoritative buildability and further exports remain future reviewed milestones.
+
+Torrevieja and Alicante now share a research-independent C-empty composer.
+V3 annotations add partial observed footprint evidence and seven-decimal safe-zone
+transport; original A/B/C and hierarchy entries remain unchanged. StreetCells and
+native geography own placement, evidence/population modulate quantity, and optional
+research supplies appearance. Frontage/interior slots retain full-envelope,
+WATER, transit/StopPlace/landmark/protection and collision checks. Current reference
+plans contain 8,407 buildings / 894 occupied Torrevieja cells and 8,461 / 1,210
+Alicante core cells, with independent usable-denominator and exclusion ledgers.
+Incremental bounded proposals and static instancing/caching remain. Road-crossed
+Pass 2, surveyed reconstruction, further architectural diversity, full grammar,
+editing, additional exports and Workbench optimization are deferred.

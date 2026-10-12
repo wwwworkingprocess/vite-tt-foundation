@@ -162,14 +162,21 @@ describe('foundation screen', () => {
     });
     cy.get('[data-testid="d3d-map-representation"]')
       .should(($map) => {
-        expect(Number($map.attr('data-city-building-count'))).to.be.greaterThan(
-          5998,
-        );
+        const count = Number($map.attr('data-city-building-count'));
+        const urban = Number($map.attr('data-cell-buildings-urban'));
+        const suburban = Number($map.attr('data-cell-buildings-suburban'));
+        expect(count).to.be.greaterThan(5998);
+        expect(urban).to.be.greaterThan(0);
+        expect(suburban).to.be.greaterThan(0);
+        expect(urban + suburban).to.equal(count);
       })
       .and('have.attr', 'data-settlement-metadata-status', 'ready')
       .and('have.attr', 'data-morphology-zone-count', '31')
       .and('have.attr', 'data-landmark-zone-mismatch-count', '3')
-      .and('have.attr', 'data-city-archetype-count', '12')
+      .and('have.attr', 'data-cell-buildings-status', 'ready')
+      .and('have.attr', 'data-cell-buildings-source-cells', '1623')
+      .and('have.attr', 'data-cell-buildings-outside-safe-zone', '0')
+      .and('have.attr', 'data-cell-buildings-ineligible', '0')
       .should(($map) => {
         expect(Number($map.attr('data-city-building-instances'))).to.equal(
           Number($map.attr('data-city-building-count')),

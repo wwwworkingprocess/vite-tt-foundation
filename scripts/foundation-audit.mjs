@@ -705,6 +705,9 @@ for (const purePresentationFile of [
   'apps/web/src/representation/d3d-city-model.ts',
   'apps/web/src/representation/d3d-city-spatial.ts',
   'apps/web/src/representation/d3d-metadata-city.ts',
+  'apps/web/src/representation/d3d-street-cell-city.ts',
+  'apps/web/src/representation/d3d-street-cell-layout.ts',
+  'apps/web/src/representation/d3d-footprint.ts',
   'apps/web/src/settlement/settlement-metadata.ts',
   'apps/web/src/settlement/settlement-metadata-spatial.ts',
   'apps/web/src/settlement/settlement-population-overlay.ts',
@@ -800,6 +803,7 @@ for (const file of [...simulation, ...protocol, ...web]) {
     /apps\/web\/src\/representation\/(?:street-cells|street-cells-loader|use-street-cells|d3d-street-cells)\.ts$/.test(
       normalized,
     ) ||
+    normalized.endsWith('apps/web/src/test/street-cell-city-fixture.ts') ||
     normalized.includes('apps/web/src/population') ||
     normalized.includes('apps/web/src/settlement/') ||
     normalized.includes('apps/web/src/terrain/') ||
@@ -847,6 +851,13 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('apps/web/src/representation/d3d-stop-geometry.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-city-spatial.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-metadata-city.ts') ||
+    normalized.endsWith(
+      'apps/web/src/representation/d3d-street-cell-city.ts',
+    ) ||
+    normalized.endsWith(
+      'apps/web/src/representation/d3d-street-cell-layout.ts',
+    ) ||
+    normalized.endsWith('apps/web/src/representation/d3d-footprint.ts') ||
     normalized.endsWith(
       'apps/web/src/representation/D3dMapRepresentation.tsx',
     ) ||

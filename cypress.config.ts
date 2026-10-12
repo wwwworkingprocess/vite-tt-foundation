@@ -1,3 +1,14 @@
+import {
+  buildStreetCellCity,
+  streetCellLandmarkProtections,
+} from './apps/web/src/representation/d3d-street-cell-city.js';
+import {
+  cellCityMap,
+  cellCityMetadata,
+  cellCityPopulation,
+  cellCityCells,
+  cellCityTerrain,
+} from './apps/web/src/test/street-cell-city-fixture.js';
 import { createTerrainLoader } from './apps/web/src/terrain/terrain-loader.js';
 import { createD3dTerrain } from './apps/web/src/representation/d3d-terrain-model.js';
 import {
@@ -61,6 +72,98 @@ export default defineConfig({
               Math.tan((35 * Math.PI) / 180)) *
             Math.SQRT1_2;
           return { x: point.x - forward, z: point.z - forward };
+        },
+        async streetCellBuildingSamples() {
+          const start = performance.now();
+          const city = buildStreetCellCity(
+            cellCityMap,
+            cellCityPopulation,
+            cellCityMetadata,
+            cellCityCells,
+            cellCityTerrain,
+            streetCellLandmarkProtections(cellCityMap, cellCityMetadata),
+          );
+          const coldMs = performance.now() - start,
+            cachedStart = performance.now();
+          const cached = buildStreetCellCity(
+            cellCityMap,
+            cellCityPopulation,
+            cellCityMetadata,
+            cellCityCells,
+            cellCityTerrain,
+            streetCellLandmarkProtections(cellCityMap, cellCityMetadata),
+          );
+          const cachedMs = performance.now() - cachedStart;
+          if (cached !== city) throw new Error('Static cell city cache failed');
+          const loader = createTerrainLoader({
+            baseUrl: '/',
+            fetchText: async (url) => ({
+              ok: true,
+              text: async () =>
+                readFileSync(
+                  new URL('./apps/web/public' + url, import.meta.url),
+                  'utf8',
+                ),
+            }),
+          });
+          const native = await loader.resolve(
+            'es-torrevieja',
+            'torrevieja-legacy-all-v1',
+          );
+          if (native.status !== 'ready')
+            throw new Error('Cell city DEM unavailable');
+          const world = createD3dTerrain(native.terrain, cellCityMap);
+          const groundCounts: Record<string, number> = {};
+          for (const b of city.buildings) {
+            const key = world.ground(b.x, b.z).diagnostic;
+            groundCounts[key] = (groundCounts[key] ?? 0) + 1;
+          }
+          const sample = (profiles: readonly string[], urban = false) => {
+            const groups = new Map<string, (typeof city.buildings)[number][]>();
+            for (const b of city.buildings)
+              if (
+                profiles.includes(b.buildingProfileId!) &&
+                (!urban || b.zoneId === 'z-central-grid')
+              ) {
+                const key = b.cellId! + ':' + b.zoneId;
+                let group = groups.get(key);
+                if (!group) {
+                  group = [];
+                  groups.set(key, group);
+                }
+                group.push(b);
+              }
+            const group = [...groups.values()].sort(
+              (a, b) => b.length - a.length || a[0]!.id.localeCompare(b[0]!.id),
+            )[0]!;
+            const x = group.reduce((sum, b) => sum + b.x, 0) / group.length,
+              z = group.reduce((sum, b) => sum + b.z, 0) / group.length;
+            const ground = world.ground(x, z);
+            const forward =
+              (ground.y / Math.tan((35 * Math.PI) / 180)) * Math.SQRT1_2;
+            return {
+              x: x - forward,
+              z: z - forward,
+              cellId: group[0]!.cellId,
+              zoneId: group[0]!.zoneId,
+              profiles: [...new Set(group.map((b) => b.buildingProfileId))],
+              buildings: group.length,
+              ground: ground.diagnostic,
+            };
+          };
+          return {
+            coldMs,
+            cachedMs,
+            buildings: city.buildings.length,
+            diagnostics: city.streetCellLayout,
+            groundCounts,
+            urban: sample(['bp-central-mixed', 'bp-midrise-apartment'], true),
+            centralGrid: sample(
+              ['bp-central-mixed', 'bp-midrise-apartment'],
+              true,
+            ),
+            suburban: sample(['bp-detached-villa', 'bp-terrace-bungalow']),
+          };
         },
         roadProductCounts() {
           const catalog = JSON.parse(

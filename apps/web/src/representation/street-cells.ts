@@ -16,13 +16,16 @@ type CityEntry = Readonly<{
   }>;
 }>;
 const policies = Object.freeze({
-  schemaVersion: 'street-cells-catalog-v2',
-  version: '0.2.0',
+  schemaVersion: 'street-cells-catalog-v3',
+  version: '0.3.0',
   classificationPolicy: 'at-grade-interior-corridor-v1',
   idPolicy: 'city-sc-sa-sb-geography-source-monotonic-v2',
   marginPolicy: 'estimated-width-half-plus-2m-bevel-v1',
   mergePolicy: 'shared-edge-shape-road-barrier-v1',
-  storagePolicy: 'lossless-json-tuples-single-lineage-v2',
+  storagePolicy: 'grid7-numeric-c-evidence-tuples-v3',
+  annotationEncoding: 'wgs84-grid-7-v3',
+  buildingEvidencePolicy:
+    'observed-feature-largest-component-interior-owned-lexical-tie-unioned-area-v3',
   crs: 'EPSG:4326',
   metricCrs: 'EPSG:3035',
   geometry: 'Polygon',
@@ -145,7 +148,7 @@ function sources(value: unknown, id: string): readonly SourceProduct[] {
   );
   return Object.freeze(products);
 }
-/** Exact V2 grammar, using the same explicit validation convention as roads.
+/** Exact V3 grammar, using the same explicit validation convention as roads.
  * No new schema features inflate unrelated shared runtime chunks. */
 export function parseStreetCellCatalog(value: unknown): StreetCellCatalog {
   const root = object(value, [...Object.keys(policies), 'settlements']);
@@ -166,7 +169,7 @@ export function parseStreetCellCatalog(value: unknown): StreetCellCatalog {
       ]);
     const audit = file(
       object(entry.audit, ['path', 'byteLength', 'sha256']),
-      id + '/audit.v2.json',
+      id + '/audit.v3.json',
     );
     const products = list(entry.products).map((p) => {
       const o = object(p, [
@@ -220,7 +223,7 @@ export function parseStreetCellCatalog(value: unknown): StreetCellCatalog {
       audit,
       annotations: file(
         object(entry.annotations, ['path', 'byteLength', 'sha256']),
-        id + '/annotations-c.v2.json',
+        id + '/annotations-c.v3.json',
       ),
       hierarchy: file(
         object(entry.hierarchy, ['path', 'byteLength', 'sha256']),
@@ -254,16 +257,30 @@ export function streetCellPoint(value: unknown): Point {
   );
   return Object.freeze([p[0], p[1]]);
 }
-function ring(value: unknown): readonly Point[] {
-  const r = list(value).map(streetCellPoint);
+function ring(value: unknown, annotation = false): readonly Point[] {
+  const r = list(value).map(annotation ? annotationPoint : streetCellPoint);
   requireCell(r.length >= 4, 'polygon ring length');
   const a = r[0]!,
     b = r[r.length - 1]!;
   requireCell(a[0] === b[0] && a[1] === b[1], 'polygon closure');
   requireCell(
-    r.slice(1).every((p, i) => p[0] !== r[i]![0] || p[1] !== r[i]![1]),
+    annotation ||
+      r.slice(1).every((p, i) => p[0] !== r[i]![0] || p[1] !== r[i]![1]),
     'degenerate edge',
   );
+  if (annotation) {
+    const origin = r[0]!;
+    const area = r
+      .slice(1)
+      .reduce(
+        (sum, p, i) =>
+          sum +
+          (r[i]![0] - origin[0]) * (p[1] - origin[1]) -
+          (p[0] - origin[0]) * (r[i]![1] - origin[1]),
+        0,
+      );
+    requireCell(area !== 0, 'polygon area');
+  }
   return Object.freeze(r);
 }
 /** Preserve exact polygon rings/holes, IDs, measurements and source-road metadata.
@@ -316,7 +333,7 @@ export function decodeStreetCells(
     requireCell(roads.length > 0, 'source roads');
     const g = object(f.geometry, ['type', 'coordinates']);
     requireCell(g.type === 'Polygon', 'Polygon');
-    const rings = list(g.coordinates).map(ring);
+    const rings = list(g.coordinates).map((r) => ring(r));
     requireCell(rings.length > 0, 'polygon rings');
     return Object.freeze({
       type: 'Feature' as const,
@@ -378,7 +395,7 @@ function nonnegative(value: unknown): number {
   return value;
 }
 function polygon(value: unknown) {
-  const rings = list(value).map(ring);
+  const rings = list(value).map((r) => ring(r, true));
   requireCell(rings.length > 0, 'polygon rings');
   return Object.freeze(rings);
 }
@@ -402,15 +419,17 @@ export type StreetCellAnnotation = Readonly<{
     appliedClearanceM: number;
   }>[];
   roads: readonly StreetCellAssociation[];
+  buildingEvidence: StreetCellBuildingEvidence;
 }>;
 export type StreetCellAnnotations = Readonly<{
   cells: Readonly<Record<string, StreetCellAnnotation>>;
   roadMetadata: JsonValue;
   roadProductSha256: string;
+  evidence: StreetCellEvidence;
 }>;
 const tupleKeys = {
   cell: [
-    'cellId',
+    'cellNumber',
     'classification',
     'representativePoint',
     'safeZoneCoordinates',
@@ -418,6 +437,18 @@ const tupleKeys = {
     'reasons',
     'margins',
     'roads',
+    'buildingEvidence',
+  ],
+  building: [
+    'ownedFeatureCount',
+    'ownedComponentCount',
+    'safeRepresentativeCount',
+    'safeFullyContainedCount',
+    'safeIntersectingFeatureCount',
+    'safeFootprintUnionAreaSqm',
+    'safeFootprintCoverage',
+    'estimatedBuildingCount',
+    'desiredFootprintCoverage',
   ],
   association: [
     'roadId',
@@ -442,7 +473,7 @@ const tupleKeys = {
   ],
   width: ['widthM', 'source'],
 } as const;
-/** Compact V2 tuple decoding is confined to this boundary; rendering joins named
+/** Compact V3 tuple decoding is confined to this boundary; rendering joins named
  * safe zones by stable city-scoped identity, never ordinal feature position. */
 export function decodeStreetCellAnnotations(
   value: unknown,
@@ -454,6 +485,8 @@ export function decodeStreetCellAnnotations(
     'cells',
     'classificationPolicy',
     'coordinateEncoding',
+    'geometryPolicy',
+    'evidence',
     'crs',
     'interiorToleranceM',
     'keys',
@@ -471,7 +504,7 @@ export function decodeStreetCellAnnotations(
   ]);
   requireCell(
     model.level === 'C' &&
-      root.schemaVersion === 'street-cells-annotations-v2' &&
+      root.schemaVersion === 'street-cells-annotations-v3' &&
       root.settlementId === model.settlementId &&
       root.roadProductSha256 === roadHash,
     'annotation identity/provenance',
@@ -481,7 +514,9 @@ export function decodeStreetCellAnnotations(
       root.marginPolicy === policies.marginPolicy &&
       root.crs === policies.crs &&
       root.metricCrs === policies.metricCrs &&
-      root.coordinateEncoding === 'exact-ieee754-json',
+      root.coordinateEncoding === policies.annotationEncoding &&
+      root.geometryPolicy === 'wgs84-grid-7-metric-checked-v3' &&
+      root.serializationToleranceM === 0.021,
     'annotation policy',
   );
   const keys = object(root.keys, Object.keys(tupleKeys));
@@ -532,6 +567,7 @@ export function decodeStreetCellAnnotations(
       'width source',
     );
   }
+  const evidence = decodeEvidence(root.evidence, model.settlementId);
   const roadId = (value: unknown) => {
     const id = text(value);
     requireCell(Object.hasOwn(metadata, JSON.stringify(id)), 'road reference');
@@ -541,8 +577,8 @@ export function decodeStreetCellAnnotations(
     cells: Record<string, StreetCellAnnotation> = {};
   for (const value of list(root.cells)) {
     const t = list(value);
-    requireCell(t.length === 8, 'cell tuple');
-    const cellId = text(t[0]);
+    requireCell(t.length === 9, 'cell tuple');
+    const cellId = `${model.settlementId}-sc-${integer(t[0])}`;
     requireCell(
       ids.has(cellId) && !Object.hasOwn(cells, cellId),
       'annotation cell ID',
@@ -594,7 +630,7 @@ export function decodeStreetCellAnnotations(
           disposition === 'non-drawable-candidate',
         'association measures',
       );
-      const coords = r.length === 6 ? list(r[5]).map(streetCellPoint) : null;
+      const coords = r.length === 6 ? list(r[5]).map(annotationPoint) : null;
       requireCell(coords === null || coords.length >= 2, 'clipped line');
       return Object.freeze({
         roadId: id,
@@ -609,18 +645,182 @@ export function decodeStreetCellAnnotations(
     cells[cellId] = Object.freeze({
       cellId,
       classification,
-      representativePoint: streetCellPoint(t[2]),
+      representativePoint: annotationPoint(t[2]),
       safeZoneCoordinates: t[3] === null ? null : polygon(t[3]),
       safeAreaSqm,
       reasons: Object.freeze(list(t[5]).map(text)),
       margins: Object.freeze(margins),
       roads: Object.freeze(roads),
+      buildingEvidence: decodeBuildingEvidence(
+        t[8],
+        classification,
+        safeAreaSqm,
+        evidence.availability,
+      ),
     });
   }
   requireCell(Object.keys(cells).length === ids.size, 'annotation count');
   return Object.freeze({
     cells: Object.freeze(cells),
+    evidence,
     roadMetadata: freezeJson(metadata),
     roadProductSha256: hash(root.roadProductSha256),
+  });
+}
+
+/** V3 annotation precision is transport validation; original C geometry stays exact. */
+function annotationPoint(value: unknown): Point {
+  const point = streetCellPoint(value);
+  requireCell(
+    point.every((v) => Math.abs(v * 1e7 - Math.round(v * 1e7)) < 1e-6),
+    'annotation coordinate precision',
+  );
+  return point;
+}
+export type StreetCellEvidence = Readonly<{
+  availability: 'available' | 'partial' | 'unavailable';
+  source: CellFile | null;
+  sourceCounts: JsonValue;
+  diagnostics: JsonValue;
+}>;
+export type StreetCellBuildingEvidence = Readonly<{
+  ownedFeatureCount: number | null;
+  ownedComponentCount: number | null;
+  safeRepresentativeCount: number | null;
+  safeFullyContainedCount: number | null;
+  safeIntersectingFeatureCount: number | null;
+  safeFootprintUnionAreaSqm: number | null;
+  safeFootprintCoverage: number | null;
+  estimatedBuildingCount: number | null;
+  desiredFootprintCoverage: number | null;
+}>;
+function count(value: unknown) {
+  const n = nonnegative(value);
+  requireCell(Number.isSafeInteger(n), 'evidence count');
+  return n;
+}
+function decodeEvidence(value: unknown, city: string): StreetCellEvidence {
+  const e = object(value, [
+    'availability',
+    'source',
+    'sourceCounts',
+    'diagnostics',
+    'estimate',
+    'policy',
+  ]);
+  const availability = e.availability;
+  requireCell(
+    availability === 'available' ||
+      availability === 'partial' ||
+      availability === 'unavailable',
+    'evidence availability',
+  );
+  requireCell(
+    e.policy === policies.buildingEvidencePolicy &&
+      e.estimate === 'unavailable-no-supported-local-estimator',
+    'evidence policy',
+  );
+  const source =
+    e.source === null
+      ? null
+      : file(
+          object(e.source, ['path', 'byteLength', 'sha256']),
+          `osm-layers/${city.slice(3)}/building.geojson`,
+        );
+  requireCell(
+    (availability === 'unavailable') === (source === null),
+    'evidence source availability',
+  );
+  const counts = object(e.sourceCounts, [
+    'candidatePairs',
+    'components',
+    'excludedTagFeatures',
+    'features',
+    'nonPolygonFeatures',
+    'partFeatures',
+    'polygonFeatures',
+    'rejectedFeatures',
+    'unownedComponents',
+    'unownedFeatures',
+  ]);
+  Object.values(counts).forEach(count);
+  const diagnostics = list(e.diagnostics);
+  for (const d of diagnostics) {
+    const o = object(d, ['feature', 'id', 'reason']);
+    count(o.feature);
+    text(o.id);
+    text(o.reason);
+  }
+  requireCell(
+    availability !== 'unavailable' ||
+      Object.values(counts).every((n) => n === 0),
+    'unavailable evidence counters',
+  );
+  return Object.freeze({
+    availability,
+    source,
+    sourceCounts: freezeJson(counts),
+    diagnostics: freezeJson(diagnostics),
+  });
+}
+function decodeBuildingEvidence(
+  value: unknown,
+  classification: StreetCellAnnotation['classification'],
+  area: number,
+  availability: StreetCellEvidence['availability'],
+): StreetCellBuildingEvidence {
+  const values = list(value);
+  requireCell(
+    values.length === tupleKeys.building.length,
+    'building evidence tuple',
+  );
+  const observed = availability !== 'unavailable';
+  const safe = observed && classification !== 'non-drawable';
+  for (let i = 0; i < 9; i++) {
+    const expected = i < 2 ? observed : i < 7 ? safe : false;
+    requireCell(
+      expected ? values[i] !== null : values[i] === null,
+      'building evidence availability',
+    );
+    if (expected) {
+      if (i < 5) count(values[i]);
+      else nonnegative(values[i]);
+    }
+  }
+  if (observed)
+    requireCell(
+      nonnegative(values[1]) >= nonnegative(values[0]),
+      'owned component count',
+    );
+  if (safe) {
+    const owned = nonnegative(values[0]),
+      representative = nonnegative(values[2]),
+      contained = nonnegative(values[3]),
+      intersecting = nonnegative(values[4]),
+      union = nonnegative(values[5]),
+      coverage = nonnegative(values[6]);
+    requireCell(
+      contained <= representative &&
+        representative <= owned &&
+        contained <= intersecting,
+      'safe evidence counts',
+    );
+    requireCell(
+      coverage <= 1 && Math.abs(union / area - coverage) <= 1e-9,
+      'safe evidence coverage',
+    );
+  }
+  const measurement = (value: unknown) =>
+    value === null ? null : nonnegative(value);
+  return Object.freeze({
+    ownedFeatureCount: measurement(values[0]),
+    ownedComponentCount: measurement(values[1]),
+    safeRepresentativeCount: measurement(values[2]),
+    safeFullyContainedCount: measurement(values[3]),
+    safeIntersectingFeatureCount: measurement(values[4]),
+    safeFootprintUnionAreaSqm: measurement(values[5]),
+    safeFootprintCoverage: measurement(values[6]),
+    estimatedBuildingCount: null,
+    desiredFootprintCoverage: null,
   });
 }

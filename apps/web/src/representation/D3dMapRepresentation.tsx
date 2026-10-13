@@ -858,7 +858,7 @@ function City({
   const policy = d3dDrapePolicy(mode, effectiveLod);
   const omitStreets =
     roadsPresented ||
-    city.buildingSource === 'street-cells-C-empty' ||
+    city.buildingSource === 'street-cells-C' ||
     (terrain !== undefined && !policy.streets);
   const omitGroundOverlays = terrain !== undefined;
   const buildings = cityLodBuildings(city, lod, mode);
@@ -2332,6 +2332,8 @@ export default function D3dMapRepresentation({
       data-cell-buildings-road-crossed={cellLayout?.roadCrossed ?? 0}
       data-cell-buildings-non-drawable={cellLayout?.nonDrawable ?? 0}
       data-cell-buildings-usable-empty={cellLayout?.usableEmptyCells ?? 0}
+      data-cell-buildings-pass1={JSON.stringify(cellLayout?.pass1 ?? {})}
+      data-cell-buildings-pass2={JSON.stringify(cellLayout?.pass2 ?? {})}
       data-cell-buildings-urban={cellLayout?.urbanBuildings ?? 0}
       data-cell-buildings-suburban={cellLayout?.suburbanBuildings ?? 0}
       data-cell-buildings-frontage={cellLayout?.frontageBuildings ?? 0}

@@ -64,7 +64,7 @@ it('composes Alicante with the same C-owned composer without research', () => {
     alicanteCity.buildings.every(
       (b) =>
         b.cellId &&
-        f.cells.annotations.cells[b.cellId]!.classification === 'empty',
+        f.cells.annotations.cells[b.cellId]!.classification !== 'non-drawable',
     ),
   ).toBe(true);
   expect(alicanteCity.streetCellLayout!.outsideSafeZone).toBe(0);

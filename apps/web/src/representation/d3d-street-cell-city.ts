@@ -1,3 +1,4 @@
+import { planStreetCellRoads } from './d3d-street-cell-roads.js';
 import {
   iterateStreetCellBuildingLots,
   streetCellFootprintCalibration,
@@ -53,6 +54,18 @@ export type StreetCellLayout = Readonly<{
   roadCrossed: number;
   nonDrawable: number;
   usableEmptyCells: number;
+  pass1: Readonly<{ buildings: number; occupied: number; proposed: number }>;
+  pass2: Readonly<{
+    eligible: number;
+    processed: number;
+    occupied: number;
+    buildings: number;
+    proposed: number;
+    guideSegments: number;
+    reservationSegments: number;
+    corridorConflicts: number;
+    budgetCells: number;
+  }>;
   urbanBuildings: number;
   suburbanBuildings: number;
   frontageBuildings: number;
@@ -91,13 +104,34 @@ export function auditStreetCellBuildings(
   model: D3dMapModel,
   cells: StreetCells,
   buildings: readonly CityBuilding[],
+  roadPlans = new Map<string, ReturnType<typeof planStreetCellRoads>>(),
 ) {
   const polygons = new Map<string, FootprintPolygon>();
   let outsideSafeZone = 0,
     ineligible = 0;
   for (const building of buildings) {
     const annotation = cells.annotations!.cells[building.cellId!];
-    if (annotation?.classification !== 'empty') ineligible++;
+    if (annotation?.classification !== 'empty') {
+      if (annotation?.classification !== 'road-crossed') ineligible++;
+      else {
+        let roads = roadPlans.get(building.cellId!);
+        if (!roads) {
+          roads = planStreetCellRoads(
+            annotation.roads,
+            cells.annotations!.roadMetadata,
+            ([longitude, latitude]) =>
+              d3dProjectedPoint(model, { longitude, latitude }),
+            d3dMetreScale(model).worldUnitsPerMetre,
+          );
+          roadPlans.set(building.cellId!, roads);
+        }
+        if (
+          roads.reservationSegments === 0 ||
+          roads.conflicts(footprintRing(building))
+        )
+          ineligible++;
+      }
+    }
     if (!annotation?.safeZoneCoordinates) {
       outsideSafeZone++;
       continue;
@@ -124,7 +158,7 @@ export function emptyStreetCellCity(
 ): ProceduralCity {
   const metre = d3dMetreScale(model).worldUnitsPerMetre;
   return freezeSettlement({
-    buildingSource: 'street-cells-C-empty' as const,
+    buildingSource: 'street-cells-C' as const,
     ...populationSpace(model, population),
     storeyHeight: 3.1 * metre,
     stopClearance: 12 * metre,
@@ -153,6 +187,10 @@ export type StreetCellDisposition = Readonly<{
   geometricFit: boolean;
   buildings: number;
   target: number;
+  proposed: number;
+  guideSegments: number;
+  reservationSegments: number;
+  proposalAllowance: number;
   reasons: Readonly<Record<string, number>>;
 }>;
 type Slots = Readonly<{
@@ -325,6 +363,18 @@ function composeSlots(
     roadCrossed: 0,
     nonDrawable: 0,
     usableEmptyCells: 0,
+    pass1: { buildings: 0, occupied: 0, proposed: 0 },
+    pass2: {
+      eligible: 0,
+      processed: 0,
+      occupied: 0,
+      buildings: 0,
+      proposed: 0,
+      guideSegments: 0,
+      reservationSegments: 0,
+      corridorConflicts: 0,
+      budgetCells: 0,
+    },
     urbanBuildings: 0,
     suburbanBuildings: 0,
     frontageBuildings: 0,
@@ -335,7 +385,21 @@ function composeSlots(
     samples: {} as Record<string, string[]>,
     ledger: [] as StreetCellDisposition[],
   };
-  for (const cell of cells.features) {
+  // Accepted Pass 1 runs first in its unchanged source order and consumes its
+  // unchanged proposals. Pass 2 shares only the remaining global guard.
+  const roadPlans = new Map<string, ReturnType<typeof planStreetCellRoads>>();
+  const ordered = [
+    ...cells.features.filter(
+      (c) => cells.annotations!.cells[c.id]!.classification === 'empty',
+    ),
+    ...cells.features.filter(
+      (c) => cells.annotations!.cells[c.id]!.classification !== 'empty',
+    ),
+  ];
+  let remainingRoadCells = cells.features.filter(
+    (c) => cells.annotations!.cells[c.id]!.classification === 'road-crossed',
+  ).length;
+  for (const cell of ordered) {
     const a = cells.annotations!.cells[cell.id]!,
       evidence = a.buildingEvidence;
     const representative = d3dProjectedPoint(model, {
@@ -356,15 +420,48 @@ function composeSlots(
       geometricFit: false,
       buildings: 0,
       target: 0,
+      proposed: 0,
+      guideSegments: 0,
+      reservationSegments: 0,
+      proposalAllowance: 0,
       reasons: {} as Record<string, number>,
     };
     diagnostics.ledger.push(record);
-    if (a.classification !== 'empty') {
-      if (a.classification === 'road-crossed') diagnostics.roadCrossed++;
-      else diagnostics.nonDrawable++;
+    const pass2 = a.classification === 'road-crossed';
+    if (a.classification === 'non-drawable') {
+      diagnostics.nonDrawable++;
       continue;
     }
-    diagnostics.empty++;
+    const startCandidates = diagnostics.candidates;
+    // Equal-share admission prevents a high-segment early cell exhausting the rest;
+    // unused allowances are redistributed deterministically to remaining cells.
+    const allowance = pass2
+      ? Math.floor(
+          (streetCellLotBudget - startCandidates) / remainingRoadCells--,
+        )
+      : streetCellLotBudget - startCandidates;
+    if (pass2) {
+      diagnostics.roadCrossed++;
+      diagnostics.pass2.processed++;
+    } else diagnostics.empty++;
+    const roads = pass2
+      ? planStreetCellRoads(
+          a.roads,
+          cells.annotations!.roadMetadata,
+          ([longitude, latitude]) =>
+            d3dProjectedPoint(model, { longitude, latitude }),
+          metre,
+        )
+      : undefined;
+    if (roads) {
+      roadPlans.set(cell.id, roads);
+      if (roads.reservationSegments > 0) diagnostics.pass2.eligible++;
+      record.guideSegments = roads.guides.length;
+      record.reservationSegments = roads.reservationSegments;
+      diagnostics.pass2.guideSegments += roads.guides.length;
+      diagnostics.pass2.reservationSegments += roads.reservationSegments;
+    }
+    record.proposalAllowance = allowance;
     const reject = (reason: string) => {
       record.reasons[reason] = (record.reasons[reason] ?? 0) + 1;
       diagnostics.rejectedCandidates[reason] =
@@ -381,6 +478,11 @@ function composeSlots(
             )[0] ?? 'no-fitting-lots',
         });
     };
+    if (pass2 && !roads!.reservationSegments) {
+      reject('no-at-grade-guide');
+      finish();
+      continue;
+    }
     if (!a.safeZoneCoordinates) {
       reject('no-safe-zone');
       finish();
@@ -502,11 +604,21 @@ function composeSlots(
           parcelDepth: d,
         },
         0,
-        streetCellLotBudget - diagnostics.candidates,
+        pass2
+          ? streetCellLotBudget
+          : streetCellLotBudget - diagnostics.candidates,
+        undefined,
+        roads?.guides,
       );
       let ordinal = 0;
       for (const lot of lots) {
         const index = ordinal++;
+        if (pass2 && diagnostics.candidates - startCandidates >= allowance) {
+          if (!record.reasons['candidate-budget'])
+            diagnostics.pass2.budgetCells++;
+          reject('candidate-budget');
+          break;
+        }
         if (
           record.buildings >= record.target ||
           (record.buildings > 0 &&
@@ -515,6 +627,8 @@ function composeSlots(
         )
           break;
         diagnostics.candidates++;
+        record.proposed++;
+        if (pass2) diagnostics.pass2.proposed++;
         const envelope = footprintRing({
           ...lot,
           width: w + 0.4 * metre,
@@ -532,6 +646,11 @@ function composeSlots(
           record.geometricFit = true;
         if (!fitting) {
           reject('safe-zone-footprint');
+          continue;
+        }
+        if (roads?.conflicts(envelope)) {
+          reject('internal-road-corridor');
+          diagnostics.pass2.corridorConflicts++;
           continue;
         }
         if (!streetCellNativeLand(model, terrain, envelope)) {
@@ -598,13 +717,15 @@ function composeSlots(
         buildings.push(building);
         record.buildings++;
         occupiedArea += w * d;
-        used.add(cell.id);
+        if (pass2) diagnostics.pass2.buildings++;
+        else used.add(cell.id);
         if (urban) diagnostics.urbanBuildings++;
         else diagnostics.suburbanBuildings++;
         if (lot.band === 'frontage') diagnostics.frontageBuildings++;
         else diagnostics.interiorBuildings++;
       }
     }
+    if (pass2 && record.buildings > 0) diagnostics.pass2.occupied++;
     if (record.buildings > 0)
       blocks.push({
         ...crop,
@@ -616,7 +737,15 @@ function composeSlots(
     finish();
   }
   diagnostics.usableEmptyCells = used.size;
-  Object.assign(diagnostics, auditStreetCellBuildings(model, cells, buildings));
+  diagnostics.pass1 = {
+    buildings: buildings.length - diagnostics.pass2.buildings,
+    occupied: used.size,
+    proposed: diagnostics.candidates - diagnostics.pass2.proposed,
+  };
+  Object.assign(
+    diagnostics,
+    auditStreetCellBuildings(model, cells, buildings, roadPlans),
+  );
   return freezeSettlement({ buildings, blocks, diagnostics });
 }
 /** C owns placement; research only assigns recipes to already accepted slots. */

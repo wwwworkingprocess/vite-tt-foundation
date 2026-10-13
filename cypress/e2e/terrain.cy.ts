@@ -162,7 +162,9 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
       // Capture a static presentation through existing host controls; do not
       // race worker fleet/UI updates while Cypress freezes browser animation.
       cy.contains('button', /^Pause$/).click();
-      cy.screenshot('terrain-focused-route');
+      // Capture the inspected viewport without full-page scroll/resize work
+      // while Cypress freezes scene timers for the screenshot.
+      cy.screenshot('terrain-focused-route', { capture: 'viewport' });
       cy.contains('button', /^Resume$/).click();
       cy.contains('button', 'Show full network').click();
     });
@@ -354,6 +356,13 @@ it('switches between cataloged cities and unsupported Cartagena without stale ro
   const changeCity = (city: string, scenario: string) => {
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.get('select[aria-label="City"]').select(city);
+    // City selection loads its default scenario before the requested variant.
+    // Acknowledge that transition, then query the current select afresh.
+    cy.get('select[aria-label="City"]').should('have.value', city);
+    cy.get('[data-testid="scenario-status"]').should(
+      'have.text',
+      'Scenario status: ready',
+    );
     cy.contains('label', 'Scenario')
       .find('select')
       .should('be.enabled')
@@ -634,7 +643,7 @@ it('draws Alicante V3 C-owned buildings with A/B/C, keeps near buffers stable an
   cy.then(() => expect(archives).to.equal(1));
 });
 
-it('shows distinct research urban/suburban buildings only inside empty C cells at every LOD', () => {
+it('shows Pass-1 and safe road-crossed urban/suburban buildings at every LOD', () => {
   cy.viewport(1000, 660);
   let archives = 0;
   cy.intercept('GET', '**/street-cells/street-cells.zip*', () => {
@@ -656,6 +665,15 @@ it('shows distinct research urban/suburban buildings only inside empty C cells a
       expect(Number($map.attr('data-city-building-count'))).to.be.greaterThan(
         2486 * 3,
       );
+      const pass1 = JSON.parse($map.attr('data-cell-buildings-pass1')!),
+        pass2 = JSON.parse($map.attr('data-cell-buildings-pass2')!);
+      expect(pass1).to.deep.equal({
+        buildings: 8407,
+        occupied: 894,
+        proposed: 34289,
+      });
+      expect(pass2.buildings).to.be.greaterThan(4000);
+      expect(pass2.occupied).to.be.greaterThan(250);
       expect(
         Number($map.attr('data-cell-buildings-frontage')),
       ).to.be.greaterThan(0);
@@ -682,6 +700,12 @@ it('shows distinct research urban/suburban buildings only inside empty C cells a
       const samples = raw as {
         urban: { x: number; z: number; buildings: number };
         suburban: { x: number; z: number; buildings: number };
+        highGuides: {
+          x: number;
+          z: number;
+          buildings: number;
+          guideSegments: number;
+        };
       };
       expect(samples.urban.buildings).to.be.greaterThan(10);
       expect(samples.suburban.buildings).to.be.greaterThan(10);
@@ -689,7 +713,7 @@ it('shows distinct research urban/suburban buildings only inside empty C cells a
         'node_modules/.cache/street-cells/cell-city-browser-samples.json',
         raw,
       );
-      for (const family of ['urban', 'suburban'] as const) {
+      for (const family of ['urban', 'suburban', 'highGuides'] as const) {
         frameTerrainTarget(samples[family]);
         terrainMap()
           .should('have.attr', 'data-city-layout-builds', layoutBuilds)

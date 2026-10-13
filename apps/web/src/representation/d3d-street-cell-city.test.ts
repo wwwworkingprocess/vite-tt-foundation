@@ -76,8 +76,8 @@ const referencePolygons = new Map(
 const realFootprintViolations = city.buildings.flatMap((b) => {
   const polygon = referencePolygons.get(b.cellId!)!,
     ring = footprintRing(b);
-  return cellCityCells.annotations!.cells[b.cellId!]!.classification !==
-    'empty' ||
+  return cellCityCells.annotations!.cells[b.cellId!]!.classification ===
+    'non-drawable' ||
     !polygon.safe ||
     !footprintInside(ring, polygon.safe, 0) ||
     !footprintInside(ring, polygon.original, 0) ||
@@ -101,6 +101,23 @@ const profileValues = new Map(
     },
   ]),
 );
+
+const fullSafetyAudit = auditStreetCellBuildings(
+  cellCityMap,
+  cellCityCells,
+  city.buildings,
+);
+const appearanceViolations = city.buildings.flatMap((b) => {
+  if (!b.buildingProfileId) return [];
+  const { profile, walls, roofs } = profileValues.get(b.buildingProfileId)!;
+  return profile.allowedArchetypes.includes(b.archetype) &&
+    b.storeys >= profile.storeys.min &&
+    b.storeys <= profile.storeys.max &&
+    walls.includes(b.wallColor!) &&
+    roofs.includes(b.roofColor!)
+    ? []
+    : [b.id];
+});
 
 it('materializes both real Torrevieja families exclusively from empty C safe zones', () => {
   const cachedStart = performance.now();
@@ -186,7 +203,7 @@ it('keeps pending C as empty research support and separates immutable cache inpu
   ).not.toBe(pending);
   expect(
     emptyStreetCellCity(cellCityMap, cellCityPopulation).buildingSource,
-  ).toBe('street-cells-C-empty');
+  ).toBe('street-cells-C');
 });
 it('rejects non-C or foreign data and safely skips ineligible or missing safe zones', () => {
   for (const invalid of [
@@ -229,7 +246,9 @@ it('rejects non-C or foreign data and safely skips ineligible or missing safe zo
   const gates = {
     ...cellCityCells,
     features: cellCityCells.features.filter(
-      (f) => cellCityCells.annotations!.cells[f.id]!.classification !== 'empty',
+      (f) =>
+        cellCityCells.annotations!.cells[f.id]!.classification ===
+        'non-drawable',
     ),
   };
   const gated = buildStreetCellCity(
@@ -239,7 +258,7 @@ it('rejects non-C or foreign data and safely skips ineligible or missing safe zo
     gates,
   );
   expect(gated.buildings).toEqual([]);
-  expect(gated.streetCellLayout!.roadCrossed).toBe(311);
+  expect(gated.streetCellLayout!.roadCrossed).toBe(0);
   expect(gated.streetCellLayout!.nonDrawable).toBe(186);
 });
 it('honors zero population and fails before allocating an excessive parcel layout', () => {
@@ -449,15 +468,7 @@ it('retains research storeys, prototypes, colors and stable local family repetit
   expect(Math.min(...urban.map((b) => b.storeys))).toBeGreaterThanOrEqual(2);
   expect(Math.max(...villas.map((b) => b.storeys))).toBeLessThanOrEqual(2);
   expect(villas.every((b) => b.archetype === 'detached-house')).toBe(true);
-  for (const b of city.buildings) {
-    if (!b.buildingProfileId) continue;
-    const { profile, walls, roofs } = profileValues.get(b.buildingProfileId)!;
-    expect(profile.allowedArchetypes).toContain(b.archetype);
-    expect(b.storeys).toBeGreaterThanOrEqual(profile.storeys.min);
-    expect(b.storeys).toBeLessThanOrEqual(profile.storeys.max);
-    expect(walls).toContain(b.wallColor);
-    expect(roofs).toContain(b.roofColor);
-  }
+  expect(appearanceViolations).toEqual([]);
   const repetitiveBlocks = city.blocks.filter((block) => {
     const local = buildingsByBlock.get(block.id)!;
     return (
@@ -516,9 +527,7 @@ it('measures safety diagnostics from actual building provenance and footprint, i
     cellCityMetadata,
     cellCityCells,
   );
-  expect(
-    auditStreetCellBuildings(cellCityMap, cellCityCells, city.buildings),
-  ).toEqual({ outsideSafeZone: 0, ineligible: 0 });
+  expect(fullSafetyAudit).toEqual({ outsideSafeZone: 0, ineligible: 0 });
   const first = city.buildings[0]!;
   expect(
     auditStreetCellBuildings(cellCityMap, cellCityCells, [
@@ -531,7 +540,18 @@ it('measures safety diagnostics from actual building provenance and footprint, i
   )!;
   expect(
     auditStreetCellBuildings(cellCityMap, cellCityCells, [
-      { ...first, cellId: crossed.id },
+      {
+        ...first,
+        cellId: crossed.id,
+        ...d3dProjectedPoint(cellCityMap, {
+          longitude: cellCityCells.annotations!.cells[crossed.id]!.roads.find(
+            (r) => r.disposition === 'internal',
+          )!.clippedCoordinates![0]![0],
+          latitude: cellCityCells.annotations!.cells[crossed.id]!.roads.find(
+            (r) => r.disposition === 'internal',
+          )!.clippedCoordinates![0]![1],
+        }),
+      },
     ]).ineligible,
   ).toBe(1);
   expect(

@@ -189,3 +189,46 @@ it('respects a caller center filter without emitting or consuming a geometric lo
     streetCellBuildingLots(rings, bounds, urban, 0, 1000, () => false),
   ).toEqual([]);
 });
+
+it('places both internal-road frontages beyond the reservation, keeping tangents and perimeter/interior reuse', () => {
+  const guide = {
+    roadId: 'r',
+    sourceSegment: 0,
+    from: [20, 50] as const,
+    to: [180, 50] as const,
+    clearance: 5,
+    widthSource: 'tag',
+  };
+  const lots = streetCellBuildingLots(
+    rings,
+    bounds,
+    urban,
+    0,
+    1000,
+    undefined,
+    [guide],
+  );
+  expect(
+    lots
+      .slice(0, 28)
+      .every((l) => l.rotation === 0 && Math.abs(l.z - 50) === 14),
+  ).toBe(true);
+  expect(lots.some((l) => l.band === 'interior')).toBe(true);
+  expect(
+    streetCellBuildingLots(rings, bounds, urban, 0, 1000, undefined, [guide]),
+  ).toEqual(lots);
+});
+it('bounds internal frontage traversal before iterating an enormous guide', () => {
+  expect(() =>
+    streetCellBuildingLots(rings, bounds, urban, 0, 1, undefined, [
+      {
+        roadId: 'r',
+        sourceSegment: 0,
+        from: [0, 0],
+        to: [1e9, 0],
+        clearance: 5,
+        widthSource: 'tag',
+      },
+    ]),
+  ).toThrow('budget');
+});

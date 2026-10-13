@@ -344,8 +344,7 @@ A/B deduplicate shared outlines; C no longer uses the temporary 8-metre game ins
 All boundaries retain native ground sampling and unscaled 0.50-metre clearance,
 static batching, truthful draw acknowledgements and existing LOD/cache ownership.
 Compact annotations preserve future margin/road-guide context; offline hierarchy
-checks do not turn into a browser compiler. Torrevieja C-empty placement is now the separate pass below; road-crossed filling,
-authoritative buildability and further exports remain future reviewed milestones.
+checks do not turn into a browser compiler. Torrevieja C-empty placement is now the separate pass below; authoritative buildability and further exports remain future reviewed milestones.
 
 Torrevieja and Alicante now share a research-independent C-empty composer.
 V3 annotations add partial observed footprint evidence and seven-decimal safe-zone
@@ -355,6 +354,13 @@ research supplies appearance. Frontage/interior slots retain full-envelope,
 WATER, transit/StopPlace/landmark/protection and collision checks. Current reference
 plans contain 8,407 buildings / 894 occupied Torrevieja cells and 8,461 / 1,210
 Alicante core cells, with independent usable-denominator and exclusion ledgers.
-Incremental bounded proposals and static instancing/caching remain. Road-crossed
-Pass 2, surveyed reconstruction, further architectural diversity, full grammar,
+Incremental bounded proposals and static instancing/caching remain. Surveyed reconstruction, further architectural diversity, full grammar,
 editing, additional exports and Workbench optimization are deferred.
+
+StreetCell road-crossed Pass 2 now extends the same two-city C-owned composer.
+Buffered at-grade internal roads supply frontage and full-envelope exclusions;
+short/support records only reserve space, and grade-separated crossings do not
+seed buildings. Pass 1 remains pinned exactly, optional research remains
+appearance-only, and the 65,536-proposal guard and instanced renderer remain.
+Budget-limited/residual cells are diagnosed. Further building diversity,
+authoritative parcel grammar and Workbench preprocessing remain separate work.

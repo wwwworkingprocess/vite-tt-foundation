@@ -77,7 +77,7 @@ export type CityBuilding = D3dWorldPoint &
     roofColor?: string;
   }>;
 export type ProceduralCity = Readonly<{
-  buildingSource?: 'street-cells-C-empty';
+  buildingSource?: 'street-cells-C';
   streetCellLayout?: import('./d3d-street-cell-city.js').StreetCellLayout;
   bounds: CityBounds;
   cellWidth: number;

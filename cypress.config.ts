@@ -123,7 +123,9 @@ export default defineConfig({
             for (const b of city.buildings)
               if (
                 profiles.includes(b.buildingProfileId!) &&
-                (!urban || b.zoneId === 'z-central-grid')
+                (!urban || b.zoneId === 'z-central-grid') &&
+                cellCityCells.annotations!.cells[b.cellId!]!.classification ===
+                  'road-crossed'
               ) {
                 const key = b.cellId! + ':' + b.zoneId;
                 let group = groups.get(key);
@@ -163,6 +165,32 @@ export default defineConfig({
               true,
             ),
             suburban: sample(['bp-detached-villa', 'bp-terrace-bungalow']),
+            highGuides: (() => {
+              const candidates = city
+                .streetCellLayout!.ledger.filter(
+                  (c) => c.classification === 'road-crossed' && c.buildings > 0,
+                )
+                .sort(
+                  (a, b) =>
+                    b.guideSegments - a.guideSegments ||
+                    a.cellId.localeCompare(b.cellId),
+                );
+              const record = candidates[0]!,
+                group = city.buildings.filter(
+                  (b) => b.cellId === record.cellId,
+                ),
+                point = group[Math.floor(group.length / 2)]!,
+                ground = world.ground(point.x, point.z),
+                forward =
+                  (ground.y / Math.tan((35 * Math.PI) / 180)) * Math.SQRT1_2;
+              return {
+                x: point.x - forward,
+                z: point.z - forward,
+                cellId: record.cellId,
+                buildings: record.buildings,
+                guideSegments: record.guideSegments,
+              };
+            })(),
           };
         },
         roadProductCounts() {

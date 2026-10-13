@@ -665,8 +665,7 @@ hierarchy tests prove exact shared-edge footprint cancellation and conserved
 metric area, without browser topology compilation.
 
 The outline layer remains a visual consumer. Two-city C-empty composition is
-now the bounded presentation pass below. Authoritative buildability, road-crossed
-filling, topology repair, additional exports and hierarchy-driven city generation
+now the bounded presentation pass below. Authoritative buildability, topology repair, additional exports and hierarchy-driven city generation
 remain separately reviewed work. Native terrain,
 clean-ground policy, road products, canonical transit and simulation are unchanged.
 
@@ -675,8 +674,7 @@ clean-ground policy, road products, canonical transit and simulation are unchang
 Torrevieja and Alicante share one C-owned ordinary-building composer. Supplied
 `empty` C safe zones decide **where**, native geography and explicit physical
 reservations govern safety, population and observed footprint evidence modulate
-**quantity**, and optional research assigns **appearance**. Road-crossed and
-non-drawable cells remain excluded. Other settlements without C coverage retain
+**quantity**, and optional research assigns **appearance**. Road-crossed cells now use the bounded Pass 2 below; non-drawable cells remain excluded. Other settlements without C coverage retain
 their prior generic presentation. The canonical population, terrain, transport,
 Worker, simulation and persistence contracts are unchanged.
 
@@ -754,6 +752,52 @@ with cached lookups around 0.009 milliseconds; these are setup observations, not
 CI FPS thresholds. Root/subpath lazy ZIP/PWA and truthful line-draw acknowledgements
 remain part of acceptance.
 
-Road-crossed Pass 2, additional art/families, surveyed reconstruction, authoritative
+Additional art/families, surveyed reconstruction, authoritative
 parcel/setback calculation, blueprint compilation, further exports and Workbench
 performance work remain deferred.
+
+## StreetCell road-crossed Pass 2
+
+The same C-owned composer now processes Torrevieja and Alicante road-crossed
+cells after the accepted empty-cell pass. Pass-1 source order, IDs and physical
+slots are preserved exactly. Supplied C polygons, safe zones, population, terrain
+and all ZIP products remain unchanged. A/B remain visual coarsenings only.
+
+Clipped at-grade internal roads seed two-sided tangent-aligned frontage rows;
+corridor-support and short records reserve space without seeding frontage.
+Grade-separated and non-drawable-candidate records do neither. Validated road
+width provenance is retained: half the declared estimated width plus 2 metres
+per side reserves pedestrian clearance. Segment rectangles and conservative
+circumscribed octagonal caps cover joints, turns and intersections. Collinear
+contiguous pieces of the same road join deterministically for layout; exclusions
+retain every source segment. The supplied perimeter safe zone is not inset again.
+Full rotated envelopes must avoid the indexed union of these reservations in
+addition to all previous polygon, hole, native WATER, transit, StopPlace,
+landmark, protection and building-collision checks. No runtime polygon export,
+subdivision authority or new rendering pipeline is introduced.
+
+The unchanged 65,536-proposal global guard processes Pass 1 first. Remaining
+capacity is divided among remaining road-crossed cells; unused allowances are
+redistributed in deterministic source order. Budget-limited cells remain explicit
+in the ledger rather than silently raising the cap. Optional research still only
+changes appearance after slots freeze. Pending native terrain/C retains the
+existing fallback lifecycle and no provisional streets are reintroduced.
+
+Current reference plans retain Pass 1 at 8,407 / 894 occupied Torrevieja
+empty cells and 8,461 / 1,210 Alicante core empty cells. Pass 2 adds 4,534
+buildings in 277 of 311 Torrevieja road-crossed cells and 1,983 in 200 of 381
+Alicante cells. These are generated counts, distinct from partial observed safe
+representative evidence (10,423 / 4,468). Remaining cells and partially filled
+budget-limited cells are not declared unbuildable. The native Alicante core
+viewport excludes much of its broader export. No 90–95% occupancy claim is made.
+Matched Torrevieja urban/high-guide views retain 49 / 48 draw calls, and the
+overview retains 29; additional buildings increase instanced triangles.
+
+Read-only `data-cell-buildings-pass1` and `data-cell-buildings-pass2` summarize
+separate building, occupied-cell, proposal and guide/reservation counts. The
+existing occupied-empty diagnostic retains its Pass-1 meaning. Per-cell ledgers
+add proposed counts, allowances and guide/reservation counts; omission/rejection
+reasons remain inspectable. Static CPU plans retain immutable authority caches;
+GPU bodies/roofs retain instancing, native 10x grounding and scene disposal.
+Further diversity, authoritative parcels/setbacks and Workbench processing remain
+deferred.

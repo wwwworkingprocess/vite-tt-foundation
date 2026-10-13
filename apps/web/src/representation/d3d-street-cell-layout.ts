@@ -1,4 +1,5 @@
 import { preparePolygonQuery } from '../settlement/settlement-metadata-spatial.js';
+import type { StreetCellRoadGuide } from './d3d-street-cell-roads.js';
 import type { CityBounds } from './d3d-city-model.js';
 import type { FootprintPolygon } from './d3d-footprint.js';
 
@@ -51,6 +52,7 @@ export function* iterateStreetCellBuildingLots(
     readonly x: number;
     readonly z: number;
   }) => boolean = () => true,
+  roadGuides: readonly StreetCellRoadGuide[] = [],
 ): Generator<StreetCellLot, void> {
   if (
     ![
@@ -129,6 +131,29 @@ export function* iterateStreetCellBuildingLots(
       band,
     });
   };
+  // Internal frontage uses the same emitter/containment/crop and bounded iterator.
+  // Full corridor and junction safety remains the composer's envelope check.
+  for (const guide of roadGuides) {
+    const dx = guide.to[0] - guide.from[0],
+      dz = guide.to[1] - guide.from[1],
+      length = Math.hypot(dx, dz);
+    const count = Math.floor(length / step);
+    if (count > Math.max(budget * 4, 1024))
+      throw new Error('StreetCell building lot budget exceeded');
+    for (let i = 0; i < count; i++)
+      for (const side of [-1, 1]) {
+        const along = (length - count * step) / 2 + (i + 0.5) * step,
+          offset = guide.clearance + dimensions.depth / 2;
+        const lot = emit(
+          guide.from[0] + (dx * along - dz * offset * side) / length,
+          guide.from[1] + (dz * along + dx * offset * side) / length,
+          -Math.atan2(dz, dx),
+          i === 0 || i === count - 1,
+          'frontage',
+        );
+        if (lot) yield lot;
+      }
+  }
   let longest = 0,
     angle = fallbackAngle;
   for (const guide of guides) {

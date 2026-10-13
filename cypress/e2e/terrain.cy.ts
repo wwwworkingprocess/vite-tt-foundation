@@ -215,8 +215,9 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   terrainMap().should(($map) => {
     const patches = Number($map.attr('data-terrain-meshes'));
     expect(patches).to.equal(53);
-    expect($map.attr('data-terrain-triangles')).to.equal('553692');
-    expect($map.attr('data-terrain-vertices')).to.equal('283086');
+    // Native top faces remain 553,692; the cached shore adds 1,361 faces.
+    expect($map.attr('data-terrain-triangles')).to.equal('555053');
+    expect($map.attr('data-terrain-vertices')).to.equal('286009');
     expect(Number($map.attr('data-terrain-rendered-patches'))).to.be.lessThan(
       patches,
     );

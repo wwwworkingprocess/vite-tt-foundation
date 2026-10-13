@@ -66,10 +66,13 @@ describe('maximum zoom native grid', () => {
     const land = new Map<string, number>();
     for (const p of near.patches.filter((p) => p.kind === 'land'))
       for (let i = 0; i < p.positions.length; i += 3)
-        land.set(
-          p.positions[i] + ':' + p.positions[i + 2],
-          p.positions[i + 1]!,
-        );
+        // Original top vertices precede duplicated vertical shore endpoints.
+        // Keep the top support, rather than replacing it with sea-level closure.
+        if (!land.has(p.positions[i] + ':' + p.positions[i + 2]))
+          land.set(
+            p.positions[i] + ':' + p.positions[i + 2],
+            p.positions[i + 1]!,
+          );
     for (let i = 0; i < positions.count; i++) {
       const y = land.get(positions.getX(i) + ':' + positions.getZ(i));
       if (y !== undefined)

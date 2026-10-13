@@ -833,3 +833,17 @@ Owner editing guide: set `streetCells.showBoundaries` for purple inspection line
 set `terrain.defaultVerticalExaggeration` or `verticalExaggerationByCity` for relief;
 then rebuild and run the existing validation gates. Limits are validated positive
 integers, scale is finite in (0, 50], and city override keys use settlement IDs.
+
+## Rendered terrain shoreline closure
+
+Cached terrain LAND patches now include front-sided vertical closure only at
+adjacent displayed WATER blocks. Upper supports copy the exact rendered LAND
+edge at the active stride; the other edge is sea level zero. Sign-changing edges
+split at zero; coincident zero edges add nothing. Separate wall vertices preserve
+existing top normals and shading. Native data, interpolation/anchors, 5x settings,
+coastline products and source mask are unchanged. Display classification drives
+far/medium/near adjacency, with no walls between LAND chunks or at outer coverage
+edges. Shared materials, draw calls, caching and disposal remain unchanged.
+Torrevieja adds 26 / 80 / 1,361 triangles at far / medium / near; original top
+faces remain exactly 8,690 / 34,772 / 553,692. Raster jaggedness is retained;
+surveyed coastline reconstruction and waterfront art remain deferred.

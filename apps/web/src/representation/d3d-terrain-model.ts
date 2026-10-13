@@ -288,6 +288,60 @@ export function planD3dTerrain(
           corners[key] = index;
           return index;
         };
+        // Only displayed WATER neighbors expose a shore. Chunk seams and raster
+        // coverage edges are not coastlines; classification uses the same coarse
+        // block centers as the top faces, including partial final blocks.
+        const waterBlock = (col: number, row: number) =>
+          col >= 0 &&
+          row >= 0 &&
+          col < width &&
+          row < height &&
+          terrain.classify(
+            Math.floor((row + Math.min(height, row + stride) - 1) / 2),
+            Math.floor((col + Math.min(width, col + stride) - 1) / 2),
+          ) === 'water';
+        type ShorePoint = readonly [number, number, number, number];
+        const shorePoint = (index: number): ShorePoint => [
+          positions[index * 3]!,
+          positions[index * 3 + 1]!,
+          positions[index * 3 + 2]!,
+          colors[index * 3]!,
+        ];
+        const shoreVertex = (point: ShorePoint, y: number) => {
+          const index = positions.length / 3;
+          positions.push(point[0], y, point[2]);
+          colors.push(point[3], point[3], point[3]);
+          return index;
+        };
+        // Separate wall vertices preserve existing top normals. Exact top-edge
+        // positions bridge to sea level; negative LAND remains LAND. Split an
+        // edge crossing zero so no quad folds or overdraws across the water plane.
+        const closeShore = (a: ShorePoint, b: ShorePoint) => {
+          if (a[1] === 0 && b[1] === 0) return;
+          if (a[1] * b[1] < 0) {
+            const t = a[1] / (a[1] - b[1]);
+            const zero: ShorePoint = [
+              a[0] + (b[0] - a[0]) * t,
+              0,
+              a[2] + (b[2] - a[2]) * t,
+              a[3] + (b[3] - a[3]) * t,
+            ];
+            closeShore(a, zero);
+            closeShore(zero, b);
+            return;
+          }
+          const topA = shoreVertex(a, a[1]),
+            topB = shoreVertex(b, b[1]);
+          // The same top-edge winding faces the exposed high side: toward
+          // WATER for positive LAND, toward LAND when water is higher.
+          const triangle = (a: number, b: number, c: number) =>
+            indices.push(a, b, c);
+          if (a[1] !== 0) {
+            const bottomA = shoreVertex(a, 0);
+            triangle(topA, topB, bottomA);
+            if (b[1] !== 0) triangle(bottomA, topB, shoreVertex(b, 0));
+          } else triangle(topA, topB, shoreVertex(b, 0));
+        };
         for (let row = rowStart; row < endRow; row += stride)
           for (let col = colStart; col < endCol; col += stride) {
             const colEnd = Math.min(endCol, col + stride),
@@ -328,6 +382,14 @@ export function planD3dTerrain(
                 center,
                 a,
               );
+              if (waterBlock(col, row - stride))
+                closeShore(shorePoint(a), shorePoint(b));
+              if (waterBlock(colEnd, row))
+                closeShore(shorePoint(b), shorePoint(d));
+              if (waterBlock(col, rowEnd))
+                closeShore(shorePoint(d), shorePoint(c1));
+              if (waterBlock(col - stride, row))
+                closeShore(shorePoint(c1), shorePoint(a));
             }
           }
         if (indices.length)

@@ -143,6 +143,24 @@ it('places every cell-fan quadrant on the rendered native land surface rather th
   material.dispose();
 });
 
+function terrainTopTriangles(plan: ReturnType<typeof planD3dTerrain>) {
+  return plan.patches.reduce((count, p) => {
+    for (let i = 0; i < p.indices.length; i += 3) {
+      const a = p.indices[i]! * 3,
+        b = p.indices[i + 1]! * 3,
+        c = p.indices[i + 2]! * 3;
+      if (
+        (p.positions[b + 2]! - p.positions[a + 2]!) *
+          (p.positions[c]! - p.positions[a]!) -
+          (p.positions[b]! - p.positions[a]!) *
+            (p.positions[c + 2]! - p.positions[a + 2]!) !==
+        0
+      )
+        count++;
+    }
+    return count;
+  }, 0);
+}
 describe('full native dataset render LOD', () => {
   let world: ReturnType<typeof createD3dTerrain>;
   beforeAll(() => {
@@ -193,8 +211,10 @@ describe('full native dataset render LOD', () => {
     expect(world.terrain.sample(0, 0)).toBe(21.832195281982422);
     expect(far.stride).toBe(8);
     expect(medium.stride).toBe(4);
-    expect(far.triangles).toBe(8690);
-    expect(medium.triangles).toBe(34772);
+    expect(terrainTopTriangles(far)).toBe(8690);
+    expect(far.triangles).toBe(8716);
+    expect(terrainTopTriangles(medium)).toBe(34772);
+    expect(medium.triangles).toBe(34852);
     expect(far.patches).toHaveLength(2);
     expect(medium.patches).toHaveLength(2);
     expect(
@@ -208,7 +228,8 @@ describe('full native dataset render LOD', () => {
     });
     expect(near.stride).toBe(1);
     expect(near.patches).toHaveLength(53);
-    expect(near.triangles).toBe(553692);
+    expect(terrainTopTriangles(near)).toBe(553692);
+    expect(near.triangles).toBe(555053);
     const step = world.terrain.resolution.x * world.metre;
     const samples = new Map<number, number>();
     for (const patch of near.patches.filter((p) => p.kind === 'land'))

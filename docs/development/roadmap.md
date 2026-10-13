@@ -364,3 +364,11 @@ seed buildings. Pass 1 remains pinned exactly, optional research remains
 appearance-only, and the 65,536-proposal guard and instanced renderer remain.
 Budget-limited/residual cells are diagnosed. Further building diversity,
 authoritative parcel grammar and Workbench preprocessing remain separate work.
+
+D3D hardening centralizes checked-in outline visibility, relief and existing guards.
+Purple A/B/C outlines default hidden while mandatory C building input remains lazy
+and independent. Default relief is 5x with scale-isolated terrain caches; native
+terrain, transit and city anchoring share the resolved instance. Measured cold-query
+prefilters preserve complete two-pass slots, counts and protections. Existing shared
+prototypes/palettes gain deterministic row-level appearance variance. Incremental
+preparation, further packing and broader architectural families remain separate work.

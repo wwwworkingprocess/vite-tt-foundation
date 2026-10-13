@@ -130,7 +130,7 @@ it('grounds ribbon corners on rendered 10x native relief with finite no-data/out
     edges: [],
     stopPlaces: [],
   });
-  const terrain = createD3dTerrain(native, m);
+  const terrain = createD3dTerrain(native, m, 10);
   const geo = (x: number, y: number) => {
     const p = terrainToGeographic({ x, y });
     return [p.longitude, p.latitude] as const;
@@ -209,6 +209,7 @@ describe('real Torrevieja grounded road plans', () => {
     m: ReturnType<typeof createD3dMapModel>,
     terrain: ReturnType<typeof createD3dTerrain>;
   const root = join(import.meta.dirname, '../../public') + '/';
+  const installedRoads = new Map<'A' | 'B' | 'C', RoadNetwork>();
   beforeAll(() => {
     roadCatalog = parseRoadCatalog(
       JSON.parse(
@@ -252,10 +253,9 @@ describe('real Torrevieja grounded road plans', () => {
       resolution,
     );
     terrain = createD3dTerrain(native, m);
-  });
-  it.each(['A', 'B', 'C'] as const)(
-    'prepares complete %s geometry within bounded batches and reuses it without fleet/selection inputs',
-    (level) => {
+    // Static product decoding has its own integrity/parser tests. This case
+    // measures uncached geometry planning and checks every original invariant.
+    for (const level of ['A', 'B', 'C'] as const) {
       const descriptor = roadCatalog.settlements[
         'es-torrevieja'
       ]!.products.find((p) => p.level === level)!;
@@ -266,6 +266,13 @@ describe('real Torrevieja grounded road plans', () => {
         roadCatalog,
         descriptor,
       );
+      installedRoads.set(level, road);
+    }
+  });
+  it.each(['A', 'B', 'C'] as const)(
+    'prepares complete %s geometry within bounded batches and reuses it without fleet/selection inputs',
+    (level) => {
+      const road = installedRoads.get(level)!;
       const start = performance.now(),
         plan = prepareD3dRoads(road, m, terrain),
         milliseconds = performance.now() - start;

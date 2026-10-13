@@ -5,11 +5,7 @@ import {
 import { BufferAttribute, BufferGeometry } from 'three';
 import { geographicToTerrain } from '../terrain/terrain-projection.js';
 import { d3dGeographicPoint, type D3dMapModel } from './d3d-map-model.js';
-import {
-  d3dTerrainElevationScale,
-  terrainRenderCorner,
-  type D3dTerrain,
-} from './d3d-terrain-model.js';
+import { terrainRenderCorner, type D3dTerrain } from './d3d-terrain-model.js';
 import type { RepresentationMode } from './representation-cadence.js';
 export type TerrainGridWindow = Readonly<{
   col: number;
@@ -127,7 +123,7 @@ export function createTerrainGridGeometry(
       support[index + 1] =
         terrainRenderCorner(terrain, col, row) *
           metre *
-          d3dTerrainElevationScale +
+          world.verticalExaggeration +
         0.2 * metre;
     positions[cursor++] = support[index]!;
     positions[cursor++] = kind === 'land' ? support[index + 1]! : 0.2 * metre;

@@ -367,7 +367,7 @@ deforming their volume. Stops, vehicles, selection cues and camera diagnostic
 pick coordinates use the same ground query with small named metre offsets.
 D3D placement samples the same native-center triangle fans as its near terrain
 mesh, preventing bilinear-versus-mesh differences from burying objects; native
-query interpolation remains bilinear. Corner support is a lazy presentation cache shared across map transforms and native mesh/grid derivations. Ground tints are emitted only on mask land. D3D elevation uses a fixed 10× presentation multiplier about sea level zero, including negative LAND elevations; native heights, mask, queries and statistics remain unchanged. Terrain meshes, shared ground mapping, building/landmark bases, routes, city surfaces, stops, vehicles and selection cues all use the same exaggerated surface. Horizontal dimensions, building heights, vehicle sizes and metre layer offsets are not exaggerated;
+query interpolation remains bilinear. Corner support is a lazy presentation cache shared across map transforms and native mesh/grid derivations. Ground tints are emitted only on mask land. D3D elevation uses a resolved presentation multiplier (default 5×) about sea level zero, including negative LAND elevations; native heights, mask, queries and statistics remain unchanged. Terrain meshes, shared ground mapping, building/landmark bases, routes, city surfaces, stops, vehicles and selection cues all use the same exaggerated surface. Horizontal dimensions, building heights, vehicle sizes and metre layer offsets are not exaggerated;
 framing allows for its height range, and pan targets stay within its coverage
 bounds. Manual pan/zoom and active drags survive ordinary workspace viewport resizing; mini mode cancels pending gestures. Explicit
 scenario, focus and mode changes retain their fit/restore behavior.
@@ -573,7 +573,7 @@ At most three non-raycasting front-sided batches depict ordinary, bridge and
 tunnel linework. Fixed 8/6/4 metre widths and tag-based tones are visual styling,
 not surveyed lanes or curbs. Support is 150/50/12.5 metres at A/B/C, bounded at
 131,072 segments. Ribbon corners use shared rendered-ground queries, including
-10x elevation exaggeration; native/nearest-land/explicit finite fallback behavior
+resolved elevation exaggeration; native/nearest-land/explicit finite fallback behavior
 also preserves bridges on water and outside coverage. A 0.22 metre road offset
 lies between city ground and canonical transit lines. Grade tags survive unchanged;
 no surveyed road-deck height, true tunnel, clearance or topology is claimed.
@@ -743,7 +743,7 @@ acceptance, including unresolved cases. Candidate rejection totals never stand i
 for skipped-cell totals. The post-composition footprint/class audit is zero for
 both cities.
 
-Existing instanced bodies/roofs, mini reduction, native 10x grounding, stable
+Existing instanced bodies/roofs, mini reduction, native grounding at the resolved presentation scale, stable
 cell provenance and scene-owned GPU disposal remain. Slot caches include immutable
 map/population/C/terrain/protection identity; recipe caches additionally include
 research identity/hash. Fleet, selection, same-band pan and outline LOD do not
@@ -798,6 +798,38 @@ separate building, occupied-cell, proposal and guide/reservation counts. The
 existing occupied-empty diagnostic retains its Pass-1 meaning. Per-cell ledgers
 add proposed counts, allowances and guide/reservation counts; omission/rejection
 reasons remain inspectable. Static CPU plans retain immutable authority caches;
-GPU bodies/roofs retain instancing, native 10x grounding and scene disposal.
+GPU bodies/roofs retain instancing, native grounding at the resolved presentation scale and scene disposal.
 Further diversity, authoritative parcels/setbacks and Workbench processing remain
 deferred.
+
+## D3D application settings and StreetCell hardening
+
+`apps/web/src/representation/d3d-app-settings.ts` is a typed, checked-in presentation
+policy, applied on rebuild. Purple StreetCell A/B/C inspection outlines are off
+by default: no outline product request, CPU preparation or GPU line/material batch
+is made. Required lazy C building inputs remain independent; Torrevieja and
+Alicante retain their accepted empty and road-crossed composition. Hidden-outline
+status is distinct from the C building-input status and errors; actual-draw
+acknowledgements remain empty while hidden. Native terrain debug grid is a separate
+maximum-zoom diagnostic and is unaffected by the purple-outline setting.
+
+Relief defaults to 5x about sea level with optional per-settlement overrides and a
+5x fallback for future city IDs. Terrain instance caches include the resolved scale;
+mesh vertices, shading, bounds, ground anchors, roads, transit, grid and buildings
+share that instance. Native DEM/mask, horizontal metres, building dimensions and
+layer clearance offsets remain unchanged. Safety guards remain 65,536 lot proposals
+and 262,144 displayed StreetCell segments; line support remains 12.5 metres.
+
+Cold preparation avoids per-cell copies of city-wide road metadata and uses
+immutable polygon row/envelope prefilters before unchanged exact full-footprint
+predicates. Complete two-pass physical-slot hashes and previous Pass-1 pins are
+regression-tested for both cities. Counts remain 12,941 / 10,444. Existing prototype
+families and muted palettes now repeat coherently by stable cell/orientation/row;
+optional research affects only appearance. No extra per-building meshes/materials,
+new geography, density policy or runtime settings UI is introduced. Further
+incremental preparation, residual packing and architectural diversity remain deferred.
+
+Owner editing guide: set `streetCells.showBoundaries` for purple inspection lines;
+set `terrain.defaultVerticalExaggeration` or `verticalExaggerationByCity` for relief;
+then rebuild and run the existing validation gates. Limits are validated positive
+integers, scale is finite in (0, 50], and city override keys use settlement IDs.

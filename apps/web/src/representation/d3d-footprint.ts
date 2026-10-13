@@ -66,24 +66,68 @@ function touching(
     ) <= tolerance
   );
 }
+type BoundaryEdge = readonly [Point, Point];
+const boundaryQueries = new WeakMap<
+  FootprintPolygon,
+  (ring: readonly Point[], tolerance: number) => readonly BoundaryEdge[]
+>();
+/** Immutable polygon identity owns a conservative row index. Exact edge predicates
+ * still decide every candidate; source rings and full-envelope semantics stay intact. */
+function boundaryEdges(rings: FootprintPolygon) {
+  let query = boundaryQueries.get(rings);
+  if (query) return query;
+  const edges: BoundaryEdge[] = [];
+  let south = Infinity,
+    north = -Infinity;
+  for (const ring of rings)
+    for (let i = 1; i < ring.length; i++) {
+      const a = ring[i - 1]!,
+        b = ring[i]!;
+      edges.push([a, b]);
+      south = Math.min(south, a[1], b[1]);
+      north = Math.max(north, a[1], b[1]);
+    }
+  const count = Math.min(64, Math.ceil(Math.sqrt(edges.length))),
+    step = (north - south) / count;
+  const row = (z: number) =>
+    Math.max(0, Math.min(count - 1, Math.floor((z - south) / step)));
+  const buckets =
+    edges.length >= 64 && step > 0
+      ? Array.from({ length: count }, () => [] as BoundaryEdge[])
+      : undefined;
+  if (buckets)
+    for (const edge of edges)
+      for (
+        let r = row(Math.min(edge[0][1], edge[1][1]));
+        r <= row(Math.max(edge[0][1], edge[1][1]));
+        r++
+      )
+        buckets[r]!.push(edge);
+  query = (ring, tolerance) => {
+    if (!buckets) return edges;
+    let low = Infinity,
+      high = -Infinity;
+    for (const p of ring) {
+      low = Math.min(low, p[1]);
+      high = Math.max(high, p[1]);
+    }
+    const found = new Set<BoundaryEdge>();
+    for (let r = row(low - tolerance); r <= row(high + tolerance); r++)
+      for (const edge of buckets[r]!) found.add(edge);
+    return [...found];
+  };
+  boundaryQueries.set(rings, query);
+  return query;
+}
 function boundariesTouch(
   footprint: readonly Point[],
   rings: FootprintPolygon,
   tolerance: number,
 ): boolean {
-  for (const ring of rings)
-    for (let i = 1; i < ring.length; i++)
-      for (let j = 1; j < footprint.length; j++)
-        if (
-          touching(
-            ring[i - 1]!,
-            ring[i]!,
-            footprint[j - 1]!,
-            footprint[j]!,
-            tolerance,
-          )
-        )
-          return true;
+  for (const [a, b] of boundaryEdges(rings)(footprint, tolerance))
+    for (let j = 1; j < footprint.length; j++)
+      if (touching(a, b, footprint[j - 1]!, footprint[j]!, tolerance))
+        return true;
   return false;
 }
 /** Conservative full-envelope test: no corner-only shortcut, hole enclosure, edge touch or concave crossing. */
@@ -98,11 +142,31 @@ export function footprintInside(
     !rings.slice(1).some((r) => contains(r[0]!, [footprint]))
   );
 }
+const polygonBounds = new WeakMap<FootprintPolygon, readonly number[]>();
 export function footprintOverlaps(
   footprint: readonly Point[],
   rings: FootprintPolygon,
   tolerance: number,
 ): boolean {
+  let bounds = polygonBounds.get(rings);
+  if (!bounds) {
+    const outer = rings[0]!;
+    bounds = [
+      Math.min(...outer.map((p) => p[0])),
+      Math.max(...outer.map((p) => p[0])),
+      Math.min(...outer.map((p) => p[1])),
+      Math.max(...outer.map((p) => p[1])),
+    ];
+    polygonBounds.set(rings, bounds);
+  }
+  const margin = Math.max(tolerance, 1e-12);
+  if (
+    footprint.every((p) => p[0] < bounds[0]! - margin) ||
+    footprint.every((p) => p[0] > bounds[1]! + margin) ||
+    footprint.every((p) => p[1] < bounds[2]! - margin) ||
+    footprint.every((p) => p[1] > bounds[3]! + margin)
+  )
+    return false;
   return (
     footprint.some((p) => contains(p, rings)) ||
     contains(rings[0]![0]!, [footprint]) ||

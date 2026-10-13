@@ -64,7 +64,7 @@ export type CityBuilding = D3dWorldPoint &
     depth: number;
     rotation: number;
     archetype: BuildingArchetype;
-    prototype?: 'detached-villa';
+    prototype?: Exclude<BuildingPrototypeKind, 'landmark-placeholder'>;
     storeys: number;
     height: number;
     baseY: number;

@@ -52,9 +52,11 @@ it('renders native relief and distinct mask surfaces with static plans and groun
     model,
     terrainToGeographic({ x: 3375012.5, y: 1720062.5 }),
   );
-  expect(world.ground(native.x, native.z).y).toBeCloseTo(-40 * world.metre);
+  expect(world.ground(native.x, native.z).y).toBeCloseTo(
+    -4 * world.verticalExaggeration * world.metre,
+  );
   expect(world.bounds.maxY).toBeCloseTo(
-    terrain.statistics.maxElevation! * world.metre * 10,
+    terrain.statistics.maxElevation! * world.metre * world.verticalExaggeration,
   );
   expect(terrain.sample(0, 0)).toBe(-4);
   const building = { id: 'a', ...native, baseY: 0.035, height: 2 };
@@ -65,7 +67,9 @@ it('renders native relief and distinct mask surfaces with static plans and groun
     mini: [building],
   } as unknown as ProceduralCity;
   const grounded = groundCity(city, world);
-  expect(grounded.buildings[0]!.baseY).toBeCloseTo(-40 * world.metre);
+  expect(grounded.buildings[0]!.baseY).toBeCloseTo(
+    -4 * world.verticalExaggeration * world.metre,
+  );
   expect(grounded.buildings[0]!.height).toBe(2);
   expect(grounded.buildings[0]!.x).toBe(building.x);
   expect(groundCity(city, world)).toBe(grounded);
@@ -197,7 +201,7 @@ describe('full native dataset render LOD', () => {
       planD3dTerrain(world, { representationMode: 'normal', lod: 'medium' }),
     ).toBe(medium);
   });
-  it('includes every unchanged native LAND sample in detailed GPU buffers at ten-fold elevation', () => {
+  it('includes every unchanged native LAND sample in detailed GPU buffers at the resolved presentation elevation', () => {
     const near = planD3dTerrain(world, {
       representationMode: 'normal',
       lod: 'near',
@@ -229,7 +233,7 @@ describe('full native dataset render LOD', () => {
         Math.floor(index / world.terrain.viewport.width),
         index % world.terrain.viewport.width,
       )!;
-      if (y !== Math.fround(native * world.metre * 10))
+      if (y !== Math.fround(native * world.metre * world.verticalExaggeration))
         mismatchedCenters.push(index);
     }
     expect(mismatchedCenters).toEqual([]);
@@ -340,5 +344,48 @@ it('keeps coarse terrain below native-grounded anchors rather than burying trans
   const patch = plan.patches.find((p) => p.kind === 'land')!;
   expect(
     Math.max(...Array.from(patch.positions).filter((_, i) => i % 3 === 1)),
-  ).toBeLessThanOrEqual(-40 * w.metre + 1e-6);
+  ).toBeLessThanOrEqual(-4 * w.verticalExaggeration * w.metre + 1e-6);
+});
+
+it('isolates fivefold and tenfold terrain instances, mesh support, shading and anchors', () => {
+  const f = terrainFixture(),
+    resolved = resolveTerrainViewport(
+      parseTerrainCatalog(f.catalog),
+      'test',
+      'a',
+    )!,
+    native = terrainJsonDecoder.decode(f, resolved);
+  const nw = terrainToGeographic({ x: 3375000, y: 1720075 }),
+    se = terrainToGeographic({ x: 3375075, y: 1720000 });
+  const map = createD3dMapModel({
+    bounds: {
+      west: nw.longitude,
+      east: se.longitude,
+      north: nw.latitude,
+      south: se.latitude,
+    },
+    edges: [],
+    stopPlaces: [],
+  });
+  const a = createD3dTerrain(native, map),
+    b = createD3dTerrain(native, map, 10);
+  expect(a.verticalExaggeration).toBe(5);
+  expect(b).not.toBe(a);
+  expect(createD3dTerrain(native, map, 10)).toBe(b);
+  expect(createD3dTerrain(native, map, 5)).toBe(a);
+  expect(() => createD3dTerrain(native, map, 0)).toThrow(
+    'Invalid D3D settings',
+  );
+  const pa = planD3dTerrain(a, { representationMode: 'normal', lod: 'near' }),
+    pb = planD3dTerrain(b, { representationMode: 'normal', lod: 'near' });
+  for (let i = 0; i < pa.patches.length; i++)
+    for (let j = 0; j < pa.patches[i]!.positions.length; j++)
+      expect(pb.patches[i]!.positions[j]).toBe(
+        pa.patches[i]!.positions[j]! * (j % 3 === 1 ? 2 : 1),
+      );
+  const point = a.worldPoint(3375025, 1720050);
+  expect(b.ground(point.x, point.z).y).toBe(a.ground(point.x, point.z).y * 2);
+  expect(b.bounds.maxY).toBe(a.bounds.maxY * 2);
+  expect(b.bounds.minY).toBe(a.bounds.minY * 2);
+  expect(native.viewport.width).toBe(3);
 });

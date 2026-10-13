@@ -481,9 +481,19 @@ it('retains research storeys, prototypes, colors and stable local family repetit
       .get(block.id)!
       .filter((b) => b.buildingProfileId === 'bp-terrace-bungalow');
     expect(local.every((b) => b.cellId === block.cellId)).toBe(true);
-    expect(new Set(local.map((b) => b.archetype)).size).toBe(1);
-    expect(new Set(local.map((b) => b.wallColor)).size).toBe(1);
-    expect(new Set(local.map((b) => b.roofColor)).size).toBe(1);
+    const rows = new Map<string, typeof local>();
+    for (const b of local) {
+      const key = `${Math.round(b.rotation * 1000)}:${Math.round((b.x * Math.sin(b.rotation) + b.z * Math.cos(b.rotation)) / (12 * cellCityTerrain.metre))}`;
+      const row = rows.get(key) ?? [];
+      row.push(b);
+      rows.set(key, row);
+    }
+    for (const row of rows.values()) {
+      expect(new Set(row.map((b) => b.archetype)).size).toBe(1);
+      expect(new Set(row.map((b) => b.wallColor)).size).toBe(1);
+      expect(new Set(row.map((b) => b.roofColor)).size).toBe(1);
+      expect(new Set(row.map((b) => b.storeys)).size).toBe(1);
+    }
   }
 });
 

@@ -17,6 +17,7 @@ it('drapes independent surface layers and keeps landmark placeholder heights abo
   let queries = 0;
   const terrain: D3dTerrain = {
     terrain: runtime,
+    verticalExaggeration: 5,
     metre: 0.01,
     step: 1,
     bounds: { minX: -1, maxX: 1, minZ: -1, maxZ: 1, minY: 2, maxY: 2 },

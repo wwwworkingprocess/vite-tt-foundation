@@ -1,3 +1,4 @@
+import { resolveD3dAppSettings } from './d3d-app-settings.js';
 import {
   buildStreetCellCity,
   streetCellLandmarkProtections,
@@ -126,7 +127,6 @@ import {
   planD3dTerrain,
   groundCity,
   terrainLayerOffsets,
-  d3dTerrainElevationScale,
   type D3dTerrain,
 } from './d3d-terrain-model.js';
 import {
@@ -1572,17 +1572,19 @@ function D3dWorld({
   }, [cellPresentation, onStreetCellsInvalidated]);
   const cellMaterial = useMemo(
     () =>
-      new LineBasicMaterial({
-        color: '#7833b2',
-        toneMapped: false,
-        transparent: true,
-        opacity: 0.88,
-        depthTest: true,
-        depthWrite: false,
-      }),
-    [],
+      streetCellGeometry
+        ? new LineBasicMaterial({
+            color: '#7833b2',
+            toneMapped: false,
+            transparent: true,
+            opacity: 0.88,
+            depthTest: true,
+            depthWrite: false,
+          })
+        : undefined,
+    [streetCellGeometry],
   );
-  useEffect(() => () => cellMaterial.dispose(), [cellMaterial]);
+  useEffect(() => () => cellMaterial?.dispose(), [cellMaterial]);
   const roadMaterials = useMemo(
     () => ({
       surface: new MeshBasicMaterial({
@@ -1674,7 +1676,7 @@ function D3dWorld({
           }}
         />
       ))}
-      {streetCellGeometry ? (
+      {streetCellGeometry && cellMaterial ? (
         <lineSegments
           name="street-cells-boundaries"
           renderOrder={2}
@@ -1748,6 +1750,7 @@ export default function D3dMapRepresentation({
       routeAsset,
     );
   const transportModel = useMemo(() => createD3dMapModel(view.map), [view]);
+  const settings = resolveD3dAppSettings(scenario.manifest.primarySettlementId);
   const terrainState = useTerrain(
     scenario.manifest.primarySettlementId,
     scenario.manifest.scenarioId,
@@ -1755,9 +1758,13 @@ export default function D3dMapRepresentation({
   const terrain = useMemo(
     () =>
       terrainState.status === 'ready'
-        ? createD3dTerrain(terrainState.terrain, model)
+        ? createD3dTerrain(
+            terrainState.terrain,
+            model,
+            settings.verticalExaggeration,
+          )
         : undefined,
-    [terrainState, model],
+    [terrainState, model, settings.verticalExaggeration],
   );
   const roadState = useRoadNetwork(
     scenario.manifest.primarySettlementId,
@@ -1859,7 +1866,10 @@ export default function D3dMapRepresentation({
     buildingCellState.model.level === 'C'
       ? buildingCellState.model
       : undefined;
-  const streetCellActive = mode === 'normal' && terrain !== undefined;
+  const streetCellActive =
+    settings.streetCells.showBoundaries &&
+    mode === 'normal' &&
+    terrain !== undefined;
   const streetCellLevel = lod === 'far' ? 'A' : lod === 'medium' ? 'B' : 'C';
   const streetCellState = useStreetCells(
     scenario.manifest.primarySettlementId,
@@ -2194,11 +2204,13 @@ export default function D3dMapRepresentation({
       }
       data-vehicle-hud-count={vehicles.length}
       data-street-cells-status={
-        !streetCellActive
-          ? 'inactive'
-          : streetCellPreparation?.status === 'error'
-            ? 'error'
-            : streetCellState.status
+        !settings.streetCells.showBoundaries
+          ? 'hidden'
+          : !streetCellActive
+            ? 'inactive'
+            : streetCellPreparation?.status === 'error'
+              ? 'error'
+              : streetCellState.status
       }
       data-street-cells-level={streetCellGeometry ? streetCellLevel : ''}
       data-rendered-street-cells-level=""
@@ -2254,7 +2266,9 @@ export default function D3dMapRepresentation({
           : 0
       }
       data-terrain-geometry-builds={terrainGeometryBuilds}
-      data-terrain-elevation-scale={d3dTerrainElevationScale}
+      data-terrain-elevation-scale={
+        terrain?.verticalExaggeration ?? settings.verticalExaggeration
+      }
       data-terrain-grid-visible={Boolean(gridGeometry)}
       data-terrain-grid-window={
         gridGeometry ? JSON.stringify(gridView!.window) : ''

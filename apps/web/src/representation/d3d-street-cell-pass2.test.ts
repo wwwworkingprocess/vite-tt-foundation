@@ -133,7 +133,16 @@ for (const r of results)
   it(`${r.f.id}: extends road-crossed C safely without changing any accepted Pass-1 slot`, () => {
     expect(r.pass1).toHaveLength(r.f.count);
     expect(r.hash).toBe(r.f.hash);
-    expect(r.pass2.length).toBeGreaterThan(0);
+    expect(r.city.buildings).toHaveLength(
+      r.f.id === 'es-torrevieja' ? 12941 : 10444,
+    );
+    expect(
+      createHash('sha256').update(JSON.stringify(r.slots)).digest('hex'),
+    ).toBe(
+      r.f.id === 'es-torrevieja'
+        ? '6327326d4351b3b990a1eff173c54cab2754c150a85c4496a87c5a45238c69ec'
+        : '20acfff7884ad14d6892b392d676e2e7d60f1fa8015bb869d3a83e7a7d5cdaae',
+    );
     expect(r.violations).toEqual([]);
     expect(r.slots).toEqual(r.noResearchSlots);
     expect(r.city.streetCellLayout!.outsideSafeZone).toBe(0);
@@ -494,3 +503,22 @@ it('keeps hole, protected and native-water exclusions in Pass 2 and leaves tiny 
     ).buildings,
   ).toEqual([]);
 });
+
+for (const r of results)
+  it(`${r.f.id}: assigns restrained deterministic appearance without changing research-independent slots`, () => {
+    expect(
+      new Set(r.without.buildings.map((b) => b.wallColor)).size,
+    ).toBeGreaterThan(1);
+    expect(
+      new Set(r.without.buildings.map((b) => b.roofColor)).size,
+    ).toBeGreaterThan(1);
+    expect(
+      new Set(r.without.buildings.map((b) => b.prototype ?? b.archetype)).size,
+    ).toBeGreaterThan(2);
+    expect(
+      r.without.buildings.every((b) => b.storeys >= 1 && b.storeys <= 4),
+    ).toBe(true);
+    expect(r.without.buildings.map((b) => [b.width, b.depth, b.id])).toEqual(
+      r.city.buildings.map((b) => [b.width, b.depth, b.id]),
+    );
+  });

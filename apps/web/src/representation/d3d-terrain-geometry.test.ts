@@ -22,6 +22,7 @@ const runtime = terrainJsonDecoder.decode(
   resolveTerrainViewport(parseTerrainCatalog(fixture.catalog), 'test', 'a')!,
 );
 const terrain: D3dTerrain = {
+  verticalExaggeration: 5,
   metre: 1,
   step: 1,
   bounds: { minX: 0, maxX: 5, minZ: 0, maxZ: 5, minY: 0, maxY: 5 },
@@ -218,7 +219,9 @@ it('drapes curved transport over positive and negative exaggerated relief withou
     );
   }
   expect(Math.min(...ys)).toBeLessThan(0);
-  expect(Math.max(...ys)).toBeGreaterThan(100 * world.metre);
+  expect(Math.max(...ys)).toBeGreaterThan(
+    10 * world.verticalExaggeration * world.metre,
+  );
   // Subdivision replaces renderer-owned attributes, preserving source arrays.
   expect(Array.from(sourceAttribute.array)).toEqual(original);
   for (let i = 0; i < original.length; i += 3)

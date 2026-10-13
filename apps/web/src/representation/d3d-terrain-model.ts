@@ -1,3 +1,7 @@
+import {
+  d3dAppSettings,
+  validateD3dVerticalExaggeration,
+} from './d3d-app-settings.js';
 import { terrainSelfShade } from './d3d-terrain-shading.js';
 import type { TerrainRuntime } from '../terrain/terrain-runtime.js';
 import { sampleTerrain, terrainGround } from '../terrain/terrain-runtime.js';
@@ -16,7 +20,8 @@ import type { ProceduralCity } from './d3d-city-model.js';
 import type { RepresentationMode } from './representation-cadence.js';
 // Presentation elevation about sea level; horizontal scale and object dimensions
 // retain metres. Native runtime heights and query semantics are unchanged.
-export const d3dTerrainElevationScale = 10;
+export const d3dTerrainElevationScale =
+  d3dAppSettings.terrain.defaultVerticalExaggeration;
 export const terrainLayerOffsets = Object.freeze({
   route: 0.3,
   stop: 0.3,
@@ -26,6 +31,7 @@ export const terrainLayerOffsets = Object.freeze({
 }); // metres
 export interface D3dTerrain {
   readonly terrain: TerrainRuntime;
+  readonly verticalExaggeration: number;
   readonly metre: number;
   readonly step: number;
   readonly bounds: Readonly<{
@@ -102,13 +108,20 @@ function renderedGround(terrain: TerrainRuntime, x: number, y: number) {
 export function createD3dTerrain(
   terrain: TerrainRuntime,
   model: D3dMapModel,
+  verticalExaggeration = d3dTerrainElevationScale,
 ): D3dTerrain {
+  validateD3dVerticalExaggeration(verticalExaggeration);
   let maps = worlds.get(terrain);
   if (!maps) {
     maps = new WeakMap();
     worlds.set(terrain, maps);
   }
-  const previous = maps.get(model);
+  let scales = maps.get(model);
+  if (!scales) {
+    scales = new Map();
+    maps.set(model, scales);
+  }
+  const previous = scales.get(verticalExaggeration);
   if (previous) return previous;
   const metre = d3dMetreScale(model).worldUnitsPerMetre;
   const projected = (x: number, z: number) =>
@@ -124,6 +137,7 @@ export function createD3dTerrain(
   ].map((p) => worldPoint(p[0]!, p[1]!));
   const world = Object.freeze({
     terrain,
+    verticalExaggeration,
     metre,
     step: Math.min(terrain.resolution.x, terrain.resolution.y) * metre,
     worldPoint,
@@ -131,13 +145,13 @@ export function createD3dTerrain(
       const p = projected(x, z),
         s = renderedGround(terrain, p.x, p.y);
       return Object.freeze({
-        y: s.elevation * metre * d3dTerrainElevationScale,
+        y: s.elevation * metre * verticalExaggeration,
         diagnostic: s.diagnostic,
         shade: terrainSelfShade(
           terrain,
           (p.x - west) / terrain.resolution.x,
           (north - p.y) / terrain.resolution.y,
-          d3dTerrainElevationScale,
+          verticalExaggeration,
         ),
       });
     },
@@ -151,19 +165,18 @@ export function createD3dTerrain(
       minZ: Math.min(...corners.map((p) => p.z)),
       maxZ: Math.max(...corners.map((p) => p.z)),
       minY:
-        (terrain.statistics.minElevation ?? 0) *
-        metre *
-        d3dTerrainElevationScale,
+        (terrain.statistics.minElevation ?? 0) * metre * verticalExaggeration,
       maxY:
-        (terrain.statistics.maxElevation ?? 0) *
-        metre *
-        d3dTerrainElevationScale,
+        (terrain.statistics.maxElevation ?? 0) * metre * verticalExaggeration,
     }),
   });
-  maps.set(model, world);
+  scales.set(verticalExaggeration, world);
   return world;
 }
-const worlds = new WeakMap<TerrainRuntime, WeakMap<D3dMapModel, D3dTerrain>>();
+const worlds = new WeakMap<
+  TerrainRuntime,
+  WeakMap<D3dMapModel, Map<number, D3dTerrain>>
+>();
 export type TerrainMeshPatch = Readonly<{
   id: string;
   cells: Readonly<{ col: number; row: number; endCol: number; endRow: number }>;
@@ -252,11 +265,11 @@ export function planD3dTerrain(
           const shade =
             kind === 'water'
               ? 1
-              : terrainSelfShade(terrain, col, row, d3dTerrainElevationScale);
+              : terrainSelfShade(terrain, col, row, world.verticalExaggeration);
           colors.push(shade, shade, shade);
           positions.push(
             p.x,
-            elevation * metre * d3dTerrainElevationScale,
+            elevation * metre * world.verticalExaggeration,
             p.z,
           );
           return index;

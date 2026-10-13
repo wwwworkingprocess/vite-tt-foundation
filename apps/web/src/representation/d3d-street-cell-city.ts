@@ -1,3 +1,4 @@
+import { d3dAppSettings } from './d3d-app-settings.js';
 import { planStreetCellRoads } from './d3d-street-cell-roads.js';
 import {
   iterateStreetCellBuildingLots,
@@ -45,7 +46,7 @@ import type { StreetCells } from './street-cells.js';
 import type { D3dTerrain } from './d3d-terrain-model.js';
 import { geographicToTerrain } from '../terrain/terrain-projection.js';
 
-export const streetCellLotBudget = 65536;
+export const streetCellLotBudget = d3dAppSettings.city.maxLotProposals;
 export type StreetCellLayout = Readonly<{
   outsideSafeZone: number;
   ineligible: number;
@@ -832,13 +833,36 @@ export function buildStreetCellCity(
     const profile = zone
       ? selectDevelopmentProfile(view!.metadata, zone.buildingProfileMix, seed)
       : undefined;
-    if (!profile) return slot;
+    // Row-normal coordinate and orientation give coherent repetition, independent
+    // of camera, load order and optional research. Physical slots stay frozen.
+    const rowSeed = citySeed(
+      `${slot.cellId}:${Math.round(slot.rotation * 1000)}:${Math.round((slot.x * Math.sin(slot.rotation) + slot.z * Math.cos(slot.rotation)) / (12 * terrain.metre))}`,
+    );
+    if (!profile) {
+      const urban = slot.archetype === 'perimeter-block';
+      return {
+        ...slot,
+        prototype: urban
+          ? rowSeed % 2 === 0
+            ? ('perimeter-block' as const)
+            : ('small-apartment' as const)
+          : rowSeed % 2 === 0
+            ? ('detached-house' as const)
+            : ('detached-villa' as const),
+        wallColor: (urban
+          ? ['#c8c0ad', '#bbb49f', '#cec8b7']
+          : ['#d3cab8', '#c5bda8', '#ddd4c2'])[rowSeed % 3]!,
+        roofColor: (urban
+          ? ['#949a95', '#aba899', '#a5a797']
+          : ['#aa7a62', '#bd9275', '#978e79'])[(rowSeed >>> 8) % 3]!,
+      };
+    }
     const archetype =
-      profile.allowedArchetypes[seed % profile.allowedArchetypes.length]!;
+      profile.allowedArchetypes[rowSeed % profile.allowedArchetypes.length]!;
     const storeys = Math.round(
       metadataRangeSample(
         { min: profile.storeys.typicalMin, max: profile.storeys.typicalMax },
-        seed,
+        rowSeed,
       ),
     );
     const list = samples[profile.id] ?? (samples[profile.id] = []);
@@ -855,10 +879,10 @@ export function buildStreetCellCity(
       storeys,
       height: storeys * 3.1 * terrain.metre,
       wallColor: settlementPaletteColor(
-        profile.wallPalette[seed % profile.wallPalette.length]!,
+        profile.wallPalette[rowSeed % profile.wallPalette.length]!,
       ),
       roofColor: settlementPaletteColor(
-        profile.roofPalette[seed % profile.roofPalette.length]!,
+        profile.roofPalette[rowSeed % profile.roofPalette.length]!,
       ),
     };
   });

@@ -53,6 +53,7 @@
       "apps/web/src/representation/d3d-street-cell-city.ts",
       "apps/web/src/representation/d3d-street-cell-layout.ts",
       "apps/web/src/representation/d3d-street-cell-roads.ts",
+      "apps/web/src/representation/d3d-app-settings.ts",
       "apps/web/src/representation/d3d-footprint.ts",
       "apps/web/src/settlement/settlement-metadata.ts",
       "apps/web/src/settlement/settlement-metadata-spatial.ts",

@@ -160,3 +160,46 @@ it('matches the original predicate on real C safe-zone boundaries and bounded in
       }
   }
 });
+
+it('indexed dense boundaries retain exact touching, concave crossing and hole safety', () => {
+  const dense = (r: readonly (readonly [number, number])[]) =>
+    r
+      .slice(1)
+      .flatMap((b, i) =>
+        Array.from(
+          { length: 32 },
+          (_, j) =>
+            [
+              r[i]![0] + ((b[0] - r[i]![0]) * j) / 32,
+              r[i]![1] + ((b[1] - r[i]![1]) * j) / 32,
+            ] as const,
+        ),
+      )
+      .concat([r[0]!]);
+  const original = [square(0, 0, 100), square(40, 40, 20)],
+    indexed = original.map(dense);
+  for (const [x, z, w, d, angle] of [
+    [10, 10, 4, 4, 0],
+    [1, 20, 4, 4, 0],
+    [50, 50, 30, 30, 0],
+    [50, 50, 5, 5, 0],
+    [90, 90, 30, 5, 1],
+    [30, -20, 5, 5, 0],
+    [30, 120, 5, 5, 0],
+    [10, 0.0001, 2, 0.0001, 0],
+  ]) {
+    const r = rectangle(x!, z!, w!, d!, angle!);
+    for (const tol of [0, 0.001]) {
+      expect(footprintInside(r, indexed, tol)).toBe(
+        footprintInside(r, original, tol),
+      );
+      expect(footprintOverlaps(r, indexed, tol)).toBe(
+        footprintOverlaps(r, original, tol),
+      );
+    }
+  }
+  expect(footprintInside(rectangle(10, 10, 4, 4), indexed, 0.001)).toBe(true);
+  expect(footprintInside(rectangle(50, 50, 30, 30), indexed, 0.001)).toBe(
+    false,
+  );
+});

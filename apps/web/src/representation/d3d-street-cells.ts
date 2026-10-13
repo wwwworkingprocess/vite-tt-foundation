@@ -1,12 +1,15 @@
+import { d3dAppSettings } from './d3d-app-settings.js';
 import { BufferAttribute, BufferGeometry } from 'three';
 import { d3dProjectedPoint, type D3dMapModel } from './d3d-map-model.js';
 import type { D3dTerrain } from './d3d-terrain-model.js';
 import type { StreetCells } from './street-cells.js';
 /** Display-only clearance above roads (+0.22m)/transit (+0.30m), not DEM or cell height.
- * Ground already includes 10x relief; this metre clearance is never exaggerated. */
+ * Ground already includes resolved relief; this metre clearance is never exaggerated. */
 export const streetCellBoundaryOffsetMetres = 0.5;
-export const streetCellSupportMetres = 12.5;
-export const streetCellSegmentBudget = 262144;
+export const streetCellSupportMetres =
+  d3dAppSettings.streetCells.lineSupportSpacingMetres;
+export const streetCellSegmentBudget =
+  d3dAppSettings.streetCells.maxDisplaySegments;
 
 type Point = Readonly<{ x: number; z: number }>;
 

@@ -1,3 +1,22 @@
+// Test-only dev-module response: exercise the checked-in true setting without
+// adding a runtime UI/configuration channel to production.
+const enableStreetCellOutlines = () =>
+  cy.intercept(
+    'GET',
+    '**/src/representation/d3d-app-settings.ts*',
+    (request) => {
+      delete request.headers['if-none-match'];
+      request.continue((response) => {
+        response.headers['cache-control'] = 'no-store';
+        delete response.headers.etag;
+        expect(response.body).to.contain('showBoundaries: false');
+        response.body = response.body.replace(
+          'showBoundaries: false',
+          'showBoundaries: true',
+        );
+      });
+    },
+  );
 let roadProductCounts: Record<string, Record<'A' | 'B' | 'C', number>>;
 before(() =>
   cy.task('roadProductCounts').then((counts) => {
@@ -96,6 +115,7 @@ const terrainPick = (kind: 'stop' | 'vehicle') =>
     );
   });
 it('renders native terrain, preserves entity/focus interaction, and reuses products across scenarios', () => {
+  enableStreetCellOutlines();
   let products = 0,
     cellArchives = 0;
   cy.intercept('GET', '**/street-cells/street-cells.zip*', () => {
@@ -114,7 +134,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   cy.contains('button', 'Start new game').should('be.enabled').click();
   terrainMap()
     .should('have.attr', 'data-terrain-status', 'ready')
-    .and('have.attr', 'data-terrain-elevation-scale', '10')
+    .and('have.attr', 'data-terrain-elevation-scale', '5')
     .and('have.attr', 'data-terrain-grid-visible', 'false')
     .and('have.attr', 'data-terrain-native-samples', '161680')
     .and('have.attr', 'data-terrain-land-samples', '115166')
@@ -449,6 +469,7 @@ const frameCellDowntown = (city = 'es-torrevieja') =>
     .task('streetCellDowntown', city)
     .then((point) => frameTerrainTarget(point as { x: number; z: number }));
 it('draws inspectable V2 C safe-zone boundaries beside downtown roads and preserves static buffers on pan', () => {
+  enableStreetCellOutlines();
   cy.viewport(1000, 660);
   cy.visit('/');
   cy.get('[data-testid="open-screen"]').should('be.visible');
@@ -537,6 +558,7 @@ it('draws inspectable V2 C safe-zone boundaries beside downtown roads and preser
   terrainMap().should('have.attr', 'data-rendered-street-cells-level', 'C');
 });
 it('preserves native downtown gameplay when the mandatory StreetCell archive cannot load', () => {
+  enableStreetCellOutlines();
   cy.intercept('GET', '**/street-cells/street-cells.zip*', {
     statusCode: 503,
     body: '',
@@ -569,6 +591,7 @@ it('preserves native downtown gameplay when the mandatory StreetCell archive can
 });
 
 it('draws Alicante V3 C-owned buildings with A/B/C, keeps near buffers stable and clears cells for unsupported Cartagena', () => {
+  enableStreetCellOutlines();
   let archives = 0;
   cy.intercept('GET', '**/street-cells/street-cells.zip*', () => {
     archives++;
@@ -695,7 +718,11 @@ it('shows Pass-1 and safe road-crossed urban/suburban buildings at every LOD', (
     terrainMap().find('canvas').trigger('wheel', { deltaY: -10000 });
     terrainDrawn();
     roadDrawn('C');
-    terrainMap().should('have.attr', 'data-rendered-street-cells-level', 'C');
+    terrainMap()
+      .should('have.attr', 'data-street-cells-status', 'hidden')
+      .and('have.attr', 'data-rendered-street-cells-level', '')
+      .and('have.attr', 'data-street-cells-batches', '0')
+      .and('have.attr', 'data-terrain-elevation-scale', '5');
     cy.task('streetCellBuildingSamples').then((raw) => {
       const samples = raw as {
         urban: { x: number; z: number; buildings: number };

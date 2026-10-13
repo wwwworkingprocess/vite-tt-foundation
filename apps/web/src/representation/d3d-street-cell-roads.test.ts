@@ -264,3 +264,19 @@ it('rejects missing or malformed width provenance instead of inventing a corrido
       ).guides[0],
     ).toMatchObject({ clearance: 12, widthSource: source });
 });
+
+it('requires own road metadata entries instead of inheriting undeclared road widths', () => {
+  expect(() =>
+    planStreetCellRoads(
+      [
+        road('r', [
+          [0, 0],
+          [40, 0],
+        ]),
+      ],
+      Object.create(metadata),
+      project,
+      1,
+    ),
+  ).toThrow('Missing StreetCell road width');
+});

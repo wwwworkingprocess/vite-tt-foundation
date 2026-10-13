@@ -1,3 +1,5 @@
+import * as appSettings from './d3d-app-settings.js';
+const resolveSettings = appSettings.resolveD3dAppSettings;
 import * as terrainGrid from './d3d-terrain-grid.js';
 import * as terrainPlanning from './d3d-terrain-model.js';
 import {
@@ -1173,13 +1175,9 @@ it('uses a terrain-ready native scene while retaining entity selection and stati
   );
 });
 
-it('grounds transport and selection on ready terrain while preserving pan/focus and replacing the cheap mini plan', () => {
-  const { setMatrixAt } = enableWorld();
-  const generatedBefore = buildProceduralCity(model, population);
-  const surfacePreparation = vi.spyOn(
-    cityGeometry,
-    'createCitySurfaceGeometry',
-  );
+// Static fixture preparation is not an interaction or cold-composition benchmark.
+// Keep it outside the timed assertion; the dedicated real-city benchmark remains cold.
+const uniformGroundingTerrain = (() => {
   const f = terrainFixture();
   const b = f.catalog.settlements.test.viewports[0]!.rasterBounds3035;
   Object.assign(b, {
@@ -1199,6 +1197,27 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
     f,
     resolveTerrainViewport(parseTerrainCatalog(f.catalog), 'test', 'a')!,
   );
+  return terrain;
+})();
+const uniformGroundingModel = createD3dMapModel(
+  createTransportMapProjection(genericScenario),
+);
+terrainPlanning.groundCity(
+  buildProceduralCity(uniformGroundingModel, population),
+  terrainPlanning.createD3dTerrain(
+    uniformGroundingTerrain,
+    uniformGroundingModel,
+  ),
+);
+
+it('grounds transport and selection on ready terrain while preserving pan/focus and replacing the cheap mini plan', () => {
+  const { setMatrixAt } = enableWorld();
+  const generatedBefore = buildProceduralCity(model, population);
+  const surfacePreparation = vi.spyOn(
+    cityGeometry,
+    'createCitySurfaceGeometry',
+  );
+  const terrain = uniformGroundingTerrain;
   vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
   const view = render(
     scene(
@@ -1226,7 +1245,10 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
   }
   expect(document.querySelector('mesh[name="settlement-ground"]')).toBeNull();
   expect(document.querySelector('mesh[name="research-landscape"]')).toBeNull();
-  const ground = 100 * d3dMetreScale(model).worldUnitsPerMetre;
+  const ground =
+    10 *
+    appSettings.d3dAppSettings.terrain.defaultVerticalExaggeration *
+    d3dMetreScale(model).worldUnitsPerMetre;
   expect(
     setMatrixAt.mock.calls.some(
       ([, matrix]) => Math.abs(matrix.elements[13] - ground) < 1e-7,
@@ -1730,7 +1752,7 @@ it('uses native detail and a viewport grid only at the normal maximum zoom, upda
   vi.mocked(useTerrain).mockReturnValue({ status: 'ready', terrain });
   const view = render(scene('normal'));
   const map = screen.getByTestId('d3d-map-representation');
-  expect(map).toHaveAttribute('data-terrain-elevation-scale', '10');
+  expect(map).toHaveAttribute('data-terrain-elevation-scale', '5');
   expect(map).toHaveAttribute('data-terrain-grid-visible', 'false');
   fireEvent.wheel(controls.canvas, { deltaY: -10000 });
   expect(map).toHaveAttribute('data-terrain-render-stride', '1');
@@ -2140,6 +2162,15 @@ const cellModel = withStreetCellZones(
   }),
 );
 it('preserves non-drawable C authority without empty GPU geometry or fake acknowledgement', () => {
+  vi.spyOn(appSettings, 'resolveD3dAppSettings').mockImplementation((city) =>
+    resolveSettings(city, {
+      ...appSettings.d3dAppSettings,
+      streetCells: {
+        ...appSettings.d3dAppSettings.streetCells,
+        showBoundaries: true,
+      },
+    }),
+  );
   enableWorld();
   readyCellTerrain();
   const one = {
@@ -2176,6 +2207,15 @@ it('preserves non-drawable C authority without empty GPU geometry or fake acknow
   view.unmount();
 });
 it('presents only near normal C lines with native terrain, safe depth style, stable GPU buffers and actual-draw acknowledgement', () => {
+  vi.spyOn(appSettings, 'resolveD3dAppSettings').mockImplementation((city) =>
+    resolveSettings(city, {
+      ...appSettings.d3dAppSettings,
+      streetCells: {
+        ...appSettings.d3dAppSettings.streetCells,
+        showBoundaries: true,
+      },
+    }),
+  );
   enableWorld();
   readyCellTerrain();
   vi.mocked(useStreetCells).mockReturnValue({
@@ -2256,6 +2296,15 @@ it('presents only near normal C lines with native terrain, safe depth style, sta
   observer.disconnect();
 });
 it('clears cells immediately on loading/error/absence, terrain and scene changes, rejecting stale batch callbacks', () => {
+  vi.spyOn(appSettings, 'resolveD3dAppSettings').mockImplementation((city) =>
+    resolveSettings(city, {
+      ...appSettings.d3dAppSettings,
+      streetCells: {
+        ...appSettings.d3dAppSettings.streetCells,
+        showBoundaries: true,
+      },
+    }),
+  );
   enableWorld();
   readyCellTerrain();
   vi.mocked(useStreetCells).mockReturnValue({
@@ -2323,6 +2372,15 @@ it('clears cells immediately on loading/error/absence, terrain and scene changes
 });
 
 it('keeps StreetCell preparation guard failures diagnostic and rejects old city/terrain acknowledgements', () => {
+  vi.spyOn(appSettings, 'resolveD3dAppSettings').mockImplementation((city) =>
+    resolveSettings(city, {
+      ...appSettings.d3dAppSettings,
+      streetCells: {
+        ...appSettings.d3dAppSettings.streetCells,
+        showBoundaries: true,
+      },
+    }),
+  );
   enableWorld();
   readyCellTerrain();
   vi.mocked(useStreetCells).mockReturnValue({
@@ -2384,6 +2442,15 @@ it('keeps StreetCell preparation guard failures diagnostic and rejects old city/
 });
 
 it('uses existing far/medium/near demand and rejects stale rendered levels during A/B/C transitions', () => {
+  vi.spyOn(appSettings, 'resolveD3dAppSettings').mockImplementation((city) =>
+    resolveSettings(city, {
+      ...appSettings.d3dAppSettings,
+      streetCells: {
+        ...appSettings.d3dAppSettings.streetCells,
+        showBoundaries: true,
+      },
+    }),
+  );
   enableWorld();
   readyCellTerrain();
   vi.mocked(useStreetCells).mockReturnValue({
@@ -2548,6 +2615,24 @@ it('batches cell-owned Torrevieja buildings once and keeps their static plan thr
   expect(Number(host.dataset.cellBuildingsUrban)).toBeGreaterThan(0);
   expect(Number(host.dataset.cellBuildingsSuburban)).toBeGreaterThan(0);
   expect(host).toHaveAttribute('data-cell-buildings-source-cells', '2');
+  expect(host).toHaveAttribute('data-street-cells-status', 'hidden');
+  expect(host).toHaveAttribute('data-street-cells-batches', '0');
+  expect(host).toHaveAttribute('data-rendered-street-cells-level', '');
+  expect(
+    document.querySelector('linesegments[name="street-cells-boundaries"]'),
+  ).toBeNull();
+  expect(useStreetCells).toHaveBeenCalledWith(
+    'es-torrevieja',
+    true,
+    undefined,
+    'C',
+  );
+  expect(useStreetCells).toHaveBeenCalledWith(
+    'es-torrevieja',
+    false,
+    undefined,
+    'A',
+  );
   expect(document.querySelector('mesh[name="provisional-streets"]')).toBeNull();
   const builds = host.dataset.cityLayoutBuilds;
   fireEvent.wheel(controls.canvas, { deltaY: -3000 });
@@ -2600,6 +2685,24 @@ it('reports repeated skipped-cell causes separately from candidate rejections', 
   render(scene('normal', null, undefined, scenario, cellOwnedPopulation));
   const host = screen.getByTestId('d3d-map-representation');
   expect(host).toHaveAttribute('data-cell-buildings-source-cells', '2');
+  expect(host).toHaveAttribute('data-street-cells-status', 'hidden');
+  expect(host).toHaveAttribute('data-street-cells-batches', '0');
+  expect(host).toHaveAttribute('data-rendered-street-cells-level', '');
+  expect(
+    document.querySelector('linesegments[name="street-cells-boundaries"]'),
+  ).toBeNull();
+  expect(useStreetCells).toHaveBeenCalledWith(
+    'es-torrevieja',
+    true,
+    undefined,
+    'C',
+  );
+  expect(useStreetCells).toHaveBeenCalledWith(
+    'es-torrevieja',
+    false,
+    undefined,
+    'A',
+  );
   expect(host).toHaveAttribute('data-city-building-count', '0');
   expect(JSON.parse(host.dataset.cellBuildingsSkipped!)).toEqual({
     'safe-zone-footprint': 2,
@@ -2667,4 +2770,53 @@ it('reports C buildings ready with absent/error/loading optional research and re
   expect(host).toHaveAttribute('data-cell-buildings-status', 'ready');
   expect(host.dataset.cityBuildingCount).toBe(count);
   expect(host.dataset.cityLayoutBuilds).toBe(builds);
+});
+
+it('disposes enabled outline resources on hidden settings and rejects delayed draw callbacks', () => {
+  enableWorld();
+  readyCellTerrain();
+  const setting = vi
+    .spyOn(appSettings, 'resolveD3dAppSettings')
+    .mockImplementation((city) =>
+      resolveSettings(city, {
+        ...appSettings.d3dAppSettings,
+        streetCells: {
+          ...appSettings.d3dAppSettings.streetCells,
+          showBoundaries: true,
+        },
+      }),
+    );
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: cellModel,
+  });
+  const v = render(scene('normal'));
+  fireEvent.wheel(controls.canvas, { deltaY: -10000 });
+  const node = document.querySelector(
+    'linesegments[name="street-cells-boundaries"]',
+  )!;
+  expect(node).not.toBeNull();
+  const props = sceneProps(node);
+  const dispose = vi.spyOn(props.material!, 'dispose');
+  const drawn = props.onAfterRender!;
+  act(() => drawn());
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-rendered-street-cells-level',
+    'C',
+  );
+  setting.mockImplementation((city) => resolveSettings(city));
+  v.rerender(scene('normal'));
+  expect(dispose).toHaveBeenCalledTimes(1);
+  expect(
+    document.querySelector('linesegments[name="street-cells-boundaries"]'),
+  ).toBeNull();
+  act(() => drawn());
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-rendered-street-cells-level',
+    '',
+  );
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-street-cells-status',
+    'hidden',
+  );
 });

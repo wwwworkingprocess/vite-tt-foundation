@@ -28,7 +28,6 @@ export function planStreetCellRoads(
     metre <= 0
   )
     throw new Error('Invalid StreetCell road metadata');
-  const tags = new Map<string, unknown>(Object.entries(metadata));
   const guides: StreetCellRoadGuide[] = [],
     reservations: FootprintPolygon[] = [];
   const segments: (StreetCellRoadGuide & { readonly disposition: string })[] =
@@ -47,7 +46,10 @@ export function planStreetCellRoads(
       !road.clippedCoordinates
     )
       continue;
-    const tag = tags.get(JSON.stringify(road.roadId));
+    const tag: unknown = Object.getOwnPropertyDescriptor(
+      metadata,
+      JSON.stringify(road.roadId),
+    )?.value;
     if (!Array.isArray(tag) || tag.length !== 10)
       throw new Error('Missing StreetCell road width');
     if (tag[8] !== true) continue;

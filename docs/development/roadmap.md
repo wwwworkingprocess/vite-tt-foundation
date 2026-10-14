@@ -372,3 +372,11 @@ terrain, transit and city anchoring share the resolved instance. Measured cold-q
 prefilters preserve complete two-pass slots, counts and protections. Existing shared
 prototypes/palettes gain deterministic row-level appearance variance. Incremental
 preparation, further packing and broader architectural families remain separate work.
+
+City Materialization V0 review candidate adds optional, versioned Torrevieja site
+recipes within the existing urban-assets ZIP: verified area treatments and bounded
+instanced approximate kits, with visual-only ownership and configurable material
+presets. Detailed historic structures, verified marina repetition guides, La Mata
+geometry, GLB loading, physical reservations and Workbench production/UI are later
+reviewed milestones; satellite textures and advanced shoreline gradients remain
+deferred.

@@ -23,7 +23,7 @@ it.each(['/', '/game/'])(
     const fetchText = vi.fn(registry.fetchAsset);
     const loader = createStreetCellLoader({ baseUrl, fetchText, digestSha256 });
     expect(fetchArchive).not.toHaveBeenCalled();
-    expect(await loader.resolve('es-elche')).toBeUndefined();
+    expect(await loader.resolve('es-cartagena')).toBeUndefined();
     const [a, b] = await Promise.all([
       loader.resolve('es-torrevieja'),
       loader.resolve('es-torrevieja'),
@@ -66,8 +66,8 @@ it.each(['missing', 'undefined', 'http', 'invalid', 'archive'])(
       fetchText,
       digestSha256,
     });
-    await expect(loader.resolve('es-elche')).rejects.toThrow();
-    expect(await loader.resolve('es-elche')).toBeUndefined();
+    await expect(loader.resolve('es-cartagena')).rejects.toThrow();
+    expect(await loader.resolve('es-cartagena')).toBeUndefined();
     expect(await loader.resolve('constructor')).toBeUndefined();
     expect(fetchText).toHaveBeenCalledTimes(2);
   },
@@ -86,7 +86,7 @@ it('retries unavailable, wrong-length, checksum and invalid C products without p
     fetchText,
     digestSha256: digest,
   });
-  await loader.resolve('es-elche');
+  await loader.resolve('es-cartagena');
   fetchText.mockResolvedValueOnce(undefined);
   await expect(loader.resolve('es-torrevieja')).rejects.toThrow('unavailable');
   fetchText.mockResolvedValueOnce({ ok: false, text: async () => '' });

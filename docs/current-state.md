@@ -847,3 +847,71 @@ edges. Shared materials, draw calls, caching and disposal remain unchanged.
 Torrevieja adds 26 / 80 / 1,361 triangles at far / medium / near; original top
 faces remain exactly 8,690 / 34,772 / 553,692. Raster jaggedness is retained;
 surveyed coastline reconstruction and waterfront art remain deferred.
+
+## City Materialization V0 (review candidate)
+
+Torrevieja's optional `urban-assets` city collection references a versioned
+`materialization/catalog.v0.json`; collection paths remain city-relative, while
+its geometry and shared-kit paths are ZIP-root-relative. Acquisition uses the
+existing revision-bound public layer, verifies geometry SHA-256 before decoding,
+and caches successful city/LOD models. Missing collections are normal; corrupt
+active data is diagnosed without replacing source geography. Normal D3D with
+native terrain presents far/medium/near recipes; mini and other representations
+remain unchanged. Static CPU plans and scene-owned GPU batches are reused through
+fleet, selection and within-band camera updates. Actual-draw acknowledgement is
+cleared on scene, city and LOD transitions.
+
+The installed verified examples are Laguna Rosa (R14660913), Playa del Cura
+(W151884902), Torre del Moro (W1092710852) and Sociedad Cultural Casino
+(W480233467). Read-only local OSM inventory additionally supplies Friday market
+(R14503849), Parque de las Naciones (R14960789), Eras de la Sal theatre extent
+(W320790561) and Marina Internacional (R19987857). OSM provenance and ODbL
+licensing are retained. Tower/Casino kits are deliberately approximate proxies.
+Eras is an extent treatment, not a historic-structure reconstruction; the marina
+extent is not the entire port; its broad area fill is now suppressed while metadata
+and source diagnostics remain. Verified mooring layout suitable for boat centers
+and detailed Eras structure geometry remain unavailable. No invented guides or
+buffered POI extents are substituted.
+
+All recipes are `visual-only`: no ordinary building, footprint, assignment,
+reservation, terrain mask, DEM sample or transport authority is changed. Existing
+ordinary buildings overlap the Casino and park graphics; diagnostics report those
+IDs rather than removing them. Legacy landmark placeholders also remain intact.
+Native mask/source discrepancies are reported: Rosa's verified water extent
+samples LAND in the native raster; its polygon tint uses `native-both`. Beach sand
+currently retains the supplied LAND-only policy. Large surfaces are clipped to
+the native loaded region and use bounded presentation support, not full-resolution
+site meshes. Preparation guards are 131,072 triangles, 4,096 repeated instances
+32 draw batches globally, and 65,536 proposals per site. Unsupported GLB entries are diagnosed and skipped.
+
+`apps/web/src/representation/d3d-material-presets.ts` owns surface, terrain and kit
+colors outside numeric geometry planning. Torrevieja presets independently reserve
+Rosa pink `#B7A2A7`, La Mata green-turquoise `#408E89`, Mediterranean blue `#527F96`,
+shallow-water turquoise `#43B8C6`, and sand/mineral `#E6D8B5`. La Mata and shallow
+water presets do not invent missing geographic shapes or bands. Satellite textures,
+shoreline gradients, reviewed physical reservations, GLB loading and a Workbench
+producer/UI remain deferred.
+
+### Narrow V0 visual correction (owner review)
+
+The verified Marina Internacional R19987857 extent produced a distracting pale
+water block. Its site surface is disabled by city-local presentation policy;
+Mediterranean/native WATER and coast geometry remain unchanged. No inferred
+piers, boats or substitute water boundaries are introduced.
+
+Rosa remains opaque, one-sided and terrain-following, with configurable muted
+pink and bounded +/-4.5% world-space regional tone modulation. Neutral vertex
+weights are separate from palette values; they do not alter the polygon or DEM.
+La Mata remains deferred: the accessible water extracts identify Rosa R14660913,
+while unnamed R14667851/R14660916 are tagged river. No unambiguous La Mata lagoon
+extent was found; its reserved color remains unchanged.
+
+Market row recipes now select separated rows and progressively distributed
+columns before exhausting the accepted-instance cap. The verified market uses
+10-metre along-row spacing, 20-metre aisle pitch and 8-by-6-metre canopy proxies,
+retaining a bounded 80/160 B/C subset and exact B-prefix-of-C identity. Full envelopes,
+holes, native grounding and proposal guards remain enforced. Park tree layout,
+other verified proxies, ordinary city building records and physical authorities
+are unchanged. These are static visual rows, with no calendar or temporal logic.
+
+The bounded market ground also uses 25 m drape support at medium LOD, so coarse overlay faces do not hide native-grounded canopy roofs. Other site surfaces retain their existing presentation LOD.

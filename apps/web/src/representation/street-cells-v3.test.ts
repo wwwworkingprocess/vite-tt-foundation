@@ -48,13 +48,14 @@ const installedCities = Object.entries(installedCatalog.settlements).map(
     return { id, entry, descriptors, model, annotations };
   },
 );
-it('validates the accepted V3 two-city archive and preserves null estimates and partial observed evidence', () => {
-  expect(zip.length).toBe(3861322);
+it('validates the owner-supplied V3 three-city archive and preserves null estimates and partial observed evidence', () => {
+  expect(zip.length).toBe(5759674);
   expect(createHash('sha256').update(zip).digest('hex')).toBe(
-    'e71360004a34fe1ba82782b01f4921d1ab42e3d4c2da1fcb5192308699f5524e',
+    '710e6aaaec11c8003cda936502d1b65769810a8c4bedf5b09dd5f5d4960976c3',
   );
   expect(Object.keys(installedCatalog.settlements).sort()).toEqual([
     'es-alicante',
+    'es-elche',
     'es-torrevieja',
   ]);
   for (const { entry, descriptors, annotations } of installedCities) {

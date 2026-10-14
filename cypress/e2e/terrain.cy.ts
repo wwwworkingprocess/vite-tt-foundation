@@ -374,6 +374,8 @@ it('switches between cataloged cities and unsupported Cartagena without stale ro
   cy.get('[data-testid="open-screen"]').should('be.visible');
   cy.contains('button', 'Start new game').should('be.enabled').click();
   roadDrawn('A');
+  // This checks city/road acquisition, independently of a running simulation.
+  cy.contains('button', /^Pause$/).click();
   const changeCity = (city: string, scenario: string) => {
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.get('select[aria-label="City"]').select(city);
@@ -786,4 +788,54 @@ it('shows Pass-1 and safe road-crossed urban/suburban buildings at every LOD', (
     cy.screenshot('cell-city-cityscale');
   });
   cy.then(() => expect(archives).to.equal(1));
+});
+
+it('draws optional verified city sites across LODs without rebuilding the C-owned city', () => {
+  cy.visit('/');
+  cy.get('[data-testid="open-screen"]').should('be.visible');
+  cy.contains('label', 'Scenario')
+    .find('select')
+    .select('torrevieja-legacy-all-v1');
+  cy.contains('button', 'Start new game').should('be.enabled').click();
+  terrainMap().should('have.attr', 'data-terrain-status', 'ready');
+  cy.contains('button', /^Pause$/).click();
+  cy.get('button[aria-label="Select mini representation for swap"]').click();
+  cy.contains('button', 'Swap visualizations').click();
+  terrainMap()
+    .should('have.attr', 'data-materialization-status', 'ready')
+    .and('have.attr', 'data-city-building-count', '12941');
+  terrainMap().then(($map) => {
+    const builds = $map.attr('data-city-layout-builds');
+    for (const [pixel, level] of [
+      [0.3, 'A'],
+      [0.055, 'B'],
+      [0.014, 'C'],
+      [0.3, 'A'],
+    ] as const) {
+      terrainZoomTo(pixel);
+      terrainDrawn();
+      terrainMap()
+        .should('have.attr', 'data-materialization-status', 'ready')
+        .and('have.attr', 'data-rendered-materialization-level', level)
+        .and('have.attr', 'data-city-layout-builds', builds)
+        .and('have.attr', 'data-city-building-count', '12941')
+        .then(($host) => {
+          const diagnostics = JSON.parse(
+            $host.attr('data-materialization-diagnostics')!,
+          ) as {
+            siteId: string;
+            triangles: number;
+            instances: number;
+            suppressedSurfaces: number;
+          }[];
+          expect(
+            diagnostics.find((s) => s.siteId.endsWith('marina-internacional')),
+          ).to.include({ triangles: 0, instances: 0, suppressedSurfaces: 1 });
+          expect(
+            diagnostics.find((s) => s.siteId.endsWith('friday-market'))!
+              .instances,
+          ).to.equal({ A: 0, B: 80, C: 160 }[level]);
+        });
+    }
+  });
 });

@@ -1,3 +1,14 @@
+import {
+  d3dMaterialPresets,
+  resolveTerrainMaterials,
+} from './d3d-material-presets.js';
+import { useCityMaterialization } from './use-city-materialization.js';
+import {
+  prepareCityMaterialization,
+  diagnoseMaterializationOverlaps,
+  type MaterializationPlan,
+} from './d3d-materialization.js';
+import { D3dMaterialization } from './D3dMaterialization.js';
 import { resolveD3dAppSettings } from './d3d-app-settings.js';
 import {
   buildStreetCellCity,
@@ -692,11 +703,13 @@ type D3dTerrainMeshes = readonly Readonly<{
   geometry: BufferGeometry;
 }>[];
 function NativeTerrain({
+  settlementId,
   meshes,
   source,
   wrapper,
   renderLod,
 }: {
+  settlementId: string;
   meshes: D3dTerrainMeshes;
   source: D3dTerrain['terrain'];
   renderLod: D3dLodBand;
@@ -704,10 +717,16 @@ function NativeTerrain({
 }) {
   const materials = useMemo(
     () => ({
-      land: new MeshLambertMaterial({ color: '#a7b88d', vertexColors: true }),
-      water: new MeshLambertMaterial({ color: '#729ea5', vertexColors: true }),
+      land: new MeshLambertMaterial({
+        color: resolveTerrainMaterials(settlementId).land,
+        vertexColors: true,
+      }),
+      water: new MeshLambertMaterial({
+        color: resolveTerrainMaterials(settlementId).water,
+        vertexColors: true,
+      }),
     }),
-    [],
+    [settlementId],
   );
   useEffect(
     () => () => {
@@ -766,7 +785,7 @@ function Terrain({
           (sceneBounds.maxZ - sceneBounds.minZ) * 1.04,
         ]}
       />
-      <meshLambertMaterial color="#a7b88d" />
+      <meshLambertMaterial color={d3dMaterialPresets.terrain.land} />
     </mesh>
   );
 }
@@ -1506,6 +1525,8 @@ function Vehicles({
 }
 
 function D3dWorld({
+  settlementId,
+  materializationPlan,
   streetCellGeometry,
   onStreetCellsInvalidated,
   onStreetCellsRendered,
@@ -1526,6 +1547,8 @@ function D3dWorld({
   gridGeometry,
   wrapper,
 }: Readonly<{
+  settlementId: string;
+  materializationPlan: MaterializationPlan | undefined;
   wrapper: React.RefObject<HTMLElement | null>;
   terrain?: D3dTerrain | undefined;
   streetCellGeometry: BufferGeometry | undefined;
@@ -1635,6 +1658,7 @@ function D3dWorld({
       <directionalLight position={[-40, 80, 30]} intensity={1.6} />
       {terrainMeshes ? (
         <NativeTerrain
+          settlementId={settlementId}
           meshes={terrainMeshes}
           source={terrain!.terrain}
           wrapper={wrapper}
@@ -1688,6 +1712,13 @@ function D3dWorld({
             if (activeCellPresentation.current === cellPresentation)
               onStreetCellsRendered();
           }}
+        />
+      ) : null}
+      {materializationPlan ? (
+        <D3dMaterialization
+          plan={materializationPlan}
+          lod={lod}
+          wrapper={wrapper}
         />
       ) : null}
       <Routes
@@ -1765,6 +1796,11 @@ export default function D3dMapRepresentation({
           )
         : undefined,
     [terrainState, model, settings.verticalExaggeration],
+  );
+  const materializationState = useCityMaterialization(
+    scenario.manifest.primarySettlementId,
+    lod,
+    mode === 'normal' && terrain !== undefined,
   );
   const roadState = useRoadNetwork(
     scenario.manifest.primarySettlementId,
@@ -2132,6 +2168,46 @@ export default function D3dMapRepresentation({
     [model, vehicles],
   );
   const [candidateIndex, setCandidateIndex] = useState(0);
+  const materializationPreparation = useMemo(() => {
+    if (
+      materializationState.status !== 'ready' ||
+      !terrain ||
+      mode !== 'normal'
+    )
+      return undefined;
+    try {
+      const plan = prepareCityMaterialization(
+        materializationState.model,
+        model,
+        terrain,
+        lod,
+      );
+      const overlaps = city
+        ? diagnoseMaterializationOverlaps(
+            materializationState.model,
+            model,
+            city,
+          )
+        : [];
+      return { status: 'ready' as const, plan, overlaps };
+    } catch (error) {
+      return { status: 'error' as const, message: String(error) };
+    }
+  }, [materializationState, model, terrain, lod, city, mode]);
+  const materializationError =
+    materializationPreparation?.status === 'error'
+      ? materializationPreparation.message
+      : materializationState.status === 'error'
+        ? materializationState.message
+        : undefined;
+  const materializationPlan =
+    materializationPreparation?.status === 'ready'
+      ? materializationPreparation.plan
+      : undefined;
+  useLayoutEffect(() => {
+    // This layout effect always commits with the root host mounted.
+    wrapper.current!.dataset.renderedMaterializationLevel = '';
+  }, [materializationPlan, lod, scenario, mode]);
   const visualState = useMemo(
     () => [
       transportModel,
@@ -2141,6 +2217,7 @@ export default function D3dMapRepresentation({
       gridGeometry,
       roadMeshes,
       streetCellGeometry,
+      materializationPlan,
       vehicles,
       selection,
       focusedRouteId,
@@ -2155,6 +2232,7 @@ export default function D3dMapRepresentation({
       gridGeometry,
       roadMeshes,
       streetCellGeometry,
+      materializationPlan,
       vehicles,
       selection,
       focusedRouteId,
@@ -2189,6 +2267,27 @@ export default function D3dMapRepresentation({
       className="scene d3d-map-representation"
       aria-label="Three-dimensional transport Map"
       data-testid="d3d-map-representation"
+      data-materialization-status={
+        materializationPreparation?.status === 'error'
+          ? 'error'
+          : materializationState.status
+      }
+      data-materialization-error={materializationError ?? ''}
+      data-materialization-sites={materializationPlan?.diagnostics.length ?? 0}
+      data-materialization-triangles={materializationPlan?.triangles ?? 0}
+      data-materialization-instances={
+        materializationPlan?.instances.length ?? 0
+      }
+      data-materialization-overlaps={
+        materializationPreparation?.status === 'ready'
+          ? JSON.stringify(materializationPreparation.overlaps)
+          : ''
+      }
+      data-materialization-diagnostics={
+        materializationPlan
+          ? JSON.stringify(materializationPlan.diagnostics)
+          : ''
+      }
       data-scenario-id={scenario.manifest.scenarioId}
       data-representation-mode={mode}
       data-target-frames-per-second={cadence.targetFramesPerSecond}
@@ -2426,6 +2525,8 @@ export default function D3dMapRepresentation({
           terrain={terrain}
         />
         <D3dWorld
+          settlementId={scenario.manifest.primarySettlementId}
+          materializationPlan={materializationPlan}
           streetCellGeometry={streetCellGeometry}
           onStreetCellsInvalidated={onStreetCellsInvalidated}
           onStreetCellsRendered={onStreetCellsRendered}
@@ -2447,6 +2548,9 @@ export default function D3dMapRepresentation({
           mode={mode}
         />
       </Canvas>
+      {mode === 'normal' && materializationError !== undefined ? (
+        <p role="status">City sites unavailable: {materializationError}</p>
+      ) : null}
       {mode === 'normal' ? (
         <div
           className="d3d-keyboard-control"

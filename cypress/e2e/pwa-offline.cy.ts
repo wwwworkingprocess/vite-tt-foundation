@@ -552,3 +552,65 @@ describe('built foundation PWA offline lifecycle', () => {
     cy.then(() => network(false));
   });
 });
+
+describe('optional city-site offline acquisition', () => {
+  afterEach(() => network(false));
+  it('reuses the acquired urban-assets revision and draws verified sites after an offline reload', () => {
+    cy.visit('./');
+    cy.get('[data-testid="open-screen"]').should('be.visible');
+    cy.window().then((win) =>
+      cy
+        .wrap(win.navigator.serviceWorker.ready, {
+          timeout: serviceWorkerReadyTimeoutMs,
+          log: false,
+        })
+        .its('active')
+        .should('not.be.null'),
+    );
+    cy.reload();
+    const start = () => {
+      cy.get('[data-testid="open-screen"]').should('be.visible');
+      cy.contains('label', 'Scenario')
+        .find('select')
+        .select('torrevieja-legacy-all-v1');
+      cy.contains('button', 'Start new game').should('be.enabled').click();
+      cy.contains('button', /^Pause$/).click();
+      cy.get(
+        'button[aria-label="Select mini representation for swap"]',
+      ).click();
+      cy.contains('button', 'Swap visualizations').click();
+    };
+    const presented = () =>
+      cy
+        .get('[data-testid="d3d-map-representation"]', { timeout: 15000 })
+        .should('have.attr', 'data-terrain-status', 'ready')
+        .and('have.attr', 'data-materialization-status', 'ready')
+        .and('have.attr', 'data-city-building-count', '12941')
+        .should(($map) => {
+          expect($map.attr('data-rendered-materialization-level')).to.match(
+            /^[ABC]$/,
+          );
+          expect(
+            Number($map.attr('data-materialization-triangles')),
+          ).to.be.greaterThan(0);
+        });
+    start();
+    presented();
+    cy.window().then(async (win) => {
+      const cache = await win.caches.open('public-layers');
+      const keys = await cache.keys();
+      const archive = keys.find((r) =>
+        new URL(r.url).pathname.endsWith('/urban-assets/urban-assets.zip'),
+      );
+      expect(archive, 'on-demand city materialization archive').not.to.equal(
+        undefined,
+      );
+      const response = await cache.match(archive!);
+      expect(response?.ok).to.equal(true);
+    });
+    cy.then(() => network(true));
+    cy.reload();
+    start();
+    presented();
+  });
+});

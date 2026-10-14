@@ -25,10 +25,22 @@ const descriptor = () => catalog().settlements['es-torrevieja']!.products[2]!;
 it('preserves the accepted archive CRCs, provenance, all descriptors and immutable exact polygons including holes', () => {
   const zip = rawRead(streetCellRoot + 'street-cells.zip');
   expect(createHash('sha256').update(zip).digest('hex')).toBe(
-    'e71360004a34fe1ba82782b01f4921d1ab42e3d4c2da1fcb5192308699f5524e',
+    '710e6aaaec11c8003cda936502d1b65769810a8c4bedf5b09dd5f5d4960976c3',
   );
   const entries = indexZip(zip);
-  expect(entries.size).toBe(13);
+  expect(entries.size).toBe(19);
+  for (const entry of Object.values(catalog().settlements))
+    for (const p of [
+      ...entry.products,
+      entry.audit,
+      entry.annotations,
+      entry.hierarchy,
+    ]) {
+      const e = entries.get(p.path)!;
+      const b = verifyZipEntry(e, inflateRawSync(e.compressed));
+      expect(b.length).toBe(p.byteLength);
+      expect(createHash('sha256').update(b).digest('hex')).toBe(p.sha256);
+    }
   const city = catalog().settlements['es-torrevieja']!;
   expect(city.products.map((p) => p.featureCount)).toEqual([84, 584, 1623]);
   for (const p of [
@@ -298,12 +310,14 @@ const installedV3Products = (() => {
     }),
   }));
 })();
-it('consumes the actual V3 dictionary and stable-ID annotations for both cities', () => {
+it('consumes the actual V3 dictionary and stable-ID annotations for all three installed cities', () => {
   for (const { city, entry, products } of installedV3Products) {
     const counts =
       city === 'es-torrevieja'
         ? [84, 584, 1623, 1437]
-        : [348, 1411, 3201, 2759];
+        : city === 'es-alicante'
+          ? [348, 1411, 3201, 2759]
+          : [326, 815, 1865, 1561];
     expect(entry.products.map((p) => p.featureCount)).toEqual(
       counts.slice(0, 3),
     );

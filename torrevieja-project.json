@@ -87,7 +87,13 @@
       "apps/web/src/representation/street-cells.ts",
       "apps/web/src/representation/street-cells-loader.ts",
       "apps/web/src/representation/use-street-cells.ts",
-      "apps/web/src/representation/d3d-street-cells.ts"
+      "apps/web/src/representation/d3d-street-cells.ts",
+      "apps/web/src/representation/city-materialization.ts",
+      "apps/web/src/representation/city-materialization-loader.ts",
+      "apps/web/src/representation/use-city-materialization.ts",
+      "apps/web/src/representation/d3d-materialization.ts",
+      "apps/web/src/representation/d3d-material-presets.ts",
+      "apps/web/src/representation/D3dMaterialization.tsx"
     ]
   },
   "simulationCriticalCoverage": {

@@ -348,6 +348,47 @@ for (const entry of Object.values(terrainCatalog.settlements)) {
   }
 }
 for (const path of terrainAssets) await assetBytes(path);
+// Materialization stays inside the existing on-demand urban-assets archive.
+// Verify the published inventory and each active city-relative collection's
+// ZIP-root-relative geometry/kit references, without emitting raw source assets.
+const urbanManifest = JSON.parse(await assetText('urban-assets/MANIFEST.json'));
+for (const descriptor of urbanManifest.files) {
+  const bytes = await assetBytes('urban-assets/' + descriptor.path);
+  if (
+    bytes.length !== descriptor.byteLength ||
+    createHash('sha256').update(bytes).digest('hex') !== descriptor.sha256
+  )
+    throw new Error('Built urban asset integrity mismatch: ' + descriptor.path);
+}
+const urbanCatalog = JSON.parse(await assetText('urban-assets/catalog.json'));
+for (const [city, descriptor] of Object.entries(urbanCatalog.settlements)) {
+  const cityCatalog = JSON.parse(
+    await assetText('urban-assets/' + descriptor.catalog),
+  );
+  const collection = cityCatalog.collections.materialization;
+  if (!collection) continue;
+  const materialization = JSON.parse(
+    await assetText(
+      'urban-assets/' +
+        posix.join(posix.dirname(descriptor.catalog), collection),
+    ),
+  );
+  if (
+    materialization.contract !== 'city-materialization' ||
+    materialization.schemaVersion !== '0.1.0' ||
+    materialization.settlementId !== city
+  )
+    throw new Error('Built materialization identity mismatch: ' + city);
+  await assetBytes('urban-assets/' + materialization.kitCatalogPath);
+  for (const site of materialization.sites)
+    for (const geometry of site.geometries) {
+      const bytes = await assetBytes('urban-assets/' + geometry.path);
+      if (createHash('sha256').update(bytes).digest('hex') !== geometry.sha256)
+        throw new Error(
+          'Built materialization geometry checksum mismatch: ' + geometry.path,
+        );
+    }
+}
 for (const layer of [
   'asset-research',
   'icons',

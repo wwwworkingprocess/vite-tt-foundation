@@ -1,3 +1,10 @@
+import { useCityMaterialization } from './use-city-materialization.js';
+import { createCityMaterializationLoader } from './city-materialization-loader.js';
+import * as sitePlanning from './d3d-materialization.js';
+import { createHash } from 'node:crypto';
+vi.mock('./use-city-materialization.js', () => ({
+  useCityMaterialization: vi.fn(() => ({ status: 'inactive' })),
+}));
 import * as appSettings from './d3d-app-settings.js';
 const resolveSettings = appSettings.resolveD3dAppSettings;
 import * as terrainGrid from './d3d-terrain-grid.js';
@@ -191,21 +198,23 @@ const pointer = (kind: string, x: number, y: number, pointerId = 1) => {
 };
 
 afterEach(() => {
+  vi.mocked(useCityMaterialization).mockReturnValue({ status: 'inactive' });
   vi.mocked(useStreetCells).mockReturnValue({ status: 'inactive' });
   vi.mocked(useRoadNetwork).mockReturnValue({ status: 'absent' });
   controls.renderWorld = false;
   controls.frame = undefined;
   controls.eventConnect.mockClear();
+  cleanup();
   for (const property of [
     'setMatrixAt',
     'setColorAt',
     'instanceMatrix',
     'instanceColor',
     'computeBoundingSphere',
+    'dispose',
     'scale',
   ])
     Reflect.deleteProperty(HTMLElement.prototype, property);
-  cleanup();
   vi.restoreAllMocks();
   vi.useRealTimers();
   configureRepresentationProfiling(false);
@@ -387,6 +396,7 @@ const enableWorld = () => {
     setMatrixAt,
     setColorAt,
     computeBoundingSphere,
+    dispose: vi.fn(),
     instanceMatrix: { needsUpdate: false },
     instanceColor: { needsUpdate: false },
   });
@@ -2818,5 +2828,116 @@ it('disposes enabled outline resources on hidden settings and rejects delayed dr
   expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
     'data-street-cells-status',
     'hidden',
+  );
+});
+
+const installedSites = createCityMaterializationLoader({
+  baseUrl: '/',
+  digestSha256: async (text) => createHash('sha256').update(text).digest('hex'),
+  fetchText: async (url) => ({
+    ok: true,
+    text: async () =>
+      readFileSync(join(import.meta.dirname, '../../public', url), 'utf8'),
+  }),
+});
+it('presents verified native-ground sites, preserves static GPU geometry through fleet/selection/pan and clears removed acknowledgements', async () => {
+  enableWorld();
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  const state = {
+    status: 'ready' as const,
+    model: (await installedSites.resolve('es-torrevieja', 'far'))!,
+  };
+  vi.mocked(useCityMaterialization).mockReturnValue(state);
+  const view = render(scene('normal', null, undefined, scenario, population));
+  const host = screen.getByTestId('d3d-map-representation');
+  expect(host).toHaveAttribute('data-materialization-status', 'ready');
+  expect(Number(host.dataset.materializationTriangles)).toBeGreaterThan(0);
+  expect(host.dataset.materializationOverlaps).not.toBe('');
+  expect(host).toHaveAttribute('data-rendered-materialization-level', '');
+  const node = document.querySelector('mesh[name^="materialization-"]')!;
+  const props = sceneProps(node);
+  act(() => props.onAfterRender!());
+  expect(host).toHaveAttribute('data-rendered-materialization-level', 'A');
+  view.rerender(
+    scene(
+      'normal',
+      selectStop(stop.stopPlaceId),
+      undefined,
+      scenario,
+      population,
+      [...fleet],
+    ),
+  );
+  pointer('pointerdown', 10, 10);
+  pointer('pointermove', 12, 12);
+  pointer('pointerup', 12, 12);
+  expect(
+    sceneProps(document.querySelector('mesh[name^="materialization-"]')!)
+      .geometry,
+  ).toBe(props.geometry);
+  vi.mocked(useCityMaterialization).mockReturnValue({ status: 'absent' });
+  view.rerender(scene('normal'));
+  expect(host).toHaveAttribute('data-rendered-materialization-level', '');
+  expect(
+    document.querySelector('group[name="city-materialization"]'),
+  ).toBeNull();
+  act(() => props.onAfterRender!());
+  expect(host).toHaveAttribute('data-rendered-materialization-level', '');
+});
+it('keeps unavailable, mini and corrupt site inputs usable and diagnoses preparation failures', async () => {
+  const state = {
+    status: 'ready' as const,
+    model: (await installedSites.resolve('es-torrevieja', 'far'))!,
+  };
+  vi.mocked(useCityMaterialization).mockReturnValue(state);
+  const view = render(scene('normal'));
+  expect(useCityMaterialization).toHaveBeenLastCalledWith(
+    'es-torrevieja',
+    screen.getByTestId('d3d-map-representation').dataset.cityLod,
+    false,
+  );
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-materialization-sites',
+    '0',
+  );
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  view.rerender(scene('mini'));
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-materialization-sites',
+    '0',
+  );
+  view.rerender(scene('normal'));
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-materialization-overlaps',
+    '[]',
+  );
+  const fail = vi
+    .spyOn(sitePlanning, 'prepareCityMaterialization')
+    .mockImplementation(() => {
+      throw new Error('Site preparation budget');
+    });
+  vi.mocked(useCityMaterialization).mockReturnValue({ ...state });
+  view.rerender(scene('normal'));
+  expect(screen.getByRole('status')).toHaveTextContent(
+    'Site preparation budget',
+  );
+  expect(screen.getByTestId('d3d-map-representation')).toHaveAttribute(
+    'data-materialization-status',
+    'error',
+  );
+  fail.mockRestore();
+  vi.mocked(useCityMaterialization).mockReturnValue({
+    status: 'error',
+    message: 'Site checksum mismatch',
+  });
+  view.rerender(scene('normal'));
+  expect(screen.getByRole('status')).toHaveTextContent(
+    'Site checksum mismatch',
   );
 });

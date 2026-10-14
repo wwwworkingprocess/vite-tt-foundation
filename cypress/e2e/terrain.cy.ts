@@ -694,9 +694,9 @@ it('shows Pass-1 and safe road-crossed urban/suburban buildings at every LOD', (
       const pass1 = JSON.parse($map.attr('data-cell-buildings-pass1')!),
         pass2 = JSON.parse($map.attr('data-cell-buildings-pass2')!);
       expect(pass1).to.deep.equal({
-        buildings: 8407,
-        occupied: 894,
-        proposed: 34289,
+        buildings: 8878,
+        occupied: 941,
+        proposed: 18680,
       });
       expect(pass2.buildings).to.be.greaterThan(4000);
       expect(pass2.occupied).to.be.greaterThan(250);
@@ -803,7 +803,7 @@ it('draws optional verified city sites across LODs without rebuilding the C-owne
   cy.contains('button', 'Swap visualizations').click();
   terrainMap()
     .should('have.attr', 'data-materialization-status', 'ready')
-    .and('have.attr', 'data-city-building-count', '12941');
+    .and('have.attr', 'data-city-building-count', '17562');
   terrainMap().then(($map) => {
     const builds = $map.attr('data-city-layout-builds');
     for (const [pixel, level] of [
@@ -818,7 +818,7 @@ it('draws optional verified city sites across LODs without rebuilding the C-owne
         .should('have.attr', 'data-materialization-status', 'ready')
         .and('have.attr', 'data-rendered-materialization-level', level)
         .and('have.attr', 'data-city-layout-builds', builds)
-        .and('have.attr', 'data-city-building-count', '12941')
+        .and('have.attr', 'data-city-building-count', '17562')
         .then(($host) => {
           const diagnostics = JSON.parse(
             $host.attr('data-materialization-diagnostics')!,
@@ -838,4 +838,104 @@ it('draws optional verified city sites across LODs without rebuilding the C-owne
         });
     }
   });
+});
+
+it('renders analytic wall details with identical prototype batches and no window meshes', () => {
+  cy.visit('/');
+  cy.window()
+    .then(async (win) => {
+      const three = await win.eval(
+        'import("/node_modules/.vite/deps/three.js")',
+      );
+      const geometry = await win.eval(
+        'import("/src/representation/d3d-city-geometry.ts")',
+      );
+      const facade = await win.eval(
+        'import("/src/representation/d3d-city-facade.ts")',
+      );
+      const output = [];
+      for (const enabled of [false, true]) {
+        const renderer = new three.WebGLRenderer({
+          antialias: true,
+          preserveDrawingBuffer: true,
+        });
+        renderer.setSize(1000, 660);
+        renderer.setClearColor('#e3e9dc');
+        renderer.debug.onShaderError = () => {
+          throw new Error('Facade shader compilation failed');
+        };
+        const scene = new three.Scene(),
+          camera = new three.OrthographicCamera(-25, 25, 16.5, -16.5, 0.1, 200);
+        camera.position.set(26, 25, 40);
+        camera.lookAt(0, 5, 0);
+        scene.add(new three.AmbientLight('#ffffff', 0.85));
+        const light = new three.DirectionalLight('#ffffff', 1.6);
+        light.position.set(-40, 80, 30);
+        scene.add(light);
+        const resources = [];
+        for (const [i, kind] of [
+          'midrise-slab',
+          'detached-villa',
+          'terrace-row',
+        ].entries()) {
+          const storeys = i === 0 ? 5 : 2,
+            b = { width: 8, depth: 10, storeys, density: i === 0 ? 0.8 : 0.2 };
+          for (const layer of ['body', 'roof']) {
+            const g = geometry.createCityPrototypeGeometry(kind, layer),
+              m = new three.MeshLambertMaterial({
+                color: layer === 'body' ? '#cec8b7' : '#949a95',
+              });
+            if (enabled && layer === 'body') {
+              g.setAttribute('cityFacade', facade.facadeParameters([b], 1));
+              m.onBeforeCompile = facade.patchCityFacadeShader;
+              m.customProgramCacheKey = () => 'city-wall-facade-v0';
+            }
+            const mesh = new three.InstancedMesh(g, m, 1),
+              object = new three.Object3D();
+            object.position.set((i - 1) * 15, 0, 0);
+            object.scale.set(8, storeys * 3.1, 10);
+            object.updateMatrix();
+            mesh.setMatrixAt(0, object.matrix);
+            scene.add(mesh);
+            resources.push([g, m, mesh]);
+          }
+        }
+        renderer.render(scene, camera);
+        const name = 'facade-' + (enabled ? 'after' : 'before');
+        output.push({
+          name,
+          image: renderer.domElement.toDataURL().split(',')[1],
+          calls: renderer.info.render.calls,
+          triangles: renderer.info.render.triangles,
+        });
+        for (const [g, m, mesh] of resources) {
+          g.dispose();
+          m.dispose();
+          mesh.dispose();
+        }
+        renderer.dispose();
+        renderer.forceContextLoss();
+      }
+      return output;
+    })
+    .then((rows) => {
+      expect(rows[0].calls).to.equal(6);
+      expect(rows[1].calls).to.equal(rows[0].calls);
+      expect(rows[1].triangles).to.equal(rows[0].triangles);
+      for (const row of rows) {
+        cy.writeFile(
+          'node_modules/.cache/street-cells/urban-perimeters/' +
+            row.name +
+            '.png',
+          row.image,
+          'base64',
+        );
+        cy.writeFile(
+          'node_modules/.cache/street-cells/urban-perimeters/' +
+            row.name +
+            '.json',
+          { calls: row.calls, triangles: row.triangles },
+        );
+      }
+    });
 });

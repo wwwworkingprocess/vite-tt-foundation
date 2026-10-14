@@ -28,15 +28,15 @@ const fixtures = [
     cells: cellCityCells,
     terrain: cellCityTerrain,
     view: cellCityMetadata,
-    hash: 'eb3ba2340a77f4be47e8d9ce08d693979e46e45ee864370d7886d9bf49875c26',
-    count: 8407,
+    hash: '473257f82ca5c24627da2b2d6f874523c71030ac455107a594469587839f85b4',
+    count: 8878,
   },
   {
     id: 'es-alicante',
     ...alicanteCellCityFixture(),
     view: undefined,
-    hash: '5a63d3377c3ba045fe6574ae9b2028f6f55a3341ef19ad69895c6d050f5747a2',
-    count: 8461,
+    hash: 'd1e3ca2a49d332e2192ddf01f68bddcb2c25a6bf4c903146d1f2f649642ea5ff',
+    count: 9331,
   },
 ];
 const results = fixtures.map((f) => {
@@ -130,18 +130,18 @@ const results = fixtures.map((f) => {
   };
 });
 for (const r of results)
-  it(`${r.f.id}: extends road-crossed C safely without changing any accepted Pass-1 slot`, () => {
+  it(`${r.f.id}: pins refined frontage layouts for both passes with complete geographic safety`, () => {
     expect(r.pass1).toHaveLength(r.f.count);
     expect(r.hash).toBe(r.f.hash);
     expect(r.city.buildings).toHaveLength(
-      r.f.id === 'es-torrevieja' ? 12941 : 10444,
+      r.f.id === 'es-torrevieja' ? 17562 : 13804,
     );
     expect(
       createHash('sha256').update(JSON.stringify(r.slots)).digest('hex'),
     ).toBe(
       r.f.id === 'es-torrevieja'
-        ? '6327326d4351b3b990a1eff173c54cab2754c150a85c4496a87c5a45238c69ec'
-        : '20acfff7884ad14d6892b392d676e2e7d60f1fa8015bb869d3a83e7a7d5cdaae',
+        ? '944cc75594313e949cbe45aeeb5d5e10ee1b5411dcf4b71f2d3c4b77a7a1ae20'
+        : '48d610a2dcf7ac0ac1f0d1a800661eda4db31cb9be341d0c47ac8706d9396091',
     );
     expect(r.violations).toEqual([]);
     expect(r.slots).toEqual(r.noResearchSlots);
@@ -516,9 +516,37 @@ for (const r of results)
       new Set(r.without.buildings.map((b) => b.prototype ?? b.archetype)).size,
     ).toBeGreaterThan(2);
     expect(
-      r.without.buildings.every((b) => b.storeys >= 1 && b.storeys <= 4),
+      r.without.buildings.every((b) => b.storeys >= 1 && b.storeys <= 6),
     ).toBe(true);
     expect(r.without.buildings.map((b) => [b.width, b.depth, b.id])).toEqual(
       r.city.buildings.map((b) => [b.width, b.depth, b.id]),
     );
   });
+
+it('fills four feasible real urban frontage spans around a protected courtyard and shares a real crossed triangle', () => {
+  const tor = results[0]!.city;
+  const rectangle = tor.streetCellLayout!.ledger.find(
+    (r) => r.cellId === 'es-torrevieja-sc-145',
+  )!;
+  expect(rectangle.courtyard).toBe(true);
+  expect(rectangle.rectangularity).toBeGreaterThan(0.95);
+  expect(Object.values(rectangle.frontageSpans).sort()).toEqual([6, 6, 6, 6]);
+  expect(
+    tor.buildings
+      .filter((b) => b.cellId === rectangle.cellId)
+      .every((b) => b.layoutBand === 'frontage'),
+  ).toBe(true);
+  expect(
+    rectangle.occupiedFootprintSqm / rectangle.safeAreaSqm,
+  ).toBeGreaterThan(0.3);
+  const triangle = tor.streetCellLayout!.ledger.find(
+    (r) => r.cellId === 'es-torrevieja-sc-1031',
+  )!;
+  expect(triangle.classification).toBe('road-crossed');
+  expect(triangle.rectangularity).toBeLessThan(0.55);
+  expect(Object.keys(triangle.frontageSpans).length).toBeGreaterThan(10);
+  expect(
+    Math.max(...Object.values(triangle.frontageSpans)) / triangle.buildings,
+  ).toBeLessThan(0.3);
+  expect(triangle.reasons['internal-road-corridor']).toBeGreaterThan(0);
+});

@@ -30,15 +30,15 @@ const fixtures = [
     view: cellCityMetadata,
     cells: cellCityCells,
     terrain: cellCityTerrain,
-    count: 12941,
-    hash: '6ea3fc7e9ee88362ee62b9541ca899721e923ac9a7113560bb2365793f6a6a54',
+    count: 17562,
+    hash: '657a27f596be7ef5c59618f58975e4c9fa7aba5493543181635a602231731492',
   },
   {
     id: 'es-alicante',
     ...alicanteCellCityFixture(),
     view: undefined,
-    count: 10444,
-    hash: '034e25a426a54b3fcd6c505d94af0a0d0669e8666457b9e2261554bf602db063',
+    count: 13804,
+    hash: '4d08aa01e62fb41d71d847b612d6e8515317f4483c857602ca6d87b662759502',
   },
 ].map((f) => ({
   ...f,
@@ -54,7 +54,7 @@ const fixtures = [
     f.terrain,
   ),
 }));
-it('visual-only keeps the entire ordered building list, including assignments and grounding, exactly equal to the accepted baseline for both cities', async () => {
+it('visual-only keeps the entire ordered building list, including assignments and grounding, exactly equal before/after visual-only POI planning for both cities', async () => {
   const loader = createCityMaterializationLoader({
     baseUrl: '/',
     digestSha256: async (s) => digest(s),
@@ -79,10 +79,10 @@ it('visual-only keeps the entire ordered building list, including assignments an
       const overlap = diagnoseMaterializationOverlaps(data!, f.model, f.city);
       expect(
         overlap.find((s) => s.siteId.endsWith('casino-cultural'))?.buildingIds,
-      ).toHaveLength(4);
+      ).toHaveLength(6);
       expect(
         overlap.find((s) => s.siteId.endsWith('parque-naciones'))?.buildingIds,
-      ).toHaveLength(24);
+      ).toHaveLength(27);
       expect(prepareCityMaterialization(data!, f.model, f.terrain, lod)).toBe(
         plan,
       );

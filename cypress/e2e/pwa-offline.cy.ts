@@ -585,7 +585,7 @@ describe('optional city-site offline acquisition', () => {
         .get('[data-testid="d3d-map-representation"]', { timeout: 15000 })
         .should('have.attr', 'data-terrain-status', 'ready')
         .and('have.attr', 'data-materialization-status', 'ready')
-        .and('have.attr', 'data-city-building-count', '12941')
+        .and('have.attr', 'data-city-building-count', '17562')
         .should(($map) => {
           expect($map.attr('data-rendered-materialization-level')).to.match(
             /^[ABC]$/,

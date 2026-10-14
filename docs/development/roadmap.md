@@ -360,7 +360,8 @@ editing, additional exports and Workbench optimization are deferred.
 StreetCell road-crossed Pass 2 now extends the same two-city C-owned composer.
 Buffered at-grade internal roads supply frontage and full-envelope exclusions;
 short/support records only reserve space, and grade-separated crossings do not
-seed buildings. Pass 1 remains pinned exactly, optional research remains
+seed buildings. Its accepted baseline pinned Pass 1; the frontage refinement below intentionally
+supersedes those pins. Optional research remains
 appearance-only, and the 65,536-proposal guard and instanced renderer remain.
 Budget-limited/residual cells are diagnosed. Further building diversity,
 authoritative parcel grammar and Workbench preprocessing remain separate work.
@@ -380,3 +381,15 @@ presets. Detailed historic structures, verified marina repetition guides, La Mat
 geometry, GLB loading, physical reservations and Workbench production/UI are later
 reviewed milestones; satellite textures and advanced shoreline gradients remain
 deferred.
+
+The bounded StreetCell urban refinement now balances real internal/perimeter
+frontages, retains open courts in sufficiently regular urban empty cells, and gives
+suburban rows a separate spacing policy. Canonical population/evidence and full
+geographic/road safety remain mandatory; research supplies optional appearance.
+Stable row floor profiles make five-storey urban and one/two-storey suburban fabric
+common. Near-only shared analytic wall shading adds floor/window/balcony cues without
+per-window meshes, UV textures or new batches. Counts/placement pins intentionally
+change; all source products and visual-only POI recipes stay unchanged. Larger
+plans cost more cold preparation/triangles; unreviewed POI overlaps remain explicit.
+Physical site reservations, richer courtyard grammar and additional architectural
+families remain separate milestones.

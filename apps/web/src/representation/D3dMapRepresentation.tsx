@@ -1,3 +1,4 @@
+import { facadeParameters, patchCityFacadeShader } from './d3d-city-facade.js';
 import {
   d3dMaterialPresets,
   resolveTerrainMaterials,
@@ -795,20 +796,34 @@ function CityBatch({
   kind,
   layer,
   simple,
+  facade = false,
+  metre = 1,
 }: {
   buildings: readonly CityBuilding[];
   kind: BuildingPrototypeKind;
   layer: 'body' | 'roof';
   simple: boolean;
+  facade?: boolean;
+  metre?: number;
 }) {
   const instances = useRef<import('three').InstancedMesh>(null);
-  const geometry = useMemo(
-    () =>
-      simple
-        ? new BoxGeometry(1, 1, 1).translate(0, 0.5, 0)
-        : createCityPrototypeGeometry(kind, layer),
-    [kind, layer, simple],
-  );
+  const geometry = useMemo(() => {
+    const value = simple
+      ? new BoxGeometry(1, 1, 1).translate(0, 0.5, 0)
+      : createCityPrototypeGeometry(kind, layer);
+    if (facade)
+      value.setAttribute('cityFacade', facadeParameters(buildings, metre));
+    return value;
+  }, [kind, layer, simple, facade, buildings, metre]);
+  const material = useMemo(() => {
+    const value = new MeshLambertMaterial({ color: '#ffffff' });
+    if (facade) {
+      value.onBeforeCompile = patchCityFacadeShader;
+      value.customProgramCacheKey = () => 'city-wall-facade-v0';
+    }
+    return value;
+  }, [facade]);
+  useEffect(() => () => material.dispose(), [material]);
   useEffect(() => () => geometry.dispose(), [geometry]);
   useEffect(() => {
     const mesh = instances.current!;
@@ -828,7 +843,9 @@ function CityBatch({
       object.rotation.set(0, b.rotation, 0);
       object.scale.set(
         b.width,
-        simple && !b.buildingProfileId ? b.height * 0.35 : b.height,
+        simple && !b.buildingProfileId && !b.cellId
+          ? b.height * 0.35
+          : b.height,
         b.depth,
       );
       object.updateMatrix();
@@ -845,20 +862,19 @@ function CityBatch({
     mesh.instanceMatrix.needsUpdate = true;
     mesh.instanceColor!.needsUpdate = true;
     mesh.computeBoundingSphere();
-  }, [buildings, layer, simple]);
+  }, [buildings, layer, simple, geometry, material]);
   return (
     <instancedMesh
       name={'city-' + kind + '-' + layer}
       ref={instances}
-      args={[geometry, undefined, buildings.length]}
+      args={[geometry, material, buildings.length]}
       raycast={() => null}
-    >
-      <meshLambertMaterial color="#ffffff" />
-    </instancedMesh>
+    ></instancedMesh>
   );
 }
 
 function City({
+  facadeEnabled,
   roadsPresented,
   wrapper,
   city,
@@ -867,6 +883,7 @@ function City({
   terrain,
 }: {
   terrain?: D3dTerrain | undefined;
+  facadeEnabled: boolean;
   roadsPresented: boolean;
   city: ProceduralCity;
   wrapper: React.RefObject<HTMLElement | null>;
@@ -984,6 +1001,8 @@ function City({
             kind={group.kind}
             layer="body"
             simple={simple}
+            facade={lod === 'near' && !simple && facadeEnabled}
+            metre={terrain?.metre ?? 1}
           />
           {!simple && lod === 'near' ? (
             <CityBatch
@@ -1525,6 +1544,7 @@ function Vehicles({
 }
 
 function D3dWorld({
+  facadeEnabled,
   settlementId,
   materializationPlan,
   streetCellGeometry,
@@ -1547,6 +1567,7 @@ function D3dWorld({
   gridGeometry,
   wrapper,
 }: Readonly<{
+  facadeEnabled: boolean;
   settlementId: string;
   materializationPlan: MaterializationPlan | undefined;
   wrapper: React.RefObject<HTMLElement | null>;
@@ -1678,6 +1699,7 @@ function D3dWorld({
       ) : null}
       {city ? (
         <City
+          facadeEnabled={facadeEnabled}
           roadsPresented={roadMeshes !== undefined}
           city={city}
           lod={lod}
@@ -2525,6 +2547,7 @@ export default function D3dMapRepresentation({
           terrain={terrain}
         />
         <D3dWorld
+          facadeEnabled={settings.city.nearFacades}
           settlementId={scenario.manifest.primarySettlementId}
           materializationPlan={materializationPlan}
           streetCellGeometry={streetCellGeometry}

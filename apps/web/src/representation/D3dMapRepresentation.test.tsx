@@ -353,6 +353,7 @@ const sceneProps = (element: Element) =>
     onClick?: (event: unknown) => void;
     raycast?: () => unknown;
     geometry?: BufferGeometry;
+    args?: readonly [BufferGeometry, import('three').Material, number];
     material?: import('three').Material;
     onBeforeRender?: () => void;
     onAfterRender?: () => void;
@@ -2649,7 +2650,7 @@ it('batches cell-owned Torrevieja buildings once and keeps their static plan thr
   expect(host.dataset.cityLayoutBuilds).toBe(builds);
   const geometries = [
     ...document.querySelectorAll('instancedmesh[name^="city-"]'),
-  ].map((node) => sceneProps(node).geometry);
+  ].map((node) => sceneProps(node).args![0]);
   const staticGeometry = vi.spyOn(cityGeometry, 'createCityPrototypeGeometry');
   view.rerender(
     scene(
@@ -2669,7 +2670,7 @@ it('batches cell-owned Torrevieja buildings once and keeps their static plan thr
   expect(host.dataset.cityLayoutBuilds).toBe(builds);
   expect(
     [...document.querySelectorAll('instancedmesh[name^="city-"]')].map(
-      (node) => sceneProps(node).geometry,
+      (node) => sceneProps(node).args![0],
     ),
   ).toEqual(geometries);
   expect(staticGeometry).not.toHaveBeenCalled();
@@ -2688,7 +2689,7 @@ it('reports repeated skipped-cell causes separately from candidate rejections', 
     model: {
       ...cellCityCells,
       features: cellCityCells.features.filter((f) =>
-        ['es-torrevieja-sc-4', 'es-torrevieja-sc-7'].includes(f.id),
+        ['es-torrevieja-sc-8', 'es-torrevieja-sc-12'].includes(f.id),
       ),
     },
   });
@@ -2940,4 +2941,148 @@ it('keeps unavailable, mini and corrupt site inputs usable and diagnoses prepara
   expect(screen.getByRole('status')).toHaveTextContent(
     'Site checksum mismatch',
   );
+});
+
+it('shares near-only wall facade parameters, keeps roofs plain, and releases static resources', () => {
+  enableWorld();
+  vi.spyOn(terrainGrid, 'terrainGridWindow').mockReturnValue(undefined);
+  const planner = terrainPlanning.planD3dTerrain;
+  vi.spyOn(terrainPlanning, 'planD3dTerrain').mockImplementation(
+    (terrain, policy) => planner(terrain, { ...policy, lod: 'far' }),
+  );
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  vi.mocked(useStreetCells).mockImplementation(
+    (_city, _active, _loader, level) =>
+      level === 'C'
+        ? { status: 'ready', model: lifecycleCells }
+        : { status: 'loading' },
+  );
+  const view = render(
+    scene('normal', null, undefined, scenario, cellOwnedPopulation),
+  );
+  fireEvent.wheel(controls.canvas, { deltaY: -3000 });
+  const bodies = [
+    ...document.querySelectorAll('instancedmesh[name^="city-"][name$="-body"]'),
+  ];
+  expect(bodies.length).toBeGreaterThan(0);
+  expect(bodies.length).toBeLessThanOrEqual(14);
+  const resources = bodies.map((node) => sceneProps(node).args!);
+  for (const [geometry, material, count] of resources) {
+    expect(geometry.getAttribute('cityFacade').count).toBe(count);
+    expect(geometry.getAttribute('cityFacade').itemSize).toBe(4);
+    expect(geometry.getAttribute('uv')).toBeUndefined();
+    expect(material.customProgramCacheKey()).toBe('city-wall-facade-v0');
+  }
+  for (const node of document.querySelectorAll(
+    'instancedmesh[name^="city-"][name$="-roof"]',
+  ))
+    expect(
+      sceneProps(node).args![0].getAttribute('cityFacade'),
+    ).toBeUndefined();
+  const disposals = resources.flatMap(([geometry, material]) => [
+    vi.spyOn(geometry, 'dispose'),
+    vi.spyOn(material, 'dispose'),
+  ]);
+  act(() => {
+    pointer('pointerdown', 10, 10);
+    pointer('pointermove', 12, 12);
+    pointer('pointerup', 12, 12);
+  });
+  expect(
+    [
+      ...document.querySelectorAll(
+        'instancedmesh[name^="city-"][name$="-body"]',
+      ),
+    ].map((n) => sceneProps(n).args),
+  ).toEqual(resources);
+  expect(disposals.every((spy) => spy.mock.calls.length === 0)).toBe(true);
+  view.unmount();
+  for (const spy of disposals) expect(spy).toHaveBeenCalled();
+});
+it('disables facade GPU attributes by checked-in policy without suppressing the C-owned city', () => {
+  enableWorld();
+  // Facade policy is independent of native terrain tessellation, covered separately.
+  vi.spyOn(terrainGrid, 'terrainGridWindow').mockReturnValue(undefined);
+  const planner = terrainPlanning.planD3dTerrain;
+  vi.spyOn(terrainPlanning, 'planD3dTerrain').mockImplementation(
+    (terrain, policy) => planner(terrain, { ...policy, lod: 'far' }),
+  );
+
+  vi.spyOn(appSettings, 'resolveD3dAppSettings').mockImplementation(
+    (city, settings) => {
+      const resolved = resolveSettings(city, settings);
+      return { ...resolved, city: { ...resolved.city, nearFacades: false } };
+    },
+  );
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: lifecycleCells,
+  });
+  const view = render(
+    scene('normal', null, undefined, scenario, cellOwnedPopulation),
+  );
+  fireEvent.wheel(controls.canvas, { deltaY: -3000 });
+  expect(
+    Number(
+      screen.getByTestId('d3d-map-representation').dataset.cityBuildingCount,
+    ),
+  ).toBeGreaterThan(0);
+  for (const node of document.querySelectorAll('instancedmesh[name^="city-"]'))
+    expect(
+      sceneProps(node).args![0].getAttribute('cityFacade'),
+    ).toBeUndefined();
+  view.rerender(scene('mini', null, undefined, scenario, cellOwnedPopulation));
+  for (const node of document.querySelectorAll('instancedmesh[name^="city-"]'))
+    expect(
+      sceneProps(node).args![0].getAttribute('cityFacade'),
+    ).toBeUndefined();
+});
+
+it('uploads transforms again when facade resources replace a batch with unchanged physical slots', () => {
+  const { setMatrixAt } = enableWorld();
+  vi.spyOn(terrainGrid, 'terrainGridWindow').mockReturnValue(undefined);
+  const planner = terrainPlanning.planD3dTerrain;
+  vi.spyOn(terrainPlanning, 'planD3dTerrain').mockImplementation(
+    (terrain, policy) => planner(terrain, { ...policy, lod: 'far' }),
+  );
+  let enabled = true;
+  vi.spyOn(appSettings, 'resolveD3dAppSettings').mockImplementation(
+    (city, settings) => {
+      const resolved = resolveSettings(city, settings);
+      return { ...resolved, city: { ...resolved.city, nearFacades: enabled } };
+    },
+  );
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: lifecycleCells,
+  });
+  const view = render(
+    scene('normal', null, undefined, scenario, cellOwnedPopulation),
+  );
+  publishCellLod('near');
+  const body = () =>
+    document.querySelector('instancedmesh[name^="city-"][name$="-body"]')!;
+  const before = sceneProps(body()).args!;
+  expect(before[0].getAttribute('cityFacade')).toBeDefined();
+  setMatrixAt.mockClear();
+  enabled = false;
+  view.rerender(
+    scene('normal', null, undefined, scenario, cellOwnedPopulation),
+  );
+  const after = sceneProps(body()).args!;
+  expect(after[0]).not.toBe(before[0]);
+  expect(after[2]).toBe(before[2]);
+  expect(after[0].getAttribute('cityFacade')).toBeUndefined();
+  expect(setMatrixAt).toHaveBeenCalled();
 });

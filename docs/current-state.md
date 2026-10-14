@@ -759,8 +759,8 @@ performance work remain deferred.
 ## StreetCell road-crossed Pass 2
 
 The same C-owned composer now processes Torrevieja and Alicante road-crossed
-cells after the accepted empty-cell pass. Pass-1 source order, IDs and physical
-slots are preserved exactly. Supplied C polygons, safe zones, population, terrain
+cells after the empty-cell pass. The accepted Pass-2 baseline preserved Pass-1
+slots; the urban-frontage refinement below intentionally supersedes those layout pins. Supplied C polygons, safe zones, population, terrain
 and all ZIP products remain unchanged. A/B remain visual coarsenings only.
 
 Clipped at-grade internal roads seed two-sided tangent-aligned frontage rows;
@@ -783,7 +783,7 @@ in the ledger rather than silently raising the cap. Optional research still only
 changes appearance after slots freeze. Pending native terrain/C retains the
 existing fallback lifecycle and no provisional streets are reintroduced.
 
-Current reference plans retain Pass 1 at 8,407 / 894 occupied Torrevieja
+The accepted Pass-2 baseline retained Pass 1 at 8,407 / 894 occupied Torrevieja
 empty cells and 8,461 / 1,210 Alicante core empty cells. Pass 2 adds 4,534
 buildings in 277 of 311 Torrevieja road-crossed cells and 1,983 in 200 of 381
 Alicante cells. These are generated counts, distinct from partial observed safe
@@ -823,7 +823,8 @@ and 262,144 displayed StreetCell segments; line support remains 12.5 metres.
 Cold preparation avoids per-cell copies of city-wide road metadata and uses
 immutable polygon row/envelope prefilters before unchanged exact full-footprint
 predicates. Complete two-pass physical-slot hashes and previous Pass-1 pins are
-regression-tested for both cities. Counts remain 12,941 / 10,444. Existing prototype
+regression-tested for both cities. Its accepted 12,941 / 10,444 counts are
+superseded by the frontage refinement below. Existing prototype
 families and muted palettes now repeat coherently by stable cell/orientation/row;
 optional research affects only appearance. No extra per-building meshes/materials,
 new geography, density policy or runtime settings UI is introduced. Further
@@ -915,3 +916,62 @@ other verified proxies, ordinary city building records and physical authorities
 are unchanged. These are static visual rows, with no calendar or temporal logic.
 
 The bounded market ground also uses 25 m drape support at medium LOD, so coarse overlay faces do not hide native-grounded canopy roofs. Other site surfaces retain their existing presentation LOD.
+
+## StreetCell urban perimeters, floor profiles and near façades
+
+The existing C-owned composer now offers internal and exterior frontage spans in
+bounded round-robin order, starting near each span's middle. Exhausted spans leave
+the active list; work is linear in bounded candidate supports rather than repeatedly
+scanning dead guides. The 65,536-proposal global guard and Pass-2 equal-share
+admission remain. A 0.75-metre proposal setback accommodates the bounded deviation
+of merged safe-zone edges and avoids touching reserved internal-road boundaries.
+It does not shrink, export or replace safe zones or change road reservations.
+Every expanded rotated envelope still passes original/safe polygon, hole, native
+LAND, transport/stop/protection, corridor and collision checks.
+
+A longest-edge oriented bounding rectangle supplies a soft rectangularity signal.
+Urban, hole-free empty cells with rectangularity at least 0.82 and more than two
+building depths plus 12 metres across retain frontage-only rows and an open inner
+court. Irregular, narrow and hole-bearing cells retain partial frontages and the
+existing bounded interior fallback. Observed footprint evidence and canonical
+population support still determine urban/suburban intensity, quantity and coverage;
+research is not an eligibility gate. Suburban frontage spacing is 2 metres where
+positive observed evidence and intensity support terraces, otherwise 4 metres;
+urban spacing remains 1 metre, in addition to the checked envelope separation.
+No hardcoded geographic city center or new population/parcel authority is added.
+
+Current normal-city plans contain 17,562 Torrevieja buildings (8,878 empty-cell /
+8,684 crossed-cell), 13,804 Alicante (9,331 / 4,473), and 7,139 Elche (4,831 / 2,308)
+from the installed three-city C inputs. Torrevieja crossed-cell occupancy is 308/311;
+Alicante is 226/381, within its loaded core viewport; Elche is 76/243. These are
+render-generation observations, not OSM reconstruction or a revised eligible-cell
+denominator. New frontage IDs encode immutable cell/span/sample identity. Unchanged
+interior physical slots retain their legacy IDs; ordered placement hashes are newly
+pinned and research-present/absent placement remains identical. Per-cell ledgers
+record fabric, rectangularity, courtyard choice, rectangle footprint coverage,
+reserved frontage length, accepted span counts and physical rejection reasons.
+
+Rows receive stable cell/orientation/row-seeded floors: dense urban recipes commonly
+select five, with three through six alternatives; suburban recipes typically select
+one or two, with exceptional four/five only at higher local intensity. Optional
+research appearance clamps these choices to its compatible family limits. Height
+remains storeys × 3.1 metres × horizontal world scale, on native ground; C-owned
+silhouettes retain that height at all LODs. Research may change aesthetic recipes
+and heights within family ranges, never physical slot counts or coordinates.
+
+`city.nearFacades` in the existing checked-in settings defaults true. Near body
+batches extend shared Lambert shading using local positions/normals and a compact
+four-float instance attribute (floors, metre width/depth, dense-pattern flag).
+Wall-only floor/window/balcony shading needs no UVs, textures, protruding objects or
+extra window draw calls. Roof batches stay plain; far/mini/medium omit the attribute
+and shader extension. Derivative antialiasing fades unresolved patterns at distance.
+Each scene owns and disposes its geometry/material with attributes still attached;
+fleet, selection and within-band pan retain static plans and GPU buffers.
+
+All ten public ZIPs, POI geometries/recipes, source C geography, roads, native DEM,
+simulation and persistence are unchanged. POI sites remain visual-only: refined
+ordinary buildings increase diagnosed Casino/park/market overlaps (6/27/21).
+No unreviewed site extent becomes a physical reservation. More buildings increase
+cold composition, memory and submitted triangles; shared prototype batch count is
+unchanged. Physical POI reservations, richer courtyard grammar, additional families
+and broader city optimization require separate review.

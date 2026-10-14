@@ -51,7 +51,7 @@ it('rejects invalid scales, city overrides and presentation guards', () => {
     expect(() =>
       resolveD3dAppSettings('es-test', {
         ...d3dAppSettings,
-        city: { maxLotProposals: value },
+        city: { ...d3dAppSettings.city, maxLotProposals: value },
       }),
     ).toThrow('Invalid D3D settings');
     expect(() =>
@@ -90,4 +90,14 @@ it('rejects non-finite line support independently of geometry budgets', () => {
 it('uses the default for future IDs that coincide with object-prototype property names', () => {
   for (const city of ['constructor', 'toString', '__proto__'])
     expect(resolveD3dAppSettings(city).verticalExaggeration).toBe(5);
+});
+
+it('can disable shared near facade shading without changing source budgets', () => {
+  expect(
+    resolveD3dAppSettings('es-test', {
+      ...d3dAppSettings,
+      city: { ...d3dAppSettings.city, nearFacades: false },
+    }).city.nearFacades,
+  ).toBe(false);
+  expect(d3dAppSettings.city.nearFacades).toBe(true);
 });

@@ -59,6 +59,8 @@ export type CityBuilding = D3dWorldPoint &
   Readonly<{
     id: string;
     cellId?: string;
+    frontageSpan?: string;
+    layoutBand?: 'frontage' | 'interior';
     blockId: string;
     width: number;
     depth: number;

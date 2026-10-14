@@ -9,7 +9,7 @@ export type D3dAppSettings = Readonly<{
     defaultVerticalExaggeration: number;
     verticalExaggerationByCity: Readonly<Record<string, number>>;
   }>;
-  city: Readonly<{ maxLotProposals: number }>;
+  city: Readonly<{ maxLotProposals: number; nearFacades: boolean }>;
 }>;
 export const d3dAppSettings: D3dAppSettings = Object.freeze({
   streetCells: Object.freeze({
@@ -21,7 +21,7 @@ export const d3dAppSettings: D3dAppSettings = Object.freeze({
     defaultVerticalExaggeration: 5,
     verticalExaggerationByCity: Object.freeze({}),
   }),
-  city: Object.freeze({ maxLotProposals: 65_536 }),
+  city: Object.freeze({ maxLotProposals: 65_536, nearFacades: true }),
 });
 export function validateD3dVerticalExaggeration(value: number): number {
   if (!Number.isFinite(value) || value <= 0 || value > 50)

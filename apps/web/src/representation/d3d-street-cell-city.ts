@@ -1,3 +1,4 @@
+import { streetCellForm, streetCellStoreys } from './d3d-street-cell-policy.js';
 import { d3dAppSettings } from './d3d-app-settings.js';
 import { planStreetCellRoads } from './d3d-street-cell-roads.js';
 import {
@@ -193,6 +194,12 @@ export type StreetCellDisposition = Readonly<{
   reservationSegments: number;
   proposalAllowance: number;
   reasons: Readonly<Record<string, number>>;
+  fabric: string;
+  rectangularity: number;
+  courtyard: boolean;
+  occupiedFootprintSqm: number;
+  reservedFrontageMetres: number;
+  frontageSpans: Readonly<Record<string, number>>;
 }>;
 type Slots = Readonly<{
   buildings: readonly CityBuilding[];
@@ -386,8 +393,7 @@ function composeSlots(
     samples: {} as Record<string, string[]>,
     ledger: [] as StreetCellDisposition[],
   };
-  // Accepted Pass 1 runs first in its unchanged source order and consumes its
-  // unchanged proposals. Pass 2 shares only the remaining global guard.
+  // Empty cells precede road-crossed cells; both retain the shared proposal guard.
   const roadPlans = new Map<string, ReturnType<typeof planStreetCellRoads>>();
   const ordered = [
     ...cells.features.filter(
@@ -426,6 +432,12 @@ function composeSlots(
       reservationSegments: 0,
       proposalAllowance: 0,
       reasons: {} as Record<string, number>,
+      fabric: 'unresolved',
+      rectangularity: 0,
+      courtyard: false,
+      occupiedFootprintSqm: 0,
+      reservedFrontageMetres: 0,
+      frontageSpans: {} as Record<string, number>,
     };
     diagnostics.ledger.push(record);
     const pass2 = a.classification === 'road-crossed';
@@ -570,6 +582,12 @@ function composeSlots(
           { min: calibration.longMin, max: calibration.longMax },
           seed >>> 8,
         );
+    const form = streetCellForm(safe, depth * metre, metre);
+    const courtyard = urban && !pass2 && form.courtyard;
+    record.fabric = urban ? 'urban' : 'suburban';
+    record.rectangularity = form.rectangularity;
+    record.courtyard = courtyard;
+    const terrace = !urban && observed > 0 && intensity >= 0.28;
     const targetCoverage = Math.min(
       0.6,
       Math.max(
@@ -599,7 +617,7 @@ function composeSlots(
         {
           width: w + 0.4 * metre,
           depth: d + 0.4 * metre,
-          gap: (urban ? 1 : 4) * metre,
+          gap: (urban ? 1 : terrace ? 2 : 4) * metre,
           interiorGap: (urban ? 2 : 5) * metre,
           parcelWidth: w,
           parcelDepth: d,
@@ -610,10 +628,16 @@ function composeSlots(
           : streetCellLotBudget - diagnostics.candidates,
         undefined,
         roads?.guides,
+        // This proposal clearance absorbs bounded merged-edge deviations and
+        // avoids touching reserved road boundaries; source safe zones stay intact.
+        {
+          balanced: true,
+          frontageOnly: courtyard,
+          frontageSetback: 0.75 * metre,
+        },
       );
-      let ordinal = 0;
       for (const lot of lots) {
-        const index = ordinal++;
+        const index = lot.ordinal;
         if (pass2 && diagnostics.candidates - startCandidates >= allowance) {
           if (!record.reasons['candidate-budget'])
             diagnostics.pass2.budgetCells++;
@@ -692,8 +716,10 @@ function composeSlots(
           reject('cell-coverage');
           continue;
         }
-        const id = `${cell.id}-parcel-${index + (scale === 1 ? 0 : streetCellLotBudget)}`,
-          ring = footprintRing({ ...lot, width: w, depth: d });
+        const id = lot.spanId
+          ? `${cell.id}-frontage-${lot.spanId}-${lot.spanIndex}-${scale}`
+          : `${cell.id}-parcel-${index + (scale === 1 ? 0 : streetCellLotBudget)}`;
+        const ring = footprintRing({ ...lot, width: w, depth: d });
         if (!occupied.add(id, ring)) {
           reject('spacing');
           continue;
@@ -708,6 +734,8 @@ function composeSlots(
           depth: d,
           rotation: lot.rotation,
           archetype: urban ? 'perimeter-block' : 'detached-house',
+          ...(lot.spanId ? { frontageSpan: lot.spanId } : {}),
+          layoutBand: lot.band,
           storeys: urban ? 4 : 2,
           height: (urban ? 4 : 2) * 3.1 * metre,
           baseY: 0.035,
@@ -718,6 +746,12 @@ function composeSlots(
         buildings.push(building);
         record.buildings++;
         occupiedArea += w * d;
+        record.occupiedFootprintSqm = occupiedArea / (metre * metre);
+        if (lot.spanId) {
+          record.reservedFrontageMetres += w / metre;
+          record.frontageSpans[lot.spanId] =
+            (record.frontageSpans[lot.spanId] ?? 0) + 1;
+        }
         if (pass2) diagnostics.pass2.buildings++;
         else used.add(cell.id);
         if (urban) diagnostics.urbanBuildings++;
@@ -838,13 +872,22 @@ export function buildStreetCellCity(
     const rowSeed = citySeed(
       `${slot.cellId}:${Math.round(slot.rotation * 1000)}:${Math.round((slot.x * Math.sin(slot.rotation) + slot.z * Math.cos(slot.rotation)) / (12 * terrain.metre))}`,
     );
+    const urban = slot.archetype === 'perimeter-block';
+    const baseStoreys = streetCellStoreys(urban, slot.density, rowSeed);
+    const storeys = profile
+      ? Math.max(
+          profile.storeys.min,
+          Math.min(profile.storeys.max, baseStoreys),
+        )
+      : baseStoreys;
+    const floorProfile = { storeys, height: storeys * 3.1 * terrain.metre };
     if (!profile) {
-      const urban = slot.archetype === 'perimeter-block';
       return {
         ...slot,
+        ...floorProfile,
         prototype: urban
           ? rowSeed % 2 === 0
-            ? ('perimeter-block' as const)
+            ? ('midrise-slab' as const)
             : ('small-apartment' as const)
           : rowSeed % 2 === 0
             ? ('detached-house' as const)
@@ -859,12 +902,6 @@ export function buildStreetCellCity(
     }
     const archetype =
       profile.allowedArchetypes[rowSeed % profile.allowedArchetypes.length]!;
-    const storeys = Math.round(
-      metadataRangeSample(
-        { min: profile.storeys.typicalMin, max: profile.storeys.typicalMax },
-        rowSeed,
-      ),
-    );
     const list = samples[profile.id] ?? (samples[profile.id] = []);
     if (list.length < 4 && !list.includes(slot.cellId!))
       list.push(slot.cellId!);
@@ -876,8 +913,7 @@ export function buildStreetCellCity(
       ...(archetype === 'detached-house'
         ? { prototype: 'detached-villa' as const }
         : {}),
-      storeys,
-      height: storeys * 3.1 * terrain.metre,
+      ...floorProfile,
       wallColor: settlementPaletteColor(
         profile.wallPalette[rowSeed % profile.wallPalette.length]!,
       ),

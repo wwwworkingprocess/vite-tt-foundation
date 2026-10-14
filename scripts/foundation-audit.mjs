@@ -665,6 +665,7 @@ for (const d3dRepresentationFile of [
   'apps/web/src/representation/d3d-map-model.ts',
   'apps/web/src/representation/d3d-city-model.ts',
   'apps/web/src/representation/d3d-city-geometry.ts',
+  'apps/web/src/representation/d3d-city-facade.ts',
   'apps/web/src/representation/d3d-road-geometry.ts',
   'apps/web/src/representation/use-road-network.ts',
   'apps/web/src/representation/use-street-cells.ts',
@@ -707,6 +708,7 @@ for (const purePresentationFile of [
   'apps/web/src/representation/d3d-metadata-city.ts',
   'apps/web/src/representation/d3d-street-cell-city.ts',
   'apps/web/src/representation/d3d-street-cell-layout.ts',
+  'apps/web/src/representation/d3d-street-cell-policy.ts',
   'apps/web/src/representation/d3d-footprint.ts',
   'apps/web/src/settlement/settlement-metadata.ts',
   'apps/web/src/settlement/settlement-metadata-spatial.ts',
@@ -856,6 +858,9 @@ for (const file of [...simulation, ...protocol, ...web]) {
     ) ||
     normalized.endsWith(
       'apps/web/src/representation/d3d-street-cell-layout.ts',
+    ) ||
+    normalized.endsWith(
+      'apps/web/src/representation/d3d-street-cell-policy.ts',
     ) ||
     normalized.endsWith('apps/web/src/representation/d3d-footprint.ts') ||
     normalized.endsWith(

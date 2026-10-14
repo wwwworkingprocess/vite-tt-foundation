@@ -39,6 +39,9 @@ export type StreetCellLot = Readonly<{
   rotation: number;
   corner: boolean;
   band: 'frontage' | 'interior';
+  ordinal: number;
+  spanId?: string;
+  spanIndex?: number;
 }>;
 /** Placement proposals, not clipping/buildability: the composer checks every complete footprint.
  * Boundary bands precede a street-aligned interior lattice. Subdivided collinear source edges form one frontage. */
@@ -53,6 +56,11 @@ export function* iterateStreetCellBuildingLots(
     readonly z: number;
   }) => boolean = () => true,
   roadGuides: readonly StreetCellRoadGuide[] = [],
+  policy: Readonly<{
+    balanced?: boolean;
+    frontageOnly?: boolean;
+    frontageSetback?: number;
+  }> = {},
 ): Generator<StreetCellLot, void> {
   if (
     ![
@@ -61,9 +69,12 @@ export function* iterateStreetCellBuildingLots(
       dimensions.parcelWidth,
       dimensions.parcelDepth,
     ].every((v) => Number.isFinite(v) && v > 0) ||
-    ![dimensions.gap, dimensions.interiorGap, budget].every(
-      (v) => Number.isFinite(v) && v >= 0,
-    ) ||
+    ![
+      dimensions.gap,
+      dimensions.interiorGap,
+      budget,
+      policy.frontageSetback ?? 0,
+    ].every((v) => Number.isFinite(v) && v >= 0) ||
     !Number.isFinite(fallbackAngle)
   )
     throw new Error('Invalid StreetCell lot dimensions');
@@ -129,58 +140,137 @@ export function* iterateStreetCellBuildingLots(
       rotation,
       corner,
       band,
+      ordinal: emitted - 1,
     });
   };
-  // Internal frontage uses the same emitter/containment/crop and bounded iterator.
-  // Full corridor and junction safety remains the composer's envelope check.
-  for (const guide of roadGuides) {
-    const dx = guide.to[0] - guide.from[0],
-      dz = guide.to[1] - guide.from[1],
-      length = Math.hypot(dx, dz);
+  // Compact span descriptors, not a giant proposal array. Each span retains its
+  // canonical emitted ordinal so unchanged physical slots keep their parcel IDs.
+  const spans = [
+    ...roadGuides.flatMap((g, i) =>
+      [-1, 1].map((side) => ({
+        ...g,
+        side,
+        offset:
+          g.clearance + dimensions.depth / 2 + (policy.frontageSetback ?? 0),
+        id: `internal-${i}-${side}`,
+      })),
+    ),
+    ...guides.map((g, i) => ({
+      ...g,
+      side: signed > 0 ? 1 : -1,
+      offset: dimensions.depth / 2 + (policy.frontageSetback ?? 0),
+      id: `perimeter-${i}`,
+    })),
+  ];
+  let longest = 0,
+    angle = fallbackAngle;
+  const candidate = (span: (typeof spans)[number], i: number) => {
+    const dx = span.to[0] - span.from[0],
+      dz = span.to[1] - span.from[1],
+      length = Math.hypot(dx, dz),
+      count = Math.floor(length / step),
+      along = (length - count * step) / 2 + (i + 0.5) * step;
+    return {
+      x: span.from[0] + (dx * along - dz * span.offset * span.side) / length,
+      z: span.from[1] + (dz * along + dx * span.offset * span.side) / length,
+      rotation: -Math.atan2(dz, dx),
+      corner: i === 0 || i === count - 1,
+    };
+  };
+  const accepted = (p: { x: number; z: number }) =>
+    p.x >= crop.minX &&
+    p.x <= crop.maxX &&
+    p.z >= crop.minZ &&
+    p.z <= crop.maxZ &&
+    contains([p.x, p.z]) &&
+    acceptCenter(p);
+  let canonical = 0,
+    supports = 0;
+  const prepared = spans.map((span) => {
+    const length = Math.hypot(
+      span.to[0] - span.from[0],
+      span.to[1] - span.from[1],
+    );
+    if (span.id.startsWith('perimeter') && length > longest) {
+      longest = length;
+      angle = -Math.atan2(span.to[1] - span.from[1], span.to[0] - span.from[0]);
+    }
     const count = Math.floor(length / step);
-    if (count > Math.max(budget * 4, 1024))
+    supports += count;
+    if (
+      count > Math.max(budget * 4, 1024) ||
+      (policy.balanced && supports > Math.max(budget * 4, 1024))
+    )
       throw new Error('StreetCell building lot budget exceeded');
-    for (let i = 0; i < count; i++)
-      for (const side of [-1, 1]) {
-        const along = (length - count * step) / 2 + (i + 0.5) * step,
-          offset = guide.clearance + dimensions.depth / 2;
-        const lot = emit(
-          guide.from[0] + (dx * along - dz * offset * side) / length,
-          guide.from[1] + (dz * along + dx * offset * side) / length,
-          -Math.atan2(dz, dx),
-          i === 0 || i === count - 1,
-          'frontage',
-        );
+    return {
+      ...span,
+      count,
+      next: 0,
+      ordinals: policy.balanced ? new Uint32Array(count) : undefined,
+    };
+  });
+  const number = (span: (typeof prepared)[number], i: number) => {
+    const legacy = candidate(
+      { ...span, offset: span.offset - (policy.frontageSetback ?? 0) },
+      i,
+    );
+    span.ordinals![i] = canonical;
+    if (accepted(legacy)) canonical++;
+  };
+  if (policy.balanced) {
+    for (let n = 0; n < roadGuides.length; n++) {
+      const left = prepared[n * 2]!,
+        right = prepared[n * 2 + 1]!;
+      for (let i = 0; i < left.count; i++) {
+        number(left, i);
+        number(right, i);
+      }
+    }
+    for (const span of prepared.slice(roadGuides.length * 2))
+      for (let i = 0; i < span.count; i++) number(span, i);
+  }
+  const draw = (span: (typeof prepared)[number], i: number) => {
+    const p = candidate(span, i);
+    const lot = emit(p.x, p.z, p.rotation, p.corner, 'frontage');
+    if (!lot) return;
+    const ordinal = policy.balanced ? span.ordinals![i]! : emitted - 1;
+    return Object.freeze({ ...lot, ordinal, spanId: span.id, spanIndex: i });
+  };
+  if (policy.balanced) {
+    // Round robin offers each independent road/perimeter span before a long
+    // early guide can consume the cell's target. No unbounded queue or scans.
+    let active = prepared.filter((span) => span.count > 0);
+    while (active.length > 0) {
+      const next: typeof active = [];
+      for (const span of active) {
+        const n = span.next++,
+          mid = Math.floor((span.count - 1) / 2);
+        const i = n % 2 === 0 ? mid - n / 2 : mid + (n + 1) / 2;
+        const lot = draw(span, i);
+        if (lot) yield lot;
+        if (span.next < span.count) next.push(span);
+      }
+      active = next;
+    }
+  } else {
+    // Preserve legacy internal side-interleaving for existing callers.
+    for (let n = 0; n < roadGuides.length; n++) {
+      const left = prepared[n * 2]!,
+        right = prepared[n * 2 + 1]!;
+      for (let i = 0; i < left.count; i++)
+        for (const span of [left, right]) {
+          const lot = draw(span, i);
+          if (lot) yield lot;
+        }
+    }
+    for (const span of prepared.slice(roadGuides.length * 2))
+      for (let i = 0; i < span.count; i++) {
+        const lot = draw(span, i);
         if (lot) yield lot;
       }
   }
-  let longest = 0,
-    angle = fallbackAngle;
-  for (const guide of guides) {
-    const dx = guide.to[0] - guide.from[0],
-      dz = guide.to[1] - guide.from[1],
-      length = Math.hypot(dx, dz);
-    if (length > longest) {
-      longest = length;
-      angle = -Math.atan2(dz, dx);
-    }
-    const count = Math.floor(length / step);
-    if (count > Math.max(budget * 4, 1024))
-      throw new Error('StreetCell building lot budget exceeded');
-    const side = signed > 0 ? 1 : -1;
-    for (let i = 0; i < count; i++) {
-      const along = (length - count * step) / 2 + (i + 0.5) * step,
-        offset = dimensions.depth / 2;
-      const lot = emit(
-        guide.from[0] + (dx * along - dz * offset * side) / length,
-        guide.from[1] + (dz * along + dx * offset * side) / length,
-        -Math.atan2(dz, dx),
-        i === 0 || i === count - 1,
-        'frontage',
-      );
-      if (lot) yield lot;
-    }
-  }
+  if (policy.frontageOnly) return;
+  let interiorOrdinal = canonical;
   const cos = Math.cos(angle),
     sin = Math.sin(angle);
   const local = (
@@ -222,7 +312,10 @@ export function* iterateStreetCellBuildingLots(
         false,
         'interior',
       );
-      if (lot) yield lot;
+      if (lot)
+        yield policy.balanced
+          ? Object.freeze({ ...lot, ordinal: interiorOrdinal++ })
+          : lot;
     }
 }
 

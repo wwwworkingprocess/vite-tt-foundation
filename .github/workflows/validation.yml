@@ -60,7 +60,8 @@ jobs:
       - run: unzip foundation-template.zip -d foundation-template
       - uses: actions/setup-node@v6
         with: { node-version-file: foundation-template/.node-version }
-      - working-directory: foundation-template
+      - name: Install toolchain and validate extracted Windows archive on Linux
+        working-directory: foundation-template
         run: |
           corepack enable
           corepack install --global yarn@4.17.1

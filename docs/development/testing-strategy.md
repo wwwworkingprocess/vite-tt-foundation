@@ -45,6 +45,14 @@ Protect properties that must never be violated, including:
 
 ### Determinism and equivalence tests
 
+Presentation identity tests preserve full ordered record bytes before/after
+visual-only operations and check grounding exactly against native terrain.
+Portable baseline pins normalize only the non-authoritative `Math.pow` density
+scalar to 15 significant decimal digits, retaining its hard facade threshold.
+Native math libraries can differ by one ULP here; every other record field stays
+exact. This test serialization does not round runtime values, geographic/source
+data, placement coordinates, native DEM or simulation authority.
+
 Given the same initial scenario, derived plans, commands, and tick advancement,
 the simulation must produce identical authority.
 

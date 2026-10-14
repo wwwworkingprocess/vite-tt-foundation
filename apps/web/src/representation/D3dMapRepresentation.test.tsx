@@ -867,6 +867,35 @@ it('handles pinch zoom, pointer cancellation, and wheel bounds without keeping s
   );
 });
 
+it('pans with two fingers, ends lost capture, and suppresses gesture clicks while allowing taps', () => {
+  render(scene('normal'));
+  const clicked = vi.fn();
+  controls.canvas.addEventListener('click', clicked);
+  const initial = cameraState();
+  pointer('pointerdown', 200, 200, 1);
+  pointer('pointerdown', 300, 200, 2);
+  pointer('pointermove', 220, 220, 1);
+  pointer('pointermove', 320, 220, 2);
+  expect(cameraState().targetX).not.toBe(initial.targetX);
+  pointer('pointerup', 220, 220, 1);
+  pointer('pointerup', 320, 220, 2);
+  fireEvent.click(controls.canvas);
+  expect(clicked).not.toHaveBeenCalled();
+  pointer('pointerdown', 220, 220);
+  pointer('pointerup', 220, 220);
+  fireEvent.click(controls.canvas);
+  expect(clicked).toHaveBeenCalledTimes(1);
+  pointer('pointerdown', 220, 220);
+  pointer('pointermove', 250, 250);
+  pointer('lostpointercapture', 250, 250);
+  const after = cameraState();
+  pointer('pointermove', 400, 400);
+  expect(cameraState()).toEqual(after);
+  fireEvent.click(controls.canvas);
+  expect(clicked).toHaveBeenCalledTimes(1);
+  controls.canvas.removeEventListener('click', clicked);
+});
+
 it('advances without profile records when presentation profiling is disabled', () => {
   vi.useFakeTimers();
   const mark = vi.spyOn(performance, 'mark');

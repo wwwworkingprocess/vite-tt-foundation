@@ -6,6 +6,12 @@ manifests. Historical phase documents and ADR version prose do not override it.
 
 ## Current product milestone
 
+D3D normal-mode maps own touch gestures: one-finger pan and two-finger pinch/pan
+share the mouse camera bounds and dirty-frame driver. Taps retain canonical
+entity selection; drags/pinches suppress accidental picks, and cancelled/lost
+pointer capture ends tracking. UI text is non-selectable, while editable fields
+retain native selection and panels retain native scrolling.
+
 The implemented authority is Phase 4E5. The deterministic passenger chain is:
 
 ```text

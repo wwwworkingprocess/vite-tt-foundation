@@ -114,6 +114,54 @@ const terrainPick = (kind: 'stop' | 'vehicle') =>
       Number($map.attr(`data-pointer-${kind}-y`)),
     );
   });
+// Native browser touch input exercises gesture arbitration, pointer capture,
+// and the compatibility click used by R3F, rather than synthetic mouse clicks.
+const terrainTouch = (
+  type: 'touchStart' | 'touchMove' | 'touchEnd',
+  points: readonly { x: number; y: number; id: number }[],
+) =>
+  cy
+    .window()
+    .should(() => {
+      // Screenshots briefly expand the AUT to fill the browser. Wait for the
+      // runner layout to return before converting native input coordinates.
+      expect(
+        window.parent.document
+          .querySelector('iframe.aut-iframe')!
+          .getBoundingClientRect().left,
+      ).to.be.greaterThan(0);
+    })
+    .then((win) => {
+      const frame = window.parent.document
+        .querySelector('iframe.aut-iframe')!
+        .getBoundingClientRect();
+      const scaleX = frame.width / win.innerWidth;
+      const scaleY = frame.height / win.innerHeight;
+      const params = {
+        type,
+        touchPoints: points.map((point) => ({
+          ...point,
+          x: point.x * scaleX + frame.left,
+          y: point.y * scaleY + frame.top,
+        })),
+      };
+      return Cypress.automation('remote:debugger:protocol', {
+        command: 'Input.dispatchTouchEvent',
+        params,
+      });
+    });
+const terrainTouchPick = (kind: 'stop' | 'vehicle') =>
+  terrainMap().then(($map) => {
+    const rect = $map.find('canvas')[0]!.getBoundingClientRect();
+    terrainTouch('touchStart', [
+      {
+        id: 1,
+        x: rect.left + Number($map.attr(`data-pointer-${kind}-x`)),
+        y: rect.top + Number($map.attr(`data-pointer-${kind}-y`)),
+      },
+    ]);
+    terrainTouch('touchEnd', []);
+  });
 it('renders native terrain, preserves entity/focus interaction, and reuses products across scenarios', () => {
   enableStreetCellOutlines();
   let products = 0,
@@ -286,10 +334,50 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   terrainDrawn();
   recordTerrainState('terrain-near-built-up');
   cy.screenshot('terrain-near-built-up');
+  terrainMap().find('canvas').should('have.css', 'touch-action', 'none');
+  cy.get('body').should('have.css', 'user-select', 'none');
+  terrainMap().then(($map) => {
+    const rect = $map.find('canvas')[0]!.getBoundingClientRect();
+    const x = rect.left + rect.width / 2,
+      y = rect.top + rect.height / 2;
+    const zoom = Number($map.attr('data-camera-zoom'));
+    const target = $map.attr('data-camera-target-x');
+    const selected = $map.attr('data-selected-kind');
+    const builds = $map.attr('data-terrain-geometry-builds');
+    terrainTouch('touchStart', [
+      { id: 1, x: x - 50, y },
+      { id: 2, x: x + 50, y },
+    ]);
+    terrainTouch('touchMove', [
+      { id: 1, x: x - 65, y: y + 20 },
+      { id: 2, x: x + 85, y: y + 20 },
+    ]);
+    terrainTouch('touchEnd', []);
+    terrainMap()
+      .should(($next) => {
+        expect(Number($next.attr('data-camera-zoom'))).to.be.greaterThan(zoom);
+        expect($next.attr('data-camera-target-x')).not.to.equal(target);
+        expect($next.attr('data-selected-kind')).to.equal(selected);
+        expect($next.attr('data-terrain-geometry-builds')).to.equal(builds);
+      })
+      .then(($next) => {
+        const panned = $next.attr('data-camera-target-x');
+        terrainTouch('touchStart', [{ id: 1, x, y }]);
+        terrainTouch('touchMove', [{ id: 1, x: x + 25, y: y + 10 }]);
+        terrainTouch('touchEnd', []);
+        terrainMap().should(($panned) => {
+          expect($panned.attr('data-camera-target-x')).not.to.equal(panned);
+          expect($panned.attr('data-selected-kind')).to.equal(selected);
+          expect($panned.attr('data-terrain-geometry-builds')).to.equal(builds);
+        });
+      });
+  });
+  terrainPanTo('stop');
+  terrainDrawn();
   terrainMap().should('have.attr', 'data-camera-mode', 'manual');
   terrainMap().then(($map) => {
     const id = $map.attr('data-pointer-stop-id');
-    terrainPick('stop');
+    terrainTouchPick('stop');
     terrainMap().should('have.attr', 'data-selected-stop-id', id);
   });
   cy.get('[role="dialog"]').should('contain.text', 'Stop overview');
@@ -298,7 +386,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   recordTerrainState('terrain-selected-stop');
   cy.screenshot('terrain-selected-stop');
   terrainPanTo('vehicle');
-  terrainPick('vehicle');
+  terrainTouchPick('vehicle');
   cy.get('[role="dialog"]').should('contain.text', 'Vehicle');
   closeTerrainDetails();
   terrainDrawn();

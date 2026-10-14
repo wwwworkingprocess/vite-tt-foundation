@@ -325,6 +325,8 @@ function CameraController({
   const target = useRef(new Vector3());
   // A viewport change rebinds listeners without ending an active gesture.
   const pointers = useRef(new Map<number, { x: number; y: number }>()).current;
+  const gesture = useRef({ suppressClick: false, x: 0, y: 0 }).current;
+  useEffect(() => () => pointers.clear(), [pointers]);
   const vehiclesRef = useRef(vehicles);
   vehiclesRef.current = vehicles;
   const previous = useRef<
@@ -642,12 +644,19 @@ function CameraController({
     }
     const canvas = gl.domElement;
     const down = (event: PointerEvent) => {
+      if (pointers.size === 0) {
+        gesture.suppressClick = false;
+        gesture.x = event.clientX;
+        gesture.y = event.clientY;
+      } else gesture.suppressClick = true;
       canvas.setPointerCapture(event.pointerId);
       pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
     };
     const move = (event: PointerEvent) => {
       const previousPointer = pointers.get(event.pointerId);
       if (!previousPointer) return;
+      if (Math.hypot(event.clientX - gesture.x, event.clientY - gesture.y) > 4)
+        gesture.suppressClick = true;
       if (pointers.size === 1)
         pan(
           event.clientX - previousPointer.x,
@@ -663,11 +672,22 @@ function CameraController({
           event.clientX - other.x,
           event.clientY - other.y,
         );
+        // Moving either contact moves the pair's midpoint by half its delta.
+        pan(
+          (event.clientX - previousPointer.x) / 2,
+          (event.clientY - previousPointer.y) / 2,
+        );
         if (before > 0) zoom(after / before);
       }
       pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
     };
     const up = (event: PointerEvent) => pointers.delete(event.pointerId);
+    const click = (event: MouseEvent) => {
+      if (gesture.suppressClick) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    };
     const wheel = (event: WheelEvent) => {
       event.preventDefault();
       zoom(Math.exp(-event.deltaY * 0.001));
@@ -676,12 +696,16 @@ function CameraController({
     canvas.addEventListener('pointermove', move);
     canvas.addEventListener('pointerup', up);
     canvas.addEventListener('pointercancel', up);
+    canvas.addEventListener('lostpointercapture', up);
+    canvas.addEventListener('click', click, true);
     canvas.addEventListener('wheel', wheel, { passive: false });
     return () => {
       canvas.removeEventListener('pointerdown', down);
       canvas.removeEventListener('pointermove', move);
       canvas.removeEventListener('pointerup', up);
       canvas.removeEventListener('pointercancel', up);
+      canvas.removeEventListener('lostpointercapture', up);
+      canvas.removeEventListener('click', click, true);
       canvas.removeEventListener('wheel', wheel);
     };
   }, [
@@ -694,6 +718,7 @@ function CameraController({
     publish,
     terrain,
     pointers,
+    gesture,
   ]);
   return null;
 }

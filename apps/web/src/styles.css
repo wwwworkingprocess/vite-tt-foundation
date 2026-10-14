@@ -59,6 +59,20 @@ body,
 
 body {
   min-width: 320px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea,
+[contenteditable='true'] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Reserve map gestures for the camera; panel scrolling remains native. */
+.d3d-map-representation canvas {
+  touch-action: none;
 }
 
 button,

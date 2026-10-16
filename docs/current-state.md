@@ -1049,3 +1049,31 @@ projected area lies within the accepted native raster. Presentation bounding-box
 coverage (63.128%) is not native coverage. No lake/site or urban-assets ZIP change
 was made. A follow-up requires native extent/source provenance approval and a verified
 site export; neither the supplied polygon nor DEM may be stretched or invented.
+
+### Mediterranean typed-land detail (Landscape V1)
+
+A separate visual-only landscape plan materializes V4 woods, parks, gardens, grass
+and recreation masks; inland water receives no plants. Six deterministic recipes
+combine palm, olive, carob, succulent and dry scrub silhouettes. No conifers or
+unverified playground/sports amenities are inferred. Per-mask style/uint32 seed
+overrides live in `representation/d3d-landscape-policy.ts`; muted per-instance
+trunk/foliage palettes live in `d3d-material-presets.ts`. These are checked-in
+presentation settings, not ZIP/schema/save/UI authority.
+
+Whole decorative envelopes retain exact source rings/holes, native LAND, existing
+C-safe/perimeter and at-grade internal-road clearance, actual building/transport
+reservations and custom-site precedence. C safe zones supply conservative road
+clearance evidence only; no class/quantity/ordinary-building decision is changed.
+Unsupported areas may remain undecorated with named diagnostics. Displayed-face
+barycentric anchors share the existing bounded native terrain index; source DEM
+and the six typed-cover faces are unchanged.
+
+Far has no ornaments. Medium is a stable ranked tree-only subset of near. Separate
+limits are 32,768 proposals overall / 512 per mask, 2,000 instances / 40,000 triangles
+medium, and 8,000 / 180,000 near. Instance ceilings count GPU part slots
+(a tree consumes two); logical plant counts are reported separately. At most eight shared instanced batches use one
+white Lambert material and real instanceColor attributes; color choice does not
+move a slot. Existing cover, site, city and build budgets remain unchanged. CPU
+plans are weakly cached; scene-owned GPU resources dispose on replacement, and
+read-only draw acknowledgements reject stale roots. No ordinary building color
+shader changes, foliage animation, La Mata or terrain-coverage extension is included.

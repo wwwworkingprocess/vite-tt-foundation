@@ -28,6 +28,12 @@ it('measures paused maximum-zoom terrain interaction separately from running pac
   map()
     .should('have.attr', 'data-terrain-status', 'ready')
     .and('have.attr', 'data-representation-mode', 'normal');
+  // Reuse the existing startup acquisition allowance for the independent C city.
+  // A benchmark of the complete city must not race its asynchronous input load.
+  cy.get('[data-testid="d3d-map-representation"]', { timeout: 15000 })
+    .should('have.attr', 'data-cell-buildings-status', 'ready')
+    .and('have.attr', 'data-settlement-metadata-status', 'ready')
+    .and('have.attr', 'data-city-building-count', '16231');
   drawn();
   map().find('canvas').trigger('wheel', { deltaY: -10000 });
   map()
@@ -35,8 +41,18 @@ it('measures paused maximum-zoom terrain interaction separately from running pac
     .and('have.attr', 'data-terrain-grid-visible', 'true');
   map()
     .should('have.attr', 'data-road-network-status', 'ready')
-    .and('have.attr', 'data-road-network-level', 'C')
-    .and('have.attr', 'data-rendered-road-network-level', 'C');
+    .and('have.attr', 'data-road-network-level', 'C');
+  // Model acquisition/preparation and the subsequent real GPU draw are independent stages.
+  // Each keeps the default 4s command deadline; measured camera checks below are unchanged.
+  map().should('have.attr', 'data-rendered-road-network-level', 'C');
+  map()
+    .should('have.attr', 'data-landscape-status', 'ready')
+    .should(($m) => {
+      expect($m.attr('data-rendered-landscape-identity')).to.equal(
+        $m.attr('data-landscape-identity'),
+      );
+      expect(Number($m.attr('data-landscape-instances'))).to.be.greaterThan(0);
+    });
   drawn();
   const roadPreparations: { name: string; duration: number }[] = [];
   cy.window().then((w) => {

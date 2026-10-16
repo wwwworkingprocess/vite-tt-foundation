@@ -853,6 +853,8 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.endsWith('apps/web/src/representation/d3d-stop-geometry.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-city-spatial.ts') ||
     normalized.endsWith('apps/web/src/representation/d3d-metadata-city.ts') ||
+    // Read-only decorative clearance consumes canonical StopPlace presentation geometry.
+    normalized.endsWith('apps/web/src/representation/d3d-landscape-scene.ts') ||
     normalized.endsWith(
       'apps/web/src/representation/d3d-street-cell-city.ts',
     ) ||

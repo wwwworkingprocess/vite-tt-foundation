@@ -360,8 +360,10 @@ const sceneProps = (element: Element) =>
     onAfterRender?: () => void;
     children?: readonly Readonly<{
       props: {
+        visualState?: readonly unknown[];
         onLod?: (level: 'far' | 'medium' | 'near') => void;
         onRoadInvalidated?: () => void;
+        onLandscapeRendered?: (gpuBytes: number, batches: number) => void;
         onStreetCellsInvalidated?: () => void;
       };
     }>[];
@@ -3372,3 +3374,185 @@ function presentNativeTerrain() {
   expect(node).not.toBeNull();
   act(() => sceneProps(node!).onAfterRender!());
 }
+import * as landscapePlanning from './d3d-landscape-scene.js';
+it('keeps landscape visuals near/medium-only, uploads instanced colors once, and rejects stale scene acknowledgements', async () => {
+  const colors = enableWorld().setColorAt;
+  vi.spyOn(appSettings, 'resolveD3dAppSettings').mockImplementation((id) => ({
+    ...resolveSettings(id),
+    typedLandCovers: { visible: false },
+  }));
+  const stableRouteView = createRoutePresentationView(
+    createTransportMapProjection(scenario),
+  );
+  const stableScene = (
+    mode: 'normal' | 'mini',
+    selection = null as ReturnType<typeof selectStop>,
+    focusedRouteId?: typeof route.routeId,
+    currentScenario = scenario,
+    currentPopulation?: ScenarioPopulationView,
+    currentFleet = fleet,
+  ) => (
+    <RepresentationModeProvider mode={mode}>
+      <D3dMapRepresentation
+        scenario={currentScenario}
+        fleet={currentFleet}
+        selection={selection}
+        onSelectionChange={onSelectionChange}
+        focusedRouteId={focusedRouteId}
+        population={currentPopulation}
+        routePresentation={stableRouteView}
+      />
+    </RepresentationModeProvider>
+  );
+
+  // Real native query semantics remain; full near mesh/grid costs have separate model/E2E tests.
+  vi.spyOn(terrainGrid, 'terrainGridWindow').mockReturnValue(undefined);
+  const nativePlanner = terrainPlanning.planD3dTerrain;
+  vi.spyOn(terrainPlanning, 'planD3dTerrain').mockImplementation(
+    (world, policy) => nativePlanner(world, { ...policy, lod: 'far' }),
+  );
+  // Cover geometry has independent real-data tests; isolate this layer's lifecycle.
+  vi.spyOn(typedCoverPlanning, 'prepareD3dTypedLandCovers').mockReturnValue({
+    identity: 'cover-fixture',
+    batches: [],
+    triangles: 0,
+    bytes: 0,
+    features: 0,
+    suppressedBySites: [],
+    belowAreaThreshold: 0,
+    outsideSupportTriangles: 0,
+    nativeWaterLandCoverTriangles: 0,
+    failures: [],
+  });
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  const cells = (await installedMaskCells.resolve('es-torrevieja'))!;
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: { ...cells, features: cells.features.slice(0, 2) },
+  });
+  const plan = {
+    identity: 'landscape-test',
+    availability: 'available',
+    instances: Array.from({ length: 6 }, (_, i) => ({
+      id: 'p' + i,
+      maskId: 'm',
+      family: 'palm' as const,
+      x: i,
+      y: 0,
+      z: 0,
+      width: 0.1,
+      depth: 0.1,
+      height: 0.3,
+      rotation: 0,
+      colorVariant: i % 3,
+    })),
+    triangles: 192,
+    gpuInstances: 12,
+    proposals: 6,
+    diagnostics: [],
+    numericBytes: 432,
+    terrainIndexBytes: 0,
+    suppressedMasks: [],
+    unsupportedSupports: {},
+  };
+  const prepare = vi
+    .spyOn(landscapePlanning, 'prepareLandscapeDetails')
+    .mockReturnValue(plan);
+  vi.useFakeTimers();
+  const v = render(
+    stableScene('normal', null, undefined, scenario, population),
+  );
+  presentNativeTerrain();
+  const host = screen.getByTestId('d3d-map-representation');
+  expect(host).toHaveAttribute('data-landscape-status', 'inactive');
+  expect(prepare).not.toHaveBeenCalled();
+  const farDraw = sceneProps(screen.getByTestId('r3f-canvas')).children!.find(
+    (c) => c.props.onLandscapeRendered,
+  )!.props.onLandscapeRendered!;
+  act(() => farDraw(0, 0));
+  expect(host).toHaveAttribute('data-rendered-landscape-identity', '');
+  fireEvent.wheel(controls.canvas, { deltaY: -10000 });
+  expect(host).toHaveAttribute('data-landscape-status', 'ready');
+  expect(host).toHaveAttribute('data-landscape-instances', '6');
+  expect(host).toHaveAttribute('data-rendered-landscape-identity', '');
+  const visualState = () =>
+    sceneProps(screen.getByTestId('r3f-canvas')).children!.find(
+      (child) => child.props.visualState,
+    )!.props.visualState!;
+  const activeVisualState = visualState();
+  act(() => vi.advanceTimersByTime(18));
+  const framesBeforeLandscapeChange = Number(host.dataset.rendererFrames);
+  expect(activeVisualState).toContain(plan);
+  vi.mocked(useCityMaterialization).mockReturnValue({ status: 'loading' });
+  v.rerender(stableScene('normal', null, undefined, scenario, population));
+  expect(host).toHaveAttribute('data-landscape-status', 'inactive');
+  act(() => vi.advanceTimersByTime(18));
+  expect(Number(host.dataset.rendererFrames)).toBe(
+    framesBeforeLandscapeChange + 1,
+  );
+  expect(visualState()).not.toBe(activeVisualState);
+  expect(visualState()).not.toContain(plan);
+  const hiddenVisualState = visualState();
+  vi.mocked(useCityMaterialization).mockReturnValue({ status: 'inactive' });
+  v.rerender(stableScene('normal', null, undefined, scenario, population));
+  expect(visualState()).not.toBe(hiddenVisualState);
+  expect(visualState()).toContain(plan);
+  expect(host).toHaveAttribute('data-rendered-landscape-identity', '');
+  const mesh = document.querySelector(
+      'instancedMesh[name="landscape-palm-foliage"]',
+    )!,
+    props = sceneProps(mesh),
+    dispose = vi.spyOn(props.args![0] as BufferGeometry, 'dispose');
+  expect(props.raycast!()).toBeNull();
+  expect(colors).toHaveBeenCalled();
+  act(() => props.onAfterRender!());
+  expect(host.dataset.renderedLandscapeIdentity).toBe(plan.identity);
+  const retainedDraw = sceneProps(
+    screen.getByTestId('r3f-canvas'),
+  ).children!.find((c) => c.props.onLandscapeRendered)!.props
+    .onLandscapeRendered!;
+  const observer = new MutationObserver(() => {});
+  observer.observe(host, {
+    attributes: true,
+    attributeFilter: ['data-rendered-landscape-identity'],
+  });
+  act(() => {
+    retainedDraw(1000, 2);
+    props.onAfterRender!();
+  });
+  expect(observer.takeRecords()).toHaveLength(0);
+  observer.disconnect();
+  const calls = colors.mock.calls.length,
+    preparations = prepare.mock.calls.length;
+  v.rerender(
+    stableScene(
+      'normal',
+      selectStop(stop.stopPlaceId),
+      undefined,
+      scenario,
+      population,
+      [...fleet],
+    ),
+  );
+  expect(colors).toHaveBeenCalledTimes(calls);
+  expect(prepare).toHaveBeenCalledTimes(preparations);
+  v.rerender(stableScene('mini'));
+  expect(document.querySelector('group[name="landscape-details"]')).toBeNull();
+  expect(host).toHaveAttribute('data-rendered-landscape-identity', '');
+  expect(dispose).toHaveBeenCalledTimes(1);
+  act(() => retainedDraw(1000, 2));
+  expect(host).toHaveAttribute('data-rendered-landscape-identity', '');
+  act(() => props.onAfterRender!());
+  expect(host).toHaveAttribute('data-rendered-landscape-identity', '');
+  prepare.mockImplementation(() => {
+    throw Error('Landscape preparation failed');
+  });
+  v.rerender(stableScene('normal', null, undefined, scenario, population));
+  expect(host).toHaveAttribute('data-landscape-status', 'error');
+  expect(document.querySelector('group[name="native-terrain"]')).not.toBeNull();
+  v.unmount();
+  act(() => props.onAfterRender!());
+});

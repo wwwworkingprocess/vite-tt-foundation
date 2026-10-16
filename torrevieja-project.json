@@ -102,7 +102,12 @@
       "apps/web/src/representation/d3d-surface-geometry.ts",
       "apps/web/src/representation/d3d-typed-land-covers.ts",
       "apps/web/src/representation/D3dTypedLandCovers.tsx",
-      "apps/web/src/representation/d3d-terrain-covers.ts"
+      "apps/web/src/representation/d3d-terrain-covers.ts",
+      "apps/web/src/representation/d3d-landscape-policy.ts",
+      "apps/web/src/representation/d3d-landscape-geometry.ts",
+      "apps/web/src/representation/d3d-landscape.ts",
+      "apps/web/src/representation/d3d-landscape-scene.ts",
+      "apps/web/src/representation/D3dLandscapeDetails.tsx"
     ]
   },
   "simulationCriticalCoverage": {

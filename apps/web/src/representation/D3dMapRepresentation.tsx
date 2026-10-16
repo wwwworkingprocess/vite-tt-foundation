@@ -1,3 +1,9 @@
+import { D3dLandscapeDetails } from './D3dLandscapeDetails.js';
+import {
+  prepareLandscapeDetails,
+  type LandscapeDetailPlan,
+} from './d3d-landscape-scene.js';
+import { landscapePolicy, landscapeVisible } from './d3d-landscape-policy.js';
 import { facadeParameters, patchCityFacadeShader } from './d3d-city-facade.js';
 import {
   d3dMaterialPresets,
@@ -1583,6 +1589,8 @@ function D3dWorld({
   onNativeDraw,
   typedCoverPlan,
   onTypedCoversRendered,
+  landscapePlan,
+  onLandscapeRendered,
   facadeEnabled,
   settlementId,
   materializationPlan,
@@ -1607,6 +1615,8 @@ function D3dWorld({
   wrapper,
 }: Readonly<{
   onNativeDraw: () => boolean;
+  landscapePlan: LandscapeDetailPlan | undefined;
+  onLandscapeRendered: (gpuBytes: number, batches: number) => void;
   typedCoverPlan: TypedLandCoverPlan | undefined;
   onTypedCoversRendered: () => void;
   facadeEnabled: boolean;
@@ -1744,6 +1754,12 @@ function D3dWorld({
         <D3dTypedLandCovers
           plan={typedCoverPlan}
           onDraw={onTypedCoversRendered}
+        />
+      ) : null}
+      {landscapePlan && landscapePlan.instances.length > 0 ? (
+        <D3dLandscapeDetails
+          plan={landscapePlan}
+          onDraw={onLandscapeRendered}
         />
       ) : null}
       {city ? (
@@ -2370,6 +2386,92 @@ export default function D3dMapRepresentation({
     materializationPreparation?.status === 'ready'
       ? materializationPreparation.plan
       : undefined;
+  const landscapeSites =
+    materializationState.status === 'ready'
+      ? materializationState.model
+      : undefined;
+  const landscapePreparation = useMemo(() => {
+    if (
+      !landscapeVisible(mode, lod) ||
+      !terrain ||
+      drawnTerrain !== terrain ||
+      !buildingCells?.masks ||
+      !city ||
+      materializationState.status === 'loading' ||
+      materializationState.status === 'error'
+    )
+      return undefined;
+    try {
+      return {
+        status: 'ready' as const,
+        plan: prepareLandscapeDetails({
+          cityId: scenario.manifest.primarySettlementId,
+          cells: buildingCells,
+          model,
+          terrain,
+          city,
+          sites: landscapeSites,
+          sitePlan: materializationPlan,
+          lod,
+        }),
+      };
+    } catch (error) {
+      return { status: 'error' as const, message: String(error) };
+    }
+  }, [
+    mode,
+    lod,
+    terrain,
+    drawnTerrain,
+    buildingCells,
+    city,
+    model,
+    scenario.manifest.primarySettlementId,
+    materializationState.status,
+    landscapeSites,
+    materializationPlan,
+  ]);
+  const landscapePlan =
+    landscapePreparation?.status === 'ready'
+      ? landscapePreparation.plan
+      : undefined;
+  const landscapeToken = useMemo(() => ({}), [landscapePlan, scenario, mode]);
+  const activeLandscape = useRef<object | null>(null);
+  useLayoutEffect(() => {
+    activeLandscape.current = landscapeToken;
+    // Parent layout effects always own a mounted host; cleanup retains that host.
+    // Detached Canvas callbacks are separately rejected by the active token below.
+    const element = wrapper.current!;
+    element.dataset.renderedLandscapeIdentity = '';
+    element.dataset.landscapeGpuBytes = '0';
+    element.dataset.landscapeBatches = '0';
+    return () => {
+      activeLandscape.current = null;
+      element.dataset.renderedLandscapeIdentity = '';
+      element.dataset.landscapeGpuBytes = '0';
+      element.dataset.landscapeBatches = '0';
+    };
+  }, [landscapeToken]);
+  const onLandscapeRendered = useCallback(
+    (gpuBytes: number, batches: number) => {
+      const element = wrapper.current;
+      if (
+        activeLandscape.current === landscapeToken &&
+        landscapePlan &&
+        element &&
+        element.dataset.renderedLandscapeIdentity !== landscapePlan.identity
+      ) {
+        element.dataset.renderedLandscapeIdentity = landscapePlan.identity;
+        element.dataset.landscapeGpuBytes = String(gpuBytes);
+        element.dataset.landscapeBatches = String(batches);
+      }
+    },
+    [landscapeToken, landscapePlan],
+  );
+  const landscapeDiagnostics = useMemo(
+    () => JSON.stringify(landscapePlan?.diagnostics ?? []),
+    [landscapePlan],
+  );
   useLayoutEffect(() => {
     // This layout effect always commits with the root host mounted.
     wrapper.current!.dataset.renderedMaterializationLevel = '';
@@ -2384,6 +2486,7 @@ export default function D3dMapRepresentation({
       roadMeshes,
       streetCellGeometry,
       typedCoverPlan,
+      landscapePlan,
       materializationPlan,
       vehicles,
       selection,
@@ -2400,6 +2503,7 @@ export default function D3dMapRepresentation({
       roadMeshes,
       streetCellGeometry,
       typedCoverPlan,
+      landscapePlan,
       materializationPlan,
       vehicles,
       selection,
@@ -2459,6 +2563,28 @@ export default function D3dMapRepresentation({
               : 'ready'
             : 'inactive'
       }
+      data-landscape-status={landscapePreparation?.status ?? 'inactive'}
+      data-landscape-availability={
+        landscapePlan?.availability ??
+        buildingCells?.masks?.availability ??
+        'inactive'
+      }
+      data-landscape-policy={landscapePolicy.version}
+      data-landscape-unsupported-supports={JSON.stringify(
+        landscapePlan?.unsupportedSupports ?? {},
+      )}
+      data-landscape-error={
+        landscapePreparation?.status === 'error'
+          ? landscapePreparation.message
+          : ''
+      }
+      data-landscape-identity={landscapePlan?.identity ?? ''}
+      data-landscape-instances={landscapePlan?.instances.length ?? 0}
+      data-landscape-gpu-instances={landscapePlan?.gpuInstances ?? 0}
+      data-landscape-triangles={landscapePlan?.triangles ?? 0}
+      data-landscape-proposals={landscapePlan?.proposals ?? 0}
+      data-landscape-numeric-bytes={landscapePlan?.numericBytes ?? 0}
+      data-landscape-diagnostics={landscapeDiagnostics}
       data-typed-covers-error={
         typedCoverPreparation?.status === 'error'
           ? typedCoverPreparation.message
@@ -2741,6 +2867,8 @@ export default function D3dMapRepresentation({
         />
         <D3dWorld
           onNativeDraw={onNativeDraw}
+          landscapePlan={landscapePlan}
+          onLandscapeRendered={onLandscapeRendered}
           typedCoverPlan={typedCoverPlan}
           onTypedCoversRendered={onTypedCoversRendered}
           facadeEnabled={settings.city.nearFacades}

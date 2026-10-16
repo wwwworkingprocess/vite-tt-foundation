@@ -400,3 +400,9 @@ terrain-following visual cover batches use the same source masks, separate from 
 terrain/water and verified POI identity. Source completeness/capacity omissions remain
 observable for Torrevieja, Elche and Alicante. La Mata native-coverage extension/site
 packaging is a separate owner-approved follow-up; no producer/geography changes here.
+
+Landscape Materialization Refinement V1 adds deterministic Mediterranean planting
+to V4 typed masks through a separately bounded visual plan and shared colored
+instances. Exact building slots/exclusions and custom POIs remain authoritative
+and unchanged. Richer sourced amenities, building instance-color reuse, La Mata
+coverage/provenance and producer-controlled exports remain separate milestones.

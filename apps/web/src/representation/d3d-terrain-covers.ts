@@ -132,6 +132,33 @@ export function createTerrainCoverProjector(
     indexBytes:
       faces.byteLength +
       [...rows.values()].reduce((n, r) => n + r.byteLength, 0),
+    /** Visual-only barycentric support in the exact displayed face; never native DEM authority. */
+    height(x: number, z: number): number | undefined {
+      const keyX = Math.max(
+          range.minX,
+          Math.min(range.maxX, Math.floor(x / step)),
+        ),
+        keyZ = Math.max(range.minZ, Math.min(range.maxZ, Math.floor(z / step)));
+      for (const id of rows.get(keyX + ':' + keyZ) ?? []) {
+        const patch = plan.patches[faces[id * 2]!]!,
+          offset = faces[id * 2 + 1]!,
+          p = patch.positions;
+        const a = patch.indices[offset]! * 3,
+          b = patch.indices[offset + 1]! * 3,
+          c = patch.indices[offset + 2]! * 3;
+        const aa = [p[a]!, p[a + 2]!] as const,
+          bb = [p[b]!, p[b + 2]!] as const,
+          cc = [p[c]!, p[c + 2]!] as const;
+        const denominator = cross(aa, bb, cc),
+          point = [x, z] as const;
+        const u = cross(point, bb, cc) / denominator,
+          v = cross(aa, point, cc) / denominator,
+          w = 1 - u - v;
+        if (Math.min(u, v, w) >= -1e-9)
+          return u * p[a + 1]! + v * p[b + 1]! + w * p[c + 1]!;
+      }
+      return undefined;
+    },
     project(
       polygons: readonly FootprintPolygon[],
       clearance: number,

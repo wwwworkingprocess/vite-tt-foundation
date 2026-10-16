@@ -613,8 +613,42 @@ describe('optional city-site offline acquisition', () => {
               ).to.be.within(1, 6);
             }),
         );
+    let landscapeIdentity: string | undefined;
+    const landscapePresented = () => {
+      cy.get('[data-testid="d3d-map-representation"]', { timeout: 15000 })
+        .should('have.attr', 'data-settlement-metadata-status', 'ready')
+        .find('canvas')
+        .trigger('wheel', { deltaY: -10000 });
+      cy.get('[data-testid="d3d-map-representation"]', { timeout: 15000 })
+        .should('have.attr', 'data-landscape-status', 'ready')
+        .and('have.attr', 'data-typed-mask-conflicts', '0');
+      cy.get('[data-testid="d3d-map-representation"]', { timeout: 15000 })
+        .should((m) => {
+          expect(Number(m.attr('data-landscape-gpu-instances'))).to.be.within(
+            1,
+            8000,
+          );
+          expect(Number(m.attr('data-landscape-instances'))).to.be.within(
+            1,
+            8000,
+          );
+          expect(Number(m.attr('data-landscape-triangles'))).to.be.at.most(
+            180000,
+          );
+          expect(m.attr('data-rendered-landscape-identity')).to.equal(
+            m.attr('data-landscape-identity'),
+          );
+        })
+        .then((m) => {
+          const identity = m.attr('data-landscape-identity')!;
+          if (landscapeIdentity !== undefined)
+            expect(identity).to.equal(landscapeIdentity);
+          landscapeIdentity = identity;
+        });
+    };
     start();
     presented();
+    landscapePresented();
     cy.window().then(async (win) => {
       const cache = await win.caches.open('public-layers');
       const keys = await cache.keys();
@@ -633,5 +667,6 @@ describe('optional city-site offline acquisition', () => {
     cy.reload();
     start();
     presented();
+    landscapePresented();
   });
 });

@@ -153,3 +153,17 @@ it('reuses fully enclosed faces, omits outside/degenerate/rejected pieces and bo
     ),
   ).toThrow('Cover triangle budget exceeded');
 });
+it('samples only actual displayed nonvertical native faces for decorative bases', () => {
+  const query = createTerrainCoverProjector(plan, 2, regions);
+  expect(query.height(1, 1)).toBeCloseTo(5, 7);
+  expect(query.height(3, 3)).toBeCloseTo(15, 7);
+  expect(query.height(20, 20)).toBeUndefined();
+  expect(query.height(4, 4)).toBeCloseTo(20, 7);
+});
+it('returns no decorative height for a source region with no displayed native faces', () => {
+  const q = createTerrainCoverProjector(plan, 2, [
+    { minX: 10, maxX: 12, minZ: 10, maxZ: 12 },
+  ]);
+  expect(q.faces).toBe(0);
+  expect(q.height(11, 11)).toBeUndefined();
+});

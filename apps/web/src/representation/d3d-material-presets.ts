@@ -10,6 +10,30 @@ export type SiteSurfacePreset = Extract<
  * La Mata and shallow-water presets are reserved until verified geometry is installed;
  * this file does not create masks, bands, gradients or texture acquisition. */
 export const d3dMaterialPresets = freezeSettlement({
+  // Instance colors multiply a single shared white Lambert material. These muted
+  // trunk/foliage palettes are independent of all placement/style seeds.
+  landscape: {
+    palm: {
+      trunk: ['#887c63', '#95866b', '#7e745f'],
+      foliage: ['#73876a', '#7f906f', '#697e62'],
+    },
+    olive: {
+      trunk: ['#8c897a', '#999181', '#807f73'],
+      foliage: ['#97a58c', '#a1ad96', '#8d9d85'],
+    },
+    carob: {
+      trunk: ['#81745f', '#8c7d66', '#776e5c'],
+      foliage: ['#687b59', '#728363', '#5e7255'],
+    },
+    succulent: {
+      trunk: ['#889b7c', '#96a58a', '#7f9276'],
+      foliage: ['#889b7c', '#96a58a', '#7f9276'],
+    },
+    scrub: {
+      trunk: ['#929c7a', '#a0a889', '#87936f'],
+      foliage: ['#929c7a', '#a0a889', '#87936f'],
+    },
+  },
   typedLandCovers: {
     'inland water': '#7e999b',
     woods: '#89977b',

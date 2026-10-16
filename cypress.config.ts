@@ -368,6 +368,7 @@ export default defineConfig({
       'cypress/e2e/foundation.cy.ts',
       'cypress/e2e/route-presentation.cy.ts',
       'cypress/e2e/terrain.cy.ts',
+      'cypress/e2e/landscape.cy.ts',
     ],
     supportFile: false,
     video: false,

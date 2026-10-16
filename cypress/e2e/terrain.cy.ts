@@ -632,6 +632,11 @@ it('draws inspectable V2 C safe-zone boundaries beside downtown roads and preser
   cy.get('button[aria-label="Select mini representation for swap"]').click();
   cy.contains('button', 'Swap visualizations').click();
   terrainMap().should('have.attr', 'data-representation-mode', 'normal');
+  // Native terrain can draw before the independent C-city acquisition completes.
+  // Only assert city drape diagnostics after that real city exists; retain draw checks below.
+  terrainMap().should('have.attr', 'data-cell-buildings-status', 'ready');
+  terrainMap().should('have.attr', 'data-settlement-metadata-status', 'ready');
+  terrainMap().should('have.attr', 'data-city-building-count', '16231');
   terrainDrawn();
   terrainZoomTo(0.03);
   terrainMap().should('have.attr', 'data-lod', 'near');

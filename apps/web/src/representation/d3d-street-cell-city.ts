@@ -46,9 +46,12 @@ import {
 import type { StreetCells } from './street-cells.js';
 import type { D3dTerrain } from './d3d-terrain-model.js';
 import { geographicToTerrain } from '../terrain/terrain-projection.js';
+import { prepareStreetCellMaskQueries } from './d3d-street-cell-masks.js';
 
 export const streetCellLotBudget = d3dAppSettings.city.maxLotProposals;
 export type StreetCellLayout = Readonly<{
+  maskConflicts?: number;
+  maskRejections?: number;
   outsideSafeZone: number;
   ineligible: number;
   sourceCells: number;
@@ -109,9 +112,15 @@ export function auditStreetCellBuildings(
   roadPlans = new Map<string, ReturnType<typeof planStreetCellRoads>>(),
 ) {
   const polygons = new Map<string, FootprintPolygon>();
+  const masks = cells.masks
+    ? prepareStreetCellMaskQueries(cells.masks, model)
+    : undefined;
+  let maskConflicts = 0;
   let outsideSafeZone = 0,
     ineligible = 0;
   for (const building of buildings) {
+    if (masks?.conflicts(building.cellId!, footprintRing(building), 0))
+      maskConflicts++;
     const annotation = cells.annotations!.cells[building.cellId!];
     if (annotation?.classification !== 'empty') {
       if (annotation?.classification !== 'road-crossed') ineligible++;
@@ -151,7 +160,11 @@ export function auditStreetCellBuildings(
     if (!footprintInside(footprintRing(building), polygon, 0))
       outsideSafeZone++;
   }
-  return Object.freeze({ outsideSafeZone, ineligible });
+  return Object.freeze({
+    outsideSafeZone,
+    ineligible,
+    ...(masks ? { maskConflicts } : {}),
+  });
 }
 
 export function emptyStreetCellCity(
@@ -181,6 +194,12 @@ export type StreetCellProtections = Readonly<{
   polygons: readonly FootprintPolygon[];
 }>;
 export type StreetCellDisposition = Readonly<{
+  maskIds?: readonly string[];
+  maskTypes?: readonly number[];
+  totalSafeArea?: number;
+  estimatedBuildableAreaSqm?: number;
+  estimatedMaskedAreaSqm?: number;
+  areaEstimate?: 'grid32-union';
   cellId: string;
   classification: string;
   safeAreaSqm: number;
@@ -329,13 +348,23 @@ export function streetCellNativeLand(
     }
   return true;
 }
+type PhysicalCandidate = Readonly<
+  | { kind: 'accepted'; body: FootprintPolygon[number] }
+  | { kind: 'rejected'; reason: string }
+>;
+type PhysicalCandidateCache = Map<string, Map<string, PhysicalCandidate>>;
 function composeSlots(
   model: D3dMapModel,
   population: SettlementPopulationInput,
   cells: StreetCells,
   terrain: D3dTerrain,
   protections: StreetCellProtections,
+  proposalAllowances?: ReadonlyMap<string, number>,
+  physicalCache?: PhysicalCandidateCache,
 ): Slots {
+  const masks = cells.masks
+    ? prepareStreetCellMaskQueries(cells.masks, model)
+    : undefined;
   const metre = terrain.metre,
     tolerance = 0.001 * metre;
   const project = (rings: FootprintPolygon): FootprintPolygon =>
@@ -448,11 +477,13 @@ function composeSlots(
     const startCandidates = diagnostics.candidates;
     // Equal-share admission prevents a high-segment early cell exhausting the rest;
     // unused allowances are redistributed deterministically to remaining cells.
-    const allowance = pass2
-      ? Math.floor(
-          (streetCellLotBudget - startCandidates) / remainingRoadCells--,
-        )
-      : streetCellLotBudget - startCandidates;
+    const allowance =
+      proposalAllowances?.get(cell.id) ??
+      (pass2
+        ? Math.floor(
+            (streetCellLotBudget - startCandidates) / remainingRoadCells--,
+          )
+        : streetCellLotBudget - startCandidates);
     if (pass2) {
       diagnostics.roadCrossed++;
       diagnostics.pass2.processed++;
@@ -501,9 +532,22 @@ function composeSlots(
       finish();
       continue;
     }
-    const safe = project(a.safeZoneCoordinates),
+    const preparedRemainder = masks?.remainder(
+      cell.id,
+      a.safeZoneCoordinates,
+      a.safeAreaSqm,
+    );
+    const safe = preparedRemainder?.safe ?? project(a.safeZoneCoordinates),
       original = project(cell.geometry.coordinates),
       cellBounds = bounds(safe[0]!);
+    const remainder = preparedRemainder?.estimate;
+    if (remainder)
+      Object.assign(record, {
+        ...remainder,
+        maskIds: cells.masks!.cellRefs[cell.id],
+        totalSafeArea: a.safeAreaSqm,
+        areaEstimate: 'grid32-union',
+      });
     const crop = {
       minX: Math.max(cellBounds.minX, terrain.bounds.minX),
       maxX: Math.min(cellBounds.maxX, terrain.bounds.maxX),
@@ -595,13 +639,27 @@ function composeSlots(
         coverage === null ? intensity * 0.45 : coverage,
       ),
     );
+    // Quadrature modulates capacity, never geographical admission. Retain a
+    // one-footprint opportunity when narrow remaining land misses grid probes.
+    const capacityArea = remainder
+      ? Math.max(
+          (width * depth) / targetCoverage,
+          remainder.estimatedBuildableAreaSqm,
+        )
+      : a.safeAreaSqm;
+    const observedCapacity =
+      observed * Math.min(1, capacityArea / a.safeAreaSqm);
     record.target = Math.max(
       1,
       Math.ceil(
-        Math.max(observed, (a.safeAreaSqm * targetCoverage) / (width * depth)),
+        Math.max(
+          observedCapacity,
+          (capacityArea * targetCoverage) / (width * depth),
+        ),
       ),
     );
     const occupied = createFootprintIndex(50 * metre, tolerance);
+    const cachedCandidates = physicalCache?.get(cell.id);
     let occupiedArea = 0;
     for (const scale of [1, 0.65]) {
       if (
@@ -638,7 +696,10 @@ function composeSlots(
       );
       for (const lot of lots) {
         const index = lot.ordinal;
-        if (pass2 && diagnostics.candidates - startCandidates >= allowance) {
+        if (
+          (pass2 || proposalAllowances) &&
+          diagnostics.candidates - startCandidates >= allowance
+        ) {
           if (!record.reasons['candidate-budget'])
             diagnostics.pass2.budgetCells++;
           reject('candidate-budget');
@@ -648,20 +709,12 @@ function composeSlots(
           record.buildings >= record.target ||
           (record.buildings > 0 &&
             occupiedArea + w * d >
-              a.safeAreaSqm * metre * metre * targetCoverage)
+              capacityArea * metre * metre * targetCoverage)
         )
           break;
         diagnostics.candidates++;
         record.proposed++;
         if (pass2) diagnostics.pass2.proposed++;
-        const envelope = footprintRing({
-          ...lot,
-          width: w + 0.4 * metre,
-          depth: d + 0.4 * metre,
-        });
-        const fitting =
-          footprintInside(envelope, safe, tolerance) &&
-          footprintInside(envelope, original, tolerance);
         const witness = footprintRing({
           ...lot,
           width: 10 * metre,
@@ -669,49 +722,80 @@ function composeSlots(
         });
         if (!record.geometricFit && footprintInside(witness, safe, tolerance))
           record.geometricFit = true;
-        if (!fitting) {
-          reject('safe-zone-footprint');
-          continue;
-        }
-        if (roads?.conflicts(envelope)) {
-          reject('internal-road-corridor');
-          diagnostics.pass2.corridorConflicts++;
-          continue;
-        }
-        if (!streetCellNativeLand(model, terrain, envelope)) {
-          reject('native-water-or-coverage');
-          continue;
-        }
-        const local = streetCellPopulationSupport(model, population, lot);
-        if (local.state !== 'positive' && observed === 0) {
-          reject(
-            local.state === 'zero'
-              ? 'zero-population-no-evidence'
-              : 'unknown-population-no-evidence',
-          );
-          continue;
-        }
-        const radius = Math.hypot(w, d) / 2;
-        if (
-          model.stops.some(
-            (s) => Math.hypot(s.x - lot.x, s.z - lot.z) < 12 * metre + radius,
-          ) ||
-          corridors.some(
-            (r) => distanceToCorridor(lot, r) < r.width / 2 + radius,
-          ) ||
-          protections.reservations.some(
-            (p) => Math.hypot(p.x - lot.x, p.z - lot.z) < p.radius + radius,
-          ) ||
-          protections.polygons.some((p) =>
-            footprintOverlaps(envelope, p, tolerance),
+        // This cache lives only through one synchronous baseline/remainder pair.
+        // All geography/population/road/protection inputs are identical. Collision
+        // and mask admission are deliberately NOT cached: accepted neighbors differ.
+        const candidateKey = cachedCandidates
+          ? `${lot.x}:${lot.z}:${lot.rotation}:${w}:${d}`
+          : '';
+        let physical = cachedCandidates?.get(candidateKey);
+        if (!physical) {
+          const envelope = footprintRing({
+            ...lot,
+            width: w + 0.4 * metre,
+            depth: d + 0.4 * metre,
+          });
+          let reason: string | undefined;
+          if (
+            !footprintInside(envelope, safe, tolerance) ||
+            !footprintInside(envelope, original, tolerance)
           )
-        ) {
-          reject('physical-clearance');
+            reason = 'safe-zone-footprint';
+          else if (roads?.conflicts(envelope))
+            reason = 'internal-road-corridor';
+          else if (!streetCellNativeLand(model, terrain, envelope))
+            reason = 'native-water-or-coverage';
+          else {
+            const local = streetCellPopulationSupport(model, population, lot);
+            if (local.state !== 'positive' && observed === 0)
+              reason =
+                local.state === 'zero'
+                  ? 'zero-population-no-evidence'
+                  : 'unknown-population-no-evidence';
+            else {
+              const radius = Math.hypot(w, d) / 2;
+              if (
+                model.stops.some(
+                  (s) =>
+                    Math.hypot(s.x - lot.x, s.z - lot.z) < 12 * metre + radius,
+                ) ||
+                corridors.some(
+                  (r) => distanceToCorridor(lot, r) < r.width / 2 + radius,
+                ) ||
+                protections.reservations.some(
+                  (p) =>
+                    Math.hypot(p.x - lot.x, p.z - lot.z) < p.radius + radius,
+                ) ||
+                protections.polygons.some((p) =>
+                  footprintOverlaps(envelope, p, tolerance),
+                )
+              )
+                reason = 'physical-clearance';
+            }
+          }
+          physical = reason
+            ? { kind: 'rejected', reason }
+            : {
+                kind: 'accepted',
+                body: footprintRing({ ...lot, width: w, depth: d }),
+              };
+          cachedCandidates?.set(candidateKey, physical);
+        }
+        if (physical.kind === 'rejected') {
+          reject(physical.reason);
+          if (physical.reason === 'internal-road-corridor')
+            diagnostics.pass2.corridorConflicts++;
+          continue;
+        }
+        // Ordinary body only, with the existing one-millimetre tolerance. The
+        // broader frontage/road envelope is NOT a new mask setback/erosion.
+        if (masks?.conflicts(cell.id, physical.body, tolerance)) {
+          reject('typed-mask-footprint');
           continue;
         }
         if (
           occupiedArea + w * d >
-          a.safeAreaSqm * metre * metre * targetCoverage
+          capacityArea * metre * metre * targetCoverage
         ) {
           reject('cell-coverage');
           continue;
@@ -719,7 +803,7 @@ function composeSlots(
         const id = lot.spanId
           ? `${cell.id}-frontage-${lot.spanId}-${lot.spanIndex}-${scale}`
           : `${cell.id}-parcel-${index + (scale === 1 ? 0 : streetCellLotBudget)}`;
-        const ring = footprintRing({ ...lot, width: w, depth: d });
+        const ring = physical.body;
         if (!occupied.add(id, ring)) {
           reject('spacing');
           continue;
@@ -783,6 +867,188 @@ function composeSlots(
   );
   return freezeSettlement({ buildings, blocks, diagnostics });
 }
+
+/** Freeze the accepted unmasked work allocation, then recompose affected cells
+ * through the same admission predicate. Unassociated slots are reused exactly;
+ * only previously unused proposals are shared among affected cells. The actual
+ * merged proposal count remains bounded by the original global guard. */
+function composeMaskedSlots(
+  model: D3dMapModel,
+  population: SettlementPopulationInput,
+  cells: StreetCells,
+  terrain: D3dTerrain,
+  protections: StreetCellProtections,
+): Slots {
+  const withMaskLedger = (slots: Slots): Slots =>
+    freezeSettlement({
+      ...slots,
+      diagnostics: {
+        ...slots.diagnostics,
+        ledger: slots.diagnostics.ledger.map((row) => {
+          const annotation = cells.annotations!.cells[row.cellId]!;
+          const ids = cells.masks!.cellRefs[row.cellId]!;
+          return {
+            ...row,
+            maskIds: ids,
+            maskTypes: [
+              ...new Set(
+                ids.map(
+                  (id) =>
+                    cells.masks!.features.find((f) => f.id === id)!.properties
+                      .t,
+                ),
+              ),
+            ],
+            totalSafeArea: annotation.safeAreaSqm,
+            estimatedBuildableAreaSqm:
+              row.estimatedBuildableAreaSqm ?? annotation.safeAreaSqm,
+            estimatedMaskedAreaSqm: row.estimatedMaskedAreaSqm ?? 0,
+            areaEstimate: 'grid32-union' as const,
+          };
+        }),
+      },
+    });
+  if (!cells.masks!.features.length)
+    return withMaskLedger(
+      composeSlots(
+        model,
+        population,
+        { ...cells, masks: undefined },
+        terrain,
+        protections,
+      ),
+    );
+  const queries = prepareStreetCellMaskQueries(cells.masks!, model);
+  const affected = new Set(
+    cells.features
+      .filter((cell) => {
+        const safe = cells.annotations!.cells[cell.id]!.safeZoneCoordinates;
+        if (!safe || !queries.forCell(cell.id).length) return false;
+        return (
+          queries.remainder(
+            cell.id,
+            safe,
+            cells.annotations!.cells[cell.id]!.safeAreaSqm,
+          ).estimate.maskIds.length > 0
+        );
+      })
+      .map((c) => c.id),
+  );
+  // Only affected cells need a baseline/remainder query cache. Retaining physical
+  // candidates for unrelated cells adds allocations without any possible reuse.
+  const physicalCache: PhysicalCandidateCache = new Map(
+    [...affected].map((id) => [id, new Map<string, PhysicalCandidate>()]),
+  );
+  const baseline = composeSlots(
+    model,
+    population,
+    { ...cells, masks: undefined },
+    terrain,
+    protections,
+    undefined,
+    physicalCache,
+  );
+  if (!affected.size) return withMaskLedger(baseline);
+  const extra = Math.floor(
+    (streetCellLotBudget - baseline.diagnostics.candidates) / affected.size,
+  );
+  const allowances = new Map(
+    baseline.diagnostics.ledger
+      .filter((r) => affected.has(r.cellId))
+      .map((r) => [r.cellId, r.proposed + extra]),
+  );
+  const changed = composeSlots(
+    model,
+    population,
+    { ...cells, features: cells.features.filter((c) => affected.has(c.id)) },
+    terrain,
+    protections,
+    allowances,
+    physicalCache,
+  );
+  const updates = new Map(changed.diagnostics.ledger.map((r) => [r.cellId, r]));
+  const ledger = baseline.diagnostics.ledger.map(
+    (r) => updates.get(r.cellId) ?? r,
+  );
+  const grouped = new Map<string, CityBuilding[]>();
+  for (const b of [
+    ...baseline.buildings.filter((b) => !affected.has(b.cellId!)),
+    ...changed.buildings,
+  ]) {
+    const group = grouped.get(b.cellId!) ?? [];
+    group.push(b);
+    grouped.set(b.cellId!, group);
+  }
+  const buildings = ledger.flatMap((r) => grouped.get(r.cellId) ?? []);
+  const blocksByCell = new Map(
+    [
+      ...baseline.blocks.filter((b) => !affected.has(b.id)),
+      ...changed.blocks,
+    ].map((b) => [b.id, b]),
+  );
+  const blocks = ledger.flatMap((r) =>
+    blocksByCell.has(r.cellId) ? [blocksByCell.get(r.cellId)!] : [],
+  );
+  const sum = (
+    records: readonly StreetCellDisposition[],
+    f: (r: StreetCellDisposition) => number,
+  ) => records.reduce((n, r) => n + f(r), 0);
+  const p1 = ledger.filter((r) => r.classification === 'empty'),
+    p2 = ledger.filter((r) => r.classification === 'road-crossed');
+  const rejectedCandidates: Record<string, number> = {};
+  for (const r of ledger)
+    for (const [reason, n] of Object.entries(r.reasons))
+      rejectedCandidates[reason] = (rejectedCandidates[reason] ?? 0) + n;
+  const diagnostics: StreetCellLayout = {
+    ...baseline.diagnostics,
+    ledger,
+    candidates: sum(ledger, (r) => r.proposed),
+    outsideSafeZone:
+      baseline.diagnostics.outsideSafeZone +
+      changed.diagnostics.outsideSafeZone,
+    ineligible:
+      baseline.diagnostics.ineligible + changed.diagnostics.ineligible,
+    // This pass always carries masks and its safety audit sets this count.
+    maskConflicts: changed.diagnostics.maskConflicts!,
+    maskRejections: rejectedCandidates['typed-mask-footprint'] ?? 0,
+    usableEmptyCells: p1.filter((r) => r.buildings > 0).length,
+    pass1: {
+      buildings: sum(p1, (r) => r.buildings),
+      occupied: p1.filter((r) => r.buildings > 0).length,
+      proposed: sum(p1, (r) => r.proposed),
+    },
+    pass2: {
+      ...baseline.diagnostics.pass2,
+      buildings: sum(p2, (r) => r.buildings),
+      occupied: p2.filter((r) => r.buildings > 0).length,
+      proposed: sum(p2, (r) => r.proposed),
+      corridorConflicts: sum(
+        p2,
+        (r) => r.reasons['internal-road-corridor'] ?? 0,
+      ),
+      budgetCells: p2.filter((r) => r.reasons['candidate-budget']).length,
+    },
+    rejectedCandidates,
+    urbanBuildings: buildings.filter((b) => b.archetype === 'perimeter-block')
+      .length,
+    suburbanBuildings: buildings.filter((b) => b.archetype === 'detached-house')
+      .length,
+    frontageBuildings: buildings.filter((b) => b.layoutBand === 'frontage')
+      .length,
+    interiorBuildings: buildings.filter((b) => b.layoutBand !== 'frontage')
+      .length,
+    skippedCells: ledger
+      .filter((r) => r.classification !== 'non-drawable' && r.buildings === 0)
+      .map((r) => ({
+        cellId: r.cellId,
+        reason:
+          Object.keys(r.reasons).sort(
+            (a, b) => r.reasons[b]! - r.reasons[a]! || a.localeCompare(b),
+          )[0] ?? 'no-fitting-lots',
+      })),
+  };
+  return withMaskLedger({ buildings, blocks, diagnostics });
+}
 /** C owns placement; research only assigns recipes to already accepted slots. */
 export function buildStreetCellCity(
   model: D3dMapModel,
@@ -831,7 +1097,9 @@ export function buildStreetCellCity(
   }
   let slots = protectedPlans.get(protections);
   if (!slots) {
-    slots = composeSlots(model, population, cells, terrain, protections);
+    slots = cells.masks
+      ? composeMaskedSlots(model, population, cells, terrain, protections)
+      : composeSlots(model, population, cells, terrain, protections);
     protectedPlans.set(protections, slots);
   }
   let recipes = appearanceCache.get(slots);

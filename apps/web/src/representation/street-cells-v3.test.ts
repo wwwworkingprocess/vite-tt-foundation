@@ -48,10 +48,10 @@ const installedCities = Object.entries(installedCatalog.settlements).map(
     return { id, entry, descriptors, model, annotations };
   },
 );
-it('validates the owner-supplied V3 three-city archive and preserves null estimates and partial observed evidence', () => {
-  expect(zip.length).toBe(5759674);
+it('validates the V4 archive preserves V3 annotations across three cities and preserves null estimates and partial observed evidence', () => {
+  expect(zip.length).toBe(6031239);
   expect(createHash('sha256').update(zip).digest('hex')).toBe(
-    '710e6aaaec11c8003cda936502d1b65769810a8c4bedf5b09dd5f5d4960976c3',
+    'e25c3f6bc0c4e134dc3f0d2683b86a7492df8ebbe7c01cd9e5e7bbf9ac5b8164',
   );
   expect(Object.keys(installedCatalog.settlements).sort()).toEqual([
     'es-alicante',

@@ -35,6 +35,8 @@ it.each(['/', '/game/'])(
       baseUrl + 'street-cells/catalog.json',
       baseUrl + 'street-cells/es-torrevieja/cells-c.v2.geojson',
       baseUrl + 'street-cells/es-torrevieja/annotations-c.v3.json',
+      baseUrl + 'street-cells/es-torrevieja/masks.v0.geojson',
+      baseUrl + 'street-cells/es-torrevieja/cell-mask-refs.v0.json',
     ]);
     expect(fetchArchive.mock.calls).toHaveLength(1);
     expect(fetchArchive).toHaveBeenCalledWith(
@@ -144,4 +146,110 @@ it('loads only the selected city/level; A/B never read annotations and failed C 
         !url.includes('road-network'),
     ),
   ).toBe(true);
+});
+
+it.each(['masks.v0.geojson', 'cell-mask-refs.v0.json'])(
+  'reports and retries required V4 %s failures instead of returning absent',
+  async (path) => {
+    let broken = true;
+    const fetchText = vi.fn(async (url: string) => ({
+      ok: !(broken && url.endsWith(path)),
+      text: async () =>
+        readFileSync(streetCellRoot + url.split('/street-cells/')[1]!, 'utf8'),
+    }));
+    const loader = createStreetCellLoader({
+      baseUrl: '/game/',
+      fetchText,
+      digestSha256,
+    });
+    await expect(loader.resolve('es-torrevieja')).rejects.toThrow(
+      'unavailable',
+    );
+    broken = false;
+    const ready = await loader.resolve('es-torrevieja');
+    expect(ready?.masks?.features).toHaveLength(1000);
+    expect(ready?.masks?.availability).toBe('available');
+    expect(await loader.resolve('es-torrevieja')).toBe(ready);
+    expect(
+      fetchText.mock.calls.filter(([url]) => url.endsWith('catalog.json')),
+    ).toHaveLength(1);
+    expect(
+      fetchText.mock.calls.every(
+        ([url]) =>
+          !url.includes('es-elche') &&
+          !url.includes('es-alicante') &&
+          !url.includes('-new') &&
+          !url.includes('-next'),
+      ),
+    ).toBe(true);
+  },
+);
+it('checks both V4 checksums and keeps unavailable and partial inventories explicit', async () => {
+  let corrupt = true;
+  const fetchText = vi.fn(async (url: string) => ({
+    ok: true,
+    text: async () =>
+      corrupt && url.endsWith('masks.v0.geojson')
+        ? '{}'
+        : readFileSync(
+            streetCellRoot + url.split('/street-cells/')[1]!,
+            'utf8',
+          ),
+  }));
+  const loader = createStreetCellLoader({
+    baseUrl: '/',
+    fetchText,
+    digestSha256,
+  });
+  await expect(loader.resolve('es-alicante')).rejects.toThrow('integrity');
+  corrupt = false;
+  const alicante = await loader.resolve('es-alicante');
+  expect(alicante?.masks?.availability).toBe('unavailable');
+  expect(alicante?.masks?.missingSelectors).toHaveLength(6);
+  expect(alicante?.masks?.features).toEqual([]);
+  const elche = await loader.resolve('es-elche');
+  expect(elche?.masks?.availability).toBe('partial');
+  expect(elche?.masks?.features).toHaveLength(919);
+  expect(elche?.masks?.missingSelectors).toEqual([
+    'landuse=recreation_ground',
+    'natural=wood',
+  ]);
+});
+it('keeps legacy V3 acquisition explicit without inventing an empty V4 inventory', async () => {
+  const root = JSON.parse(
+    readFileSync(streetCellRoot + 'catalog.json', 'utf8'),
+  ) as Record<string, unknown>;
+  root.schemaVersion = 'street-cells-catalog-v3';
+  root.version = '0.3.0';
+  for (const key of [
+    'maskRegistryVersion',
+    'maskRegistrySha256',
+    'maskTypes',
+    'maskSemantics',
+  ])
+    delete root[key];
+  for (const value of Object.values(
+    root.settlements as Record<string, Record<string, unknown>>,
+  )) {
+    delete value.masks;
+    delete value.cellMaskRefs;
+  }
+  const fetchText = vi.fn(async (url: string) => ({
+    ok: true,
+    text: async () =>
+      url.endsWith('catalog.json')
+        ? JSON.stringify(root)
+        : readFileSync(
+            streetCellRoot + url.split('/street-cells/')[1]!,
+            'utf8',
+          ),
+  }));
+  const model = await createStreetCellLoader({
+    baseUrl: '/',
+    fetchText,
+    digestSha256,
+  }).resolve('es-torrevieja');
+  expect(model?.masks).toBeUndefined();
+  expect(model?.annotations).toBeDefined();
+  expect(fetchText.mock.calls.map(([url]) => url)).toHaveLength(3);
 });

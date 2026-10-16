@@ -95,7 +95,14 @@
       "apps/web/src/representation/use-city-materialization.ts",
       "apps/web/src/representation/d3d-materialization.ts",
       "apps/web/src/representation/d3d-material-presets.ts",
-      "apps/web/src/representation/D3dMaterialization.tsx"
+      "apps/web/src/representation/D3dMaterialization.tsx",
+      "apps/web/src/representation/street-cell-masks.ts",
+      "apps/web/src/representation/geographic-polygon.ts",
+      "apps/web/src/representation/d3d-street-cell-masks.ts",
+      "apps/web/src/representation/d3d-surface-geometry.ts",
+      "apps/web/src/representation/d3d-typed-land-covers.ts",
+      "apps/web/src/representation/D3dTypedLandCovers.tsx",
+      "apps/web/src/representation/d3d-terrain-covers.ts"
     ]
   },
   "simulationCriticalCoverage": {

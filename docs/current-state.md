@@ -600,22 +600,21 @@ Native DEM clean-ground presentation omits optional research/density tint meshes
 
 The full Málaga and Murcia C products currently exceed the unchanged 131,072-segment road preparation guard; those near views expose a preparation error and retain provisional streets. Their A/B products and all six catalog/product acquisitions remain supported. Bounded delivery of the larger C geometry requires a separately accepted road preparation change; this catalog integration does not raise geometry or JS budgets.
 
-## StreetCells V3 multi-city A/B/C inspection POC
+## StreetCells V4 multi-city masks and A/B/C inspection
 
 The tenth mandatory on-demand ZIP remains `street-cells/street-cells.zip`.
-The supplied Workbench `street-cells-catalog-v3` / `0.3.0` dictionary currently
-covers Torrevieja (A/B/C: 84/584/1,623 polygons) and Alicante (348/1,411/3,201).
-Installed bytes are the accepted V3 export (3,861,322 bytes, SHA-256
-`e71360004a34fe1ba82782b01f4921d1ab42e3d4c2da1fcb5192308699f5524e`).
-The A/B/C `.v2.geojson` and `.v2` hierarchy entries remain byte-identical.
-Only annotations/audits migrate to V3; the owner staging copy is not published.
+The installed Workbench `street-cells-catalog-v4` / `0.4.0` covers Torrevieja,
+Alicante and Elche. Its exact owner-supplied ZIP is 6,031,239 bytes, SHA-256
+`e25c3f6bc0c4e134dc3f0d2683b86a7492df8ebbe7c01cd9e5e7bbf9ac5b8164`.
+All eighteen underlying V3 polygon/hierarchy/annotation/audit entries remain
+byte-identical. The owner staging copy is preserved and never published.
 Coverage is catalog-derived; an unlisted city is absent, while a missing/broken
 required ZIP/catalog or declared product is an error with gameplay preserved.
 
 Normal D3D with ready native terrain uses the existing far/medium/near hysteresis
 to request A/B/C respectively. Mini and unavailable terrain remain inactive.
 Only the selected city's selected polygon product is decoded; C additionally
-reads that city's annotations. Hierarchy, audit and source-road products are not
+reads that city's annotations plus verified typed masks/references. Hierarchy, audit and source-road products are not
 routine runtime reads. Byte lengths/SHA-256, exact policies, city-local paths,
 city/level IDs, measurements, closed rings/holes and annotation references are
 validated. Successful immutable models share revision-bound acquisition and
@@ -981,3 +980,72 @@ No unreviewed site extent becomes a physical reservation. More buildings increas
 cold composition, memory and submitted triangles; shared prototype batch count is
 unchanged. Physical POI reservations, richer courtyard grammar, additional families
 and broader city optimization require separate review.
+
+## StreetCells V4 typed exclusion and visual covers
+
+The independent six-type registry is pinned by version, semantics and SHA-256.
+City-local descriptors, mask Polygon rings/holes, source identities, source selector
+availability, audit inventories and complete stable numeric C-ID joins are validated.
+Only requested C decoding inflates the selected city's masks and reference file;
+A/B outline reads do not. Missing/corrupt declared data is an error with retry and
+stale-request protection, not an empty inventory or permission to reuse another city.
+Torrevieja exports 1,000 masks / 425 associated C cells (179 capacity omissions),
+Elche 919 / 246 with two missing selectors, Alicante zero with all six unavailable.
+Available means available source selectors, not complete zoning or uncapped coverage.
+
+Both existing placement passes check each actual rotated building body against the
+referenced polygons, including holes, with the existing 1 mm tolerance. A referenced
+cell is not automatically excluded. Exact footprint admission remains authoritative;
+a cached 32x32 union quadrature only estimates remaining capacity, without overlapping
+mask double-counting. The accepted unmasked proposal allocation freezes unrelated
+cell records/IDs; affected cells are recomposed under the same physical guards and
+65,536-proposal cap. A short-lived immutable physical-query cache excludes mask,
+collision and coverage decisions. The per-cell ledger records safe area, associated
+IDs/types, approximate remaining/masked area, proposals, reasons and accepted count.
+Research remains appearance-only with fixed real protection inputs.
+
+Reference native plans change Torrevieja 17,562 -> 16,231 buildings (8,219 Pass 1,
+8,012 Pass 2), Elche urban 7,139 -> 6,510 (4,513 / 1,997); Alicante retains all
+13,804 exact records. Real-data tests check zero full-body conflicts against all
+exported masks and exact unchanged unassociated records. These are exported-mask
+restrictions, not claims that missing OSM coverage is developable.
+
+Typed covers default on via `d3d-app-settings.ts`; purple outlines remain off and
+native relief remains 5x. Configurable muted palettes reside in
+`d3d-material-presets.ts`, separate from geometry. One source feature is planned
+once, not once per C association. Shared hole-aware topology validation and
+native-face clipping attach visual faces to the displayed terrain and reject support
+outside the actual native raster;
+non-water covers also reject native-water supports without changing classifications.
+Far/medium/near minimum areas are 1,000/100/0 m²; covers clip to the displayed native
+terrain faces at the existing LOD.
+Interior native faces are reused directly. Boundary rings clip once where their
+intersection remains simple; disconnected concavities/opened holes use exact
+source-triangle intersections. This avoids both floating chords and unnecessary
+internal triangulation fragments. A temporary numeric spatial index is restricted
+to potential visible source regions and released after preparation.
+The per-feature/global triangle guards remain 8,192/65,536; deterministic failures have
+IDs/messages in host diagnostics. Real near plans use 51,402 Torrevieja triangles
+and 26,171 Elche triangles without budget failures. There are at most six non-raycasting one-sided
+Lambert batches, +0.04 m unexaggerated clearance, no depth writes. Native terrain
+renders first; grass, recreation, garden, park, wood, water have fixed draw priority;
+roads/buildings/verified sites render afterward. Verified source-identical POI sites
+suppress generic covers (including Rosa and Parque de las Naciones).
+
+Immutable CPU plans cache by mask/map/native terrain/site/LOD identity. Mounted scenes
+own/dispose GPU buffers and materials. Fleet, selection and same-band pan retain plans;
+render acknowledgements clear on transitions and only actual active batches publish,
+without repeated DOM mutation. Detached Canvas cleanup closes its own frame driver
+without clearing a replacement root's shared driver reference. Initial cold C-city
+and typed-cover preparation follow the first actual native terrain draw, allowing
+the surface and optional site acquisition to commit first. A guarded terrain-instance
+handshake updates once, rejects detached callbacks and resets on native replacement;
+LOD, pan and fleet do not reschedule composition. Research loading/absence/error
+remain supported and final model inputs, counts and footprints are unchanged. Host diagnostics expose source availability, omissions,
+mask rejections/conflicts and cover features/triangles/bytes/batches/builds/failures.
+
+La Mata Q115094064 remains deferred: only 40.697% of the supplied exact polygon's
+projected area lies within the accepted native raster. Presentation bounding-box
+coverage (63.128%) is not native coverage. No lake/site or urban-assets ZIP change
+was made. A follow-up requires native extent/source provenance approval and a verified
+site export; neither the supplied polygon nor DEM may be stretched or invented.

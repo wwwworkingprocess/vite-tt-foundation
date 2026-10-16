@@ -53,6 +53,7 @@ import {
 } from '@torrevieja-tycoon/simulation';
 import { RepresentationModeProvider } from './RepresentationModeContext.js';
 import D3dMapRepresentation, {
+  RepresentationFrameDriver,
   createD3dRibbonGeometry,
   writeD3dDiagnostics,
   writeD3dRenderedTerrain,
@@ -2650,6 +2651,7 @@ it('batches cell-owned Torrevieja buildings once and keeps their static plan thr
   const view = render(
     scene('normal', null, undefined, scenario, realPopulation),
   );
+  presentNativeTerrain();
   const host = screen.getByTestId('d3d-map-representation');
   expect(Number(host.dataset.cityBuildingCount)).toBeGreaterThan(0);
   expect(Number(host.dataset.cellBuildingsUrban)).toBeGreaterThan(0);
@@ -2723,6 +2725,7 @@ it('reports repeated skipped-cell causes separately from candidate rejections', 
     },
   });
   render(scene('normal', null, undefined, scenario, cellOwnedPopulation));
+  presentNativeTerrain();
   const host = screen.getByTestId('d3d-map-representation');
   expect(host).toHaveAttribute('data-cell-buildings-source-cells', '2');
   expect(host).toHaveAttribute('data-street-cells-status', 'hidden');
@@ -2798,6 +2801,7 @@ it('reports C buildings ready with absent/error/loading optional research and re
   const view = render(
     scene('normal', null, undefined, scenario, cellOwnedPopulation),
   );
+  presentNativeTerrain();
   const host = screen.getByTestId('d3d-map-representation');
   expect(host).toHaveAttribute('data-cell-buildings-status', 'ready');
   expect(Number(host.dataset.cityBuildingCount)).toBeGreaterThan(0);
@@ -2992,6 +2996,7 @@ it('shares near-only wall facade parameters, keeps roofs plain, and releases sta
   const view = render(
     scene('normal', null, undefined, scenario, cellOwnedPopulation),
   );
+  presentNativeTerrain();
   fireEvent.wheel(controls.canvas, { deltaY: -3000 });
   const bodies = [
     ...document.querySelectorAll('instancedmesh[name^="city-"][name$="-body"]'),
@@ -3057,6 +3062,7 @@ it('disables facade GPU attributes by checked-in policy without suppressing the 
   const view = render(
     scene('normal', null, undefined, scenario, cellOwnedPopulation),
   );
+  presentNativeTerrain();
   fireEvent.wheel(controls.canvas, { deltaY: -3000 });
   expect(
     Number(
@@ -3099,6 +3105,7 @@ it('uploads transforms again when facade resources replace a batch with unchange
   const view = render(
     scene('normal', null, undefined, scenario, cellOwnedPopulation),
   );
+  presentNativeTerrain();
   publishCellLod('near');
   const body = () =>
     document.querySelector('instancedmesh[name^="city-"][name$="-body"]')!;
@@ -3115,3 +3122,253 @@ it('uploads transforms again when facade resources replace a batch with unchange
   expect(after[0].getAttribute('cityFacade')).toBeUndefined();
   expect(setMatrixAt).toHaveBeenCalled();
 });
+import * as typedCoverPlanning from './d3d-typed-land-covers.js';
+import { createStreetCellLoader } from './street-cells-loader.js';
+const installedMaskCells = createStreetCellLoader({
+  baseUrl: '/',
+  digestSha256: async (text) => createHash('sha256').update(text).digest('hex'),
+  fetchText: async (url) => ({
+    ok: true,
+    text: async () =>
+      readFileSync(join(import.meta.dirname, '../../public', url), 'utf8'),
+  }),
+});
+it('presents genuine typed-cover draws, reuses static batches and invalidates hidden, replaced and unmounted scenes', async () => {
+  enableWorld();
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  // A small real subset exercises the renderer independently of full-city preparation cost.
+  const source = (await installedMaskCells.resolve('es-torrevieja'))!;
+  const cells = { ...source, features: source.features.slice(0, 2) };
+  const state = { status: 'ready' as const, model: cells };
+  vi.mocked(useStreetCells).mockReturnValue(state);
+  const view = render(scene('normal', null, undefined, scenario, population));
+  presentNativeTerrain();
+  const host = screen.getByTestId('d3d-map-representation');
+  expect(host).toHaveAttribute('data-typed-masks-availability', 'available');
+  expect(host).toHaveAttribute('data-typed-masks-count', '1000');
+  expect(host).toHaveAttribute('data-typed-covers-status', 'ready');
+  expect(host).toHaveAttribute('data-rendered-typed-covers-identity', '');
+  const node = document.querySelector('mesh[name^="typed-land-cover-"]')!;
+  const props = sceneProps(node),
+    disposed = vi.spyOn(props.geometry!, 'dispose');
+  expect(props.raycast!()).toBeNull();
+  act(() => props.onAfterRender!());
+  expect(host.dataset.renderedTypedCoversIdentity).toBe(
+    host.dataset.typedCoversIdentity,
+  );
+  const observer = vi.fn();
+  const mutation = new MutationObserver(observer);
+  mutation.observe(host, {
+    attributes: true,
+    attributeFilter: ['data-rendered-typed-covers-identity'],
+  });
+  act(() => {
+    props.onAfterRender!();
+    props.onAfterRender!();
+  });
+  await Promise.resolve();
+  expect(observer).not.toHaveBeenCalled();
+  mutation.disconnect();
+  const builds = host.dataset.typedCoversPlanBuilds;
+  view.rerender(
+    scene(
+      'normal',
+      selectStop(stop.stopPlaceId),
+      undefined,
+      scenario,
+      population,
+      [...fleet],
+    ),
+  );
+  pointer('pointerdown', 10, 10);
+  pointer('pointermove', 12, 12);
+  pointer('pointerup', 12, 12);
+  expect(
+    sceneProps(document.querySelector('mesh[name^="typed-land-cover-"]')!)
+      .geometry,
+  ).toBe(props.geometry);
+  expect(host.dataset.typedCoversPlanBuilds).toBe(builds);
+  const resolve = vi
+    .spyOn(appSettings, 'resolveD3dAppSettings')
+    .mockImplementation((id) => ({
+      ...resolveSettings(id),
+      typedLandCovers: { visible: false },
+    }));
+  view.rerender(scene('normal'));
+  expect(host).toHaveAttribute('data-rendered-typed-covers-identity', '');
+  expect(host).toHaveAttribute('data-typed-covers-status', 'inactive');
+  expect(document.querySelector('group[name="typed-land-covers"]')).toBeNull();
+  expect(disposed).toHaveBeenCalledTimes(1);
+  act(() => props.onAfterRender!());
+  expect(host).toHaveAttribute('data-rendered-typed-covers-identity', '');
+  expect(useStreetCells).toHaveBeenCalledWith(
+    'es-torrevieja',
+    false,
+    undefined,
+    'C',
+  );
+  resolve.mockRestore();
+  view.rerender(scene('mini'));
+  expect(host).toHaveAttribute('data-typed-covers-status', 'inactive');
+  view.rerender(scene('normal', null, undefined, scenario, population));
+  const fresh = sceneProps(
+    document.querySelector('mesh[name^="typed-land-cover-"]')!,
+  );
+  act(() => fresh.onAfterRender!());
+  expect(host.dataset.renderedTypedCoversIdentity).not.toBe('');
+  vi.mocked(useStreetCells).mockReturnValue({ status: 'loading' });
+  view.rerender(scene('normal'));
+  expect(host).toHaveAttribute('data-rendered-typed-covers-identity', '');
+  act(() => fresh.onAfterRender!());
+  expect(host).toHaveAttribute('data-rendered-typed-covers-identity', '');
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'error',
+    message: 'Mask checksum',
+  });
+  view.rerender(scene('normal'));
+  expect(host).toHaveAttribute('data-typed-masks-status', 'error');
+  expect(screen.getByRole('status')).toHaveTextContent('Mask checksum');
+  vi.mocked(useStreetCells).mockReturnValue(state);
+  const failure = vi
+    .spyOn(typedCoverPlanning, 'prepareD3dTypedLandCovers')
+    .mockImplementation(() => {
+      throw new Error('Bounded cover failure');
+    });
+  view.rerender(scene('normal', null, undefined, scenario, population));
+  expect(host).toHaveAttribute('data-typed-covers-status', 'error');
+  expect(screen.getByRole('status')).toHaveTextContent('Bounded cover failure');
+  failure.mockRestore();
+  vi.mocked(useCityMaterialization).mockReturnValue({
+    status: 'ready',
+    model: (await installedSites.resolve('es-torrevieja', 'far'))!,
+  });
+  const planner = typedCoverPlanning.prepareD3dTypedLandCovers;
+  const partial = vi
+    .spyOn(typedCoverPlanning, 'prepareD3dTypedLandCovers')
+    .mockImplementation((...args) => ({
+      ...planner(...args),
+      failures: [
+        { id: 'too-complex', message: 'Typed cover triangle budget exceeded' },
+      ],
+    }));
+  view.rerender(scene('normal', null, undefined, scenario, population));
+  expect(host).toHaveAttribute('data-typed-covers-status', 'partial');
+  expect(host.dataset.typedCoversFailures).toContain('too-complex');
+  partial.mockRestore();
+  view.unmount();
+  act(() => fresh.onAfterRender!());
+});
+
+import type { createD3dDirtyFrameDriver } from './d3d-dirty-frame.js';
+it('keeps the replacement canvas driver active when a detached root cleans up later', () => {
+  vi.useFakeTimers();
+  const wrapper = { current: document.createElement('section') };
+  const shared: {
+    current: ReturnType<typeof createD3dDirtyFrameDriver> | null;
+  } = { current: null };
+  const oldRoot = render(
+    <RepresentationFrameDriver
+      mode="mini"
+      wrapper={wrapper}
+      driverRef={shared}
+      visualState={[]}
+    />,
+  );
+  const replacement = render(
+    <RepresentationFrameDriver
+      mode="normal"
+      wrapper={wrapper}
+      driverRef={shared}
+      visualState={[]}
+    />,
+  );
+  const active = shared.current;
+  oldRoot.unmount();
+  expect(shared.current).toBe(active);
+  act(() => {
+    shared.current!.request();
+    vi.advanceTimersByTime(18);
+  });
+  expect(wrapper.current.dataset.rendererFrames).toBe('1');
+  replacement.unmount();
+  expect(shared.current).toBeNull();
+  expect(vi.getTimerCount()).toBe(0);
+});
+
+it('presents native terrain before cold C composition, then preserves optional-research placement', () => {
+  enableWorld();
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: lifecycleCells,
+  });
+  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'loading' });
+  const view = render(
+    scene('normal', null, undefined, scenario, cellOwnedPopulation),
+  );
+  const host = screen.getByTestId('d3d-map-representation');
+  expect(host).toHaveAttribute('data-city-building-count', '0');
+  expect(host).toHaveAttribute(
+    'data-cell-buildings-awaiting-terrain-draw',
+    'true',
+  );
+  const draw = sceneProps(
+    document.querySelector('mesh[name="native-terrain-land"]')!,
+  ).onAfterRender!;
+  act(() => draw());
+  expect(Number(host.dataset.cityBuildingCount)).toBeGreaterThan(0);
+  expect(host).toHaveAttribute(
+    'data-cell-buildings-awaiting-terrain-draw',
+    'false',
+  );
+  const count = host.dataset.cityBuildingCount,
+    builds = host.dataset.cityLayoutBuilds;
+  act(() => {
+    draw();
+    draw();
+  });
+  expect(host.dataset.cityLayoutBuilds).toBe(builds);
+  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'unavailable' });
+  view.rerender(
+    scene('normal', null, undefined, scenario, cellOwnedPopulation),
+  );
+  expect(host.dataset.cityBuildingCount).toBe(count);
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: {
+      ...cellCityTerrain.terrain,
+      identity: cellCityTerrain.terrain.identity + '-replacement',
+    },
+  });
+  view.rerender(
+    scene('normal', null, undefined, scenario, cellOwnedPopulation),
+  );
+  expect(host).toHaveAttribute('data-city-building-count', '0');
+  act(() => draw());
+  expect(host).toHaveAttribute(
+    'data-cell-buildings-awaiting-terrain-draw',
+    'true',
+  );
+  expect(host).toHaveAttribute('data-city-building-count', '0');
+  presentNativeTerrain();
+  expect(host.dataset.cityBuildingCount).toBe(count);
+  expect(host).toHaveAttribute(
+    'data-cell-buildings-awaiting-terrain-draw',
+    'false',
+  );
+  view.unmount();
+  expect(() => draw()).not.toThrow();
+});
+
+/** Model readiness is distinct from the first real native batch draw. */
+function presentNativeTerrain() {
+  const node = document.querySelector('mesh[name="native-terrain-land"]');
+  expect(node).not.toBeNull();
+  act(() => sceneProps(node!).onAfterRender!());
+}

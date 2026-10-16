@@ -1,9 +1,21 @@
+import {
+  parseStreetCellMaskDescriptors,
+  validateStreetCellMaskRegistry,
+  streetCellMaskRegistry,
+  streetCellMaskRegistryHash,
+  streetCellMaskSemantics,
+  type StreetCellMasks,
+  type StreetCellMaskDescriptor,
+  type StreetCellMaskRefsDescriptor,
+} from './street-cell-masks.js';
 export type CellLevel = 'A' | 'B' | 'C';
 type CellFile = Readonly<{ path: string; byteLength: number; sha256: string }>;
 export type StreetCellDescriptor = CellFile &
   Readonly<{ level: CellLevel; featureCount: number }>;
 type SourceProduct = CellFile & Readonly<{ level: CellLevel }>;
 type CityEntry = Readonly<{
+  masks?: StreetCellMaskDescriptor;
+  cellMaskRefs?: StreetCellMaskRefsDescriptor;
   audit: CellFile;
   annotations: CellFile;
   hierarchy: CellFile;
@@ -34,7 +46,15 @@ const policies = Object.freeze({
   eligibilityPolicy: 'exclude-service-bridge-tunnel-nonzero-layer-v0',
 } as const);
 export type StreetCellCatalog = Readonly<
-  typeof policies & { settlements: Readonly<Record<string, CityEntry>> }
+  Omit<typeof policies, 'schemaVersion' | 'version'> & {
+    schemaVersion: 'street-cells-catalog-v3' | 'street-cells-catalog-v4';
+    version: '0.3.0' | '0.4.0';
+    maskRegistryVersion?: string;
+    maskRegistrySha256?: string;
+    maskSemantics?: string;
+    maskTypes?: typeof streetCellMaskRegistry;
+    settlements: Readonly<Record<string, CityEntry>>;
+  }
 >;
 export type Point = readonly [number, number];
 type CellFeature = Readonly<{
@@ -61,6 +81,7 @@ export type StreetCells = Readonly<{
   sha256: string;
   features: readonly CellFeature[];
   annotations?: StreetCellAnnotations | undefined;
+  masks?: StreetCellMasks | undefined;
 }>;
 function requireCell(valid: boolean, message: string): asserts valid {
   if (!valid) throw new Error('Invalid StreetCell ' + message);
@@ -151,11 +172,31 @@ function sources(value: unknown, id: string): readonly SourceProduct[] {
 /** Exact V3 grammar, using the same explicit validation convention as roads.
  * No new schema features inflate unrelated shared runtime chunks. */
 export function parseStreetCellCatalog(value: unknown): StreetCellCatalog {
-  const root = object(value, [...Object.keys(policies), 'settlements']);
+  const v4 = object(value).schemaVersion === 'street-cells-catalog-v4';
+  const expected = v4
+    ? {
+        ...policies,
+        schemaVersion: 'street-cells-catalog-v4',
+        version: '0.4.0',
+      }
+    : policies;
+  const root = object(value, [
+    ...Object.keys(policies),
+    'settlements',
+    ...(v4
+      ? [
+          'maskRegistryVersion',
+          'maskRegistrySha256',
+          'maskTypes',
+          'maskSemantics',
+        ]
+      : []),
+  ]);
   requireCell(
-    Object.entries(policies).every(([key, expected]) => root[key] === expected),
+    Object.entries(expected).every(([key, expected]) => root[key] === expected),
     'catalog policy/version',
   );
+  if (v4) validateStreetCellMaskRegistry(root);
   const entries = object(root.settlements),
     settlements: Record<string, CityEntry> = {};
   for (const [key, value] of Object.entries(entries)) {
@@ -166,6 +207,7 @@ export function parseStreetCellCatalog(value: unknown): StreetCellCatalog {
         'hierarchy',
         'products',
         'source',
+        ...(v4 ? ['masks', 'cellMaskRefs'] : []),
       ]);
     const audit = file(
       object(entry.audit, ['path', 'byteLength', 'sha256']),
@@ -220,6 +262,15 @@ export function parseStreetCellCatalog(value: unknown): StreetCellCatalog {
       'embedded source products',
     );
     settlements[id] = Object.freeze({
+      ...(v4
+        ? parseStreetCellMaskDescriptors(
+            entry.masks,
+            entry.cellMaskRefs,
+            id,
+            products.find((p) => p.level === 'C')!.sha256,
+            products.find((p) => p.level === 'C')!.featureCount,
+          )
+        : {}),
       audit,
       annotations: file(
         object(entry.annotations, ['path', 'byteLength', 'sha256']),
@@ -240,6 +291,16 @@ export function parseStreetCellCatalog(value: unknown): StreetCellCatalog {
   }
   return Object.freeze({
     ...policies,
+    schemaVersion: v4 ? 'street-cells-catalog-v4' : 'street-cells-catalog-v3',
+    version: v4 ? '0.4.0' : '0.3.0',
+    ...(v4
+      ? {
+          maskRegistryVersion: 'osm-building-exclusion-types-v0',
+          maskRegistrySha256: streetCellMaskRegistryHash,
+          maskSemantics: streetCellMaskSemantics,
+          maskTypes: streetCellMaskRegistry,
+        }
+      : {}),
     settlements: Object.freeze(settlements),
   });
 }

@@ -585,28 +585,49 @@ describe('optional city-site offline acquisition', () => {
         .get('[data-testid="d3d-map-representation"]', { timeout: 15000 })
         .should('have.attr', 'data-terrain-status', 'ready')
         .and('have.attr', 'data-materialization-status', 'ready')
-        .and('have.attr', 'data-city-building-count', '17562')
-        .should(($map) => {
-          expect($map.attr('data-rendered-materialization-level')).to.match(
-            /^[ABC]$/,
-          );
-          expect(
-            Number($map.attr('data-materialization-triangles')),
-          ).to.be.greaterThan(0);
-        });
+        .and('have.attr', 'data-city-building-count', '16231')
+        .and('have.attr', 'data-cell-buildings-awaiting-terrain-draw', 'false')
+        .and('have.attr', 'data-typed-masks-status', 'ready')
+        .and('have.attr', 'data-typed-masks-availability', 'available')
+        .and('have.attr', 'data-typed-masks-count', '1000')
+        .and('have.attr', 'data-typed-mask-conflicts', '0')
+        .and('have.attr', 'data-typed-covers-status', 'ready')
+        // Cold synchronous preparation can consume acquisition's deadline before
+        // the independent Canvas commits. Await its genuine draw separately,
+        // retaining the same timeout and every presentation assertion.
+        .then(() =>
+          cy
+            .get('[data-testid="d3d-map-representation"]', { timeout: 15000 })
+            .should(($map) => {
+              expect($map.attr('data-rendered-materialization-level')).to.match(
+                /^[ABC]$/,
+              );
+              expect(
+                Number($map.attr('data-materialization-triangles')),
+              ).to.be.greaterThan(0);
+              expect($map.attr('data-rendered-typed-covers-identity')).to.equal(
+                $map.attr('data-typed-covers-identity'),
+              );
+              expect(
+                Number($map.attr('data-typed-covers-batches')),
+              ).to.be.within(1, 6);
+            }),
+        );
     start();
     presented();
     cy.window().then(async (win) => {
       const cache = await win.caches.open('public-layers');
       const keys = await cache.keys();
-      const archive = keys.find((r) =>
-        new URL(r.url).pathname.endsWith('/urban-assets/urban-assets.zip'),
-      );
-      expect(archive, 'on-demand city materialization archive').not.to.equal(
-        undefined,
-      );
-      const response = await cache.match(archive!);
-      expect(response?.ok).to.equal(true);
+      for (const layer of ['urban-assets', 'street-cells']) {
+        const archive = keys.find((r) =>
+          new URL(r.url).pathname.endsWith('/' + layer + '/' + layer + '.zip'),
+        );
+        expect(archive, 'on-demand ' + layer + ' archive').not.to.equal(
+          undefined,
+        );
+        const response = await cache.match(archive!);
+        expect(response?.ok).to.equal(true);
+      }
     });
     cy.then(() => network(true));
     cy.reload();

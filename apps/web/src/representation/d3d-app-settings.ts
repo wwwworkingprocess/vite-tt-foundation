@@ -1,5 +1,6 @@
 /** Checked-in application presentation policy; edit and rebuild, never saved game state. */
 export type D3dAppSettings = Readonly<{
+  typedLandCovers: Readonly<{ visible: boolean }>;
   streetCells: Readonly<{
     showBoundaries: boolean;
     lineSupportSpacingMetres: number;
@@ -12,6 +13,7 @@ export type D3dAppSettings = Readonly<{
   city: Readonly<{ maxLotProposals: number; nearFacades: boolean }>;
 }>;
 export const d3dAppSettings: D3dAppSettings = Object.freeze({
+  typedLandCovers: Object.freeze({ visible: true }),
   streetCells: Object.freeze({
     showBoundaries: false,
     lineSupportSpacingMetres: 12.5,

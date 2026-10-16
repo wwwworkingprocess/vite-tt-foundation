@@ -32,6 +32,23 @@ const recordTerrainState = (name: string) =>
   );
 const terrainMap = () =>
   cy.get('[data-testid="d3d-map-representation"]', { timeout: 15000 });
+const typedCoversDrawn = (availability: string, count: number) =>
+  terrainMap()
+    .should('have.attr', 'data-typed-masks-availability', availability)
+    .and('have.attr', 'data-typed-masks-count', String(count))
+    .and('have.attr', 'data-typed-covers-status', 'ready')
+    .and('have.attr', 'data-typed-covers-failures', '[]')
+    .and('have.attr', 'data-typed-mask-conflicts', '0')
+    .should(($map) => {
+      expect($map.attr('data-rendered-typed-covers-identity')).to.equal(
+        $map.attr('data-typed-covers-identity'),
+      );
+      expect(Number($map.attr('data-typed-covers-batches'))).to.be.within(1, 6);
+      expect(Number($map.attr('data-typed-covers-triangles'))).to.be.within(
+        1,
+        65536,
+      );
+    });
 const terrainZoomTo = (worldUnitsPerPixel: number) =>
   terrainMap().then(($map) => {
     const zoom = Number($map.attr('data-camera-zoom')),
@@ -230,9 +247,12 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
       // Capture a static presentation through existing host controls; do not
       // race worker fleet/UI updates while Cypress freezes browser animation.
       cy.contains('button', /^Pause$/).click();
-      // Capture the inspected viewport without full-page scroll/resize work
-      // while Cypress freezes scene timers for the screenshot.
-      cy.screenshot('terrain-focused-route', { capture: 'viewport' });
+      // Simulation is already paused. Keep presentation timers live so Cypress
+      // does not freeze a pending dirty-frame commit during WebGL capture.
+      cy.screenshot('terrain-focused-route', {
+        capture: 'viewport',
+        disableTimersAndAnimations: false,
+      });
       cy.contains('button', /^Resume$/).click();
       cy.contains('button', 'Show full network').click();
     });
@@ -247,6 +267,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   });
   roadDrawn('A');
   recordTerrainState('terrain-full-network-far');
+  typedCoversDrawn('available', 1000);
   cy.screenshot('terrain-full-network-far');
   terrainZoomTo(0.1);
   terrainMap().should('have.attr', 'data-lod', 'medium');
@@ -255,6 +276,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   terrainMap().should('have.attr', 'data-terrain-render-stride', '4');
   roadDrawn('B');
   recordTerrainState('terrain-medium-coast');
+  typedCoversDrawn('available', 1000);
   cy.screenshot('terrain-medium-coast');
   terrainZoomTo(0.03);
   terrainMap().should('have.attr', 'data-lod', 'near');
@@ -333,6 +355,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
   terrainPanTo('stop');
   terrainDrawn();
   recordTerrainState('terrain-near-built-up');
+  typedCoversDrawn('available', 1000);
   cy.screenshot('terrain-near-built-up');
   terrainMap().find('canvas').should('have.css', 'touch-action', 'none');
   cy.get('body').should('have.css', 'user-select', 'none');
@@ -482,11 +505,48 @@ it('switches between cataloged cities and unsupported Cartagena without stale ro
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.contains('button', 'Restart').click();
     terrainMap().should('have.attr', 'data-scenario-id', scenario);
+    terrainMap().then(($map) => {
+      if ($map.attr('data-representation-mode') === 'mini') {
+        cy.get(
+          'button[aria-label="Select mini representation for swap"]',
+        ).click();
+        cy.contains('button', 'Swap visualizations').click();
+      }
+    });
+    terrainMap().should('have.attr', 'data-representation-mode', 'normal');
   };
   changeCity('es-elche', 'elche-urban-abc-v1');
   roadDrawn('A', 'es-elche');
+  typedCoversDrawn('partial', 919);
+  cy.screenshot('typed-covers-elche-partial');
+  terrainZoomTo(0.014);
+  cy.task('elchePartialMaskSample').then((raw) => {
+    const sample = raw as {
+      x: number;
+      z: number;
+      cellId: string;
+      buildings: number;
+      maskRejected: number;
+    };
+    expect(sample.buildings).to.be.greaterThan(0);
+    expect(sample.maskRejected).to.be.greaterThan(0);
+    frameTerrainTarget(sample);
+    typedCoversDrawn('partial', 919);
+    recordTerrainState('typed-covers-elche-partial-near');
+    cy.writeFile(
+      'node_modules/.cache/street-cells/v4/elche-browser-sample.json',
+      sample,
+    );
+    cy.screenshot('typed-covers-elche-partial-near');
+  });
   changeCity('es-alicante', 'alicante-legacy-core-v1');
   roadDrawn('A', 'es-alicante');
+  terrainMap()
+    .should('have.attr', 'data-typed-masks-availability', 'unavailable')
+    .and('have.attr', 'data-typed-masks-count', '0')
+    .and('have.attr', 'data-typed-covers-batches', '0')
+    .and('have.attr', 'data-rendered-typed-covers-identity', '');
+  cy.screenshot('typed-covers-alicante-unavailable');
   changeCity('es-cartagena', 'cartagena-legacy-core-v1');
   terrainMap()
     .should('have.attr', 'data-road-network-status', 'absent')
@@ -782,9 +842,9 @@ it('shows Pass-1 and safe road-crossed urban/suburban buildings at every LOD', (
       const pass1 = JSON.parse($map.attr('data-cell-buildings-pass1')!),
         pass2 = JSON.parse($map.attr('data-cell-buildings-pass2')!);
       expect(pass1).to.deep.equal({
-        buildings: 8878,
-        occupied: 941,
-        proposed: 18680,
+        buildings: 8219,
+        occupied: 869,
+        proposed: 21380,
       });
       expect(pass2.buildings).to.be.greaterThan(4000);
       expect(pass2.occupied).to.be.greaterThan(250);
@@ -798,83 +858,118 @@ it('shows Pass-1 and safe road-crossed urban/suburban buildings at every LOD', (
   cy.get('button[aria-label="Select mini representation for swap"]').click();
   cy.contains('button', 'Swap visualizations').click();
   terrainDrawn();
-  terrainMap().then(($map) => {
-    const layoutBuilds = $map.attr('data-city-layout-builds'),
-      buildings = $map.attr('data-city-building-count');
-    expect(Number($map.attr('data-cell-buildings-urban'))).to.be.greaterThan(0);
-    expect(Number($map.attr('data-cell-buildings-suburban'))).to.be.greaterThan(
-      0,
-    );
-    terrainZoomTo(0.03);
-    terrainMap().find('canvas').trigger('wheel', { deltaY: -10000 });
-    terrainDrawn();
-    roadDrawn('C');
-    terrainMap()
-      .should('have.attr', 'data-street-cells-status', 'hidden')
-      .and('have.attr', 'data-rendered-street-cells-level', '')
-      .and('have.attr', 'data-street-cells-batches', '0')
-      .and('have.attr', 'data-terrain-elevation-scale', '5');
-    cy.task('streetCellBuildingSamples').then((raw) => {
-      const samples = raw as {
-        urban: { x: number; z: number; buildings: number };
-        suburban: { x: number; z: number; buildings: number };
-        highGuides: {
-          x: number;
-          z: number;
-          buildings: number;
-          guideSegments: number;
-        };
-      };
-      expect(samples.urban.buildings).to.be.greaterThan(10);
-      expect(samples.suburban.buildings).to.be.greaterThan(10);
-      cy.writeFile(
-        'node_modules/.cache/street-cells/cell-city-browser-samples.json',
-        raw,
+  terrainMap()
+    .should('have.attr', 'data-settlement-metadata-status', 'ready')
+    .and('have.attr', 'data-cell-buildings-awaiting-terrain-draw', 'false')
+    .and('have.attr', 'data-city-building-count', '16231')
+    .then(($map) => {
+      const layoutBuilds = $map.attr('data-city-layout-builds'),
+        buildings = $map.attr('data-city-building-count');
+      expect(Number($map.attr('data-cell-buildings-urban'))).to.be.greaterThan(
+        0,
       );
-      for (const family of ['urban', 'suburban', 'highGuides'] as const) {
-        frameTerrainTarget(samples[family]);
+      expect(
+        Number($map.attr('data-cell-buildings-suburban')),
+      ).to.be.greaterThan(0);
+      terrainZoomTo(0.03);
+      terrainMap().find('canvas').trigger('wheel', { deltaY: -10000 });
+      terrainDrawn();
+      roadDrawn('C');
+      terrainMap()
+        .should('have.attr', 'data-street-cells-status', 'hidden')
+        .and('have.attr', 'data-rendered-street-cells-level', '')
+        .and('have.attr', 'data-street-cells-batches', '0')
+        .and('have.attr', 'data-terrain-elevation-scale', '5');
+      cy.task('streetCellBuildingSamples').then((raw) => {
+        const samples = raw as {
+          urban: { x: number; z: number; buildings: number };
+          suburban: { x: number; z: number; buildings: number };
+          typedCovers: {
+            type: number;
+            id: string;
+            sourceId: string;
+            x: number;
+            z: number;
+          }[];
+          highGuides: {
+            x: number;
+            z: number;
+            buildings: number;
+            guideSegments: number;
+          };
+        };
+        expect(samples.urban.buildings).to.be.greaterThan(10);
+        expect(samples.suburban.buildings).to.be.greaterThan(10);
+        cy.writeFile(
+          'node_modules/.cache/street-cells/cell-city-browser-samples.json',
+          raw,
+        );
+        for (const family of ['urban', 'suburban', 'highGuides'] as const) {
+          frameTerrainTarget(samples[family]);
+          terrainMap()
+            .should('have.attr', 'data-city-layout-builds', layoutBuilds)
+            .and('have.attr', 'data-city-building-count', buildings);
+          recordTerrainState('cell-city-' + family);
+          cy.screenshot('cell-city-' + family);
+        }
+      });
+      cy.task('streetCellBuildingSamples').then((raw) => {
+        const samples = raw as {
+          typedCovers: {
+            type: number;
+            id: string;
+            sourceId: string;
+            x: number;
+            z: number;
+          }[];
+        };
+        expect(samples.typedCovers).to.have.length(6);
+        terrainZoomTo(0.014);
+        for (const sample of samples.typedCovers) {
+          frameTerrainTarget(sample);
+          typedCoversDrawn('available', 1000);
+          terrainMap()
+            .should('have.attr', 'data-city-layout-builds', layoutBuilds)
+            .and('have.attr', 'data-typed-covers-failures', '[]');
+          recordTerrainState('typed-cover-' + sample.type);
+          cy.screenshot('typed-cover-' + sample.type);
+        }
+      });
+      // Same world targets and viewport as the retained V2 dense-candidate samples.
+      for (const [name, target] of [
+        ['urban', { x: 14.19654349468673, z: 4.6500942933388325 }],
+        ['suburban', { x: 27.23797137949348, z: -32.05766803384611 }],
+      ] as const) {
+        frameTerrainTarget(target);
         terrainMap()
           .should('have.attr', 'data-city-layout-builds', layoutBuilds)
           .and('have.attr', 'data-city-building-count', buildings);
-        recordTerrainState('cell-city-' + family);
-        cy.screenshot('cell-city-' + family);
+        recordTerrainState('cell-city-matched-' + name);
+        cy.screenshot('cell-city-matched-' + name);
       }
-    });
-    // Same world targets and viewport as the retained V2 dense-candidate samples.
-    for (const [name, target] of [
-      ['urban', { x: 14.19654349468673, z: 4.6500942933388325 }],
-      ['suburban', { x: 27.23797137949348, z: -32.05766803384611 }],
-    ] as const) {
-      frameTerrainTarget(target);
+      cy.get('[aria-label="Routes"] [data-route-id="legacy-A"]').click();
+      cy.contains('button', 'Add bus').click();
+      cy.contains('button', 'Focus route').click();
       terrainMap()
         .should('have.attr', 'data-city-layout-builds', layoutBuilds)
         .and('have.attr', 'data-city-building-count', buildings);
-      recordTerrainState('cell-city-matched-' + name);
-      cy.screenshot('cell-city-matched-' + name);
-    }
-    cy.get('[aria-label="Routes"] [data-route-id="legacy-A"]').click();
-    cy.contains('button', 'Add bus').click();
-    cy.contains('button', 'Focus route').click();
-    terrainMap()
-      .should('have.attr', 'data-city-layout-builds', layoutBuilds)
-      .and('have.attr', 'data-city-building-count', buildings);
-    cy.contains('button', 'Show full network').click();
-    terrainDrawn();
-    terrainZoomTo(0.3);
-    terrainDrawn();
-    roadDrawn('A');
-    terrainMap()
-      .should('have.attr', 'data-city-layout-builds', layoutBuilds)
-      .and('have.attr', 'data-city-building-count', buildings);
-    terrainZoomTo(0.055);
-    terrainDrawn();
-    frameCellDowntown();
-    terrainMap()
-      .should('have.attr', 'data-city-layout-builds', layoutBuilds)
-      .and('have.attr', 'data-city-building-count', buildings);
-    recordTerrainState('cell-city-cityscale');
-    cy.screenshot('cell-city-cityscale');
-  });
+      cy.contains('button', 'Show full network').click();
+      terrainDrawn();
+      terrainZoomTo(0.3);
+      terrainDrawn();
+      roadDrawn('A');
+      terrainMap()
+        .should('have.attr', 'data-city-layout-builds', layoutBuilds)
+        .and('have.attr', 'data-city-building-count', buildings);
+      terrainZoomTo(0.055);
+      terrainDrawn();
+      frameCellDowntown();
+      terrainMap()
+        .should('have.attr', 'data-city-layout-builds', layoutBuilds)
+        .and('have.attr', 'data-city-building-count', buildings);
+      recordTerrainState('cell-city-cityscale');
+      cy.screenshot('cell-city-cityscale');
+    });
   cy.then(() => expect(archives).to.equal(1));
 });
 
@@ -891,7 +986,9 @@ it('draws optional verified city sites across LODs without rebuilding the C-owne
   cy.contains('button', 'Swap visualizations').click();
   terrainMap()
     .should('have.attr', 'data-materialization-status', 'ready')
-    .and('have.attr', 'data-city-building-count', '17562');
+    .and('have.attr', 'data-city-building-count', '16231')
+    .and('have.attr', 'data-settlement-metadata-status', 'ready')
+    .and('have.attr', 'data-cell-buildings-awaiting-terrain-draw', 'false');
   terrainMap().then(($map) => {
     const builds = $map.attr('data-city-layout-builds');
     for (const [pixel, level] of [
@@ -906,7 +1003,7 @@ it('draws optional verified city sites across LODs without rebuilding the C-owne
         .should('have.attr', 'data-materialization-status', 'ready')
         .and('have.attr', 'data-rendered-materialization-level', level)
         .and('have.attr', 'data-city-layout-builds', builds)
-        .and('have.attr', 'data-city-building-count', '17562')
+        .and('have.attr', 'data-city-building-count', '16231')
         .then(($host) => {
           const diagnostics = JSON.parse(
             $host.attr('data-materialization-diagnostics')!,
@@ -925,6 +1022,27 @@ it('draws optional verified city sites across LODs without rebuilding the C-owne
           ).to.equal({ A: 0, B: 80, C: 160 }[level]);
         });
     }
+    cy.task('materializationControlSamples').then((raw) => {
+      for (const sample of raw as {
+        name: string;
+        id: string;
+        x: number;
+        z: number;
+      }[]) {
+        terrainZoomTo(sample.name === 'laguna-rosa' ? 0.055 : 0.014);
+        frameTerrainTarget(sample);
+        typedCoversDrawn('available', 1000);
+        terrainMap()
+          .should('have.attr', 'data-city-layout-builds', builds)
+          .and(
+            'have.attr',
+            'data-rendered-materialization-level',
+            sample.name === 'laguna-rosa' ? 'B' : 'C',
+          );
+        recordTerrainState('v4-control-' + sample.name);
+        cy.screenshot('v4-control-' + sample.name);
+      }
+    });
   });
 });
 

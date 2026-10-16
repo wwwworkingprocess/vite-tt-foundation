@@ -1,3 +1,7 @@
+import { createCityMaterializationLoader } from './apps/web/src/representation/city-materialization-loader.js';
+import { prepareStreetCellMaskQueries } from './apps/web/src/representation/d3d-street-cell-masks.js';
+import { createStreetCellLoader } from './apps/web/src/representation/street-cells-loader.js';
+import { createHash } from 'node:crypto';
 import {
   buildStreetCellCity,
   streetCellLandmarkProtections,
@@ -8,6 +12,7 @@ import {
   cellCityPopulation,
   cellCityCells,
   cellCityTerrain,
+  elcheCellCityFixture,
 } from './apps/web/src/test/street-cell-city-fixture.js';
 import { createTerrainLoader } from './apps/web/src/terrain/terrain-loader.js';
 import { createD3dTerrain } from './apps/web/src/representation/d3d-terrain-model.js';
@@ -24,6 +29,49 @@ export default defineConfig({
   e2e: {
     setupNodeEvents(on) {
       on('task', {
+        async elchePartialMaskSample() {
+          const f = elcheCellCityFixture();
+          const cells = (await createStreetCellLoader({
+            baseUrl: '/',
+            digestSha256: async (text) =>
+              createHash('sha256').update(text).digest('hex'),
+            fetchText: async (url) => ({
+              ok: true,
+              text: async () =>
+                readFileSync(
+                  new URL('./apps/web/public' + url, import.meta.url),
+                  'utf8',
+                ),
+            }),
+          }).resolve('es-elche'))!;
+          const city = buildStreetCellCity(
+            f.model,
+            f.population,
+            undefined,
+            cells,
+            f.terrain,
+          );
+          const row = city.streetCellLayout!.ledger.find(
+            (r) =>
+              r.classification === 'empty' &&
+              r.buildings > 0 &&
+              r.estimatedMaskedAreaSqm! > 100 &&
+              (r.reasons['typed-mask-footprint'] ?? 0) > 0,
+          )!;
+          const group = city.buildings.filter((b) => b.cellId === row.cellId);
+          const x = group.reduce((n, b) => n + b.x, 0) / group.length;
+          const z = group.reduce((n, b) => n + b.z, 0) / group.length;
+          const forward =
+            (f.terrain.ground(x, z).y / Math.tan((35 * Math.PI) / 180)) *
+            Math.SQRT1_2;
+          return {
+            x: x - forward,
+            z: z - forward,
+            cellId: row.cellId,
+            buildings: group.length,
+            maskRejected: row.reasons['typed-mask-footprint'],
+          };
+        },
         async streetCellDowntown(city: string = 'es-torrevieja') {
           const scenarioId =
             city === 'es-alicante'
@@ -73,13 +121,74 @@ export default defineConfig({
             Math.SQRT1_2;
           return { x: point.x - forward, z: point.z - forward };
         },
+        async materializationControlSamples() {
+          const sites = (await createCityMaterializationLoader({
+            baseUrl: '/',
+            digestSha256: async (text) =>
+              createHash('sha256').update(text).digest('hex'),
+            fetchText: async (url) => ({
+              ok: true,
+              text: async () =>
+                readFileSync(
+                  new URL('./apps/web/public' + url, import.meta.url),
+                  'utf8',
+                ),
+            }),
+          }).resolve('es-torrevieja', 'near'))!;
+          return [
+            'laguna-rosa',
+            'parque-naciones',
+            'friday-market',
+            'marina-internacional',
+          ].map((name) => {
+            const site = sites.sites.find((s) => s.site.id.endsWith(name))!;
+            const geometry = site.geometries[0]!.feature.geometry;
+            if (geometry.type !== 'Polygon' && geometry.type !== 'MultiPolygon')
+              throw new Error('Control area unavailable');
+            const rings =
+              geometry.type === 'Polygon'
+                ? geometry.coordinates
+                : geometry.coordinates.flat();
+            const points = rings
+              .flat()
+              .map(([longitude, latitude]) =>
+                d3dProjectedPoint(cellCityMap, { longitude, latitude }),
+              );
+            const x =
+                (Math.min(...points.map((p) => p.x)) +
+                  Math.max(...points.map((p) => p.x))) /
+                2,
+              z =
+                (Math.min(...points.map((p) => p.z)) +
+                  Math.max(...points.map((p) => p.z))) /
+                2;
+            const forward =
+              (cellCityTerrain.ground(x, z).y /
+                Math.tan((35 * Math.PI) / 180)) *
+              Math.SQRT1_2;
+            return { name, id: site.site.id, x: x - forward, z: z - forward };
+          });
+        },
         async streetCellBuildingSamples() {
+          const cells = (await createStreetCellLoader({
+            baseUrl: '/',
+            digestSha256: async (text) =>
+              createHash('sha256').update(text).digest('hex'),
+            fetchText: async (url) => ({
+              ok: true,
+              text: async () =>
+                readFileSync(
+                  new URL('./apps/web/public' + url, import.meta.url),
+                  'utf8',
+                ),
+            }),
+          }).resolve('es-torrevieja'))!;
           const start = performance.now();
           const city = buildStreetCellCity(
             cellCityMap,
             cellCityPopulation,
             cellCityMetadata,
-            cellCityCells,
+            cells,
             cellCityTerrain,
             streetCellLandmarkProtections(cellCityMap, cellCityMetadata),
           );
@@ -89,7 +198,7 @@ export default defineConfig({
             cellCityMap,
             cellCityPopulation,
             cellCityMetadata,
-            cellCityCells,
+            cells,
             cellCityTerrain,
             streetCellLandmarkProtections(cellCityMap, cellCityMetadata),
           );
@@ -159,6 +268,42 @@ export default defineConfig({
             buildings: city.buildings.length,
             diagnostics: city.streetCellLayout,
             groundCounts,
+            typedCovers: Array.from({ length: 6 }, (_, type) => {
+              const masks = prepareStreetCellMaskQueries(
+                cells.masks!,
+                cellCityMap,
+              ).features;
+              for (const mask of masks
+                .filter(
+                  (m) =>
+                    m.type === type &&
+                    m.areaSqm > 1000 &&
+                    m.areaSqm < 50000 &&
+                    !['R14660913', 'R14960789'].includes(m.sourceId),
+                )
+                .sort((a, b) => a.areaSqm - b.areaSqm)) {
+                const xs = mask.rings[0]!.map((p) => p[0]),
+                  zs = mask.rings[0]!.map((p) => p[1]);
+                const x = (Math.min(...xs) + Math.max(...xs)) / 2,
+                  z = (Math.min(...zs) + Math.max(...zs)) / 2;
+                if (
+                  !mask.contains([x, z]) ||
+                  world.sample(x, z).kind === 'outside'
+                )
+                  continue;
+                const forward =
+                  (world.ground(x, z).y / Math.tan((35 * Math.PI) / 180)) *
+                  Math.SQRT1_2;
+                return {
+                  type,
+                  id: mask.id,
+                  sourceId: mask.sourceId,
+                  x: x - forward,
+                  z: z - forward,
+                };
+              }
+              throw new Error('No native-covered typed sample: ' + type);
+            }),
             urban: sample(['bp-central-mixed', 'bp-midrise-apartment'], true),
             centralGrid: sample(
               ['bp-central-mixed', 'bp-midrise-apartment'],

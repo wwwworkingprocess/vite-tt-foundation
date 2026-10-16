@@ -157,7 +157,7 @@ describe('foundation screen', () => {
       expect($map).to.have.attr('data-terrain-status', 'ready');
       expect(
         $map.attr('data-rendered-terrain-identity'),
-        'current native terrain has drawn',
+        'current native terrain has drawn: ' + JSON.stringify($map[0]!.dataset),
       ).to.equal($map.attr('data-terrain-identity'));
     });
     cy.get('[data-testid="d3d-map-representation"]')

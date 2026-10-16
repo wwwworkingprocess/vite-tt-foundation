@@ -1,6 +1,7 @@
 import { freezeSettlement } from '../settlement/settlement-metadata.js';
 import type { MaterializationRecipe } from './city-materialization.js';
 import type { SiteKit } from './d3d-materialization.js';
+import { streetCellMaskRegistry } from './street-cell-masks.js';
 export type SiteSurfacePreset = Extract<
   MaterializationRecipe,
   { kind: 'surface' }
@@ -9,6 +10,14 @@ export type SiteSurfacePreset = Extract<
  * La Mata and shallow-water presets are reserved until verified geometry is installed;
  * this file does not create masks, bands, gradients or texture acquisition. */
 export const d3dMaterialPresets = freezeSettlement({
+  typedLandCovers: {
+    'inland water': '#7e999b',
+    woods: '#89977b',
+    park: '#9eaf8c',
+    garden: '#adb99a',
+    grass: '#a8b596',
+    'recreation ground': '#bab29b',
+  },
   terrain: { land: '#a7b88d', water: '#729ea5' },
   surfaces: {
     'salt-lagoon-pink-v0': '#cb889f',
@@ -38,6 +47,11 @@ export const d3dMaterialPresets = freezeSettlement({
     'civic-proxy-v0': ['#d4c7a9', '#937f69'],
   },
 } as const);
+export function resolveTypedLandCoverMaterial(type: number): string {
+  const entry = streetCellMaskRegistry.find((entry) => entry.t === type);
+  if (!entry) throw new Error('Unknown typed land cover registry entry');
+  return d3dMaterialPresets.typedLandCovers[entry.name];
+}
 export function resolveTerrainMaterials(settlementId: string) {
   return Object.freeze({
     land: d3dMaterialPresets.terrain.land,

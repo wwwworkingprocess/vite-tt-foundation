@@ -6,6 +6,7 @@ import {
   type StreetCellCatalog,
   type StreetCells,
 } from './street-cells.js';
+import { decodeStreetCellMasks } from './street-cell-masks.js';
 /** Revision-bound selected-level acquisition. Only C also reads annotations;
  * hierarchy/audit/source roads remain offline provenance, never runtime fetches. */
 export function createStreetCellLoader(
@@ -46,7 +47,14 @@ export function createStreetCellLoader(
       if (!Object.hasOwn(entries.settlements, settlementId)) return undefined;
       const entry = entries.settlements[settlementId]!;
       const product = entry.products.find((p) => p.level === level)!;
-      const key = settlementId + ':' + level + ':' + product.sha256;
+      const key = [
+        settlementId,
+        level,
+        product.sha256,
+        entry.annotations.sha256,
+        entry.masks?.sha256,
+        entry.cellMaskRefs?.sha256,
+      ].join(':');
       let model = models.get(key);
       if (!model) {
         model = (async () => {
@@ -81,7 +89,23 @@ export function createStreetCellLoader(
             cells,
             entry.source.products.find((p) => p.level === 'C')!.sha256,
           );
-          return Object.freeze({ ...cells, annotations });
+          const masks =
+            entry.masks && entry.cellMaskRefs
+              ? decodeStreetCellMasks(
+                  ...(await Promise.all([
+                    read(entry.masks),
+                    read(entry.cellMaskRefs),
+                  ])),
+                  cells,
+                  entry.masks,
+                  entry.cellMaskRefs,
+                )
+              : undefined;
+          return Object.freeze({
+            ...cells,
+            annotations,
+            ...(masks ? { masks } : {}),
+          });
         })();
         models.set(key, model);
         void model.catch(() => models.delete(key));

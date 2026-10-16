@@ -112,11 +112,17 @@ export const cellCityTerrain = createD3dTerrain(
 
 /** Catalog-discovered second-city fixture; no invented settlement research. */
 export function alicanteCellCityFixture() {
+  return otherCellCityFixture('es-alicante', 'alicante-legacy-core-v1');
+}
+export function elcheCellCityFixture() {
+  return otherCellCityFixture('es-elche', 'elche-urban-abc-v1');
+}
+function otherCellCityFixture(city: string, scenarioId: string) {
   const catalog = json('scenarios/catalog.json') as {
     scenarios: { scenarioId: string; manifestPath: string }[];
   };
   const path = catalog.scenarios
-    .find((s) => s.scenarioId === 'alicante-legacy-core-v1')!
+    .find((s) => s.scenarioId === scenarioId)!
     .manifestPath.replace(/scenario\.json$/, '');
   const scenario = parseScenarioPackage(
     Object.fromEntries(
@@ -144,7 +150,7 @@ export function alicanteCellCityFixture() {
     }[];
   };
   const p = populationCatalog.cities.find(
-    (c) => c.primarySettlementId === 'es-alicante',
+    (c) => c.primarySettlementId === city,
   )!;
   const grid = parseCityPopulationGrid(json('population-fields/' + p.gridPath));
   const crops = json('population-fields/' + p.cropPath) as {
@@ -165,10 +171,10 @@ export function alicanteCellCityFixture() {
     ),
   };
   const e = parseStreetCellCatalog(json('street-cells/catalog.json'))
-    .settlements['es-alicante']!;
+    .settlements[city]!;
   const base = decodeStreetCells(
     json('street-cells/' + e.products[2]!.path),
-    'es-alicante',
+    city,
     e.products[2]!,
   );
   const cells = Object.freeze({
@@ -181,7 +187,7 @@ export function alicanteCellCityFixture() {
   });
   const resolved = resolveTerrainViewport(
     parseTerrainCatalog(json('terrain/catalog.json')),
-    'es-alicante',
+    city,
     scenario.manifest.scenarioId,
   )!;
   const terrain = createD3dTerrain(

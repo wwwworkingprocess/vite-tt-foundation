@@ -25,16 +25,18 @@ const descriptor = () => catalog().settlements['es-torrevieja']!.products[2]!;
 it('preserves the accepted archive CRCs, provenance, all descriptors and immutable exact polygons including holes', () => {
   const zip = rawRead(streetCellRoot + 'street-cells.zip');
   expect(createHash('sha256').update(zip).digest('hex')).toBe(
-    '710e6aaaec11c8003cda936502d1b65769810a8c4bedf5b09dd5f5d4960976c3',
+    'e25c3f6bc0c4e134dc3f0d2683b86a7492df8ebbe7c01cd9e5e7bbf9ac5b8164',
   );
   const entries = indexZip(zip);
-  expect(entries.size).toBe(19);
+  expect(entries.size).toBe(25);
   for (const entry of Object.values(catalog().settlements))
     for (const p of [
       ...entry.products,
       entry.audit,
       entry.annotations,
       entry.hierarchy,
+      entry.masks!,
+      entry.cellMaskRefs!,
     ]) {
       const e = entries.get(p.path)!;
       const b = verifyZipEntry(e, inflateRawSync(e.compressed));
@@ -48,6 +50,8 @@ it('preserves the accepted archive CRCs, provenance, all descriptors and immutab
     city.audit,
     city.annotations,
     city.hierarchy,
+    city.masks!,
+    city.cellMaskRefs!,
   ]) {
     const e = entries.get(p.path)!;
     const b = verifyZipEntry(e, inflateRawSync(e.compressed));

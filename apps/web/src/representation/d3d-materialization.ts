@@ -1,5 +1,5 @@
 import { resolveSiteSurfacePresentation } from './d3d-material-presets.js';
-import { ShapeUtils, Vector2 } from 'three';
+import { prepareDrapedPolygonSurface } from './d3d-surface-geometry.js';
 import {
   d3dProjectedPoint,
   type D3dMapModel,
@@ -99,31 +99,6 @@ function projected(
     ),
   );
 }
-/** Sutherland-Hodgman clipping of already triangulated site faces to native coverage. */
-function clip(points: Point[], bounds: D3dTerrain['bounds']): Point[] {
-  let result = points;
-  for (const [axis, limit, greater] of [
-    [0, bounds.minX, true],
-    [0, bounds.maxX, false],
-    [1, bounds.minZ, true],
-    [1, bounds.maxZ, false],
-  ] as const) {
-    const next: Point[] = [];
-    for (let i = 0; i < result.length; i++) {
-      const a = result[i]!,
-        b = result[(i + 1) % result.length]!,
-        insideA = greater ? a[axis] >= limit : a[axis] <= limit,
-        insideB = greater ? b[axis] >= limit : b[axis] <= limit;
-      if (insideA) next.push(a);
-      if (insideA !== insideB) {
-        const t = (limit - a[axis]) / (b[axis] - a[axis]);
-        next.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]);
-      }
-    }
-    result = next;
-  }
-  return result;
-}
 function surface(
   polygons: Point[][][],
   recipe: Extract<MaterializationRecipe, { kind: 'surface' }>,
@@ -131,10 +106,7 @@ function surface(
   lod: D3dLodBand,
   remaining: number,
 ) {
-  const output: number[] = [];
-  let mismatches = 0,
-    emitted = 0,
-    visited = 0;
+  let mismatches = 0;
   const broad =
     polygons.reduce(
       (sum, rings) =>
@@ -158,82 +130,33 @@ function surface(
   const support =
     ({ far: 200, medium: mediumSupport, near: broad ? 75 : 25 } as const)[lod] *
     terrain.metre;
-  const emit = (a: Point, b: Point, c: Point, depth = 0) => {
-    if (
-      ++visited > materializationBudgets.triangles * 4 ||
-      emitted >= remaining
-    )
-      throw new Error('Materialization triangle budget exceeded');
-    if (
-      Math.abs((b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])) <
-      1e-15
-    )
-      return;
-    const ab = distance(a, b),
-      bc = distance(b, c),
-      ca = distance(c, a);
-    if (Math.max(ab, bc, ca) > support) {
-      if (depth >= 24)
-        throw new Error('Materialization support depth exceeded');
-      const midpoint = (p: Point, q: Point): Point => [
-        (p[0] + q[0]) / 2,
-        (p[1] + q[1]) / 2,
-      ];
-      if (ab >= bc && ab >= ca) {
-        const m = midpoint(a, b);
-        emit(a, m, c, depth + 1);
-        emit(m, b, c, depth + 1);
-      } else if (bc >= ca) {
-        const m = midpoint(b, c);
-        emit(a, b, m, depth + 1);
-        emit(a, m, c, depth + 1);
-      } else {
-        const m = midpoint(c, a);
-        emit(a, b, m, depth + 1);
-        emit(m, b, c, depth + 1);
+  const positions = prepareDrapedPolygonSurface(
+    polygons,
+    terrain,
+    support,
+    recipe.clearanceM * terrain.metre,
+    remaining,
+    (a, b, c) => {
+      const kind = terrain.sample(
+        (a[0] + b[0] + c[0]) / 3,
+        (a[1] + b[1] + c[1]) / 3,
+      ).kind;
+      if (
+        recipe.terrainRule !== 'native-both' &&
+        kind !== (recipe.terrainRule === 'native-land' ? 'land' : 'water')
+      ) {
+        mismatches++;
+        return false;
       }
-      return;
-    }
-    const kind = terrain.sample(
-      (a[0] + b[0] + c[0]) / 3,
-      (a[1] + b[1] + c[1]) / 3,
-    ).kind;
-    if (
-      recipe.terrainRule !== 'native-both' &&
-      kind !== (recipe.terrainRule === 'native-land' ? 'land' : 'water')
-    ) {
-      mismatches++;
-      return;
-    }
-    if (recipe.preset === 'salt-lagoon-pink-v0' && kind === 'land')
-      mismatches++;
-    // ShapeUtils/Earcut emits CCW in X/Z; clipping preserves order. Reverse for +Y.
-    for (const p of [a, c, b])
-      output.push(
-        p[0],
-        terrain.ground(p[0], p[1]).y + recipe.clearanceM * terrain.metre,
-        p[1],
-      );
-    emitted++;
-  };
-  for (const rings of polygons) {
-    const contour = rings[0]!.slice(0, -1).map((p) => new Vector2(...p)),
-      holes = rings
-        .slice(1)
-        .map((r) => r.slice(0, -1).map((p) => new Vector2(...p))),
-      vertices = [...contour, ...holes.flat()];
-    for (const face of ShapeUtils.triangulateShape(contour, holes)) {
-      const clipped = clip(
-        face.map((i) => [vertices[i]!.x, vertices[i]!.y]),
-        terrain.bounds,
-      );
-      for (let i = 1; i + 1 < clipped.length; i++)
-        emit(clipped[0]!, clipped[i]!, clipped[i + 1]!);
-    }
-  }
-  return { positions: new Float32Array(output), mismatches };
+      if (recipe.preset === 'salt-lagoon-pink-v0' && kind === 'land')
+        mismatches++;
+      return true;
+    },
+    'Materialization',
+  );
+  return { positions, mismatches };
 }
-/** Balanced interval order, independent of camera/LOD and bounded by proposal guards. */
+
 function progressiveIndices(count: number) {
   const result: number[] = [],
     ranges: [number, number][] = [[0, count]];

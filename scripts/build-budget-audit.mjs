@@ -1,8 +1,30 @@
-import {
+import { registerHooks } from 'node:module';
+// This Node audit executes the actual transitive web TS validators. Resolve only
+// their checked-in source-relative .js specifiers, never package/Node imports.
+const sourceRoot = new URL('../apps/web/src/', import.meta.url).href;
+const sourceHooks = registerHooks({
+  resolve(specifier, context, next) {
+    if (
+      context.parentURL?.startsWith(sourceRoot) &&
+      specifier.startsWith('.') &&
+      specifier.endsWith('.js')
+    )
+      return next(
+        new URL(specifier.slice(0, -3) + '.ts', context.parentURL).href,
+        context,
+      );
+    return next(specifier, context);
+  },
+});
+const {
   parseStreetCellCatalog,
   decodeStreetCells,
   decodeStreetCellAnnotations,
-} from '../apps/web/src/representation/street-cells.ts';
+} = await import('../apps/web/src/representation/street-cells.ts');
+const { decodeStreetCellMasks } =
+  await import('../apps/web/src/representation/street-cell-masks.ts');
+sourceHooks.deregister();
+
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { readLayerFile } from './public-layer-files.mjs';
 const assetBytes = async (path) => readLayerFile(dist, path);
@@ -268,7 +290,7 @@ for (const [settlementId, entry] of Object.entries(roadCatalog.settlements)) {
 const cellCatalog = parseStreetCellCatalog(
   JSON.parse(await assetText('street-cells/catalog.json')),
 );
-if (cellCatalog.schemaVersion !== 'street-cells-catalog-v3')
+if (cellCatalog.schemaVersion !== 'street-cells-catalog-v4')
   throw new Error('Invalid built StreetCell catalog');
 const roadArchiveHash = createHash('sha256')
   .update(await readFile(new URL('road-network/road-network.zip', dist)))
@@ -290,6 +312,8 @@ for (const [settlementId, entry] of Object.entries(cellCatalog.settlements)) {
     entry.audit,
     entry.annotations,
     entry.hierarchy,
+    entry.masks,
+    entry.cellMaskRefs,
     ...entry.products,
   ]) {
     const bytes = await assetBytes('street-cells/' + descriptor.path);
@@ -308,12 +332,22 @@ for (const [settlementId, entry] of Object.entries(cellCatalog.settlements)) {
         throw new Error('Built StreetCell city/path mismatch');
       const data = JSON.parse(bytes.toString('utf8'));
       const cells = decodeStreetCells(data, settlementId, descriptor);
-      if (descriptor.level === 'C')
+      if (descriptor.level === 'C') {
+        decodeStreetCellMasks(
+          JSON.parse(await assetText('street-cells/' + entry.masks.path)),
+          JSON.parse(
+            await assetText('street-cells/' + entry.cellMaskRefs.path),
+          ),
+          cells,
+          entry.masks,
+          entry.cellMaskRefs,
+        );
         decodeStreetCellAnnotations(
           JSON.parse(await assetText('street-cells/' + entry.annotations.path)),
           cells,
           entry.source.products.find((p) => p.level === 'C').sha256,
         );
+      }
       if (
         data.type !== 'FeatureCollection' ||
         data.features.length !== descriptor.featureCount ||

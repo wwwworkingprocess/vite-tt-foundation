@@ -393,3 +393,10 @@ change; all source products and visual-only POI recipes stay unchanged. Larger
 plans cost more cold preparation/triangles; unreviewed POI overlaps remain explicit.
 Physical site reservations, richer courtyard grammar and additional architectural
 families remain separate milestones.
+
+StreetCells V4 adds independent typed polygon exclusions to both C placement passes,
+retaining surviving safe land and unchanged unassociated slots. Six bounded cached
+terrain-following visual cover batches use the same source masks, separate from native
+terrain/water and verified POI identity. Source completeness/capacity omissions remain
+observable for Torrevieja, Elche and Alicante. La Mata native-coverage extension/site
+packaging is a separate owner-approved follow-up; no producer/geography changes here.

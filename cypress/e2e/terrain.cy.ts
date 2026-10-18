@@ -29,6 +29,8 @@ const recordTerrainState = (name: string) =>
     cy.writeFile(
       'node_modules/.cache/terrain-hardening/diagnostics/' + name + '.json',
       { ...$map[0]!.dataset },
+      // Diagnostic I/O can outlast the 4s command default on a busy CI runner.
+      { timeout: 20000 },
     ),
   );
 const terrainMap = () =>

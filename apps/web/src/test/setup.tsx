@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { Children, isValidElement, type ReactNode } from 'react';
-import { vi } from 'vitest';
+import { afterAll, vi } from 'vitest';
 const r3fTestControls = vi.hoisted(() => {
   const position = {
     x: 0,
@@ -72,3 +72,10 @@ vi.mock('@react-three/fiber', () => ({
   useThree: (selector?: (state: typeof r3fState) => unknown) =>
     selector ? selector(r3fState) : r3fState,
 }));
+
+// Lazy UI/preparation imports can outlive a test's unmounted consumer. Settle
+// module evaluation before V8 snapshots coverage, preserving SSR offset metadata
+// (vitest-dev/vitest#10581). This waits for imports, not application data jobs.
+afterAll(async () => {
+  await vi.dynamicImportSettled();
+});

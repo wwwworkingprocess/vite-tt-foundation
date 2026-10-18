@@ -2,8 +2,10 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { useRoadNetwork } from './use-road-network.js';
 import type { RoadLevel, RoadNetwork } from './road-network.js';
-vi.mock('../assets/public-layers.js', () => ({ fetchPublicAsset: vi.fn() }));
-import { fetchPublicAsset } from '../assets/public-layers.js';
+vi.mock('../city-preparation/browser-preparation.js', () => ({
+  runPreparation: vi.fn(),
+}));
+import { runPreparation as fetchPublicAsset } from '../city-preparation/browser-preparation.js';
 const model: RoadNetwork = {
   settlementId: 'es-torrevieja',
   level: 'A',
@@ -138,4 +140,18 @@ it('keeps two supported city/LOD races separate and rejects late prior-city resu
     status: 'ready',
     model: { settlementId: 'es-alicante', level: 'C' },
   });
+});
+it('preserves absent city, freezes a matching worker road and rejects wrong levels', async () => {
+  for (const value of [undefined, model, { ...model, level: 'C' }]) {
+    vi.mocked(fetchPublicAsset).mockResolvedValueOnce(value);
+    const h = renderHook(() => useRoadNetwork('es-torrevieja', 'A'));
+    await waitFor(() =>
+      expect(h.result.current.status).toBe(
+        value === undefined ? 'absent' : value === model ? 'ready' : 'error',
+      ),
+    );
+    if (h.result.current.status === 'ready')
+      expect(Object.isFrozen(h.result.current.model)).toBe(true);
+    h.unmount();
+  }
 });

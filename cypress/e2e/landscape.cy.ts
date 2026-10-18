@@ -1,3 +1,4 @@
+import { waitForCurrentCityReady } from '../support/city-preparation.js';
 import type { LandscapeDetailPlan } from '../../apps/web/src/representation/d3d-landscape-scene.js';
 const landscapeMap = () =>
   cy.get<HTMLElement>('[data-testid="d3d-map-representation"]', {
@@ -12,13 +13,20 @@ const landscapeCameraDrawn = () =>
       );
   });
 const landscapeZoom = (units: number) =>
-  landscapeMap().then((m) => {
-    const desired =
-      20 / (Number(m.attr('data-camera-viewport-height')) * units);
-    cy.wrap(m.find('canvas')[0]!).trigger('wheel', {
-      deltaY: -Math.log(desired / Number(m.attr('data-camera-zoom'))) * 1000,
+  landscapeMap()
+    .should((m) => {
+      expect(Number(m.attr('data-camera-viewport-height'))).to.be.greaterThan(
+        0,
+      );
+      expect(Number(m.attr('data-camera-zoom'))).to.be.greaterThan(0);
+    })
+    .then((m) => {
+      const desired =
+        20 / (Number(m.attr('data-camera-viewport-height')) * units);
+      cy.wrap(m.find('canvas')[0]!).trigger('wheel', {
+        deltaY: -Math.log(desired / Number(m.attr('data-camera-zoom'))) * 1000,
+      });
     });
-  });
 const landscapeTarget = (target: { x: number; z: number }) => {
   landscapeMap().then((m) => {
     const canvas = m.find('canvas')[0]!,
@@ -109,6 +117,7 @@ it('draws bounded Mediterranean masks, reuses static near plans, preserves POIs 
     .find('select')
     .select('torrevieja-legacy-all-v1');
   cy.contains('button', 'Start new game').should('be.enabled').click();
+  waitForCurrentCityReady();
   pauseLandscape();
   landscapeNormal();
   landscapeMap()
@@ -205,6 +214,7 @@ it('draws bounded Mediterranean masks, reuses static near plans, preserves POIs 
     cy.get('[data-testid="scenario-menu-trigger"]').click();
     cy.contains('button', 'Restart').click();
     landscapeMap().should('have.attr', 'data-scenario-id', scenario);
+    waitForCurrentCityReady();
     pauseLandscape();
     landscapeNormal();
   };

@@ -1,7 +1,9 @@
+import { usePreparationAttempt } from '../city-preparation/CityPreparationProvider.js';
 import { useEffect, useMemo, useState } from 'react';
-import { fetchPublicAsset } from '../assets/public-layers.js';
-import { browserSha256 } from '../scenarios/scenario-loader.js';
-import { createStreetCellLoader } from './street-cells-loader.js';
+import { runPreparation } from '../city-preparation/browser-preparation.js';
+import { record } from '../city-preparation/preparation-protocol.js';
+import { freezeSettlement } from '../settlement/settlement-metadata.js';
+import type { createStreetCellLoader } from './street-cells-loader.js';
 import type { CellLevel, StreetCells } from './street-cells.js';
 export type StreetCellState =
   | Readonly<{ status: 'inactive' | 'loading' | 'absent' }>
@@ -10,11 +12,23 @@ export type StreetCellState =
 type Loader = ReturnType<typeof createStreetCellLoader>;
 let browserLoader: Loader | undefined;
 function getBrowserLoader() {
-  browserLoader ??= createStreetCellLoader({
-    baseUrl: import.meta.env.BASE_URL,
-    fetchText: fetchPublicAsset,
-    digestSha256: browserSha256,
-  });
+  browserLoader ??= {
+    async resolve(settlementId, level = 'C') {
+      const value = await runPreparation(
+        'cells:' + settlementId + ':' + level,
+        { kind: 'cells', city: settlementId, level },
+      );
+      if (value === undefined) return undefined;
+      if (
+        !record(value) ||
+        value.settlementId !== settlementId ||
+        value.level !== level ||
+        !Array.isArray(value.features)
+      )
+        throw Error('Invalid prepared cells model');
+      return freezeSettlement(value) as unknown as StreetCells;
+    },
+  };
   return browserLoader;
 }
 /** No acquisition until normal/native-ready selected-level demand. Effect identity rejects
@@ -25,9 +39,10 @@ export function useStreetCells(
   loader: Loader = getBrowserLoader(),
   level: CellLevel = 'C',
 ): StreetCellState {
+  const attempt = usePreparationAttempt();
   const request = useMemo(
-    () => ({ settlementId, active, loader, level }),
-    [settlementId, active, loader, level],
+    () => ({ settlementId, active, loader, level, attempt }),
+    [settlementId, active, loader, level, attempt],
   );
   const [result, setResult] =
     useState<Readonly<{ request: typeof request; view: StreetCellState }>>();

@@ -1,3 +1,4 @@
+import { waitForCurrentCityReady } from '../support/city-preparation.js';
 // Test-only dev-module response: exercise the checked-in true setting without
 // adding a runtime UI/configuration channel to production.
 const enableStreetCellOutlines = () =>
@@ -197,6 +198,7 @@ it('renders native terrain, preserves entity/focus interaction, and reuses produ
     .find('select')
     .select('torrevieja-legacy-all-v1');
   cy.contains('button', 'Start new game').should('be.enabled').click();
+  waitForCurrentCityReady();
   terrainMap()
     .should('have.attr', 'data-terrain-status', 'ready')
     .and('have.attr', 'data-terrain-elevation-scale', '5')
@@ -484,6 +486,7 @@ it('switches between cataloged cities and unsupported Cartagena without stale ro
   cy.visit('/');
   cy.get('[data-testid="open-screen"]').should('be.visible');
   cy.contains('button', 'Start new game').should('be.enabled').click();
+  waitForCurrentCityReady();
   roadDrawn('A');
   // This checks city/road acquisition, independently of a running simulation.
   cy.contains('button', /^Pause$/).click();
@@ -628,6 +631,7 @@ it('draws inspectable V2 C safe-zone boundaries beside downtown roads and preser
     .find('select')
     .select('torrevieja-legacy-all-v1');
   cy.contains('button', 'Start new game').click();
+  waitForCurrentCityReady();
   terrainMap().should('have.attr', 'data-terrain-status', 'ready');
   cy.get('button[aria-label="Select mini representation for swap"]').click();
   cy.contains('button', 'Swap visualizations').click();
@@ -760,6 +764,7 @@ it('draws Alicante V3 C-owned buildings with A/B/C, keeps near buffers stable an
     .find('select')
     .select('alicante-legacy-core-v1');
   cy.contains('button', 'Start new game').click();
+  waitForCurrentCityReady();
   terrainMap().should('have.attr', 'data-terrain-status', 'ready');
   cy.get('button[aria-label="Select mini representation for swap"]').click();
   cy.contains('button', 'Swap visualizations').click();
@@ -834,6 +839,7 @@ it('shows Pass-1 and safe road-crossed urban/suburban buildings at every LOD', (
     .find('select')
     .select('torrevieja-legacy-all-v1');
   cy.contains('button', 'Start new game').click();
+  waitForCurrentCityReady();
   terrainMap()
     .should('have.attr', 'data-cell-buildings-status', 'ready')
     .and('have.attr', 'data-cell-buildings-source-cells', '1623')
@@ -985,6 +991,7 @@ it('draws optional verified city sites across LODs without rebuilding the C-owne
     .find('select')
     .select('torrevieja-legacy-all-v1');
   cy.contains('button', 'Start new game').should('be.enabled').click();
+  waitForCurrentCityReady();
   terrainMap().should('have.attr', 'data-terrain-status', 'ready');
   cy.contains('button', /^Pause$/).click();
   cy.get('button[aria-label="Select mini representation for swap"]').click();

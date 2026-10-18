@@ -15,7 +15,8 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "vite.config.ts",
-    "public-layers-plugin.ts"
+    "public-layers-plugin.ts",
+    "city-preparation-plugin.ts"
   ],
   "references": [
     { "path": "../../packages/protocol" },

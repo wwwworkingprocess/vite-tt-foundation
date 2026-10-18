@@ -1,3 +1,51 @@
+import { useMemo } from 'react';
+import { usePreparedCity } from '../city-preparation/use-prepared-city.js';
+vi.mock('../city-preparation/use-prepared-city.js', () => ({
+  usePreparedCity: vi.fn(function usePreparedCityDouble(
+    _key: string,
+    input: Parameters<typeof usePreparedCity>[1],
+  ) {
+    return useMemo(() => {
+      if (!input) return undefined;
+      const native = vi.mocked(useTerrain).mock.results.at(-1)
+        ?.value as ReturnType<typeof useTerrain>;
+      const state = vi.mocked(useStreetCells).mock.results[
+        vi
+          .mocked(useStreetCells)
+          .mock.calls.findLastIndex((c) => c[1] && c[3] === 'C')
+      ]?.value as ReturnType<typeof useStreetCells> | undefined;
+      const terrain =
+        native?.status === 'ready'
+          ? terrainPlanning.createD3dTerrain(
+              native.terrain,
+              input.model,
+              input.scale,
+            )
+          : undefined;
+      try {
+        const city = buildStreetCellCity(
+          input.model,
+          input.population,
+          input.metadata,
+          state?.status === 'ready' ? state.model : undefined,
+          terrain,
+          input.metadata
+            ? streetCellLandmarkProtections(input.model, input.metadata)
+            : undefined,
+        );
+        return {
+          status: 'ready' as const,
+          city,
+          baseYs: Float64Array.from(city.buildings, (b) =>
+            terrain ? terrain.ground(b.x, b.z).y : b.baseY,
+          ),
+        };
+      } catch (error) {
+        return { status: 'error' as const, message: String(error) };
+      }
+    }, [input]);
+  }),
+}));
 import { useCityMaterialization } from './use-city-materialization.js';
 import { createCityMaterializationLoader } from './city-materialization-loader.js';
 import * as sitePlanning from './d3d-materialization.js';
@@ -66,6 +114,7 @@ import { fitD3dCamera } from './d3d-map-model.js';
 import type { ScenarioPopulationView } from '../population/population-field-loader.js';
 import {
   BoxGeometry,
+  InstancedBufferAttribute,
   BufferGeometry,
   OrthographicCamera,
   Raycaster,
@@ -363,6 +412,7 @@ const sceneProps = (element: Element) =>
         visualState?: readonly unknown[];
         onLod?: (level: 'far' | 'medium' | 'near') => void;
         onRoadInvalidated?: () => void;
+        onRoadRendered?: () => void;
         onLandscapeRendered?: (gpuBytes: number, batches: number) => void;
         onStreetCellsInvalidated?: () => void;
       };
@@ -401,7 +451,7 @@ const enableWorld = () => {
     setColorAt,
     computeBoundingSphere,
     dispose: vi.fn(),
-    instanceMatrix: { needsUpdate: false },
+    instanceMatrix: new InstancedBufferAttribute(new Float32Array(16), 16),
     instanceColor: { needsUpdate: false },
   });
   return { setMatrixAt, setColorAt, computeBoundingSphere };
@@ -1271,6 +1321,7 @@ it('grounds transport and selection on ready terrain while preserving pan/focus 
       population,
     ),
   );
+  presentNativeTerrain();
   const initialBuilds = Number(
     screen
       .getByTestId('d3d-map-representation')
@@ -3300,7 +3351,7 @@ it('keeps the replacement canvas driver active when a detached root cleans up la
   expect(vi.getTimerCount()).toBe(0);
 });
 
-it('presents native terrain before cold C composition, then preserves optional-research placement', () => {
+it('prepares C data before native draw while keeping native-first building presentation and optional research', () => {
   enableWorld();
   vi.mocked(useTerrain).mockReturnValue({
     status: 'ready',
@@ -3310,12 +3361,13 @@ it('presents native terrain before cold C composition, then preserves optional-r
     status: 'ready',
     model: lifecycleCells,
   });
-  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'loading' });
+  vi.mocked(useSettlementMetadata).mockReturnValue({ status: 'unavailable' });
   const view = render(
     scene('normal', null, undefined, scenario, cellOwnedPopulation),
   );
   const host = screen.getByTestId('d3d-map-representation');
-  expect(host).toHaveAttribute('data-city-building-count', '0');
+  expect(Number(host.dataset.cityBuildingCount)).toBeGreaterThan(0);
+  expect(document.querySelector('instancedMesh[name^=city-]')).toBeNull();
   expect(host).toHaveAttribute(
     'data-cell-buildings-awaiting-terrain-draw',
     'true',
@@ -3351,13 +3403,14 @@ it('presents native terrain before cold C composition, then preserves optional-r
   view.rerender(
     scene('normal', null, undefined, scenario, cellOwnedPopulation),
   );
-  expect(host).toHaveAttribute('data-city-building-count', '0');
+  expect(host.dataset.cityBuildingCount).toBe(count);
   act(() => draw());
   expect(host).toHaveAttribute(
     'data-cell-buildings-awaiting-terrain-draw',
     'true',
   );
-  expect(host).toHaveAttribute('data-city-building-count', '0');
+  expect(host.dataset.cityBuildingCount).toBe(count);
+  expect(document.querySelector('instancedMesh[name^=city-]')).toBeNull();
   presentNativeTerrain();
   expect(host.dataset.cityBuildingCount).toBe(count);
   expect(host).toHaveAttribute(
@@ -3555,4 +3608,252 @@ it('keeps landscape visuals near/medium-only, uploads instanced colors once, and
   expect(document.querySelector('group[name="native-terrain"]')).not.toBeNull();
   v.unmount();
   act(() => props.onAfterRender!());
+});
+
+import { CityPreparationProvider } from '../city-preparation/CityPreparationProvider.js';
+it('acknowledges only current native and city GPU batches and rejects old Canvas callbacks after replacement', () => {
+  enableWorld();
+  vi.mocked(useTerrain).mockReturnValue({
+    status: 'ready',
+    terrain: cellCityTerrain.terrain,
+  });
+  vi.mocked(useStreetCells).mockReturnValue({
+    status: 'ready',
+    model: lifecycleCells,
+  });
+  const tree = (identity: string) => (
+    <CityPreparationProvider identity={identity} cityName="Test">
+      {scene('normal', null, undefined, scenario, cellOwnedPopulation)}
+    </CityPreparationProvider>
+  );
+  const v = render(tree('first'));
+  const host = screen.getByTestId('city-preparation');
+  expect(host.dataset.cityPreparationStatus).toBe('loading');
+  const oldNative = sceneProps(
+    document.querySelector('mesh[name="native-terrain-land"]')!,
+  ).onAfterRender!;
+  act(() => oldNative());
+  const batch = document.querySelector('instancedMesh[name^="city-"]');
+  expect(batch).not.toBeNull();
+  const oldCity = sceneProps(batch!).onAfterRender!;
+  expect(host.dataset.firstUsefulFrame).toBe('');
+  act(() => oldCity());
+  expect(host.dataset.firstUsefulFrame).toBe('presented');
+  v.rerender(tree('second'));
+  expect(host.dataset.firstUsefulFrame).toBe('');
+  act(() => {
+    oldNative();
+    oldCity();
+  });
+  expect(host.dataset.firstUsefulFrame).toBe('');
+  presentNativeTerrain();
+  act(() =>
+    sceneProps(document.querySelector('instancedMesh[name^="city-"]')!)
+      .onAfterRender!(),
+  );
+  expect(host.dataset.firstUsefulFrame).toBe('presented');
+  v.unmount();
+  expect(() => {
+    oldNative();
+    oldCity();
+  }).not.toThrow();
+});
+it('requires an actual fallback draw and exposes required-road errors while gameplay remains mounted', () => {
+  enableWorld();
+  vi.mocked(useTerrain).mockReturnValue({ status: 'unavailable' });
+  vi.mocked(useStreetCells).mockReturnValue({ status: 'absent' });
+  const tree = (id: string) => (
+    <CityPreparationProvider identity={id} cityName="Test">
+      {scene('normal', null, undefined, scenario, cellOwnedPopulation)}
+    </CityPreparationProvider>
+  );
+  const v = render(tree('fallback'));
+  const host = screen.getByTestId('city-preparation');
+  expect(host.dataset.firstUsefulFrame).toBe('');
+  const ground = [...document.querySelectorAll('mesh')].find((n) =>
+    n.querySelector('boxGeometry'),
+  )!;
+  expect(ground).toBeDefined();
+  act(() => sceneProps(ground).onAfterRender!());
+  expect(host.dataset.firstUsefulFrame).toBe('presented');
+  vi.mocked(useRoadNetwork).mockReturnValue({
+    status: 'error',
+    message: 'Required road archive CRC',
+  });
+  v.rerender(tree('broken'));
+  expect(host.dataset.cityPreparationStatus).toBe('error');
+  expect(host.dataset.preparationError).toContain('Required road archive CRC');
+  expect(screen.getByTestId('r3f-canvas')).toBeInTheDocument();
+  v.unmount();
+});
+
+import * as roadPlanning from './d3d-road-geometry.js';
+const preparationRoad: RoadNetwork = {
+  settlementId: 'es-torrevieja',
+  level: 'A',
+  sha256: 'a'.repeat(64),
+  features: [
+    {
+      type: 'Feature',
+      id: 'W1',
+      properties: { highway: 'primary' },
+      geometry: {
+        type: 'LineString',
+        coordinates: [
+          [-0.7, 37.98],
+          [-0.69, 37.98],
+        ],
+      },
+    },
+  ],
+};
+it.each(['terrain', 'cells', 'city', 'road-plan'] as const)(
+  'surfaces initial %s failure through the coordinator without a fabricated useful frame',
+  (kind) => {
+    enableWorld();
+    vi.mocked(useTerrain).mockReturnValue({ status: 'unavailable' });
+    vi.mocked(useStreetCells).mockReturnValue({ status: 'absent' });
+    if (kind === 'terrain')
+      vi.mocked(useTerrain).mockReturnValue({
+        status: 'error',
+        message: 'native-source-failure',
+      });
+    if (kind === 'cells')
+      vi.mocked(useStreetCells).mockReturnValue({
+        status: 'error',
+        message: 'cell-source-failure',
+      });
+    if (kind === 'city')
+      vi.mocked(useStreetCells).mockReturnValue({
+        status: 'ready',
+        model: { ...lifecycleCells, settlementId: 'foreign-city' },
+      });
+    if (kind === 'road-plan') {
+      vi.mocked(useRoadNetwork).mockReturnValue({
+        status: 'ready',
+        model: preparationRoad,
+      });
+      vi.spyOn(roadPlanning, 'prepareD3dRoads').mockImplementation(() => {
+        throw Error('road-plan-failure');
+      });
+    }
+    const v = render(
+      <CityPreparationProvider identity={kind} cityName="Test">
+        {scene('normal', null, undefined, scenario, cellOwnedPopulation)}
+      </CityPreparationProvider>,
+    );
+    const host = screen.getByTestId('city-preparation');
+    expect(host.dataset.cityPreparationStatus).toBe('error');
+    expect(host.dataset.firstUsefulFrame).toBe('');
+    expect(host.dataset.preparationError).toContain(
+      kind === 'city' ? 'mismatch' : 'failure',
+    );
+    v.unmount();
+  },
+);
+it('requires the real current road batch in addition to fallback ground', () => {
+  enableWorld();
+  vi.mocked(useRoadNetwork).mockReturnValue({
+    status: 'ready',
+    model: preparationRoad,
+  });
+  const v = render(
+    <CityPreparationProvider identity="roads" cityName="Test">
+      {scene('normal', null, undefined, scenario, cellOwnedPopulation)}
+    </CityPreparationProvider>,
+  );
+  const host = screen.getByTestId('city-preparation');
+  act(() =>
+    sceneProps(
+      [...document.querySelectorAll('mesh')].find((n) =>
+        n.querySelector('boxGeometry'),
+      )!,
+    ).onAfterRender!(),
+  );
+  expect(host.dataset.firstUsefulFrame).toBe('');
+  act(() =>
+    sceneProps(document.querySelector('mesh[name="road-network-surface"]')!)
+      .onAfterRender!(),
+  );
+  expect(host.dataset.firstUsefulFrame).toBe('presented');
+  v.unmount();
+});
+
+it.each([
+  'terrain',
+  'cells',
+  'roads',
+  'no-population',
+  'city-pending',
+] as const)(
+  'keeps actual readiness pending for %s without acknowledging an incomplete scene',
+  (kind) => {
+    enableWorld();
+    const original = vi.mocked(usePreparedCity).getMockImplementation()!;
+    if (kind === 'terrain')
+      vi.mocked(useTerrain).mockReturnValue({ status: 'loading' });
+    if (kind === 'cells')
+      vi.mocked(useStreetCells).mockReturnValue({ status: 'loading' });
+    if (kind === 'roads')
+      vi.mocked(useRoadNetwork).mockReturnValue({ status: 'loading' });
+    if (kind === 'city-pending')
+      vi.mocked(usePreparedCity).mockImplementation(
+        function pending(_key, input) {
+          return useMemo(() => ({ status: 'loading' as const }), [input]);
+        },
+      );
+    try {
+      const v = render(
+        <CityPreparationProvider identity={kind} cityName="A">
+          {scene(
+            'normal',
+            null,
+            undefined,
+            scenario,
+            kind === 'no-population' ? undefined : cellOwnedPopulation,
+          )}
+        </CityPreparationProvider>,
+      );
+      const host = screen.getByTestId('city-preparation');
+      expect(host.dataset.firstUsefulFrame).toBe('');
+      expect(host.dataset.cityPreparationStatus).toBe('loading');
+      v.unmount();
+    } finally {
+      vi.mocked(usePreparedCity).mockImplementation(original);
+    }
+  },
+);
+it('ignores detached fallback and outer-road callbacks after the visible root is replaced', () => {
+  enableWorld();
+  vi.mocked(useRoadNetwork).mockReturnValue({
+    status: 'ready',
+    model: preparationRoad,
+  });
+  const tree = (id: string) => (
+    <CityPreparationProvider identity={id} cityName="A">
+      {scene('normal', null, undefined, scenario, cellOwnedPopulation)}
+    </CityPreparationProvider>
+  );
+  const v = render(tree('old'));
+  const ground = sceneProps(
+    [...document.querySelectorAll('mesh')].find((n) =>
+      n.querySelector('boxGeometry'),
+    )!,
+  ).onAfterRender!;
+  const road = sceneProps(screen.getByTestId('r3f-canvas')).children!.find(
+    (c) => c.props.onRoadRendered,
+  )!.props.onRoadRendered!;
+  v.rerender(tree('new'));
+  act(() => {
+    ground();
+    road();
+  });
+  expect(screen.getByTestId('city-preparation').dataset.firstUsefulFrame).toBe(
+    '',
+  );
+  v.unmount();
+  act(() => {
+    ground();
+    road();
+  });
 });

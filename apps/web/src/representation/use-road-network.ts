@@ -1,7 +1,9 @@
+import { usePreparationAttempt } from '../city-preparation/CityPreparationProvider.js';
 import { useEffect, useState } from 'react';
-import { fetchPublicAsset } from '../assets/public-layers.js';
-import { browserSha256 } from '../scenarios/scenario-loader.js';
-import { createRoadNetworkLoader } from './road-network-loader.js';
+import { runPreparation } from '../city-preparation/browser-preparation.js';
+import { record } from '../city-preparation/preparation-protocol.js';
+import { freezeSettlement } from '../settlement/settlement-metadata.js';
+import type { createRoadNetworkLoader } from './road-network-loader.js';
 import type { RoadLevel, RoadNetwork } from './road-network.js';
 export type RoadNetworkState =
   | Readonly<{ status: 'absent' | 'loading' }>
@@ -10,11 +12,23 @@ export type RoadNetworkState =
 type Loader = ReturnType<typeof createRoadNetworkLoader>;
 let browserLoader: Loader | undefined;
 function getBrowserLoader() {
-  browserLoader ??= createRoadNetworkLoader({
-    baseUrl: import.meta.env.BASE_URL,
-    digestSha256: browserSha256,
-    fetchText: fetchPublicAsset,
-  });
+  browserLoader ??= {
+    async resolve(settlementId, level = 'C') {
+      const value = await runPreparation(
+        'roads:' + settlementId + ':' + level,
+        { kind: 'roads', city: settlementId, level },
+      );
+      if (value === undefined) return undefined;
+      if (
+        !record(value) ||
+        value.settlementId !== settlementId ||
+        value.level !== level ||
+        !Array.isArray(value.features)
+      )
+        throw Error('Invalid prepared roads model');
+      return freezeSettlement(value) as unknown as RoadNetwork;
+    },
+  };
   return browserLoader;
 }
 /** Pending/failed transitions show provisional streets, never a mislabeled old level. */
@@ -23,7 +37,8 @@ export function useRoadNetwork(
   level: RoadLevel,
   loader: Loader = getBrowserLoader(),
 ): RoadNetworkState {
-  const key = settlementId + ':' + level;
+  const attempt = usePreparationAttempt();
+  const key = attempt + ':' + settlementId + ':' + level;
   const [result, setResult] =
     useState<
       Readonly<{ key: string; loader: Loader; view: RoadNetworkState }>

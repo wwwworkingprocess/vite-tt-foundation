@@ -1,3 +1,4 @@
+import { waitForCurrentCityReady } from '../support/city-preparation.js';
 const network = (offline: boolean) =>
   Cypress.automation('remote:debugger:protocol', {
     command: 'Network.emulateNetworkConditions',
@@ -574,6 +575,7 @@ describe('optional city-site offline acquisition', () => {
         .find('select')
         .select('torrevieja-legacy-all-v1');
       cy.contains('button', 'Start new game').should('be.enabled').click();
+      waitForCurrentCityReady();
       cy.contains('button', /^Pause$/).click();
       cy.get(
         'button[aria-label="Select mini representation for swap"]',

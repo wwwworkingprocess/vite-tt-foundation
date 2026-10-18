@@ -60,6 +60,38 @@ economics, transfers, multi-pattern passenger routing, advanced services,
 traffic, schedules, and richer operational realism remain later work unless an
 active task explicitly changes the sequence.
 
+## City Preparation V1 review candidate
+
+Application-owned preparation is separate from authoritative simulation. One
+visual module Worker owns geographic revision-bound ZIP storage, native terrain
+and road/StreetCell decoding, and C-city composition/ground anchors. The small
+scenarios/population-fields archives retain disjoint host ownership through the
+same loader, keeping session acquisition independent of visual CPU work. Current and
+one recent city's derived plans are retained; successful main-thread DTO retention
+is bounded to 64 MiB estimated payload and 16 entries. Source inputs, complete
+building records, physical masks and all existing geometry/proposal budgets remain
+unchanged. The shared Rollup graph emits a content-hashed Worker without duplicating
+the dependency bundle; all emitted JavaScript remains in the existing total audit.
+
+The real workspace stays mounted beneath an accessible, non-modal preparation
+surface. Scenario/timeline/retry identity scopes a monotonic acquisition,
+preparation and presentation state. First-useful-frame readiness requires actual
+current native/fallback, city and required-road draw callbacks, not a mounted
+Canvas or resolved promise. Removing D3D cancels presentation readiness; reinstalling
+it creates a fresh scope. Simulation commands and ticks do not wait for this state.
+
+Optional covers, sites and landscape details begin after the initial useful frame.
+GPU resources and remaining numeric terrain/road/optional planning stay on the main
+thread. An explicitly diagnosed legacy fallback yields between jobs if Workers
+are unavailable; synchronous composition inside that fallback remains a limitation.
+One visual Worker is selected on desktop and mobile. Desktop Node
+trials measured 12.10/12.02 s and 16.22/13.47 s for one/two workers. Independent
+owners duplicated archive reads (73.1 to 134.5 MB); combined estimated heaps were
+190–194 MB for one and 255–300 MB for two. This
+is not a mobile/browser CPU benchmark; a production two-worker pool is deferred. See the
+[preparation boundary](architecture/city-preparation-v1.md) and task validation report
+for measured results and remaining acceptance work.
+
 ## Workspace and dependency graph
 
 ### Compressed public-layer storage
@@ -85,8 +117,7 @@ storage adapter without becoming new runtime authorities or being eagerly loaded
 Node audits and real-data fixtures read the same archived entries. The supplied
 archives are preserved, and loose source folders may be removed by the owner;
 they are not a runtime/build/test fallback. Replacing data requires replacing its
-layer archive and rebuilding/restarting Vite. Streaming, binary terrain transport,
-worker decoding, and new semantic asset integration remain separate work.
+layer archive and rebuilding/restarting Vite. City Preparation V1 below introduces worker decoding and binary native terrain transport; new semantic asset integration remains separate work.
 
 ```text
 apps/web ───────────────► packages/simulation
@@ -401,7 +432,7 @@ so broad terrain-height Stop targets cannot steal visible Vehicle clicks;
 canonical entity identities and selection callbacks remain unchanged. Public catalog/products retain their logical root/subpath
 paths inside lazily acquired archives, with byte/hash integrity checked by the build audit.
 
-The terrain catalog includes Torrevieja, Alicante, Murcia, Benidorm, Elche and Málaga: 65 scenario mappings across 58 native viewports. Its 18 height/mask/coastline products retain their supplied bytes; Cartagena is the only uncatalogued settlement. ZIP guards retain a 64 MiB compressed archive limit, with 128 MiB per-entry and 384 MiB aggregate declared-output limits to accommodate the supplied six-city package (about 108 MiB largest entry and 328 MiB total); entries inflate only when requested. JSON products now use compressed layer storage; binary or streamed delivery, worker preparation, persistent GPU chunk caches and million-plus-sample delivery remain future work. Native detailed terrain already uses cullable spatial patches; broader city batching remains bounded presentation geometry. Cartagena terrain, complex foundations, bridges/tunnels, terrain editing, vertical exaggeration controls and advanced water/art are deferred.
+The terrain catalog includes Torrevieja, Alicante, Murcia, Benidorm, Elche and Málaga: 65 scenario mappings across 58 native viewports. Its 18 height/mask/coastline products retain their supplied bytes; Cartagena is the only uncatalogued settlement. ZIP guards retain a 64 MiB compressed archive limit, with 128 MiB per-entry and 384 MiB aggregate declared-output limits to accommodate the supplied six-city package (about 108 MiB largest entry and 328 MiB total); entries inflate only when requested. JSON products use compressed layer storage; ZIP inflation and native/C-city preparation now use the visual Worker boundary above. Binary or streamed delivery, off-thread numeric mesh planning, persistent GPU chunk caches and million-plus-sample delivery remain future work. Native detailed terrain already uses cullable spatial patches; broader city batching remains bounded presentation geometry. Cartagena terrain, complex foundations, bridges/tunnels, terrain editing, vertical exaggeration controls and advanced water/art are deferred.
 
 D3D `Map` is the family's sole current view. No view-switch control exists while
 every family supports only one view.

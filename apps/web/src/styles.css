@@ -1379,3 +1379,28 @@ summary {
     max-height: calc(100dvh - 5rem);
   }
 }
+
+.city-preparation-host {
+  position: relative;
+}
+.city-preparation-overlay {
+  position: fixed;
+  z-index: 20;
+  top: 6.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  gap: 0.6rem;
+  width: min(28rem, 90vw);
+  padding: 1.2rem;
+  border: 1px solid #9da8a1;
+  border-radius: 0.7rem;
+  background: #f3eee4f2;
+  color: #183b43;
+  box-shadow: 0 4px 18px #15313b30;
+  pointer-events: none;
+}
+
+.city-preparation-overlay button {
+  pointer-events: auto;
+}

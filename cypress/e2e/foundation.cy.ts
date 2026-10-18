@@ -1,3 +1,4 @@
+import { waitForCurrentCityReady } from '../support/city-preparation.js';
 type VehicleSvgState = readonly Readonly<Record<string, string | null>>[];
 type VehicleMovementState = Readonly<{
   vehicleId: string | null;
@@ -160,6 +161,7 @@ describe('foundation screen', () => {
         'current native terrain has drawn: ' + JSON.stringify($map[0]!.dataset),
       ).to.equal($map.attr('data-terrain-identity'));
     });
+    waitForCurrentCityReady();
     cy.get('[data-testid="d3d-map-representation"]')
       .should(($map) => {
         const count = Number($map.attr('data-city-building-count'));

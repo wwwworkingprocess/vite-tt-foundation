@@ -1,3 +1,9 @@
+import { buildStreetCellCity } from './d3d-street-cell-city.js';
+import { preparationMetrics } from '../city-preparation/browser-preparation.js';
+import {
+  useCityPreparation,
+  useCityPreparationInteractive,
+} from '../city-preparation/CityPreparationProvider.js';
 import { D3dLandscapeDetails } from './D3dLandscapeDetails.js';
 import {
   prepareLandscapeDetails,
@@ -22,10 +28,7 @@ import {
   type TypedLandCoverPlan,
 } from './d3d-typed-land-covers.js';
 import { resolveD3dAppSettings } from './d3d-app-settings.js';
-import {
-  buildStreetCellCity,
-  streetCellLandmarkProtections,
-} from './d3d-street-cell-city.js';
+import { usePreparedCity } from '../city-preparation/use-prepared-city.js';
 import { useStreetCells } from './use-street-cells.js';
 import {
   prepareD3dStreetCells,
@@ -808,12 +811,15 @@ function NativeTerrain({
 }
 
 function Terrain({
+  onDraw,
   sceneBounds,
 }: {
+  onDraw: () => void;
   sceneBounds: ReturnType<typeof d3dSceneBounds>;
 }) {
   return (
     <mesh
+      onAfterRender={onDraw}
       position={[
         (sceneBounds.minX + sceneBounds.maxX) / 2,
         -0.18,
@@ -840,7 +846,9 @@ function CityBatch({
   simple,
   facade = false,
   metre = 1,
+  onDraw,
 }: {
+  onDraw?: (() => void) | undefined;
   buildings: readonly CityBuilding[];
   kind: BuildingPrototypeKind;
   layer: 'body' | 'roof';
@@ -907,6 +915,10 @@ function CityBatch({
   }, [buildings, layer, simple, geometry, material]);
   return (
     <instancedMesh
+      onAfterRender={() => {
+        if (instances.current && instances.current.instanceMatrix.version > 0)
+          onDraw?.();
+      }}
       name={'city-' + kind + '-' + layer}
       ref={instances}
       args={[geometry, material, buildings.length]}
@@ -916,6 +928,8 @@ function CityBatch({
 }
 
 function City({
+  nativePresented,
+  onDraw,
   facadeEnabled,
   roadsPresented,
   wrapper,
@@ -924,6 +938,8 @@ function City({
   mode,
   terrain,
 }: {
+  onDraw?: (() => void) | undefined;
+  nativePresented: boolean;
   terrain?: D3dTerrain | undefined;
   facadeEnabled: boolean;
   roadsPresented: boolean;
@@ -939,7 +955,10 @@ function City({
     city.buildingSource === 'street-cells-C' ||
     (terrain !== undefined && !policy.streets);
   const omitGroundOverlays = terrain !== undefined;
-  const buildings = cityLodBuildings(city, lod, mode);
+  const buildings = useMemo(
+    () => (nativePresented ? cityLodBuildings(city, lod, mode) : []),
+    [nativePresented, city, lod, mode],
+  );
   const simple = mode === 'mini' || lod === 'far';
   const groups = useMemo(
     () =>
@@ -1039,6 +1058,7 @@ function City({
       {groups.map((group) => (
         <group key={group.kind}>
           <CityBatch
+            onDraw={onDraw}
             buildings={group.buildings}
             kind={group.kind}
             layer="body"
@@ -1586,6 +1606,9 @@ function Vehicles({
 }
 
 function D3dWorld({
+  onFallbackDraw,
+  nativePresented,
+  onCityRendered,
   onNativeDraw,
   typedCoverPlan,
   onTypedCoversRendered,
@@ -1614,6 +1637,9 @@ function D3dWorld({
   gridGeometry,
   wrapper,
 }: Readonly<{
+  onFallbackDraw: () => void;
+  nativePresented: boolean;
+  onCityRendered: () => void;
   onNativeDraw: () => boolean;
   landscapePlan: LandscapeDetailPlan | undefined;
   onLandscapeRendered: (gpuBytes: number, batches: number) => void;
@@ -1739,7 +1765,7 @@ function D3dWorld({
           renderLod={mode === 'mini' ? 'far' : lod}
         />
       ) : (
-        <Terrain sceneBounds={sceneBounds} />
+        <Terrain onDraw={onFallbackDraw} sceneBounds={sceneBounds} />
       )}
       {gridGeometry ? (
         <lineSegments
@@ -1764,6 +1790,8 @@ function D3dWorld({
       ) : null}
       {city ? (
         <City
+          nativePresented={nativePresented}
+          onDraw={onCityRendered}
           facadeEnabled={facadeEnabled}
           roadsPresented={roadMeshes !== undefined}
           city={city}
@@ -1848,6 +1876,8 @@ export default function D3dMapRepresentation({
   focusedRouteId,
   population,
 }: MapProps) {
+  const preparation = useCityPreparation();
+  const optionalReady = useCityPreparationInteractive();
   const mode = useRepresentationMode();
   const wrapper = useRef<HTMLElement>(null);
   const [lod, setLod] = useState<D3dLodBand>('far');
@@ -1888,26 +1918,32 @@ export default function D3dMapRepresentation({
   // This schedules presentation only: model inputs and all physical rules stay fixed.
   const [drawnTerrain, setDrawnTerrain] = useState<D3dTerrain>();
   const firstNativeDraw = useRef<D3dTerrain | undefined>(undefined);
-  const nativePresentation = useMemo(() => ({}), [terrain, scenario]);
+  const nativePresentation = useMemo(
+    () => ({}),
+    [terrain, scenario, mode, preparation],
+  );
   const activeNativePresentation = useRef<object | null>(null);
   useLayoutEffect(() => {
     activeNativePresentation.current = nativePresentation;
+    preparation?.coordinator.invalidate(preparation.generation, 'terrain');
     return () => {
       activeNativePresentation.current = null;
     };
-  }, [nativePresentation]);
+  }, [nativePresentation, preparation]);
   const onNativeDraw = useCallback(() => {
     if (activeNativePresentation.current !== nativePresentation) return false;
     if (firstNativeDraw.current !== terrain) {
       firstNativeDraw.current = terrain;
       setDrawnTerrain(terrain);
+      requestFrame();
     }
+    preparation?.coordinator.draw(preparation.generation, 'terrain');
     return true;
-  }, [terrain, nativePresentation]);
+  }, [terrain, nativePresentation, preparation, requestFrame]);
   const materializationState = useCityMaterialization(
     scenario.manifest.primarySettlementId,
     lod,
-    mode === 'normal' && terrain !== undefined,
+    mode === 'normal' && terrain !== undefined && optionalReady,
   );
   const roadState = useRoadNetwork(
     scenario.manifest.primarySettlementId,
@@ -1958,12 +1994,13 @@ export default function D3dMapRepresentation({
         writeD3dDiagnostics(element, { renderedRoadNetworkLevel: '' });
     };
     activeRoadPresentation.current = roadPresentation;
+    preparation?.coordinator.invalidate(preparation.generation, 'roads');
     clear();
     return () => {
       activeRoadPresentation.current = null;
       clear();
     };
-  }, [roadPresentation]);
+  }, [roadPresentation, preparation]);
   const onRoadInvalidated = useCallback(() => {
     const element = wrapper.current;
     if (
@@ -1975,13 +2012,15 @@ export default function D3dMapRepresentation({
   }, [roadPresentation]);
   const onRoadRendered = useCallback(() => {
     const element = wrapper.current;
+    if (activeRoadPresentation.current === roadPresentation)
+      preparation?.coordinator.draw(preparation.generation, 'roads');
     if (
       activeRoadPresentation.current === roadPresentation &&
       element &&
       element.dataset.renderedRoadNetworkLevel !== roadLevel
     )
       writeD3dDiagnostics(element, { renderedRoadNetworkLevel: roadLevel! });
-  }, [roadPresentation, roadLevel]);
+  }, [roadPresentation, roadLevel, preparation]);
   const [roadBuilds, setRoadBuilds] = useState(0);
   useEffect(() => {
     if (!roadMeshes) return;
@@ -2011,6 +2050,7 @@ export default function D3dMapRepresentation({
       : undefined;
   const typedCoverPreparation = useMemo(() => {
     if (
+      !optionalReady ||
       !settings.typedLandCovers.visible ||
       mode !== 'normal' ||
       !terrain ||
@@ -2034,6 +2074,7 @@ export default function D3dMapRepresentation({
       return { status: 'error' as const, message: String(error) };
     }
   }, [
+    optionalReady,
     settings.typedLandCovers.visible,
     mode,
     terrain,
@@ -2233,61 +2274,69 @@ export default function D3dMapRepresentation({
     };
   }, [terrainMeshes]);
   const metadata = useSettlementMetadata(scenario.manifest.primarySettlementId);
-  const cellProtections = useMemo(
-    () =>
-      metadata.status === 'ready'
-        ? streetCellLandmarkProtections(model, metadata)
-        : undefined,
-    [model, metadata],
-  );
-  const cellCityPreparation = useMemo(() => {
-    if (!cellOwnedCity || !population || (terrain && drawnTerrain !== terrain))
-      return undefined;
-    try {
-      if (
-        buildingCells &&
-        buildingCells.settlementId !== scenario.manifest.primarySettlementId
-      )
-        throw new Error('StreetCell C settlement mismatch');
-      const profile = beginRepresentationProfile('street-cell-city.prepare');
-      const city = buildStreetCellCity(
-        model,
-        population,
-        metadata.status === 'ready' ? metadata : undefined,
-        buildingCells,
-        terrain,
-        cellProtections,
-      );
-      finishRepresentationProfile(profile, {
-        buildings: city.buildings.length,
-      });
-      return { status: 'ready' as const, city };
-    } catch (error) {
-      return {
-        status: 'error' as const,
-        message: String(error),
-        city: buildStreetCellCity(
-          model,
-          population,
-          metadata.status === 'ready' ? metadata : undefined,
-        ),
-      };
-    }
-  }, [
-    cellOwnedCity,
-    drawnTerrain,
-    model,
-    population,
-    metadata,
-    buildingCells,
-    terrain,
-    cellProtections,
+  const cellCityKey = [
+    scenario.manifest.contentHash,
+    scenario.manifest.scenarioId,
     scenario.manifest.primarySettlementId,
-  ]);
+    population?.gridSha256,
+    population?.cropSha256,
+    import.meta.env.PUBLIC_LAYER_REVISIONS?.terrain,
+    import.meta.env.PUBLIC_LAYER_REVISIONS?.['street-cells'],
+    metadata.status === 'ready' ? metadata.sha256 : metadata.status,
+    settings.verticalExaggeration,
+  ].join(':');
+  const cellCityInput = useMemo(
+    () =>
+      cellOwnedCity && population
+        ? {
+            kind: 'compose' as const,
+            identity: cellCityKey,
+            sceneIdentity: cellCityKey.split(':').slice(0, -2).join(':'),
+            resolveResearch: metadata.status === 'loading',
+            city: scenario.manifest.primarySettlementId,
+            scenario: scenario.manifest.scenarioId,
+            model,
+            population,
+            metadata: metadata.status === 'ready' ? metadata : undefined,
+            scale: settings.verticalExaggeration,
+          }
+        : undefined,
+    [
+      cellOwnedCity,
+      population,
+      cellCityKey,
+      metadata,
+      scenario,
+      model,
+      settings.verticalExaggeration,
+    ],
+  );
+  const preparedCity = usePreparedCity(cellCityKey, cellCityInput);
+  const cellCityPreparation =
+    buildingCells &&
+    buildingCells.settlementId !== scenario.manifest.primarySettlementId
+      ? {
+          status: 'error' as const,
+          message: 'StreetCell C settlement mismatch',
+        }
+      : preparedCity;
+  const fallbackCity = useMemo(
+    () =>
+      cellOwnedCity && population
+        ? buildStreetCellCity(
+            model,
+            population,
+            metadata.status === 'ready' ? metadata : undefined,
+          )
+        : undefined,
+    [cellOwnedCity, model, population, metadata],
+  );
   const generatedCity = useMemo(
     () =>
       cellOwnedCity
-        ? cellCityPreparation?.city
+        ? cellCityPreparation?.status === 'ready'
+          ? cellCityPreparation.city
+          : fallbackCity
         : population && metadata.status !== 'loading'
           ? buildProceduralCity(
               model,
@@ -2295,7 +2344,14 @@ export default function D3dMapRepresentation({
               metadata.status === 'ready' ? metadata : undefined,
             )
           : undefined,
-    [cellOwnedCity, cellCityPreparation, model, population, metadata],
+    [
+      cellOwnedCity,
+      cellCityPreparation,
+      fallbackCity,
+      model,
+      population,
+      metadata,
+    ],
   );
   const [cityLayoutBuilds, setCityLayoutBuilds] = useState(0);
   // Publish the committed-plan counter before observers can capture its baseline.
@@ -2319,10 +2375,95 @@ export default function D3dMapRepresentation({
   const city = useMemo(
     () =>
       generatedCity && terrain
-        ? groundCity(generatedCity, terrain)
+        ? groundCity(
+            generatedCity,
+            terrain,
+            cellCityPreparation?.status === 'ready'
+              ? cellCityPreparation.baseYs
+              : undefined,
+          )
         : generatedCity,
-    [generatedCity, terrain],
+    [generatedCity, terrain, cellCityPreparation],
   );
+  const cityDrawToken = useMemo(
+    () => ({}),
+    [city, terrain, scenario, mode, preparation],
+  );
+  const activeCityDraw = useRef<object | null>(null);
+  useLayoutEffect(() => {
+    activeCityDraw.current = cityDrawToken;
+    preparation?.coordinator.invalidate(preparation.generation, 'city');
+    preparation?.coordinator.invalidate(preparation.generation, 'fallback');
+    return () => {
+      activeCityDraw.current = null;
+    };
+  }, [cityDrawToken, preparation]);
+  const onCityRendered = useCallback(() => {
+    if (activeCityDraw.current === cityDrawToken)
+      preparation?.coordinator.draw(preparation.generation, 'city');
+  }, [cityDrawToken, preparation]);
+  const onFallbackDraw = useCallback(() => {
+    if (activeCityDraw.current === cityDrawToken)
+      preparation?.coordinator.draw(preparation.generation, 'fallback');
+  }, [cityDrawToken, preparation]);
+  useEffect(() => {
+    if (!preparation) return;
+    const { coordinator, generation } = preparation;
+    coordinator.bind(
+      generation,
+      [
+        cellCityKey,
+        terrain?.terrain.identity,
+        buildingCells?.sha256,
+        roadState.status === 'ready'
+          ? roadState.model.sha256
+          : roadState.status,
+      ].join(':'),
+    );
+    const error =
+      terrainState.status === 'error'
+        ? terrainState.message
+        : buildingCellState.status === 'error'
+          ? buildingCellState.message
+          : roadState.status === 'error'
+            ? roadState.message
+            : roadPreparation?.status === 'error'
+              ? roadPreparation.message
+              : cellCityPreparation?.status === 'error'
+                ? cellCityPreparation.message
+                : undefined;
+    if (error) {
+      coordinator.fail(generation, error);
+      return;
+    }
+    if (
+      terrainState.status === 'loading' ||
+      buildingCellState.status === 'loading' ||
+      roadState.status === 'loading'
+    )
+      return;
+    coordinator.stage(generation, 'preparing');
+    if (!city || (cellOwnedCity && cellCityPreparation?.status !== 'ready'))
+      return;
+    coordinator.prepared(generation, [
+      ...(terrain ? ['terrain' as const] : ['fallback' as const]),
+      ...(city.buildings.length ? ['city' as const] : []),
+      ...(roadMeshes?.length ? ['roads' as const] : []),
+    ]);
+  }, [
+    preparation,
+    terrainState,
+    buildingCellState,
+    roadState,
+    roadPreparation,
+    cellCityPreparation,
+    cellOwnedCity,
+    cellCityKey,
+    buildingCells,
+    city,
+    roadMeshes,
+    terrain,
+  ]);
   const sceneBounds = useMemo(
     () =>
       terrain
@@ -2352,6 +2493,7 @@ export default function D3dMapRepresentation({
   const [candidateIndex, setCandidateIndex] = useState(0);
   const materializationPreparation = useMemo(() => {
     if (
+      !optionalReady ||
       materializationState.status !== 'ready' ||
       !terrain ||
       mode !== 'normal'
@@ -2375,7 +2517,7 @@ export default function D3dMapRepresentation({
     } catch (error) {
       return { status: 'error' as const, message: String(error) };
     }
-  }, [materializationState, model, terrain, lod, city, mode]);
+  }, [optionalReady, materializationState, model, terrain, lod, city, mode]);
   const materializationError =
     materializationPreparation?.status === 'error'
       ? materializationPreparation.message
@@ -2392,6 +2534,7 @@ export default function D3dMapRepresentation({
       : undefined;
   const landscapePreparation = useMemo(() => {
     if (
+      !optionalReady ||
       !landscapeVisible(mode, lod) ||
       !terrain ||
       drawnTerrain !== terrain ||
@@ -2428,6 +2571,7 @@ export default function D3dMapRepresentation({
     model,
     scenario.manifest.primarySettlementId,
     materializationState.status,
+    optionalReady,
     landscapeSites,
     materializationPlan,
   ]);
@@ -2604,6 +2748,7 @@ export default function D3dMapRepresentation({
       data-typed-covers-batches={typedCoverPlan?.batches.length ?? 0}
       data-typed-covers-plan-builds={typedCoverBuilds}
       aria-label="Three-dimensional transport Map"
+      data-preparation-worker-jobs={JSON.stringify(preparationMetrics())}
       data-testid="d3d-map-representation"
       data-materialization-status={
         materializationPreparation?.status === 'error'
@@ -2770,7 +2915,9 @@ export default function D3dMapRepresentation({
         cellOwnedCity
           ? cellCityPreparation?.status === 'error'
             ? 'error'
-            : buildingCellState.status
+            : buildingCellState.status === 'ready'
+              ? (cellCityPreparation?.status ?? 'loading')
+              : buildingCellState.status
           : 'inactive'
       }
       data-cell-buildings-error={
@@ -2866,6 +3013,9 @@ export default function D3dMapRepresentation({
           terrain={terrain}
         />
         <D3dWorld
+          onFallbackDraw={onFallbackDraw}
+          nativePresented={!terrain || drawnTerrain === terrain}
+          onCityRendered={onCityRendered}
           onNativeDraw={onNativeDraw}
           landscapePlan={landscapePlan}
           onLandscapeRendered={onLandscapeRendered}

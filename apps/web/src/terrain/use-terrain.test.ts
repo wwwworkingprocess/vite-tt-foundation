@@ -1,6 +1,8 @@
-vi.mock('../assets/public-layers.js', () => ({
-  fetchPublicAsset: (url: string) => fetch(url),
+vi.mock('../city-preparation/browser-preparation.js', () => ({
+  runPreparation: vi.fn(),
 }));
+import { runPreparation } from '../city-preparation/browser-preparation.js';
+import { packNativeTerrain } from '../city-preparation/native-terrain-dto.js';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { createTerrainLoader, type TerrainView } from './terrain-loader.js';
@@ -72,7 +74,17 @@ it('uses the lazily shared browser loader and reaches ready without injected acq
               : f.coastline,
       ),
   }));
-  vi.stubGlobal('fetch', fetchMock);
+  const workerLoader = createTerrainLoader({
+    baseUrl: '/',
+    fetchText: fetchMock,
+  });
+  vi.mocked(runPreparation).mockImplementation(async (_key, job) => {
+    if (job.kind !== 'terrain') throw Error('unexpected job');
+    const r = await workerLoader.resolve(job.city, job.scenario);
+    return r.status === 'ready'
+      ? { status: 'ready', terrain: packNativeTerrain(r.terrain) }
+      : r;
+  });
   const a = renderHook(() => useTerrain('test', 'a'));
   await waitFor(() => expect(a.result.current.status).toBe('ready'));
   const b = renderHook(() => useTerrain('test', 'b'));
@@ -81,4 +93,20 @@ it('uses the lazily shared browser loader and reaches ready without injected acq
   expect(fetchMock.mock.calls[0]![0]).toBe('/terrain/catalog.json');
   a.unmount();
   b.unmount();
+});
+it('accepts shared ready/absent worker packets and diagnoses malformed native acquisition', async () => {
+  for (const value of [
+    { status: 'unavailable' },
+    null,
+    { status: 'unknown' },
+  ]) {
+    vi.mocked(runPreparation).mockResolvedValueOnce(value);
+    const h = renderHook(() => useTerrain('test', 'a'));
+    await waitFor(() =>
+      expect(h.result.current.status).toBe(
+        value && value.status === 'unavailable' ? 'unavailable' : 'error',
+      ),
+    );
+    h.unmount();
+  }
 });

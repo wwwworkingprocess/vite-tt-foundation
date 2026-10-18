@@ -406,3 +406,11 @@ to V4 typed masks through a separately bounded visual plan and shared colored
 instances. Exact building slots/exclusions and custom POIs remain authoritative
 and unchanged. Richer sourced amenities, building instance-color reuse, La Mata
 coverage/provenance and producer-controlled exports remain separate milestones.
+
+City Preparation V1 is an owner-review candidate: one separate visual Worker owns
+lazy geographic storage/decoding, native binary sample delivery and unchanged C-city preparation.
+The real workspace stays mounted and readiness follows actual current scene draws;
+optional detail follows afterward. Scenario/population ZIPs have disjoint host
+ownership so acquisition cannot queue behind visual composition. Simulation remains independent. Multi-worker
+scheduling, remaining synchronous optional planners and constrained-device CPU
+measurements remain explicit follow-up/acceptance items, not claimed optimizations.

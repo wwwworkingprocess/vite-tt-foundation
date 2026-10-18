@@ -107,7 +107,21 @@
       "apps/web/src/representation/d3d-landscape-geometry.ts",
       "apps/web/src/representation/d3d-landscape.ts",
       "apps/web/src/representation/d3d-landscape-scene.ts",
-      "apps/web/src/representation/D3dLandscapeDetails.tsx"
+      "apps/web/src/representation/D3dLandscapeDetails.tsx",
+      "apps/web/src/city-preparation/browser-preparation.ts",
+      "apps/web/src/city-preparation/city-preparation-coordinator.ts",
+      "apps/web/src/city-preparation/city-preparation-settings.ts",
+      "apps/web/src/city-preparation/city-preparation.worker.ts",
+      "apps/web/src/city-preparation/CityPreparationProvider.tsx",
+      "apps/web/src/city-preparation/native-terrain-dto.ts",
+      "apps/web/src/city-preparation/preparation-bytes.ts",
+      "apps/web/src/city-preparation/preparation-client.ts",
+      "apps/web/src/city-preparation/preparation-engine.ts",
+      "apps/web/src/city-preparation/preparation-protocol.ts",
+      "apps/web/src/city-preparation/preparation-wire.ts",
+      "apps/web/src/city-preparation/use-prepared-city.ts",
+      "apps/web/src/city-preparation/use-prepared-value.ts",
+      "apps/web/src/assets/public-layer-loader.ts"
     ]
   },
   "simulationCriticalCoverage": {

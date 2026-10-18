@@ -1,3 +1,4 @@
+import { cityPreparationPlugin } from './city-preparation-plugin.js';
 import { publicLayersPlugin } from './public-layers-plugin.js';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
@@ -28,6 +29,7 @@ export default defineConfig({
   },
   plugins: [
     publicLayersPlugin(),
+    cityPreparationPlugin(base),
     react(),
     VitePWA({
       includeAssets: [],

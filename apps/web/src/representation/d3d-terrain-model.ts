@@ -427,7 +427,14 @@ const cities = new WeakMap<
 export function groundCity(
   city: ProceduralCity,
   world: D3dTerrain,
+  preparedBaseYs?: Float64Array,
 ): ProceduralCity {
+  if (
+    preparedBaseYs &&
+    (preparedBaseYs.length !== city.buildings.length ||
+      !preparedBaseYs.every(Number.isFinite))
+  )
+    throw Error('Invalid prepared building anchors');
   let terrains = cities.get(city);
   if (!terrains) {
     terrains = new WeakMap();
@@ -436,9 +443,12 @@ export function groundCity(
   const previous = terrains.get(world);
   if (previous) return previous;
   const grounded = new Map(
-    city.buildings.map((b) => [
+    city.buildings.map((b, i) => [
       b,
-      Object.freeze({ ...b, baseY: world.ground(b.x, b.z).y }),
+      Object.freeze({
+        ...b,
+        baseY: preparedBaseYs ? preparedBaseYs[i]! : world.ground(b.x, b.z).y,
+      }),
     ]),
   );
   const subset = (list: ProceduralCity['buildings']) =>

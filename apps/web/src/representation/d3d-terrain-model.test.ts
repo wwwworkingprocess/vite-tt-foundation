@@ -66,7 +66,17 @@ it('renders native relief and distinct mask surfaces with static plans and groun
     medium: [building],
     mini: [building],
   } as unknown as ProceduralCity;
-  const grounded = groundCity(city, world);
+  expect(() => groundCity(city, world, new Float64Array(0))).toThrow(
+    'Invalid prepared building anchors',
+  );
+  expect(() => groundCity(city, world, new Float64Array([NaN]))).toThrow(
+    'Invalid prepared building anchors',
+  );
+  const grounded = groundCity(
+    city,
+    world,
+    Float64Array.from(city.buildings, (b) => world.ground(b.x, b.z).y),
+  );
   expect(grounded.buildings[0]!.baseY).toBeCloseTo(
     -4 * world.verticalExaggeration * world.metre,
   );

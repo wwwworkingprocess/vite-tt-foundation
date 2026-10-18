@@ -1,3 +1,4 @@
+import { CityPreparationProvider } from './city-preparation/CityPreparationProvider.js';
 import { recordRepresentationProfile } from './performance/representation-profiler.js';
 import { fetchPublicAsset } from './assets/public-layers.js';
 import {
@@ -977,133 +978,119 @@ export function App() {
     await actions?.start();
   };
   return (
-    <GameShell
-      status={
-        browserActionMessage ?? state?.message ?? persistenceMessage ?? status
+    <CityPreparationProvider
+      identity={
+        (authoritativeCoordinateKey ?? 'pending') +
+        ':' +
+        (authoritativeTimelineKey ?? 'pending')
       }
-      pacingStatus={pacing?.status ?? 'idle'}
-      persistenceStatus={application?.persistence.status ?? 'idle'}
-      saveDisabled={!ready}
-      restartDisabled={
-        !actions ||
-        scenarioSelection.status !== 'ready' ||
-        !selectedScenario ||
-        state?.operation !== 'idle'
+      cityName={
+        authoritativeScenarioPackage?.settlements.settlements.find(
+          (s) =>
+            s.settlementId ===
+            authoritativeScenarioPackage.manifest.primarySettlementId,
+        )?.name ?? 'Selected city'
       }
-      onSave={() =>
-        actions?.save() ??
-        Promise.resolve(Object.freeze({ status: 'ignored' as const }))
-      }
-      onRestart={action(restart)}
-      onPauseResume={action(
-        () =>
-          actions?.mode(pacing?.mode === 'paused' ? 'normal' : 'paused') ??
-          Promise.resolve(),
-      )}
-      scenarioControl={scenarioControl}
-      projectInfo={
-        <Suspense fallback={<p>Loading project information…</p>}>
-          <ProjectInfo />
-        </Suspense>
-      }
-      simulationControls={simulationControls}
-      sessionControls={sessionControls}
-      primaryVisualization={
-        <Suspense fallback={<p>Loading transport representation…</p>}>
-          {authoritativeScenarioPackage && fleet ? (
-            <div className="vehicle-movement-representation">
-              <TransportMapViewActions
-                populationVisible={populationVisible}
-                passengersVisible={passengersVisible}
-                onPopulationVisibleChange={setPopulationVisible}
-                onPassengersVisibleChange={setPassengersVisible}
-              />
-              {authoritativePopulationState.status === 'ready' &&
-              authoritativePopulationState.coordinateKey ===
-                authoritativeCoordinateKey &&
-              authoritativePopulationState.population ? (
-                <Suspense fallback={<p>Loading population field...</p>}>
-                  <PopulationGridOverlay
-                    key={authoritativeCoordinateKey}
-                    scenario={authoritativeScenarioPackage}
-                    cells={
-                      authoritativePopulationState.population.canonicalCells
-                    }
-                    resolutionDegrees={
-                      authoritativePopulationState.population.grid
-                        .resolutionDegrees
-                    }
-                    demandModelContentHash={
-                      authoritativePopulationState.population
-                        .demandModelContentHash
-                    }
-                    visible={populationVisible}
-                    focusedRouteId={validFocusedRouteId}
-                  />
-                </Suspense>
-              ) : null}
-              <VehicleMovementSvg
-                key={`${authoritativeCoordinateKey ?? 'none'}:${authoritativeTimelineKey ?? 'none'}`}
-                scenario={authoritativeScenarioPackage}
-                fleet={fleet}
-                selection={gameSelection}
-                onSelectionChange={selectGameObject}
-                passengerDemand={transportApplication?.passengerDemand}
-                vehiclePassengerLoads={
-                  transportApplication?.vehiclePassengerLoads
-                }
-                passengerOriginStopArrivalEvents={
-                  transportApplication?.passengerOriginStopArrivalEvents
-                }
-                simulationTick={application?.authoritative?.simulationTick}
-                showPassengerArrivalPulse={false}
-                passengersVisible={passengersVisible}
-                focusedRouteId={validFocusedRouteId}
-              />
-            </div>
-          ) : (
-            <p>Authoritative scenario representation loading.</p>
-          )}
-        </Suspense>
-      }
-      secondaryVisualization={
-        <Suspense fallback={<p>Loading representation…</p>}>
-          {authoritativeScenarioPackage && fleet ? (
-            <D3dMapRepresentation
-              key={authoritativeCoordinateKey}
-              scenario={authoritativeScenarioPackage}
-              fleet={fleet}
-              selection={gameSelection}
-              onSelectionChange={selectGameObject}
-              focusedRouteId={validFocusedRouteId}
-              population={
-                authoritativePopulationState.status === 'ready' &&
+    >
+      <GameShell
+        status={
+          browserActionMessage ?? state?.message ?? persistenceMessage ?? status
+        }
+        pacingStatus={pacing?.status ?? 'idle'}
+        persistenceStatus={application?.persistence.status ?? 'idle'}
+        saveDisabled={!ready}
+        restartDisabled={
+          !actions ||
+          scenarioSelection.status !== 'ready' ||
+          !selectedScenario ||
+          state?.operation !== 'idle'
+        }
+        onSave={() =>
+          actions?.save() ??
+          Promise.resolve(Object.freeze({ status: 'ignored' as const }))
+        }
+        onRestart={action(restart)}
+        onPauseResume={action(
+          () =>
+            actions?.mode(pacing?.mode === 'paused' ? 'normal' : 'paused') ??
+            Promise.resolve(),
+        )}
+        scenarioControl={scenarioControl}
+        projectInfo={
+          <Suspense fallback={<p>Loading project information…</p>}>
+            <ProjectInfo />
+          </Suspense>
+        }
+        simulationControls={simulationControls}
+        sessionControls={sessionControls}
+        primaryVisualization={
+          <Suspense fallback={<p>Loading transport representation…</p>}>
+            {authoritativeScenarioPackage && fleet ? (
+              <div className="vehicle-movement-representation">
+                <TransportMapViewActions
+                  populationVisible={populationVisible}
+                  passengersVisible={passengersVisible}
+                  onPopulationVisibleChange={setPopulationVisible}
+                  onPassengersVisibleChange={setPassengersVisible}
+                />
+                {authoritativePopulationState.status === 'ready' &&
                 authoritativePopulationState.coordinateKey ===
-                  authoritativeCoordinateKey
-                  ? authoritativePopulationState.population
-                  : undefined
-              }
-            />
-          ) : (
-            <p>Authoritative scenario representation loading.</p>
-          )}
-        </Suspense>
-      }
-      canvasVisualization={
-        <Suspense fallback={<p>Loading Canvas 2D representation…</p>}>
-          {authoritativeScenarioPackage && fleet ? (
-            <div className="canvas2d-map-representation">
-              <TransportMapViewActions
-                populationVisible={populationVisible}
-                passengersVisible={passengersVisible}
-                onPopulationVisibleChange={setPopulationVisible}
-                onPassengersVisibleChange={setPassengersVisible}
-              />
-              <Canvas2dRepresentation
+                  authoritativeCoordinateKey &&
+                authoritativePopulationState.population ? (
+                  <Suspense fallback={<p>Loading population field...</p>}>
+                    <PopulationGridOverlay
+                      key={authoritativeCoordinateKey}
+                      scenario={authoritativeScenarioPackage}
+                      cells={
+                        authoritativePopulationState.population.canonicalCells
+                      }
+                      resolutionDegrees={
+                        authoritativePopulationState.population.grid
+                          .resolutionDegrees
+                      }
+                      demandModelContentHash={
+                        authoritativePopulationState.population
+                          .demandModelContentHash
+                      }
+                      visible={populationVisible}
+                      focusedRouteId={validFocusedRouteId}
+                    />
+                  </Suspense>
+                ) : null}
+                <VehicleMovementSvg
+                  key={`${authoritativeCoordinateKey ?? 'none'}:${authoritativeTimelineKey ?? 'none'}`}
+                  scenario={authoritativeScenarioPackage}
+                  fleet={fleet}
+                  selection={gameSelection}
+                  onSelectionChange={selectGameObject}
+                  passengerDemand={transportApplication?.passengerDemand}
+                  vehiclePassengerLoads={
+                    transportApplication?.vehiclePassengerLoads
+                  }
+                  passengerOriginStopArrivalEvents={
+                    transportApplication?.passengerOriginStopArrivalEvents
+                  }
+                  simulationTick={application?.authoritative?.simulationTick}
+                  showPassengerArrivalPulse={false}
+                  passengersVisible={passengersVisible}
+                  focusedRouteId={validFocusedRouteId}
+                />
+              </div>
+            ) : (
+              <p>Authoritative scenario representation loading.</p>
+            )}
+          </Suspense>
+        }
+        secondaryVisualization={
+          <Suspense fallback={<p>Loading representation…</p>}>
+            {authoritativeScenarioPackage && fleet ? (
+              <D3dMapRepresentation
+                key={authoritativeCoordinateKey}
                 scenario={authoritativeScenarioPackage}
                 fleet={fleet}
                 selection={gameSelection}
                 onSelectionChange={selectGameObject}
+                focusedRouteId={validFocusedRouteId}
                 population={
                   authoritativePopulationState.status === 'ready' &&
                   authoritativePopulationState.coordinateKey ===
@@ -1111,135 +1098,164 @@ export function App() {
                     ? authoritativePopulationState.population
                     : undefined
                 }
-                populationVisible={populationVisible}
-                passengerDemand={transportApplication?.passengerDemand}
-                vehiclePassengerLoads={
-                  transportApplication?.vehiclePassengerLoads
-                }
-                passengerOriginStopArrivalEvents={
-                  transportApplication?.passengerOriginStopArrivalEvents
-                }
-                simulationTick={application?.authoritative?.simulationTick}
-                showPassengerArrivalPulse={false}
-                passengersVisible={passengersVisible}
-                focusedRouteId={validFocusedRouteId}
               />
-            </div>
-          ) : null}
-        </Suspense>
-      }
-      representationModal={
-        openSelectionDetails === 'stop' &&
-        gameSelection?.kind === 'stop' &&
-        authoritativeScenarioPackage
-          ? {
-              title:
-                authoritativeScenarioPackage.stops.stopPlaces.find(
-                  ({ stopPlaceId }) =>
-                    stopPlaceId === gameSelection.stopPlaceId,
-                )?.name ?? 'StopPlace details',
-              content: (
-                <Suspense fallback={<p>Loading StopPlace details…</p>}>
-                  <StopPlaceModalDetails
-                    scenario={authoritativeScenarioPackage}
-                    stopPlaceId={gameSelection.stopPlaceId}
-                    passengerDemand={transportApplication?.passengerDemand}
-                    currentBoardingEvents={
-                      transportApplication?.currentBoardingEvents
-                    }
-                    currentAlightingEvents={
-                      transportApplication?.currentAlightingEvents
-                    }
-                  />
-                </Suspense>
-              ),
-              onClose: () => setOpenSelectionDetails(undefined),
-            }
-          : openSelectionDetails === 'vehicle' &&
-              gameSelection?.kind === 'vehicle' &&
-              fleet
+            ) : (
+              <p>Authoritative scenario representation loading.</p>
+            )}
+          </Suspense>
+        }
+        canvasVisualization={
+          <Suspense fallback={<p>Loading Canvas 2D representation…</p>}>
+            {authoritativeScenarioPackage && fleet ? (
+              <div className="canvas2d-map-representation">
+                <TransportMapViewActions
+                  populationVisible={populationVisible}
+                  passengersVisible={passengersVisible}
+                  onPopulationVisibleChange={setPopulationVisible}
+                  onPassengersVisibleChange={setPassengersVisible}
+                />
+                <Canvas2dRepresentation
+                  scenario={authoritativeScenarioPackage}
+                  fleet={fleet}
+                  selection={gameSelection}
+                  onSelectionChange={selectGameObject}
+                  population={
+                    authoritativePopulationState.status === 'ready' &&
+                    authoritativePopulationState.coordinateKey ===
+                      authoritativeCoordinateKey
+                      ? authoritativePopulationState.population
+                      : undefined
+                  }
+                  populationVisible={populationVisible}
+                  passengerDemand={transportApplication?.passengerDemand}
+                  vehiclePassengerLoads={
+                    transportApplication?.vehiclePassengerLoads
+                  }
+                  passengerOriginStopArrivalEvents={
+                    transportApplication?.passengerOriginStopArrivalEvents
+                  }
+                  simulationTick={application?.authoritative?.simulationTick}
+                  showPassengerArrivalPulse={false}
+                  passengersVisible={passengersVisible}
+                  focusedRouteId={validFocusedRouteId}
+                />
+              </div>
+            ) : null}
+          </Suspense>
+        }
+        representationModal={
+          openSelectionDetails === 'stop' &&
+          gameSelection?.kind === 'stop' &&
+          authoritativeScenarioPackage
             ? {
-                title: `Vehicle ${gameSelection.vehicleId}`,
+                title:
+                  authoritativeScenarioPackage.stops.stopPlaces.find(
+                    ({ stopPlaceId }) =>
+                      stopPlaceId === gameSelection.stopPlaceId,
+                  )?.name ?? 'StopPlace details',
                 content: (
-                  <Suspense fallback={<p>Loading vehicle details…</p>}>
-                    <VehicleModalDetails
-                      vehicleId={gameSelection.vehicleId}
-                      fleet={fleet}
+                  <Suspense fallback={<p>Loading StopPlace details…</p>}>
+                    <StopPlaceModalDetails
+                      scenario={authoritativeScenarioPackage}
+                      stopPlaceId={gameSelection.stopPlaceId}
                       passengerDemand={transportApplication?.passengerDemand}
-                      vehicleOperations={
-                        transportApplication?.vehicleOperations
-                      }
-                      vehiclePassengerLoads={
-                        transportApplication?.vehiclePassengerLoads
-                      }
                       currentBoardingEvents={
                         transportApplication?.currentBoardingEvents
                       }
                       currentAlightingEvents={
                         transportApplication?.currentAlightingEvents
                       }
-                      currentJourneyCompletionEvents={
-                        transportApplication?.currentJourneyCompletionEvents
-                      }
                     />
                   </Suspense>
                 ),
                 onClose: () => setOpenSelectionDetails(undefined),
               }
-            : undefined
-      }
-      workspaceSidecar={
-        authoritativeScenarioPackage ? (
-          <TransportRouteDock
-            scenario={authoritativeScenarioPackage}
-            selection={gameSelection}
-            ready={ready}
-            onSelectionChange={selectGameObject}
-            onAddBus={() => void addBusToSelectedRoute()}
-            focusedRouteId={validFocusedRouteId}
-            onFocusRoute={setFocusedRouteId}
-            onShowFullNetwork={() => setFocusedRouteId(undefined)}
-          />
-        ) : null
-      }
-      inspector={
-        authoritativeScenarioPackage && fleet ? (
-          <Suspense fallback={<p>Loading inspector…</p>}>
-            <GameInspector
-              selection={gameSelection}
+            : openSelectionDetails === 'vehicle' &&
+                gameSelection?.kind === 'vehicle' &&
+                fleet
+              ? {
+                  title: `Vehicle ${gameSelection.vehicleId}`,
+                  content: (
+                    <Suspense fallback={<p>Loading vehicle details…</p>}>
+                      <VehicleModalDetails
+                        vehicleId={gameSelection.vehicleId}
+                        fleet={fleet}
+                        passengerDemand={transportApplication?.passengerDemand}
+                        vehicleOperations={
+                          transportApplication?.vehicleOperations
+                        }
+                        vehiclePassengerLoads={
+                          transportApplication?.vehiclePassengerLoads
+                        }
+                        currentBoardingEvents={
+                          transportApplication?.currentBoardingEvents
+                        }
+                        currentAlightingEvents={
+                          transportApplication?.currentAlightingEvents
+                        }
+                        currentJourneyCompletionEvents={
+                          transportApplication?.currentJourneyCompletionEvents
+                        }
+                      />
+                    </Suspense>
+                  ),
+                  onClose: () => setOpenSelectionDetails(undefined),
+                }
+              : undefined
+        }
+        workspaceSidecar={
+          authoritativeScenarioPackage ? (
+            <TransportRouteDock
               scenario={authoritativeScenarioPackage}
-              fleet={fleet}
-              passengerDemand={transportApplication?.passengerDemand}
-              vehicleOperations={transportApplication?.vehicleOperations}
-              vehiclePassengerLoads={
-                transportApplication?.vehiclePassengerLoads
-              }
-              currentBoardingEvents={
-                transportApplication?.currentBoardingEvents
-              }
-              currentAlightingEvents={
-                transportApplication?.currentAlightingEvents
-              }
-              currentJourneyCompletionEvents={
-                transportApplication?.currentJourneyCompletionEvents
-              }
-              selectionDetailsOpen={
-                openSelectionDetails === gameSelection?.kind
-              }
-              onOpenSelectionDetails={() =>
-                setOpenSelectionDetails(
-                  gameSelection?.kind === 'stop' ||
-                    gameSelection?.kind === 'vehicle'
-                    ? gameSelection.kind
-                    : undefined,
-                )
-              }
-              onClear={clearGameSelection}
+              selection={gameSelection}
+              ready={ready}
+              onSelectionChange={selectGameObject}
+              onAddBus={() => void addBusToSelectedRoute()}
+              focusedRouteId={validFocusedRouteId}
+              onFocusRoute={setFocusedRouteId}
+              onShowFullNetwork={() => setFocusedRouteId(undefined)}
             />
-          </Suspense>
-        ) : null
-      }
-    />
+          ) : null
+        }
+        inspector={
+          authoritativeScenarioPackage && fleet ? (
+            <Suspense fallback={<p>Loading inspector…</p>}>
+              <GameInspector
+                selection={gameSelection}
+                scenario={authoritativeScenarioPackage}
+                fleet={fleet}
+                passengerDemand={transportApplication?.passengerDemand}
+                vehicleOperations={transportApplication?.vehicleOperations}
+                vehiclePassengerLoads={
+                  transportApplication?.vehiclePassengerLoads
+                }
+                currentBoardingEvents={
+                  transportApplication?.currentBoardingEvents
+                }
+                currentAlightingEvents={
+                  transportApplication?.currentAlightingEvents
+                }
+                currentJourneyCompletionEvents={
+                  transportApplication?.currentJourneyCompletionEvents
+                }
+                selectionDetailsOpen={
+                  openSelectionDetails === gameSelection?.kind
+                }
+                onOpenSelectionDetails={() =>
+                  setOpenSelectionDetails(
+                    gameSelection?.kind === 'stop' ||
+                      gameSelection?.kind === 'vehicle'
+                      ? gameSelection.kind
+                      : undefined,
+                  )
+                }
+                onClear={clearGameSelection}
+              />
+            </Suspense>
+          ) : null
+        }
+      />
+    </CityPreparationProvider>
   );
 }
 

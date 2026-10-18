@@ -1,3 +1,4 @@
+import { waitForCurrentCityReady } from '../support/city-preparation.js';
 const map = () => cy.get('[data-testid="d3d-map-representation"]');
 const drawn = () =>
   map().should(($m) => {
@@ -15,6 +16,7 @@ it('measures paused maximum-zoom terrain interaction separately from running pac
     .select('torrevieja-legacy-all-v1');
   cy.contains('button', 'Start new game').should('be.enabled').click();
   cy.get('[data-testid="game-shell"]').should('be.visible');
+  waitForCurrentCityReady();
   // Use the existing terrain-spec acquisition allowance before timing interactions.
   // All measured camera assertions retain the default command timeout.
   cy.get('[data-testid="d3d-map-representation"]', { timeout: 15000 }).should(

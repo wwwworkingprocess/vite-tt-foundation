@@ -2,8 +2,10 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { useStreetCells } from './use-street-cells.js';
 import type { StreetCells } from './street-cells.js';
-vi.mock('../assets/public-layers.js', () => ({ fetchPublicAsset: vi.fn() }));
-import { fetchPublicAsset } from '../assets/public-layers.js';
+vi.mock('../city-preparation/browser-preparation.js', () => ({
+  runPreparation: vi.fn(),
+}));
+import { runPreparation as fetchPublicAsset } from '../city-preparation/browser-preparation.js';
 const model: StreetCells = {
   settlementId: 'es-torrevieja',
   level: 'C',
@@ -113,4 +115,22 @@ it('invalidates same-city A/B/C requests and rejects delayed obsolete levels', a
     ['es-torrevieja', 'C'],
   ]);
   h.unmount();
+});
+it('preserves absent coverage, freezes valid worker C and diagnoses foreign packets', async () => {
+  for (const value of [
+    undefined,
+    model,
+    { ...model, settlementId: 'es-foreign' },
+  ]) {
+    vi.mocked(fetchPublicAsset).mockResolvedValueOnce(value);
+    const h = renderHook(() => useStreetCells('es-torrevieja', true));
+    await waitFor(() =>
+      expect(h.result.current.status).toBe(
+        value === undefined ? 'absent' : value === model ? 'ready' : 'error',
+      ),
+    );
+    if (h.result.current.status === 'ready')
+      expect(Object.isFrozen(h.result.current.model)).toBe(true);
+    h.unmount();
+  }
 });

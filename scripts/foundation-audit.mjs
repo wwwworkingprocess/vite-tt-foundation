@@ -629,7 +629,8 @@ for (const file of web) {
   if (
     /\b(?:DedicatedWorkerGlobalScope|postMessage|new Worker)\b/.test(text) &&
     !file.includes('simulation-worker') &&
-    !file.includes('transport-simulation')
+    !file.includes('transport-simulation') &&
+    !file.includes('city-preparation')
   )
     fail(`${file} uses Worker globals outside the Worker adapter.`);
   if (writableStoreViolations(text).length)
@@ -809,7 +810,10 @@ for (const file of [...simulation, ...protocol, ...web]) {
     normalized.includes('apps/web/src/population') ||
     normalized.includes('apps/web/src/settlement/') ||
     normalized.includes('apps/web/src/terrain/') ||
+    // Shared ZIP storage and the separate visual preparation adapter retain web-owned acquisition.
     normalized.endsWith('apps/web/src/assets/public-layers.ts') ||
+    normalized.endsWith('apps/web/src/assets/public-layer-loader.ts') ||
+    normalized.includes('apps/web/src/city-preparation/') ||
     /apps\/web\/src\/representation\/d3d-terrain-/.test(normalized) ||
     normalized.endsWith(
       'apps/web/src/representation/d3d-presentation-policy.ts',

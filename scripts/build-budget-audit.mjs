@@ -52,7 +52,7 @@ const one = (pattern) =>
 const transportWorker = one(/^transport\.worker-[\w-]+\.js$/);
 const foundationWorker = one(/^foundation\.worker-[\w-]+\.js$/);
 const workerChunks = javascript.filter((file) =>
-  /(?:^|\/)\w[\w.-]*\.worker-[\w-]+\.js$/.test(file),
+  /(?:^|\/)\w[\w.-]*\.worker(?:-[\w-]+)?\.js$/.test(file),
 );
 const entry = one(/^index-[\w-]+\.js$/);
 const dialogShell = one(/^AccessibleDialog-[\w-]+\.js$/);
@@ -113,8 +113,14 @@ for (const [name, matches] of Object.entries({
 if (foundationWorker.length !== 0)
   throw new Error('The project build must not emit a Foundation Worker chunk.');
 if (
-  workerChunks.length !== transportWorker.length ||
-  workerChunks.some((file) => !transportWorker.includes(file))
+  workerChunks.length !==
+    transportWorker.length +
+      one(/^city-preparation\.worker-[\w-]+\.js$/).length ||
+  workerChunks.some(
+    (file) =>
+      !transportWorker.includes(file) &&
+      !one(/^city-preparation\.worker-[\w-]+\.js$/).includes(file),
+  )
 )
   throw new Error(`Unclassified Worker chunks: ${workerChunks.join(', ')}`);
 const configured = JSON.parse(

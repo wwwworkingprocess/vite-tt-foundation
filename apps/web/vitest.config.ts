@@ -1,7 +1,8 @@
+import { cityPreparationPlugin } from './city-preparation-plugin.js';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), cityPreparationPlugin('/')],
   test: {
     name: 'web',
     environment: 'jsdom',
@@ -24,6 +25,8 @@ export default defineConfig({
         'src/settlement/**/*.ts',
         'src/terrain/**/*.ts',
         'src/assets/**/*.ts',
+        'src/city-preparation/**/*.ts',
+        'src/city-preparation/CityPreparationProvider.tsx',
         'src/representation/**/*.ts',
         'src/representation/D3dMapRepresentation.tsx',
         'src/representation/D3dMaterialization.tsx',
@@ -50,6 +53,8 @@ export default defineConfig({
         'apps/web/src/settlement/**/*.ts',
         'apps/web/src/terrain/**/*.ts',
         'apps/web/src/assets/**/*.ts',
+        'apps/web/src/city-preparation/**/*.ts',
+        'apps/web/src/city-preparation/CityPreparationProvider.tsx',
         'apps/web/src/representation/**/*.ts',
         'apps/web/src/representation/D3dMapRepresentation.tsx',
         'apps/web/src/representation/D3dMaterialization.tsx',

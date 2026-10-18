@@ -1,3 +1,4 @@
+import { useCityPreparation } from '../city-preparation/CityPreparationProvider.js';
 import { ControlIcon } from '../ui/ControlIcon.js';
 import {
   type FocusEvent,
@@ -48,6 +49,9 @@ export function RepresentationWorkspace({
     readonly [RepresentationFamily, RepresentationFamily]
   >(['dom2d', 'd3d']);
   const [swapArmed, setSwapArmed] = useState(false);
+  const setD3dActive = useCityPreparation()?.setD3dActive;
+  const d3dActive = visibleFamilies.includes('d3d');
+  useEffect(() => setD3dActive?.(d3dActive), [setD3dActive, d3dActive]);
   const miniBoundary = useRef<HTMLDivElement>(null);
   const restoreModalFocus = useRef(true);
   const [primaryFamily, secondaryFamily] = visibleFamilies;

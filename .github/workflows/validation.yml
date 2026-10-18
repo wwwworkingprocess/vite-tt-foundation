@@ -21,6 +21,13 @@ jobs:
       - run: corepack yarn install --immutable
       - run: corepack yarn cypress install
       - run: corepack yarn validate:portable
+      - name: Upload Linux full web coverage diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-full-web-coverage
+          path: coverage/web-simulation-host/coverage-final.json
+          if-no-files-found: warn
       - run: corepack yarn validate:repository
   windows-portability:
     runs-on: windows-latest
@@ -71,3 +78,10 @@ jobs:
           corepack yarn install --immutable
           corepack yarn cypress install
           corepack yarn validate:portable
+      - name: Upload extracted-archive web coverage diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-archive-web-coverage
+          path: foundation-template/coverage/web-simulation-host/coverage-final.json
+          if-no-files-found: warn
